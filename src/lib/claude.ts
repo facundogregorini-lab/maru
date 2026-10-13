@@ -3,9 +3,12 @@ import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import mammoth from "mammoth";
 import type { z } from "zod";
 import { fetchJobPage, isHttpUrl } from "./job";
+import { DOCX_MIME, MIN_TEXT_CHARS, PDF_MIME, looksLikeDocx, looksLikePdf } from "./cvSource";
 import type { CvSource, JobInput } from "./schemas";
 
-const client = new Anthropic();
+// Se crea al primer uso: así importar este módulo (por ejemplo en tests) no exige la API key.
+let client: Anthropic | null = null;
+const anthropic = () => (client ??= new Anthropic());
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-opus-5-5";
 
 type Block = Anthropic.Beta.BetaContentBlockParam;
@@ -21,7 +24,6 @@ export class UserFacingError extends Error {
 }
 
 const MIN_JOB_TEXT = 300;
-const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 /** Lee la vacante (link y/o texto pegado) y la devuelve como bloque de texto para Claude. */
 export async function jobBlock(input: JobInput): Promise<Block> {
@@ -56,23 +58,40 @@ export async function jobBlock(input: JobInput): Promise<Block> {
   };
 }
 
+const CV_MISSING = "Subí el PDF de tu LinkedIn, tu CV o pegá tu experiencia.";
+
 /** Convierte la fuente del CV (PDF de LinkedIn, CV en PDF/DOCX o texto) en bloques para Claude. */
 export async function cvBlocks(source: CvSource | undefined): Promise<Block[]> {
-  if (!source) throw new UserFacingError("Subí el PDF de tu LinkedIn, tu CV o pegá tu experiencia.", "CV_MISSING");
+  if (!source) throw new UserFacingError(CV_MISSING, "CV_MISSING");
   const label = source.kind === "linkedin" ? "Perfil de LinkedIn exportado a PDF" : "CV de la persona";
 
-  if (source.fileBase64 && source.mimeType === "application/pdf") {
-    return [{ type: "document", source: { type: "base64", media_type: "application/pdf", data: source.fileBase64 }, title: label }];
+  if (source.fileBase64) {
+    if (source.mimeType === PDF_MIME) {
+      if (!looksLikePdf(source.fileBase64)) {
+        throw new UserFacingError("El archivo no es un PDF válido. Probá exportarlo de nuevo o pegá tu experiencia.", "CV_INVALID", 422);
+      }
+      return [{ type: "document", source: { type: "base64", media_type: "application/pdf", data: source.fileBase64 }, title: label }];
+    }
+    if (source.mimeType === DOCX_MIME && looksLikeDocx(source.fileBase64)) {
+      const { value } = await mammoth.extractRawText({ buffer: Buffer.from(source.fileBase64, "base64") });
+      if (value.trim().length < MIN_TEXT_CHARS) throw unreadable();
+      return [{ type: "text", text: `<cv titulo="${label}">\n${value.trim()}\n</cv>` }];
+    }
+    throw new UserFacingError("Aceptamos CVs en PDF o Word (.docx).", "CV_INVALID", 422);
   }
-  if (source.fileBase64 && source.mimeType === DOCX_MIME) {
-    const { value } = await mammoth.extractRawText({ buffer: Buffer.from(source.fileBase64, "base64") });
-    if (value.trim().length < 80) throw new UserFacingError("No pudimos leer el Word. Probá exportarlo a PDF.", "CV_UNREADABLE");
-    return [{ type: "text", text: `<cv titulo="${label}">\n${value.trim()}\n</cv>` }];
-  }
-  if (source.text && source.text.trim().length >= 80) {
+  if (source.text && source.text.trim().length >= MIN_TEXT_CHARS) {
     return [{ type: "text", text: `<cv titulo="Perfil pegado por la persona">\n${source.text.trim()}\n</cv>` }];
   }
-  throw new UserFacingError("Subí el PDF de tu LinkedIn, tu CV o pegá tu experiencia.", "CV_MISSING");
+  throw new UserFacingError(CV_MISSING, "CV_MISSING");
+}
+
+/** El archivo llegó bien pero no tiene texto legible (CV de Canva exportado como imagen, escaneos…). */
+export function unreadable(): UserFacingError {
+  return new UserFacingError(
+    "No pudimos leer tu CV: parece estar guardado como imagen (pasa con algunos exportados de Canva o escaneados). Pegá tu experiencia como texto y seguimos.",
+    "CV_UNREADABLE",
+    422,
+  );
 }
 
 export function feedbackBlock(feedback: string | undefined): Block {
@@ -88,7 +107,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
   effort: "low" | "medium" | "high";
   maxTokens?: number;
 }): Promise<z.infer<T>> {
-  const response = await client.beta.messages.parse({
+  const response = await anthropic().beta.messages.parse({
     model: MODEL,
     max_tokens: opts.maxTokens ?? 16000,
     betas: ["server-side-fallback-2026-07-01"],
