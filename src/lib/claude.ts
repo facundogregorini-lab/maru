@@ -1,11 +1,14 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
+import mammoth from "mammoth";
 import type { z } from "zod";
-import { fetchJobPage, fetchLinkedinProfile, isHttpUrl } from "./job";
-import type { CandidateInput } from "./schemas";
+import { fetchJobPage, isHttpUrl } from "./job";
+import type { CvSource, JobInput } from "./schemas";
 
 const client = new Anthropic();
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-opus-5-5";
+
+type Block = Anthropic.Beta.BetaContentBlockParam;
 
 export class UserFacingError extends Error {
   constructor(
@@ -18,14 +21,10 @@ export class UserFacingError extends Error {
 }
 
 const MIN_JOB_TEXT = 300;
+const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-/** Junta vacante + CV + feedback en bloques de contenido para Claude. */
-export async function buildContext(input: CandidateInput): Promise<Anthropic.Beta.BetaContentBlockParam[]> {
-  if (!input.feedback?.trim()) {
-    throw new UserFacingError("Contanos por qué te interesa la vacante.", "FEEDBACK_MISSING");
-  }
-
-  // 1. Vacante
+/** Lee la vacante (link y/o texto pegado) y la devuelve como bloque de texto para Claude. */
+export async function jobBlock(input: JobInput): Promise<Block> {
   let jobText = input.jobText?.trim() ?? "";
   let formFields: string[] = [];
   let jobTitle = "";
@@ -46,57 +45,52 @@ export async function buildContext(input: CandidateInput): Promise<Anthropic.Bet
       422,
     );
   }
-
-  // 2. CV / LinkedIn
-  const blocks: Anthropic.Beta.BetaContentBlockParam[] = [];
-  let profileText = input.cvText?.trim() ?? "";
-  if (input.cvPdfBase64) {
-    blocks.push({
-      type: "document",
-      source: { type: "base64", media_type: "application/pdf", data: input.cvPdfBase64 },
-      title: "CV actual de la persona",
-    });
-  }
-  if (input.linkedinUrl && isHttpUrl(input.linkedinUrl) && !input.cvPdfBase64 && !profileText) {
-    profileText = (await fetchLinkedinProfile(input.linkedinUrl)) ?? "";
-    if (!profileText) {
-      throw new UserFacingError(
-        "LinkedIn no nos deja leer tu perfil directamente. Descargalo en PDF (en tu perfil: Más → Guardar en PDF) y subilo.",
-        "LINKEDIN_BLOCKED",
-        422,
-      );
-    }
-  }
-  if (!input.cvPdfBase64 && !profileText) {
-    throw new UserFacingError("Subí tu CV en PDF, tu LinkedIn en PDF o pegá tu experiencia.", "CV_MISSING");
-  }
-
-  blocks.push({
+  return {
     type: "text",
     text: [
       `<vacante url="${input.jobUrl}" titulo_pagina="${jobTitle.replace(/"/g, "'")}">\n${jobText}\n</vacante>`,
       formFields.length
         ? `<campos_formulario_detectados>\n${formFields.map((f) => `- ${f}`).join("\n")}\n</campos_formulario_detectados>`
         : "<campos_formulario_detectados>No se detectaron campos en la página.</campos_formulario_detectados>",
-      profileText ? `<perfil_texto>\n${profileText}\n</perfil_texto>` : "",
-      `<feedback_de_la_persona>\n${input.feedback.trim()}\n</feedback_de_la_persona>`,
-    ]
-      .filter(Boolean)
-      .join("\n\n"),
-  });
-  return blocks;
+    ].join("\n\n"),
+  };
+}
+
+/** Convierte la fuente del CV (PDF de LinkedIn, CV en PDF/DOCX o texto) en bloques para Claude. */
+export async function cvBlocks(source: CvSource | undefined): Promise<Block[]> {
+  if (!source) throw new UserFacingError("Subí el PDF de tu LinkedIn, tu CV o pegá tu experiencia.", "CV_MISSING");
+  const label = source.kind === "linkedin" ? "Perfil de LinkedIn exportado a PDF" : "CV de la persona";
+
+  if (source.fileBase64 && source.mimeType === "application/pdf") {
+    return [{ type: "document", source: { type: "base64", media_type: "application/pdf", data: source.fileBase64 }, title: label }];
+  }
+  if (source.fileBase64 && source.mimeType === DOCX_MIME) {
+    const { value } = await mammoth.extractRawText({ buffer: Buffer.from(source.fileBase64, "base64") });
+    if (value.trim().length < 80) throw new UserFacingError("No pudimos leer el Word. Probá exportarlo a PDF.", "CV_UNREADABLE");
+    return [{ type: "text", text: `<cv titulo="${label}">\n${value.trim()}\n</cv>` }];
+  }
+  if (source.text && source.text.trim().length >= 80) {
+    return [{ type: "text", text: `<cv titulo="Perfil pegado por la persona">\n${source.text.trim()}\n</cv>` }];
+  }
+  throw new UserFacingError("Subí el PDF de tu LinkedIn, tu CV o pegá tu experiencia.", "CV_MISSING");
+}
+
+export function feedbackBlock(feedback: string | undefined): Block {
+  if (!feedback?.trim()) throw new UserFacingError("Contanos por qué te interesa la vacante.", "FEEDBACK_MISSING");
+  return { type: "text", text: `<feedback_de_la_persona>\n${feedback.trim()}\n</feedback_de_la_persona>` };
 }
 
 /** Llamada con salida estructurada validada por Zod. */
 export async function askStructured<T extends z.ZodType>(opts: {
   system: string;
-  content: Anthropic.Beta.BetaContentBlockParam[];
+  content: Block[];
   schema: T;
   effort: "low" | "medium" | "high";
+  maxTokens?: number;
 }): Promise<z.infer<T>> {
   const response = await client.beta.messages.parse({
     model: MODEL,
-    max_tokens: 16000,
+    max_tokens: opts.maxTokens ?? 16000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
     system: opts.system,
@@ -125,7 +119,7 @@ export function errorResponse(err: unknown): Response {
     return Response.json({ error: "Hay mucha demanda en este momento. Probá en un minuto.", code: "RATE_LIMIT" }, { status: 429 });
   }
   if (err instanceof Anthropic.AuthenticationError) {
-    console.error("Falta o es inválida ANTHROPIC_API_KEY");
+    console.error("ANTHROPIC_API_KEY inválida");
     return Response.json({ error: "El servicio no está configurado todavía.", code: "CONFIG" }, { status: 500 });
   }
   if (err instanceof Anthropic.APIError) {

@@ -38,11 +38,13 @@ body {
 }
 .animate-breathe { animation: breathe 2.4s ease-in-out infinite; }
 
-/* Al imprimir sólo se ve el CV: así "Descargar PDF" genera un documento limpio y legible por ATS. */
-@media print {
-  @page { size: A4; margin: 16mm 16mm; }
-  body { background: white; }
-  body * { visibility: hidden; }
-  #cv-print, #cv-print * { visibility: visible; }
-  #cv-print { position: absolute; inset: 0 auto auto 0; width: 100%; box-shadow: none !important; border: 0 !important; padding: 0 !important; }
+/* Editor de CV */
+.cv-editable { outline: none; border-radius: 3px; transition: background-color .15s, box-shadow .15s; cursor: text; }
+.cv-editable:hover { background: rgba(192, 98, 58, 0.06); }
+.cv-editable:focus { background: rgba(192, 98, 58, 0.08); box-shadow: 0 0 0 2px rgba(192, 98, 58, 0.35); }
+.cv-editable:empty::before { content: attr(data-placeholder); color: #b9ada3; font-style: italic; }
+
+/* En celular el papel A4 no entra: reducimos márgenes sólo en la vista previa. */
+@media (max-width: 640px) {
+  .cv-scroll article { padding: 28px 18px !important; font-size: 11.5px !important; }
 }
