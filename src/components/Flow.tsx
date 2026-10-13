@@ -15,6 +15,7 @@ import {
 } from "@/lib/cvSource";
 import type { Analysis, CvDoc, GapQuestion, Generation, Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { useAuth } from "./auth/AuthProvider";
 import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
 import LinkedinGuide from "./LinkedinGuide";
@@ -82,6 +83,9 @@ async function post<T>(url: string, body: unknown): Promise<T> {
 export default function Flow() {
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
+  // Aviso al volver del magic link (?ingreso=ok | vencido).
+  const [loginNotice, setLoginNotice] = useState<"ok" | "vencido" | null>(null);
+  const { email } = useAuth();
 
   const [jobUrl, setJobUrl] = useState("");
   const [jobText, setJobText] = useState("");
@@ -104,6 +108,16 @@ export default function Flow() {
   const cvTextRef = useRef<HTMLTextAreaElement>(null);
   const readSeq = useRef(0);
   const topRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const ingreso = url.searchParams.get("ingreso");
+    if (ingreso === "ok" || ingreso === "vencido") {
+      setLoginNotice(ingreso);
+      url.searchParams.delete("ingreso");
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    }
+  }, []);
 
   // Retomamos la última postulación si se recargó la página.
   useEffect(() => {
@@ -245,6 +259,28 @@ export default function Flow() {
 
   return (
     <div ref={topRef} className="scroll-mt-6">
+      {loginNotice && (
+        <div
+          role="status"
+          className={`animate-rise mb-6 flex items-start justify-between gap-4 rounded-2xl px-5 py-4 text-sm ${
+            loginNotice === "ok" ? "bg-sage-soft text-ink" : "border border-clay/30 bg-clay-soft text-clay-dark"
+          }`}
+        >
+          <span>
+            {loginNotice === "ok" ? (
+              <>
+                <b className="text-sage">¡Listo{email ? `, entraste como ${email}` : ""}!</b>{" "}
+                {stage === "resultado" ? "Ya podés descargar tu CV." : "Este navegador te va a recordar."}
+              </>
+            ) : (
+              "El link venció o no es válido. Tocá «Descargar» y te mandamos uno nuevo."
+            )}
+          </span>
+          <button type="button" onClick={() => setLoginNotice(null)} aria-label="Cerrar aviso" className="shrink-0 text-muted hover:text-ink">
+            ✕
+          </button>
+        </div>
+      )}
       {error && (
         <div role="alert" className="animate-rise mb-6 rounded-2xl border border-clay/30 bg-clay-soft px-5 py-4 text-sm text-clay-dark">
           {error}

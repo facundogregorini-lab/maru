@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { atsReport } from "@/lib/ats";
 import { cvToText, fileBaseName, photoRecommended, setTemplate } from "@/lib/cv";
 import type { Analysis, CvDoc, SectionKey } from "@/lib/schemas";
-import CopyButton from "../CopyButton";
+import { useAuth } from "../auth/AuthProvider";
+import LoginDialog from "../auth/LoginDialog";
 import PhotoCropper from "../PhotoCropper";
 import AtsPanel from "./AtsPanel";
 import CvPaper from "./CvPaper";
@@ -39,6 +40,10 @@ export default function CvEditor({
   // Si falla el PDF, ofrecemos el Word (mismo contenido) desde el mismo aviso.
   const [pdfFailed, setPdfFailed] = useState(false);
   const [cropFile, setCropFile] = useState<File | null>(null);
+  // Descargar exige sesión: guardamos qué quería hacer para seguir apenas ingrese.
+  const { email } = useAuth();
+  const [pending, setPending] = useState<"pdf" | "docx" | "copy" | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const report = useMemo(() => atsReport(doc, analysis.palabras_clave_ats), [doc, analysis.palabras_clave_ats]);
   const filename = fileBaseName(doc, analysis.puesto);
@@ -79,7 +84,9 @@ export default function CvEditor({
     }
   }
 
-  async function exportAs(kind: "pdf" | "docx") {
+  /** `justLoggedIn`: viene del diálogo; el estado `email` todavía no se actualizó en esta closure y el servidor valida igual. */
+  async function exportAs(kind: "pdf" | "docx", justLoggedIn = false) {
+    if (!email && !justLoggedIn) return setPending(kind);
     // Confirmamos cualquier edición en curso antes de exportar.
     (document.activeElement as HTMLElement | null)?.blur();
     setBusy(kind);
@@ -87,8 +94,15 @@ export default function CvEditor({
     setPdfFailed(false);
     try {
       await new Promise((r) => setTimeout(r, 0));
-      if (kind === "pdf") await (await import("@/lib/export/pdf")).downloadPdf(doc, filename);
-      else await (await import("@/lib/export/docx")).downloadDocx(doc, filename);
+      const { downloadDocx, downloadPdf, DownloadError } = await import("@/lib/export/client");
+      try {
+        if (kind === "pdf") await downloadPdf(doc, filename);
+        else await downloadDocx(doc, filename);
+      } catch (e) {
+        // La sesión venció o se cerró en otra pestaña: pedimos ingresar de nuevo.
+        if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") return setPending(kind);
+        throw e;
+      }
     } catch (e) {
       setError((e as Error).message || "No pudimos generar el archivo.");
       if (kind === "pdf") setPdfFailed(true);
@@ -97,8 +111,29 @@ export default function CvEditor({
     }
   }
 
+  async function copyText() {
+    if (!email) return setPending("copy");
+    await navigator.clipboard.writeText(cvToText(doc));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  }
+
+  const onLoggedIn = useCallback(() => {
+    const action = pending;
+    setPending(null);
+    // Seguimos con la descarga que había pedido. Copiar necesita un nuevo toque (el navegador lo exige).
+    if (action === "pdf" || action === "docx") setTimeout(() => exportAs(action, true), 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
+
   return (
     <div className="mt-6 space-y-6">
+      <LoginDialog
+        open={!!pending}
+        reason={pending === "copy" ? "copiar tu CV" : "descargar tu CV"}
+        onClose={() => setPending(null)}
+        onLoggedIn={onLoggedIn}
+      />
       <section>
         <h2 className="mb-3 font-serif text-xl tracking-tight">Elegí el diseño</h2>
         <TemplatePicker doc={doc} recommended={analysis.template_recomendado} reason={analysis.razon_template} onPick={(t) => setDoc((d) => setTemplate(d, t))} />
@@ -152,8 +187,16 @@ export default function CvEditor({
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
             </button>
-            <CopyButton text={cvToText(doc)} label="Copiar como texto" />
-            <p className="text-xs leading-relaxed text-muted">El PDF tiene texto real y seleccionable, listo para cualquier ATS.</p>
+            <button
+              type="button"
+              onClick={copyText}
+              className="rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:border-clay hover:text-clay"
+            >
+              {copied ? "¡Copiado!" : "Copiar como texto"}
+            </button>
+            <p className="text-xs leading-relaxed text-muted">
+              {email === null ? "Para descargar te pedimos tu email: te mandamos un link y listo, sin contraseña." : "El PDF tiene texto real y seleccionable, listo para cualquier ATS."}
+            </p>
           </div>
 
           <AtsPanel report={report} />

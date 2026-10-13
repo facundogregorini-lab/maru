@@ -29,6 +29,16 @@ npm run dev
 
 Abrí http://localhost:3000.
 
+## Login con magic link
+
+Para **descargar o copiar el CV** hay que ingresar con el email: Maru manda un link (sin contraseña) y el navegador queda recordado por 180 días.
+
+- Sin base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos; al abrirlo se crea una sesión firmada en una cookie `httpOnly`.
+- Las descargas se validan en el servidor (`/api/export/pdf` y `/api/export/docx` devuelven 401 sin sesión).
+- Si la persona abre el link en otra pestaña del mismo navegador, la pestaña original lo detecta y sigue con la descarga sola.
+
+Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL` y `EMAIL_FROM`. Cualquier SMTP sirve (Brevo, Resend, SendGrid, Gmail con contraseña de aplicación).
+
 ## Deploy
 
 Funciona en Vercel tal cual: importá el repo y configurá `ANTHROPIC_API_KEY` en las variables de entorno. Las rutas `/api/analyze` y `/api/generate` declaran `maxDuration = 300` porque la generación del CV puede tardar alrededor de un minuto.

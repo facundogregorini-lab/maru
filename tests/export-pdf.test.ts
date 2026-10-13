@@ -1,9 +1,15 @@
 import { existsSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { SESSION_COOKIE, createSessionToken } from "@/lib/auth";
 
 const LOCAL_CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
 const html = `<article style="font-family:'Source Sans 3'"><h1>Ana Pérez</h1><p>Growth Lead · Ejecutivo</p></article>`;
-const req = (body: unknown) => new Request("http://test/api/export/pdf", { method: "POST", body: JSON.stringify(body) });
+const req = (body: unknown) =>
+  new Request("http://test/api/export/pdf", {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: { cookie: `${SESSION_COOKIE}=${createSessionToken("ana@mail.com")}` },
+  });
 
 async function loadRoute(chromePath: string) {
   vi.resetModules();

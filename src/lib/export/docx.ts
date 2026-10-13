@@ -1,11 +1,8 @@
-"use client";
-
 import {
   AlignmentType,
   BorderStyle,
   Document,
   ImageRun,
-  Packer,
   Paragraph,
   ShadingType,
   TabStopType,
@@ -18,7 +15,6 @@ import {
 import { THEMES } from "@/components/cv/themes";
 import { contactLine, visible } from "../cv";
 import type { CvDoc, Item, SectionKey } from "../schemas";
-import { downloadBlob } from "./download";
 
 const PAGE_W = 11906; // A4 en twips
 const PX = 15; // 1px CSS ≈ 15 twips
@@ -33,8 +29,8 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
   return out;
 }
 
-/** DOCX con el mismo contenido y orden que la vista previa, en fuentes estándar de Word. */
-export async function downloadDocx(doc: CvDoc, filename: string): Promise<void> {
+/** DOCX con el mismo contenido y orden que la vista previa, en fuentes estándar de Word. Corre en el servidor. */
+export function buildDocx(doc: CvDoc): Document {
   const t = THEMES[doc.template];
   const font = t.docx.body;
   const headFont = t.docx.head;
@@ -193,7 +189,7 @@ export async function downloadDocx(doc: CvDoc, filename: string): Promise<void> 
 
   for (const key of t.order) if (visible(doc, key)) sections[key]();
 
-  const file = new Document({
+  return new Document({
     creator: "Maru",
     title: `${doc.nombre} — CV`,
     styles: { default: { document: { run: { font, size } } } },
@@ -204,5 +200,4 @@ export async function downloadDocx(doc: CvDoc, filename: string): Promise<void> 
       },
     ],
   });
-  downloadBlob(await Packer.toBlob(file), `${filename}.docx`);
 }
