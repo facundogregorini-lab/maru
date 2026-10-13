@@ -3,7 +3,17 @@
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers } from "@/lib/gaps";
-import type { Analysis, CvDoc, CvSource, GapQuestion, Generation, Profile } from "@/lib/schemas";
+import {
+  DOCX_MIME,
+  MAX_FILE_BYTES,
+  PDF_MIME,
+  buildCvSource,
+  looksLikeDocx,
+  looksLikePdf,
+  type CvFile,
+  type CvMode,
+} from "@/lib/cvSource";
+import type { Analysis, CvDoc, GapQuestion, Generation, Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
 import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
@@ -11,11 +21,6 @@ import LinkedinGuide from "./LinkedinGuide";
 import VoiceButton from "./VoiceButton";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
-type CvMode = "linkedin" | "cv" | "texto";
-
-const MAX_FILE_BYTES = 4 * 1024 * 1024;
-const PDF = "application/pdf";
-const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 const SESSION_KEY = "maru:sesion:v2";
 
 const GUIDE = [
@@ -64,6 +69,11 @@ function readAsBase64(file: File): Promise<string> {
 
 async function post<T>(url: string, body: unknown): Promise<T> {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (res.status === 413) {
+    throw Object.assign(new Error("Tu archivo es demasiado pesado para enviarlo. Exportalo más liviano (menos de 3 MB) o pegá tu experiencia."), {
+      code: "CV_TOO_LARGE",
+    });
+  }
   const data = await res.json().catch(() => ({ error: "Respuesta inesperada del servidor." }));
   if (!res.ok) throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
   return data as T;
@@ -78,7 +88,8 @@ export default function Flow() {
   const [showJobText, setShowJobText] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [cvMode, setCvMode] = useState<CvMode>("linkedin");
-  const [file, setFile] = useState<{ name: string; base64: string; mime: string } | null>(null);
+  const [file, setFile] = useState<CvFile | null>(null);
+  const [reading, setReading] = useState(false);
   const [cvText, setCvText] = useState("");
 
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
@@ -90,6 +101,8 @@ export default function Flow() {
   const [doc, setDocState] = useState<CvDoc | null>(null);
 
   const jobTextRef = useRef<HTMLTextAreaElement>(null);
+  const cvTextRef = useRef<HTMLTextAreaElement>(null);
+  const readSeq = useRef(0);
   const topRef = useRef<HTMLDivElement>(null);
 
   // Retomamos la última postulación si se recargó la página.
@@ -120,24 +133,45 @@ export default function Flow() {
 
   const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  function source(): CvSource {
-    if (cvMode === "texto") return { kind: "texto", text: cvText };
-    return { kind: cvMode, fileBase64: file?.base64, mimeType: file?.mime };
+  // Una sola fuente de verdad: lo que habilita "Empezar" es exactamente lo que se envía.
+  const cvSource = buildCvSource(cvMode, file, cvText);
+
+  function switchMode(mode: CvMode) {
+    readSeq.current += 1; // descarta una lectura de archivo en curso
+    setCvMode(mode);
+    setFile(null);
+    setReading(false);
   }
 
   async function onFile(f: File | null) {
     setError("");
     if (!f) return;
-    const isPdf = f.type === PDF || f.name.toLowerCase().endsWith(".pdf");
-    const isDocx = f.type === DOCX || f.name.toLowerCase().endsWith(".docx");
+    const isPdf = f.type === PDF_MIME || f.name.toLowerCase().endsWith(".pdf");
+    const isDocx = f.type === DOCX_MIME || f.name.toLowerCase().endsWith(".docx");
     if (cvMode === "linkedin" && !isPdf) return setError("El perfil de LinkedIn se descarga en PDF. Subí ese archivo.");
     if (!isPdf && !isDocx) return setError("Aceptamos CVs en PDF o Word (.docx).");
-    if (f.size > MAX_FILE_BYTES) return setError("El archivo pesa más de 4 MB. Probá exportarlo más liviano.");
-    setFile({ name: f.name, base64: await readAsBase64(f), mime: isPdf ? PDF : DOCX });
+    if (f.size > MAX_FILE_BYTES) return setError("El archivo pesa más de 3 MB. Exportalo más liviano o pegá tu experiencia.");
+    if (f.size === 0) return setError("El archivo está vacío. Probá descargarlo de nuevo.");
+
+    // "Listo ✓" aparece recién cuando el archivo está leído, validado y guardado en el estado.
+    const seq = ++readSeq.current;
+    setFile(null);
+    setReading(true);
+    try {
+      const base64 = await readAsBase64(f);
+      if (seq !== readSeq.current) return; // eligió otro archivo o cambió de pestaña mientras leíamos
+      if (isPdf ? !looksLikePdf(base64) : !looksLikeDocx(base64)) {
+        return setError(`No pudimos leer “${f.name}”: no parece un ${isPdf ? "PDF" : "Word"} válido. Probá exportarlo de nuevo o pegá tu experiencia.`);
+      }
+      setFile({ name: f.name, base64, mime: isPdf ? PDF_MIME : DOCX_MIME });
+    } catch {
+      if (seq === readSeq.current) setError("No pudimos leer el archivo. Probá de nuevo.");
+    } finally {
+      if (seq === readSeq.current) setReading(false);
+    }
   }
 
-  const hasCv = cvMode === "texto" ? cvText.trim().length > 80 : !!file;
-  const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && feedback.trim().length > 20 && hasCv;
+  const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && feedback.trim().length > 20 && !!cvSource && !reading;
   const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
   async function analyze() {
@@ -146,8 +180,8 @@ export default function Flow() {
     try {
       // Perfil y vacante en paralelo: la espera es la del más lento, no la suma.
       const [p, a] = await Promise.all([
-        post<{ profile: Profile; gaps: GapQuestion[] }>("/api/profile", { source: source() }),
-        post<{ analysis: Analysis }>("/api/analyze", { ...job(), feedback, source: source() }),
+        post<{ profile: Profile; gaps: GapQuestion[] }>("/api/profile", { source: cvSource }),
+        post<{ analysis: Analysis }>("/api/analyze", { ...job(), feedback, source: cvSource }),
       ]);
       setProfile(p.profile);
       setGaps(p.gaps);
@@ -164,6 +198,11 @@ export default function Flow() {
       if (err.code === "JOB_FETCH_FAILED") {
         setShowJobText(true);
         setTimeout(() => jobTextRef.current?.focus(), 400);
+      }
+      // PDF ilegible (imagen de Canva, escaneo) o muy pesado: ofrecemos pegar el texto.
+      if (err.code === "CV_UNREADABLE" || err.code === "CV_INVALID" || err.code === "CV_TOO_LARGE") {
+        switchMode("texto");
+        setTimeout(() => cvTextRef.current?.focus(), 400);
       }
     }
   }
@@ -273,10 +312,7 @@ export default function Flow() {
                   <button
                     key={mode}
                     type="button"
-                    onClick={() => {
-                      setCvMode(mode);
-                      setFile(null);
-                    }}
+                    onClick={() => switchMode(mode)}
                     className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 transition ${cvMode === mode ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
                   >
                     {label}
@@ -298,11 +334,17 @@ export default function Flow() {
                 >
                   <input
                     type="file"
-                    accept={cvMode === "linkedin" ? ".pdf,application/pdf" : `.pdf,.docx,${PDF},${DOCX}`}
+                    accept={cvMode === "linkedin" ? ".pdf,application/pdf" : `.pdf,.docx,${PDF_MIME},${DOCX_MIME}`}
                     className="sr-only"
-                    onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+                    onChange={(e) => {
+                      // El archivo queda en el estado (no en el input): reseteamos el input para poder elegir el mismo archivo otra vez.
+                      onFile(e.target.files?.[0] ?? null);
+                      e.target.value = "";
+                    }}
                   />
-                  {file ? (
+                  {reading ? (
+                    <span className="font-medium text-muted">Leyendo tu archivo…</span>
+                  ) : file ? (
                     <>
                       <span className="font-medium text-ink">{file.name}</span>
                       <span className="text-xs text-sage">Listo ✓ · tocá para cambiarlo</span>
@@ -312,7 +354,7 @@ export default function Flow() {
                       <span className="font-medium text-ink">
                         {cvMode === "linkedin" ? "Arrastrá tu Profile.pdf o tocá para elegirlo" : "Arrastrá tu CV o tocá para elegirlo"}
                       </span>
-                      <span className="text-xs text-muted">{cvMode === "linkedin" ? "PDF · hasta 4 MB" : "PDF o .docx · hasta 4 MB"}</span>
+                      <span className="text-xs text-muted">{cvMode === "linkedin" ? "PDF · hasta 3 MB" : "PDF o .docx · hasta 3 MB"}</span>
                     </>
                   )}
                 </label>
@@ -320,6 +362,7 @@ export default function Flow() {
 
               {cvMode === "texto" && (
                 <textarea
+                  ref={cvTextRef}
                   rows={8}
                   placeholder="Pegá tu perfil o tu experiencia: puestos, empresas, fechas, logros, estudios, idiomas…"
                   value={cvText}
