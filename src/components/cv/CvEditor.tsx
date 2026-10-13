@@ -36,6 +36,8 @@ export default function CvEditor({
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [busy, setBusy] = useState<"pdf" | "docx" | null>(null);
   const [error, setError] = useState("");
+  // Si falla el PDF, ofrecemos el Word (mismo contenido) desde el mismo aviso.
+  const [pdfFailed, setPdfFailed] = useState(false);
   const [cropFile, setCropFile] = useState<File | null>(null);
 
   const report = useMemo(() => atsReport(doc, analysis.palabras_clave_ats), [doc, analysis.palabras_clave_ats]);
@@ -82,12 +84,14 @@ export default function CvEditor({
     (document.activeElement as HTMLElement | null)?.blur();
     setBusy(kind);
     setError("");
+    setPdfFailed(false);
     try {
       await new Promise((r) => setTimeout(r, 0));
       if (kind === "pdf") await (await import("@/lib/export/pdf")).downloadPdf(doc, filename);
       else await (await import("@/lib/export/docx")).downloadDocx(doc, filename);
     } catch (e) {
       setError((e as Error).message || "No pudimos generar el archivo.");
+      if (kind === "pdf") setPdfFailed(true);
     } finally {
       setBusy(null);
     }
@@ -101,8 +105,21 @@ export default function CvEditor({
       </section>
 
       {error && (
-        <div role="alert" className="rounded-2xl border border-clay/30 bg-clay-soft px-4 py-3 text-sm text-clay-dark">
-          {error}
+        <div
+          role="alert"
+          className="flex flex-col gap-3 rounded-2xl border border-clay/30 bg-clay-soft px-4 py-3 text-sm text-clay-dark sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span>{error}</span>
+          {pdfFailed && (
+            <button
+              type="button"
+              onClick={() => exportAs("docx")}
+              disabled={!!busy}
+              className="shrink-0 rounded-full bg-clay px-4 py-2 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:opacity-70"
+            >
+              {busy === "docx" ? "Generando Word…" : "Descargar Word"}
+            </button>
+          )}
         </div>
       )}
 
