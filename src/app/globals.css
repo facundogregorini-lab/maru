@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fbf6ef;
+  --color-sand: #f4ebe0;
+  --color-paper: #fffdf9;
+  --color-line: #eadfd3;
+  --color-ink: #2b2420;
+  --color-muted: #75685f;
+  --color-clay: #c0623a;
+  --color-clay-dark: #9e4d2b;
+  --color-clay-soft: #f6e1d3;
+  --color-sage: #6f8466;
+  --color-sage-soft: #e5ece0;
+  --color-honey: #d9a441;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: var(--color-clay-soft);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: rise 0.45s ease-out both; }
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+.animate-breathe { animation: breathe 2.4s ease-in-out infinite; }
+
+/* Al imprimir sólo se ve el CV: así "Descargar PDF" genera un documento limpio y legible por ATS. */
+@media print {
+  @page { size: A4; margin: 16mm 16mm; }
+  body { background: white; }
+  body * { visibility: hidden; }
+  #cv-print, #cv-print * { visibility: visible; }
+  #cv-print { position: absolute; inset: 0 auto auto 0; width: 100%; box-shadow: none !important; border: 0 !important; padding: 0 !important; }
+}
