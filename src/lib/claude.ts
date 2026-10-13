@@ -117,6 +117,10 @@ export function errorResponse(err: unknown): Response {
   if (err instanceof UserFacingError) {
     return Response.json({ error: err.message, code: err.code }, { status: err.status });
   }
+  if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
+    console.error("Falta ANTHROPIC_API_KEY en las variables de entorno", err);
+    return Response.json({ error: "El servicio no está configurado todavía.", code: "CONFIG" }, { status: 500 });
+  }
   if (err instanceof Anthropic.RateLimitError) {
     return Response.json({ error: "Hay mucha demanda en este momento. Probá en un minuto.", code: "RATE_LIMIT" }, { status: 429 });
   }
