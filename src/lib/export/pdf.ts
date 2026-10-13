@@ -17,7 +17,9 @@ export async function downloadPdf(doc: CvDoc, filename: string): Promise<void> {
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.error ?? "No pudimos generar el PDF.");
+    // Dejamos el detalle técnico en la consola para diagnosticar sin acceso a los logs del servidor.
+    if (data.detail) console.error(`[export/pdf] ${data.stage}: ${data.detail}`);
+    throw new Error(data.error ?? "No pudimos generar el PDF. Descargá el Word: tiene el mismo contenido.");
   }
   downloadBlob(await res.blob(), `${filename}.pdf`);
 }

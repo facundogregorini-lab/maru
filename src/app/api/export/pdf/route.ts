@@ -1,3 +1,4 @@
+import type { Browser } from "puppeteer-core";
 import { fontFaceCss } from "@/lib/fonts";
 
 export const maxDuration = 60;
@@ -6,43 +7,108 @@ export const runtime = "nodejs";
 const MAX_HTML = 3 * 1024 * 1024;
 // Chromium local para desarrollo (en Vercel se usa @sparticuz/chromium).
 const LOCAL_CHROME = process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
+const withSparticuz = () => !!process.env.VERCEL || process.env.USE_SPARTICUZ === "1";
 
-async function launch() {
+type Stage = "launch" | "render" | "pdf";
+
+class ExportError extends Error {
+  constructor(
+    public stage: Stage,
+    public cause: unknown,
+  ) {
+    super(cause instanceof Error ? cause.message : String(cause));
+  }
+}
+
+async function launch(): Promise<Browser> {
   const puppeteer = (await import("puppeteer-core")).default;
-  if (process.env.VERCEL) {
+  if (withSparticuz()) {
+    // Requiere que node_modules/@sparticuz/chromium/bin viaje con la función (ver outputFileTracingIncludes en next.config.ts).
     const chromium = (await import("@sparticuz/chromium")).default;
     return puppeteer.launch({ args: chromium.args, executablePath: await chromium.executablePath(), headless: true });
   }
   return puppeteer.launch({ executablePath: LOCAL_CHROME, headless: true, args: ["--no-sandbox"] });
 }
 
+async function step<T>(stage: Stage, fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    throw new ExportError(stage, err);
+  }
+}
+
+/** Saca scripts y atributos on* del HTML recibido: sólo queremos marcado y estilos. */
+function sanitize(html: string): string {
+  return html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+}
+
+function failure(err: unknown, started: number): Response {
+  const stage = err instanceof ExportError ? err.stage : "render";
+  const cause = err instanceof ExportError ? err.cause : err;
+  // El detalle completo va a los logs de Vercel; al usuario, un mensaje útil y la salida por Word.
+  console.error(`[export/pdf] falló en la etapa "${stage}" a los ${Date.now() - started} ms:`, cause instanceof Error ? cause.message : cause);
+  if (cause instanceof Error && cause.stack) console.error(cause.stack);
+  return Response.json(
+    {
+      error:
+        stage === "launch"
+          ? "El generador de PDF no está disponible en este momento. Descargá el Word: tiene el mismo contenido y lo podés guardar como PDF."
+          : "No pudimos generar el PDF de este CV. Descargá el Word: tiene el mismo contenido y lo podés guardar como PDF.",
+      code: "PDF_FAILED",
+      stage,
+      detail: (cause instanceof Error ? cause.message : String(cause)).slice(0, 300),
+    },
+    { status: 500 },
+  );
+}
+
 /** Recibe el HTML del CV (el mismo componente de la vista previa) y lo imprime a un PDF A4 con texto real. */
 export async function POST(req: Request) {
-  const { html, padY } = (await req.json()) as { html?: string; padY?: number };
+  const started = Date.now();
+  const { html, padY } = (await req.json().catch(() => ({}))) as { html?: string; padY?: number };
   if (!html || html.length > MAX_HTML) {
     return Response.json({ error: "El CV no es válido.", code: "BAD_HTML" }, { status: 400 });
   }
   const marginMm = Math.max(10, Math.min(24, Math.round(((padY ?? 48) / 96) * 25.4)));
+  // Las fuentes van embebidas en base64: no dependen de URLs relativas (/_next/static/...) que el servidor no resuelve.
   const doc = `<!doctype html><html><head><meta charset="utf-8"><style>
 ${await fontFaceCss()}
 @page { size: A4; margin: ${marginMm}mm 0; }
 html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-</style></head><body>${html}</body></html>`;
+</style></head><body>${sanitize(html)}</body></html>`;
 
-  let browser: Awaited<ReturnType<typeof launch>> | null = null;
+  let browser: Browser | null = null;
   try {
-    browser = await launch();
-    const page = await browser.newPage();
-    // El HTML sólo puede usar recursos embebidos: bloqueamos cualquier pedido de red.
-    await page.setRequestInterception(true);
-    page.on("request", (r) => (r.url().startsWith("data:") ? r.continue() : r.abort()));
-    await page.setJavaScriptEnabled(false);
-    await page.setContent(doc, { waitUntil: "load" });
-    const pdf = await page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true });
+    browser = await step("launch", launch);
+    const b = browser;
+    const page = await step("render", async () => {
+      const p = await b.newPage();
+      // Sólo recursos embebidos: bloqueamos cualquier pedido de red.
+      await p.setRequestInterception(true);
+      p.on("request", (r) => (r.url().startsWith("data:") ? r.continue() : r.abort()));
+      await p.setContent(doc, { waitUntil: "load", timeout: 20_000 });
+      await p.evaluate(() => document.fonts.ready.then(() => document.fonts.size));
+      return p;
+    });
+    const pdf = await step("pdf", () => page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true, timeout: 30_000 }));
     return new Response(Buffer.from(pdf), { headers: { "Content-Type": "application/pdf", "Cache-Control": "no-store" } });
   } catch (err) {
-    console.error("PDF export failed", err);
-    return Response.json({ error: "No pudimos generar el PDF. Probá de nuevo.", code: "PDF" }, { status: 500 });
+    return failure(err, started);
+  } finally {
+    await browser?.close().catch(() => null);
+  }
+}
+
+/** Chequeo de salud: ¿arranca Chromium en este entorno? Útil para diagnosticar sin acceso a los logs. */
+export async function GET() {
+  const started = Date.now();
+  let browser: Browser | null = null;
+  try {
+    browser = await step("launch", launch);
+    return Response.json({ ok: true, chromium: await browser.version(), ms: Date.now() - started });
+  } catch (err) {
+    return failure(err, started);
   } finally {
     await browser?.close().catch(() => null);
   }
