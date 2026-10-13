@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Analysis, CandidateInput, Result } from "@/lib/schemas";
-import { cvToText } from "@/lib/cvText";
+import { buildCvDoc } from "@/lib/cv";
+import { applyGapAnswers } from "@/lib/gaps";
+import type { Analysis, CvDoc, CvSource, GapQuestion, Generation, Profile } from "@/lib/schemas";
+import { load, remove, save } from "@/lib/storage";
 import CopyButton from "./CopyButton";
-import CvDocument from "./CvDocument";
+import CvEditor from "./cv/CvEditor";
+import LinkedinGuide from "./LinkedinGuide";
 import VoiceButton from "./VoiceButton";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
-type CvMode = "pdf" | "linkedin" | "texto";
+type CvMode = "linkedin" | "cv" | "texto";
 
-const MAX_PDF_BYTES = 4 * 1024 * 1024;
+const MAX_FILE_BYTES = 4 * 1024 * 1024;
+const PDF = "application/pdf";
+const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const SESSION_KEY = "maru:sesion:v2";
 
 const GUIDE = [
   "¿Por qué te parece una buena vacante?",
@@ -19,18 +25,33 @@ const GUIDE = [
 ];
 
 const LOADING_ANALYZE = [
-  "Leyendo la vacante con atención…",
+  "Leyendo tu perfil con atención…",
+  "Leyendo la vacante…",
   "Buscando lo que el ATS va a filtrar…",
   "Cruzando tu experiencia con lo que piden…",
   "Pensando qué preguntarte…",
 ];
 const LOADING_GENERATE = [
-  "Reescribiendo tu CV para este rol…",
+  "Escribiendo tu CV para este rol…",
   "Ordenando tus logros por relevancia…",
   "Integrando las palabras clave con naturalidad…",
   "Preparando cada respuesta del formulario…",
   "Últimos retoques…",
 ];
+
+/** Lo que guardamos para no perder nada si se recarga la página. */
+type Session = {
+  jobUrl: string;
+  jobText: string;
+  feedback: string;
+  analysis: Analysis;
+  profile: Profile;
+  gaps: GapQuestion[];
+  answers: Record<string, string>;
+  gapAnswers: Record<string, string>;
+  generation: Generation | null;
+  doc: CvDoc | null;
+};
 
 function readAsBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -56,56 +77,85 @@ export default function Flow() {
   const [jobText, setJobText] = useState("");
   const [showJobText, setShowJobText] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [cvMode, setCvMode] = useState<CvMode>("pdf");
-  const [cvFile, setCvFile] = useState<File | null>(null);
-  const [cvPdfBase64, setCvPdfBase64] = useState("");
-  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [cvMode, setCvMode] = useState<CvMode>("linkedin");
+  const [file, setFile] = useState<{ name: string; base64: string; mime: string } | null>(null);
   const [cvText, setCvText] = useState("");
 
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [gaps, setGaps] = useState<GapQuestion[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [result, setResult] = useState<Result | null>(null);
+  const [gapAnswers, setGapAnswers] = useState<Record<string, string>>({});
+  const [generation, setGeneration] = useState<Generation | null>(null);
+  const [doc, setDocState] = useState<CvDoc | null>(null);
 
   const jobTextRef = useRef<HTMLTextAreaElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
+
+  // Retomamos la última postulación si se recargó la página.
+  useEffect(() => {
+    const s = load<Session>(SESSION_KEY);
+    if (!s?.analysis || !s.profile) return;
+    setJobUrl(s.jobUrl);
+    setJobText(s.jobText);
+    setFeedback(s.feedback);
+    setAnalysis(s.analysis);
+    setProfile(s.profile);
+    setGaps(s.gaps);
+    setAnswers(s.answers);
+    setGapAnswers(s.gapAnswers);
+    setGeneration(s.generation);
+    setDocState(s.doc);
+    setStage(s.doc && s.generation ? "resultado" : "preguntas");
+  }, []);
+
+  useEffect(() => {
+    if (!analysis || !profile) return;
+    save(SESSION_KEY, { jobUrl, jobText, feedback, analysis, profile, gaps, answers, gapAnswers, generation, doc } satisfies Session);
+  }, [jobUrl, jobText, feedback, analysis, profile, gaps, answers, gapAnswers, generation, doc]);
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [stage]);
 
-  function candidate(): CandidateInput {
-    return {
-      jobUrl: jobUrl.trim(),
-      jobText: showJobText ? jobText : undefined,
-      feedback,
-      cvPdfBase64: cvMode === "pdf" || cvMode === "linkedin" ? cvPdfBase64 || undefined : undefined,
-      linkedinUrl: cvMode === "linkedin" ? linkedinUrl.trim() : undefined,
-      cvText: cvMode === "texto" ? cvText : undefined,
-    };
+  const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
+
+  function source(): CvSource {
+    if (cvMode === "texto") return { kind: "texto", text: cvText };
+    return { kind: cvMode, fileBase64: file?.base64, mimeType: file?.mime };
   }
 
-  async function onFile(file: File | null) {
+  async function onFile(f: File | null) {
     setError("");
-    if (!file) return;
-    if (file.type !== "application/pdf") return setError("Por ahora aceptamos CVs en PDF.");
-    if (file.size > MAX_PDF_BYTES) return setError("El PDF pesa más de 4 MB. Probá exportarlo más liviano.");
-    setCvFile(file);
-    setCvPdfBase64(await readAsBase64(file));
+    if (!f) return;
+    const isPdf = f.type === PDF || f.name.toLowerCase().endsWith(".pdf");
+    const isDocx = f.type === DOCX || f.name.toLowerCase().endsWith(".docx");
+    if (cvMode === "linkedin" && !isPdf) return setError("El perfil de LinkedIn se descarga en PDF. Subí ese archivo.");
+    if (!isPdf && !isDocx) return setError("Aceptamos CVs en PDF o Word (.docx).");
+    if (f.size > MAX_FILE_BYTES) return setError("El archivo pesa más de 4 MB. Probá exportarlo más liviano.");
+    setFile({ name: f.name, base64: await readAsBase64(f), mime: isPdf ? PDF : DOCX });
   }
 
-  const hasCv =
-    (cvMode === "pdf" && !!cvPdfBase64) ||
-    (cvMode === "linkedin" && (!!linkedinUrl.trim() || !!cvPdfBase64)) ||
-    (cvMode === "texto" && cvText.trim().length > 80);
+  const hasCv = cvMode === "texto" ? cvText.trim().length > 80 : !!file;
   const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && feedback.trim().length > 20 && hasCv;
+  const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
   async function analyze() {
     setError("");
     setStage("analizando");
     try {
-      const { analysis } = await post<{ analysis: Analysis }>("/api/analyze", candidate());
-      setAnalysis(analysis);
+      // Perfil y vacante en paralelo: la espera es la del más lento, no la suma.
+      const [p, a] = await Promise.all([
+        post<{ profile: Profile; gaps: GapQuestion[] }>("/api/profile", { source: source() }),
+        post<{ analysis: Analysis }>("/api/analyze", { ...job(), feedback, source: source() }),
+      ]);
+      setProfile(p.profile);
+      setGaps(p.gaps);
+      setAnalysis(a.analysis);
       setAnswers({});
+      setGapAnswers({});
+      setGeneration(null);
+      setDocState(null);
       setStage("preguntas");
     } catch (e) {
       const err = e as Error & { code?: string };
@@ -115,17 +165,27 @@ export default function Flow() {
         setShowJobText(true);
         setTimeout(() => jobTextRef.current?.focus(), 400);
       }
-      if (err.code === "LINKEDIN_BLOCKED") setCvMode("linkedin");
     }
   }
 
   async function generate() {
-    if (!analysis) return;
+    if (!analysis || !profile) return;
     setError("");
     setStage("generando");
     try {
-      const { result } = await post<{ result: Result }>("/api/generate", { ...candidate(), analysis, answers });
-      setResult(result);
+      const completed = applyGapAnswers(profile, gaps, gapAnswers);
+      const { generation: g } = await post<{ generation: Generation }>("/api/generate", {
+        ...job(),
+        feedback,
+        profile: completed,
+        analysis,
+        answers,
+      });
+      const next = buildCvDoc(completed, g, analysis);
+      // Si ya había una foto, la conservamos al regenerar.
+      if (doc?.photo) Object.assign(next, { photo: doc.photo, showPhoto: doc.showPhoto });
+      setGeneration(g);
+      setDocState(next);
       setStage("resultado");
     } catch (e) {
       setStage("preguntas");
@@ -134,16 +194,20 @@ export default function Flow() {
   }
 
   function restart() {
+    remove(SESSION_KEY);
     setStage("inicio");
     setAnalysis(null);
-    setResult(null);
+    setProfile(null);
+    setGeneration(null);
+    setDocState(null);
     setAnswers({});
+    setGapAnswers({});
   }
 
   return (
     <div ref={topRef} className="scroll-mt-6">
       {error && (
-        <div role="alert" className="animate-rise mb-6 rounded-2xl border border-clay/30 bg-clay-soft px-5 py-4 text-sm text-clay-dark print:hidden">
+        <div role="alert" className="animate-rise mb-6 rounded-2xl border border-clay/30 bg-clay-soft px-5 py-4 text-sm text-clay-dark">
           {error}
         </div>
       )}
@@ -197,42 +261,33 @@ export default function Flow() {
               </div>
             </StepCard>
 
-            <StepCard n={3} title="Tu experiencia" hint="Usamos tu CV actual como base. No inventamos nada: sólo lo ponemos en su mejor versión.">
-              <div className="mb-4 inline-flex rounded-full bg-sand p-1 text-sm">
+            <StepCard n={3} title="Tu experiencia" hint="La usamos tal cual: cargos, fechas y estudios se copian de tu perfil, sin inventar nada.">
+              <div className="mb-4 flex flex-wrap gap-1 rounded-full bg-sand p-1 text-sm sm:inline-flex">
                 {(
                   [
-                    ["pdf", "CV en PDF"],
-                    ["linkedin", "LinkedIn"],
-                    ["texto", "Pegar texto"],
+                    ["linkedin", "PDF de LinkedIn", "Recomendado"],
+                    ["cv", "Mi CV (PDF o Word)", ""],
+                    ["texto", "Pegar texto", ""],
                   ] as const
-                ).map(([mode, label]) => (
+                ).map(([mode, label, badge]) => (
                   <button
                     key={mode}
                     type="button"
-                    onClick={() => setCvMode(mode)}
-                    className={`rounded-full px-4 py-1.5 transition ${cvMode === mode ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+                    onClick={() => {
+                      setCvMode(mode);
+                      setFile(null);
+                    }}
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 transition ${cvMode === mode ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
                   >
                     {label}
+                    {badge && <span className="rounded-full bg-sage-soft px-1.5 py-0.5 text-[10px] font-semibold text-sage">{badge}</span>}
                   </button>
                 ))}
               </div>
 
-              {cvMode === "linkedin" && (
-                <div className="mb-3 space-y-2">
-                  <input
-                    type="url"
-                    placeholder="https://www.linkedin.com/in/tu-perfil"
-                    value={linkedinUrl}
-                    onChange={(e) => setLinkedinUrl(e.target.value)}
-                    className="w-full rounded-xl border border-line bg-paper px-4 py-3 outline-none transition focus:border-clay focus:ring-4 focus:ring-clay-soft"
-                  />
-                  <p className="text-xs text-muted">
-                    LinkedIn suele bloquear la lectura automática. Lo más seguro: en tu perfil tocá <b>Más → Guardar en PDF</b> y subilo acá abajo.
-                  </p>
-                </div>
-              )}
+              {cvMode === "linkedin" && <LinkedinGuide />}
 
-              {(cvMode === "pdf" || cvMode === "linkedin") && (
+              {cvMode !== "texto" && (
                 <label
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => {
@@ -241,16 +296,23 @@ export default function Flow() {
                   }}
                   className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-line bg-paper px-4 py-8 text-center transition hover:border-clay"
                 >
-                  <input type="file" accept="application/pdf" className="sr-only" onChange={(e) => onFile(e.target.files?.[0] ?? null)} />
-                  {cvFile ? (
+                  <input
+                    type="file"
+                    accept={cvMode === "linkedin" ? ".pdf,application/pdf" : `.pdf,.docx,${PDF},${DOCX}`}
+                    className="sr-only"
+                    onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+                  />
+                  {file ? (
                     <>
-                      <span className="font-medium text-ink">{cvFile.name}</span>
+                      <span className="font-medium text-ink">{file.name}</span>
                       <span className="text-xs text-sage">Listo ✓ · tocá para cambiarlo</span>
                     </>
                   ) : (
                     <>
-                      <span className="font-medium text-ink">Arrastrá tu PDF o tocá para elegirlo</span>
-                      <span className="text-xs text-muted">Hasta 4 MB</span>
+                      <span className="font-medium text-ink">
+                        {cvMode === "linkedin" ? "Arrastrá tu Profile.pdf o tocá para elegirlo" : "Arrastrá tu CV o tocá para elegirlo"}
+                      </span>
+                      <span className="text-xs text-muted">{cvMode === "linkedin" ? "PDF · hasta 4 MB" : "PDF o .docx · hasta 4 MB"}</span>
                     </>
                   )}
                 </label>
@@ -259,7 +321,7 @@ export default function Flow() {
               {cvMode === "texto" && (
                 <textarea
                   rows={8}
-                  placeholder="Pegá tu CV o un resumen de tu experiencia: puestos, empresas, fechas, logros, estudios…"
+                  placeholder="Pegá tu perfil o tu experiencia: puestos, empresas, fechas, logros, estudios, idiomas…"
                   value={cvText}
                   onChange={(e) => setCvText(e.target.value)}
                   className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay-soft"
@@ -281,10 +343,22 @@ export default function Flow() {
       {stage === "generando" && <Loading messages={LOADING_GENERATE} />}
 
       {stage === "preguntas" && analysis && (
-        <Questions analysis={analysis} answers={answers} setAnswers={setAnswers} onBack={() => setStage("inicio")} onNext={generate} />
+        <Questions
+          analysis={analysis}
+          gaps={gaps}
+          answers={answers}
+          setAnswers={setAnswers}
+          gapAnswers={gapAnswers}
+          setGapAnswers={setGapAnswers}
+          onBack={() => setStage(doc ? "resultado" : "inicio")}
+          backLabel={doc ? "← Volver a mi CV" : "← Volver"}
+          onNext={generate}
+        />
       )}
 
-      {stage === "resultado" && result && analysis && <Results result={result} analysis={analysis} onRestart={restart} onBack={() => setStage("preguntas")} />}
+      {stage === "resultado" && doc && generation && analysis && (
+        <Results doc={doc} setDoc={setDoc} generation={generation} analysis={analysis} onRestart={restart} onBack={() => setStage("preguntas")} />
+      )}
     </div>
   );
 }
@@ -302,7 +376,7 @@ function Hero() {
           Postulate con un CV pensado <em className="text-clay">para ese rol</em>.
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-          Contanos qué te entusiasma, respondé un par de preguntas cortas y Maru te devuelve tu CV optimizado para ATS y para las personas que lo
+          Subí tu LinkedIn, contanos qué te entusiasma y respondé un par de preguntas cortas: Maru te devuelve tu CV optimizado para ATS y para las personas que lo
           van a leer, más una sugerencia para cada campo del formulario.
         </p>
       </div>
@@ -356,17 +430,27 @@ function Loading({ messages }: { messages: string[] }) {
 
 function Questions({
   analysis,
+  gaps,
   answers,
   setAnswers,
+  gapAnswers,
+  setGapAnswers,
   onBack,
+  backLabel,
   onNext,
 }: {
   analysis: Analysis;
+  gaps: GapQuestion[];
   answers: Record<string, string>;
   setAnswers: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  gapAnswers: Record<string, string>;
+  setGapAnswers: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   onBack: () => void;
+  backLabel: string;
   onNext: () => void;
 }) {
+  const input =
+    "mt-3 w-full rounded-xl border border-line bg-paper px-4 py-2.5 outline-none transition placeholder:text-muted/60 focus:border-clay focus:ring-4 focus:ring-clay-soft";
   return (
     <div className="animate-rise space-y-8">
       <section className="rounded-[2rem] bg-sand p-6 sm:p-10">
@@ -403,8 +487,29 @@ function Questions({
         </div>
       </section>
 
+      {gaps.length > 0 && (
+        <section>
+          <h2 className="font-serif text-2xl tracking-tight">Datos que faltan</h2>
+          <p className="mt-1 text-sm text-muted">No están en tu perfil y no los vamos a inventar. Si no querés que figuren, dejalos vacíos.</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {gaps.map((g) => (
+              <div key={g.id} className={`rounded-3xl border border-line bg-paper/70 p-5 ${g.contexto ? "sm:col-span-2" : ""}`}>
+                <p className="font-medium">{g.pregunta}</p>
+                {g.contexto && <blockquote className="mt-2 rounded-xl bg-sand px-3 py-2 text-sm italic text-muted">“{g.contexto}”</blockquote>}
+                <input
+                  value={gapAnswers[g.id] ?? ""}
+                  onChange={(e) => setGapAnswers((a) => ({ ...a, [g.id]: e.target.value }))}
+                  placeholder={g.placeholder}
+                  className={input}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section>
-        <h2 className="font-serif text-2xl tracking-tight">Unas preguntas rápidas</h2>
+        <h2 className="font-serif text-2xl tracking-tight">Para destacar</h2>
         <p className="mt-1 text-sm text-muted">Con una línea alcanza. Si no sabés, dejala vacía.</p>
         <div className="mt-5 space-y-4">
           {analysis.preguntas.map((q, idx) => (
@@ -430,12 +535,7 @@ function Questions({
                   ))}
                 </div>
               )}
-              <input
-                value={answers[q.id] ?? ""}
-                onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                placeholder="Tu respuesta…"
-                className="mt-3 w-full rounded-xl border border-line bg-paper px-4 py-2.5 outline-none transition focus:border-clay focus:ring-4 focus:ring-clay-soft"
-              />
+              <input value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} placeholder="Tu respuesta…" className={input} />
             </div>
           ))}
         </div>
@@ -443,7 +543,7 @@ function Questions({
 
       <div className="flex flex-col-reverse items-center justify-center gap-3 sm:flex-row">
         <button type="button" onClick={onBack} className="px-5 py-3 text-sm text-muted hover:text-ink">
-          ← Volver
+          {backLabel}
         </button>
         <PrimaryButton onClick={onNext}>Armar mi postulación</PrimaryButton>
       </div>
@@ -451,94 +551,53 @@ function Questions({
   );
 }
 
-function Results({ result, analysis, onRestart, onBack }: { result: Result; analysis: Analysis; onRestart: () => void; onBack: () => void }) {
+function Results({
+  doc,
+  setDoc,
+  generation,
+  analysis,
+  onRestart,
+  onBack,
+}: {
+  doc: CvDoc;
+  setDoc: (fn: (d: CvDoc) => CvDoc) => void;
+  generation: Generation;
+  analysis: Analysis;
+  onRestart: () => void;
+  onBack: () => void;
+}) {
   const [tab, setTab] = useState<"cv" | "form">("cv");
-  const plain = cvToText(result.cv);
 
   return (
     <div className="animate-rise">
-      <div className="print:hidden">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu postulación para</p>
-        <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">
-          {analysis.puesto} <span className="text-muted">· {analysis.empresa}</span>
-        </h1>
+      <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu postulación para</p>
+      <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">
+        {analysis.puesto} <span className="text-muted">· {analysis.empresa}</span>
+      </h1>
 
-        <div className="mt-6 inline-flex rounded-full bg-sand p-1 text-sm">
-          {(
-            [
-              ["cv", "CV optimizado"],
-              ["form", `Formulario (${result.recomendaciones_formulario.length})`],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setTab(key)}
-              className={`rounded-full px-5 py-2 transition ${tab === key ? "bg-paper font-medium shadow-sm" : "text-muted hover:text-ink"}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+      <div className="mt-6 inline-flex rounded-full bg-sand p-1 text-sm">
+        {(
+          [
+            ["cv", "CV optimizado"],
+            ["form", `Formulario (${generation.recomendaciones_formulario.length})`],
+          ] as const
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setTab(key)}
+            className={`rounded-full px-5 py-2 transition ${tab === key ? "bg-paper font-medium shadow-sm" : "text-muted hover:text-ink"}`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      {tab === "cv" && (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_300px]">
-          <div className="min-w-0">
-            <CvDocument cv={result.cv} />
-          </div>
-          <aside className="space-y-4 print:hidden">
-            <div className="flex flex-col gap-2 rounded-3xl bg-paper p-5">
-              <button type="button" onClick={() => window.print()} className="rounded-full bg-clay px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-clay-dark">
-                Descargar PDF
-              </button>
-              <CopyButton text={plain} label="Copiar como texto" />
-              <p className="text-xs leading-relaxed text-muted">En el diálogo de impresión elegí “Guardar como PDF”. El texto queda seleccionable, ideal para ATS.</p>
-            </div>
-
-            {result.completar_antes_de_enviar.length > 0 && (
-              <div className="rounded-3xl border border-honey/50 bg-honey/10 p-5">
-                <h3 className="text-sm font-semibold">Completá antes de enviar</h3>
-                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed">
-                  {result.completar_antes_de_enviar.map((c, i) => (
-                    <li key={i}>• {c}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className="rounded-3xl bg-paper p-5">
-              <h3 className="text-sm font-semibold">Qué cambiamos y por qué</h3>
-              <ul className="mt-2 space-y-2 text-sm leading-relaxed text-muted">
-                {result.cambios_clave.map((c, i) => (
-                  <li key={i}>• {c}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-3xl bg-paper p-5">
-              <h3 className="text-sm font-semibold">Palabras clave para el ATS</h3>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {result.cobertura_ats.incluidas.map((k) => (
-                  <span key={k} className="rounded-full bg-sage-soft px-2.5 py-1 text-xs text-sage">
-                    ✓ {k}
-                  </span>
-                ))}
-                {result.cobertura_ats.faltantes.map((k) => (
-                  <span key={k} className="rounded-full bg-sand px-2.5 py-1 text-xs text-muted line-through decoration-muted/50">
-                    {k}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-3 text-xs leading-relaxed text-muted">{result.cobertura_ats.nota}</p>
-            </div>
-          </aside>
-        </div>
-      )}
+      {tab === "cv" && <CvEditor doc={doc} setDoc={setDoc} analysis={analysis} cambios={generation.cambios_clave} />}
 
       {tab === "form" && (
-        <div className="mt-6 space-y-4 print:hidden">
-          {result.recomendaciones_formulario.map((f, i) => (
+        <div className="mt-6 space-y-4">
+          {generation.recomendaciones_formulario.map((f, i) => (
             <div key={i} className="rounded-3xl border border-line bg-paper p-5 sm:p-7">
               <div className="flex items-start justify-between gap-4">
                 <h3 className="font-serif text-xl tracking-tight">{f.campo}</h3>
@@ -560,11 +619,15 @@ function Results({ result, analysis, onRestart, onBack }: { result: Result; anal
         </div>
       )}
 
-      <div className="mt-10 flex flex-col-reverse items-center justify-center gap-3 sm:flex-row print:hidden">
+      <div className="mt-10 flex flex-col-reverse items-center justify-center gap-3 sm:flex-row">
         <button type="button" onClick={onBack} className="px-5 py-3 text-sm text-muted hover:text-ink">
           ← Ajustar respuestas
         </button>
-        <button type="button" onClick={onRestart} className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-clay hover:text-clay">
+        <button
+          type="button"
+          onClick={onRestart}
+          className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-clay hover:text-clay"
+        >
           Postularme a otra vacante
         </button>
       </div>

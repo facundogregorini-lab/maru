@@ -109,17 +109,3 @@ export async function fetchJobPage(url: string): Promise<JobPage> {
   const text = [posting, bodyText].filter(Boolean).join("\n\n---\n\n").slice(0, MAX_TEXT);
   return { url, title, text, formFields };
 }
-
-/** Los perfiles de LinkedIn casi nunca son públicos para un servidor; intentamos igual. */
-export async function fetchLinkedinProfile(url: string): Promise<string | null> {
-  try {
-    const html = await fetchHtml(url);
-    const $ = cheerio.load(html);
-    $("script, style, noscript, svg").remove();
-    const text = $("main").text().replace(/\s+/g, " ").trim();
-    if (text.length < 400 || /authwall|Iniciar sesión|Sign in/i.test($("title").text())) return null;
-    return text.slice(0, MAX_TEXT);
-  } catch {
-    return null;
-  }
-}
