@@ -1,4 +1,8 @@
-import type { Analysis, CvDoc, Generation, Item, Profile, SectionKey, TemplateId } from "./schemas";
+import { templateDefaults } from "@/components/cv/themes";
+import type { CvContext, CvDoc, Generation, Item, Profile, SectionKey, TemplateId } from "./schemas";
+
+/** Lo que la IA redacta para el CV (la postulación suma además las respuestas del formulario). */
+export type CvWriting = Pick<Generation, "titular" | "resumen" | "logros_clave" | "habilidades" | "experiencias">;
 
 const LABELS: Record<string, Record<SectionKey, string> & { actual: string; enCurso: string }> = {
   es: {
@@ -63,8 +67,8 @@ export function photoRecommended(country: string): boolean {
 }
 
 /** Arma el CV editable: hechos copiados del perfil + redacción de la IA. */
-export function buildCvDoc(profile: Profile, gen: Generation, analysis: Analysis): CvDoc {
-  const lang = analysis.idioma_vacante || "es";
+export function buildCvDoc(profile: Profile, gen: CvWriting, ctx: CvContext): CvDoc {
+  const lang = ctx.idioma || "es";
   const l = labels(lang);
   const byIndex = new Map(gen.experiencias.map((e) => [e.indice, e]));
 
@@ -82,12 +86,12 @@ export function buildCvDoc(profile: Profile, gen: Generation, analysis: Analysis
 
   const { resumen, logrosClave, experiencia: _e, educacion, habilidades, idiomas, certificaciones } = l;
   return {
-    template: analysis.template_recomendado,
+    template: ctx.templateRecomendado,
     lang,
     titulos: { resumen, logrosClave, experiencia: _e, educacion, habilidades, idiomas, certificaciones },
-    hidden: { logrosClave: analysis.template_recomendado !== "ejecutivo", certificaciones: !profile.certificaciones.length },
+    hidden: { logrosClave: !templateDefaults(ctx.templateRecomendado).keyAchievements, certificaciones: !profile.certificaciones.length },
     photo: null,
-    showPhoto: photoRecommended(analysis.pais_empresa),
+    showPhoto: photoRecommended(ctx.pais),
     nombre: profile.nombre,
     titular: gen.titular || profile.titulo,
     contacto: {
@@ -111,9 +115,14 @@ export function buildCvDoc(profile: Profile, gen: Generation, analysis: Analysis
   };
 }
 
+/**
+ * Cambia de template: vuelve al color y la tipografía propios del nuevo diseño
+ * (densidad, tamaño y orden de secciones se mantienen). El bloque de logros clave
+ * es propio de los templates ejecutivos; lo mostramos/ocultamos con ellos.
+ */
 export function setTemplate(doc: CvDoc, template: TemplateId): CvDoc {
-  // El bloque de logros clave es propio del template Ejecutivo; lo mostramos/ocultamos con él.
-  return { ...doc, template, hidden: { ...doc.hidden, logrosClave: template !== "ejecutivo" } };
+  const style = { ...doc.style, accent: undefined, fonts: undefined };
+  return { ...doc, template, style, hidden: { ...doc.hidden, logrosClave: !templateDefaults(template).keyAchievements } };
 }
 
 export function contactLine(doc: CvDoc): string[] {

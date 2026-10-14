@@ -3,7 +3,7 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import CvPaper from "@/components/cv/CvPaper";
-import { THEMES } from "@/components/cv/themes";
+import { resolveTheme } from "@/components/cv/themes";
 import type { CvDoc } from "../schemas";
 import { downloadBlob } from "./download";
 
@@ -13,7 +13,7 @@ export async function downloadPdf(doc: CvDoc, filename: string): Promise<void> {
   const res = await fetch("/api/export/pdf", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ html, padY: THEMES[doc.template].padY }),
+    body: JSON.stringify({ html, padY: resolveTheme(doc).padY }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

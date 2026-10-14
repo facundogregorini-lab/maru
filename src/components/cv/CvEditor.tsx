@@ -3,34 +3,36 @@
 import { useMemo, useState } from "react";
 import { atsReport } from "@/lib/ats";
 import { cvToText, fileBaseName, photoRecommended, setTemplate } from "@/lib/cv";
-import type { Analysis, CvDoc, SectionKey } from "@/lib/schemas";
+import type { CvContext, CvDoc, SectionKey } from "@/lib/schemas";
 import CopyButton from "../CopyButton";
 import PhotoCropper from "../PhotoCropper";
 import AtsPanel from "./AtsPanel";
 import CvPaper from "./CvPaper";
+import StylePanel from "./StylePanel";
 import TemplatePicker from "./TemplatePicker";
+import { resolveTheme } from "./themes";
 
-const SECTIONS: { key: SectionKey; label: string }[] = [
-  { key: "resumen", label: "Perfil / resumen" },
-  { key: "logrosClave", label: "Logros clave" },
-  { key: "experiencia", label: "Experiencia" },
-  { key: "educacion", label: "Educación" },
-  { key: "habilidades", label: "Habilidades" },
-  { key: "idiomas", label: "Idiomas" },
-  { key: "certificaciones", label: "Certificaciones" },
-];
+const SECTION_LABELS: Record<SectionKey, string> = {
+  resumen: "Perfil / resumen",
+  logrosClave: "Logros clave",
+  experiencia: "Experiencia",
+  educacion: "Educación",
+  habilidades: "Habilidades",
+  idiomas: "Idiomas",
+  certificaciones: "Certificaciones",
+};
 
 const NO_PHOTO_NAMES: Record<string, string> = { US: "EE.UU.", GB: "Reino Unido", UK: "Reino Unido", CA: "Canadá", IE: "Irlanda", AU: "Australia", NZ: "Nueva Zelanda" };
 
 export default function CvEditor({
   doc,
   setDoc,
-  analysis,
+  context,
   cambios,
 }: {
   doc: CvDoc;
   setDoc: (fn: (d: CvDoc) => CvDoc) => void;
-  analysis: Analysis;
+  context: CvContext;
   cambios: string[];
 }) {
   const [regenerating, setRegenerating] = useState<string | null>(null);
@@ -40,9 +42,18 @@ export default function CvEditor({
   const [pdfFailed, setPdfFailed] = useState(false);
   const [cropFile, setCropFile] = useState<File | null>(null);
 
-  const report = useMemo(() => atsReport(doc, analysis.palabras_clave_ats), [doc, analysis.palabras_clave_ats]);
-  const filename = fileBaseName(doc, analysis.puesto);
-  const photoOk = photoRecommended(analysis.pais_empresa);
+  const report = useMemo(() => atsReport(doc, context.palabrasClave), [doc, context.palabrasClave]);
+  const filename = fileBaseName(doc, context.puesto);
+  const photoOk = photoRecommended(context.pais);
+  const order = resolveTheme(doc).order;
+
+  function moveSection(i: number, to: number) {
+    if (to < 0 || to >= order.length) return;
+    const next = [...order];
+    const [k] = next.splice(i, 1);
+    next.splice(to, 0, k);
+    setDoc((d) => ({ ...d, style: { ...d.style, order: next } }));
+  }
 
   async function regenerate(expId: string, bulletId: string) {
     const exp = doc.experiencia.find((e) => e.id === expId);
@@ -59,8 +70,8 @@ export default function CvEditor({
           cargo: exp.cargo,
           empresa: exp.empresa,
           otros: exp.bullets.filter((b) => b.id !== bulletId).map((b) => b.text),
-          puesto: analysis.puesto,
-          palabrasClave: analysis.palabras_clave_ats,
+          puesto: context.puesto,
+          palabrasClave: context.palabrasClave,
           idioma: doc.lang,
         }),
       });
@@ -101,7 +112,7 @@ export default function CvEditor({
     <div className="mt-6 space-y-6">
       <section>
         <h2 className="mb-3 font-serif text-xl tracking-tight">Elegí el diseño</h2>
-        <TemplatePicker doc={doc} recommended={analysis.template_recomendado} reason={analysis.razon_template} onPick={(t) => setDoc((d) => setTemplate(d, t))} />
+        <TemplatePicker doc={doc} recommended={context.templateRecomendado} reason={context.razonTemplate} onPick={(t) => setDoc((d) => setTemplate(d, t))} />
       </section>
 
       {error && (
@@ -176,7 +187,7 @@ export default function CvEditor({
             <p className={`mt-2 text-xs leading-relaxed ${photoOk ? "text-muted" : "text-clay-dark"}`}>
               {photoOk
                 ? "Recomendada en LatAm y Europa. No se recomienda para empresas de EE.UU. o Reino Unido."
-                : `Esta vacante es de ${NO_PHOTO_NAMES[analysis.pais_empresa.toUpperCase()] ?? "un país anglosajón"}: allí se recomienda no incluir foto, por eso la desactivamos.`}
+                : `Buscás en ${NO_PHOTO_NAMES[context.pais.toUpperCase()] ?? "un país anglosajón"}: allí se recomienda no incluir foto, por eso la desactivamos.`}
             </p>
             {cropFile ? (
               <div className="mt-3">
@@ -218,11 +229,14 @@ export default function CvEditor({
             )}
           </div>
 
+          <StylePanel doc={doc} setDoc={setDoc} />
+
           <div className="rounded-3xl bg-paper p-5">
             <h3 className="text-sm font-semibold">Secciones</h3>
-            <ul className="mt-2 space-y-1.5">
-              {SECTIONS.map(({ key, label }) => (
-                <li key={key}>
+            <p className="mt-1 text-xs text-muted">Mostralas, ocultalas o cambiá su orden.</p>
+            <ul className="mt-3 space-y-1">
+              {order.map((key, i) => (
+                <li key={key} className="flex items-center justify-between gap-2">
                   <label className="flex cursor-pointer items-center gap-2 text-sm">
                     <input
                       type="checkbox"
@@ -230,8 +244,16 @@ export default function CvEditor({
                       onChange={(e) => setDoc((d) => ({ ...d, hidden: { ...d.hidden, [key]: !e.target.checked } }))}
                       className="h-4 w-4 accent-clay"
                     />
-                    {label}
+                    {SECTION_LABELS[key]}
                   </label>
+                  <span className="flex">
+                    <button type="button" aria-label={`Subir ${SECTION_LABELS[key]}`} disabled={i === 0} onClick={() => moveSection(i, i - 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-clay-soft hover:text-clay-dark disabled:opacity-30">
+                      ↑
+                    </button>
+                    <button type="button" aria-label={`Bajar ${SECTION_LABELS[key]}`} disabled={i === order.length - 1} onClick={() => moveSection(i, i + 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-clay-soft hover:text-clay-dark disabled:opacity-30">
+                      ↓
+                    </button>
+                  </span>
                 </li>
               ))}
             </ul>
