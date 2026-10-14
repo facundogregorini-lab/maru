@@ -5,7 +5,9 @@
 - **Coach de postulación** (`/postulacion`): CV a medida y respuestas para el formulario de una vacante concreta (detalle abajo).
 - **Creá tu CV perfecto** (`/cv`): sin vacante. Subís tu experiencia, contás a qué rol, nivel, industria y país apuntás y qué querés destacar (texto o audio), respondés 3-5 preguntas y recibís un CV general optimizado para ATS y recruiters.
 - **Carta de presentación** (`/carta`): link o job description (o carta espontánea a una empresa), lo que querés contar por texto o audio, tu experiencia y ajustes de tono, largo, idioma y destinatario. Devuelve una carta editable con reescritura por párrafo, otra versión con otro tono o largo, asunto de email, mensaje corto para LinkedIn y descarga en PDF o Word.
-- Video de presentación, simulación de entrevista, match con búsquedas y aplicación automática: próximamente.
+- **Video de presentación** (`/video`): para una búsqueda o una presentación general. Maru escribe el guion (30, 60 o 90 s) en bloques editables con tiempos y tips; lo leés en un **teleprompter** mientras grabás con la cámara del navegador y recibís **feedback de cada toma**: ritmo (palabras por minuto, muletillas), fidelidad al guion y encuadre, luz, fondo y mirada a partir de 3 fotogramas. El video no sale del navegador.
+- **Entrená para tu entrevista** (`/entrevista`): simulación con formato de videollamada. Elegís tipo (RR. HH., con tu futuro líder, técnica), dificultad, cantidad de preguntas e idioma; la entrevistadora habla en voz alta, respondés por voz o por escrito y, si tu respuesta queda corta, repregunta. Al final, un **informe** con puntaje, fortalezas, qué mejorar y una respuesta más fuerte (STAR) para cada pregunta.
+- Match con búsquedas y aplicación automática: próximamente.
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
 
@@ -42,7 +44,7 @@ Abrí http://localhost:3000.
 
 ## Login con magic link
 
-Para **descargar o copiar el CV** hay que ingresar con el email: Maru manda un link (sin contraseña) y el navegador queda recordado por 180 días.
+Cualquier persona puede **ingresar** desde el header de todas las páginas. Para **descargar o copiar el CV y la carta, o descargar el video**, es obligatorio: Maru manda un link (sin contraseña) y el navegador queda recordado por 180 días. Después de abrir el link, la persona vuelve a la página donde estaba.
 
 - Sin base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos; al abrirlo se crea una sesión firmada en una cookie `httpOnly`.
 - Las descargas se validan en el servidor (`/api/export/pdf` y `/api/export/docx` devuelven 401 sin sesión).
@@ -69,6 +71,11 @@ src/app/api/analyze           Lee vacante + CV + feedback → análisis y pregun
 src/app/api/generate          + respuestas → CV optimizado y respuestas del formulario
 src/app/api/cv/*              Análisis y redacción del CV sin vacante
 src/app/api/carta, carta/parrafo  Carta completa y reescritura de un párrafo
+src/components/video/, src/app/api/video/*   Video: guion, estudio (cámara + teleprompter) y feedback
+src/components/entrevista/, src/app/api/entrevista/*  Entrevista: plan, llamada (voz), turnos y informe
+src/components/speech.ts      Dictado continuo, voz de la entrevistadora y métricas de ritmo
+src/components/auth/, src/lib/auth.ts, src/app/api/auth/*  Login con magic link
+src/app/api/export/pdf, docx  Descargas (exigen sesión)
 src/lib/job.ts                Scraping de la vacante y de LinkedIn
 src/lib/prompts.ts            Instrucciones para Claude
 src/lib/schemas.ts            Esquemas Zod de entrada/salida
@@ -78,4 +85,6 @@ src/lib/schemas.ts            Esquemas Zod de entrada/salida
 
 - Algunos portales (p. ej. LinkedIn Jobs con login, o sitios 100% JavaScript) no se pueden leer desde el servidor; en ese caso la app pide pegar el texto.
 - Los perfiles de LinkedIn casi nunca son públicos para un servidor: lo más confiable es *Más → Guardar en PDF* y subir ese archivo.
-- El dictado por voz depende del navegador; Firefox no lo soporta.
+- El dictado por voz depende del navegador; Firefox no lo soporta. En la entrevista se puede responder por escrito, y en el video el feedback funciona igual con los fotogramas.
+- La voz de la entrevistadora es la del navegador o del sistema: cambia según el dispositivo.
+- El video se graba en WebM (Chrome, Edge, Firefox) o MP4 (Safari).

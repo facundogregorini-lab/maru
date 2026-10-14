@@ -67,10 +67,14 @@ export function useDictation(lang: string) {
       setInterim(partial);
     };
     rec.onerror = (e) => {
-      if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-        wantRef.current = false;
-        setError("Necesitamos permiso para usar el micrófono.");
-      }
+      // "no-speech" y "aborted" son normales (silencio, pausa): seguimos. El resto, cortamos sin reintentar.
+      if (e.error === "no-speech" || e.error === "aborted") return;
+      wantRef.current = false;
+      setError(
+        e.error === "not-allowed" || e.error === "service-not-allowed"
+          ? "Necesitamos permiso para usar el micrófono."
+          : "El dictado por voz no está funcionando en este navegador. Podés responder escribiendo.",
+      );
     };
     rec.onend = () => {
       setInterim("");

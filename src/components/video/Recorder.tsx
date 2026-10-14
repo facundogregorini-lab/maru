@@ -17,6 +17,12 @@ function pickMime(): string {
   return MIME_CANDIDATES.find((m) => MediaRecorder.isTypeSupported(m)) ?? "";
 }
 
+/** n elementos repartidos a lo largo de la lista (principio, medio, final). */
+function pickSpread<T>(list: T[], n: number): T[] {
+  if (list.length <= n) return list;
+  return Array.from({ length: n }, (_, i) => list[Math.round((i * (list.length - 1)) / (n - 1))]);
+}
+
 function fmt(s: number) {
   const m = Math.floor(s / 60);
   return `${m}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
@@ -31,8 +37,8 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   const [error, setError] = useState("");
   const [count, setCount] = useState(3);
   const [elapsed, setElapsed] = useState(0);
-  const [speed, setSpeed] = useState(34); // px por segundo
-  const [fontSize, setFontSize] = useState(26);
+  const [speed, setSpeed] = useState(100); // % del ritmo natural (2,3 palabras por segundo)
+  const [fontSize, setFontSize] = useState(24);
   const [prompter, setPrompter] = useState(true);
   const [take, setTake] = useState<{ url: string; blob: Blob; seconds: number; mime: string } | null>(null);
   const [frames, setFrames] = useState<string[]>([]);
@@ -47,6 +53,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   const prompterRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const frameTimers = useRef<number[]>([]);
+  const allFrames = useRef<string[]>([]);
   const dictation = useDictation(lang);
   const gate = useLoginGate();
 
@@ -59,7 +66,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     () => () => {
       stopCamera();
       cancelAnimationFrame(rafRef.current);
-      frameTimers.current.forEach(clearTimeout);
+      frameTimers.current.forEach(clearInterval);
     },
     [stopCamera],
   );
@@ -104,10 +111,18 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     return c.toDataURL("image/jpeg", 0.7).split(",")[1] ?? null;
   }
 
+  // El teleprompter recorre todo el guion en el tiempo que lleva leerlo en voz alta.
+  const readSeconds = Math.max(10, (script.trim().split(/\s+/).length || 1) / 2.3);
+  const scrollPos = useRef(0);
+
   function scrollPrompter(prev: number) {
     rafRef.current = requestAnimationFrame((now) => {
       const el = prompterRef.current;
-      if (el && prev) el.scrollTop += ((now - prev) / 1000) * speedRef.current;
+      if (el && prev) {
+        const distance = el.scrollHeight - el.clientHeight;
+        scrollPos.current += ((now - prev) / 1000) * (distance / readSeconds) * (speedRef.current / 100);
+        el.scrollTop = scrollPos.current;
+      }
       setElapsed((Date.now() - startRef.current) / 1000);
       scrollPrompter(now);
     });
@@ -149,18 +164,20 @@ export default function Recorder({ script, target, lang, filename }: { script: s
       setPhase("review");
     };
     recorderRef.current = rec;
+    scrollPos.current = 0;
     if (prompterRef.current) prompterRef.current.scrollTop = 0;
     dictation.reset();
     if (dictation.supported) dictation.start();
     setFrames([]);
     setFeedback(null);
-    // Tres fotogramas a lo largo de la toma, para el feedback de encuadre y luz.
-    frameTimers.current = [0.2, 0.5, 0.8].map((f) =>
-      window.setTimeout(() => {
+    // Un fotograma cada 2,5 s; al terminar elegimos 3 repartidos en la toma (encuadre, luz, mirada).
+    allFrames.current = [];
+    frameTimers.current = [
+      window.setInterval(() => {
         const fr = grabFrame();
-        if (fr) setFrames((x) => [...x, fr]);
-      }, target * 1000 * f),
-    );
+        if (fr) allFrames.current.push(fr);
+      }, 2500),
+    ];
     startRef.current = Date.now();
     setElapsed(0);
     rec.start(1000);
@@ -170,11 +187,10 @@ export default function Recorder({ script, target, lang, filename }: { script: s
 
   function stop() {
     cancelAnimationFrame(rafRef.current);
-    frameTimers.current.forEach(clearTimeout);
-    if (frames.length === 0) {
-      const fr = grabFrame();
-      if (fr) setFrames([fr]);
-    }
+    frameTimers.current.forEach(clearInterval);
+    const last = grabFrame();
+    const all = last ? [...allFrames.current, last] : allFrames.current;
+    setFrames(pickSpread(all, 3));
     dictation.stop();
     recorderRef.current?.stop();
   }
@@ -258,13 +274,14 @@ export default function Recorder({ script, target, lang, filename }: { script: s
         {prompter && (phase === "preview" || phase === "countdown" || phase === "recording") && (
           <div
             ref={prompterRef}
-            className="pointer-events-auto absolute inset-x-[8%] top-3 max-h-[42%] overflow-hidden rounded-2xl bg-ink/65 px-6 py-4 text-center text-paper backdrop-blur-sm"
+            className="pointer-events-auto absolute inset-x-[6%] top-3 h-[42%] overflow-hidden rounded-2xl bg-ink/65 px-6 text-center text-paper backdrop-blur-sm sm:inset-x-[10%]"
             style={{ fontSize, lineHeight: 1.35 }}
             aria-label="Teleprompter"
           >
-            <div className="h-[30%]" aria-hidden />
+            {/* Margen arriba y abajo: la primera línea arranca en el centro y la última llega hasta ahí. */}
+            <div className="h-[35%]" aria-hidden />
             <p className="whitespace-pre-line font-medium">{script}</p>
-            <div className="h-[80%]" aria-hidden />
+            <div className="h-[55%]" aria-hidden />
           </div>
         )}
 
@@ -301,7 +318,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
             </label>
             <label className="flex items-center gap-2 text-muted">
               Velocidad
-              <input type="range" min={15} max={70} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="flex-1 accent-clay" />
+              <input type="range" min={50} max={150} step={5} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="flex-1 accent-clay" aria-valuetext={`${speed}%`} />
             </label>
             <label className="flex items-center gap-2 text-muted">
               Letra

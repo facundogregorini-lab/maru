@@ -55,6 +55,16 @@ export default function Call({
     return () => clearInterval(id);
   }, [answerStart]);
 
+  // La sala de espera y la llamada tienen cada una su <video>: reconectamos la cámara al cambiar de vista.
+  const inCall = phase !== "lobby";
+  useEffect(() => {
+    const v = videoRef.current;
+    if (camera && v && streamRef.current && v.srcObject !== streamRef.current) {
+      v.srcObject = streamRef.current;
+      void v.play().catch(() => null);
+    }
+  }, [camera, inCall]);
+
   useEffect(
     () => () => {
       stopSpeaking();
@@ -220,23 +230,24 @@ export default function Call({
         </span>
       </div>
 
-      <div className="grid gap-3 px-3 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-2 px-2 sm:gap-3 sm:px-3">
         {/* Entrevistadora */}
-        <div className="relative grid place-items-center rounded-2xl bg-[#3a302b]" style={{ aspectRatio: "16 / 10" }}>
-          <div className={`grid h-24 w-24 place-items-center rounded-full bg-clay font-serif text-3xl transition sm:h-28 sm:w-28 ${speakingNow ? "ring-4 ring-honey/80 ring-offset-4 ring-offset-[#3a302b]" : ""}`}>
+        <div className="relative grid aspect-[3/4] place-items-center rounded-2xl bg-[#3a302b] sm:aspect-[16/10]">
+          <div className={`grid h-16 w-16 place-items-center rounded-full bg-clay font-serif text-2xl transition sm:h-28 sm:w-28 sm:text-3xl ${speakingNow ? "ring-4 ring-honey/80 ring-offset-4 ring-offset-[#3a302b]" : ""}`}>
             {initials(plan.entrevistador.nombre)}
           </div>
           {phase === "thinking" && <span className="absolute top-3 rounded-full bg-paper/10 px-3 py-1 text-xs">pensando…</span>}
-          <span className="absolute bottom-2 left-2 rounded-lg bg-ink/60 px-2 py-1 text-xs">
-            {plan.entrevistador.nombre} · {plan.entrevistador.cargo}
+          <span className="absolute bottom-2 left-2 right-2 truncate rounded-lg bg-ink/60 px-2 py-1 text-xs sm:right-auto">
+            {plan.entrevistador.nombre}
+            <span className="hidden sm:inline"> · {plan.entrevistador.cargo}</span>
           </span>
         </div>
         {/* Vos */}
-        <div className="relative grid place-items-center overflow-hidden rounded-2xl bg-[#2f2825]" style={{ aspectRatio: "16 / 10" }}>
+        <div className="relative grid aspect-[3/4] place-items-center overflow-hidden rounded-2xl bg-[#2f2825] sm:aspect-[16/10]">
           {camera ? (
             <video ref={videoRef} muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
           ) : (
-            <span className={`grid h-24 w-24 place-items-center rounded-full bg-paper/10 font-serif text-2xl transition ${phase === "listening" && dictation.listening ? "ring-4 ring-sage ring-offset-4 ring-offset-[#2f2825]" : ""}`}>
+            <span className={`grid h-16 w-16 place-items-center rounded-full bg-paper/10 font-serif text-xl transition sm:h-24 sm:w-24 sm:text-2xl ${phase === "listening" && dictation.listening ? "ring-4 ring-sage ring-offset-4 ring-offset-[#2f2825]" : ""}`}>
               Vos
             </span>
           )}
@@ -298,6 +309,19 @@ export default function Call({
             aria-pressed={dictation.listening}
           >
             {dictation.listening ? "🎙 Pausar micrófono" : "🎙 Seguir hablando"}
+          </button>
+        )}
+        {phase === "listening" && useVoice && (
+          <button
+            type="button"
+            onClick={() => {
+              dictation.stop();
+              setTyped(live);
+              setVoice(false);
+            }}
+            className="rounded-full bg-paper/10 px-4 py-2.5 text-sm transition hover:bg-paper/20"
+          >
+            ⌨ Escribir en vez de hablar
           </button>
         )}
         {phase === "listening" && (
