@@ -17,9 +17,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", axes: ["SOFT", "opsz"] });
 
 export const metadata: Metadata = {
-  title: "Maru · Tu postulación, a medida",
+  title: "Maru · Tu coach profesional",
   description:
-    "Pegá el link de la vacante que te gusta, contanos por qué, y Maru te devuelve un CV optimizado y respuestas para cada campo del formulario.",
+    "Encontrá el trabajo perfecto con todo el poder de la IA: CV optimizado, coach de postulación y más.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
