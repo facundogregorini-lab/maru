@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Evidence, HeroStats } from "@/components/landing/Evidence";
 import SiteShell from "@/components/SiteShell";
 
 type Section = {
@@ -62,23 +63,31 @@ const SECTIONS: Section[] = [
 export default function Home() {
   return (
     <SiteShell tagline="Tu coach profesional">
-      <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-14 sm:px-12 sm:py-20">
+      <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-12 sm:px-12 sm:py-16">
         <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-clay-soft" />
-        <div className="pointer-events-none absolute -bottom-20 right-24 h-40 w-40 rounded-full bg-sage-soft" />
-        <div className="relative max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Maru, tu coach profesional</p>
-          <h1 className="mt-3 font-serif text-4xl leading-[1.08] tracking-tight sm:text-6xl">
-            Encontrá el trabajo perfecto, con todo el poder de la <em className="text-clay">IA</em>.
-          </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-            Del CV a la entrevista: Maru te acompaña en cada paso de tu búsqueda.
-          </p>
-          <Link
-            href={FEATURED.href!}
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-clay px-6 py-3 font-medium text-paper transition hover:bg-clay-dark"
-          >
-            Empezar mi postulación <span aria-hidden>→</span>
-          </Link>
+        <div className="pointer-events-none absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-sage-soft" />
+        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+          <div>
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Maru, tu coach profesional</p>
+            <h1 className="mt-3 font-serif text-4xl leading-[1.08] tracking-tight sm:text-6xl">
+              Encontrá el trabajo perfecto, con todo el poder de la <em className="text-clay">IA</em>.
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+              Un CV y una carta a medida para cada búsqueda multiplican tus chances de que te llamen. Maru los arma en minutos, sin inventar nada.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Link
+                href={FEATURED.href!}
+                className="inline-flex items-center gap-2 rounded-full bg-clay px-6 py-3 font-medium text-paper transition hover:bg-clay-dark"
+              >
+                Empezar mi postulación <span aria-hidden>→</span>
+              </Link>
+              <a href="#evidencia" className="text-sm font-medium text-clay-dark underline decoration-clay/40 underline-offset-4 hover:decoration-clay">
+                Ver la evidencia
+              </a>
+            </div>
+          </div>
+          <HeroStats />
         </div>
       </section>
 
@@ -90,6 +99,8 @@ export default function Home() {
           <SectionCard key={s.title} s={s} delay={(i + 1) * 60} />
         ))}
       </div>
+
+      <Evidence />
     </SiteShell>
   );
 }
