@@ -328,3 +328,56 @@ export const VideoFeedbackSchema = z.object({
   guion: z.string().describe("Qué tan fiel fue al guion y si conviene ajustar algo del texto"),
 });
 export type VideoFeedback = z.infer<typeof VideoFeedbackSchema>;
+
+/* ---------- Entrená para tu entrevista ---------- */
+
+export type EntrevistaOpciones = {
+  tipo: "rrhh" | "hiring" | "tecnica";
+  dificultad: "amable" | "estandar" | "exigente";
+  preguntas: 4 | 6 | 8;
+  idioma: "auto" | "es" | "en" | "pt";
+};
+
+export const EntrevistaPlanSchema = z.object({
+  entrevistador: z.object({ nombre: z.string().describe("Nombre de pila verosímil para el país"), cargo: z.string() }),
+  empresa: z.string().describe("Empresa de la búsqueda, o '' si es general"),
+  puesto: z.string(),
+  idioma: z.string().describe("Código ISO del idioma de la entrevista"),
+  contexto_puesto: z.string().describe("Qué buscan, en 80-120 palabras, para usar en las repreguntas"),
+  contexto_candidato: z.string().describe("Resumen fiel del CV en 100-150 palabras: cargos, empresas, logros. Sin inventar."),
+  apertura: z.string().describe("Saludo breve y natural, cómo va a ser la entrevista (1-3 frases). No incluye la primera pregunta."),
+  preguntas: z
+    .array(z.object({ tema: z.string(), pregunta: z.string().describe("Tal como la diría en voz alta"), que_evalua: z.string() }))
+    .describe("Exactamente la cantidad pedida, de lo general a lo específico"),
+  cierre: z.string().describe("Despedida natural, con próximos pasos genéricos (1-2 frases)"),
+});
+export type EntrevistaPlan = z.infer<typeof EntrevistaPlanSchema>;
+
+export type Intercambio = { pregunta: string; respuesta: string; segundos: number; repregunta?: boolean };
+
+export const TurnoSchema = z.object({
+  reaccion: z.string().describe("Reacción breve y natural a la respuesta (máx. 1 frase), sin evaluarla ni elogiar de más"),
+  repregunta: z.string().describe("Una repregunta concreta si la respuesta quedó vaga o sin ejemplo; '' si no hace falta"),
+});
+export type Turno = z.infer<typeof TurnoSchema>;
+
+export const InformeSchema = z.object({
+  puntaje: z.number().describe("0 a 100"),
+  veredicto: z.string().describe("Una frase: qué tan lista está la persona para la entrevista real"),
+  resumen: z.string().describe("2-3 frases cálidas y honestas"),
+  fortalezas: z.array(z.string()),
+  a_mejorar: z.array(z.string()),
+  respuestas: z.array(
+    z.object({
+      pregunta: z.string(),
+      puntaje: z.number().describe("1 a 5"),
+      funciono: z.string(),
+      mejorar: z.string(),
+      respuesta_sugerida: z
+        .string()
+        .describe("Cómo podría responder mejor, en primera persona y con estructura STAR cuando aplica, usando sólo hechos reales de su CV y sus respuestas"),
+    }),
+  ),
+  proximos_pasos: z.array(z.string()).describe("2-4 acciones concretas para practicar antes de la entrevista real"),
+});
+export type Informe = z.infer<typeof InformeSchema>;
