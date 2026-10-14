@@ -94,11 +94,10 @@ describe("descargas exigen sesión", () => {
         nombre: "Ana Pérez", titulo: "Growth", ubicacion: "", email: "ana@mail.com", telefono: "", linkedin_url: "", otros_links: [], resumen: "",
         aptitudes: [], experiencia: [], educacion: [], idiomas: [], certificaciones: [],
       },
-      { titular: "Growth Lead", resumen: "Resumen", logros_clave: [], habilidades: ["SEO"], experiencias: [], cambios_clave: [], recomendaciones_formulario: [] },
-      // @ts-expect-error: sólo los campos que usa buildCvDoc
-      { idioma_vacante: "es", pais_empresa: "AR", template_recomendado: "moderno" },
+      { titular: "Growth Lead", resumen: "Resumen", logros_clave: [], habilidades: ["SEO"], experiencias: [] },
+      { puesto: "Growth Lead", idioma: "es", pais: "AR", palabrasClave: [], templateRecomendado: "moderno", razonTemplate: "" },
     );
-    const body = JSON.stringify({ doc });
+    const body = JSON.stringify({ kind: "cv", doc });
     expect((await POST(new Request("http://maru.test/api/export/docx", { method: "POST", body }))).status).toBe(401);
     const ok = await POST(new Request("http://maru.test/api/export/docx", { method: "POST", body, headers: { cookie: cookie() } }));
     expect(ok.status).toBe(200);
@@ -110,5 +109,22 @@ describe("descargas exigen sesión", () => {
     const res = await POST(new Request("http://maru.test/api/export/pdf", { method: "POST", body: JSON.stringify({ html: "<p>x</p>" }) }));
     expect(res.status).toBe(401);
     expect((await res.json()).code).toBe("AUTH_REQUIRED");
+  });
+});
+
+describe("redirección después del link", () => {
+  it("vuelve a la página donde estabas, sólo si es interna", async () => {
+    const { safeNext } = await import("@/lib/auth");
+    expect(safeNext("/cv")).toBe("/cv");
+    expect(safeNext("/carta?x=1")).toBe("/carta?x=1");
+    expect(safeNext("//evil.com")).toBe("/");
+    expect(safeNext("https://evil.com")).toBe("/");
+    expect(safeNext("/\\evil.com")).toBe("/");
+    expect(safeNext(undefined)).toBe("/");
+
+    const { createLoginToken } = await import("@/lib/auth");
+    const { GET: verify } = await import("@/app/api/auth/verify/route");
+    const back = await verify(new Request(`http://maru.test/api/auth/verify?token=${createLoginToken("a@b.co")}&next=%2Fentrevista`));
+    expect(back.headers.get("location")).toBe("http://maru.test/entrevista?ingreso=ok");
   });
 });

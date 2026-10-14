@@ -48,7 +48,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
       const res = await fetch("/api/auth/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, next: window.location.pathname }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? "No pudimos enviarte el email.");
@@ -112,7 +112,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
             >
               {sending ? "Enviando…" : "Mandame el link"}
             </button>
-            <p className="mt-3 text-center text-xs text-muted">Tu CV queda guardado: no perdés nada mientras tanto.</p>
+            <p className="mt-3 text-center text-xs text-muted">Lo que armaste queda guardado: no perdés nada mientras tanto.</p>
           </form>
         ) : (
           <div aria-live="polite">
@@ -121,7 +121,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-muted">
               Te mandamos un link a <span className="font-medium text-ink">{sentTo}</span>. Abrilo <b>en este mismo navegador</b>: apenas
-              entres, seguimos con tu descarga.
+              entres, seguimos donde estabas.
             </p>
             <div className="mt-5 flex items-center gap-3 rounded-2xl bg-sand px-4 py-3 text-sm text-muted">
               <span className="relative flex h-2.5 w-2.5">

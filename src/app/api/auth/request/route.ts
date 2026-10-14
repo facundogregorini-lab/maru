@@ -1,4 +1,4 @@
-import { createLoginToken, normalizeEmail } from "@/lib/auth";
+import { createLoginToken, normalizeEmail, safeNext } from "@/lib/auth";
 import { sendMagicLink } from "@/lib/mailer";
 
 export const runtime = "nodejs";
@@ -17,14 +17,15 @@ function tooMany(email: string): boolean {
 }
 
 export async function POST(req: Request) {
-  const body = (await req.json().catch(() => ({}))) as { email?: unknown };
+  const body = (await req.json().catch(() => ({}))) as { email?: unknown; next?: unknown };
   const email = normalizeEmail(body.email);
   if (!email) return Response.json({ error: "Revisá tu email: parece que tiene un error.", code: "BAD_EMAIL" }, { status: 400 });
   if (tooMany(email)) {
     return Response.json({ error: "Ya te mandamos varios links. Revisá tu bandeja (y spam) o probá en unos minutos.", code: "RATE_LIMIT" }, { status: 429 });
   }
   try {
-    const link = `${new URL(req.url).origin}/api/auth/verify?token=${encodeURIComponent(createLoginToken(email))}`;
+    const next = safeNext(body.next);
+    const link = `${new URL(req.url).origin}/api/auth/verify?token=${encodeURIComponent(createLoginToken(email))}${next !== "/" ? `&next=${encodeURIComponent(next)}` : ""}`;
     await sendMagicLink(email, link);
   } catch (err) {
     console.error("[auth] no se pudo enviar el magic link:", err instanceof Error ? err.message : err);

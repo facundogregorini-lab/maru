@@ -52,8 +52,11 @@ export type GapQuestion = {
 
 /* ---------- Análisis de la vacante ---------- */
 
+/** Familias que la IA recomienda; cada una tiene varios templates en la galería. */
 export const TEMPLATE_IDS = ["clasico", "moderno", "ejecutivo", "minimal"] as const;
-export type TemplateId = (typeof TEMPLATE_IDS)[number];
+export type BaseTemplateId = (typeof TEMPLATE_IDS)[number];
+/** Cualquier template de la galería (ver components/cv/themes.ts). */
+export type TemplateId = string;
 
 export const FormFieldSchema = z.object({
   campo: z.string().describe("Etiqueta del campo tal como aparece (o como suele aparecer) en el formulario"),
@@ -69,6 +72,7 @@ export const QuestionSchema = z.object({
   por_que: z.string().describe("En una frase, para qué sirve la respuesta"),
   opciones_sugeridas: z.array(z.string()).describe("2-4 respuestas rápidas posibles; vacío si es abierta"),
 });
+export type Question = z.infer<typeof QuestionSchema>;
 
 export const AnalysisSchema = z.object({
   puesto: z.string(),
@@ -138,8 +142,43 @@ export type CvEducation = { id: string; titulo: string; institucion: string; per
 
 export type SectionKey = "resumen" | "logrosClave" | "experiencia" | "educacion" | "habilidades" | "idiomas" | "certificaciones";
 
+export type FontPairId = "sans" | "serif-clasica" | "serif" | "humanista";
+export type Density = "compacto" | "normal" | "amplio";
+export type TextSize = "chico" | "normal" | "grande";
+
+/** Ajustes de diseño elegidos por la persona por encima del template. Todo opcional. */
+export type CvStyle = {
+  accent?: string;
+  fonts?: FontPairId;
+  density?: Density;
+  size?: TextSize;
+  order?: SectionKey[];
+};
+
+/** Lo que el CV necesita saber del objetivo, venga de una vacante o de la sección "Creá tu CV". */
+export type CvContext = {
+  puesto: string;
+  idioma: string;
+  pais: string;
+  palabrasClave: string[];
+  templateRecomendado: BaseTemplateId;
+  razonTemplate: string;
+};
+
+export function contextFromAnalysis(a: Analysis): CvContext {
+  return {
+    puesto: a.puesto,
+    idioma: a.idioma_vacante || "es",
+    pais: a.pais_empresa,
+    palabrasClave: a.palabras_clave_ats,
+    templateRecomendado: a.template_recomendado,
+    razonTemplate: a.razon_template,
+  };
+}
+
 export type CvDoc = {
   template: TemplateId;
+  style?: CvStyle;
   lang: string;
   titulos: Record<SectionKey, string>;
   hidden: Partial<Record<SectionKey, boolean>>;
@@ -165,4 +204,87 @@ export type CvSource = {
   fileBase64?: string;
   mimeType?: string;
   text?: string;
+};
+
+/* ---------- Sección "Creá tu CV" (sin vacante: un objetivo profesional) ---------- */
+
+export type Objetivo = {
+  /** Rol al que apunta; vacío = que Maru lo deduzca de la trayectoria. */
+  rol: string;
+  nivel: string;
+  industria: string;
+  /** ISO-3166 alfa-2 del mercado donde busca, o "" (remoto / varios). */
+  pais: string;
+  idioma: "es" | "en" | "pt";
+};
+
+export const CvAnalysisSchema = z.object({
+  rol_objetivo: z.string().describe("Nombre del rol objetivo, como lo publicaría una empresa en ese mercado e idioma"),
+  idioma: z.string().describe("Código ISO del idioma del CV: el pedido por la persona"),
+  pais: z.string().describe("ISO-3166 alfa-2 del mercado donde busca, o '' si es remoto o no se sabe"),
+  resumen_objetivo: z.string().describe("2-3 frases: quién es la persona y hacia dónde apunta su CV"),
+  palabras_clave_ats: z
+    .array(z.string())
+    .describe("12-20 términos exactos y cortos (1-3 palabras) que recruiters y ATS buscan para ese rol en ese mercado"),
+  fortalezas: z.array(z.string()).describe("Lo que el perfil ya muestra bien para ese objetivo"),
+  oportunidades: z.array(z.string()).describe("Lo que falta mostrar o está flojo para ese objetivo"),
+  preguntas: z
+    .array(QuestionSchema)
+    .describe("Entre 3 y 5 preguntas para conseguir logros medibles y evidencia. No preguntes datos que ya están en el CV."),
+  template_recomendado: z.enum(TEMPLATE_IDS),
+  razon_template: z.string().describe("Una línea: por qué ese estilo para ese rol e industria"),
+});
+export type CvAnalysis = z.infer<typeof CvAnalysisSchema>;
+
+export function contextFromCvAnalysis(a: CvAnalysis, objetivo: Objetivo): CvContext {
+  return {
+    puesto: a.rol_objetivo || objetivo.rol,
+    idioma: objetivo.idioma || a.idioma || "es",
+    pais: objetivo.pais || a.pais,
+    palabrasClave: a.palabras_clave_ats,
+    templateRecomendado: a.template_recomendado,
+    razonTemplate: a.razon_template,
+  };
+}
+
+export const CvGenerationSchema = GenerationSchema.omit({ recomendaciones_formulario: true }).extend({
+  consejos: z.array(z.string()).describe("2-4 consejos concretos para seguir mejorando el CV o el perfil, en español"),
+});
+export type CvGeneration = z.infer<typeof CvGenerationSchema>;
+
+/* ---------- Carta de presentación ---------- */
+
+export type CartaTono = "calido" | "profesional" | "entusiasta" | "directo";
+export type CartaLargo = "corta" | "media" | "completa";
+export type CartaOpciones = { tono: CartaTono; largo: CartaLargo; idioma: "auto" | "es" | "en" | "pt"; destinatario: string };
+
+export const CartaSchema = z.object({
+  puesto: z.string(),
+  empresa: z.string(),
+  idioma: z.string().describe("Código ISO del idioma en que está escrita la carta"),
+  saludo: z.string().describe("Saludo inicial, dirigido a la persona indicada si se conoce; si no, al equipo de la empresa"),
+  parrafos: z.array(z.string()).describe("Cuerpo de la carta: 3 a 5 párrafos, sin saludo ni despedida"),
+  cierre: z.string().describe("Fórmula de despedida antes de la firma, p. ej. 'Saludos cordiales,'"),
+  asunto_email: z.string().describe("Asunto sugerido si la carta se envía por email"),
+  mensaje_corto: z.string().describe("Versión breve (máximo 600 caracteres) para un mensaje de LinkedIn o un email corto al recruiter"),
+  requisitos_cubiertos: z
+    .array(z.object({ requisito: z.string(), como: z.string().describe("En una frase, cómo lo demuestra la carta") }))
+    .describe("3-5 cosas que la empresa busca y la carta demuestra"),
+  consejos: z.array(z.string()).describe("2-3 tips para enviarla o personalizarla más, en español"),
+});
+export type Carta = z.infer<typeof CartaSchema>;
+
+export type CartaRemitente = { nombre: string; titular: string; email: string; telefono: string; ubicacion: string; linkedin: string };
+
+/** La carta editable. Comparte templates y ajustes de diseño con el CV. */
+export type CartaDoc = {
+  template: TemplateId;
+  style?: CvStyle;
+  lang: string;
+  remitente: CartaRemitente;
+  fecha: string;
+  saludo: string;
+  parrafos: Item[];
+  cierre: string;
+  firma: string;
 };

@@ -74,3 +74,8 @@ export function sessionCookie(token: string, maxAge = SESSION_TTL_S): string {
 export function authRequired(): Response {
   return Response.json({ error: "Ingresá con tu email para descargar tu CV.", code: "AUTH_REQUIRED" }, { status: 401 });
 }
+
+/** Sólo rutas internas ("/cv", "/carta?x=1"): evita redirecciones abiertas a otros sitios. */
+export function safeNext(raw: unknown): string {
+  return typeof raw === "string" && /^\/(?![/\\])[^\s]*$/.test(raw) ? raw : "/";
+}
