@@ -24,7 +24,8 @@ function getCtor(): RecognitionCtor | null {
 }
 
 /** Dictado por voz: transcribe en vivo y entrega cada frase terminada. */
-export default function VoiceButton({ onText, lang = "es-AR" }: { onText: (text: string) => void; lang?: string }) {
+/** `compact`: botón chico para respuestas cortas; si el navegador no dicta, no muestra nada. */
+export default function VoiceButton({ onText, lang = "es-AR", compact = false, label }: { onText: (text: string) => void; lang?: string; compact?: boolean; label?: string }) {
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
@@ -71,6 +72,7 @@ export default function VoiceButton({ onText, lang = "es-AR" }: { onText: (text:
   }
 
   if (!supported) {
+    if (compact) return null;
     return <p className="text-xs text-muted">Tu navegador no permite dictado por voz. Probá desde Chrome, Edge o Safari.</p>;
   }
 
@@ -79,7 +81,7 @@ export default function VoiceButton({ onText, lang = "es-AR" }: { onText: (text:
       <button
         type="button"
         onClick={listening ? stop : start}
-        className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${
+        className={`inline-flex items-center gap-2 rounded-full font-medium transition ${compact ? "px-3 py-1 text-xs" : "px-4 py-2 text-sm"} ${
           listening ? "bg-clay text-paper" : "border border-line bg-paper text-ink hover:border-clay hover:text-clay"
         }`}
         aria-pressed={listening}
@@ -87,7 +89,7 @@ export default function VoiceButton({ onText, lang = "es-AR" }: { onText: (text:
         <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${listening ? "bg-paper" : "bg-clay"}`}>
           {listening && <span className="absolute inset-0 animate-ping rounded-full bg-paper/70" />}
         </span>
-        {listening ? "Terminar de grabar" : "Contalo en un audio"}
+        {listening ? "Terminar de grabar" : (label ?? (compact ? "Dictar" : "Contalo en un audio"))}
       </button>
       {listening && <span className="text-sm italic text-muted">{interim || "Te escuchamos…"}</span>}
       {error && <span className="text-sm text-clay-dark">{error}</span>}

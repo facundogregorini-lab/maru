@@ -22,14 +22,16 @@ const SECTIONS: Section[] = [
   {
     kicker: "CV",
     title: "Creá tu CV perfecto",
-    body: "Un CV 100% optimizado para pasar los filtros automáticos y ganar las búsquedas.",
+    body: "Un CV 100% optimizado para pasar los filtros automáticos y ganar las búsquedas. Más de 20 diseños para personalizar.",
     icon: "doc",
+    href: "/cv",
   },
   {
     kicker: "Carta",
     title: "Carta de presentación",
-    body: "Una carta a medida que cuenta, con tu voz, por qué sos la persona indicada.",
+    body: "Cargá la búsqueda, contá lo tuyo por escrito o en un audio, y te armamos una carta a medida que muestra por qué sos la persona indicada.",
     icon: "letter",
+    href: "/carta",
   },
   {
     kicker: "Video",
@@ -85,7 +87,7 @@ export default function Home() {
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <FeaturedCard s={FEATURED} />
         {SECTIONS.map((s, i) => (
-          <SoonCard key={s.title} s={s} delay={(i + 1) * 60} />
+          <SectionCard key={s.title} s={s} delay={(i + 1) * 60} />
         ))}
       </div>
     </SiteShell>
@@ -112,7 +114,23 @@ function FeaturedCard({ s }: { s: Section }) {
   );
 }
 
-function SoonCard({ s, delay }: { s: Section; delay: number }) {
+function SectionCard({ s, delay }: { s: Section; delay: number }) {
+  if (s.href) {
+    return (
+      <Link
+        href={s.href}
+        className="animate-rise group flex flex-col rounded-3xl border border-line bg-paper p-6 transition hover:-translate-y-0.5 hover:border-clay hover:shadow-lg"
+        style={{ animationDelay: `${delay}ms` }}
+      >
+        <Icon name={s.icon} className="bg-clay-soft text-clay-dark" />
+        <h3 className="mt-5 font-serif text-xl leading-snug tracking-tight">{s.title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
+        <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-clay-dark">
+          Empezar <span aria-hidden className="transition group-hover:translate-x-1">→</span>
+        </span>
+      </Link>
+    );
+  }
   return (
     <div
       aria-disabled

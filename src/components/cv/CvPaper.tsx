@@ -4,7 +4,7 @@ import { createContext, useContext, type CSSProperties, type ReactNode } from "r
 import { contactLine, item, newId, visible } from "@/lib/cv";
 import type { CvDoc, CvExperience, Item, SectionKey } from "@/lib/schemas";
 import EditableText from "./EditableText";
-import { THEMES, type Theme } from "./themes";
+import { resolveTheme, type Theme } from "./themes";
 
 type Update = (fn: (d: CvDoc) => CvDoc) => void;
 
@@ -30,7 +30,7 @@ function move<T>(list: T[], from: number, to: number): T[] {
 
 /* ---------- controles del editor (nunca se exportan) ---------- */
 
-function Ctl({ children, onClick, label, busy }: { children: ReactNode; onClick: () => void; label: string; busy?: boolean }) {
+export function Ctl({ children, onClick, label, busy }: { children: ReactNode; onClick: () => void; label: string; busy?: boolean }) {
   return (
     <button
       type="button"
@@ -46,7 +46,7 @@ function Ctl({ children, onClick, label, busy }: { children: ReactNode; onClick:
   );
 }
 
-function Toolbar({ children }: { children: ReactNode }) {
+export function Toolbar({ children }: { children: ReactNode }) {
   return (
     <span className="cv-toolbar pointer-events-none absolute -top-8 right-0 z-10 flex items-center gap-0.5 rounded-lg border border-line bg-paper px-1 py-0.5 opacity-0 shadow-sm transition group-focus-within/row:pointer-events-auto group-focus-within/row:opacity-100 group-hover/row:pointer-events-auto group-hover/row:opacity-100">
       {children}
@@ -54,7 +54,7 @@ function Toolbar({ children }: { children: ReactNode }) {
   );
 }
 
-function AddButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+export function AddButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -94,7 +94,7 @@ function Text({
 /* ---------- papel ---------- */
 
 export default function CvPaper({ doc, onChange, onRegenerate, regenerating, mode = "preview" }: PaperProps) {
-  const t: Theme = THEMES[doc.template];
+  const t: Theme = resolveTheme(doc);
   const editable = !!onChange;
   const set: Update = onChange ?? (() => {});
 
@@ -119,7 +119,7 @@ export default function CvPaper({ doc, onChange, onRegenerate, regenerating, mod
             as="h2"
             value={doc.titulos[key]}
             onSet={(v) => set((d) => ({ ...d, titulos: { ...d.titulos, [key]: v } }))}
-            style={{ ...t.sectionTitle, fontFamily: t.sectionTitle.fontFamily ?? t.headFont, margin: 0, marginBottom: t.sectionTitle.marginBottom, flex: 1 }}
+            style={{ ...t.sectionTitle, fontFamily: t.sectionTitle.fontFamily ?? t.headFont, margin: 0, marginBottom: t.sectionTitle.marginBottom, flex: t.titleInline ? "none" : 1 }}
           />
           {editable && (
             <span className="absolute -top-1 right-0 opacity-0 transition group-focus-within/section:opacity-100 group-hover/section:opacity-100">
@@ -342,7 +342,7 @@ export default function CvPaper({ doc, onChange, onRegenerate, regenerating, mod
             <p style={{ ...t.contact, margin: `${t.contact.marginTop}px 0 0` }}>
               {(["email", "telefono", "ubicacion", "linkedin"] as const).map((k, i) => (
                 <span key={k}>
-                  {i > 0 && <span style={{ color: t.muted }}>{"  |  "}</span>}
+                  {i > 0 && <span style={{ color: t.contactSep ?? t.muted }}>{"  |  "}</span>}
                   <EditableText
                     value={doc.contacto[k]}
                     placeholder={{ email: "email", telefono: "teléfono", ubicacion: "ciudad", linkedin: "linkedin" }[k]}
