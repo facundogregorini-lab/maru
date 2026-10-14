@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { atsReport } from "@/lib/ats";
 import { cvToText, fileBaseName, photoRecommended, setTemplate } from "@/lib/cv";
 import type { CvContext, CvDoc, SectionKey } from "@/lib/schemas";
+import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import PhotoCropper from "../PhotoCropper";
 import AtsPanel from "./AtsPanel";
@@ -90,7 +91,14 @@ export default function CvEditor({
     }
   }
 
-  async function exportAs(kind: "pdf" | "docx") {
+  // Descargar o copiar el CV exige haber ingresado con el magic link.
+  const gate = useLoginGate();
+
+  function exportAs(kind: "pdf" | "docx") {
+    gate.run("descargar tu CV", () => doExport(kind));
+  }
+
+  async function doExport(kind: "pdf" | "docx"): Promise<void> {
     // Confirmamos cualquier edición en curso antes de exportar.
     (document.activeElement as HTMLElement | null)?.blur();
     setBusy(kind);
@@ -98,8 +106,18 @@ export default function CvEditor({
     setPdfFailed(false);
     try {
       await new Promise((r) => setTimeout(r, 0));
-      if (kind === "pdf") await (await import("@/lib/export/pdf")).downloadPdf(doc, filename);
-      else await (await import("@/lib/export/docx")).downloadDocx(doc, filename);
+      const { downloadDocx, downloadPdf, DownloadError } = await import("@/lib/export/client");
+      try {
+        if (kind === "pdf") await downloadPdf(doc, filename);
+        else await downloadDocx(doc, filename);
+      } catch (e) {
+        // La sesión venció o se cerró en otra pestaña: pedimos ingresar de nuevo y seguimos.
+        if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") {
+          gate.ask("descargar tu CV", () => doExport(kind));
+          return;
+        }
+        throw e;
+      }
     } catch (e) {
       setError((e as Error).message || "No pudimos generar el archivo.");
       if (kind === "pdf") setPdfFailed(true);
@@ -110,6 +128,7 @@ export default function CvEditor({
 
   return (
     <div className="mt-6 space-y-6">
+      {gate.dialog}
       <section>
         <h2 className="mb-3 font-serif text-xl tracking-tight">Elegí el diseño</h2>
         <TemplatePicker doc={doc} recommended={context.templateRecomendado} reason={context.razonTemplate} onPick={(t) => setDoc((d) => setTemplate(d, t))} />
@@ -163,8 +182,12 @@ export default function CvEditor({
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
             </button>
-            <CopyButton text={cvToText(doc)} label="Copiar como texto" />
-            <p className="text-xs leading-relaxed text-muted">El PDF tiene texto real y seleccionable, listo para cualquier ATS.</p>
+            <CopyButton text={cvToText(doc)} label="Copiar como texto" guard={(copy) => gate.run("copiar tu CV", copy, { resume: false })} />
+            <p className="text-xs leading-relaxed text-muted">
+              {gate.email === null
+                ? "Para descargar te pedimos tu email: te mandamos un link y listo, sin contraseña."
+                : "El PDF tiene texto real y seleccionable, listo para cualquier ATS."}
+            </p>
           </div>
 
           <AtsPanel report={report} />

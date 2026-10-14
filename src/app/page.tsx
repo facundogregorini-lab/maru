@@ -37,14 +37,16 @@ const SECTIONS: Section[] = [
   {
     kicker: "Video",
     title: "Video de presentación",
-    body: "Guion y tips para grabar un video corto que te haga destacar.",
+    body: "Guion a medida, teleprompter mientras grabás con tu cámara y feedback de cada toma: ritmo, mirada y luz.",
     icon: "video",
+    href: "/video",
   },
   {
     kicker: "Entrevista",
     title: "Entrená para tu entrevista",
-    body: "Simulá la entrevista por Zoom con IA y recibí feedback para llegar con confianza.",
+    body: "Simulá la entrevista por voz, como en una videollamada, y recibí un informe con puntaje y respuestas más fuertes.",
     icon: "chat",
+    href: "/entrevista",
   },
   {
     kicker: "Match",

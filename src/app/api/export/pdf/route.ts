@@ -1,4 +1,5 @@
 import type { Browser } from "puppeteer-core";
+import { authRequired, sessionEmail } from "@/lib/auth";
 import { fontFaceCss } from "@/lib/fonts";
 
 export const maxDuration = 60;
@@ -65,6 +66,8 @@ function failure(err: unknown, started: number): Response {
 
 /** Recibe el HTML del CV (el mismo componente de la vista previa) y lo imprime a un PDF A4 con texto real. */
 export async function POST(req: Request) {
+  // Descargar el CV exige haber ingresado con el magic link.
+  if (!sessionEmail(req)) return authRequired();
   const started = Date.now();
   const { html, padY } = (await req.json().catch(() => ({}))) as { html?: string; padY?: number };
   if (!html || html.length > MAX_HTML) {

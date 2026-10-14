@@ -1,29 +1,7 @@
-"use client";
-
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { AlignmentType, BorderStyle, Document, Packer, Paragraph, ShadingType, TextRun } from "docx";
-import LetterPaper from "@/components/carta/LetterPaper";
+import { AlignmentType, BorderStyle, Document, Paragraph, ShadingType, TextRun } from "docx";
 import { resolveTheme } from "@/components/cv/themes";
 import { remitenteLine } from "../carta";
 import type { CartaDoc } from "../schemas";
-import { downloadBlob } from "./download";
-
-/** Misma vista que el editor (sin controles), impresa a PDF A4 con texto real. */
-export async function downloadLetterPdf(doc: CartaDoc, filename: string): Promise<void> {
-  const html = renderToStaticMarkup(createElement(LetterPaper, { doc, mode: "export" }));
-  const res = await fetch("/api/export/pdf", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ html, padY: resolveTheme(doc).padY }),
-  });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    if (data.detail) console.error(`[export/pdf] ${data.stage}: ${data.detail}`);
-    throw new Error(data.error ?? "No pudimos generar el PDF. Descargá el Word: tiene el mismo contenido.");
-  }
-  downloadBlob(await res.blob(), `${filename}.pdf`);
-}
 
 const PAGE_W = 11906;
 const PX = 15;
@@ -31,7 +9,8 @@ const hp = (px: number) => Math.round(px * 1.5);
 const hex = (c: string) => c.replace("#", "");
 const isHex = (c: unknown): c is string => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c);
 
-export async function downloadLetterDocx(doc: CartaDoc, filename: string): Promise<void> {
+/** Carta en Word, con el mismo diseño que la vista previa. Se arma en el servidor. */
+export function buildLetterDocx(doc: CartaDoc): Document {
   const t = resolveTheme(doc);
   const font = t.docx.body;
   const head = t.docx.head;
@@ -100,7 +79,7 @@ export async function downloadLetterDocx(doc: CartaDoc, filename: string): Promi
   children.push(p(doc.firma, { bold: true, color: hex(t.accent), f: head }));
 
   const margin = (t.padX + 8) * PX;
-  const file = new Document({
+  return new Document({
     creator: "Maru",
     title: `${r.nombre} — Carta de presentación`,
     styles: { default: { document: { run: { font, size } } } },
@@ -111,5 +90,4 @@ export async function downloadLetterDocx(doc: CartaDoc, filename: string): Promi
       },
     ],
   });
-  downloadBlob(await Packer.toBlob(file), `${filename}.docx`);
 }

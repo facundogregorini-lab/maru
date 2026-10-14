@@ -7,6 +7,7 @@ import { findGaps } from "@/lib/gaps";
 import { profileToText, saveProfile } from "@/lib/profileStore";
 import type { Carta, CartaDoc, CartaLargo, CartaOpciones, CartaTono, GapQuestion, Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import StylePanel from "../cv/StylePanel";
@@ -346,16 +347,31 @@ function Result({
     }
   }
 
-  async function exportAs(kind: "pdf" | "docx") {
+  // Descargar o copiar la carta exige haber ingresado con el magic link.
+  const gate = useLoginGate();
+
+  function exportAs(kind: "pdf" | "docx") {
+    gate.run("descargar tu carta", () => doExport(kind));
+  }
+
+  async function doExport(kind: "pdf" | "docx"): Promise<void> {
     (document.activeElement as HTMLElement | null)?.blur();
     setBusy(kind);
     onError("");
     setPdfFailed(false);
     try {
       await new Promise((r) => setTimeout(r, 0));
-      const mod = await import("@/lib/export/letter");
-      if (kind === "pdf") await mod.downloadLetterPdf(doc, filename);
-      else await mod.downloadLetterDocx(doc, filename);
+      const { downloadLetterDocx, downloadLetterPdf, DownloadError } = await import("@/lib/export/client");
+      try {
+        if (kind === "pdf") await downloadLetterPdf(doc, filename);
+        else await downloadLetterDocx(doc, filename);
+      } catch (e) {
+        if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") {
+          gate.ask("descargar tu carta", () => doExport(kind));
+          return;
+        }
+        throw e;
+      }
     } catch (e) {
       onError((e as Error).message || "No pudimos generar el archivo.");
       if (kind === "pdf") setPdfFailed(true);
@@ -368,6 +384,7 @@ function Result({
 
   return (
     <div className="animate-rise">
+      {gate.dialog}
       <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu carta para</p>
       <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">
         {carta.puesto || "la búsqueda"} {carta.empresa && <span className="text-muted">· {carta.empresa}</span>}
@@ -405,7 +422,7 @@ function Result({
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
             </button>
-            <CopyButton text={cartaToText(doc)} label="Copiar como texto" />
+            <CopyButton text={cartaToText(doc)} label="Copiar como texto" guard={(copy) => gate.run("copiar tu carta", copy, { resume: false })} />
           </div>
 
           <div className="rounded-3xl bg-paper p-5">
