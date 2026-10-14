@@ -288,3 +288,43 @@ export type CartaDoc = {
   cierre: string;
   firma: string;
 };
+
+/* ---------- Video de presentación y entrevista: objetivo compartido ---------- */
+
+/** Búsqueda concreta (link/texto) o un rol en general. */
+export type TargetInput = { job?: JobInput; general?: { rol: string; empresa: string } };
+
+/* ---------- Video de presentación ---------- */
+
+export type VideoOpciones = { duracion: 30 | 60 | 90; tono: "calido" | "profesional" | "energico"; idioma: "auto" | "es" | "en" | "pt" };
+
+export const VideoGuionSchema = z.object({
+  titulo: z.string().describe("Para qué es el video, en pocas palabras (ej.: 'Product Manager en Mercado Pago')"),
+  idioma: z.string().describe("Código ISO del idioma del guion"),
+  bloques: z
+    .array(
+      z.object({
+        nombre: z.string().describe("Etapa: Gancho, Quién sos, Por qué vos, Una prueba, Cierre…"),
+        texto: z.string().describe("Lo que la persona dice, en primera persona, oral y natural"),
+        segundos: z.number().describe("Duración estimada del bloque"),
+        tip: z.string().describe("Cómo decirlo: gesto, pausa, énfasis. Una línea."),
+      }),
+    )
+    .describe("4 o 5 bloques que suman la duración pedida"),
+  consejos: z.array(z.string()).describe("4-6 consejos concretos de grabación: encuadre, luz, sonido, ropa, energía"),
+  mensaje_envio: z.string().describe("Mensaje corto para mandar junto con el link del video (email o LinkedIn), en el idioma del guion"),
+});
+export type VideoGuion = z.infer<typeof VideoGuionSchema>;
+
+export const VideoFeedbackSchema = z.object({
+  puntaje: z.number().describe("De 1 a 10"),
+  resumen: z.string().describe("2 frases cálidas y honestas"),
+  fortalezas: z.array(z.string()),
+  mejoras: z.array(z.object({ aspecto: z.string(), detalle: z.string(), como: z.string().describe("Qué hacer distinto en la próxima toma") })),
+  imagen: z
+    .object({ encuadre: z.string(), luz: z.string(), fondo: z.string(), mirada: z.string() })
+    .describe("Comentarios sobre los fotogramas; si no hay fotogramas, strings vacíos"),
+  ritmo: z.string().describe("Sobre velocidad, pausas y muletillas"),
+  guion: z.string().describe("Qué tan fiel fue al guion y si conviene ajustar algo del texto"),
+});
+export type VideoFeedback = z.infer<typeof VideoFeedbackSchema>;
