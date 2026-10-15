@@ -7,7 +7,8 @@
 - **Carta de presentación** (`/carta`): link o job description (o carta espontánea a una empresa), lo que querés contar por texto o audio, tu experiencia y ajustes de tono, largo, idioma y destinatario. Devuelve una carta editable con reescritura por párrafo, otra versión con otro tono o largo, asunto de email, mensaje corto para LinkedIn y descarga en PDF o Word.
 - **Video de presentación** (`/video`): para una búsqueda o una presentación general. Maru escribe el guion (30, 60 o 90 s) en bloques editables con tiempos y tips; lo leés en un **teleprompter** mientras grabás con la cámara del navegador y recibís **feedback de cada toma**: ritmo (palabras por minuto, muletillas), fidelidad al guion y encuadre, luz, fondo y mirada a partir de 3 fotogramas. El video no sale del navegador.
 - **Entrená para tu entrevista** (`/entrevista`): simulación con formato de videollamada. Elegís tipo (RR. HH., con tu futuro líder, técnica), dificultad, cantidad de preguntas e idioma; la entrevistadora habla en voz alta, respondés por voz o por escrito y, si tu respuesta queda corta, repregunta. Al final, un **informe** con puntaje, fortalezas, qué mejorar y una respuesta más fuerte (STAR) para cada pregunta.
-- Match con búsquedas y aplicación automática: próximamente.
+- **Extensión de Chrome** (`extension/`): cargás tu CV una vez y, en cualquier formulario de postulación, un clic (o <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>) completa los campos. Vos revisás y enviás (detalle abajo).
+- Match con búsquedas: próximamente.
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
 
@@ -24,6 +25,23 @@ Para quienes encontraron una vacante que les encanta:
    - una **recomendación lista para copiar en cada campo del formulario** de postulación, con el porqué y un tip.
 
 Maru nunca inventa experiencia: si un dato ayudaría pero falta, deja un marcador `[completar]` resaltado.
+
+## Extensión de Chrome: completar postulaciones
+
+1. En el popup, la persona sube su CV (PDF o Word, o pega el texto). Maru lo lee con `/api/profile` y lo guarda **sólo en ese navegador** (`chrome.storage.local`), junto con el archivo para adjuntarlo.
+2. Opcional: carga "datos que suelen pedir y no están en el CV" (pretensión salarial, disponibilidad, permiso de trabajo, cómo se enteró). Sin eso, Maru no los completa.
+3. En el formulario, toca **Completar esta postulación**. La extensión lee los campos de la página **y de sus iframes** (Greenhouse embebido en la web de la empresa), los manda a `/api/autofill` y completa cada uno.
+4. Verde: copiado del CV. Amarillo: Maru lo redactó o dedujo (respuestas abiertas, años de experiencia) u obligatorio que falta completar. **Nunca envía el formulario.**
+
+Qué completa: textos, email, teléfono, links, números, fechas, `<select>`, radios, casillas y adjunta el CV en el campo de archivo. Funciona con formularios hechos en React (setter nativo + eventos) y salta campos ya completos y honeypots anti-bots. Por diseño **no** completa datos demográficos (género, etnia, discapacidad…), consentimientos ni términos y condiciones: eso lo decide la persona.
+
+Todavía no: listas desplegables con buscador (`role="combobox"`, como las de Greenhouse nuevo o Workday), formularios de varios pasos que cambian de página y editores de texto enriquecido. Quedan sin tocar y, si son obligatorios, marcados en amarillo.
+
+**Instalarla en desarrollo:** `npm run dev`, abrí `chrome://extensions`, activá *Modo de desarrollador* → *Cargar descomprimida* → elegí la carpeta `extension/`. Por defecto usa `http://localhost:3000`; para usar la Maru publicada, cambiá el servidor en *Avanzado* dentro del popup.
+
+**Cómo está hecha:** JavaScript plano con Manifest V3, sin build. `background.js` coordina (inyecta `content.js` en todos los frames, llama a la API y reparte las respuestas por frame), `content.js` lee y completa los campos, `popup.*` es la interfaz. El servidor valida todo lo que devuelve la IA (`src/lib/autofill.ts`): sólo opciones que existen en la página, fechas y números con formato válido, largo máximo y nada de campos inventados.
+
+**Tests:** `tests/extension.test.ts` levanta Chromium con la extensión cargada contra páginas de prueba (HTML común, iframe de otro origen y un formulario React controlado) y las rutas reales; sólo simula la respuesta de la IA.
 
 ## Stack
 
@@ -76,6 +94,8 @@ src/components/entrevista/, src/app/api/entrevista/*  Entrevista: plan, llamada 
 src/components/speech.ts      Dictado continuo, voz de la entrevistadora y métricas de ritmo
 src/components/auth/, src/lib/auth.ts, src/app/api/auth/*  Login con magic link
 src/app/api/export/pdf, docx  Descargas (exigen sesión)
+src/app/api/autofill, src/lib/autofill.ts  Autocompletar formularios desde la extensión
+extension/                    Extensión de Chrome (Manifest V3, sin build)
 src/lib/job.ts                Scraping de la vacante y de LinkedIn
 src/lib/prompts.ts            Instrucciones para Claude
 src/lib/schemas.ts            Esquemas Zod de entrada/salida

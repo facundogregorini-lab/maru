@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Senior Frontend Engineer — Tucán</title></head>
+  <body>
+    <h1>Senior Frontend Engineer</h1>
+    <p>Tucán is hiring a Senior Frontend Engineer to build our checkout with React and TypeScript. Remote, LATAM.</p>
+    <form id="apply" onsubmit="event.preventDefault(); window.submitted = (window.submitted || 0) + 1;">
+      <label for="first">First name *</label><input id="first" name="first_name" required />
+      <label for="last">Last name *</label><input id="last" name="last_name" required />
+      <label>Email * <input type="email" name="email" required /></label>
+      <div class="field"><span>Phone</span><input type="tel" name="phone" /></div>
+      <label for="li">LinkedIn profile</label><input id="li" type="url" name="urls[LinkedIn]" />
+      <label for="city">Current location</label><input id="city" name="location" value="Rosario" />
+      <label for="years">Years of experience</label><input id="years" type="number" name="years" />
+      <label for="start">Earliest start date</label><input id="start" type="date" name="start" />
+      <label for="country">Country</label>
+      <select id="country" name="country"><option value="">Select…</option><option value="ar">Argentina</option><option value="br">Brazil</option><option value="mx">Mexico</option></select>
+      <fieldset>
+        <legend>Are you legally authorized to work in Argentina? *</legend>
+        <label><input type="radio" name="auth" value="1" required /> Yes</label>
+        <label><input type="radio" name="auth" value="0" /> No</label>
+      </fieldset>
+      <fieldset>
+        <legend>Which of these do you use daily?</legend>
+        <label><input type="checkbox" name="skills" value="ts" /> TypeScript</label>
+        <label><input type="checkbox" name="skills" value="react" /> React</label>
+        <label><input type="checkbox" name="skills" value="php" /> PHP</label>
+      </fieldset>
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender"><option value="">Select…</option><option>Female</option><option>Male</option><option>Decline to self-identify</option></select>
+      <label for="why">Why do you want to work at Tucán? *</label><textarea id="why" name="why" maxlength="600" required></textarea>
+      <label for="salary">Salary expectations *</label><input id="salary" name="salary" required />
+      <label for="resume">Resume/CV *</label><input id="resume" type="file" name="resume" style="display:none" required />
+      <label><input type="checkbox" name="terms" required /> I agree to the privacy policy</label>
+      <input name="website_hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" />
+      <iframe id="extra" src="__FRAME_URL__" title="Más preguntas" style="width:100%;height:220px;border:0"></iframe>
+      <button type="submit">Submit application</button>
+    </form>
+  </body>
+</html>
