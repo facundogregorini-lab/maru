@@ -17,7 +17,7 @@ export default function UserMenu() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="rounded-full border border-line bg-paper px-4 py-1.5 text-sm font-medium transition hover:border-clay hover:text-clay"
+          className="rounded-full border border-line bg-paper px-4 py-1.5 text-sm font-medium transition hover:border-celeste hover:text-celeste"
         >
           Ingresar
         </button>
@@ -34,7 +34,7 @@ export default function UserMenu() {
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sage-soft font-medium text-sage sm:hidden" aria-label={email}>
         {email[0]?.toUpperCase()}
       </span>
-      <button type="button" onClick={logout} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs text-muted transition hover:border-clay hover:text-clay">
+      <button type="button" onClick={logout} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs text-muted transition hover:border-celeste hover:text-celeste">
         Salir
       </button>
     </div>

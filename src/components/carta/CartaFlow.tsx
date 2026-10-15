@@ -172,7 +172,7 @@ export default function CartaFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Carta de presentación" title={<>Una carta que <em className="text-clay">se lee de verdad</em>.</>}>
+          <SectionHero kicker="Carta de presentación" title={<>Una carta que <em className="text-celeste">se lee de verdad</em>.</>}>
             Traé la búsqueda, contanos con tus palabras (o en un audio) qué querés transmitir, y Maru escribe una carta concreta, humana y con tus mejores logros.
           </SectionHero>
 
@@ -209,7 +209,7 @@ export default function CartaFlow() {
                       className={`mt-3 ${inputClass} text-sm`}
                     />
                   ) : (
-                    <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-clay">
+                    <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-celeste">
                       ¿No tenés link? Pegá el job description
                     </button>
                   )}
@@ -385,7 +385,7 @@ function Result({
   return (
     <div className="animate-rise">
       {gate.dialog}
-      <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu carta para</p>
+      <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu carta para</p>
       <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">
         {carta.puesto || "la búsqueda"} {carta.empresa && <span className="text-muted">· {carta.empresa}</span>}
       </h1>
@@ -393,7 +393,7 @@ function Result({
       <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
           <p className="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted">
-            <span className="grid h-6 w-6 place-items-center rounded-full bg-clay-soft text-xs text-clay-dark">✎</span>
+            <span className="grid h-6 w-6 place-items-center rounded-full bg-celeste-soft text-xs text-celeste-dark">✎</span>
             Tocá cualquier texto para editarlo. Pasá por un párrafo para reescribirlo con IA.
             <span className="ml-auto text-xs">{words} palabras</span>
           </p>
@@ -408,7 +408,7 @@ function Result({
               type="button"
               onClick={() => exportAs("pdf")}
               disabled={!!busy}
-              className="rounded-full bg-clay px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:opacity-70"
+              className="rounded-full bg-celeste px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-70"
             >
               {busy === "pdf" ? "Generando PDF…" : "Descargar PDF"}
             </button>
@@ -417,7 +417,7 @@ function Result({
               onClick={() => exportAs("docx")}
               disabled={!!busy}
               className={`rounded-full border px-4 py-2.5 text-sm font-medium transition disabled:opacity-70 ${
-                pdfFailed ? "border-clay bg-clay-soft text-clay-dark" : "border-clay text-clay-dark hover:bg-clay-soft"
+                pdfFailed ? "border-danger bg-danger-soft text-danger-dark" : "border-celeste text-celeste-dark hover:bg-celeste-soft"
               }`}
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
@@ -440,7 +440,7 @@ function Result({
               type="button"
               onClick={() => onRewriteAll({ ...draft, idioma: opciones.idioma, destinatario: opciones.destinatario })}
               className={`mt-4 w-full rounded-full px-4 py-2.5 text-sm font-medium transition ${
-                changed ? "bg-ink text-paper hover:bg-ink/85" : "border border-line text-ink hover:border-clay hover:text-clay"
+                changed ? "bg-ink text-paper hover:bg-ink/85" : "border border-line text-ink hover:border-celeste hover:text-celeste"
               }`}
             >
               {changed ? "Reescribir con estos ajustes" : "Escribir otra versión"}
@@ -456,7 +456,7 @@ function Result({
               id="carta-template"
               value={doc.template}
               onChange={(e) => setDoc((d) => ({ ...d, template: e.target.value, style: { density: d.style?.density, size: d.style?.size } }))}
-              className="mt-3 w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm outline-none focus:border-clay"
+              className="mt-3 w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm outline-none focus:border-celeste"
             >
               {CATEGORIES.map((c) => (
                 <optgroup key={c.id} label={c.label}>
@@ -529,12 +529,12 @@ function Result({
       )}
 
       <section className="mt-8 grid gap-4 sm:grid-cols-2">
-        <Link href="/cv" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-clay">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-clay">Completá el set</p>
+        <Link href="/cv" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">Completá el set</p>
           <p className="mt-2 font-serif text-xl">Creá tu CV con el mismo diseño →</p>
         </Link>
-        <Link href="/postulacion" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-clay">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-clay">¿Hay formulario?</p>
+        <Link href="/postulacion" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">¿Hay formulario?</p>
           <p className="mt-2 font-serif text-xl">Preparate con el coach de postulación →</p>
         </Link>
       </section>
@@ -546,7 +546,7 @@ function Result({
         <button
           type="button"
           onClick={onRestart}
-          className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-clay hover:text-clay"
+          className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-celeste hover:text-celeste"
         >
           Escribir otra carta
         </button>

@@ -73,7 +73,7 @@ export default function TemplatePicker({
               type="button"
               onClick={() => onPick(id)}
               aria-pressed={active}
-              className={`group rounded-2xl p-2 text-left transition ${active ? "bg-clay-soft ring-2 ring-clay" : "bg-paper ring-1 ring-line hover:ring-clay/60"}`}
+              className={`group rounded-2xl p-2 text-left transition ${active ? "bg-celeste-soft ring-2 ring-celeste" : "bg-paper ring-1 ring-line hover:ring-celeste/60"}`}
             >
               <div className="relative mx-auto overflow-hidden rounded-md bg-white" style={{ width: THUMB_W, height: THUMB_W * 1.3 }} aria-hidden>
                 <Thumb doc={doc} id={id} />
@@ -92,7 +92,7 @@ export default function TemplatePicker({
         <button
           type="button"
           onClick={() => setExpanded((x) => !x)}
-          className="mt-3 rounded-full border border-line bg-paper px-4 py-2 text-sm font-medium transition hover:border-clay hover:text-clay"
+          className="mt-3 rounded-full border border-line bg-paper px-4 py-2 text-sm font-medium transition hover:border-celeste hover:text-celeste"
         >
           {expanded ? "Ver menos" : `Ver los ${all.length} diseños`}
         </button>

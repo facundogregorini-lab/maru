@@ -71,7 +71,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
     >
       <div className="p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-clay font-serif text-lg text-paper">m</span>
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-celeste font-serif text-lg text-paper">m</span>
           <button type="button" onClick={onClose} aria-label="Cerrar" className="grid h-8 w-8 place-items-center rounded-full text-muted hover:bg-sand hover:text-ink">
             ✕
           </button>
@@ -98,17 +98,17 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="nombre@mail.com"
-              className="mt-1.5 w-full rounded-xl border border-line bg-cream px-4 py-3 text-base outline-none transition focus:border-clay focus:ring-4 focus:ring-clay-soft"
+              className="mt-1.5 w-full rounded-xl border border-line bg-cream px-4 py-3 text-base outline-none transition focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
             />
             {error && (
-              <p role="alert" className="mt-2 text-sm text-clay-dark">
+              <p role="alert" className="mt-2 text-sm text-celeste-dark">
                 {error}
               </p>
             )}
             <button
               type="submit"
               disabled={sending || !email.trim()}
-              className="mt-5 w-full rounded-full bg-clay px-6 py-3 font-medium text-paper transition hover:bg-clay-dark disabled:opacity-60"
+              className="mt-5 w-full rounded-full bg-celeste px-6 py-3 font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-60"
             >
               {sending ? "Enviando…" : "Mandame el link"}
             </button>
@@ -125,18 +125,18 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
             </p>
             <div className="mt-5 flex items-center gap-3 rounded-2xl bg-sand px-4 py-3 text-sm text-muted">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-clay/60" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-clay" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-celeste/60" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-celeste" />
               </span>
               Esperando que abras el link… (vence en 15 minutos)
             </div>
             {error && (
-              <p role="alert" className="mt-2 text-sm text-clay-dark">
+              <p role="alert" className="mt-2 text-sm text-celeste-dark">
                 {error}
               </p>
             )}
             <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <button type="button" onClick={() => send()} disabled={sending} className="text-clay-dark underline underline-offset-4 disabled:opacity-60">
+              <button type="button" onClick={() => send()} disabled={sending} className="text-celeste-dark underline underline-offset-4 disabled:opacity-60">
                 {sending ? "Reenviando…" : "Reenviar el link"}
               </button>
               <button type="button" onClick={() => setSentTo(null)} className="text-muted underline underline-offset-4 hover:text-ink">

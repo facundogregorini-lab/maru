@@ -51,11 +51,11 @@ export default function Questions({
   nextLabel: string;
 }) {
   const input =
-    "mt-3 w-full rounded-xl border border-line bg-paper px-4 py-2.5 outline-none transition placeholder:text-muted/60 focus:border-clay focus:ring-4 focus:ring-clay-soft";
+    "mt-3 w-full rounded-xl border border-line bg-paper px-4 py-2.5 outline-none transition placeholder:text-muted/60 focus:border-celeste focus:ring-4 focus:ring-celeste-soft";
   return (
     <div className="animate-rise space-y-8">
       <section className="rounded-[2rem] bg-sand p-6 sm:p-10">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">{kicker}</p>
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">{kicker}</p>
         <h1 className="mt-2 font-serif text-3xl tracking-tight sm:text-4xl">{title}</h1>
         <p className="mt-3 max-w-3xl leading-relaxed text-muted">{summary}</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -71,12 +71,12 @@ export default function Questions({
             </ul>
           </div>
           <div className="rounded-2xl bg-paper p-5">
-            <h3 className="text-sm font-semibold text-clay-dark">{gapsTitle}</h3>
+            <h3 className="text-sm font-semibold text-celeste-dark">{gapsTitle}</h3>
             <ul className="mt-2 space-y-1.5 text-sm leading-relaxed">
               {gapsList.length ? (
                 gapsList.map((b, i) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-clay">○</span>
+                    <span className="text-celeste">○</span>
                     {b}
                   </li>
                 ))
@@ -116,7 +116,7 @@ export default function Questions({
           {preguntas.map((q, idx) => (
             <div key={q.id} className="rounded-3xl border border-line bg-paper/70 p-5 sm:p-6">
               <p className="font-medium">
-                <span className="mr-2 font-serif text-clay">{idx + 1}.</span>
+                <span className="mr-2 font-serif text-celeste">{idx + 1}.</span>
                 {q.pregunta}
               </p>
               <p className="mt-1 text-xs text-muted">{q.por_que}</p>
@@ -128,7 +128,7 @@ export default function Questions({
                       type="button"
                       onClick={() => setAnswers((a) => ({ ...a, [q.id]: o }))}
                       className={`rounded-full border px-3 py-1.5 text-sm transition ${
-                        answers[q.id] === o ? "border-clay bg-clay-soft text-clay-dark" : "border-line bg-paper hover:border-clay"
+                        answers[q.id] === o ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"
                       }`}
                     >
                       {o}

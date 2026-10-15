@@ -1,4 +1,4 @@
-# maru
+# Maru Coach (marucoach.com)
 
 **Tu coach profesional.** La home (`/`) reúne las secciones de Maru:
 

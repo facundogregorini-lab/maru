@@ -93,7 +93,7 @@ export default function JobField({ input, generalLabel = "Sin búsqueda concreta
               className={`mt-3 ${inputClass} text-sm`}
             />
           ) : (
-            <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-clay">
+            <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-celeste">
               ¿No tenés link? Pegá el job description
             </button>
           )}

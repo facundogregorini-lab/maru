@@ -8,7 +8,7 @@ function Dots({ n }: { n: number }) {
   return (
     <span className="flex gap-1" aria-label={`${n} de 5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className={`h-2.5 w-2.5 rounded-full ${i <= Math.round(n) ? "bg-clay" : "bg-line"}`} />
+        <span key={i} className={`h-2.5 w-2.5 rounded-full ${i <= Math.round(n) ? "bg-celeste" : "bg-line"}`} />
       ))}
     </span>
   );
@@ -38,7 +38,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
   const score = Math.round(informe.puntaje);
   const r = 46;
   const c = 2 * Math.PI * r;
-  const color = score >= 75 ? "var(--color-sage)" : score >= 55 ? "var(--color-honey)" : "var(--color-clay)";
+  const color = score >= 75 ? "var(--color-sage)" : score >= 55 ? "var(--color-honey)" : "var(--color-danger)";
 
   return (
     <div className="animate-rise space-y-6">
@@ -51,7 +51,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
           </text>
         </svg>
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu informe</p>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu informe</p>
           <h1 className="mt-1 font-serif text-3xl leading-tight tracking-tight">{informe.veredicto}</h1>
           <p className="mt-2 leading-relaxed text-muted">{informe.resumen}</p>
         </div>
@@ -67,7 +67,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
           </ul>
         </div>
         <div className="rounded-3xl bg-paper p-5">
-          <h2 className="text-sm font-semibold text-clay-dark">Para trabajar</h2>
+          <h2 className="text-sm font-semibold text-celeste-dark">Para trabajar</h2>
           <ul className="mt-2 space-y-1.5 text-sm leading-relaxed">
             {informe.a_mejorar.map((f) => (
               <li key={f}>○ {f}</li>
@@ -86,7 +86,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
               <div key={i} className="overflow-hidden rounded-3xl border border-line bg-paper">
                 <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="flex w-full items-center justify-between gap-4 p-5 text-left">
                   <span className="font-medium">
-                    <span className="mr-2 font-serif text-clay">{i + 1}.</span>
+                    <span className="mr-2 font-serif text-celeste">{i + 1}.</span>
                     {x.pregunta}
                   </span>
                   <Dots n={x.puntaje} />
@@ -102,7 +102,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
                       <b className="text-sage">Funcionó:</b> {x.funciono}
                     </p>
                     <p>
-                      <b className="text-clay-dark">Mejorar:</b> {x.mejorar}
+                      <b className="text-celeste-dark">Mejorar:</b> {x.mejorar}
                     </p>
                     <div className="rounded-2xl bg-cream px-4 py-3">
                       <div className="flex items-start justify-between gap-3">

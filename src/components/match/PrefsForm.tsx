@@ -124,7 +124,7 @@ export default function PrefsForm({
                     <option key={lv}>{lv}</option>
                   ))}
                 </select>
-                <button type="button" onClick={() => setProfile({ ...profile, languages: profile.languages.filter((_, j) => j !== i) })} className="text-sm text-muted hover:text-clay-dark">
+                <button type="button" onClick={() => setProfile({ ...profile, languages: profile.languages.filter((_, j) => j !== i) })} className="text-sm text-muted hover:text-celeste-dark">
                   Quitar
                 </button>
               </div>
@@ -132,7 +132,7 @@ export default function PrefsForm({
             <button
               type="button"
               onClick={() => setProfile({ ...profile, languages: [...profile.languages, { language: "", level: "" }] })}
-              className="text-sm text-clay-dark underline decoration-clay/40 underline-offset-4"
+              className="text-sm text-celeste-dark underline decoration-celeste/40 underline-offset-4"
             >
               + Agregar idioma
             </button>

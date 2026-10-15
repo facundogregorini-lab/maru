@@ -129,10 +129,10 @@ export default function CvSourceField({ input }: { input: CvInput }) {
         )}
         <p className="mt-2 text-xs text-muted">Lo cargaste el {new Date(saved.savedAt).toLocaleDateString("es-AR")}. Queda guardado sólo en este navegador.</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" onClick={() => setUseSaved(false)} className="rounded-full border border-line bg-paper px-4 py-1.5 text-sm transition hover:border-clay hover:text-clay">
+          <button type="button" onClick={() => setUseSaved(false)} className="rounded-full border border-line bg-paper px-4 py-1.5 text-sm transition hover:border-celeste hover:text-celeste">
             Usar otro CV
           </button>
-          <button type="button" onClick={forgetSaved} className="px-2 py-1.5 text-sm text-muted hover:text-clay-dark">
+          <button type="button" onClick={forgetSaved} className="px-2 py-1.5 text-sm text-muted hover:text-celeste-dark">
             Olvidar este perfil
           </button>
         </div>
@@ -176,7 +176,7 @@ export default function CvSourceField({ input }: { input: CvInput }) {
             e.preventDefault();
             onFile(e.dataTransfer.files?.[0] ?? null);
           }}
-          className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-line bg-paper px-4 py-8 text-center transition hover:border-clay"
+          className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-line bg-paper px-4 py-8 text-center transition hover:border-celeste"
         >
           <input
             type="file"
@@ -211,11 +211,11 @@ export default function CvSourceField({ input }: { input: CvInput }) {
           placeholder="Pegá tu perfil o tu experiencia: puestos, empresas, fechas, logros, estudios, idiomas…"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-clay focus:ring-4 focus:ring-clay-soft"
+          className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
         />
       )}
 
-      {fileError && <p className="mt-3 text-sm text-clay-dark">{fileError}</p>}
+      {fileError && <p className="mt-3 text-sm text-danger-dark">{fileError}</p>}
     </>
   );
 }

@@ -137,7 +137,7 @@ export default function CvEditor({
       {error && (
         <div
           role="alert"
-          className="flex flex-col gap-3 rounded-2xl border border-clay/30 bg-clay-soft px-4 py-3 text-sm text-clay-dark sm:flex-row sm:items-center sm:justify-between"
+          className="flex flex-col gap-3 rounded-2xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-danger-dark sm:flex-row sm:items-center sm:justify-between"
         >
           <span>{error}</span>
           {pdfFailed && (
@@ -145,7 +145,7 @@ export default function CvEditor({
               type="button"
               onClick={() => exportAs("docx")}
               disabled={!!busy}
-              className="shrink-0 rounded-full bg-clay px-4 py-2 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:opacity-70"
+              className="shrink-0 rounded-full bg-celeste px-4 py-2 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-70"
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word"}
             </button>
@@ -156,7 +156,7 @@ export default function CvEditor({
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
           <p className="mb-3 flex items-center gap-2 text-sm text-muted">
-            <span className="grid h-6 w-6 place-items-center rounded-full bg-clay-soft text-xs text-clay-dark">✎</span>
+            <span className="grid h-6 w-6 place-items-center rounded-full bg-celeste-soft text-xs text-celeste-dark">✎</span>
             Tocá cualquier texto para editarlo. Los cambios se guardan solos.
           </p>
           <div className="cv-scroll">
@@ -170,7 +170,7 @@ export default function CvEditor({
               type="button"
               onClick={() => exportAs("pdf")}
               disabled={!!busy}
-              className="rounded-full bg-clay px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:opacity-70"
+              className="rounded-full bg-celeste px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-70"
             >
               {busy === "pdf" ? "Generando PDF…" : "Descargar PDF"}
             </button>
@@ -178,7 +178,7 @@ export default function CvEditor({
               type="button"
               onClick={() => exportAs("docx")}
               disabled={!!busy}
-              className="rounded-full border border-clay px-4 py-2.5 text-sm font-medium text-clay-dark transition hover:bg-clay-soft disabled:opacity-70"
+              className="rounded-full border border-celeste px-4 py-2.5 text-sm font-medium text-celeste-dark transition hover:bg-celeste-soft disabled:opacity-70"
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
             </button>
@@ -204,10 +204,10 @@ export default function CvEditor({
                   onChange={(e) => setDoc((d) => ({ ...d, showPhoto: e.target.checked }))}
                   className="peer sr-only"
                 />
-                <span className="relative h-6 w-10 rounded-full bg-line transition peer-checked:bg-sage peer-focus-visible:ring-4 peer-focus-visible:ring-clay-soft after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-paper after:shadow after:transition peer-checked:after:translate-x-4" />
+                <span className="relative h-6 w-10 rounded-full bg-line transition peer-checked:bg-sage peer-focus-visible:ring-4 peer-focus-visible:ring-celeste-soft after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-paper after:shadow after:transition peer-checked:after:translate-x-4" />
               </label>
             </div>
-            <p className={`mt-2 text-xs leading-relaxed ${photoOk ? "text-muted" : "text-clay-dark"}`}>
+            <p className={`mt-2 text-xs leading-relaxed ${photoOk ? "text-muted" : "text-celeste-dark"}`}>
               {photoOk
                 ? "Recomendada en LatAm y Europa. No se recomienda para empresas de EE.UU. o Reino Unido."
                 : `Buscás en ${NO_PHOTO_NAMES[context.pais.toUpperCase()] ?? "un país anglosajón"}: allí se recomienda no incluir foto, por eso la desactivamos.`}
@@ -230,7 +230,7 @@ export default function CvEditor({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={doc.photo.dataUrl} alt="Tu foto" className={`h-12 w-12 object-cover ${doc.photo.shape === "circle" ? "rounded-full" : "rounded-md"}`} />
                 )}
-                <label className="cursor-pointer rounded-full border border-line px-3 py-1.5 text-xs font-medium transition hover:border-clay hover:text-clay">
+                <label className="cursor-pointer rounded-full border border-line px-3 py-1.5 text-xs font-medium transition hover:border-celeste hover:text-celeste">
                   {doc.photo ? "Cambiar foto" : "Subir foto"}
                   <input
                     type="file"
@@ -244,7 +244,7 @@ export default function CvEditor({
                   />
                 </label>
                 {doc.photo && (
-                  <button type="button" onClick={() => setDoc((d) => ({ ...d, photo: null, showPhoto: false }))} className="text-xs text-muted hover:text-clay-dark">
+                  <button type="button" onClick={() => setDoc((d) => ({ ...d, photo: null, showPhoto: false }))} className="text-xs text-muted hover:text-celeste-dark">
                     Quitar
                   </button>
                 )}
@@ -265,15 +265,15 @@ export default function CvEditor({
                       type="checkbox"
                       checked={!doc.hidden[key]}
                       onChange={(e) => setDoc((d) => ({ ...d, hidden: { ...d.hidden, [key]: !e.target.checked } }))}
-                      className="h-4 w-4 accent-clay"
+                      className="h-4 w-4 accent-celeste"
                     />
                     {SECTION_LABELS[key]}
                   </label>
                   <span className="flex">
-                    <button type="button" aria-label={`Subir ${SECTION_LABELS[key]}`} disabled={i === 0} onClick={() => moveSection(i, i - 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-clay-soft hover:text-clay-dark disabled:opacity-30">
+                    <button type="button" aria-label={`Subir ${SECTION_LABELS[key]}`} disabled={i === 0} onClick={() => moveSection(i, i - 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-celeste-soft hover:text-celeste-dark disabled:opacity-30">
                       ↑
                     </button>
-                    <button type="button" aria-label={`Bajar ${SECTION_LABELS[key]}`} disabled={i === order.length - 1} onClick={() => moveSection(i, i + 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-clay-soft hover:text-clay-dark disabled:opacity-30">
+                    <button type="button" aria-label={`Bajar ${SECTION_LABELS[key]}`} disabled={i === order.length - 1} onClick={() => moveSection(i, i + 1)} className="grid h-7 w-7 place-items-center rounded-md text-muted transition hover:bg-celeste-soft hover:text-celeste-dark disabled:opacity-30">
                       ↓
                     </button>
                   </span>

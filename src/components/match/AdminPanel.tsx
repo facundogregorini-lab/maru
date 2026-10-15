@@ -44,7 +44,7 @@ export default function AdminPanel() {
     return (
       <div className="py-20 text-center">
         <p className="font-serif text-2xl">Ingresá con tu email de administración</p>
-        <button type="button" onClick={() => setLogin(true)} className="mt-4 rounded-full bg-clay px-6 py-2.5 text-paper">
+        <button type="button" onClick={() => setLogin(true)} className="mt-4 rounded-full bg-celeste px-6 py-2.5 text-paper">
           Ingresar
         </button>
         <LoginDialog open={login} reason="ver el panel" onClose={() => setLogin(false)} onLoggedIn={() => setLogin(false)} />
@@ -57,7 +57,7 @@ export default function AdminPanel() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Encontrá tu trabajo perfecto</p>
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Encontrá tu trabajo perfecto</p>
         <h1 className="mt-1 font-serif text-3xl tracking-tight">Cobertura y calidad del inventario</h1>
         <p className="mt-2 text-sm text-muted">
           {m.generatedAt ? `Última sincronización completa: ${new Date(m.generatedAt).toLocaleString("es-AR")}.` : "Todavía no corrió ninguna sincronización."} Son conteos del inventario propio: no son un
@@ -106,7 +106,7 @@ export default function AdminPanel() {
       <Section title={`Empresas del directorio (${m.companies.total})`}>
         <Bars data={m.companies.byState as Record<string, number>} labels={STATE_LABEL} />
         <details className="mt-4">
-          <summary className="cursor-pointer text-sm text-clay-dark">Ver el listado</summary>
+          <summary className="cursor-pointer text-sm text-celeste-dark">Ver el listado</summary>
           <ul className="mt-3 space-y-1 text-sm">
             {m.companies.list.map((c) => (
               <li key={`${c.name}-${c.evidence}`} className="flex flex-wrap gap-x-2">
@@ -114,7 +114,7 @@ export default function AdminPanel() {
                 <span className="text-muted">· {STATE_LABEL[c.state] ?? c.state}</span>
                 {"relevant" in c && c.state !== "excluida" && <span className="text-muted">· {c.relevant} relevantes de {c.open}</span>}
                 {"reason" in c && c.reason && <span className="text-muted">· {c.reason}</span>}
-                {"lastError" in c && c.lastError && <span className="text-clay-dark">· {c.lastError}</span>}
+                {"lastError" in c && c.lastError && <span className="text-danger-dark">· {c.lastError}</span>}
               </li>
             ))}
           </ul>
@@ -142,7 +142,7 @@ export default function AdminPanel() {
             {m.lastRun.mode} · nuevas {m.lastRun.created} · actualizadas {m.lastRun.updated} · sin cambios {m.lastRun.unchanged} · cerradas {m.lastRun.closed} · errores {m.lastRun.errors}
           </p>
           {m.lastRun.failedBoards.length > 0 && (
-            <ul className="mt-2 space-y-1 text-sm text-clay-dark">
+            <ul className="mt-2 space-y-1 text-sm text-celeste-dark">
               {m.lastRun.failedBoards.map((b) => (
                 <li key={b.boardId}>
                   {b.boardId}: {b.error}
@@ -184,11 +184,11 @@ function AddCompany() {
       <div className="grid gap-3 sm:grid-cols-[2fr_1fr_auto]">
         <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://job-boards.greenhouse.io/empresa" className={inputClass} aria-label="URL de la bolsa" />
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre (opcional)" className={inputClass} aria-label="Nombre" />
-        <button type="button" onClick={validate} disabled={busy || !url} className="rounded-full bg-clay px-5 py-2.5 text-sm font-medium text-paper disabled:bg-muted/40">
+        <button type="button" onClick={validate} disabled={busy || !url} className="rounded-full bg-celeste px-5 py-2.5 text-sm font-medium text-paper disabled:bg-muted/40">
           {busy ? "Validando…" : "Validar"}
         </button>
       </div>
-      {error && <p className="mt-3 text-sm text-clay-dark">{error}</p>}
+      {error && <p className="mt-3 text-sm text-danger-dark">{error}</p>}
       {result && (
         <div className="mt-4 rounded-2xl bg-sand p-4 text-sm">
           <p>
@@ -240,7 +240,7 @@ function Bars({ data, labels }: { data: Record<string, number>; labels: Record<s
             <span className="tabular-nums text-muted">{v}</span>
           </div>
           <div className="mt-1 h-1.5 rounded-full bg-sand">
-            <div className="h-1.5 rounded-full bg-clay" style={{ width: `${(v / max) * 100}%` }} />
+            <div className="h-1.5 rounded-full bg-celeste" style={{ width: `${(v / max) * 100}%` }} />
           </div>
         </li>
       ))}

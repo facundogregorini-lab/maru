@@ -101,7 +101,7 @@ export default function PhotoCropper({
             setZoom(z);
             setPos({ x: VIEW / 2 - cx * z, y: VIEW / 2 - cy * z });
           }}
-          className="flex-1 accent-clay"
+          className="flex-1 accent-celeste"
         />
       </label>
       <div className="mt-3 flex items-center justify-between gap-2">
@@ -121,7 +121,7 @@ export default function PhotoCropper({
           <button type="button" onClick={onCancel} className="px-3 py-1.5 text-xs text-muted hover:text-ink">
             Cancelar
           </button>
-          <button type="button" onClick={finish} disabled={!img} className="rounded-full bg-clay px-4 py-1.5 text-xs font-medium text-paper hover:bg-clay-dark">
+          <button type="button" onClick={finish} disabled={!img} className="rounded-full bg-celeste px-4 py-1.5 text-xs font-medium text-paper hover:bg-celeste-dark">
             Usar foto
           </button>
         </div>
