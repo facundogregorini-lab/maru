@@ -102,6 +102,28 @@ describe("normalizeAnswers", () => {
     ]);
   });
 
+  it("nunca completa datos demográficos ni aceptaciones legales, aunque la IA lo intente", () => {
+    const sensitive: AutofillField[] = [
+      { id: "s1", tipo: "seleccion", etiqueta: "Gender", opciones: ["Female", "Male"] },
+      { id: "s2", tipo: "seleccion", etiqueta: "Are you Hispanic/Latino?", opciones: ["Yes", "No"] },
+      { id: "s3", tipo: "seleccion", etiqueta: "Veteran Status", opciones: ["I am not a protected veteran"] },
+      { id: "s4", tipo: "seleccion", etiqueta: "Agreement to Arbitrate", opciones: ["I agree"] },
+      { id: "s5", tipo: "casilla", etiqueta: "Acepto los términos y condiciones" },
+      { id: "s6", tipo: "opcion_unica", etiqueta: "May we use AI notetakers?", ayuda: "We need your consent", opciones: ["Yes", "No"] },
+      { id: "ok1", tipo: "texto", etiqueta: "In terms of salary, what do you expect?" },
+    ];
+    const answers = [
+      a("s1", "Female"),
+      a("s2", "No"),
+      a("s3", "I am not a protected veteran"),
+      a("s4", "I agree"),
+      a("s5", "sí"),
+      a("s6", "Yes"),
+      a("ok1", "USD 3000"),
+    ];
+    expect(normalizeAnswers(sensitive, answers, true).map((x) => x.id)).toEqual(["ok1"]);
+  });
+
   it("no adjunta el CV si la persona no subió un archivo", () => {
     expect(normalizeAnswers(fields, [a("0:f6", "cv")], false)).toEqual([]);
   });

@@ -35,6 +35,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "react-select": "^5.10.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.2.7"

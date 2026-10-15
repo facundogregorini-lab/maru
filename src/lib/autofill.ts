@@ -66,6 +66,20 @@ export function matchOption(options: string[], wanted: string): string | null {
   return contains.length === 1 ? contains[0] : null;
 }
 
+/**
+ * Campos que decide siempre la persona, diga lo que diga la IA: datos demográficos
+ * (EEO: género, etnia, discapacidad…) y aceptaciones legales (arbitraje, términos, privacidad).
+ */
+const DEMOGRAPHIC =
+  /\b(gender|g[eé]nero|sexo?|pronouns?|pronombres?|ethnicity|ethnic|[eé]tnic[oa]|race|racial|raza|hispanic|latin[oa]|latinx|veterans?|veteran[oa]|disabilit(y|ies)|discapacidad|sexual orientation|orientaci[oó]n sexual|religi[oó]n|religion|transgender|lgbtq?)\b/i;
+const LEGAL =
+  /(arbitra|consent|consentimiento|privacy|privacidad|terms (and|&) conditions|terms of (use|service)|t[eé]rminos y condiciones|certify|certifico|acknowledge)/i;
+
+export function isSensitive(f: AutofillField): boolean {
+  const text = `${f.etiqueta} ${f.ayuda ?? ""}`;
+  return DEMOGRAPHIC.test(text) || LEGAL.test(text);
+}
+
 /** Deja sólo respuestas válidas para los campos que existen. */
 export function normalizeAnswers(
   fields: AutofillField[],
@@ -77,7 +91,7 @@ export function normalizeAnswers(
   const out: AutofillAnswer[] = [];
   for (const c of campos) {
     const f = byId.get(c.id);
-    if (!f || seen.has(f.id)) continue;
+    if (!f || seen.has(f.id) || isSensitive(f)) continue;
     const valor = clean(f, c.valor.trim(), hasCv);
     if (!valor) continue;
     seen.add(f.id);

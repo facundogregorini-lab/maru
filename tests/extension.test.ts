@@ -93,18 +93,24 @@ let browser: Browser;
 let sw: CDPSession;
 let extensionId = "";
 
+async function bundle(file: string): Promise<string> {
+  const result = await build({
+    entryPoints: [path.join(FIXTURES, file)],
+    bundle: true,
+    write: false,
+    format: "iife",
+    jsx: "automatic",
+    define: { "process.env.NODE_ENV": '"production"' },
+    logLevel: "silent",
+  });
+  return result.outputFiles[0].text;
+}
+
 async function startServer() {
-  const reactJs = (
-    await build({
-      entryPoints: [path.join(FIXTURES, "react-form.tsx")],
-      bundle: true,
-      write: false,
-      format: "iife",
-      jsx: "automatic",
-      define: { "process.env.NODE_ENV": '"production"' },
-      logLevel: "silent",
-    })
-  ).outputFiles[0].text;
+  const scripts: Record<string, string> = {
+    "/react.js": await bundle("react-form.tsx"),
+    "/combobox.js": await bundle("combobox-form.tsx"),
+  };
   const handlers: Record<string, (req: Request) => Promise<Response>> = { "/api/profile": profilePOST, "/api/autofill": autofillPOST };
 
   server = createServer(async (req, res) => {
@@ -125,10 +131,12 @@ async function startServer() {
     // El iframe se sirve desde 127.0.0.1 y la página desde localhost: orígenes distintos, como un Greenhouse embebido.
     if (pathname === "/form") return html(readFileSync(path.join(FIXTURES, "form.html"), "utf8").replace("__FRAME_URL__", `http://127.0.0.1:${port}/frame`));
     if (pathname === "/frame") return html(readFileSync(path.join(FIXTURES, "frame.html"), "utf8"));
-    if (pathname === "/react") return html(`<!doctype html><title>React</title><div id="root"></div><script src="/react.js"></script>`);
-    if (pathname === "/react.js") {
+    if (pathname === "/react" || pathname === "/combobox") {
+      return html(`<!doctype html><title>React</title><div id="root"></div><script src="${pathname}.js"></script>`);
+    }
+    if (scripts[pathname]) {
       res.writeHead(200, { "content-type": "text/javascript" });
-      return res.end(reactJs);
+      return res.end(scripts[pathname]);
     }
     res.writeHead(404).end();
   });
@@ -322,6 +330,26 @@ describe.skipIf(!run)("extensión de Chrome", () => {
     expect(result.error).toBeUndefined();
     const state = JSON.parse(await page.$eval("#state", (n) => n.textContent ?? "{}"));
     expect(state).toEqual({ name: "Ana Pérez", email: "ana@mail.com", country: "AR", remote: "yes", cover: WHY });
+    await page.close();
+  }, 30_000);
+
+  it("elige en listas con buscador (react-select, como Greenhouse) sin tocar las ya elegidas", async () => {
+    autofillRequests.length = 0;
+    const { page, result } = await fill(`http://localhost:${port}/combobox`);
+    expect(result.error).toBeUndefined();
+
+    const [{ fields }] = autofillRequests;
+    expect(fields.map((f) => [f.tipo, f.etiqueta, f.opciones])).toEqual([
+      ["seleccion", "Country", ["Argentina", "Brazil", "Chile", "Uruguay"]],
+      ["seleccion", "Are you legally authorized to work in Argentina?", ["Yes", "No"]],
+      ["seleccion", "Gender", ["Female", "Male", "Decline to self-identify"]],
+    ]);
+
+    const state = JSON.parse(await page.$eval("#state", (n) => n.textContent ?? "{}"));
+    expect(state).toEqual({ prefilled: "uy", country: "argentina", authorized: "yes" });
+    // Las listas quedan cerradas y el género (no lo completamos nunca) queda marcado como pendiente.
+    expect(await page.$$("[role=listbox]")).toHaveLength(0);
+    expect(result).toMatchObject({ completados: 2, revisar: 0, pendientes: 1 });
     await page.close();
   }, 30_000);
 

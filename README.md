@@ -33,15 +33,17 @@ Maru nunca inventa experiencia: si un dato ayudaría pero falta, deja un marcado
 3. En el formulario, toca **Completar esta postulación**. La extensión lee los campos de la página **y de sus iframes** (Greenhouse embebido en la web de la empresa), los manda a `/api/autofill` y completa cada uno.
 4. Verde: copiado del CV. Amarillo: Maru lo redactó o dedujo (respuestas abiertas, años de experiencia) u obligatorio que falta completar. **Nunca envía el formulario.**
 
-Qué completa: textos, email, teléfono, links, números, fechas, `<select>`, radios, casillas y adjunta el CV en el campo de archivo. Funciona con formularios hechos en React (setter nativo + eventos) y salta campos ya completos y honeypots anti-bots. Por diseño **no** completa datos demográficos (género, etnia, discapacidad…), consentimientos ni términos y condiciones: eso lo decide la persona.
+Qué completa: textos, email, teléfono, links, números, fechas, `<select>`, radios, casillas, listas con buscador (`role="combobox"`, como las de react-select en el Greenhouse nuevo) y adjunta el CV en el campo de archivo. Funciona con formularios hechos en React (setter nativo + eventos, teclas completas keydown + keyup) y salta campos ya completos y honeypots anti-bots. Por diseño **no** completa datos demográficos (género, etnia, discapacidad, veterano…) ni aceptaciones legales (arbitraje, términos, privacidad, consentimientos): lo pide el prompt y además lo bloquea el servidor (`isSensitive` en `src/lib/autofill.ts`), aunque la IA conteste igual.
 
-Todavía no: listas desplegables con buscador (`role="combobox"`, como las de Greenhouse nuevo o Workday), formularios de varios pasos que cambian de página y editores de texto enriquecido. Quedan sin tocar y, si son obligatorios, marcados en amarillo.
+Probado contra formularios reales (sin enviar nada): Lever (Palantir, Spotify) y Greenhouse (Anthropic, 23 campos incluidas 11 listas con buscador).
+
+Todavía no: buscadores que cargan opciones recién al tipear (ciudades), las listas de Workday (son botones, no inputs), formularios de varios pasos que cambian de página y editores de texto enriquecido. Quedan sin tocar y, si son obligatorios, marcados en amarillo.
 
 **Instalarla en desarrollo:** `npm run dev`, abrí `chrome://extensions`, activá *Modo de desarrollador* → *Cargar descomprimida* → elegí la carpeta `extension/`. Por defecto usa `http://localhost:3000`; para usar la Maru publicada, cambiá el servidor en *Avanzado* dentro del popup.
 
 **Cómo está hecha:** JavaScript plano con Manifest V3, sin build. `background.js` coordina (inyecta `content.js` en todos los frames, llama a la API y reparte las respuestas por frame), `content.js` lee y completa los campos, `popup.*` es la interfaz. El servidor valida todo lo que devuelve la IA (`src/lib/autofill.ts`): sólo opciones que existen en la página, fechas y números con formato válido, largo máximo y nada de campos inventados.
 
-**Tests:** `tests/extension.test.ts` levanta Chromium con la extensión cargada contra páginas de prueba (HTML común, iframe de otro origen y un formulario React controlado) y las rutas reales; sólo simula la respuesta de la IA.
+**Tests:** `tests/extension.test.ts` levanta Chromium con la extensión cargada contra páginas de prueba (HTML común, iframe de otro origen, un formulario React controlado y listas de react-select como las de Greenhouse) y las rutas reales; sólo simula la respuesta de la IA.
 
 ## Stack
 

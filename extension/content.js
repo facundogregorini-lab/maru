@@ -7,6 +7,7 @@
   const ATTR = "data-maru-id";
   const MAX_FIELDS = 250;
   const MAX_OPTIONS = 400;
+  const MAX_COMBOS = 60;
   const GREEN = "#6f8466";
   const AMBER = "#d9a441";
 
@@ -17,6 +18,91 @@
       .normalize("NFD")
       .replace(/[̀-ͯ]/g, "")
       .toLowerCase();
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  async function waitFor(fn, ms = 600) {
+    for (let t = 0; t < ms; t += 30) {
+      const v = fn();
+      if (v) return v;
+      await sleep(30);
+    }
+    return fn();
+  }
+
+  /* ---------- Listas con buscador (role="combobox", como react-select en Greenhouse) ---------- */
+
+  const isCombo = (el) => el.tagName === "INPUT" && el.getAttribute("role") === "combobox";
+  /** Una tecla completa (keydown + keyup), como una persona: Greenhouse, por ejemplo, abre la lista en el keyup. */
+  function press(el, k) {
+    for (const type of ["keydown", "keyup"]) el.dispatchEvent(new KeyboardEvent(type, { key: k, code: k, bubbles: true, cancelable: true }));
+  }
+
+  /** Vacía si no tiene texto y muestra un placeholder ("Seleccioná…") en lugar de un valor elegido. */
+  function comboEmpty(el) {
+    if (clean(el.value)) return false;
+    const described = (el.getAttribute("aria-describedby") || "").split(/\s+/).map((id) => id && document.getElementById(id));
+    if (described.some((n) => n && /placeholder/i.test(`${n.id} ${n.className}`))) return true;
+    return !comboBox(el).querySelector("[class*='single-value'], [class*='singleValue'], [class*='multi-value'], [class*='multiValue']");
+  }
+
+  /** El recuadro de la lista: el ancestro más cercano que muestra el valor elegido o el placeholder. */
+  function comboBox(el) {
+    let node = el.parentElement;
+    for (let i = 0; node && i < 4; i++, node = node.parentElement) {
+      if (/control/i.test(node.className) || node.querySelector("[class*='value'], [class*='placeholder']")) return node;
+    }
+    return el.parentElement;
+  }
+
+  function comboOptions(el) {
+    const ids = `${el.getAttribute("aria-controls") || ""} ${el.getAttribute("aria-owns") || ""}`.split(/\s+/).filter(Boolean);
+    let list = ids.map((id) => document.getElementById(id)).find(Boolean);
+    // Sin aria-controls (versiones viejas de react-select): el listbox más cercano, sin pasar a otra lista.
+    for (let node = el.parentElement, i = 0; !list && node && i < 6; node = node.parentElement, i++) {
+      if ([...node.querySelectorAll("[role='combobox']")].some((c) => c !== el)) break;
+      list = node.querySelector("[role='listbox']");
+    }
+    // Menú en un portal (al final del <body>): si hay una sola lista abierta en la página, es esta.
+    if (!list) {
+      const open = [...document.querySelectorAll("[role='listbox']")].filter(isShown);
+      if (open.length === 1) list = open[0];
+    }
+    return list ? [...list.querySelectorAll("[role='option']")].filter((o) => o.getAttribute("aria-disabled") !== "true") : [];
+  }
+
+  /** Abre la lista con ↓ (como haría alguien con el teclado) y devuelve sus opciones. */
+  async function openCombo(el) {
+    el.focus({ preventScroll: true });
+    press(el, "ArrowDown");
+    const options = await waitFor(() => {
+      const found = comboOptions(el);
+      return found.length ? found : null;
+    });
+    return options || [];
+  }
+
+  /** Cierra la lista y espera a que desaparezca, para no leer sus opciones como si fueran de la siguiente. */
+  async function closeCombo(el) {
+    press(el, "Escape");
+    el.blur();
+    await waitFor(() => el.getAttribute("aria-expanded") !== "true" && !comboOptions(el).length);
+  }
+
+  async function fillCombo(el, valor) {
+    const options = await openCombo(el);
+    const texts = options.map((o) => clean(o.textContent));
+    const i = findOption(texts, valor);
+    if (i < 0) {
+      await closeCombo(el);
+      return false;
+    }
+    options[i].click();
+    await sleep(30);
+    if (el.getAttribute("aria-expanded") === "true") await closeCombo(el);
+    // Algunas listas muestran otra cosa que la opción ("+54" para "Argentina +54"): alcanza con que ya no esté vacía.
+    return !comboEmpty(el) || norm(el.value) === norm(texts[i]);
+  }
 
   /* ---------- Lectura ---------- */
 
@@ -123,7 +209,16 @@
     return field;
   }
 
-  function scan() {
+  async function scan() {
+    const { scrollX, scrollY } = window;
+    try {
+      return await scanFields();
+    } finally {
+      window.scrollTo(scrollX, scrollY);
+    }
+  }
+
+  async function scanFields() {
     seq = 0;
     registry.clear();
     required.clear();
@@ -175,13 +270,18 @@
       } else if (tag === "TEXTAREA") {
         if (isEmpty(el)) fields.push({ el, base: { tipo: "texto_largo", etiqueta: labelOf(el) } });
       } else if (type in KIND || type === "") {
-        // Los combos accesibles (role=combobox) se completan eligiendo de una lista: todavía no los manejamos.
-        if (el.getAttribute("role") === "combobox" || el.getAttribute("aria-autocomplete") === "list") continue;
+        if (isCombo(el)) {
+          if (comboEmpty(el)) fields.push({ el, combo: true, base: { tipo: "seleccion", etiqueta: labelOf(el) } });
+          continue;
+        }
+        // Autocompletar sin role=combobox (por ejemplo, buscadores de ciudades): todavía no.
+        if (el.getAttribute("aria-autocomplete") === "list") continue;
         if (isEmpty(el)) fields.push({ el, base: { tipo: KIND[type] || "texto", etiqueta: labelOf(el) } });
       }
     }
 
     const out = [];
+    let combos = 0;
     for (const f of fields) {
       if (f.list) {
         const { list, type } = f;
@@ -205,6 +305,14 @@
           base.tipo = "casilla";
         }
         out.push(describe(list[0], { id: register(list), ...base }));
+      } else if (f.combo) {
+        // Las opciones aparecen recién al abrir la lista. Las que se cargan al tipear (ciudades) quedan para después.
+        if (++combos > MAX_COMBOS) continue;
+        const options = await openCombo(f.el);
+        await closeCombo(f.el);
+        if (!options.length) continue;
+        const opciones = options.map((o) => cut(clean(o.textContent), 150)).slice(0, MAX_OPTIONS);
+        out.push(describe(f.el, { id: register([f.el]), ...f.base, opciones }));
       } else {
         out.push(describe(f.el, { id: register([f.el]), ...f.base }));
       }
@@ -262,9 +370,10 @@
     el.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
-  function fillOne(els, valor, cv) {
+  async function fillOne(els, valor, cv) {
     const el = els[0];
     const type = (el.type || "").toLowerCase();
+    if (isCombo(el)) return fillCombo(el, valor);
     if (type === "file") {
       if (!cv) return false;
       attachFile(el, cv);
@@ -316,7 +425,16 @@
     if (note) target.title = `Maru: ${note}`;
   }
 
-  function apply(answers, cv) {
+  async function apply(answers, cv) {
+    const { scrollX, scrollY } = window;
+    try {
+      return await applyAnswers(answers, cv);
+    } finally {
+      window.scrollTo(scrollX, scrollY);
+    }
+  }
+
+  async function applyAnswers(answers, cv) {
     const stats = { completados: 0, revisar: 0, pendientes: 0 };
     const done = new Set();
     for (const a of answers) {
@@ -324,7 +442,7 @@
       if (!els || !els[0].isConnected) continue;
       let ok = false;
       try {
-        ok = fillOne(els, a.valor, a.valor === "cv" ? cv : null);
+        ok = await fillOne(els, a.valor, a.valor === "cv" ? cv : null);
       } catch (err) {
         console.warn("Maru no pudo completar un campo", err);
       }
