@@ -381,3 +381,64 @@ export const InformeSchema = z.object({
   proximos_pasos: z.array(z.string()).describe("2-4 acciones concretas para practicar antes de la entrevista real"),
 });
 export type Informe = z.infer<typeof InformeSchema>;
+
+/* ---------- Autocompletar formularios de postulación (extensión de Chrome) ---------- */
+
+/** Tipos de campo que la extensión detecta en la página. */
+export const AUTOFILL_KINDS = [
+  "texto",
+  "texto_largo",
+  "email",
+  "telefono",
+  "url",
+  "numero",
+  "fecha",
+  "mes",
+  "seleccion",
+  "opcion_unica",
+  "casilla",
+  "multiple",
+  "archivo",
+] as const;
+export type AutofillKind = (typeof AUTOFILL_KINDS)[number];
+
+export const AutofillFieldSchema = z.object({
+  id: z.string().max(40),
+  tipo: z.enum(AUTOFILL_KINDS),
+  etiqueta: z.string().max(400),
+  ayuda: z.string().max(400).optional(),
+  placeholder: z.string().max(200).optional(),
+  obligatorio: z.boolean().optional(),
+  opciones: z.array(z.string().max(200)).max(400).optional(),
+  max_caracteres: z.number().int().positive().optional(),
+});
+export type AutofillField = z.infer<typeof AutofillFieldSchema>;
+
+/** Lo que manda la extensión: el perfil guardado, los datos extra y los campos de la página. */
+export const AutofillRequestSchema = z.object({
+  profile: ProfileSchema,
+  extras: z.string().max(4000).optional(),
+  hasCv: z.boolean().optional(),
+  page: z.object({ url: z.string().max(2000), title: z.string().max(500), text: z.string().max(20000) }),
+  fields: z.array(AutofillFieldSchema).min(1).max(250),
+});
+export type AutofillRequest = z.infer<typeof AutofillRequestSchema>;
+
+export const AutofillAnswerSchema = z.object({
+  campos: z
+    .array(
+      z.object({
+        id: z.string().describe("El id del campo, tal cual"),
+        valor: z
+          .string()
+          .describe(
+            "Lo que va en el campo. Selección y opción única: el texto exacto de una opción. Casilla: 'sí'. Múltiple: una opción por línea. Archivo: 'cv'.",
+          ),
+        revisar: z.boolean().describe("true si redactaste o deduciste el valor y conviene que la persona lo lea antes de enviar"),
+        nota: z.string().describe("Si revisar es true: en menos de 12 palabras, qué revisar. Si no, ''."),
+      }),
+    )
+    .describe("Sólo los campos que completás; los que no sabés, no los incluyas"),
+});
+
+export type AutofillAnswer = { id: string; valor: string; revisar: boolean; nota: string };

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Maru</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">M</div>
+      <div>
+        <strong>Maru</strong>
+        <span class="muted">Completá postulaciones con tu CV</span>
+      </div>
+    </header>
+
+    <!-- Sin perfil: cargar el CV una vez -->
+    <section id="setup" hidden>
+      <h1>Cargá tu CV una vez</h1>
+      <p class="muted">Maru lo lee y después completa los formularios por vos. Queda guardado sólo en este navegador.</p>
+      <label class="drop">
+        <input id="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+        <span id="file-name">Elegí tu CV o el PDF de tu LinkedIn (PDF o Word)</span>
+      </label>
+      <details>
+        <summary>O pegá tu experiencia como texto</summary>
+        <textarea id="cv-text" rows="5" placeholder="Pegá acá tu CV o tu experiencia"></textarea>
+      </details>
+      <button id="read" class="primary" disabled>Leer mi CV</button>
+    </section>
+
+    <!-- Con perfil: completar -->
+    <section id="ready" hidden>
+      <div class="card">
+        <div>
+          <strong id="name"></strong>
+          <span id="headline" class="muted"></span>
+          <span id="cv-file" class="muted small"></span>
+        </div>
+        <button id="change" class="link">Cambiar CV</button>
+      </div>
+      <button id="fill" class="primary big">Completar esta postulación</button>
+      <p class="muted small center">También con <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>. Maru nunca envía el formulario: lo revisás y lo enviás vos.</p>
+      <label class="extras">
+        <strong>Datos que suelen pedir y no están en tu CV</strong>
+        <textarea id="extras" rows="5" placeholder="Pretensión salarial: USD 3.000 netos por mes&#10;Disponibilidad: inmediata&#10;Permiso de trabajo: ciudadana argentina; necesito sponsorship para EE. UU.&#10;Modalidad: remoto o híbrido en CABA&#10;Cómo me enteré: LinkedIn"></textarea>
+        <span id="saved" class="muted small"></span>
+      </label>
+    </section>
+
+    <p id="status" role="status"></p>
+
+    <details class="advanced">
+      <summary>Avanzado</summary>
+      <label>
+        Servidor de Maru
+        <input id="server" type="url" placeholder="https://maru-grego7.vercel.app" />
+      </label>
+    </details>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
