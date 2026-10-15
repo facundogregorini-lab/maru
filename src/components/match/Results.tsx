@@ -96,7 +96,7 @@ export default function Results({
     <div className="animate-rise">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tus búsquedas</p>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tus búsquedas</p>
           <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">Oportunidades para vos</h1>
           {data && (
             <p className="mt-2 text-sm text-muted">
@@ -107,10 +107,10 @@ export default function Results({
           )}
         </div>
         <div className="flex shrink-0 flex-wrap gap-2 text-sm">
-          <button type="button" onClick={onEditProfile} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-clay hover:text-clay">
+          <button type="button" onClick={onEditProfile} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-celeste hover:text-celeste">
             Mi perfil
           </button>
-          <button type="button" onClick={onEditPrefs} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-clay hover:text-clay">
+          <button type="button" onClick={onEditPrefs} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-celeste hover:text-celeste">
             Lo que busco
           </button>
         </div>
@@ -130,10 +130,10 @@ export default function Results({
             </button>
           ))}
         </div>
-        <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-clay bg-clay-soft text-clay-dark" : "border-line bg-paper hover:border-clay"}`}>
+        <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"}`}>
           Filtros{hasActiveFilters ? " activos" : ""}
         </button>
-        <button type="button" onClick={() => setAdding(true)} className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition hover:border-clay hover:text-clay">
+        <button type="button" onClick={() => setAdding(true)} className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition hover:border-celeste hover:text-celeste">
           + Agregar una búsqueda
         </button>
       </div>
@@ -150,7 +150,7 @@ export default function Results({
       <div className="mt-6">
         <ErrorBanner message={error} />
         {error && (
-          <button type="button" onClick={load} className="mb-6 text-sm text-clay-dark underline underline-offset-4">
+          <button type="button" onClick={load} className="mb-6 text-sm text-celeste-dark underline underline-offset-4">
             Reintentar
           </button>
         )}
@@ -244,7 +244,7 @@ function JobCard({
             {item.seniority && <span className="rounded-full bg-sand px-2.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
             <span className="rounded-full bg-sand px-2.5 py-1">{FAMILY_LABEL[item.family]}</span>
             {item.external && <span className="rounded-full bg-sage-soft px-2.5 py-1 text-sage">Agregada por vos · privada</span>}
-            {item.status === "cerrada" && <span className="rounded-full bg-clay-soft px-2.5 py-1 text-clay-dark">Ya no figura en la fuente</span>}
+            {item.status === "cerrada" && <span className="rounded-full bg-danger-soft px-2.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
           </div>
         </div>
         <div className={`shrink-0 rounded-2xl px-4 py-2 text-center ${tone}`} title="Compatibilidad estimada a partir de tu perfil y lo que buscás. No es una probabilidad de contratación.">
@@ -268,7 +268,7 @@ function JobCard({
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {item.gaps.length > 0 && (
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-clay">Brechas</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-danger">Brechas</p>
               <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-muted">
                 {item.gaps.map((g) => (
                   <li key={g}>• {g}</li>
@@ -307,7 +307,7 @@ function JobCard({
                 {s.kind === "usuario" ? (
                   "Agregada por vos"
                 ) : (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-clay">
+                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-celeste">
                     {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
                   </a>
                 )}
@@ -317,14 +317,14 @@ function JobCard({
         </div>
       </dl>
 
-      {err && <p className="mt-3 text-sm text-clay-dark">{err}</p>}
+      {err && <p className="mt-3 text-sm text-celeste-dark">{err}</p>}
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={prepare}
           disabled={preparing}
-          className="rounded-full bg-clay px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:bg-muted/40"
+          className="rounded-full bg-celeste px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:bg-muted/40"
         >
           {preparing ? "Abriendo…" : "Preparar mi postulación"}
         </button>
@@ -334,25 +334,25 @@ function JobCard({
             target="_blank"
             rel="noopener noreferrer nofollow"
             onClick={() => track("match_ver_busqueda", { fuente: (required[0] ?? main).kind })}
-            className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-clay hover:text-clay"
+            className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-celeste hover:text-celeste"
           >
             Ver búsqueda
           </a>
         )}
         {external?.url && (
-          <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-clay hover:text-clay">
+          <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-celeste hover:text-celeste">
             Ver búsqueda
           </a>
         )}
-        <button type="button" onClick={onSave} aria-pressed={saved} className={`rounded-full border px-4 py-2.5 text-sm transition ${saved ? "border-sage bg-sage-soft text-sage" : "border-line bg-paper hover:border-clay"}`}>
+        <button type="button" onClick={onSave} aria-pressed={saved} className={`rounded-full border px-4 py-2.5 text-sm transition ${saved ? "border-sage bg-sage-soft text-sage" : "border-line bg-paper hover:border-celeste"}`}>
           {saved ? "Guardada ✓" : "Guardar"}
         </button>
         {onRemoveExternal ? (
-          <button type="button" onClick={onRemoveExternal} className="px-3 py-2.5 text-sm text-muted hover:text-clay-dark">
+          <button type="button" onClick={onRemoveExternal} className="px-3 py-2.5 text-sm text-muted hover:text-celeste-dark">
             Quitar
           </button>
         ) : (
-          <button type="button" onClick={() => setDiscarding((x) => !x)} className="px-3 py-2.5 text-sm text-muted hover:text-clay-dark">
+          <button type="button" onClick={() => setDiscarding((x) => !x)} className="px-3 py-2.5 text-sm text-muted hover:text-celeste-dark">
             Descartar
           </button>
         )}
@@ -362,7 +362,7 @@ function JobCard({
           <p className="text-sm font-medium">¿Por qué la descartás? Lo usamos para ordenar mejor.</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {DISCARD_REASONS.map(([r, label]) => (
-              <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm transition hover:border-clay">
+              <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm transition hover:border-celeste">
                 {label}
               </button>
             ))}
@@ -417,7 +417,7 @@ function FilterPanel({ filters, setFilters }: { filters: Filters; setFilters: (f
         </label>
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={!!filters.salaryPublished} onChange={(e) => set("salaryPublished", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-clay)]" />
+        <input type="checkbox" checked={!!filters.salaryPublished} onChange={(e) => set("salaryPublished", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-celeste)]" />
         Sólo con salario publicado
       </label>
     </div>
@@ -465,7 +465,7 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
   }
 
   return (
-    <div className="mt-4 space-y-3 rounded-3xl border border-clay/40 bg-paper p-5">
+    <div className="mt-4 space-y-3 rounded-3xl border border-celeste/40 bg-paper p-5">
       <p className="font-medium">Agregar una búsqueda que encontraste</p>
       <p className="text-sm text-muted">Queda privada, sólo en tu navegador. Si el link es de Greenhouse, Lever o Ashby la leemos sola; si no, pegá la descripción.</p>
       <input type="url" inputMode="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className={inputClass} aria-label="Link de la búsqueda" />
@@ -478,17 +478,17 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
           <textarea rows={6} value={text} onChange={(e) => setText(e.target.value)} placeholder="Pegá la descripción completa de la búsqueda." className={`${inputClass} text-sm`} />
         </>
       ) : (
-        <button type="button" onClick={() => setNeedsText(true)} className="text-sm text-muted underline underline-offset-4 hover:text-clay">
+        <button type="button" onClick={() => setNeedsText(true)} className="text-sm text-muted underline underline-offset-4 hover:text-celeste">
           No tengo link: pegar la descripción
         </button>
       )}
-      {error && <p className="text-sm text-clay-dark">{error}</p>}
+      {error && <p className="text-sm text-danger-dark">{error}</p>}
       <div className="flex gap-2">
         <button
           type="button"
           onClick={submit}
           disabled={busy || (!url.trim() && text.trim().length < 200)}
-          className="rounded-full bg-clay px-5 py-2 text-sm font-medium text-paper transition hover:bg-clay-dark disabled:bg-muted/40"
+          className="rounded-full bg-celeste px-5 py-2 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:bg-muted/40"
         >
           {busy ? "Leyendo…" : "Agregar"}
         </button>
@@ -531,12 +531,12 @@ function EmptyResults({ tab, hasFilters, pending, onShowPending, onClearFilters 
       {tab !== "guardadas" && (
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
           {hasFilters && (
-            <button type="button" onClick={onClearFilters} className="rounded-full border border-line px-4 py-2 hover:border-clay">
+            <button type="button" onClick={onClearFilters} className="rounded-full border border-line px-4 py-2 hover:border-celeste">
               Quitar filtros
             </button>
           )}
           {tab === "elegibles" && pending > 0 && (
-            <button type="button" onClick={onShowPending} className="rounded-full border border-line px-4 py-2 hover:border-clay">
+            <button type="button" onClick={onShowPending} className="rounded-full border border-line px-4 py-2 hover:border-celeste">
               Ver {pending} por confirmar
             </button>
           )}

@@ -22,7 +22,7 @@ export default function LoginNotice() {
     <div
       role="status"
       className={`animate-rise mb-6 flex items-start justify-between gap-4 rounded-2xl px-5 py-4 text-sm ${
-        notice === "ok" ? "bg-sage-soft text-ink" : "border border-clay/30 bg-clay-soft text-clay-dark"
+        notice === "ok" ? "bg-sage-soft text-ink" : "border border-danger/30 bg-danger-soft text-danger-dark"
       }`}
     >
       <span>

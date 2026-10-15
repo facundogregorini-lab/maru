@@ -23,7 +23,7 @@ export default function FeedbackCard({ feedback: f }: { feedback: VideoFeedback 
       )}
       {f.mejoras.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-clay-dark">Para la próxima toma</h3>
+          <h3 className="text-sm font-semibold text-celeste-dark">Para la próxima toma</h3>
           <ul className="mt-2 space-y-2">
             {f.mejoras.map((m) => (
               <li key={m.aspecto} className="rounded-2xl bg-cream px-4 py-3 text-sm leading-relaxed">

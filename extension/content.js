@@ -481,7 +481,7 @@
             background: #fffdf9; border: 1px solid #eadfd3; border-radius: 14px; padding: 12px 14px; max-width: 340px;
             box-shadow: 0 8px 30px rgba(43,36,32,.18); display: flex; gap: 10px; align-items: flex-start; }
           .box.error { border-color: #c0623a; }
-          .dot { width: 22px; height: 22px; border-radius: 50%; background: #c0623a; color: #fff; flex: none;
+          .dot { width: 22px; height: 22px; border-radius: 50%; background: #1f6fa8; color: #fff; flex: none;
             display: grid; place-items: center; font-weight: 700; font-size: 12px; }
           .msg { flex: 1; white-space: pre-line; }
           button { all: unset; cursor: pointer; color: #75685f; padding: 0 2px; font-size: 16px; line-height: 1; }

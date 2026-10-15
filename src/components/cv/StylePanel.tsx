@@ -50,7 +50,7 @@ export default function StylePanel<T extends Styled>({ doc, setDoc, hint = true 
           <button
             type="button"
             onClick={() => setDoc((d) => ({ ...d, style: { order: d.style?.order } }))}
-            className="text-xs text-muted hover:text-clay-dark"
+            className="text-xs text-muted hover:text-celeste-dark"
           >
             Restablecer
           </button>
@@ -76,7 +76,7 @@ export default function StylePanel<T extends Styled>({ doc, setDoc, hint = true 
         })}
         <label
           title="Elegí cualquier color"
-          className="relative grid h-7 w-7 cursor-pointer place-items-center overflow-hidden rounded-full border border-dashed border-line text-sm text-muted transition hover:border-clay hover:text-clay"
+          className="relative grid h-7 w-7 cursor-pointer place-items-center overflow-hidden rounded-full border border-dashed border-line text-sm text-muted transition hover:border-celeste hover:text-celeste"
         >
           +
           <input
@@ -100,7 +100,7 @@ export default function StylePanel<T extends Styled>({ doc, setDoc, hint = true 
               type="button"
               aria-pressed={active}
               onClick={() => set({ fonts: id === defaults.fonts ? undefined : id })}
-              className={`rounded-2xl px-3 py-2 text-left transition ${active ? "bg-clay-soft ring-2 ring-clay" : "ring-1 ring-line hover:ring-clay/60"}`}
+              className={`rounded-2xl px-3 py-2 text-left transition ${active ? "bg-celeste-soft ring-2 ring-celeste" : "ring-1 ring-line hover:ring-celeste/60"}`}
             >
               <span className="block text-lg leading-tight" style={{ fontFamily: f.head }}>
                 Aa

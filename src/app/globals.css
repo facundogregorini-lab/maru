@@ -7,13 +7,17 @@
   --color-line: #eadfd3;
   --color-ink: #2b2420;
   --color-muted: #75685f;
-  --color-clay: #c0623a;
-  --color-clay-dark: #9e4d2b;
-  --color-clay-soft: #f6e1d3;
+  --color-celeste: #1f6fa8;
+  --color-celeste-dark: #16547f;
+  --color-celeste-soft: #ddedf8;
+  --color-celeste-light: #a9d3f2;
+  --color-danger: #b4472a;
+  --color-danger-dark: #8f3519;
+  --color-danger-soft: #f8e2d9;
   --color-sage: #6f8466;
   --color-sage-soft: #e5ece0;
   --color-honey: #d9a441;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
@@ -23,7 +27,7 @@ body {
 }
 
 ::selection {
-  background: var(--color-clay-soft);
+  background: var(--color-celeste-soft);
 }
 
 @keyframes rise {
@@ -40,8 +44,8 @@ body {
 
 /* Editor de CV */
 .cv-editable { outline: none; border-radius: 3px; transition: background-color .15s, box-shadow .15s; cursor: text; }
-.cv-editable:hover { background: rgba(192, 98, 58, 0.06); }
-.cv-editable:focus { background: rgba(192, 98, 58, 0.08); box-shadow: 0 0 0 2px rgba(192, 98, 58, 0.35); }
+.cv-editable:hover { background: rgba(31, 111, 168, 0.06); }
+.cv-editable:focus { background: rgba(31, 111, 168, 0.08); box-shadow: 0 0 0 2px rgba(31, 111, 168, 0.35); }
 .cv-editable:empty::before { content: attr(data-placeholder); color: #b9ada3; font-style: italic; }
 
 /* En celular el papel A4 no entra: reducimos márgenes sólo en la vista previa. */

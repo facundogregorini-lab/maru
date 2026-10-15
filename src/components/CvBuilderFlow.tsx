@@ -152,7 +152,7 @@ export default function CvBuilderFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Creá tu CV perfecto" title={<>Un CV pensado para <em className="text-clay">ganar búsquedas</em>.</>}>
+          <SectionHero kicker="Creá tu CV perfecto" title={<>Un CV pensado para <em className="text-celeste">ganar búsquedas</em>.</>}>
             Contanos a dónde querés llegar y Maru reescribe tu CV para que pase los filtros automáticos y convenza a quien lo lee. Después elegí entre más de 20
             diseños y personalizalo a tu gusto.
           </SectionHero>
@@ -269,7 +269,7 @@ export default function CvBuilderFlow() {
 
       {stage === "resultado" && doc && generation && analysis && (
         <div className="animate-rise">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Tu CV para</p>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu CV para</p>
           <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">{analysis.rol_objetivo}</h1>
 
           <CvEditor doc={doc} setDoc={setDoc} context={contextFromCvAnalysis(analysis, objetivo)} cambios={generation.cambios_clave} />
@@ -289,13 +289,13 @@ export default function CvBuilderFlow() {
           )}
 
           <section className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Link href="/postulacion" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-clay">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-clay">¿Encontraste una búsqueda?</p>
+            <Link href="/postulacion" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">¿Encontraste una búsqueda?</p>
               <p className="mt-2 font-serif text-xl">Adaptá tu CV a esa vacante →</p>
               <p className="mt-1 text-sm text-muted">Con el coach de postulación, más respuestas para el formulario.</p>
             </Link>
-            <Link href="/carta" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-clay">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-clay">Sumale una carta</p>
+            <Link href="/carta" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">Sumale una carta</p>
               <p className="mt-2 font-serif text-xl">Armá tu carta de presentación →</p>
               <p className="mt-1 text-sm text-muted">Usamos el perfil que ya cargaste.</p>
             </Link>
@@ -308,7 +308,7 @@ export default function CvBuilderFlow() {
             <button
               type="button"
               onClick={restart}
-              className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-clay hover:text-clay"
+              className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-celeste hover:text-celeste"
             >
               Empezar de nuevo
             </button>

@@ -3,7 +3,7 @@ import type { AtsReport } from "@/lib/ats";
 function Ring({ score }: { score: number }) {
   const r = 26;
   const c = 2 * Math.PI * r;
-  const color = score >= 80 ? "var(--color-sage)" : score >= 60 ? "var(--color-honey)" : "var(--color-clay)";
+  const color = score >= 80 ? "var(--color-sage)" : score >= 60 ? "var(--color-honey)" : "var(--color-danger)";
   return (
     <svg viewBox="0 0 64 64" className="h-16 w-16 shrink-0" role="img" aria-label={`Compatibilidad ATS ${score} de 100`}>
       <circle cx="32" cy="32" r={r} fill="none" stroke="var(--color-sand)" strokeWidth="7" />
@@ -46,7 +46,7 @@ export default function AtsPanel({ report }: { report: AtsReport }) {
           </span>
         ))}
         {report.missing.map((k) => (
-          <span key={k} className="rounded-full border border-dashed border-clay/40 px-2.5 py-1 text-xs text-clay-dark">
+          <span key={k} className="rounded-full border border-dashed border-celeste/40 px-2.5 py-1 text-xs text-celeste-dark">
             {k}
           </span>
         ))}
@@ -56,7 +56,7 @@ export default function AtsPanel({ report }: { report: AtsReport }) {
       )}
       <ul className="mt-4 space-y-1.5 text-sm">
         {report.checks.map((c) => (
-          <li key={c.label} className={`flex gap-2 ${c.ok ? "" : "text-clay-dark"}`}>
+          <li key={c.label} className={`flex gap-2 ${c.ok ? "" : "text-danger-dark"}`}>
             <span aria-hidden>{c.ok ? "✓" : "○"}</span>
             {c.label}
           </li>

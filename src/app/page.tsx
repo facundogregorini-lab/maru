@@ -1,91 +1,36 @@
 import Link from "next/link";
 import { Evidence, HeroStats } from "@/components/landing/Evidence";
+import PostulacionTools from "@/components/landing/PostulacionTools";
 import SiteShell from "@/components/SiteShell";
 
-type Section = {
-  title: string;
-  kicker: string;
-  body: string;
-  icon: keyof typeof ICONS;
-  href?: string; // sin href = próximamente
-};
-
-/** La sección activa: lo que Maru ya hace hoy. */
-const FEATURED: Section = {
-  kicker: "Coach de postulación",
-  title: "Postulate a esa búsqueda que te encanta",
-  body: "Traé el link de la vacante y armamos tu CV personalizado, sacando el 100% de tu potencial, más una respuesta para cada campo del formulario. Todo para maximizar tus chances de que te contacten.",
-  icon: "target",
-  href: "/postulacion",
-};
-
-const SECTIONS: Section[] = [
-  {
-    kicker: "CV",
-    title: "Creá tu CV perfecto",
-    body: "Un CV 100% optimizado para pasar los filtros automáticos y ganar las búsquedas. Más de 20 diseños para personalizar.",
-    icon: "doc",
-    href: "/cv",
-  },
-  {
-    kicker: "Carta",
-    title: "Carta de presentación",
-    body: "Cargá la búsqueda, contá lo tuyo por escrito o en un audio, y te armamos una carta a medida que muestra por qué sos la persona indicada.",
-    icon: "letter",
-    href: "/carta",
-  },
-  {
-    kicker: "Video",
-    title: "Video de presentación",
-    body: "Guion a medida, teleprompter mientras grabás con tu cámara y feedback de cada toma: ritmo, mirada y luz.",
-    icon: "video",
-    href: "/video",
-  },
-  {
-    kicker: "Entrevista",
-    title: "Entrená para tu entrevista",
-    body: "Simulá la entrevista por voz, como en una videollamada, y recibí un informe con puntaje y respuestas más fuertes.",
-    icon: "chat",
-    href: "/entrevista",
-  },
-  {
-    kicker: "Match",
-    title: "Encontrá tu trabajo perfecto",
-    body: "Contanos qué querés hacer y te mostramos búsquedas reales donde podés trabajar desde Argentina, ordenadas por compatibilidad y con el porqué de cada una.",
-    icon: "search",
-    href: "/match",
-  },
-  {
-    kicker: "Extensión",
-    title: "Aplicación automática",
-    body: "Con la extensión de Maru, te postulamos automáticamente a las búsquedas con buen fit o que te encantan.",
-    icon: "bolt",
-  },
-];
+/** Dónde se instala la extensión. Mientras no esté en la Chrome Web Store, lleva a las instrucciones del repo. */
+const EXTENSION_URL =
+  process.env.NEXT_PUBLIC_EXTENSION_URL || "https://github.com/facundogregorini-lab/maru#extensi%C3%B3n-de-chrome-completar-postulaciones";
 
 export default function Home() {
   return (
     <SiteShell tagline="Tu coach profesional">
       <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-12 sm:px-12 sm:py-16">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-clay-soft" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-celeste-soft" />
         <div className="pointer-events-none absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-sage-soft" />
         <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-clay">Maru, tu coach profesional</p>
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Maru Coach, tu coach profesional</p>
             <h1 className="mt-3 font-serif text-4xl leading-[1.08] tracking-tight sm:text-6xl">
-              Encontrá el trabajo perfecto, con todo el poder de la <em className="text-clay">IA</em>.
+              Encontrá tu trabajo perfecto, con todo el poder de la <em className="text-celeste">IA</em>.
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-              Un CV y una carta a medida para cada búsqueda multiplican tus chances de que te llamen. Maru los arma en minutos, sin inventar nada.
+            <p className="mt-5 max-w-xl text-xl font-medium leading-snug text-ink">Cruzamos tu perfil con las miles de búsquedas abiertas en el mercado.</p>
+            <p className="mt-2 max-w-xl text-lg leading-relaxed text-muted">
+              Encontramos las que encajan con vos, personalizamos cada postulación y aplicamos por vos.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Link
-                href={FEATURED.href!}
-                className="inline-flex items-center gap-2 rounded-full bg-clay px-6 py-3 font-medium text-paper transition hover:bg-clay-dark"
+              <a
+                href="#ayuda"
+                className="inline-flex items-center gap-2 rounded-full bg-celeste px-7 py-3.5 font-medium text-white transition hover:bg-celeste-dark"
               >
-                Empezar mi postulación <span aria-hidden>→</span>
-              </Link>
-              <a href="#evidencia" className="text-sm font-medium text-clay-dark underline decoration-clay/40 underline-offset-4 hover:decoration-clay">
+                Empezar ahora <span aria-hidden>↓</span>
+              </a>
+              <a href="#evidencia" className="text-sm font-medium text-celeste-dark underline decoration-celeste/40 underline-offset-4 hover:decoration-celeste">
                 Ver la evidencia
               </a>
             </div>
@@ -94,70 +39,151 @@ export default function Home() {
         </div>
       </section>
 
-      <h2 className="mt-14 font-serif text-3xl tracking-tight">¿En qué te ayudamos hoy?</h2>
+      <section id="ayuda" aria-labelledby="ayuda-t" className="mt-16 scroll-mt-6">
+        <h2 id="ayuda-t" className="font-serif text-3xl tracking-tight sm:text-4xl">
+          ¿En qué te ayudamos hoy?
+        </h2>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <FeaturedCard s={FEATURED} />
-        {SECTIONS.map((s, i) => (
-          <SectionCard key={s.title} s={s} delay={(i + 1) * 60} />
-        ))}
-      </div>
+        {/* 1 · Match */}
+        <article aria-labelledby="match-t" className="mt-6 grid items-center gap-8 rounded-3xl border border-line bg-paper p-6 sm:p-10 lg:grid-cols-[1fr_1.05fr]">
+          <div>
+            <PillarLabel icon="search" tone="celeste">
+              1 · Match
+            </PillarLabel>
+            <h3 id="match-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
+              Encontrá tu trabajo perfecto
+            </h3>
+            <p className="mt-3 max-w-md text-lg leading-relaxed text-muted">Las que mejor encajan con vos, primero. Y el porqué de cada una.</p>
+            <Link
+              href="/match"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-celeste px-6 py-3 font-medium text-white transition hover:bg-celeste-dark"
+            >
+              Ver mis matches <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <MatchCardExample />
+        </article>
+
+        {/* 2 · Postulación */}
+        <article aria-labelledby="postulacion-t" className="relative mt-4 overflow-hidden rounded-3xl bg-ink p-6 text-paper sm:p-10">
+          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-celeste/45" />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <PillarLabel icon="target" tone="dark">
+                2 · Coach de postulación
+              </PillarLabel>
+              <h3 id="postulacion-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
+                Optimizá y personalizá tu postulación
+              </h3>
+              <p className="mt-3 leading-relaxed text-paper/75">
+                Traé el link de la vacante y armamos tu CV personalizado, sacando el 100% de tu potencial, más una respuesta para cada campo del formulario. Todo para maximizar tus chances de que te contacten.
+              </p>
+            </div>
+            <Link
+              href="/postulacion"
+              className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-paper px-6 py-3.5 font-medium text-celeste-dark transition hover:bg-celeste-soft lg:self-auto"
+            >
+              Empezar mi postulación <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <PostulacionTools />
+        </article>
+
+        {/* 3 · Aplicación automática */}
+        <article
+          aria-labelledby="auto-t"
+          className="mt-4 flex flex-col gap-6 rounded-3xl border border-line bg-paper p-6 sm:p-10 lg:flex-row lg:items-center lg:justify-between"
+        >
+          <div>
+            <PillarLabel icon="bolt" tone="sage">
+              3 · Extensión para Chrome
+            </PillarLabel>
+            <h3 id="auto-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
+              Aplicá automáticamente
+            </h3>
+            <p className="mt-3 max-w-md text-lg leading-relaxed text-muted">Te postulamos a las búsquedas con buen fit, con tu CV y respuestas listas. Vos sólo aprobás.</p>
+          </div>
+          <a
+            href={EXTENSION_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-[#4a5f43] px-7 py-3.5 font-medium text-white transition hover:bg-[#3d4f37] lg:self-auto"
+          >
+            Agregar a Chrome <span aria-hidden>→</span>
+          </a>
+        </article>
+      </section>
 
       <Evidence />
     </SiteShell>
   );
 }
 
-function FeaturedCard({ s }: { s: Section }) {
+/** Ejemplo ilustrativo de cómo se ve la recomendación número 1 del ranking. */
+function MatchCardExample() {
   return (
-    <Link
-      href={s.href!}
-      className="animate-rise group relative flex flex-col overflow-hidden rounded-3xl bg-ink p-6 text-paper transition hover:-translate-y-0.5 hover:shadow-xl sm:col-span-2 sm:p-8"
-    >
-      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-clay/40" />
-      <div className="relative flex items-center gap-3">
-        <Icon name={s.icon} className="bg-clay text-paper" />
-        <span className="text-xs font-medium uppercase tracking-[0.16em] text-clay-soft">{s.kicker}</span>
-      </div>
-      <h3 className="relative mt-5 font-serif text-3xl leading-tight tracking-tight">{s.title}</h3>
-      <p className="relative mt-3 max-w-lg leading-relaxed text-paper/75">{s.body}</p>
-      <span className="relative mt-6 inline-flex items-center gap-2 font-medium text-clay-soft">
-        Empezar <span aria-hidden className="transition group-hover:translate-x-1">→</span>
-      </span>
-    </Link>
-  );
-}
+    <figure className="relative pt-9" aria-label="Ejemplo de la búsqueda número 1 recomendada">
+      <div aria-hidden className="absolute inset-x-9 top-0 h-20 rounded-3xl bg-line" />
+      <div aria-hidden className="absolute inset-x-4 top-[18px] h-20 rounded-3xl border border-line bg-sand" />
+      <div className="relative rounded-3xl border-[1.5px] border-celeste bg-white p-6 shadow-[0_30px_60px_-36px_rgba(22,84,127,0.55)]">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <span className="inline-flex rounded-full bg-[#f6e3be] px-3 py-1 text-xs font-bold text-[#6a4608]">#1 para vos</span>
+            <p className="mt-3 font-serif text-2xl leading-tight">Product Manager Sr.</p>
+            <p className="mt-1 text-sm text-muted">[Empresa] · Buenos Aires · Híbrido</p>
+            <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs">
+              <span className="rounded-full bg-sand px-2.5 py-1">Senior</span>
+              <span className="rounded-full bg-sand px-2.5 py-1">Producto</span>
+              <span className="rounded-full bg-sage-soft px-2.5 py-1 text-[#4a5f43]">Contrata desde Argentina</span>
+            </div>
+          </div>
+          <div className="shrink-0 text-center">
+            <div className="relative h-20 w-20">
+              <svg viewBox="0 0 84 84" className="h-20 w-20" aria-hidden>
+                <circle cx="42" cy="42" r="34" fill="none" strokeWidth="8" className="stroke-celeste-soft" />
+                <circle
+                  cx="42"
+                  cy="42"
+                  r="34"
+                  fill="none"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray="196.5 213.6"
+                  transform="rotate(-90 42 42)"
+                  className="stroke-celeste"
+                />
+              </svg>
+              <p className="absolute inset-0 grid place-items-center font-serif text-2xl text-celeste-dark">92%</p>
+            </div>
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted">Compatibilidad</p>
+          </div>
+        </div>
 
-function SectionCard({ s, delay }: { s: Section; delay: number }) {
-  if (s.href) {
-    return (
-      <Link
-        href={s.href}
-        className="animate-rise group flex flex-col rounded-3xl border border-line bg-paper p-6 transition hover:-translate-y-0.5 hover:border-clay hover:shadow-lg"
-        style={{ animationDelay: `${delay}ms` }}
-      >
-        <Icon name={s.icon} className="bg-clay-soft text-clay-dark" />
-        <h3 className="mt-5 font-serif text-xl leading-snug tracking-tight">{s.title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
-        <span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-clay-dark">
-          Empezar <span aria-hidden className="transition group-hover:translate-x-1">→</span>
-        </span>
-      </Link>
-    );
-  }
-  return (
-    <div
-      aria-disabled
-      className="animate-rise flex flex-col rounded-3xl border border-line bg-paper/70 p-6"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <Icon name={s.icon} className="bg-sand text-clay-dark" />
-        <span className="rounded-full bg-sage-soft px-3 py-1 text-xs font-medium text-sage">Próximamente</span>
+        <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-sage">Por qué te la mostramos</p>
+        <ul className="mt-2 space-y-1.5 text-sm leading-snug">
+          {["Tu experiencia coincide con lo que piden", "El seniority que buscan es el tuyo", "Modalidad y zona dentro de lo que querés"].map((r) => (
+            <li key={r} className="flex gap-2">
+              <span aria-hidden className="font-bold text-celeste">
+                ✓
+              </span>
+              {r}
+            </li>
+          ))}
+        </ul>
+
+        <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 text-sm">
+          <div>
+            <dt className="text-xs text-muted">Salario</dt>
+            <dd className="mt-0.5 font-semibold">USD 3.500 – 4.500 / mes</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-muted">Modalidad</dt>
+            <dd className="mt-0.5 font-semibold">Híbrido · 2 días oficina</dd>
+          </div>
+        </dl>
       </div>
-      <h3 className="mt-5 font-serif text-xl leading-snug tracking-tight">{s.title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
-    </div>
+      <figcaption className="mt-2.5 text-center text-xs text-muted">Ejemplo ilustrativo de una recomendación</figcaption>
+    </figure>
   );
 }
 
@@ -166,31 +192,6 @@ const ICONS = {
     <>
       <circle cx="12" cy="12" r="8" />
       <circle cx="12" cy="12" r="4" />
-      <circle cx="12" cy="12" r="0.5" />
-    </>
-  ),
-  doc: (
-    <>
-      <path d="M7 3h7l4 4v14H7z" />
-      <path d="M14 3v4h4M10 12h5M10 16h5" />
-    </>
-  ),
-  letter: (
-    <>
-      <rect x="3" y="6" width="18" height="12" rx="2" />
-      <path d="m3 8 9 6 9-6" />
-    </>
-  ),
-  video: (
-    <>
-      <rect x="3" y="6" width="13" height="12" rx="2" />
-      <path d="m16 10 5-3v10l-5-3" />
-    </>
-  ),
-  chat: (
-    <>
-      <path d="M4 5h16v11H9l-5 4z" />
-      <path d="M8 10h8M8 13h5" />
     </>
   ),
   search: (
@@ -202,12 +203,21 @@ const ICONS = {
   bolt: <path d="M13 3 5 14h6l-1 7 8-11h-6z" />,
 };
 
-function Icon({ name, className = "" }: { name: keyof typeof ICONS; className?: string }) {
+const TONES = {
+  celeste: { icon: "bg-celeste-soft text-celeste-dark", text: "text-celeste-dark" },
+  dark: { icon: "bg-celeste text-white", text: "text-celeste-light" },
+  sage: { icon: "bg-sage-soft text-[#4a5f43]", text: "text-[#4a5f43]" },
+};
+
+function PillarLabel({ icon, tone, children }: { icon: keyof typeof ICONS; tone: keyof typeof TONES; children: React.ReactNode }) {
   return (
-    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${className}`}>
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {ICONS[name]}
-      </svg>
-    </span>
+    <div className="flex items-center gap-3">
+      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${TONES[tone].icon}`}>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          {ICONS[icon]}
+        </svg>
+      </span>
+      <span className={`text-xs font-semibold uppercase tracking-[0.16em] ${TONES[tone].text}`}>{children}</span>
+    </div>
   );
 }
