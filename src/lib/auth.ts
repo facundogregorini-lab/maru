@@ -79,3 +79,32 @@ export function authRequired(): Response {
 export function safeNext(raw: unknown): string {
   return typeof raw === "string" && /^\/(?![/\\])[^\s]*$/.test(raw) ? raw : "/";
 }
+
+/* ---------- Datos firmados genéricos (p. ej. el "state" del login con Google) ---------- */
+
+/** Firma un objeto con vencimiento. `typ` evita que un token de un uso sirva para otro. */
+export function signPayload(typ: string, data: Record<string, unknown>, ttlSeconds: number, now = Date.now()): string {
+  const body = b64url(Buffer.from(JSON.stringify({ ...data, typ, exp: Math.floor(now / 1000) + ttlSeconds })));
+  return `${body}.${sign(body)}`;
+}
+
+export function readPayload<T extends Record<string, unknown>>(token: string | null | undefined, typ: string, now = Date.now()): T | null {
+  if (!token) return null;
+  const [body, sig] = token.split(".");
+  if (!body || !sig) return null;
+  const expected = Buffer.from(sign(body));
+  const given = Buffer.from(sig);
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(body, "base64url").toString()) as T & { typ?: string; exp?: number };
+    if (payload.typ !== typ || typeof payload.exp !== "number" || payload.exp * 1000 < now) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+/** Deriva un valor secreto estable a partir de otro (p. ej. el code_verifier de PKCE desde el nonce). */
+export function deriveSecret(label: string, value: string): string {
+  return sign(`${label}:${value}`);
+}
