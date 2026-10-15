@@ -50,7 +50,20 @@ Cualquier persona puede **ingresar** desde el header de todas las páginas. Para
 - Las descargas se validan en el servidor (`/api/export/pdf` y `/api/export/docx` devuelven 401 sin sesión).
 - Si la persona abre el link en otra pestaña del mismo navegador, la pestaña original lo detecta y sigue con la descarga sola.
 
-Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL` y `EMAIL_FROM`. Cualquier SMTP sirve (Brevo, Resend, SendGrid, Gmail con contraseña de aplicación).
+Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL` y `EMAIL_FROM`. Cualquier SMTP sirve (Resend, Brevo, Mailjet, Gmail con contraseña de aplicación).
+
+### Continuar con Google
+
+El diálogo de ingreso muestra **Continuar con Google** cuando están configuradas `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`; si no, sólo aparece el magic link. Crea la misma sesión que el link (cookie firmada de 180 días), sin base de datos. Se abre en una ventana emergente para no perder lo que la persona está armando (si el navegador la bloquea, sigue en la misma pestaña). Sólo pide `openid email`, usa PKCE, `state` firmado + cookie (anti-CSRF) y `nonce`, y exige email verificado.
+
+1. En [Google Cloud Console](https://console.cloud.google.com/) creá un proyecto (o usá uno), y en *Google Auth Platform → Branding* completá nombre de la app, email de soporte y dominio.
+2. *Audience*: tipo **External** y pasala a *In production* para que entre cualquier persona. Con sólo `openid` y `email` no hace falta la verificación de app de Google; si querés que la pantalla de Google muestre el nombre y el logo de Maru, hay una verificación de marca más liviana.
+3. *Clients → Create client → Web application*. En **Authorized redirect URIs** agregá cada dominio desde el que se va a entrar, por ejemplo:
+   - `https://TU-DOMINIO/api/auth/google/callback`
+   - `http://localhost:3000/api/auth/google/callback`
+4. Copiá el Client ID y el Client secret a `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en Vercel y redeployá.
+
+Las URLs de preview de Vercel cambian en cada deploy: Google sólo acepta las URIs registradas, así que en previews conviene probar con el magic link (o registrar la URL fija de la rama).
 
 ## Deploy
 

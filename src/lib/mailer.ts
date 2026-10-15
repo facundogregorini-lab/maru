@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 
 /**
- * Envío del magic link por SMTP (sirve con Brevo, Resend, SendGrid, Gmail…):
+ * Envío del magic link por SMTP (sirve con Resend, Brevo, Mailjet, Gmail con contraseña de aplicación…):
  *   SMTP_URL   = smtps://usuario:clave@smtp-relay.brevo.com:465
  *   EMAIL_FROM = "Maru <hola@tudominio.com>"
  * Sin SMTP_URL en desarrollo, el link se imprime en la consola del servidor.
