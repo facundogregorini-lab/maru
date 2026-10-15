@@ -1,0 +1,42 @@
+{
+ "0-legal-notice": "fixture",
+ "job-count": 3,
+ "jobs": [
+  {
+   "id": 555,
+   "url": "https://remotive.com/remote-jobs/data/senior-data-analyst-555",
+   "title": "Senior Data Analyst",
+   "company_name": "Acme Pagos",
+   "category": "Data Analysis",
+   "job_type": "full_time",
+   "publication_date": "2026-10-04T10:00:00",
+   "candidate_required_location": "LATAM",
+   "salary": "",
+   "description": "<p>Somos el equipo de Riesgo de Acme Pagos. Buscamos una persona analista de datos para medir el desempeño de nuestros productos de crédito en Argentina y la región.</p><h3>Requirements</h3><ul><li>4+ years of experience in data analysis</li><li>Advanced SQL and Python</li><li>Tableau dashboards</li><li>English advanced (C1)</li></ul><h3>Nice to have</h3><ul><li>Looker</li><li>Experience in fintech</li></ul>"
+  },
+  {
+   "id": 556,
+   "url": "https://remotive.com/remote-jobs/sales/sdr-556",
+   "title": "Sales Development Representative",
+   "company_name": "Other Co",
+   "category": "Sales",
+   "job_type": "full_time",
+   "publication_date": "2026-10-04T10:00:00",
+   "candidate_required_location": "USA Only",
+   "salary": "$50k - $60k",
+   "description": "<p>Book meetings.</p>"
+  },
+  {
+   "id": 557,
+   "url": "https://remotive.com/remote-jobs/admin/virtual-assistant-557",
+   "title": "Virtual Assistant",
+   "company_name": "Helper Inc",
+   "category": "All others",
+   "job_type": "contract",
+   "publication_date": "2026-10-04T10:00:00",
+   "candidate_required_location": "Worldwide",
+   "salary": "",
+   "description": "<p>Manage calendars and inbox for executives. Excel and Google Workspace.</p>"
+  }
+ ]
+}

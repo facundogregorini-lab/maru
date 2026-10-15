@@ -1,0 +1,26 @@
+# Verificación de pull requests: lint, tests y build.
+name: ci
+
+on:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "1"
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

@@ -1,0 +1,68 @@
+{
+ "apiVersion": "1",
+ "jobs": [
+  {
+   "id": "3d37adc5-9e04-4ff2-b19d-cc32945f4429",
+   "title": "Customer Success Manager",
+   "location": "Buenos Aires",
+   "secondaryLocations": [],
+   "department": "Customer Success",
+   "team": "CS",
+   "isListed": true,
+   "isRemote": false,
+   "workplaceType": "Hybrid",
+   "descriptionPlain": "Manage a book of SMB accounts.\nRequirements\n• 2+ years in customer success or account management\n• Zendesk\n• English advanced",
+   "publishedAt": "2026-10-05T00:00:00.000Z",
+   "employmentType": "FullTime",
+   "address": {
+    "postalAddress": {
+     "addressLocality": "Buenos Aires",
+     "addressCountry": "Argentina"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/acmeashby/3d37adc5-9e04-4ff2-b19d-cc32945f4429",
+   "applyUrl": "https://jobs.ashbyhq.com/acmeashby/3d37adc5-9e04-4ff2-b19d-cc32945f4429/application",
+   "compensation": {
+    "compensationTierSummary": "$30K – $40K",
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": 30000,
+      "maxValue": 40000
+     }
+    ]
+   }
+  },
+  {
+   "id": "ffff-0000",
+   "title": "Internal Only Role",
+   "location": "Remote",
+   "isListed": false,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "descriptionPlain": "Hidden.",
+   "publishedAt": "2026-10-05T00:00:00.000Z",
+   "employmentType": "FullTime",
+   "jobUrl": "https://jobs.ashbyhq.com/acmeashby/ffff-0000"
+  },
+  {
+   "id": "eeee-9999",
+   "title": "Backend Engineer",
+   "location": "Remote",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "descriptionPlain": "Build APIs in TypeScript and Node.js.",
+   "publishedAt": "2026-10-05T00:00:00.000Z",
+   "employmentType": "Contract",
+   "address": {
+    "postalAddress": {
+     "addressCountry": "United States"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/acmeashby/eeee-9999"
+  }
+ ]
+}

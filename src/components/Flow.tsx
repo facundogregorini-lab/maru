@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers, findGaps } from "@/lib/gaps";
+import { takeHandoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
@@ -72,8 +73,23 @@ export default function Flow() {
   const jobTextRef = useRef<HTMLTextAreaElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
+  const restoredRef = useRef(false);
+
   // Retomamos la última postulación si se recargó la página.
   useEffect(() => {
+    // StrictMode corre el efecto dos veces: la segunda ya no encontraría el handoff y pisaría con la sesión vieja.
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda
+    // y descartamos la postulación anterior para que un recargo no la traiga de vuelta.
+    const handoff = takeHandoff();
+    if (handoff) {
+      remove(SESSION_KEY);
+      setJobUrl(handoff.jobUrl);
+      setJobText(handoff.jobText);
+      setShowJobText(!!handoff.jobText);
+      return;
+    }
     const s = load<Session>(SESSION_KEY);
     if (!s?.analysis || !s.profile) return;
     setJobUrl(s.jobUrl);

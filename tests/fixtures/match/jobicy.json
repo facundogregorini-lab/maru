@@ -1,0 +1,45 @@
+{
+ "apiVersion": "2",
+ "jobCount": 2,
+ "jobs": [
+  {
+   "id": 7001,
+   "url": "https://jobicy.com/jobs/7001-content-writer",
+   "jobSlug": "7001-content-writer",
+   "jobTitle": "Content Writer",
+   "companyName": "Words Co",
+   "jobIndustry": [
+    "Copywriting"
+   ],
+   "jobType": [
+    "full-time"
+   ],
+   "jobGeo": "Anywhere",
+   "jobLevel": "Any",
+   "jobExcerpt": "Write content.",
+   "jobDescription": "<p>Write SEO content for our blog.</p>",
+   "pubDate": "2026-10-06T08:00:00+00:00"
+  },
+  {
+   "id": 7002,
+   "url": "https://jobicy.com/jobs/7002-recruiter",
+   "jobSlug": "7002-recruiter",
+   "jobTitle": "Technical Recruiter",
+   "companyName": "Talent Co",
+   "jobIndustry": [
+    "HR"
+   ],
+   "jobType": [
+    "contract"
+   ],
+   "jobGeo": "LATAM",
+   "jobLevel": "Senior",
+   "jobDescription": "<p>Recruiting for engineering roles across Latin America.</p>",
+   "pubDate": "2026-10-06T08:00:00+00:00",
+   "salaryMin": 2000,
+   "salaryMax": 3000,
+   "salaryCurrency": "USD",
+   "salaryPeriod": "month"
+  }
+ ]
+}

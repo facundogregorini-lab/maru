@@ -1,0 +1,820 @@
+{
+  "$comment": "Directorio de empleadores. 'candidata' = hay evidencia pública de su bolsa (URL en 'evidence'); la primera sincronización la confirma como integrada, sin vacantes elegibles o fallida. No agregar empresas sin evidencia.",
+  "reviewedAt": "2026-10-15",
+  "companies": [
+    {
+      "name": "OLIVER Agency - Argentina",
+      "sourceId": "greenhouse",
+      "slug": "oliverargentina",
+      "region": "us",
+      "sector": "marketing / agencia",
+      "evidence": "https://job-boards.greenhouse.io/oliverargentina",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "OLIVER Agency",
+      "sourceId": "greenhouse",
+      "slug": "oliver",
+      "region": "us",
+      "sector": "marketing / agencia",
+      "evidence": "https://job-boards.greenhouse.io/oliver/jobs/7704606",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Pinterest",
+      "sourceId": "greenhouse",
+      "slug": "pinterest",
+      "region": "us",
+      "sector": "tecnología / ventas",
+      "evidence": "https://job-boards.greenhouse.io/pinterest/jobs/8084337",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Launch Potato",
+      "sourceId": "greenhouse",
+      "slug": "launch2",
+      "region": "us",
+      "sector": "marketing / datos",
+      "evidence": "https://job-boards.greenhouse.io/launch2/jobs/6129609004",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Clara",
+      "sourceId": "greenhouse",
+      "slug": "clara",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/clara",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "DEPT®",
+      "sourceId": "greenhouse",
+      "slug": "dept",
+      "region": "us",
+      "sector": "servicios profesionales / agencia",
+      "evidence": "https://job-boards.greenhouse.io/dept/jobs/8137736",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Precision for Medicine",
+      "sourceId": "greenhouse",
+      "slug": "pfm",
+      "region": "us",
+      "sector": "salud",
+      "evidence": "https://job-boards.greenhouse.io/pfm/jobs/5813365004",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Upgrade",
+      "sourceId": "greenhouse",
+      "slug": "upgrade",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/upgrade",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Newsela",
+      "sourceId": "greenhouse",
+      "slug": "newsela",
+      "region": "us",
+      "sector": "educación",
+      "evidence": "https://job-boards.greenhouse.io/newsela",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Evolution Cloud Services Latin America",
+      "sourceId": "greenhouse",
+      "slug": "evocs-latam",
+      "region": "us",
+      "sector": "tecnología / servicios",
+      "evidence": "https://job-boards.greenhouse.io/evocs-latam/jobs/4396704009",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Interview Engineering",
+      "sourceId": "greenhouse",
+      "slug": "interviewengineering",
+      "region": "us",
+      "sector": "recursos humanos / tecnología",
+      "evidence": "https://job-boards.greenhouse.io/interviewengineering/jobs/8784767002",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Greenhouse",
+      "sourceId": "greenhouse",
+      "slug": "greenhouse",
+      "region": "us",
+      "sector": "tecnología (RR. HH.)",
+      "evidence": "https://job-boards.greenhouse.io/greenhouse/jobs/8148418",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "QuintoAndar",
+      "sourceId": "greenhouse",
+      "slug": "quintoandar",
+      "region": "us",
+      "sector": "proptech",
+      "evidence": "https://job-boards.greenhouse.io/quintoandar/jobs/4336322009",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "EBANX",
+      "sourceId": "greenhouse",
+      "slug": "ebanx",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/ebanx/jobs/7734714003",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Cabify",
+      "sourceId": "greenhouse",
+      "slug": "cabify",
+      "region": "us",
+      "sector": "movilidad / logística",
+      "evidence": "https://job-boards.greenhouse.io/cabify/jobs/8450560002",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "InvGate",
+      "sourceId": "greenhouse",
+      "slug": "invgate",
+      "region": "us",
+      "sector": "tecnología (empresa argentina)",
+      "evidence": "https://job-boards.greenhouse.io/invgate/jobs/8500760002",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Monster Energy LATAM",
+      "sourceId": "greenhouse",
+      "slug": "monsterenergylatam",
+      "region": "us",
+      "sector": "consumo masivo / comercial",
+      "evidence": "https://job-boards.greenhouse.io/monsterenergylatam",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Alpaca",
+      "sourceId": "greenhouse",
+      "slug": "alpaca",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/alpaca",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Pipe17",
+      "sourceId": "greenhouse",
+      "slug": "pipe17",
+      "region": "us",
+      "sector": "comercio / operaciones",
+      "evidence": "https://job-boards.greenhouse.io/pipe17",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Remote People",
+      "sourceId": "greenhouse",
+      "slug": "remotepeople",
+      "region": "eu",
+      "sector": "staffing / ventas",
+      "evidence": "https://job-boards.eu.greenhouse.io/remotepeople",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Sezzle",
+      "sourceId": "greenhouse",
+      "slug": "sezzle",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/sezzle/jobs/6546183003",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "UserGems",
+      "sourceId": "greenhouse",
+      "slug": "usergems",
+      "region": "us",
+      "sector": "tecnología / ventas",
+      "evidence": "https://boards.greenhouse.io/usergems",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Figment",
+      "sourceId": "greenhouse",
+      "slug": "figment",
+      "region": "us",
+      "sector": "fintech / ventas",
+      "evidence": "https://job-boards.greenhouse.io/figment/jobs/5595302004",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Remote",
+      "sourceId": "greenhouse",
+      "slug": "remotecom",
+      "region": "us",
+      "sector": "RR. HH. / servicios",
+      "evidence": "https://job-boards.greenhouse.io/remotecom",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Wellhub",
+      "sourceId": "greenhouse",
+      "slug": "gympass",
+      "region": "us",
+      "sector": "salud / bienestar",
+      "evidence": "https://job-boards.greenhouse.io/gympass",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Xometry",
+      "sourceId": "greenhouse",
+      "slug": "xometry",
+      "region": "us",
+      "sector": "industria / manufactura",
+      "evidence": "https://job-boards.greenhouse.io/xometry/jobs/5013191007",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Caylent",
+      "sourceId": "greenhouse",
+      "slug": "caylent",
+      "region": "us",
+      "sector": "tecnología / consultoría",
+      "evidence": "https://job-boards.greenhouse.io/caylent",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Built Technologies",
+      "sourceId": "greenhouse",
+      "slug": "getbuilt",
+      "region": "us",
+      "sector": "fintech / construcción",
+      "evidence": "https://job-boards.greenhouse.io/getbuilt/jobs/4664279005",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "GoFundMe",
+      "sourceId": "greenhouse",
+      "slug": "gofundme",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://job-boards.greenhouse.io/gofundme/jobs/6914632",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Santex",
+      "sourceId": "greenhouse",
+      "slug": "santex",
+      "region": "us",
+      "sector": "tecnología (empresa argentina)",
+      "evidence": "https://job-boards.greenhouse.io/santex/jobs/8653451002",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Celero Communications",
+      "sourceId": "greenhouse",
+      "slug": "celerocommunicationsinc",
+      "region": "us",
+      "sector": "industria / semiconductores",
+      "evidence": "https://job-boards.greenhouse.io/celerocommunicationsinc/jobs/4296443009",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Backblaze",
+      "sourceId": "greenhouse",
+      "slug": "backblaze",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://job-boards.greenhouse.io/backblaze/jobs/5257982008",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Sterlington, PLLC",
+      "sourceId": "greenhouse",
+      "slug": "sterlingtonpllc",
+      "region": "us",
+      "sector": "servicios profesionales / legal",
+      "evidence": "https://job-boards.greenhouse.io/sterlingtonpllc",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "House Buyers of America",
+      "sourceId": "greenhouse",
+      "slug": "housebuyersofamerica",
+      "region": "us",
+      "sector": "inmobiliario / operaciones",
+      "evidence": "https://job-boards.greenhouse.io/housebuyersofamerica/jobs/4140172009",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Despegar",
+      "sourceId": "lever",
+      "slug": "despegar",
+      "region": "us",
+      "sector": "viajes / ecommerce (empresa argentina)",
+      "evidence": "https://jobs.lever.co/despegar?location=Buenos+Aires",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "dLocal",
+      "sourceId": "lever",
+      "slug": "dlocal",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://jobs.lever.co/dlocal?location=Buenos+Aires",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Resilient Co",
+      "sourceId": "lever",
+      "slug": "resilientco",
+      "region": "us",
+      "sector": "servicios",
+      "evidence": "https://jobs.lever.co/resilientco/?location=Argentina",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Bluelight Consulting",
+      "sourceId": "lever",
+      "slug": "bluelightconsulting",
+      "region": "us",
+      "sector": "tecnología / consultoría",
+      "evidence": "https://jobs.lever.co/bluelightconsulting",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Aleph",
+      "sourceId": "lever",
+      "slug": "aleph",
+      "region": "us",
+      "sector": "marketing digital / medios",
+      "evidence": "https://jobs.lever.co/aleph",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Binance",
+      "sourceId": "lever",
+      "slug": "binance",
+      "region": "us",
+      "sector": "fintech / cripto",
+      "evidence": "https://jobs.lever.co/binance?location=Argentina%2C+Buenos+Aires",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Oowlish Technology",
+      "sourceId": "lever",
+      "slug": "oowlish",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.lever.co/oowlish",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Mutt Data",
+      "sourceId": "lever",
+      "slug": "muttdata",
+      "region": "us",
+      "sector": "datos (empresa argentina)",
+      "evidence": "https://jobs.lever.co/muttdata",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Yuno",
+      "sourceId": "lever",
+      "slug": "yuno",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://jobs.lever.co/yuno?location=Argentina",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Wing Assistant",
+      "sourceId": "lever",
+      "slug": "getwingapp",
+      "region": "us",
+      "sector": "administración / asistentes remotos",
+      "evidence": "https://jobs.lever.co/getwingapp?location=Argentina",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "TSMG",
+      "sourceId": "lever",
+      "slug": "tsmg",
+      "region": "us",
+      "sector": "ventas / servicios",
+      "evidence": "https://jobs.lever.co/tsmg",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Coderio",
+      "sourceId": "lever",
+      "slug": "coderio",
+      "region": "us",
+      "sector": "tecnología (empresa argentina)",
+      "evidence": "https://jobs.lever.co/coderio",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Assist World",
+      "sourceId": "lever",
+      "slug": "assist-world",
+      "region": "us",
+      "sector": "salud / atención",
+      "evidence": "https://jobs.lever.co/assist-world/?commitment=Healthcare",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Welo Global",
+      "sourceId": "lever",
+      "slug": "welocalize",
+      "region": "us",
+      "sector": "servicios lingüísticos",
+      "evidence": "https://jobs.lever.co/welocalize/?location=Argentina",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Welo Global",
+      "sourceId": "lever",
+      "slug": "weloglobal",
+      "region": "us",
+      "sector": "servicios lingüísticos",
+      "evidence": "https://jobs.lever.co/weloglobal",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Luxury Presence",
+      "sourceId": "lever",
+      "slug": "luxurypresence",
+      "region": "us",
+      "sector": "marketing / inmobiliario",
+      "evidence": "https://jobs.lever.co/luxurypresence",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Apply Digital",
+      "sourceId": "lever",
+      "slug": "applydigital",
+      "region": "us",
+      "sector": "tecnología / consultoría",
+      "evidence": "https://jobs.lever.co/applydigital",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Atmosera",
+      "sourceId": "lever",
+      "slug": "atmosera",
+      "region": "us",
+      "sector": "tecnología / ventas",
+      "evidence": "https://jobs.lever.co/atmosera",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "1840 & Company",
+      "sourceId": "lever",
+      "slug": "1840&Company",
+      "region": "us",
+      "sector": "staffing / operaciones",
+      "evidence": "https://jobs.lever.co/1840&Company?location=Buenos+Aires%2C+Buenos+Aires",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Whippy",
+      "sourceId": "ashby",
+      "slug": "whippy",
+      "region": "us",
+      "sector": "tecnología / atención al cliente",
+      "evidence": "https://jobs.ashbyhq.com/whippy",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "SunnyData",
+      "sourceId": "ashby",
+      "slug": "sunnydata",
+      "region": "us",
+      "sector": "datos",
+      "evidence": "https://jobs.ashbyhq.com/sunnydata",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Anyone AI",
+      "sourceId": "ashby",
+      "slug": "anyone-ai",
+      "region": "us",
+      "sector": "tecnología / talento",
+      "evidence": "https://jobs.ashbyhq.com/anyone-ai",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Rehire",
+      "sourceId": "ashby",
+      "slug": "rehire",
+      "region": "us",
+      "sector": "staffing",
+      "evidence": "https://jobs.ashbyhq.com/rehire",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Acentecom",
+      "sourceId": "ashby",
+      "slug": "acentecom",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/acentecom",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Speak",
+      "sourceId": "ashby",
+      "slug": "speak",
+      "region": "us",
+      "sector": "educación / atención al cliente",
+      "evidence": "https://jobs.ashbyhq.com/speak/a92f2d55-88a1-457c-b016-5b983b4ea481",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Siena AI",
+      "sourceId": "ashby",
+      "slug": "siena",
+      "region": "us",
+      "sector": "atención al cliente / IA",
+      "evidence": "https://jobs.ashbyhq.com/siena",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Halter",
+      "sourceId": "ashby",
+      "slug": "halter",
+      "region": "us",
+      "sector": "agtech / soporte",
+      "evidence": "https://jobs.ashbyhq.com/halter",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Canals",
+      "sourceId": "ashby",
+      "slug": "canals",
+      "region": "us",
+      "sector": "tecnología / distribución",
+      "evidence": "https://jobs.ashbyhq.com/canals",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "UpGuard",
+      "sourceId": "ashby",
+      "slug": "upguard",
+      "region": "us",
+      "sector": "ciberseguridad",
+      "evidence": "https://jobs.ashbyhq.com/upguard/1ac497d5-73a3-404c-8b66-5d959f91afdb",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Nubank",
+      "sourceId": "ashby",
+      "slug": "nubank",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://jobs.ashbyhq.com/nubank/f503e4da-6330-46f0-b2e7-837c9bdf72a3",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Profound",
+      "sourceId": "ashby",
+      "slug": "Profound",
+      "region": "us",
+      "sector": "marketing / tecnología",
+      "evidence": "https://jobs.ashbyhq.com/Profound/9b429dfb-bb80-4bd6-b996-e5dd3a96908e",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Pragmatike",
+      "sourceId": "ashby",
+      "slug": "pragmatike",
+      "region": "us",
+      "sector": "tecnología / staffing",
+      "evidence": "https://jobs.ashbyhq.com/pragmatike/55f336f0-c464-4e17-afa7-60810a6614ed",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "WON",
+      "sourceId": "ashby",
+      "slug": "WON.ai",
+      "region": "us",
+      "sector": "consultoría / IA",
+      "evidence": "https://jobs.ashbyhq.com/WON.ai/1aeb2b9c-cfc9-40ef-9c37-b2c7e864e2ec",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "GovWorx",
+      "sourceId": "ashby",
+      "slug": "govworx",
+      "region": "us",
+      "sector": "tecnología / sector público",
+      "evidence": "https://jobs.ashbyhq.com/govworx/0044505a-1276-4a77-92e7-747b884b1af6",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Maple",
+      "sourceId": "ashby",
+      "slug": "maple",
+      "region": "us",
+      "sector": "atención al cliente",
+      "evidence": "https://jobs.ashbyhq.com/maple/26355256-81ab-43ea-99a2-394f1cbd32ee",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "DualEntry",
+      "sourceId": "ashby",
+      "slug": "dualentry",
+      "region": "us",
+      "sector": "finanzas / contabilidad",
+      "evidence": "https://jobs.ashbyhq.com/dualentry/cfe8b7ae-6a38-4e4e-986c-596131d6fb3e",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Puzzle Consulting Services",
+      "sourceId": "ashby",
+      "slug": "puzzle-consulting-services",
+      "region": "us",
+      "sector": "consultoría / diseño",
+      "evidence": "https://jobs.ashbyhq.com/puzzle-consulting-services/408cc227-c1ca-42e6-aa9b-be69afe33461",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Hire Hangar",
+      "sourceId": "ashby",
+      "slug": "hirehangar",
+      "region": "us",
+      "sector": "staffing / ventas",
+      "evidence": "https://jobs.ashbyhq.com/hirehangar/4004c873-4190-46cd-b5db-c6505b5766e1",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Scale Army",
+      "sourceId": "ashby",
+      "slug": "Scale Army Careers",
+      "region": "us",
+      "sector": "staffing / operaciones",
+      "evidence": "https://jobs.ashbyhq.com/Scale%20Army%20Careers",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Retell AI",
+      "sourceId": "ashby",
+      "slug": "retell-ai",
+      "region": "us",
+      "sector": "tecnología / ventas",
+      "evidence": "https://jobs.ashbyhq.com/retell-ai",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Assembly",
+      "sourceId": "ashby",
+      "slug": "assembly",
+      "region": "us",
+      "sector": "tecnología / ventas",
+      "evidence": "https://jobs.ashbyhq.com/assembly/22dc481b-d2b4-4705-8a1f-c6dcbf09787c",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "XBOW",
+      "sourceId": "ashby",
+      "slug": "xbowcareers",
+      "region": "us",
+      "sector": "ciberseguridad / ventas",
+      "evidence": "https://jobs.ashbyhq.com/xbowcareers/136d35b3-9814-41b2-894b-19c972540be6",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Curvion Blue",
+      "sourceId": "ashby",
+      "slug": "curvionblue",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/curvionblue",
+      "addedAt": "2026-10-15",
+      "status": "candidata"
+    },
+    {
+      "name": "Jobgether",
+      "evidence": "https://jobs.lever.co/jobgether",
+      "addedAt": "2026-10-15",
+      "status": "excluida",
+      "reason": "Agregador que republica avisos de otras empresas: sus obligaciones con las fuentes originales no son verificables. Se prefiere integrar al empleador directo.",
+      "sourceId": "lever",
+      "slug": "jobgether",
+      "region": "us"
+    },
+    {
+      "name": "Remote Referral Board (uso interno)",
+      "evidence": "https://job-boards.greenhouse.io/remotereferralboardinternaluseonly/jobs/7592787003",
+      "addedAt": "2026-10-15",
+      "status": "excluida",
+      "reason": "Bolsa marcada para uso interno de la empresa: no se integra.",
+      "sourceId": "greenhouse",
+      "slug": "remotereferralboardinternaluseonly",
+      "region": "us"
+    },
+    {
+      "name": "Indeed (board 'utt')",
+      "evidence": "https://job-boards.greenhouse.io/utt",
+      "addedAt": "2026-10-15",
+      "status": "excluida",
+      "reason": "El nombre del board no coincide con una empresa identificable; pendiente de verificación manual.",
+      "sourceId": "greenhouse",
+      "slug": "utt",
+      "region": "us"
+    },
+    {
+      "name": "Mercado Libre",
+      "evidence": "https://careers-meli.mercadolibre.com/",
+      "addedAt": "2026-10-15",
+      "status": "excluida",
+      "reason": "Usa una plataforma de empleos propia (no Greenhouse/Lever/Ashby): sin conector compatible en el MVP."
+    },
+    {
+      "name": "Globant",
+      "evidence": "https://career.globant.com/",
+      "addedAt": "2026-10-15",
+      "status": "excluida",
+      "reason": "Portal propio sin API pública documentada: sin conector compatible en el MVP."
+    }
+  ]
+}

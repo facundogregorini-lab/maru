@@ -51,8 +51,9 @@ const SECTIONS: Section[] = [
   {
     kicker: "Match",
     title: "Encontrá tu trabajo perfecto",
-    body: "Cruzamos más de un millón de búsquedas abiertas con tu perfil para encontrar tu match perfecto.",
+    body: "Contanos qué querés hacer y te mostramos búsquedas reales donde podés trabajar desde Argentina, ordenadas por compatibilidad y con el porqué de cada una.",
     icon: "search",
+    href: "/match",
   },
   {
     kicker: "Extensión",
