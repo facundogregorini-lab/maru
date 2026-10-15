@@ -1,0 +1,53 @@
+[
+ {
+  "id": "aaaa-1111",
+  "text": "Growth Marketing Manager",
+  "categories": {
+   "location": "Buenos Aires",
+   "commitment": "Full-time",
+   "team": "Marketing",
+   "department": "Growth",
+   "allLocations": [
+    "Buenos Aires"
+   ]
+  },
+  "country": "AR",
+  "workplaceType": "hybrid",
+  "salaryRange": {
+   "currency": "USD",
+   "interval": "per-month-salary",
+   "min": 3000,
+   "max": 4000
+  },
+  "descriptionPlain": "Lead paid acquisition and lifecycle for our app in Argentina.",
+  "lists": [
+   {
+    "text": "Requirements",
+    "content": "<li>5+ years of experience in performance marketing</li><li>Google Ads and Meta Ads</li><li>SQL</li>"
+   },
+   {
+    "text": "Nice to have",
+    "content": "<li>Experience with CRM tools like HubSpot</li>"
+   }
+  ],
+  "additionalPlain": "We offer hybrid work in Palermo.",
+  "hostedUrl": "https://jobs.lever.co/acmelever/aaaa-1111",
+  "applyUrl": "https://jobs.lever.co/acmelever/aaaa-1111/apply",
+  "createdAt": 1790000000000
+ },
+ {
+  "id": "bbbb-2222",
+  "text": "Operations Analyst",
+  "categories": {
+   "location": "Remote - Brazil",
+   "commitment": "Full-time"
+  },
+  "country": "BR",
+  "workplaceType": "remote",
+  "descriptionPlain": "Improve operations processes for our Brazil team. Portuguese required.",
+  "lists": [],
+  "hostedUrl": "https://jobs.lever.co/acmelever/bbbb-2222",
+  "applyUrl": "https://jobs.lever.co/acmelever/bbbb-2222/apply",
+  "createdAt": 1790000000000
+ }
+]

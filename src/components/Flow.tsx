@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers, findGaps } from "@/lib/gaps";
+import { takeHandoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
@@ -74,6 +75,14 @@ export default function Flow() {
 
   // Retomamos la última postulación si se recargó la página.
   useEffect(() => {
+    // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda.
+    const handoff = takeHandoff();
+    if (handoff) {
+      setJobUrl(handoff.jobUrl);
+      setJobText(handoff.jobText);
+      setShowJobText(!!handoff.jobText);
+      return;
+    }
     const s = load<Session>(SESSION_KEY);
     if (!s?.analysis || !s.profile) return;
     setJobUrl(s.jobUrl);

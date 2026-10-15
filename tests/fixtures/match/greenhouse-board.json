@@ -1,0 +1,96 @@
+{
+ "jobs": [
+  {
+   "id": 101,
+   "internal_job_id": 9001,
+   "title": "Senior Data Analyst",
+   "updated_at": "2026-10-01T12:00:00-04:00",
+   "first_published": "2026-09-28T10:00:00-04:00",
+   "location": {
+    "name": "Buenos Aires, Argentina"
+   },
+   "absolute_url": "https://job-boards.greenhouse.io/acmepagos/jobs/101",
+   "language": "en",
+   "content": "&lt;p&gt;Somos el equipo de Riesgo de Acme Pagos. Buscamos una persona analista de datos para medir el desempeño de nuestros productos de crédito en Argentina y la región.&lt;/p&gt;&lt;h3&gt;Requirements&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;4+ years of experience in data analysis&lt;/li&gt;&lt;li&gt;Advanced SQL and Python&lt;/li&gt;&lt;li&gt;Tableau dashboards&lt;/li&gt;&lt;li&gt;English advanced (C1)&lt;/li&gt;&lt;/ul&gt;&lt;h3&gt;Nice to have&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Looker&lt;/li&gt;&lt;li&gt;Experience in fintech&lt;/li&gt;&lt;/ul&gt;",
+   "departments": [
+    {
+     "name": "Risk"
+    }
+   ],
+   "offices": [
+    {
+     "name": "Buenos Aires",
+     "location": "Buenos Aires, Argentina"
+    }
+   ],
+   "metadata": null
+  },
+  {
+   "id": 105,
+   "internal_job_id": 9005,
+   "title": "Senior Data Analyst",
+   "updated_at": "2026-10-02T12:00:00-04:00",
+   "location": {
+    "name": "Buenos Aires, Argentina"
+   },
+   "absolute_url": "https://job-boards.greenhouse.io/acmepagos/jobs/105",
+   "language": "en",
+   "content": "&lt;p&gt;Equipo de Marketing de Acme Pagos: medir campañas de adquisición y atribución.&lt;/p&gt;&lt;h3&gt;Requirements&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;SQL&lt;/li&gt;&lt;li&gt;Google Analytics&lt;/li&gt;&lt;li&gt;3+ years of experience&lt;/li&gt;&lt;/ul&gt;",
+   "departments": [
+    {
+     "name": "Marketing"
+    }
+   ],
+   "offices": []
+  },
+  {
+   "id": 102,
+   "title": "Account Executive, LATAM",
+   "updated_at": "2026-10-03T12:00:00Z",
+   "location": {
+    "name": "Remote - LATAM"
+   },
+   "absolute_url": "https://job-boards.greenhouse.io/acmepagos/jobs/102",
+   "language": "en",
+   "content": "&lt;p&gt;Sell our payments platform to mid-market merchants across Latin America.&lt;/p&gt;&lt;h3&gt;What you&#x27;ll need&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;3+ years of B2B sales experience&lt;/li&gt;&lt;li&gt;Salesforce&lt;/li&gt;&lt;li&gt;Negotiation skills&lt;/li&gt;&lt;li&gt;Fluent Spanish and English&lt;/li&gt;&lt;/ul&gt;",
+   "departments": [
+    {
+     "name": "Sales"
+    }
+   ],
+   "offices": []
+  },
+  {
+   "id": 103,
+   "title": "Customer Support Specialist",
+   "updated_at": "2026-10-03T12:00:00Z",
+   "location": {
+    "name": "Remote - US"
+   },
+   "absolute_url": "https://job-boards.greenhouse.io/acmepagos/jobs/103",
+   "content": "&lt;p&gt;Help our customers. Must be authorized to work in the United States.&lt;/p&gt;",
+   "departments": [
+    {
+     "name": "Support"
+    }
+   ],
+   "offices": []
+  },
+  {
+   "id": 104,
+   "title": "Product Manager",
+   "updated_at": "2026-10-03T12:00:00Z",
+   "location": {
+    "name": "Remote"
+   },
+   "absolute_url": "https://job-boards.greenhouse.io/acmepagos/jobs/104",
+   "content": "&lt;p&gt;Own the roadmap for our merchant dashboard.&lt;/p&gt;&lt;h3&gt;Requirements&lt;/h3&gt;&lt;ul&gt;&lt;li&gt;Product management experience&lt;/li&gt;&lt;li&gt;SQL&lt;/li&gt;&lt;/ul&gt;",
+   "departments": [
+    {
+     "name": "Product"
+    }
+   ],
+   "offices": []
+  }
+ ]
+}

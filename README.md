@@ -7,7 +7,8 @@
 - **Carta de presentación** (`/carta`): link o job description (o carta espontánea a una empresa), lo que querés contar por texto o audio, tu experiencia y ajustes de tono, largo, idioma y destinatario. Devuelve una carta editable con reescritura por párrafo, otra versión con otro tono o largo, asunto de email, mensaje corto para LinkedIn y descarga en PDF o Word.
 - **Video de presentación** (`/video`): para una búsqueda o una presentación general. Maru escribe el guion (30, 60 o 90 s) en bloques editables con tiempos y tips; lo leés en un **teleprompter** mientras grabás con la cámara del navegador y recibís **feedback de cada toma**: ritmo (palabras por minuto, muletillas), fidelidad al guion y encuadre, luz, fondo y mirada a partir de 3 fotogramas. El video no sale del navegador.
 - **Entrená para tu entrevista** (`/entrevista`): simulación con formato de videollamada. Elegís tipo (RR. HH., con tu futuro líder, técnica), dificultad, cantidad de preguntas e idioma; la entrevistadora habla en voz alta, respondés por voz o por escrito y, si tu respuesta queda corta, repregunta. Al final, un **informe** con puntaje, fortalezas, qué mejorar y una respuesta más fuerte (STAR) para cada pregunta.
-- Match con búsquedas y aplicación automática: próximamente.
+- **Encontrá tu trabajo perfecto** (`/match`): cargás o reutilizás tu CV, confirmás lo que Maru entendió, contás qué querés hacer y en qué condiciones, y recibís un ranking de búsquedas reales donde podés trabajar desde Argentina, con motivos, brechas y lo que falta confirmar. Desde cada búsqueda podés guardarla, descartarla o preparar la postulación con el coach. Detalle técnico, fuentes y políticas en [docs/match.md](docs/match.md).
+- Aplicación automática: próximamente.
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
 
@@ -78,6 +79,8 @@ src/components/auth/, src/lib/auth.ts, src/app/api/auth/*  Login con magic link
 src/app/api/export/pdf, docx  Descargas (exigen sesión)
 src/lib/job.ts                Scraping de la vacante y de LinkedIn
 src/lib/prompts.ts            Instrucciones para Claude
+src/lib/match/, src/components/match/, src/app/match/, src/app/api/match/*  Match con búsquedas (ver docs/match.md)
+scripts/match-sync.ts, data/match/  Sincronización e inventario compartido de vacantes
 src/lib/schemas.ts            Esquemas Zod de entrada/salida
 ```
 

@@ -1,0 +1,61 @@
+{
+ "categories": {
+  "data": [
+   {
+    "id": "sales",
+    "type": "category",
+    "attributes": {
+     "name": "Sales"
+    }
+   }
+  ]
+ },
+ "jobs": {
+  "data": [
+   {
+    "id": "ejecutivo-comercial-acme-sur-buenos-aires",
+    "type": "job",
+    "attributes": {
+     "title": "Ejecutivo Comercial",
+     "description": "<p>Vas a vender soluciones de software a pymes de Argentina.</p>",
+     "functions": "<ul><li>Prospección y negociación con clientes</li></ul>",
+     "desirable": "<p>Experiencia con HubSpot</p>",
+     "benefits": "<p>Prepaga</p>",
+     "remote": true,
+     "remote_modality": "fully_remote",
+     "remote_zone": null,
+     "countries": [
+      "Argentina",
+      "Chile"
+     ],
+     "lang": "spanish",
+     "category_name": "Sales",
+     "min_salary": 1500,
+     "max_salary": 2200,
+     "published_at": 1791000000,
+     "company": {
+      "data": {
+       "id": "acme-sur",
+       "attributes": {
+        "name": "Acme Sur"
+       }
+      }
+     },
+     "seniority": {
+      "data": {
+       "id": 3
+      }
+     }
+    },
+    "links": {
+     "public_url": "https://www.getonbrd.com/jobs/sales/ejecutivo-comercial-acme-sur-buenos-aires"
+    }
+   }
+  ],
+  "meta": {
+   "page": 1,
+   "per_page": 100,
+   "total_pages": 1
+  }
+ }
+}
