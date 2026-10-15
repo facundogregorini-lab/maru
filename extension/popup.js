@@ -1,6 +1,6 @@
 // Popup: cargar el CV una vez (Maru lo lee con /api/profile), datos extra y botón para completar.
 
-const DEFAULT_SERVER = "http://localhost:3000";
+const DEFAULT_SERVER = "https://maru-grego7.vercel.app";
 const MAX_FILE_BYTES = 3 * 1024 * 1024; // igual que la web: Vercel acepta hasta 4,5 MB por request
 const MIN_TEXT_CHARS = 80;
 

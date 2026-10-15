@@ -47,7 +47,8 @@ function fakeModel(f: AutofillField, extras: string): { valor: string; revisar?:
   if (/full name/.test(l)) return { valor: "Ana Pérez" };
   if (/email/.test(l)) return { valor: profile.email };
   if (/phone/.test(l)) return { valor: profile.telefono };
-  if (/linkedin/.test(l)) return { valor: profile.linkedin_url };
+  // Como en el CV: sin https:// (la extensión lo agrega en los campos type="url").
+  if (/linkedin/.test(l)) return { valor: profile.linkedin_url.replace("https://", "") };
   if (/portfolio|github/.test(l)) return { valor: profile.otros_links[0] };
   if (/years/.test(l)) return { valor: "7", revisar: true, nota: "Calculado desde tu CV" };
   if (/start date/.test(l)) return { valor: "2026-11-01" };
@@ -222,12 +223,15 @@ describe.skipIf(!run)("extensión de Chrome", () => {
   it("el popup lee el CV con Maru y lo guarda junto con los datos extra", async () => {
     const popup = await browser.newPage();
     await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-    await popup.waitForSelector("#setup:not([hidden])");
+    await popup.waitForSelector("#setup", { visible: true });
+    await popup.waitForSelector("#ready", { hidden: true });
     const input = await popup.$("input#file");
     await input!.uploadFile(path.join(ROOT, "tests/fixtures/cv.pdf") as `${string}.pdf`);
     await popup.waitForSelector("#read:not([disabled])");
     await popup.click("#read");
-    await popup.waitForSelector("#ready:not([hidden])");
+    // Visibles de verdad, no sólo el atributo: el CSS puede pisar [hidden].
+    await popup.waitForSelector("#ready", { visible: true });
+    await popup.waitForSelector("#setup", { hidden: true });
     expect(await popup.$eval("#name", (n) => n.textContent)).toBe("Ana Pérez");
     expect(await popup.$eval("#cv-file", (n) => n.textContent)).toContain("cv.pdf");
 

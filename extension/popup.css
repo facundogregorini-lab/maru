@@ -9,6 +9,7 @@
   --sage: #6f8466;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body {
   margin: 0;
   width: 360px;
