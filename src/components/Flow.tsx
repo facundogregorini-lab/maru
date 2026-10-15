@@ -73,11 +73,18 @@ export default function Flow() {
   const jobTextRef = useRef<HTMLTextAreaElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
+  const restoredRef = useRef(false);
+
   // Retomamos la última postulación si se recargó la página.
   useEffect(() => {
-    // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda.
+    // StrictMode corre el efecto dos veces: la segunda ya no encontraría el handoff y pisaría con la sesión vieja.
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda
+    // y descartamos la postulación anterior para que un recargo no la traiga de vuelta.
     const handoff = takeHandoff();
     if (handoff) {
+      remove(SESSION_KEY);
       setJobUrl(handoff.jobUrl);
       setJobText(handoff.jobText);
       setShowJobText(!!handoff.jobText);

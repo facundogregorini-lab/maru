@@ -16,6 +16,8 @@ export type SyncState = {
 
 export type SyncDeps = {
   boards: Board[];
+  /** Todas las bolsas del directorio. Con `--only` se sincronizan menos, pero no hay que borrar el resto. */
+  activeBoardIds?: string[];
   loadInventory: () => Promise<Inventory>;
   saveInventory: (inv: Inventory) => Promise<void>;
   loadState: () => Promise<SyncState>;
@@ -69,6 +71,9 @@ export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
     for (let i = 0; i < todo.length; i++) {
       if (now().getTime() - started.getTime() > budget) {
         state.checkpoint = { runStartedAt, done: [...done], results };
+        // Aunque falten bolsas, publicamos lo que ya hay para que la sección no quede vacía.
+        inv.opportunities = buildOpportunities(inv.postings);
+        inv.generatedAt ??= now().toISOString();
         await deps.saveInventory(inv);
         await deps.saveState(state);
         log(`Presupuesto de tiempo agotado: quedan ${todo.length - i} bolsas para la próxima ejecución.`);
@@ -108,6 +113,9 @@ export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
       // Checkpoint por lote: si el proceso muere, la próxima ejecución sigue desde acá.
       if (processed % batchSize === 0) {
         state.checkpoint = { runStartedAt, done: [...done], results };
+        // Aunque falten bolsas, publicamos lo que ya hay para que la sección no quede vacía.
+        inv.opportunities = buildOpportunities(inv.postings);
+        inv.generatedAt ??= now().toISOString();
         await deps.saveInventory(inv);
         await deps.saveState(state);
       }
@@ -115,7 +123,7 @@ export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
     }
 
     const finished = now().toISOString();
-    purge(inv, finished, new Set(deps.boards.map((b) => b.boardId)));
+    purge(inv, finished, new Set(deps.activeBoardIds ?? deps.boards.map((b) => b.boardId)));
     inv.opportunities = buildOpportunities(inv.postings);
     inv.generatedAt = finished;
     recordRun(inv, {

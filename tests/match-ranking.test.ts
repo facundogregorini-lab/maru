@@ -30,6 +30,14 @@ async function rank(profile: MatchProfile, prefs: MatchPrefs, extra: Partial<Ran
 }
 
 describe("ranking explicable", () => {
+  it("la autorización de trabajo es texto libre: caracteres especiales no rompen el ranking", async () => {
+    for (const a of ["C++", "Italia (ciudadanía", "(a+)+$", "[eu"]) {
+      await expect(rank(dataProfile, { ...basePrefs, autorizacion: [a] })).resolves.toBeDefined();
+    }
+    const { out } = await rank(dataProfile, { ...basePrefs, autorizacion: ["Estados Unidos"] });
+    expect([...out.eligible, ...out.pending].length).toBeGreaterThan(0);
+  });
+
   it("excluye US only y separa lo que falta confirmar", async () => {
     const { out } = await rank(dataProfile, basePrefs);
     const all = [...out.eligible, ...out.pending].map((r) => r.title);

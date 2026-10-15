@@ -560,7 +560,12 @@ export function parseBoardUrl(raw: string): { sourceId: "greenhouse" | "lever" |
     return null;
   }
   const host = u.hostname.toLowerCase();
-  const parts = u.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+  let parts: string[];
+  try {
+    parts = u.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+  } catch {
+    return null; // %-escape inválido
+  }
   if (/^(job-boards|boards)(\.eu)?\.greenhouse\.io$/.test(host) && parts[0]) {
     return { sourceId: "greenhouse", slug: parts[0], region: host.includes(".eu.") ? "eu" : "us", jobId: parts[1] === "jobs" ? parts[2] : undefined };
   }

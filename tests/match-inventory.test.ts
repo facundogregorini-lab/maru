@@ -170,4 +170,23 @@ describe("sincronización", () => {
     expect(m.state.checkpoint).toBeNull();
     expect(m.inv.postings.some((p) => p.sourceId === "remotive")).toBe(true);
   });
+
+  it("con --only sincroniza algunas bolsas sin borrar las demás", async () => {
+    const m = memory();
+    await runSync({ ...m.deps, boards: [BOARDS.gh, BOARDS.remotive], fetchBoard, pauseMs: 0 });
+    const ghCount = m.inv.postings.filter((p) => p.boardId === BOARDS.gh.boardId).length;
+    expect(ghCount).toBeGreaterThan(0);
+    await runSync({ ...m.deps, boards: [BOARDS.remotive], activeBoardIds: [BOARDS.gh.boardId, BOARDS.remotive.boardId], fetchBoard, pauseMs: 0 });
+    expect(m.inv.postings.filter((p) => p.boardId === BOARDS.gh.boardId)).toHaveLength(ghCount);
+  });
+
+  it("una corrida que se queda sin tiempo igual publica oportunidades", async () => {
+    const m = memory();
+    let t = 0;
+    const now = () => new Date(Date.UTC(2026, 9, 10) + (t += 1000));
+    const out = await runSync({ ...m.deps, boards: [BOARDS.gh, BOARDS.remotive], fetchBoard, pauseMs: 0, budgetMs: 2500, now });
+    expect(out.status).toBe("parcial");
+    expect(m.inv.opportunities.length).toBeGreaterThan(0);
+    expect(m.inv.generatedAt).not.toBeNull();
+  });
 });

@@ -147,6 +147,16 @@ export function formatSalary(s: Salary | undefined | null): string | null {
 
 const WORKPLACE_LABEL: Record<Workplace, string> = { remoto: "remoto", hibrido: "híbrido", presencial: "presencial", desconocido: "sin modalidad informada" };
 
+/** `word` aparece en `text` como palabra completa. Es texto libre de la persona: nunca lo compilamos como regex. */
+function containsWord(text: string, word: string): boolean {
+  if (!word) return false;
+  const isWordChar = (c: string | undefined) => !!c && /[a-z0-9]/.test(c);
+  for (let i = text.indexOf(word); i !== -1; i = text.indexOf(word, i + 1)) {
+    if (!isWordChar(text[i - 1]) && !isWordChar(text[i + word.length])) return true;
+  }
+  return false;
+}
+
 const COUNTRY_WORDS: Record<string, string[]> = {
   espana: ["spain", "espana", "europe", "eu", "emea"],
   italia: ["italy", "europe", "eu", "emea"],
@@ -278,7 +288,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     let bucket: "eligible" | "pending" = "eligible";
     if (o.eligibility.status === "no_elegible") {
       const ev = fold(o.eligibility.evidence.join(" "));
-      const authMatch = userCountryWords.find((w) => new RegExp(`\\b${w.replace(/\./g, "\\.")}\\b`).test(ev));
+      const authMatch = userCountryWords.find((w) => containsWord(ev, w));
       const relocation = o.workplace.value !== "remoto" && placeMatches(o.locations);
       if (authMatch) {
         bucket = "pending";

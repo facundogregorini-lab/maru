@@ -37,7 +37,8 @@ async function writeJson(file: string, data: unknown, pretty = false) {
 
 async function main() {
   const dir = await readJson<Directory>(path.join(DATA, "companies.json"), { reviewedAt: "", companies: [] });
-  let boards = boardsFrom(dir);
+  const all = boardsFrom(dir);
+  let boards = all;
   const only = process.argv.find((a) => a.startsWith("--only="))?.slice(7);
   if (only) {
     const set = new Set(only.split(","));
@@ -47,6 +48,7 @@ async function main() {
 
   const outcome = await runSync({
     boards,
+    activeBoardIds: all.map((b) => b.boardId),
     loadInventory: async () => {
       const inv = await readJson<Inventory>(INV, emptyInventory("real"));
       if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real: no se mezcla con fixtures.");

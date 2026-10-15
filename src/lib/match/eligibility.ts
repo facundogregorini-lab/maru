@@ -71,6 +71,14 @@ function hasArPlace(t: string): boolean {
   return AR_PLACES.some((p) => new RegExp(`\\b${p}\\b`).test(t));
 }
 
+/** Cada ubicación por separado: "Martinez, CA" o "San Juan, TX" nombran una ciudad argentina pero están en EE. UU. */
+function arLocation(raw: string): boolean {
+  const t = fold(raw);
+  if (!hasArPlace(t)) return false;
+  if (/\bargentina\b/.test(t)) return true;
+  return !US_STATE.test(raw) && !OTHER_COUNTRIES.test(t);
+}
+
 export function classifyEligibility(p: Pick<NormalizedPosting, "locations" | "countries" | "regionText" | "workplace" | "remoteFlag" | "descriptionText">): EligibilityResult {
   const locRaw = [...p.locations, ...p.regionText].filter(Boolean).join(" | ");
   const loc = fold(locRaw);
@@ -88,7 +96,7 @@ export function classifyEligibility(p: Pick<NormalizedPosting, "locations" | "co
   if (countries.includes("AR")) return result("elegible", ["La fuente informa Argentina entre los países del puesto."]);
 
   // 2. Ubicación en Argentina.
-  if (hasArPlace(loc)) {
+  if ([...p.locations, ...p.regionText].some((l) => l && arLocation(l))) {
     return result("elegible", [`Ubicación: ${locRaw}`]);
   }
 

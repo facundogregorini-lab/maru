@@ -133,6 +133,16 @@ describe("elegibilidad desde Argentina", () => {
     expect(classifyEligibility(posting({ regionText: ["USA Only"], workplace: remote })).status).toBe("no_elegible");
     expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: "Must be authorized to work in the United States." })).status).toBe("no_elegible");
   });
+  it("ciudades argentinas homónimas en EE. UU. no cuentan como Argentina", () => {
+    for (const l of ["Martinez, CA", "San Juan, TX", "Cordoba, Spain"]) {
+      expect(classifyEligibility(posting({ locations: [l] })).status).not.toBe("elegible");
+    }
+    expect(classifyEligibility(posting({ locations: ["Martínez, Buenos Aires"] })).status).toBe("elegible");
+    expect(classifyEligibility(posting({ locations: ["Córdoba, Argentina", "London, UK"] })).status).toBe("elegible");
+  });
+  it("un link con %-escape inválido no rompe el parser", () => {
+    expect(parseBoardUrl("https://jobs.lever.co/%E0%A4")).toBeNull();
+  });
   it("LATAM, South America y Worldwide son elegibles", () => {
     for (const r of ["LATAM", "Remote - Latin America", "South America", "Worldwide"]) {
       expect(classifyEligibility(posting({ regionText: [r], workplace: remote })).status).toBe("elegible");
