@@ -1,7 +1,7 @@
 // Coordina el autocompletado: lee los campos de todos los frames de la pestaña,
 // le pide a Maru qué poner en cada uno y los completa. Nunca envía el formulario.
 
-const DEFAULT_SERVER = "http://localhost:3000";
+const DEFAULT_SERVER = "https://maru-grego7.vercel.app";
 
 class UserError extends Error {}
 

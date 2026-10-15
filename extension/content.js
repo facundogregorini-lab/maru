@@ -405,6 +405,8 @@
       return el.selectedIndex === i;
     }
     const max = el.maxLength > 0 ? el.maxLength : Infinity;
+    // Un campo type="url" no acepta "linkedin.com/in/…" sin el https:// al enviar.
+    if (type === "url" && !/^[a-z][a-z0-9+.-]*:/i.test(valor)) valor = `https://${valor}`;
     setValue(el, valor.slice(0, max));
     return clean(el.value) !== "";
   }
