@@ -65,6 +65,9 @@ describe("API de ranking: privacidad", () => {
     const j = await res.json();
     expect(j.open).toBeGreaterThan(0);
     expect(j.generatedAt).toBe("2026-10-10T12:00:00.000Z");
+    // Empresas = empleadores distintos con búsquedas abiertas, nunca más que las búsquedas.
+    expect(j.companies).toBeGreaterThan(0);
+    expect(j.companies).toBeLessThanOrEqual(j.open);
   });
 });
 

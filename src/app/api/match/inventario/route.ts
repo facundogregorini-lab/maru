@@ -21,7 +21,8 @@ export async function GET() {
         (o) => o.extracted.family.value,
       ),
       sources: active.map((s) => ({ id: s.id, name: s.name, attribution: s.attribution ?? null })),
-      companies: Object.values(inv.boards).filter((b) => b.lastOkAt && !["remotive", "jobicy", "getonbrd"].includes(b.sourceId)).length,
+      // Empleadores distintos con búsquedas abiertas (igual que la portada); no bolsas ni feeds importados.
+      companies: new Set(open.map((o) => o.company.trim().toLowerCase()).filter(Boolean)).size,
     },
     { headers: { "Cache-Control": "public, max-age=300" } },
   );
