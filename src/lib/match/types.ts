@@ -132,6 +132,8 @@ export type StoredPosting = NormalizedPosting & {
   status: PostingStatus;
   closedReason?: string;
   closedAt?: string;
+  /** Última vez que se miró la página original de un aviso importado (liveness.ts). */
+  lastLiveCheckAt?: string;
   /** Calculados al recibir el aviso completo (después se puede recortar la descripción). */
   eligibility: EligibilityResult;
   extracted: Extracted;

@@ -40,6 +40,10 @@ jobs:
           else
             npx --yes tsx@4 scripts/match-sync.ts
           fi
+      - name: Vigencia de avisos importados
+        # Mira la página original de hasta 150 importados y cierra los que ya no existen. Si falla, no frena la sync.
+        continue-on-error: true
+        run: npx --yes tsx@4 scripts/match-liveness.ts --max=150
       - name: Guardar inventario
         run: |
           git config user.name "maru-match-bot"
