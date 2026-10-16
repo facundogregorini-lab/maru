@@ -92,7 +92,8 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
           log(`✗ ${source} "${keyword}": ${run.status}.`);
           continue;
         }
-        const fields = config.fields.join(",");
+        // La API de datasets sólo filtra campos de primer nivel: "companyDetails.name" se pide como "companyDetails".
+        const fields = [...new Set(config.fields.map((f) => f.split(".")[0]))].join(",");
         const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?clean=true&format=json&limit=${rows}&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
         const list = Array.isArray(items) ? items.slice(0, rows) : [];
         // Costo conservador: uso de plataforma + precio por fila (puede sobreestimar, nunca subestimar).
@@ -102,6 +103,8 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword });
         out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } });
         log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
+        // Diagnóstico sin datos del aviso: si nada pasa, sólo los nombres de campo que llegaron.
+        if (list.length && !normalized.accepted) log(`  campos recibidos: ${Object.keys(Object(list[0])).sort().join(", ")} · rechazos ${JSON.stringify(normalized.rejected)}`);
       } catch (e) {
         spent += cap;
         out.ledger.push({ at: nowIso, provider: "apify", call: "run", params, rows: 0, consumed: cap, quota: {}, error: redact((e as Error).message) });

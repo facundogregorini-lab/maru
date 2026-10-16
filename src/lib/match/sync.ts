@@ -1,6 +1,6 @@
 import { FETCHERS, type Board, type BoardFetch } from "./connectors";
 import { HttpError, type RetryOptions } from "./http";
-import { applyBoard, buildOpportunities, expireImported, purge, recordRun } from "./inventory";
+import { applyBoard, buildOpportunities, expireImported, purge, recordRun, refreshImported } from "./inventory";
 import type { BoardSyncResult, Inventory } from "./types";
 
 /**
@@ -123,6 +123,7 @@ export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
     }
 
     const finished = now().toISOString();
+    totals.updated += refreshImported(inv);
     totals.closed += expireImported(inv, finished);
     purge(inv, finished, new Set(deps.activeBoardIds ?? deps.boards.map((b) => b.boardId)));
     inv.opportunities = buildOpportunities(inv.postings);
