@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { load, save } from "@/lib/storage";
+import { MaruHead } from "../maru/PixelMaru";
 import { useAuth } from "./AuthProvider";
 
 const LAST_EMAIL_KEY = "maru:email";
@@ -66,12 +67,44 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
       ref={dialogRef}
       onClose={onClose}
       onClick={(e) => e.target === dialogRef.current && onClose()}
-      className="m-auto w-[calc(100%-32px)] max-w-md rounded-3xl border border-line bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/40 backdrop:backdrop-blur-[2px]"
+      className="m-auto w-[calc(100%-32px)] max-w-[860px] overflow-hidden rounded-[28px] bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/40 backdrop:backdrop-blur-[2px]"
       aria-labelledby="login-title"
     >
-      <div className="p-6 sm:p-8">
+      <div className="grid md:grid-cols-[1fr_1fr]">
+      {/* Como el registro de jobright: a la izquierda la promesa, a la derecha el formulario. */}
+      <div className="hidden flex-col justify-between bg-[radial-gradient(circle_at_20%_85%,rgba(0,240,160,0.55),transparent_55%),linear-gradient(135deg,#ffffff,#e9fbf3)] p-8 md:flex">
+        <div>
+          <p className="flex items-center gap-2">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-neon">
+              <MaruHead size={22} />
+            </span>
+            <span className="font-display text-2xl font-bold">Maru</span>
+          </p>
+          <p className="mt-10 text-[28px] leading-tight">
+            <strong className="font-bold">Un camino rápido y claro</strong> a tu próximo trabajo
+          </p>
+          <hr className="mt-6 border-ink/10" />
+        </div>
+        <ul className="mt-10 space-y-2.5 text-sm">
+          {[
+            ["Búsquedas reales", "que podés tomar desde Argentina"],
+            ["Tu CV a medida", "de cada búsqueda"],
+            ["Postulaciones completas", "en 1 clic con la extensión"],
+          ].map(([b, t]) => (
+            <li key={b} className="flex items-center gap-2">
+              <span className="grid h-5 w-5 place-items-center rounded-full bg-white text-[10px] font-bold ring-1 ring-ink/20">✓</span>
+              <span>
+                <strong>{b}</strong> {t}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="p-6 sm:p-10">
         <div className="flex items-start justify-between gap-4">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-brand font-display text-lg text-paper">m</span>
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-neon md:invisible">
+            <MaruHead size={24} />
+          </span>
           <button type="button" onClick={onClose} aria-label="Cerrar" className="grid h-8 w-8 place-items-center rounded-full text-muted hover:bg-sand hover:text-ink">
             ✕
           </button>
@@ -79,13 +112,11 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
 
         {!sentTo ? (
           <form onSubmit={send}>
-            <h2 id="login-title" className="mt-4 font-display text-2xl tracking-tight">
-              Ingresá para {reason}
+            <h2 id="login-title" className="mt-2 text-center text-2xl">
+              Ingresá a <strong>Maru</strong>
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              Sin contraseña: te mandamos un link a tu email y listo. Este navegador te va a recordar.
-            </p>
-            <label className="mt-5 block text-sm font-medium" htmlFor="login-email">
+            {reason !== "entrar a Maru" && <p className="mt-1 text-center text-sm text-muted">para {reason}</p>}
+            <label className="sr-only" htmlFor="login-email">
               Tu email
             </label>
             <input
@@ -97,8 +128,8 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="nombre@mail.com"
-              className="mt-1.5 w-full rounded-xl border border-line bg-cream px-4 py-3 text-base outline-none transition focus:border-brand focus:ring-4 focus:ring-brand-soft"
+              placeholder="Tu email"
+              className="mt-8 w-full rounded-lg bg-[#f5f6f7] px-4 py-3 text-base outline-none transition placeholder:text-ink/40 focus:ring-2 focus:ring-ink"
             />
             {error && (
               <p role="alert" className="mt-2 text-sm text-brand-dark">
@@ -108,11 +139,13 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
             <button
               type="submit"
               disabled={sending || !email.trim()}
-              className="mt-5 w-full rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark disabled:opacity-60"
+              className="mt-5 w-full rounded-lg bg-ink px-6 py-3 font-bold uppercase text-white transition hover:bg-black disabled:opacity-60"
             >
               {sending ? "Enviando…" : "Mandame el link"}
             </button>
-            <p className="mt-3 text-center text-xs text-muted">Lo que armaste queda guardado: no perdés nada mientras tanto.</p>
+            <p className="mt-4 text-center text-xs leading-relaxed text-muted">
+              Sin contraseña: te mandamos un link a tu email. Lo que armaste queda guardado mientras tanto.
+            </p>
           </form>
         ) : (
           <div aria-live="polite">
@@ -146,6 +179,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
             <p className="mt-4 text-xs text-muted">¿No llega? Revisá spam o promociones.</p>
           </div>
         )}
+      </div>
       </div>
     </dialog>
   );

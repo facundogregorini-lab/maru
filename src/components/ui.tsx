@@ -8,14 +8,14 @@ import { MaruSprite } from "./maru/PixelMaru";
 export function StepCard({ n, title, hint, children }: { n: number; title: string; hint: string; children: React.ReactNode }) {
   return (
     <section
-      className="animate-rise rounded-3xl bg-paper p-5 ring-1 ring-line sm:p-8"
+      className="animate-rise rounded-[24px] bg-[#f2f4f5] p-5 sm:p-8"
       style={{ animationDelay: `${n * 70}ms` }}
     >
       <div className="mb-5 flex items-start gap-4">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-display text-lg font-bold text-white">{n}</span>
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-neon font-bold">{n}</span>
         <div>
-          <h2 className="font-display text-2xl leading-tight">{title}</h2>
-          <p className="mt-1 text-sm text-muted">{hint}</p>
+          <h2 className="text-xl font-semibold leading-tight sm:text-2xl">{title}</h2>
+          <p className="mt-1 text-sm text-ink/70">{hint}</p>
         </div>
       </div>
       {children}
@@ -28,7 +28,7 @@ export function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes
     <button
       type="button"
       {...props}
-      className="press rounded-full bg-ink px-10 py-3.5 text-base font-bold text-white hover:bg-black disabled:cursor-not-allowed disabled:bg-black/15 disabled:text-white"
+      className="press inline-flex h-14 items-center rounded-full bg-ink px-10 text-lg font-medium text-white hover:bg-black disabled:cursor-not-allowed disabled:bg-black/15 disabled:text-white sm:text-xl"
     >
       {children}
     </button>
@@ -77,7 +77,7 @@ function WalkingMaru() {
 }
 
 export const inputClass =
-  "w-full rounded-2xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 hover:border-ink/30 focus:border-ink focus:ring-4 focus:ring-brand-soft";
+  "w-full rounded-xl border border-transparent bg-white px-4 py-3 text-base outline-none ring-1 ring-black/[0.06] transition placeholder:text-ink/40 hover:ring-black/20 focus:ring-2 focus:ring-ink";
 
 /** Opciones tipo "chip" de selección única. */
 export function Chips<T extends string>({ value, options, onChange }: { value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void }) {
@@ -89,7 +89,7 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
           type="button"
           aria-pressed={value === v}
           onClick={() => onChange(v)}
-          className={`press rounded-full border px-3.5 py-1.5 text-sm font-medium ${value === v ? "border-ink bg-ink text-white" : "border-line bg-paper hover:border-ink/40"}`}
+          className={`press rounded-lg px-3.5 py-1.5 text-sm font-medium ${value === v ? "bg-ink text-white" : "bg-white ring-1 ring-black/[0.06] hover:ring-black/20"}`}
         >
           {label}
         </button>

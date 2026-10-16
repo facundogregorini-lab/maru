@@ -205,7 +205,7 @@ export default function Flow() {
                 placeholder="https://…"
                 value={jobUrl}
                 onChange={(e) => setJobUrl(e.target.value)}
-                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand-soft"
+                className="w-full rounded-xl border border-transparent bg-white px-4 py-3 ring-1 ring-black/[0.06] text-base outline-none transition placeholder:text-muted/60 focus:ring-2 focus:ring-ink"
               />
               {showJobText ? (
                 <textarea
@@ -214,7 +214,7 @@ export default function Flow() {
                   placeholder="Pegá acá el texto completo de la vacante (y, si los ves, los campos del formulario)."
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
-                  className="mt-3 w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-4 focus:ring-brand-soft"
+                  className="mt-3 w-full rounded-xl border border-transparent bg-white px-4 py-3 ring-1 ring-black/[0.06] text-sm outline-none transition focus:ring-2 focus:ring-ink"
                 />
               ) : (
                 <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-brand">
@@ -236,7 +236,7 @@ export default function Flow() {
                 placeholder="Me encanta que… Creo que encajo porque… Lo que más me entusiasma es…"
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base leading-relaxed outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand-soft"
+                className="w-full rounded-xl border border-transparent bg-white px-4 py-3 ring-1 ring-black/[0.06] text-base leading-relaxed outline-none transition placeholder:text-muted/60 focus:ring-2 focus:ring-ink"
               />
               <div className="mt-3">
                 <VoiceButton onText={(t) => setFeedback((f) => (f ? `${f.trimEnd()} ${t}` : t))} />

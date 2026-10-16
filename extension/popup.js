@@ -76,7 +76,20 @@ $("read").addEventListener("click", async () => {
     if (!res.ok) throw new Error(data.error || "No pudimos leer tu CV. Probá de nuevo.");
     await chrome.storage.local.set({ profile: data.profile, cv });
     status("¡Listo! Abrí un formulario de postulación y tocá “Completar esta postulación”.");
-    await render();
+    await /** Completitud: los campos que Maru completó (los "para revisar" incluidos) sobre esos más los obligatorios vacíos. */
+function dashboard({ completados = 0, revisar = 0, pendientes = 0 }) {
+  const total = completados + pendientes;
+  if (!total) return;
+  const pct = Math.round((completados / total) * 100);
+  $("pct").textContent = `${pct}%`;
+  $("bar").style.width = `${pct}%`;
+  $("n-ok").textContent = completados - revisar;
+  $("n-warn").textContent = revisar;
+  $("n-todo").textContent = pendientes;
+  $("dashboard").hidden = false;
+}
+
+render();
   } catch (err) {
     const offline = err instanceof TypeError;
     status(offline ? `No pudimos conectar con Maru (${await server()}).` : err.message, true);
@@ -90,7 +103,20 @@ $("change").addEventListener("click", async () => {
   $("file").value = "";
   $("file-name").textContent = "Elegí tu CV o el PDF de tu LinkedIn (PDF o Word)";
   status("");
-  await render();
+  await /** Completitud: los campos que Maru completó (los "para revisar" incluidos) sobre esos más los obligatorios vacíos. */
+function dashboard({ completados = 0, revisar = 0, pendientes = 0 }) {
+  const total = completados + pendientes;
+  if (!total) return;
+  const pct = Math.round((completados / total) * 100);
+  $("pct").textContent = `${pct}%`;
+  $("bar").style.width = `${pct}%`;
+  $("n-ok").textContent = completados - revisar;
+  $("n-warn").textContent = revisar;
+  $("n-todo").textContent = pendientes;
+  $("dashboard").hidden = false;
+}
+
+render();
   canRead();
 });
 
@@ -120,6 +146,20 @@ $("fill").addEventListener("click", async () => {
   $("fill").disabled = false;
   if (!result) return status("Algo salió mal. Probá de nuevo.", true);
   status(result.error || result.summary, !!result.error);
+  if (!result.error) dashboard(result);
 });
+
+/** Completitud: los campos que Maru completó (los "para revisar" incluidos) sobre esos más los obligatorios vacíos. */
+function dashboard({ completados = 0, revisar = 0, pendientes = 0 }) {
+  const total = completados + pendientes;
+  if (!total) return;
+  const pct = Math.round((completados / total) * 100);
+  $("pct").textContent = `${pct}%`;
+  $("bar").style.width = `${pct}%`;
+  $("n-ok").textContent = completados - revisar;
+  $("n-warn").textContent = revisar;
+  $("n-todo").textContent = pendientes;
+  $("dashboard").hidden = false;
+}
 
 render();
