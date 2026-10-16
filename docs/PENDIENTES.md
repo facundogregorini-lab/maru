@@ -12,6 +12,15 @@ El dueño pidió un traspaso para que otra IA implemente por etapas y después s
 4. Priorizar la verificación de vigencia/cuota del trial: comenzó el 16/10; vencimiento esperado 23/10, confirmar hora real. Último saldo observado: 450 avisos. La propuesta reparte hasta 360 en cortes comparables, 60 en remoto/huecos y 30 de reserva; no obliga a consumir si no aporta aprendizaje.
 5. Conservar el catálogo gratuito y el ranking actual; demostrar que la mejora funciona cuando Fantastic quede deshabilitado. No hay presupuesto recurrente aprobado para Apify ni otro proveedor.
 
+**E0 hecho (16/10, costo cero):** ver [research/e0-2026-10-16](research/e0-2026-10-16/README.md). Con 8 perfiles sintéticos (2 de reserva) y revisión manual del top 5:
+- De los 909 grupos elegibles desde Argentina, el 56% es de 8 empleadores, la mayoría agencias de staffing o proyectos de IA y lingüística.
+- Por área, los elegibles son 13 de administración, 21 de finanzas, 38 de RR. HH. y 4 de logística, contra 254 de software. Hay 37 junior.
+- El perfil de logística quedó 0 útiles de 5 (la familia "operaciones" mezcla IT y Revenue Ops).
+
+Conclusión: **para generalistas el problema principal es de adquisición (H1)**. El ranking tiene fallas menores (modalidad y ciudad, seniority, variedad, antigüedad) y hay candidatos de mejora listados ahí, sin implementar todavía. Siguiente:
+- **E1** si el trial de Fantastic sigue vigente: se corre desde el panel con sesión real. Desde los entornos de Claude en la nube no hay red ni claves de producción.
+- **E2** en paralelo: sumar empleadores argentinos generalistas.
+
 Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
 ## Implementado en esta tanda

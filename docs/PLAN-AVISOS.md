@@ -45,6 +45,8 @@ Si se amplía la herramienta para el experimento: mantener sesión + allowlist, 
 
 **Entregable:** `docs/research/avisos-<fecha>/baseline.json`, perfiles sintéticos, resultados de referencia y una tabla breve de perfiles mal cubiertos. Identificar problemas de adquisición frente a problemas de clasificación/ranking.
 
+**Estado: hecho el 16/10** en [research/e0-2026-10-16](research/e0-2026-10-16/README.md), con el script `scripts/e0-baseline.ts`, que se reutiliza para medir E1 a E3 con los mismos perfiles. Resultado: H1 se sostiene; para generalistas el problema principal es de adquisición. Candidatos de clasificación y ranking listados, sin implementar.
+
 ## 4. E1 — Aprovechar el trial de Fantastic
 
 **Objetivo:** aprender cobertura por público y repetición temporal, no construir una sincronización productiva dependiente del trial. Ejecuciones manuales; este documento no crea cron ni seguimiento programado.
