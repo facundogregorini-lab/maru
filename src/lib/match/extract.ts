@@ -7,6 +7,8 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
+export const EXTRACTION_VERSION = 2;
+
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
 export const SKILLS: Record<string, string[]> = {
@@ -124,22 +126,22 @@ export function splitSections(text: string): { required: string; desirable: stri
 /* ---------- Familia de rol ---------- */
 
 const FAMILY_RULES: [RoleFamily, RegExp][] = [
-  ["datos", /\b(data (analyst|scientist|engineer)|analista de datos|cientific[oa] de datos|business intelligence|\bbi\b|analytics engineer|machine learning|ml engineer)/],
-  ["producto", /\b(product (manager|owner|lead|director|operations)|gerente de producto|\bpm\b|product ops)/],
+  ["datos", /\b(data (analyst|scientist|engineer|reporting)|analista de datos|analista de reporting|cientific[oa] de datos|business intelligence|\bbi\b|analytics engineer|machine learning|ml engineer)/],
+  ["producto", /\b(product (manager|owner|lead|director|operations|analyst)|desarrollo de producto|gerente de producto|\bpm\b|product ops)/],
   ["diseno", /\b(designer|diseñador|disenador|ux|ui|product design|motion|graphic|grafic)/],
-  ["software", /\b(engineer|developer|desarrollador|programador|software|devops|sre|qa|tester|frontend|backend|full ?stack|architect|tech lead|cto|mobile|ios|android)/],
+  ["software", /\b(engineer|developer|desarrollador|programador|software|devops|sre|qa|tester|frontend|backend|full ?stack|architect|tech lead|cto|mobile|ios|android|infraestructura|sistemas y aplicaciones|funcional cloud|it networking|redes y telecomunicaciones|seguridad electronica|security analyst|aiops)/],
   ["marketing", /\b(marketing|growth|seo|sem|content|contenido|brand|community|social media|media buyer|paid media|performance|crm|lifecycle|comunicaci)/],
   ["ventas", /\b(sales|ventas|account executive|sdr|bdr|business development|desarrollo de negocios|comercial|vendedor|ejecutivo de cuentas|partnerships|key account)/],
   ["atencion_cliente", /\b(customer (support|service|success|experience)|support (agent|specialist)|atencion al cliente|soporte|help ?desk|call center|onboarding specialist)/],
-  ["finanzas", /\b(finance|financ|accountant|accounting|contador|contable|fp&a|controller|tesorer|treasury|tax|impuest|auditor|billing|facturaci|payroll)/],
+  ["finanzas", /\b(finance|financ|finanz|accountant|accounting|contador|contable|contabilidad|cuentas a pagar|cuentas corrientes|cobranzas|pago a proveedores|accounts payables|pricing|precios|costos|presupuesto|riesgo crediticio|credit associate|derivatives|rates analysis|record to report|fp&a|controller|tesorer|treasury|tax|impuest|auditor|billing|facturaci|impositivo|payroll)/],
   ["rrhh", /\b(recruit|talent|people|human resources|recursos humanos|rrhh|hr |hrbp|seleccion)/],
   ["legal", /\b(legal|lawyer|abogad|counsel|compliance|paralegal)/],
-  ["logistica", /\b(logistic|logistica|supply chain|warehouse|deposito|fleet|transport|procurement|compras|abastecimiento|last mile)/],
+  ["logistica", /\b(logistic|logistica|supply chain|warehouse|deposito|fleet|transport|procurement|compras|abastecimiento|last mile|comercio exterior|comex|global trade|procure to pay)/],
   ["salud", /\b(nurse|enfermer|medic|doctor|clinical|clinic|pharma|farmac|health|salud|therap|psicolog)/],
   ["educacion", /\b(teacher|docente|profesor|tutor|instructor|curriculum|education|educacion)/],
   ["consultoria", /\b(consultant|consultor|advisory|asesor)/],
-  ["administracion", /\b(administrative|administrativ|assistant|asistente|office manager|recepcion|data entry|secretar|virtual assistant)/],
-  ["operaciones", /\b(operations|operaciones|ops\b|project manager|program manager|gerente de proyecto|coordinator|coordinador|process|procesos|business analyst|strategy|estrategia)/],
+  ["administracion", /\b(administrative|administrativ|administracion|administrador de documentos|assistant|asistente|office manager|recepcion|data entry|secretar|virtual assistant)/],
+  ["operaciones", /\b(operations|operaciones|ops\b|project manager|program manager|gerente de proyecto|coordinator|coordinador|process|procesos|business analyst|strategy|estrategia|calidad|quality analyst|mejora continua|planeamiento|gestion de produccion|analista ambiente)/],
 ];
 
 export function familyFromTitle(title: string): RoleFamily {
@@ -155,8 +157,8 @@ const SENIORITY_RULES: [Seniority, RegExp][] = [
   ["director", /\b(director|directora|head of|head,|jefe de area)\b/],
   ["manager", /\b(manager|gerente|jefe|jefa|supervisor|supervisora)\b/],
   ["lead", /\b(lead|lider|staff|principal|architect|arquitect)\b/],
-  ["senior", /\b(senior|sr\.?|sssr|iii)\b/],
   ["semi_senior", /\b(semi ?senior|ssr\.?|mid|mid-level|ii)\b/],
+  ["senior", /\b(senior|sr\.?|sssr|iii)\b/],
   ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i)\b/],
   ["pasantia", /\b(intern|internship|pasante|pasantia|becari)\b/],
 ];
@@ -171,8 +173,8 @@ export function seniorityFromTitle(title: string): Seniority | null {
 }
 
 export function yearsRequired(text: string): number | null {
-  const f = fold(text);
-  const m = f.match(/(\d{1,2})\s*\+?\s*(?:-\s*\d{1,2}\s*)?(?:years|year|anos|ano)\s+(?:of\s+)?(?:de\s+)?(?:experience|experiencia|exp\b|relevant|professional|in|en)/);
+  const f = fold(text.replace(/[–—−]/g, "-").replace(/(\d),(\d)/g, "$1.$2"));
+  const m = f.match(/(?<![\d.])\b(\d{1,2}(?:\.\d+)?)\s*\+?\s*(?:(?:-|to|a|y)\s*\d{1,2}(?:\.\d+)?\s*)?(?:years|year|anos|ano)\s+(?:of\s+)?(?:de\s+)?(?:experience|experiencia|exp\b|relevant|professional|in|en)/);
   const n = m ? Number(m[1]) : null;
   return n !== null && n > 0 && n < 31 ? n : null;
 }

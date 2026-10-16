@@ -113,7 +113,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
     max_tokens: opts.maxTokens ?? 16000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
-    system: opts.system,
+    system: `${opts.system}\n\nFecha actual (UTC): ${new Date().toISOString().slice(0, 10)}. Usá esta fecha para calcular la duración de experiencias vigentes. No inventes fechas que no estén en la información de la persona.`,
     output_config: { effort: opts.effort, format: betaZodOutputFormat(opts.schema) },
     messages: [{ role: "user", content: opts.content }],
   });

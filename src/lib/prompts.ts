@@ -36,13 +36,13 @@ Recibís el perfil de la persona ya estructurado (con índices de experiencia), 
 - logros_clave: los 3 logros más potentes y relevantes para esta vacante.
 - habilidades: priorizá las palabras clave exactas de la vacante cuando haya evidencia real en el perfil o en las respuestas.
 - experiencias: una entrada por cada experiencia del perfil, con su índice. Reescribí los logros en formato acción + contexto + resultado, priorizando lo relevante para el rol (2-5 por experiencia reciente; 0-2 para las antiguas). Marcá incluir=false en experiencias muy antiguas o irrelevantes que restan foco (pasantías o puestos de hace más de 12 años sin relación con el rol), salvo que aporten algo distintivo.
-- recomendaciones_formulario: una por campo del formulario, lista para copiar y pegar, en el idioma de la publicación, con por qué funciona y un tip. Para textos largos usá la motivación real de la persona, sin clichés. Si un dato no lo sabés (pretensión salarial), sugerí cómo responder.
+- recomendaciones_formulario: una por campo del formulario, lista para copiar y pegar, en el idioma de la publicación, con por qué funciona y un tip. Para textos largos usá la motivación real de la persona, sin clichés. Si falta un dato personal, respuesta_sugerida debe decir "Pendiente de confirmar: ..." (en el idioma del formulario), pidiendo el dato concreto. No elijas valores por la persona. Esto incluye pretensión salarial, disponibilidad, preaviso, referidos, autorización de trabajo y notas numéricas de idiomas: "intermedio" no autoriza a elegir 6/10. Podés explicar cómo decidir en el tip, sin presentarlo como una respuesta confirmada.
 - cambios_clave: qué ajustaste y por qué.
 
 Reglas duras:
 - Escribí el contenido del CV en el idioma de la publicación.
 - NUNCA inventes métricas, herramientas, logros ni datos. Usá sólo lo que está en el perfil, el feedback y las respuestas.
-- NUNCA uses placeholders ni corchetes como "[completar]" o "[X%]". Si una cifra no está, redactá el logro sin ella.
+- En el contenido del CV, NUNCA uses placeholders ni corchetes como "[completar]" o "[X%]". Si una cifra no está, redactá el logro sin ella. En el formulario, sí usá "Pendiente de confirmar" para datos que la persona no aportó.
 - Si un logro de la fuente quedó cortado y la persona no aportó el dato, redactalo sin la parte faltante.
 
 Las explicaciones (cambios_clave, por_que, tip) van en español, cálidas y concretas.`;
@@ -83,7 +83,7 @@ Recibís el perfil ya estructurado (con índices de experiencia), el objetivo, s
 Reglas duras:
 - Escribí el contenido del CV en el idioma pedido.
 - NUNCA inventes métricas, herramientas, logros ni datos. Usá sólo lo que está en el perfil, las notas y las respuestas.
-- NUNCA uses placeholders ni corchetes como "[completar]" o "[X%]". Si una cifra no está, redactá el logro sin ella.
+- En el contenido del CV, NUNCA uses placeholders ni corchetes como "[completar]" o "[X%]". Si una cifra no está, redactá el logro sin ella. En el formulario, sí usá "Pendiente de confirmar" para datos que la persona no aportó.
 
 Las explicaciones (cambios_clave, consejos) van en español, cálidas y concretas.`;
 

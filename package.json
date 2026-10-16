@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "match:sync": "npx --yes tsx@4 scripts/match-sync.ts",
-    "match:add-company": "npx --yes tsx@4 scripts/match-add-company.ts"
+    "match:add-company": "npx --yes tsx@4 scripts/match-add-company.ts",
+    "match:apify": "npx --yes tsx@4 scripts/apify-jobs.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
@@ -17,6 +18,7 @@
     "@fontsource/source-sans-3": "^5.3.1",
     "@fontsource/source-serif-4": "^5.3.1",
     "@sparticuz/chromium": "^153.0.0",
+    "apify-client": "2.20.0",
     "cheerio": "^1.2.0",
     "docx": "^9.10.0",
     "jszip": "^3.10.2",

@@ -120,6 +120,10 @@ export function canonicalUrl(raw: string): string {
   try {
     const u = new URL(raw);
     const host = u.hostname.toLowerCase().replace(/^www\./, "").replace(/^job-boards\.(eu\.)?greenhouse\.io$/, "boards.$1greenhouse.io");
+    const indeedId = /(^|\.)indeed\.com$/.test(host) ? u.searchParams.get("jk") : null;
+    if (indeedId) return `indeed-job:${indeedId}`;
+    const computrabajoId = /(^|\.)computrabajo\.com$/.test(host) ? u.searchParams.get("oi") : null;
+    if (computrabajoId) return `computrabajo-job:${computrabajoId}`;
     // Greenhouse identifica el aviso por gh_jid aunque la página esté en el sitio de la empresa.
     const ghJid = u.searchParams.get("gh_jid");
     if (ghJid) return `greenhouse-job:${ghJid}`;

@@ -1,6 +1,6 @@
 # Estado y próximos pasos de Maru
 
-Actualizado el 16/10/2026. Esta tanda está preparada en `codex/cuentas-sync-y-planes`, basada en `main` con el login Google de la PR #22. Hasta integrar y desplegar la rama, estos cambios no deben considerarse publicados.
+Actualizado el 16/10/2026. La PR #23 (cuentas, sincronización y planes) y la PR #24 (teleprompter, cámaras y perfil en texto) ya están integradas en `main`. El login Google de la PR #22 está preservado. El piloto de Apify se documenta en [APIFY.md](APIFY.md); su salida queda separada del inventario público y no se activaron consumos recurrentes.
 
 ## Implementado en esta tanda
 
@@ -14,12 +14,22 @@ Actualizado el 16/10/2026. Esta tanda está preparada en `codex/cuentas-sync-y-p
 - **Logos**: 15 marcas verificadas desde Simple Icons 16.35.0, servidas como SVG local. Correspondencia por nombre exacto; el resto conserva inicial y color. Fuentes y licencias en `public/companies/`.
 - **Video de portada**: renderer usa la misma agrupación que la web. MP4, WebM y póster regenerados: 6.439 búsquedas, 425 empresas y 909 elegibles desde Argentina al renderizar.
 
+## QC y correcciones del 16/10
+
+- Teleprompter: se reprodujo “Completá los tres primeros pasos” con los tres campos completos; se quitó el mínimo oculto de motivación y se explican los requisitos de cada campo. “Aporto valor” ya genera un guion en el preview probado.
+- Cámara: preview, grabación, revisión y repetir toma verificadas con Computer Use; selección de cámara/micrófono y apagado disponibles. Entrevista: cámara en sala y llamada, respuesta por texto e informe comprobados. No se enviaron fotogramas reales al feedback de IA durante este QC.
+- Perfil: un resumen pegado sin empresas/fechas ya no se rechaza como PDF escaneado.
+- CV, carta, match, filtros/detalle y seguimiento se probaron con un perfil ficticio en preview. Seguimiento retiene el cambio de estado tras recargar. El ZIP de extensión descarga bien; su instalación y autocompletado real en Chrome quedan pendientes porque la política del navegador de Computer Use bloqueó `chrome://extensions`.
+- Apify: MCP autenticado, tres ejecuciones pagas aprobadas dentro de US$0,50 y datasets evaluados; 144 recibidos, 125 aceptados, 123 oportunidades canónicas. Sin cron ni publicación automática. Ver [APIFY.md](APIFY.md).
+- Redacción con IA: se informa la fecha actual para experiencias vigentes; en formularios, disponibilidad, referidos, salarios y notas de idiomas sin confirmar deben quedar pendientes, sin valores supuestos.
+- Calidad de avisos: se amplían títulos locales, se corrigen rangos de años y “Semi Senior”, y la extracción se recalcula al refrescar cada aviso.
+
 ## Lo que tiene que resolver el dueño
 
 1. **Definición comercial.** Confirmar o ajustar la propuesta antes de habilitar cobro: semanal $4.500, mensual $10.000 y trimestral $22.500 (destacado); gratis 1 CV y 1 carta por día y 1 entrevista y 1 guion por semana; pago ilimitado con uso razonable (25 pedidos por día); STAR, feedback de cámara y Word sólo con plan. Detalle en [COBROS.md](COBROS.md). El modo actual sigue siendo gratis. El buscador, ranking, lectura de perfil y extensión siguen gratis.
 2. **Mercado Pago.** Crear/configurar la aplicación y cargar `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET` en Vercel. Configurar notificaciones firmadas a `<dominio>/api/billing/webhook` para suscripciones, comprobantes y pagos. El circuito exacto debe probarse con la cuenta: no se hicieron cobros reales. No sirve pegar un link de pago genérico ni volver con `?suscripcion=ok`. Pasos y fuentes en [COBROS.md](COBROS.md).
 3. **Datos del negocio y legales.** Titular/razón social, identificación fiscal, domicilio y contacto; revisión de términos y privacidad, política/procedimiento de arrepentimiento y reembolso, y su botón antes de vender. La cancelación de renovación ya existe; este circuito legal depende de la definición del negocio.
-4. **Google, si todavía falta configurar.** El código ya está en main. Revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
+4. **Google.** Ya está en main y hay sesión real observada durante el QC. Sólo si cambia el dominio o falta configuración en otro entorno: revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
 5. **Validación real.** Ingresar con la misma cuenta en compu y celular, guardar una búsqueda, editar desde ambos y comprobar el borrado. Confirmar que están las variables de Redis, IA y envío de emails. No fue posible comprobar el Redis productivo con una sesión real desde este entorno.
 6. **Chrome Web Store.** Crear/completar la cuenta de publicador, ficha, datos de privacidad y subir el ZIP generado por `/extension`. La instalación por ZIP sigue disponible hasta publicar. Usar únicamente testimonios de usuarios reales que autoricen publicarlos.
 7. **Dominio y medición.** Confirmar dominio canónico en `NEXT_PUBLIC_SITE_URL`, email en `NEXT_PUBLIC_CONTACT_EMAIL` y activar Vercel Analytics si se desea usarlo.
@@ -42,3 +52,7 @@ La IA del chat y el circuito financiero se probaron con respuestas simuladas: ca
 ## Cómo seguir
 
 Mantener el idioma rioplatense, datos reales y los tokens existentes. No inventar testimonios, postulantes ni promesas de empleo. Flujo: rama → PR → chequeos y preview → integrar. Chequeos: `npx tsc --noEmit -p .`, `npx eslint src --quiet`, `npx vitest run`, `npx next build`.
+
+## Próximo paso para avisos pagos
+
+La conexión MCP de Codex ya funciona. Para correr el pipeline fuera del chat hace falta `APIFY_TOKEN` como secreto del runner, un presupuesto recurrente aprobado y una selección de consultas por rol/provincia. El permiso de US$0,50 fue sólo para el piloto. Comparar las fuentes con muestras más amplias antes de prometer cobertura nacional. El comando `match:apify` por defecto es dry-run y produce candidatos separados del inventario de producción.
