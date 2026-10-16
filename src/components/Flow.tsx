@@ -1,5 +1,6 @@
 "use client";
 
+import { jobInputIssue } from "@/lib/inputValidation";
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers, findGaps } from "@/lib/gaps";
@@ -120,7 +121,8 @@ export default function Flow() {
 
   const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && feedback.trim().length > 20 && cv.ready;
+  const missing = [jobInputIssue(jobUrl, jobText), cv.issue, !feedback.trim() ? "Contanos por qué te interesa esta vacante." : null].filter(Boolean);
+  const canAnalyze = missing.length === 0;
   const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
   async function analyze() {
@@ -264,7 +266,7 @@ export default function Flow() {
               <PrimaryButton onClick={analyze} disabled={!canAnalyze}>
                 Empezar
               </PrimaryButton>
-              {!canAnalyze && <p className="text-xs text-muted">Completá los tres pasos para seguir.</p>}
+              {!canAnalyze && <p className="text-xs text-muted">{missing.join(" ")}</p>}
             </div>
           </div>
           <ProductMore id="postulacion" />

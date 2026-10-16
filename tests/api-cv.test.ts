@@ -73,6 +73,18 @@ describe("/api/profile", () => {
     expect((await res.json()).code).toBe("CV_INVALID");
   });
 
+  it("acepta experiencia pegada como resumen aunque no traiga empresas o fechas", async () => {
+    askStructured.mockResolvedValue({ ...profile, experiencia: [], educacion: [], titulo: "Analista de datos", aptitudes: ["SQL"] });
+    const res = await profilePOST(req({ source: { kind: "texto", text: "Soy analista de datos. Trabajo con SQL y Python, construyo tableros y preparo reportes comerciales para equipos de ventas." } }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).profile.experiencia).toEqual([]);
+  });
+  it("pide detalles sobre texto insuficiente sin llamarlo un archivo de imagen", async () => {
+    askStructured.mockResolvedValue({ ...profile, titulo: "", experiencia: [], educacion: [] });
+    const res = await profilePOST(req({ source: { kind: "texto", text: "Quiero trabajar y estoy buscando una oportunidad para aprender y crecer con un equipo." } }));
+    expect((await res.json()).code).toBe("CV_NEEDS_DETAIL");
+  });
+
   it("PDF sin texto legible (p. ej. Canva como imagen): pide pegar la experiencia", async () => {
     askStructured.mockResolvedValue({ ...profile, experiencia: [], educacion: [] });
     const res = await profilePOST(req(onlyPdf));

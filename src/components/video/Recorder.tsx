@@ -7,6 +7,7 @@ import { useLoginGate } from "../auth/useLoginGate";
 import { speechStats, useDictation } from "../speech";
 import { post } from "../ui";
 import FeedbackCard from "./FeedbackCard";
+import { useCamera } from "../useCamera";
 
 type Phase = "off" | "preview" | "countdown" | "recording" | "review";
 
@@ -45,8 +46,11 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   const [feedback, setFeedback] = useState<VideoFeedback | null>(null);
   const [asking, setAsking] = useState(false);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const camera = useCamera(true);
+  const { streamRef, videoRef: attachVideo } = camera;
+  const liveVideo = useRef<HTMLVideoElement | null>(null);
+  const mounted = useRef(true);
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startRef = useRef(0);
@@ -57,50 +61,31 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   const dictation = useDictation(lang);
   const gate = useLoginGate();
 
-  const stopCamera = useCallback(() => {
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
-  }, []);
-
-  useEffect(
-    () => () => {
-      stopCamera();
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      if (countdownRef.current) clearInterval(countdownRef.current);
+      if (recorderRef.current?.state !== "inactive") {
+        if (recorderRef.current) { recorderRef.current.onstop = null; recorderRef.current.stop(); }
+      }
       cancelAnimationFrame(rafRef.current);
       frameTimers.current.forEach(clearInterval);
-    },
-    [stopCamera],
-  );
-
+    };
+  }, []);
   useEffect(() => () => void (take && URL.revokeObjectURL(take.url)), [take]);
 
   async function startCamera() {
     setError("");
-    if (!navigator.mediaDevices?.getUserMedia) return setError("Tu navegador no permite usar la cámara. Probá con Chrome, Edge o Safari actualizados.");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: { echoCancellation: true, noiseSuppression: true },
-      });
-      streamRef.current = stream;
-      setPhase("preview");
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          void videoRef.current.play().catch(() => null);
-        }
-      });
-    } catch (e) {
-      const name = (e as DOMException).name;
-      setError(
-        name === "NotAllowedError"
-          ? "Necesitamos permiso para usar la cámara y el micrófono. Habilitalo en el candado de la barra de direcciones."
-          : "No encontramos una cámara disponible. Revisá que no la esté usando otra app.",
-      );
-    }
+    if (await camera.start()) setPhase("preview");
   }
+  const bindVideo = useCallback((node: HTMLVideoElement | null) => {
+    liveVideo.current = node;
+    attachVideo(node);
+  }, [attachVideo]);
 
   function grabFrame(): string | null {
-    const v = videoRef.current;
+    const v = liveVideo.current;
     if (!v || !v.videoWidth) return null;
     const w = 480;
     const h = Math.round((v.videoHeight / v.videoWidth) * w);
@@ -131,21 +116,26 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   speedRef.current = speed;
 
   function countdownThenRecord() {
+    if (!camera.active || countdownRef.current) return;
     setPhase("countdown");
     setCount(3);
     let n = 3;
-    const id = window.setInterval(() => {
+    countdownRef.current = setInterval(() => {
       n -= 1;
       if (n === 0) {
-        clearInterval(id);
-        record();
+        if (countdownRef.current) clearInterval(countdownRef.current);
+        countdownRef.current = null;
+        if (mounted.current) record();
       } else setCount(n);
     }, 1000);
   }
 
   function record() {
     const stream = streamRef.current;
-    if (!stream) return;
+    if (!stream?.getVideoTracks().some((track) => track.readyState === "live")) {
+      setPhase("off");
+      return setError("Prendé la cámara antes de grabar.");
+    }
     const mime = pickMime();
     let rec: MediaRecorder;
     try {
@@ -157,9 +147,15 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     chunksRef.current = [];
     rec.ondataavailable = (e) => e.data.size && chunksRef.current.push(e.data);
     rec.onstop = () => {
+      if (!mounted.current) return;
+      cancelAnimationFrame(rafRef.current);
+      frameTimers.current.forEach(clearInterval);
+      dictation.stop();
       const type = rec.mimeType || mime || "video/webm";
       const blob = new Blob(chunksRef.current, { type });
       const seconds = (Date.now() - startRef.current) / 1000;
+      camera.stop();
+      if (!blob.size) { setPhase("off"); setError("La toma quedó vacía. Volvé a prender la cámara e intentá otra vez."); return; }
       setTake({ url: URL.createObjectURL(blob), blob, seconds, mime: type });
       setPhase("review");
     };
@@ -192,20 +188,14 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     const all = last ? [...allFrames.current, last] : allFrames.current;
     setFrames(pickSpread(all, 3));
     dictation.stop();
-    recorderRef.current?.stop();
+    if (recorderRef.current?.state === "recording") recorderRef.current.stop();
   }
 
   function retake() {
-    if (take) URL.revokeObjectURL(take.url);
     setTake(null);
     setFeedback(null);
-    setPhase("preview");
-    requestAnimationFrame(() => {
-      if (videoRef.current && streamRef.current) {
-        videoRef.current.srcObject = streamRef.current;
-        void videoRef.current.play().catch(() => null);
-      }
-    });
+    setPhase("off");
+    void startCamera();
   }
 
   const stats = take ? speechStats(dictation.text, take.seconds) : null;
@@ -242,9 +232,9 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   return (
     <div className="space-y-4">
       {gate.dialog}
-      {error && (
+      {(error || camera.error) && (
         <div role="alert" className="rounded-2xl border border-brand/30 bg-brand-soft px-4 py-3 text-sm text-brand-dark">
-          {error}
+          {error || camera.error}
         </div>
       )}
 
@@ -252,7 +242,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
         {phase === "review" && take ? (
           <video key={take.url} src={take.url} controls playsInline className="h-full w-full bg-ink object-contain" />
         ) : (
-          <video ref={videoRef} muted playsInline className={`h-full w-full object-cover [transform:scaleX(-1)] ${phase === "off" ? "hidden" : ""}`} />
+          <video ref={bindVideo} autoPlay muted playsInline onClick={(e) => void e.currentTarget.play().catch(() => null)} className={`h-full w-full object-cover [transform:scaleX(-1)] ${phase === "off" ? "hidden" : ""}`} />
         )}
 
         {phase === "off" && (
@@ -263,8 +253,8 @@ export default function Recorder({ script, target, lang, filename }: { script: s
               </div>
               <p className="mt-4 font-display text-2xl">Tu estudio de grabación</p>
               <p className="mx-auto mt-2 max-w-md text-sm text-paper/70">El guion pasa en pantalla mientras grabás. El video se queda en tu navegador.</p>
-              <button type="button" onClick={startCamera} className="mt-6 rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark">
-                Prender la cámara
+              <button type="button" onClick={startCamera} disabled={camera.pending} className="mt-6 rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark">
+                {camera.pending ? "Esperando cámara y micrófono…" : "Prender la cámara"}
               </button>
             </div>
           </div>
@@ -309,6 +299,16 @@ export default function Recorder({ script, target, lang, filename }: { script: s
         )}
       </div>
 
+      {phase === "preview" && camera.pending && <p role="status" className="text-sm text-muted">Conectando cámara y micrófono…</p>}
+      {phase === "preview" && <div className="flex flex-wrap gap-3 text-sm">
+        <label>Cámara <select aria-label="Cámara" disabled={camera.pending} value={camera.cameraId} onChange={(e) => void camera.start(e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
+          {camera.devices.filter((d) => d.kind === "videoinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Cámara ${i + 1}`}</option>)}
+        </select></label>
+        <label>Micrófono <select aria-label="Micrófono" disabled={camera.pending} value={camera.microphoneId} onChange={(e) => void camera.start(camera.cameraId, e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
+          {camera.devices.filter((d) => d.kind === "audioinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Micrófono ${i + 1}`}</option>)}
+        </select></label>
+        <button type="button" onClick={() => { camera.stop(); setPhase("off"); }}>Apagar cámara</button>
+      </div>}
       {(phase === "preview" || phase === "recording" || phase === "countdown") && (
         <div className="flex flex-col gap-4 rounded-3xl bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="grid flex-1 gap-3 text-sm sm:grid-cols-3">
@@ -333,7 +333,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
             <button
               type="button"
               onClick={countdownThenRecord}
-              disabled={phase === "countdown"}
+              disabled={phase === "countdown" || !camera.active || camera.pending}
               className="rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark disabled:opacity-60"
             >
               ● Grabar

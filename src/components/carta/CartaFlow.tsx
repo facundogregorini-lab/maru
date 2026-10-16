@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { jobInputIssue } from "@/lib/inputValidation";
 import { useEffect, useRef, useState } from "react";
 import { buildCartaDoc, cartaFileName, cartaToText, lastCvDesign } from "@/lib/carta";
 import { findGaps } from "@/lib/gaps";
@@ -120,8 +121,9 @@ export default function CartaFlow() {
 
   const setDoc = (fn: (d: CartaDoc) => CartaDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  const hasJob = modo === "busqueda" ? !!jobUrl.trim() || jobText.trim().length > 100 : !!empresa.trim();
-  const canWrite = hasJob && motivacion.trim().length > 15 && cv.ready;
+  const jobIssue = modo === "busqueda" ? jobInputIssue(jobUrl, jobText) : !empresa.trim() ? "Contanos a qué empresa le escribís." : null;
+  const hasJob = !jobIssue;
+  const canWrite = hasJob && !!motivacion.trim() && cv.ready;
 
   const busqueda = () =>
     modo === "busqueda" ? { job: { jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined } } : { espontanea: { empresa: empresa.trim(), rol: rol.trim() } };
@@ -299,7 +301,7 @@ export default function CartaFlow() {
               <PrimaryButton onClick={write} disabled={!canWrite}>
                 Escribir mi carta
               </PrimaryButton>
-              {!canWrite && <p className="text-xs text-muted">Completá la búsqueda, lo que querés contar y tu experiencia.</p>}
+              {!canWrite && <p className="text-xs text-muted">{[jobIssue, cv.issue, !motivacion.trim() ? "Contanos qué querés transmitir en la carta." : null].filter(Boolean).join(" ")}</p>}
             </div>
           </div>
           <ProductMore id="carta" />
