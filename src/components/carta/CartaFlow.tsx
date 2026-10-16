@@ -7,7 +7,8 @@ import { findGaps } from "@/lib/gaps";
 import { profileToText, saveProfile } from "@/lib/profileStore";
 import type { Carta, CartaDoc, CartaLargo, CartaOpciones, CartaTono, GapQuestion, Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
-import { takeHandoff } from "@/lib/match/clientStore";
+import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
+import { upsertTracked } from "@/lib/tracker";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
@@ -77,6 +78,7 @@ export default function CartaFlow() {
   const topRef = useRef<HTMLDivElement>(null);
 
   const restoredRef = useRef(false);
+  const originRef = useRef<Handoff | null>(null);
   useEffect(() => {
     if (restoredRef.current) return;
     restoredRef.current = true;
@@ -84,6 +86,7 @@ export default function CartaFlow() {
     const h = takeHandoff("carta");
     if (h) {
       remove(SESSION_KEY);
+      originRef.current = h;
       setModo("busqueda");
       setJobUrl(h.jobUrl);
       setJobText(h.jobText);
@@ -137,6 +140,13 @@ export default function CartaFlow() {
       setCarta(c.carta);
       setDocState(buildCartaDoc(c.carta, p.profile, lastCvDesign() ?? { template: "moderno" }));
       setStage("resultado");
+      // Al seguimiento: la búsqueda o, si es espontánea, la empresa a la que le escribe.
+      const origin = modo === "busqueda" && originRef.current?.jobUrl === jobUrl.trim() ? originRef.current : null;
+      upsertTracked(
+        modo === "busqueda"
+          ? { id: origin?.id, title: c.carta.puesto || origin?.title || "", company: c.carta.empresa || origin?.company || "", jobUrl: jobUrl.trim(), jobText: jobText.trim() || undefined, artifact: "carta" }
+          : { title: rol.trim() || c.carta.puesto || "Carta espontánea", company: empresa.trim() || c.carta.empresa, artifact: "carta" },
+      );
     } catch (e) {
       const err = e as Error & { code?: string };
       setStage("inicio");

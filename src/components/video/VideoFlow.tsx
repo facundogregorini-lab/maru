@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { VideoGuion, VideoOpciones } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { findTracked, upsertTracked } from "@/lib/tracker";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import JobField, { useJobInput } from "../JobField";
@@ -77,6 +78,10 @@ export default function VideoFlow() {
       const { guion } = await post<{ guion: VideoGuion }>("/api/video/guion", { ...job.payload(), motivacion, source: cv.source, opciones });
       setGuion(guion);
       setStage("guion");
+      // El guion no trae la empresa: sólo lo sumamos si la búsqueda vino de Maru o ya está en el seguimiento.
+      const url = job.jobUrl.trim();
+      const known = job.modo === "busqueda" ? (job.origin?.jobUrl === url ? job.origin : url ? findTracked({ jobUrl: url, title: "", company: "" }) : null) : null;
+      if (known) upsertTracked({ id: known.id, title: known.title, company: known.company, jobUrl: url, artifact: "video" });
     } catch (e) {
       const err = e as Error & { code?: string };
       setStage("inicio");

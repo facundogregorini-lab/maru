@@ -15,9 +15,9 @@ export default function PrepareJob({ id, to, children, className }: { id: string
     setBusy(true);
     try {
       const res = await fetch(`/api/match/oportunidad?id=${encodeURIComponent(id)}`);
-      const d = (await res.json()) as { url?: string; text?: string; title?: string; company?: string; error?: string };
+      const d = (await res.json()) as { id?: string; url?: string; text?: string; title?: string; company?: string; error?: string };
       if (!res.ok) throw new Error(d.error ?? "No pudimos abrir esta búsqueda.");
-      handoffJob(to, { jobUrl: d.url ?? "", jobText: d.text ?? "", title: d.title ?? "", company: d.company ?? "" });
+      handoffJob(to, { id: d.id, jobUrl: d.url ?? "", jobText: d.text ?? "", title: d.title ?? "", company: d.company ?? "" });
       router.push(`/${to}#empezar`);
     } catch (e) {
       setErr((e as Error).message);

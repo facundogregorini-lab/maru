@@ -7,6 +7,7 @@ export const NAV = [
   { href: "/carta", label: "Carta" },
   { href: "/video", label: "Video" },
   { href: "/entrevista", label: "Entrevista" },
+  { href: "/seguimiento", label: "Seguimiento" },
   { href: "/extension", label: "Extensión" },
 ] as const;
 
@@ -17,5 +18,6 @@ export const TOOLS = [
   { href: "/cv", label: "CV con IA", hint: "Armá o mejorá tu CV" },
   { href: "/carta", label: "Carta de presentación", hint: "Lista en un minuto" },
   { href: "/video", label: "Video de presentación", hint: "Guion, teleprompter y feedback" },
+  { href: "/seguimiento", label: "Seguimiento", hint: "Tus postulaciones en un tablero" },
   { href: "/extension", label: "Extensión para Chrome", hint: "Autocompletá postulaciones" },
 ] as const;

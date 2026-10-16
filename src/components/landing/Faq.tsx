@@ -11,6 +11,10 @@ const FAQ = [
     a: "Maru no tiene una base de datos con tu información: tu perfil queda guardado en tu navegador. Para leer tu CV y redactar, lo procesa con IA en el momento.",
   },
   {
+    q: "¿Dónde se guarda el seguimiento de mis postulaciones?",
+    a: "En tu navegador, igual que tu perfil. Maru suma solas las búsquedas que guardás o para las que armás algo, y vos las movés de estado. Si cambiás de navegador o de dispositivo, no se pasa (todavía).",
+  },
+  {
     q: "¿La extensión envía las postulaciones por mí?",
     a: "No. Completa el formulario y vos revisás y enviás. Tampoco completa datos demográficos (género, etnia, discapacidad) ni aceptaciones legales: eso lo decidís siempre vos.",
   },

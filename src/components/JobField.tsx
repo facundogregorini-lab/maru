@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { takeHandoff, type HandoffTarget } from "@/lib/match/clientStore";
+import { takeHandoff, type Handoff, type HandoffTarget } from "@/lib/match/clientStore";
 import type { TargetInput } from "@/lib/schemas";
 import { inputClass } from "./ui";
 
@@ -15,6 +15,8 @@ export function useJobInput(target?: HandoffTarget) {
   const [showJobText, setShowJobText] = useState(false);
   const [empresa, setEmpresa] = useState("");
   const [rol, setRol] = useState("");
+  /** La búsqueda de Maru de la que vino (para sumarla al seguimiento). */
+  const [origin, setOrigin] = useState<Handoff | null>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
 
   // Viene de una búsqueda de Maru ("Entrená la entrevista", "Grabá tu video"): arrancamos con ella.
@@ -24,6 +26,7 @@ export function useJobInput(target?: HandoffTarget) {
     tookRef.current = true;
     const h = takeHandoff(target);
     if (!h) return;
+    setOrigin(h);
     setModo("busqueda");
     setJobUrl(h.jobUrl);
     setJobText(h.jobText);
@@ -59,6 +62,7 @@ export function useJobInput(target?: HandoffTarget) {
     ready,
     payload,
     fallbackToText,
+    origin,
     /** Para mostrar en títulos. */
     label: modo === "general" ? [rol, empresa].filter(Boolean).join(" · ") : "",
     snapshot: () => ({ modo, jobUrl, jobText, empresa, rol }),

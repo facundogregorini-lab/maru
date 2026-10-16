@@ -194,3 +194,41 @@ export function VideoMock({ bare = false }: { bare?: boolean }) {
     </MockPanel>
   );
 }
+
+/** Seguimiento: el tablero de postulaciones con lo que armó Maru para cada una. */
+export function TrackerMock({ bare = false }: { bare?: boolean }) {
+  const cols: { label: string; dot: string; cards: { t: string; c: string; chips: string[] }[] }[] = [
+    { label: "Postuladas", dot: "bg-[#2457d6]", cards: [{ t: "Product Manager", c: "Fintech", chips: ["CV a medida", "Carta"] }, { t: "Analista de datos", c: "Retail", chips: ["CV a medida"] }] },
+    { label: "Entrevista", dot: "bg-[#d4831c]", cards: [{ t: "UX Designer", c: "Startup", chips: ["CV a medida", "Práctica de entrevista"] }] },
+    { label: "Oferta", dot: "bg-neon", cards: [{ t: "Data Engineer", c: "SaaS", chips: ["CV a medida", "Video"] }] },
+  ];
+  return (
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo">
+      <div className="mx-auto grid max-w-lg grid-cols-3 gap-2 rounded-2xl bg-[#f5f6f7] p-2.5 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
+        {cols.map((col) => (
+          <div key={col.label} className="min-w-0 rounded-xl bg-[#eceef0] p-1.5">
+            <p className="flex items-center gap-1.5 px-1 pb-1.5 text-[11px] font-semibold">
+              <span className={`h-2 w-2 rounded-full ${col.dot}`} />
+              {col.label}
+            </p>
+            <div className="space-y-1.5">
+              {col.cards.map((card) => (
+                <div key={card.t} className="rounded-lg bg-white p-2">
+                  <p className="truncate text-[11px] font-semibold">{card.t}</p>
+                  <p className="truncate text-[10px] text-ink/60">{card.c}</p>
+                  <div className="mt-1 flex flex-wrap gap-0.5">
+                    {card.chips.map((ch) => (
+                      <span key={ch} className="truncate rounded bg-neon/15 px-1 text-[9px] font-medium">
+                        ✓ {ch}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </MockPanel>
+  );
+}

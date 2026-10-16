@@ -17,46 +17,18 @@ Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español 
 - **Video del hero** (`video/intro.html`, render con `scripts/render-intro-video.mjs`, ver README): corregido para no mostrar lo que Maru no hace.
 - **Ingreso** (`src/components/auth/LoginDialog.tsx`) y **popup de la extensión** (`extension/popup.*`) al estilo jobright.
 
-## PENDIENTE 1 (prioridad alta): Seguimiento de postulaciones (`/seguimiento`)
+- **Seguimiento** (`/seguimiento`): `src/lib/tracker.ts` (localStorage `maru:tracker:v1`, evento `maru:tracker`, tests en `tests/tracker.test.ts`) y tablero `src/components/tracker/TrackerBoard.tsx` (kanban en escritorio, pestañas en celular, notas, estado, carga manual, "Adaptar mi CV" / "Escribir mi carta" / "Practicar la entrevista"). Las tarjetas se crean solas desde Postulación (CV + respuestas), Carta, Match (guardar, preparar, postularme), detalle y lista de búsquedas ("Guardar en mi seguimiento" y "Postularme" → postulada, `src/components/busquedas/TrackJob.tsx`), Entrevista (al terminar el informe) y Video (si la búsqueda vino de Maru o ya estaba en el seguimiento). En menú, barra lateral, footer, home (feature + FAQ) y README.
+- **Maru en su escritorio + recorrido** (`src/components/maru/MaruCompanion.tsx`, contenido en `src/components/maru/guide.ts`, frames `DESK_FRAMES` en `sprite.ts`): ya no sigue al mouse. Está sentada en un rincón tipeando con su mate; la primera vez saluda y ofrece un recorrido breve por los 9 productos en modo checklist (se tilda al avanzar o al visitar cada página; "Probarlo" la achica a "Seguimos el recorrido"). Al final, si no sos cliente, la oferta de $10.000/mes. Estado en localStorage `maru:guia:v1`; tocándola, el recorrido vuelve.
 
-Es el "Job Tracker" de jobright y lo que cierra la suite. Hacerlo simple (ley de Gall): **todo en el navegador (localStorage)**, como el perfil; sin base de datos.
+## PENDIENTE 0 (decisión del dueño): cobro del plan
 
-### Modelo (crear `src/lib/tracker.ts`)
-```ts
-type TrackStatus = "guardada" | "postulada" | "entrevista" | "oferta" | "descartada";
-type TrackItem = {
-  id: string;            // id del inventario si existe; si no, hash del jobUrl o de puesto+empresa
-  title: string; company: string;
-  jobUrl: string;        // link del aviso
-  jobText?: string;      // texto del aviso (sirve para mandar a entrevista/carta con handoffJob)
-  status: TrackStatus;
-  artifacts: { kind: "cv" | "respuestas" | "carta" | "entrevista" | "video" | "extension"; at: number }[];
-  notes: string;
-  createdAt: number; updatedAt: number;
-};
-```
-- Guardar con `load`/`save` de `src/lib/storage.ts` bajo una clave tipo `maru:tracker:v1`.
-- Funciones: `listTracked()`, `upsertTracked(partial & {artifact?})` (deduplica por id o jobUrl; no baja de estado salvo que se pida), `setStatus(id, status)`, `setNotes`, `removeTracked`.
-- Disparar `window.dispatchEvent(new Event("maru:tracker"))` al cambiar, para refrescar la vista.
-- Agregar tests en `tests/tracker.test.ts` (stub de `window.localStorage` con un Map).
+- **Link de pago**: la oferta usa `NEXT_PUBLIC_CHECKOUT_URL` (p. ej. una suscripción de Mercado Pago). Sin esa variable, el botón dice "Empezar ahora" (va a `/match`) y aclara que la suscripción se habilita pronto. Configurarla en Vercel y que el pago vuelva a `/?suscripcion=ok`: eso marca "cliente" en el navegador (`maru:cliente`) y la oferta deja de mostrarse. Es una marca local, no un control de acceso: si se quiere limitar funciones a quien paga, hace falta guardar la suscripción del lado del servidor.
+- **Coherencia del mensaje**: las landings dicen "Gratis, sin tarjeta" (`FREE` en `src/lib/products.ts`) y el FAQ "Podés usar todo sin cuenta". Con el precio, definir qué es gratis y qué es del plan y ajustar esos textos.
 
-### Dónde se crean las tarjetas solas (puntos exactos encontrados)
-- **Postulación** — `src/components/Flow.tsx`, en `generate()` después de `setGeneration(g)` (~línea 172): `upsertTracked({ title: analysis.puesto, company: analysis.empresa, jobUrl, jobText, status: "guardada", artifact: "cv" })` y también artifact `"respuestas"`.
-- **Carta** — `src/components/carta/CartaFlow.tsx`, en `write()` después de `setCarta(c.carta)` (~línea 137): `upsertTracked({ title: c.carta.puesto, company: c.carta.empresa, jobUrl, artifact: "carta" })` (sólo en modo "busqueda"; en espontánea usar empresa).
-- **Match** — `src/components/match/Results.tsx`: en `save(item)` (~línea 80) al guardar → `upsertTracked({ id: item.id, ..., status: "guardada" })`; en `prepare()` del card → igual.
-- **Detalle de búsqueda** — `src/app/busquedas/[id]/page.tsx`: agregar un botón cliente "Guardar en mi seguimiento" (y que "Postularme ↗" marque `postulada`, con un componente cliente que haga `upsertTracked` en el `onClick` antes de abrir el link).
-- **Entrevista / Video**: al terminar, artifact `"entrevista"` / `"video"` si vinieron con una búsqueda (handoff).
-- **Extensión**: corre en otros dominios, no puede escribir el localStorage de Maru. Opción futura: que la extensión guarde en `chrome.storage` y la web lo lea con un content script en el dominio de Maru, o abrir `/seguimiento?add=<url>`. Dejar para después.
+## PENDIENTE 1: Seguimiento, lo que quedó afuera
 
-### Página `/seguimiento`
-- `src/app/seguimiento/page.tsx` usando `AppShell` (título "SEGUIMIENTO") y un componente cliente `src/components/tracker/TrackerBoard.tsx`.
-- Tablero tipo kanban como el de jobright: columnas Guardadas · Postuladas · Entrevista · Oferta · Descartadas, con contador; en celular, pestañas.
-- Tarjeta: `CompanyTile`, puesto, empresa, fecha, chips de lo que armó (CV a medida, carta…), selector de estado, notas, link al aviso, borrar.
-- Acciones por estado: en "Entrevista" → botón "Practicar la entrevista" (`handoffJob("entrevista", …)` y `router.push("/entrevista#empezar")`); en "Guardada" → "Adaptar mi CV" (`handoffJob("postulacion", …)`).
-- Estado vacío con CTA a `/busquedas` y `/match`.
-- Sumar al menú: `src/components/nav.ts` (`NAV` y `TOOLS`), `src/components/app/SideNav.tsx` (ícono "Seguimiento"), footer en `src/components/SiteShell.tsx`.
-- Opcional: landing con la plantilla (agregar `"seguimiento"` a `src/lib/products.ts`, copiar el patrón de las otras páginas: `ProductHero` + tablero en `#empezar` + `ProductMore`). Jobright: `/tools/job-tracker` ("STAY ON TOP OF YOUR APPLICATIONS WITH JOB TRACKER", tarjetas con estado Applied / Rejected / Offer Received).
-- Actualizar la home (`src/app/page.tsx`) y el README con el producto nuevo. En el FAQ aclarar que el seguimiento vive en el navegador.
+- **Extensión → seguimiento**: corre en otros dominios y no puede escribir el localStorage de Maru. Opciones: guardar en `chrome.storage` y leerlo con un content script en el dominio de Maru, o abrir `/seguimiento?add=<url>`.
+- **Landing con la plantilla** (opcional): agregar `"seguimiento"` a `src/lib/products.ts` y usar `ProductHero` + tablero en `#empezar` + `ProductMore`, como jobright `/tools/job-tracker`.
 
 ## PENDIENTE 2: lo que jobright tiene y Maru todavía no
 

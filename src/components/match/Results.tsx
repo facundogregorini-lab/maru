@@ -7,6 +7,7 @@ import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import { roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
+import { upsertTracked, type TrackInput } from "@/lib/tracker";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
 import CompanyTile from "../busquedas/CompanyTile";
 import { ErrorBanner, inputClass, post } from "../ui";
@@ -23,6 +24,13 @@ const DISCARD_REASONS: [DiscardReason, string][] = [
   ["salario", "Salario"],
   ["otro", "Otro motivo"],
 ];
+
+/** Suma una búsqueda del match al seguimiento (con su id del inventario, así no se duplica). */
+function trackItem(item: RankedItem, extra: Partial<TrackInput> = {}) {
+  const main = item.sources.find((s) => s.kind === "ats") ?? item.sources[0];
+  const url = main?.applyUrl || main?.url || "";
+  upsertTracked({ id: item.id, title: item.title, company: item.company, jobUrl: url.startsWith("maru:") ? "" : url, ...extra });
+}
 
 const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" }) : "");
 
@@ -80,7 +88,10 @@ export default function Results({
   function save(item: RankedItem) {
     const on = interactions.saved.includes(item.id);
     setInteractions({ ...interactions, saved: on ? interactions.saved.filter((x) => x !== item.id) : [...interactions.saved, item.id] });
-    if (!on) track("match_guardar", { familia: item.family });
+    if (!on) {
+      track("match_guardar", { familia: item.family });
+      trackItem(item);
+    }
   }
 
   function discard(item: RankedItem, reason: DiscardReason) {
@@ -224,7 +235,8 @@ function JobCard({
         jobUrl = d.url || jobUrl;
         jobText = d.text ?? "";
       }
-      handoffToPostulacion({ jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText, title: item.title, company: item.company });
+      handoffToPostulacion({ id: item.id, jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText, title: item.title, company: item.company });
+      trackItem(item, { jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText });
       track("match_preparar_postulacion", { posicion: position, fuente: main?.kind ?? "" });
       router.push("/postulacion");
     } catch (e) {
@@ -369,7 +381,10 @@ function JobCard({
               href={(required[0] ?? main).url}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              onClick={() => track("match_ver_busqueda", { fuente: (required[0] ?? main).kind })}
+              onClick={() => {
+                track("match_ver_busqueda", { fuente: (required[0] ?? main).kind });
+                trackItem(item, { status: "postulada" });
+              }}
               className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase"
             >
               Postularme

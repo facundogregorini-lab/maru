@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { EntrevistaOpciones, EntrevistaPlan, Informe, Intercambio } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { upsertTracked } from "@/lib/tracker";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import JobField, { useJobInput } from "../JobField";
 import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
@@ -110,6 +111,18 @@ export default function InterviewFlow() {
       const { informe } = await post<{ informe: Informe }>("/api/entrevista/informe", { plan, opciones, historial: h });
       setInforme(informe);
       setStage("informe");
+      // Si practicó para una búsqueda concreta, queda en el seguimiento.
+      if (job.modo === "busqueda") {
+        const o = job.origin;
+        upsertTracked({
+          id: o?.jobUrl === job.jobUrl.trim() ? o.id : undefined,
+          title: plan.puesto || o?.title || "",
+          company: plan.empresa || o?.company || "",
+          jobUrl: job.jobUrl.trim(),
+          jobText: job.jobText.trim() || undefined,
+          artifact: "entrevista",
+        });
+      }
     } catch (e) {
       setError((e as Error).message);
       setStage("informe");
