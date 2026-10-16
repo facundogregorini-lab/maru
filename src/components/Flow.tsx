@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers, findGaps } from "@/lib/gaps";
-import { takeHandoff } from "@/lib/match/clientStore";
+import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { upsertTracked } from "@/lib/tracker";
 import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
 import CvSourceField, { useCvInput } from "./CvSourceField";
@@ -75,6 +76,7 @@ export default function Flow() {
   const topRef = useRef<HTMLDivElement>(null);
 
   const restoredRef = useRef(false);
+  const originRef = useRef<Handoff | null>(null);
 
   // Retomamos la última postulación si se recargó la página.
   useEffect(() => {
@@ -86,6 +88,7 @@ export default function Flow() {
     const handoff = takeHandoff();
     if (handoff) {
       remove(SESSION_KEY);
+      originRef.current = handoff;
       setJobUrl(handoff.jobUrl);
       setJobText(handoff.jobText);
       setShowJobText(!!handoff.jobText);
@@ -172,6 +175,16 @@ export default function Flow() {
       setGeneration(g);
       setDocState(next);
       setStage("resultado");
+      // La postulación queda en el seguimiento, con el CV y las respuestas que armó.
+      const origin = originRef.current?.jobUrl === jobUrl.trim() ? originRef.current : null;
+      upsertTracked({
+        id: origin?.id,
+        title: analysis.puesto || origin?.title || "",
+        company: analysis.empresa || origin?.company || "",
+        jobUrl: jobUrl.trim(),
+        jobText: jobText.trim() || undefined,
+        artifact: ["cv", "respuestas"],
+      });
     } catch (e) {
       setStage("preguntas");
       setError((e as Error).message);

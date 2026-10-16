@@ -2,6 +2,7 @@ import Link from "next/link";
 import TimeAgo from "@/components/landing/TimeAgo";
 import type { JobResult } from "@/lib/busquedas";
 import CompanyTile from "./CompanyTile";
+import { ApplyLink } from "./TrackJob";
 
 /** Íconos de línea de las tarjetas (ubicación, modalidad, contrato, seniority, salario, experiencia). */
 export const META_ICONS = {
@@ -86,9 +87,9 @@ export default function JobCard({ j }: { j: JobResult }) {
             <Link href={`/busquedas/${j.id}`} className="hidden rounded-full px-3 py-2 text-[13px] font-semibold hover:bg-black/[0.05] sm:inline-flex">
               Ver detalle
             </Link>
-            <a href={j.applyUrl} target="_blank" rel="noopener noreferrer" className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase sm:text-sm">
+            <ApplyLink job={{ id: j.id, title: j.title, company: j.company, jobUrl: j.applyUrl }} className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase sm:text-sm">
               Postularme
-            </a>
+            </ApplyLink>
           </div>
         </div>
       </div>

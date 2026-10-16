@@ -22,6 +22,7 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
   { href: "/carta", label: "Carta", icon: <path d="M3 6h18v12H3zM3 7l9 6 9-6" /> },
   { href: "/entrevista", label: "Entrevista", icon: <path d="M5 5h14v10H10l-5 4zM9 9h6M9 12h4" /> },
   { href: "/video", label: "Video", icon: <path d="M3 7h12v10H3zM15 10l6-3v10l-6-3" /> },
+  { href: "/seguimiento", label: "Seguimiento", icon: <path d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v6h-4z" /> },
   { href: "/extension", label: "Extensión", icon: <path d="M9 4h4v3a2 2 0 1 0 0 4v0h4v4h-3a2 2 0 1 0 0 4H9v-4a2 2 0 1 1 0-4V7H5V4h4" /> },
 ];
 

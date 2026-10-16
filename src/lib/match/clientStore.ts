@@ -38,7 +38,7 @@ export function forgetEverything(): void {
 }
 
 export type HandoffTarget = "postulacion" | "carta" | "entrevista" | "video";
-export type Handoff = { jobUrl: string; jobText: string; title: string; company: string; at: number; to?: HandoffTarget };
+export type Handoff = { id?: string; jobUrl: string; jobText: string; title: string; company: string; at: number; to?: HandoffTarget };
 
 /** Deja una búsqueda lista para otra herramienta (postulación, carta, entrevista o video). */
 export function handoffJob(to: HandoffTarget, h: Omit<Handoff, "at" | "to">): void {

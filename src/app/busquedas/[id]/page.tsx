@@ -5,6 +5,7 @@ import AppShell from "@/components/app/AppShell";
 import CompanyTile from "@/components/busquedas/CompanyTile";
 import { ArgTag, JobMeta, TimeTag } from "@/components/busquedas/JobCard";
 import PrepareJob from "@/components/busquedas/PrepareJob";
+import { ApplyLink, SaveJob } from "@/components/busquedas/TrackJob";
 import { MaruHead } from "@/components/maru/PixelMaru";
 import { getJob } from "@/lib/busquedas";
 
@@ -20,6 +21,7 @@ const btn = "press block w-full rounded-lg bg-neon py-2.5 text-center text-sm fo
 export default async function JobPage({ params }: Props) {
   const j = await getJob((await params).id);
   if (!j) notFound();
+  const track = { id: j.id, title: j.title, company: j.company, jobUrl: j.applyUrl };
   const paragraphs = j.description
     .split(/\n{2,}/)
     .map((p) => p.trim())
@@ -34,9 +36,12 @@ export default async function JobPage({ params }: Props) {
         <article className="rounded-2xl bg-white p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.07] pb-3">
             <span className="border-b-2 border-ink pb-2 text-[15px] font-semibold">Resumen</span>
-            <a href={j.applyUrl} target="_blank" rel="noopener noreferrer" className="press inline-flex items-center gap-1.5 rounded-full bg-neon px-5 py-2 text-sm font-extrabold uppercase">
-              Postularme ↗
-            </a>
+            <div className="flex flex-wrap items-center gap-2">
+              <SaveJob job={track} className="press inline-flex items-center rounded-full bg-[#f2f4f5] px-4 py-2 text-sm font-semibold hover:bg-black/[0.08]" />
+              <ApplyLink job={track} className="press inline-flex items-center gap-1.5 rounded-full bg-neon px-5 py-2 text-sm font-extrabold uppercase">
+                Postularme ↗
+              </ApplyLink>
+            </div>
           </div>
 
           <div className="mt-5 flex gap-4">

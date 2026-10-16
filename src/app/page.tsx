@@ -7,7 +7,7 @@ import { ResultsList } from "@/components/landing/Evidence";
 import EvidenceWall from "@/components/landing/EvidenceWall";
 import Faq from "@/components/landing/Faq";
 import Laurels from "@/components/landing/Laurels";
-import { ChatMock, CvMock, MatchMock, MockPanel, VideoMock } from "@/components/landing/Mocks";
+import { ChatMock, CvMock, MatchMock, MockPanel, TrackerMock, VideoMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import Reveal from "@/components/magic/Reveal";
 import ScrollFade from "@/components/magic/ScrollFade";
@@ -198,6 +198,13 @@ export default async function Home() {
             cta="Grabar mi video"
             href="/video"
             visual={<VideoMock />}
+          />
+          <Feature
+            title="Seguí cada postulación"
+            body="Todo lo que preparás con Maru queda en un tablero: guardadas, postuladas, entrevistas y ofertas, con el CV, la carta y la práctica de cada una. Vive en tu navegador."
+            cta="Ver mi seguimiento"
+            href="/seguimiento"
+            visual={<TrackerMock />}
           />
         </div>
       </section>

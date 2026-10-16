@@ -9,6 +9,7 @@
 - **Entrená para tu entrevista** (`/entrevista`): simulación con formato de videollamada. Elegís tipo (RR. HH., con tu futuro líder, técnica), dificultad, cantidad de preguntas e idioma; la entrevistadora habla en voz alta, respondés por voz o por escrito y, si tu respuesta queda corta, repregunta. Al final, un **informe** con puntaje, fortalezas, qué mejorar y una respuesta más fuerte (STAR) para cada pregunta.
 - **Encontrá tu trabajo perfecto** (`/match`): cargás o reutilizás tu CV, confirmás lo que Maru entendió, contás qué querés hacer y en qué condiciones, y recibís un ranking de búsquedas reales donde podés trabajar desde Argentina, con motivos, brechas y lo que falta confirmar. Desde cada búsqueda podés guardarla, descartarla o preparar la postulación con el coach. Detalle técnico, fuentes y políticas en [docs/match.md](docs/match.md).
 - **Búsquedas** (`/busquedas`): buscador sin CV sobre el mismo inventario real, con filtros por puesto o empresa, modalidad, área, seniority y "desde Argentina" (por defecto). Cada resultado lleva al aviso original con su atribución.
+- **Seguimiento** (`/seguimiento`): tablero de postulaciones (Guardadas · Postuladas · Entrevista · Oferta · Descartadas; en celular, pestañas). Las tarjetas se crean solas cuando guardás una búsqueda, tocás "Postularme" o armás un CV, una carta, una práctica de entrevista o un video para una búsqueda, con chips de lo que armaste. Notas, cambio de estado, carga manual y atajos para adaptar el CV o practicar la entrevista. Vive sólo en el navegador (`src/lib/tracker.ts`, clave `maru:tracker:v1`).
 - **Extensión de Chrome** (`extension/`): cargás tu CV una vez y, en cualquier formulario de postulación, un clic (o <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>) completa los campos. Vos revisás y enviás (detalle abajo).
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
@@ -111,6 +112,7 @@ src/app/api/cv/*              Análisis y redacción del CV sin vacante
 src/app/api/carta, carta/parrafo  Carta completa y reescritura de un párrafo
 src/components/video/, src/app/api/video/*   Video: guion, estudio (cámara + teleprompter) y feedback
 src/components/entrevista/, src/app/api/entrevista/*  Entrevista: plan, llamada (voz), turnos y informe
+src/lib/tracker.ts, src/components/tracker/, src/app/seguimiento/  Seguimiento de postulaciones (localStorage)
 src/components/speech.ts      Dictado continuo, voz de la entrevistadora y métricas de ritmo
 src/components/auth/, src/lib/auth.ts, src/app/api/auth/*  Login con magic link
 src/app/api/export/pdf, docx  Descargas (exigen sesión)
