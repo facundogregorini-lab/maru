@@ -18,6 +18,12 @@ Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español 
 - **Ingreso** (`src/components/auth/LoginDialog.tsx`) y **popup de la extensión** (`extension/popup.*`) al estilo jobright.
 
 - **Seguimiento** (`/seguimiento`): `src/lib/tracker.ts` (localStorage `maru:tracker:v1`, evento `maru:tracker`, tests en `tests/tracker.test.ts`) y tablero `src/components/tracker/TrackerBoard.tsx` (kanban en escritorio, pestañas en celular, notas, estado, carga manual, "Adaptar mi CV" / "Escribir mi carta" / "Practicar la entrevista"). Las tarjetas se crean solas desde Postulación (CV + respuestas), Carta, Match (guardar, preparar, postularme), detalle y lista de búsquedas ("Guardar en mi seguimiento" y "Postularme" → postulada, `src/components/busquedas/TrackJob.tsx`), Entrevista (al terminar el informe) y Video (si la búsqueda vino de Maru o ya estaba en el seguimiento). En menú, barra lateral, footer, home (feature + FAQ) y README.
+- **Maru en su escritorio + recorrido** (`src/components/maru/MaruCompanion.tsx`, contenido en `src/components/maru/guide.ts`, frames `DESK_FRAMES` en `sprite.ts`): ya no sigue al mouse. Está sentada en un rincón tipeando con su mate; la primera vez saluda y ofrece un recorrido breve por los 9 productos en modo checklist (se tilda al avanzar o al visitar cada página; "Probarlo" la achica a "Seguimos el recorrido"). Al final, si no sos cliente, la oferta de $10.000/mes. Estado en localStorage `maru:guia:v1`; tocándola, el recorrido vuelve.
+
+## PENDIENTE 0 (decisión del dueño): cobro del plan
+
+- **Link de pago**: la oferta usa `NEXT_PUBLIC_CHECKOUT_URL` (p. ej. una suscripción de Mercado Pago). Sin esa variable, el botón dice "Empezar ahora" (va a `/match`) y aclara que la suscripción se habilita pronto. Configurarla en Vercel y que el pago vuelva a `/?suscripcion=ok`: eso marca "cliente" en el navegador (`maru:cliente`) y la oferta deja de mostrarse. Es una marca local, no un control de acceso: si se quiere limitar funciones a quien paga, hace falta guardar la suscripción del lado del servidor.
+- **Coherencia del mensaje**: las landings dicen "Gratis, sin tarjeta" (`FREE` en `src/lib/products.ts`) y el FAQ "Podés usar todo sin cuenta". Con el precio, definir qué es gratis y qué es del plan y ajustar esos textos.
 
 ## PENDIENTE 1: Seguimiento, lo que quedó afuera
 

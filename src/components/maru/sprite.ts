@@ -91,3 +91,80 @@ export function rects(rows: readonly string[]): { x: number; y: number; w: numbe
   });
   return out;
 }
+
+/* ---------- Maru en su escritorio: sentada, tipeando en la compu, con un mate al lado ---------- */
+
+Object.assign(PALETTE, {
+  L: "#d5dae0", // tapa de la notebook
+  l: "#b3bac3", // borde de la tapa
+  K: "#8b939c", // base de la notebook
+  D: "#c89f74", // escritorio
+  d: "#9c7552", // frente del escritorio
+  G: "#6b4a33", // mate
+  g: "#8a6446", // brillo del mate
+  Y: "#c0c6cc", // bombilla
+});
+
+type Eyes = "down" | "up" | "closed";
+type Hand = "up" | "down" | "wave" | "wave2";
+
+const pad = (row: string) => `....${row}....`; // la cabeza de 16 px centrada en 24
+const set = (row: string, at: number, s: string) => row.slice(0, at) + s + row.slice(at + s.length);
+
+/** Arma un frame de 28 × 20: Maru (24 px) detrás de la notebook y el mate a la derecha. */
+function deskFrame(eyes: Eyes, left: Hand, right: Hand, mouth: "smile" | "open" = "smile"): string[] {
+  const head = (eyes === "closed" ? HEAD_BLINK : HEAD).map(pad);
+  if (eyes === "down") {
+    // Mirada a la pantalla: párpado arriba y pupilas abajo.
+    head[5] = pad("..HHSSsSSSsSSHH.");
+    head[6] = pad("..HHSSESSSESSHH.");
+  }
+  if (mouth === "open") head[8] = pad("..HHHSSMMSSSHHH.").replace("SSMMSS", "SMMMMS");
+
+  const rows = [
+    ...head,
+    "......HHH..SS..HHH......",
+    "......HHTTTTTTTTHH......",
+    "....TTlLLLLLLLLLLLLlTT..",
+    "...TTTlLLLLLLLLLLLLlTTT.",
+    "...TTTlLLLLLNNLLLLLlTTT.",
+    "...TTTlLLLLLNNLLLLLlTTT.",
+    "...TTTlLLLLLLLLLLLLlTTT.",
+    "....KKKKKKKKKKKKKKKKKK..",
+  ];
+  // Manos: arriba (sobre la tapa) o abajo (en el teclado); "wave" saluda al lado de la cara.
+  const hand = (side: "l" | "r", h: Hand) => {
+    const at = side === "l" ? 4 : 20;
+    if (h === "up") rows[15] = set(rows[15], at, "SS");
+    if (h === "down") rows[16] = set(rows[16], at, "SS");
+    if (h === "wave" || h === "wave2") {
+      // "wave2" corre la mano un píxel: alternando los dos, saluda.
+      const x = (side === "l" ? 2 : 20) + (h === "wave2" ? (side === "l" ? -1 : 1) : 0);
+      rows[8] = set(rows[8], x, "SS");
+      rows[9] = set(rows[9], x, "SS");
+      rows[10] = set(rows[10], side === "l" ? 3 : 20, "S");
+    }
+  };
+  hand("l", left);
+  hand("r", right);
+
+  // El mate (con bombilla) a la derecha, sobre el escritorio.
+  const mate = ["..Y.", "..Y.", ".GGg", "GGGg", "GGGg", ".GG."];
+  const out = rows.map((r, i) => r + (i >= rows.length - 6 ? mate[i - (rows.length - 6)] : "...."));
+  return [...out, "D".repeat(28), "d".repeat(28), "..d......................d.."];
+}
+
+export const DESK_FRAMES = {
+  typeA: deskFrame("down", "up", "down"),
+  typeB: deskFrame("down", "down", "up"),
+  think: deskFrame("down", "down", "down"),
+  blink: deskFrame("closed", "down", "down"),
+  look: deskFrame("up", "down", "down"),
+  talk: deskFrame("up", "down", "down", "open"),
+  wave: deskFrame("up", "down", "wave", "open"),
+  wave2: deskFrame("up", "down", "wave2", "open"),
+} as const;
+
+export type DeskFrame = keyof typeof DESK_FRAMES;
+export const DESK_WIDTH = 28;
+export const DESK_HEIGHT = DESK_FRAMES.typeA.length;

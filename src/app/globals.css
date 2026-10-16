@@ -172,7 +172,78 @@
 .maru-sprite[data-frame="blink"] .f-blink,
 .maru-sprite[data-frame="walkA"] .f-walkA,
 .maru-sprite[data-frame="walkB"] .f-walkB,
-.maru-sprite[data-frame="wave"] .f-wave { display: inline; }
+.maru-sprite[data-frame="wave"] .f-wave,
+.maru-sprite[data-frame="wave2"] .f-wave2,
+.maru-sprite[data-frame="typeA"] .f-typeA,
+.maru-sprite[data-frame="typeB"] .f-typeB,
+.maru-sprite[data-frame="think"] .f-think,
+.maru-sprite[data-frame="look"] .f-look,
+.maru-sprite[data-frame="talk"] .f-talk { display: inline; }
+
+/* Maru en su escritorio: vapor del mate, código que sale de la compu, el recorrido y la oferta. */
+@keyframes maru-steam {
+  0% { transform: translateY(0); opacity: 0; }
+  25% { opacity: 0.75; }
+  100% { transform: translateY(-16px) translateX(2px); opacity: 0; }
+}
+@keyframes maru-code {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  12% { opacity: 1; }
+  70% { opacity: 0.9; }
+  100% { transform: translate(var(--dx, 0), -42px) scale(1); opacity: 0; }
+}
+@keyframes maru-hop {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-7px); }
+  60% { transform: translateY(0); }
+  78% { transform: translateY(-2px); }
+}
+@keyframes maru-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+@keyframes maru-panel-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes maru-step-in {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes maru-confetti {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; }
+}
+@keyframes maru-shine {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  55%, 100% { transform: translateX(260%) skewX(-20deg); }
+}
+@keyframes maru-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 240, 160, 0.55); }
+  50% { box-shadow: 0 0 0 10px rgba(0, 240, 160, 0); }
+}
+.maru-steam { animation: maru-steam 2.4s ease-out infinite; }
+.maru-code { animation: maru-code 3.6s ease-out infinite; opacity: 0; }
+.maru-desk:not([data-mode="work"]) .maru-code { animation-play-state: paused; visibility: hidden; }
+.maru-hop { animation: maru-hop 0.7s var(--ease-out); }
+.maru-pop { animation: maru-pop 0.45s var(--ease-out) both; }
+.maru-panel-in { animation: maru-panel-in 0.45s var(--ease-out) both; transform-origin: bottom right; }
+.maru-step-in { animation: maru-step-in 0.4s var(--ease-out) both; }
+.maru-confetti { animation: maru-confetti 1.3s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+.maru-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  animation: maru-shine 2.8s ease-in-out infinite 0.8s;
+}
+.maru-glow { animation: maru-glow 2s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .maru-steam, .maru-code, .maru-confetti { display: none; }
+  .maru-hop, .maru-pop, .maru-panel-in, .maru-step-in, .maru-glow, .maru-shine::after { animation: none; }
+}
 
 /* Anillos de puntaje de las maquetas: se llenan al entrar en pantalla. */
 .ring-fill { stroke-dashoffset: var(--to); }
@@ -182,12 +253,7 @@
 /* Sección que ocupa todo el ancho de la pantalla aunque esté dentro del contenedor. */
 .full-bleed { margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
 
-/* Globo de Maru: se abre hacia donde hay lugar. */
-[data-side="left"] .maru-bubble { right: 4px; }
-[data-side="left"] .maru-bubble-tail { right: 14px; }
-[data-side="right"] .maru-bubble { left: 4px; }
-[data-side="right"] .maru-bubble-tail { left: 14px; }
 /* En pantallas chicas Maru es un poco más chica para no tapar texto. */
 @media (max-width: 640px) {
-  .maru-scale { scale: 0.8; transform-origin: bottom right; }
+  .maru-scale { scale: 0.78; transform-origin: bottom right; }
 }
