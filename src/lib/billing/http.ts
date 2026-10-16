@@ -1,6 +1,6 @@
 import { sessionEmail } from "../auth";
 import { BILLING_ENABLED, type UsageKind } from "../plans";
-import { allowUsage } from "./server";
+import { allowUsage, hasPaidPlan } from "./server";
 
 export const billingJson = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 export function billingSession(req: Request): string | null {
@@ -20,6 +20,13 @@ export async function planGuard(req: Request, kind?: UsageKind): Promise<Respons
   if (!kind) return null;
   try {
     if (await allowUsage(email, kind)) return null;
-    return billingJson({ error: "Llegaste al límite de tu plan de este mes. Podés ver las opciones en Precios.", code: "PLAN_LIMIT", upgradeUrl: "/precios" }, 429);
+    return billingJson({ error: "Llegaste al límite gratis de hoy (o de esta semana, en entrevistas y videos). Con un plan de Maru no tenés que esperar.", code: "PLAN_LIMIT", upgradeUrl: "/precios" }, 429);
   } catch { return billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503); }
+}
+/** Funciones exclusivas del plan: true con cobro apagado o plan activo. Si no se puede verificar, se trata como gratis. */
+export async function paidFeatures(req: Request): Promise<boolean> {
+  if (!BILLING_ENABLED) return true;
+  const email = billingSession(req);
+  if (!email) return false;
+  try { return await hasPaidPlan(email); } catch { return false; }
 }

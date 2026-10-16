@@ -12,7 +12,7 @@ async function setup() {
   const server = await import("@/lib/billing/server");
   return server;
 }
-function apiFixture() {
+function apiFixture(amount = 10000) {
   let reference = "";
   let status = "pending";
   let paymentStatus = "approved";
@@ -29,7 +29,7 @@ function apiFixture() {
     }
     if (path === "/authorized_payments/search") return Response.json({ results: [{ id: 100, preapproval_id: "sub1", payment: { id: 200 } }] });
     if (path === "/authorized_payments/100") return Response.json({ id: 100, preapproval_id: "sub1", payment: { id: 200 } });
-    if (path === "/v1/payments/200") return Response.json({ id: 200, status: paymentStatus, transaction_amount: 10000, currency_id: "ARS", date_approved: approvedAt });
+    if (path === "/v1/payments/200") return Response.json({ id: 200, status: paymentStatus, transaction_amount: amount, currency_id: "ARS", date_approved: approvedAt });
     throw new Error(`Unexpected provider request: ${path}`);
   });
   vi.stubGlobal("fetch", fetchMock);
@@ -46,14 +46,14 @@ describe("suscripción validada en el servidor", () => {
   });
   it("reserva una única creación concurrente y reutiliza un checkout pendiente", async () => {
     const s = await setup(); const fixture = apiFixture();
-    const out = await Promise.allSettled([s.checkout("ana@example.com"), s.checkout("ana@example.com")]);
+    const out = await Promise.allSettled([s.checkout("ana@example.com", "mensual"), s.checkout("ana@example.com", "mensual")]);
     expect(out.filter((r) => r.status === "fulfilled")).toHaveLength(1);
-    expect(await s.checkout("ana@example.com")).toContain("mercadopago.com.ar");
+    expect(await s.checkout("ana@example.com", "mensual")).toContain("mercadopago.com.ar");
     expect(fixture.fetchMock.mock.calls.filter(([,init]) => init?.method === "POST")).toHaveLength(1);
   });
   it("autorizar una suscripción no equivale a cobrar; un pago acreditado habilita un solo período", async () => {
     const s = await setup(); const fixture = apiFixture();
-    await s.checkout("ana@example.com"); fixture.authorize();
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.processNotification("subscription_preapproval", "sub1");
     expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(false);
     await s.processNotification("subscription_authorized_payment", "100");
@@ -70,7 +70,7 @@ describe("suscripción validada en el servidor", () => {
   });
   it("recupera un pago acreditado aunque no haya llegado el webhook", async () => {
     const s = await setup(); const fixture = apiFixture();
-    await s.checkout("ana@example.com"); fixture.authorize();
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.refreshSubscription("ana@example.com");
     expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);
   });
@@ -91,13 +91,75 @@ describe("suscripción validada en el servidor", () => {
     const res = await POST(new Request("https://maru.test/api/billing/webhook?data.id=123", { method: "POST", body: JSON.stringify({ type: "subscription_preapproval", data: { id: "123" } }) }));
     expect(res.status).toBe(401); expect(fixture.fetchMock).not.toHaveBeenCalled();
   });
-  it("aplica cuota gratis por cuenta y categoría en lugar de por navegador", async () => {
+  it("aplica cuota gratis diaria por cuenta y categoría, y semanal para entrevistas", async () => {
     const s = await setup();
-    expect(await s.allowUsage("ana@example.com", "cv")).toBe(true);
-    expect(await s.allowUsage("ana@example.com", "cv")).toBe(true);
-    expect(await s.allowUsage("ana@example.com", "cv")).toBe(false);
-    expect(await s.allowUsage("beto@example.com", "cv")).toBe(true);
-    expect(await s.allowUsage("ana@example.com", "carta")).toBe(true);
-    expect(await s.allowUsage("ana@example.com", "carta")).toBe(false);
+    const lunes = Date.parse("2026-10-12T15:00:00Z");
+    expect(await s.allowUsage("ana@example.com", "cv", lunes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "cv", lunes)).toBe(false);
+    expect(await s.allowUsage("beto@example.com", "cv", lunes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "carta", lunes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "carta", lunes)).toBe(false);
+    // Al día siguiente (hora de Argentina) se renueva el CV, no la entrevista semanal.
+    const martes = lunes + 86400_000;
+    expect(await s.allowUsage("ana@example.com", "entrevista", lunes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "cv", martes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "entrevista", martes)).toBe(false);
+    expect(await s.allowUsage("ana@example.com", "entrevista", lunes + 7 * 86400_000)).toBe(true);
+  });
+  it("cuenta días y semanas en hora de Argentina", async () => {
+    const s = await setup();
+    // 01:30 UTC del martes todavía es lunes en Argentina.
+    expect(s.usageWindow("dia", Date.parse("2026-10-13T01:30:00Z"))).toBe("d2026-10-12");
+    expect(s.usageWindow("dia", Date.parse("2026-10-13T03:00:00Z"))).toBe("d2026-10-13");
+    expect(s.usageWindow("semana", Date.parse("2026-10-18T20:00:00Z"))).toBe("s2026-10-12");
+    expect(s.usageWindow("semana", Date.parse("2026-10-19T02:59:00Z"))).toBe("s2026-10-12");
+    expect(s.usageWindow("semana", Date.parse("2026-10-19T03:00:00Z"))).toBe("s2026-10-19");
+  });
+  it("calcula el período pagado de cada plan", async () => {
+    const s = await setup();
+    const at = Date.parse("2026-01-31T12:00:00Z");
+    expect(s.periodEnd(at, 7, "days")).toBe(Date.parse("2026-02-07T12:00:00Z"));
+    expect(s.periodEnd(at, 1, "months")).toBe(Date.parse("2026-02-28T12:00:00Z"));
+    expect(s.periodEnd(at, 3, "months")).toBe(Date.parse("2026-04-30T12:00:00Z"));
+  });
+  it("crea la suscripción con la frecuencia e importe del plan y acredita sólo ese importe", async () => {
+    const s = await setup(); const fixture = apiFixture(4500);
+    await s.checkout("ana@example.com", "semanal");
+    const body = JSON.parse(String(fixture.fetchMock.mock.calls.find(([, init]) => init?.method === "POST")?.[1]?.body));
+    expect(body.auto_recurring).toMatchObject({ frequency: 7, frequency_type: "days", transaction_amount: 4500, currency_id: "ARS" });
+    expect((await s.readSubscription("ana@example.com"))?.plan).toBe("semanal");
+    await expect(s.checkout("ana@example.com", "trimestral")).rejects.toThrow(/pago pendiente/);
+    fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    const sub = await s.readSubscription("ana@example.com");
+    expect(s.hasPaidAccess(sub)).toBe(true);
+    expect((sub?.paidThrough ?? 0) - (sub?.paymentAt ?? 0)).toBe(7 * 86400_000);
+  });
+  it("no acredita un pago con el importe de otro plan", async () => {
+    const s = await setup(); const fixture = apiFixture(10000);
+    await s.checkout("ana@example.com", "trimestral"); fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(false);
+  });
+  it("rechaza un plan desconocido en el checkout", async () => {
+    await setup();
+    const { POST } = await import("@/app/api/billing/checkout/route");
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const res = await POST(new Request("https://maru.test/api/billing/checkout", { method: "POST", body: JSON.stringify({ plan: "anual" }), headers: { cookie: `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}` } }));
+    expect(res.status).toBe(400);
+  });
+  it("reserva el Word para el plan pago y lo deja libre con el cobro apagado", async () => {
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    // Un documento inválido alcanza: sin plan se frena antes (402); con el cobro apagado llega a validarlo (400).
+    const doc = { experiencia: "no" };
+    const req = () => new Request("https://maru.test/api/export/docx", { method: "POST", body: JSON.stringify({ kind: "cv", doc }), headers: { cookie: `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}` } });
+    await setup();
+    let { POST } = await import("@/app/api/export/docx/route");
+    const blocked = await POST(req());
+    expect(blocked.status).toBe(402);
+    expect((await blocked.json()).code).toBe("PLAN_FEATURE");
+    vi.resetModules(); vi.stubEnv("NEXT_PUBLIC_BILLING_ENABLED", "false");
+    ({ POST } = await import("@/app/api/export/docx/route"));
+    expect((await POST(req())).status).toBe(400);
   });
 });

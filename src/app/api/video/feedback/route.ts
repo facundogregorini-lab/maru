@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { paidFeatures, planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { VIDEO_FEEDBACK_SYSTEM } from "@/lib/prompts";
 import { VideoFeedbackSchema } from "@/lib/schemas";
@@ -23,7 +23,9 @@ export async function POST(req: Request) {
   try {
     const b = (await req.json()) as Body;
     if (!b.guion?.trim()) throw new UserFacingError("Falta el guion del video.", "BAD_REQUEST");
-    const frames = (b.fotogramas ?? []).filter((f) => typeof f === "string" && f.startsWith("/9j/") && f.length < MAX_FRAME_B64).slice(0, 3);
+    // El feedback de cámara (encuadre, luz, fondo, mirada) es del plan pago: sin plan no se envían fotogramas.
+    const conImagen = await paidFeatures(req);
+    const frames = (conImagen ? (b.fotogramas ?? []) : []).filter((f) => typeof f === "string" && f.startsWith("/9j/") && f.length < MAX_FRAME_B64).slice(0, 3);
     const content = [
       ...frames.map((data) => ({ type: "image" as const, source: { type: "base64" as const, media_type: "image/jpeg" as const, data } })),
       {
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
       },
     ];
     const feedback = await askStructured({ system: VIDEO_FEEDBACK_SYSTEM, content, schema: VideoFeedbackSchema, effort: "low" });
-    return Response.json({ feedback });
+    return Response.json({ feedback, exclusivo: !conImagen });
   } catch (err) {
     return errorResponse(err);
   }

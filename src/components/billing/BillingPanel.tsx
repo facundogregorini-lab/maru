@@ -3,12 +3,14 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import LoginDialog from "@/components/auth/LoginDialog";
+import { PLAN_ORDER, PLANS, type PlanId } from "@/lib/plans";
 
-type Status = { enabled: boolean; plan: string; status: string; paidThrough: number | null };
+type Status = { enabled: boolean; plan: string; tier: PlanId | null; status: string; paidThrough: number | null };
+/** Las tres tarjetas de planes pagos y el estado de la suscripción de la cuenta. */
 export default function BillingPanel() {
   const { email } = useAuth();
   const [status, setStatus] = useState<Status | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<PlanId | "cancel" | "status" | null>(null);
   const [login, setLogin] = useState(false);
   const [error, setError] = useState("");
   const read = useCallback(async (refresh = false) => {
@@ -27,38 +29,59 @@ export default function BillingPanel() {
     }).catch(() => { if (active) setError("No pudimos consultar tu plan. Recargá la página para reintentar."); });
     return () => { active = false; };
   }, [email]);
-  async function act(action: "checkout" | "cancel" | "status") {
+  async function act(action: PlanId | "cancel" | "status") {
     if (!email) { setLogin(true); return; }
     if (action === "cancel" && !window.confirm("¿Cancelar la renovación de tu plan? Conservás el acceso hasta que termine el período pagado.")) return;
-    setBusy(true); setError("");
+    setBusy(action); setError("");
     try {
       if (action === "status") await read(true);
       else {
-        const res = await fetch(`/api/billing/${action}`, { method: "POST", headers: { "X-Maru-Account": email } });
+        const checkout = action !== "cancel";
+        const res = await fetch(`/api/billing/${checkout ? "checkout" : "cancel"}`, { method: "POST", headers: { "X-Maru-Account": email, "Content-Type": "application/json" }, body: checkout ? JSON.stringify({ plan: action }) : undefined });
         const body = await res.json();
         if (!res.ok) throw new Error(body.error);
         if (body.url) window.location.assign(body.url);
         else await read();
       }
     } catch (err) { setError(err instanceof Error ? err.message : "No pudimos completar el pedido."); }
-    finally { setBusy(false); }
+    finally { setBusy(null); }
   }
   const paid = status?.plan === "maru";
-  const pending = status?.status === "authorized" && !paid;
-  return <div className="mt-6">
-    {error && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-    {paid ? <>
-      <p className="font-semibold">Tu plan está activo hasta el {status.paidThrough && new Date(status.paidThrough).toLocaleDateString("es-AR")}.</p>
-      {status.status === "cancelled" ? <p className="mt-2 text-sm">La renovación está cancelada.</p> : <button disabled={busy} onClick={() => void act("cancel")} className="mt-4 min-h-11 rounded-full border border-ink px-5 py-2 text-sm font-semibold disabled:opacity-50">Cancelar renovación</button>}
-    </> : <>
-      <button disabled={busy || !status?.enabled || pending} onClick={() => void act("checkout")} className="press min-h-12 w-full rounded-full bg-neon px-6 py-3 font-bold uppercase text-ink disabled:cursor-default disabled:opacity-60">
-        {busy ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Disponible próximamente" : pending ? "Esperando confirmación del pago" : "Elegir el plan Maru"}
-      </button>
-      {!status?.enabled && status && <p className="mt-3 text-sm leading-relaxed text-ink/70">Mientras preparamos la suscripción, podés seguir usando las herramientas gratis, sin tarjeta.</p>}
-    </>}
-    {!paid && (status?.status === "authorized" || status?.status === "pending") && <button disabled={busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 w-full rounded-full border border-ink px-4 py-2 text-sm disabled:opacity-50">Cancelar suscripción pendiente</button>}
-    {email && status?.enabled && <button disabled={busy} onClick={() => void act("status")} className="mt-3 min-h-11 w-full rounded-full py-2 text-sm underline underline-offset-4 disabled:opacity-50">Actualizar estado de mi pago</button>}
-    <p className="mt-4 text-xs leading-relaxed text-ink/70">Al contratar aceptás los <Link href="/terminos" className="underline">términos</Link> y la <Link href="/privacidad" className="underline">política de privacidad</Link>. El acceso se confirma cuando Mercado Pago acredita el pago.</p>
+  const pending = !paid && (status?.status === "authorized" || status?.status === "pending");
+  return <div>
+    <div className="grid gap-5 md:grid-cols-3 md:items-end">
+      {PLAN_ORDER.map((id) => {
+        const plan = PLANS[id];
+        const current = paid && status?.tier === id;
+        return <article key={id} className={`relative rounded-[24px] bg-white p-6 ${plan.badge ? "order-first border-2 border-ink md:order-none pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:pb-8" : "border border-line"}`}>
+          {plan.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{plan.badge}</p>}
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-xl font-bold">{plan.nombre}</h3>
+            {plan.id === "trimestral" && <span className="rounded-full border border-ink px-2.5 py-0.5 text-xs font-semibold">Ahorrá 25%</span>}
+          </div>
+          <p className="mt-3 text-sm text-ink/60">{plan.monthlyText}</p>
+          <p className="mt-1 font-display text-4xl font-bold">{plan.priceText}<span className="ml-1 text-base font-medium">{plan.per}</span></p>
+          <p className="mt-2 text-sm text-ink/70">{plan.note}</p>
+          {current ? <p className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-brand-soft px-4 text-center text-sm font-bold">Tu plan actual</p>
+            : <button disabled={!!busy || !status?.enabled || pending || paid} onClick={() => void act(id)} className={`press mt-5 min-h-12 w-full rounded-full px-6 py-3 font-bold uppercase disabled:cursor-default disabled:opacity-60 ${plan.badge ? "bg-neon text-ink" : "bg-ink text-white"}`}>
+              {busy === id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : "Elegir plan"}
+            </button>}
+        </article>;
+      })}
+    </div>
+    <div className="mx-auto mt-5 max-w-2xl text-center">
+      {error && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {paid && <>
+        <p className="font-semibold">Tu plan {status.tier ? PLANS[status.tier].nombre.toLowerCase() : ""} está activo hasta el {status.paidThrough && new Date(status.paidThrough).toLocaleDateString("es-AR")}.</p>
+        {status.status === "cancelled" ? <p className="mt-2 text-sm">La renovación está cancelada.</p> : <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm font-semibold disabled:opacity-50">Cancelar renovación</button>}
+      </>}
+      {pending && <>
+        <p className="text-sm">{status?.status === "authorized" ? "Estamos esperando que Mercado Pago confirme tu pago." : "Tenés un pago iniciado sin terminar."}</p>
+        <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm disabled:opacity-50">Cancelar suscripción pendiente</button>
+      </>}
+      {email && status?.enabled && <button disabled={!!busy} onClick={() => void act("status")} className="mt-2 block min-h-11 w-full rounded-full py-2 text-sm underline underline-offset-4 disabled:opacity-50">Actualizar estado de mi pago</button>}
+      <p className="mt-3 text-xs leading-relaxed text-ink/70">Precios en pesos argentinos, con renovación automática por Mercado Pago. Al contratar aceptás los <Link href="/terminos" className="underline">términos</Link> y la <Link href="/privacidad" className="underline">política de privacidad</Link>. El acceso se confirma cuando Mercado Pago acredita el pago.</p>
+    </div>
     <LoginDialog open={login} reason="contratar tu plan de Maru" onClose={() => setLogin(false)} onLoggedIn={() => { setLogin(false); void read(); }} />
   </div>;
 }

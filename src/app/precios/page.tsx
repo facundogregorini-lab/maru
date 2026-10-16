@@ -2,32 +2,99 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import BillingPanel from "@/components/billing/BillingPanel";
-import { BILLING_ENABLED, FREE_LIMITS, PAID_MONTHLY_LIMIT, PLAN_PRICE_TEXT } from "@/lib/plans";
-export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Conocé las opciones de Maru para organizar tu búsqueda laboral, crear tu CV y practicar entrevistas." };
-export default function PreciosPage() {
+import { landingData } from "@/lib/landing";
+import { BILLING_ENABLED, FREE_LIMITS } from "@/lib/plans";
+
+export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Elegí tu plan de Maru: semanal, mensual o trimestral. CV a medida, cartas, entrevistas y videos sin esperar al día siguiente." };
+// Los números del inventario se regeneran cada hora, como en la home.
+export const revalidate = 3600;
+
+const fmt = (n: number) => n.toLocaleString("es-AR");
+const free = (k: keyof typeof FREE_LIMITS) => `${FREE_LIMITS[k].limit} por ${FREE_LIMITS[k].window === "dia" ? "día" : "semana"}`;
+
+/** Fila de la tabla: `true` es ✓, `false` es ✕, un texto se muestra tal cual. */
+const FEATURES: { name: string; benefit: string; paid: string | true; free: string | boolean; strong?: boolean }[] = [
+  { name: "CV a medida y CV perfecto", benefit: "Pasá el ATS con las palabras exactas de la búsqueda", paid: "Ilimitado", free: free("cv"), strong: true },
+  { name: "Carta de presentación", benefit: "Una carta distinta para cada empresa", paid: "Ilimitado", free: free("carta"), strong: true },
+  { name: "Entrená para tu entrevista", benefit: "Practicá con repreguntas, como en la real", paid: "Ilimitado", free: free("entrevista") },
+  { name: "Video de presentación", benefit: "Guion a medida y teleprompter", paid: "Ilimitado", free: free("video") },
+  { name: "Respuesta más fuerte (STAR) en el informe", benefit: "Sabé cómo responder mejor cada pregunta", paid: true, free: false },
+  { name: "Feedback de cámara en tu video", benefit: "Encuadre, luz, fondo y mirada en cada toma", paid: true, free: false },
+  { name: "Descarga en Word", benefit: "Editá tu CV y tu carta donde quieras", paid: true, free: "Sólo PDF" },
+];
+
+function Cell({ value }: { value: string | boolean }) {
+  if (value === true) return <span aria-label="Incluido" className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-light font-bold">✓</span>;
+  if (value === false) return <span aria-label="No incluido" className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-danger-soft font-bold text-danger">✕</span>;
+  return <span>{value}</span>;
+}
+
+export default async function PreciosPage() {
+  const data = await landingData();
+  const forAll = [
+    `Búsquedas reales: ${fmt(data.total)} de ${fmt(data.companies)} empresas`,
+    `Match con tu perfil (${fmt(data.eligible)} búsquedas desde Argentina)`,
+    "Filtros por modalidad, área y seniority",
+    "Seguimiento de postulaciones",
+    "Chat con Maru sobre las búsquedas",
+    "Extensión que completa postulaciones",
+    "Perfil sincronizado entre dispositivos",
+    "Descarga de CV y carta en PDF",
+    "24 diseños de CV ATS-friendly",
+  ];
   return <SiteShell>
     <section className="mx-auto max-w-5xl py-8 sm:py-14" aria-labelledby="planes-titulo">
       <p className="text-center text-sm font-bold uppercase tracking-wider text-ink/60">Tu próxima oportunidad empieza con vos</p>
-      <h1 id="planes-titulo" className="mt-4 text-center font-display text-4xl font-bold uppercase leading-tight sm:text-6xl">Una búsqueda más organizada.<br />Un plan a tu medida.</h1>
-      <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-ink/70">Búsquedas reales, herramientas para mostrar tu experiencia y práctica para llegar mejor a cada entrevista.</p>
-      {!BILLING_ENABLED && <p className="mx-auto mt-6 max-w-2xl rounded-2xl bg-sand p-4 text-center leading-relaxed">La suscripción todavía no está a la venta. Hoy podés probar todas las herramientas gratis. Los límites de abajo corresponden al lanzamiento del plan.</p>}
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
-        <article className="rounded-[24px] bg-[#f2f4f5] p-6 sm:p-8">
-          <h2 className="text-2xl font-bold">Para empezar</h2><p className="mt-4 font-display text-5xl font-bold">$0</p><p className="mt-2 text-ink/70">Sin tarjeta.</p>
-          <ul className="mt-7 space-y-3 leading-relaxed">
-            <li>Búsquedas, Match y seguimiento de postulaciones.</li><li>Perfil y seguimiento sincronizados al ingresar.</li>
-            <li>{FREE_LIMITS.cv} pedidos de CV por mes, general o a medida.</li><li>{FREE_LIMITS.carta} carta, {FREE_LIMITS.entrevista} práctica de entrevista y {FREE_LIMITS.video} guion de video por mes.</li><li>Descargas con tu cuenta de email.</li>
-          </ul>
-          <Link href="/match" className="press mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-6 py-3 font-bold uppercase text-white">Empezar gratis</Link>
-        </article>
-        <article className="rounded-[24px] border-2 border-ink bg-white p-6 sm:p-8">
-          <h2 className="text-2xl font-bold">Maru con vos</h2><p className="mt-4 font-display text-5xl font-bold">{PLAN_PRICE_TEXT}<span className="ml-1 text-lg font-medium">/mes</span></p><p className="mt-2 text-ink/70">Pesos argentinos. Renovación mensual.</p>
-          <ul className="mt-7 space-y-3 leading-relaxed"><li>Todo lo del plan gratis.</li><li>Hasta {PAID_MONTHLY_LIMIT} pedidos por mes entre CV, cartas, prácticas de entrevista y guiones.</li><li>Editor, diseños de CV y descargas incluidos.</li><li>Cancelás la renovación desde esta página.</li><li>Sin promesas de empleo: herramientas para preparar mejor tu búsqueda.</li></ul>
-          <BillingPanel />
-        </article>
+      <h1 id="planes-titulo" className="mt-4 text-center font-display text-4xl font-bold uppercase leading-tight sm:text-6xl">Postulate sin esperar<br />a mañana.</h1>
+      <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-ink/70">El plan gratis te da pedidos cada día. Con un plan de Maru armás un CV y una carta para cada búsqueda que te interesa, y practicás todas las veces que quieras.</p>
+      {!BILLING_ENABLED && <p className="mx-auto mt-6 max-w-2xl rounded-2xl bg-sand p-4 text-center leading-relaxed">Los planes todavía no están a la venta: hoy podés usar todas las herramientas gratis. Los precios y límites de abajo son los del lanzamiento.</p>}
+
+      <div className="mt-12"><BillingPanel /></div>
+
+      <div className="mt-12 overflow-hidden rounded-[24px] border border-line">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 bg-[#f2f4f5] px-5 py-4 sm:px-6">
+          <h2 className="text-xl font-bold sm:text-2xl">Todo lo que incluyen los planes</h2>
+          <Link href="/match" className="text-sm font-semibold underline underline-offset-4">Empezar gratis</Link>
+        </div>
+        <table className="w-full text-left text-sm sm:text-base">
+          <thead className="text-xs uppercase tracking-wider text-ink/60">
+            <tr className="border-b border-line">
+              <th scope="col" className="px-5 py-3 font-semibold sm:px-6">Función</th>
+              <th scope="col" className="px-2 py-3 text-center font-semibold">Planes</th>
+              <th scope="col" className="px-5 py-3 text-center font-semibold sm:px-6">Gratis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FEATURES.map((f) => <tr key={f.name} className="border-b border-line last:border-0">
+              <th scope="row" className="px-5 py-3.5 font-normal sm:px-6">
+                <span className={f.strong ? "font-bold" : "font-medium"}>{f.name}</span>
+                <span className="mt-0.5 block text-xs text-ink/60 sm:text-sm">{f.benefit}</span>
+              </th>
+              <td className="px-2 py-3.5 text-center">{f.paid === true ? <Cell value /> : <span className="inline-block rounded-full bg-brand-light px-3 py-1 text-sm font-semibold">{f.paid}</span>}</td>
+              <td className="px-5 py-3.5 text-center text-ink/80 sm:px-6"><Cell value={f.free} /></td>
+            </tr>)}
+          </tbody>
+        </table>
       </div>
+      <p className="mt-3 text-center text-xs leading-relaxed text-ink/60">Ilimitado con uso razonable, para cuidar el servicio de todos. Los pedidos gratis diarios se renuevan a las 0 h (hora de Argentina) y los semanales, los lunes.</p>
+
+      <div className="mt-12 rounded-[24px] bg-sand p-6 sm:p-8">
+        <h2 className="text-center text-2xl font-bold">Gratis en todos los planes</h2>
+        <p className="mt-2 text-center text-ink/70">Lo que necesitás para buscar con orden, sin tarjeta.</p>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {forAll.map((item) => <li key={item} className="flex min-h-12 items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3"><span>{item}</span><Cell value /></li>)}
+        </ul>
+      </div>
+
       <div className="mx-auto mt-12 max-w-3xl space-y-3">
-        {[["¿Cómo se confirma el pago?", "Mercado Pago procesa la suscripción y nos confirma la acreditación. Volver a Maru desde el pago no activa por sí solo el plan. Si la confirmación tarda, usá Actualizar estado de mi pago."], ["¿Puedo cancelar?", "Sí. Cancelás la renovación desde esta página o desde tus suscripciones en Mercado Pago. Conservás el acceso hasta que termine el período ya pagado."], ["¿Cuándo se renuevan los límites?", "Los pedidos disponibles se renuevan al empezar cada mes calendario, en horario UTC. Los límites protegen la disponibilidad del servicio; no garantizan respuestas de empleadores ni entrevistas."], ["¿Qué pasa con mis datos?", "Sin cuenta, quedan en tu navegador. Al ingresar, perfil, preferencias y seguimiento se guardan también en tu cuenta. Los documentos que generás siguen en el navegador."]].map(([q,a]) => <details key={q} className="rounded-2xl bg-[#f2f4f5] px-5 py-4"><summary className="min-h-8 cursor-pointer font-semibold">{q}</summary><p className="mt-3 leading-relaxed text-ink/75">{a}</p></details>)}
+        {[
+          ["¿Qué plan me conviene?", "Si tu búsqueda va a llevar más de un mes, el trimestral: sale $7.500 por mes. El semanal sirve para un empujón puntual, como preparar varias postulaciones o una entrevista esta semana."],
+          ["¿Cómo se confirma el pago?", "Mercado Pago procesa la suscripción y nos confirma la acreditación. Volver a Maru desde el pago no activa por sí solo el plan. Si la confirmación tarda, usá Actualizar estado de mi pago."],
+          ["¿Puedo cancelar o cambiar de plan?", "Sí. Cancelás la renovación desde esta página o desde tus suscripciones en Mercado Pago, y conservás el acceso hasta que termine el período pagado. Para cambiar de plan, cancelá la renovación y elegí el nuevo cuando termine."],
+          ["¿Qué significa ilimitado?", "Que no contás pedidos: armás un CV, una carta o una práctica para cada búsqueda que te interese. Para cuidar el servicio hay un tope de uso razonable por día que una búsqueda normal no alcanza."],
+          ["¿Qué pasa con mis datos?", "Sin cuenta, quedan en tu navegador. Al ingresar, perfil, preferencias y seguimiento se guardan también en tu cuenta. Los documentos que generás siguen en el navegador."],
+          ["¿Maru me garantiza un trabajo?", "No. Maru te ayuda a preparar mejor cada postulación y cada entrevista; las decisiones son de cada empresa."],
+        ].map(([q, a]) => <details key={q} className="rounded-2xl bg-[#f2f4f5] px-5 py-4"><summary className="min-h-8 cursor-pointer font-semibold">{q}</summary><p className="mt-3 leading-relaxed text-ink/75">{a}</p></details>)}
       </div>
     </section>
   </SiteShell>;

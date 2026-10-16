@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { paidFeatures, planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { clampHistorial, contextoEntrevista, historialTexto } from "@/lib/entrevista";
 import { ENTREVISTA_INFORME_SYSTEM } from "@/lib/prompts";
@@ -22,6 +22,8 @@ export async function POST(req: Request) {
       effort: "medium",
       content: [{ type: "text", text: `${contextoEntrevista(b.plan, b.opciones)}\n\n<historial>\n${historialTexto(historial)}\n</historial>` }],
     });
+    // La respuesta sugerida (STAR) es del plan pago; el resto del informe queda para todos.
+    if (!(await paidFeatures(req))) return Response.json({ informe: { ...informe, respuestas: informe.respuestas.map((r) => ({ ...r, respuesta_sugerida: "" })) }, exclusivo: true });
     return Response.json({ informe });
   } catch (err) {
     return errorResponse(err);
