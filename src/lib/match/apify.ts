@@ -73,9 +73,32 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number) {
-  if (!Number.isInteger(limit) || limit < 1 || limit > 50) throw new Error("La prueba admite entre 1 y 50 avisos por fuente.");
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50) {
+  if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
   return { keyword, countryCode: "ar", maxJobs: limit, proxyConfiguration: { useApifyProxy: false } };
+}
+
+/**
+ * Precio estimado por fila entregada (US$, docs/PROVEEDORES-AVISOS.md) y por inicio de Actor.
+ * Se usa para frenar ANTES de pasarse del presupuesto: el costo real se registra después en el ledger.
+ */
+export const APIFY_PRICE_PER_ROW: Record<ApifyJobSource, number> = { linkedin: 0.002, indeed: 0.0001, computrabajo: 0.0015 };
+export const APIFY_START_USD = 0.02;
+
+/** Palabras clave para importar: generalistas primero (huecos de E0), después tecnología. */
+export const APIFY_KEYWORDS: Record<ApifyJobSource, string[]> = {
+  computrabajo: ["administrativo", "contable", "recursos humanos", "vendedor", "logística", "atención al cliente", "compras", "tesorería", "analista", "asistente"],
+  indeed: ["administrativo", "contable", "recursos humanos", "vendedor", "logística", "atención al cliente", "compras", "analista", "desarrollador", "data analyst"],
+  linkedin: ["analista administrativo", "contador", "recursos humanos", "ejecutivo comercial", "logística", "analista de datos"],
+};
+
+/** Peor caso de una corrida: inicio + todas las filas pedidas. */
+export const apifyRunCeiling = (source: ApifyJobSource, rows: number) => APIFY_START_USD + rows * APIFY_PRICE_PER_ROW[source];
+
+/** Tope de la próxima corrida dentro del presupuesto acumulado; 0 = no correr. */
+export function apifyNextCap(source: ApifyJobSource, rows: number, spentUsd: number, budgetUsd: number): number {
+  const ceiling = apifyRunCeiling(source, rows);
+  return spentUsd + ceiling <= budgetUsd + 1e-9 ? Math.round(ceiling * 1000) / 1000 : 0;
 }

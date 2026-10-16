@@ -93,6 +93,10 @@ export type NormalizedPosting = {
   employmentHint?: string;
   /** Seniority tal como la publica la fuente, si la informa. */
   seniorityHint?: string;
+  /** Logo de la empresa (https) tal como lo informa la fuente; la tarjeta cae a la inicial si no carga. */
+  companyLogo?: string;
+  /** Antigüedad relativa tal como la publica la fuente ("hace 3 días") cuando no hay fecha exacta. */
+  postedLabel?: string;
 };
 
 export type EligibilityResult = {

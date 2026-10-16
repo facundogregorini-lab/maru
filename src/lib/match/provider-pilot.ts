@@ -21,12 +21,12 @@ export class ProviderError extends Error {
 }
 
 /** URLs fijas; sin redirects, reintentos ni errores del proveedor que puedan incluir credenciales. */
-async function request(url: URL, headers?: HeadersInit) {
+export async function request(url: URL, headers?: HeadersInit, maxBytes = 4_000_000) {
   let response: Response;
   try { response = await fetch(url, { headers, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(55_000) }); }
   catch { throw new ProviderError("El proveedor no respondió a tiempo. No se reintentó la consulta."); }
   if (!response.ok) throw new ProviderError(`El proveedor respondió HTTP ${response.status}. Revisá la clave, el plan y la cuota en su panel.`);
-  if (Number(response.headers.get("content-length")) > 4_000_000) throw new ProviderError("La respuesta excede el límite de la prueba.");
+  if (Number(response.headers.get("content-length")) > maxBytes) throw new ProviderError("La respuesta excede el límite de la prueba.");
   const reader = response.body?.getReader();
   if (!reader) throw new ProviderError("El proveedor devolvió una respuesta vacía.");
   const chunks: Uint8Array[] = []; let size = 0;
@@ -35,13 +35,13 @@ async function request(url: URL, headers?: HeadersInit) {
       const part = await reader.read();
       if (part.done) break;
       size += part.value.length;
-      if (size > 4_000_000) { await reader.cancel(); throw new ProviderError("La respuesta excede el límite de la prueba."); }
+      if (size > maxBytes) { await reader.cancel(); throw new ProviderError("La respuesta excede el límite de la prueba."); }
       chunks.push(part.value);
     }
     return { body: JSON.parse(Buffer.concat(chunks).toString("utf8")) as unknown, headers: response.headers };
   } catch (e) { if (e instanceof ProviderError) throw e; throw new ProviderError("El proveedor devolvió una respuesta que no pudimos leer."); }
 }
-function fantasticQuota(headers: Headers): PilotResult["quota"] {
+export function fantasticQuota(headers: Headers): PilotResult["quota"] {
   const out: PilotResult["quota"] = {};
   for (const key of ["jobs-this-request", "jobs-remaining", "jobs-limit", "requests-remaining", "requests-limit"]) {
     const value = headers.get(`x-api-${key}`);
@@ -59,7 +59,7 @@ async function fantasticCall(endpoint: string, key: string, params: Record<strin
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   return request(url, { Authorization: `Bearer ${key}` });
 }
-async function serpAccount(key: string) {
+export async function serpAccount(key: string) {
   const url = new URL("https://serpapi.com/account.json"); url.searchParams.set("api_key", key);
   const { body } = await request(url); const r = object(body);
   if (r.error) throw new ProviderError("SerpAPI no pudo consultar la cuenta. Revisá la clave en su panel.");
@@ -88,7 +88,7 @@ export function pilotJobs(provider: PilotProvider, rawRows: unknown[], existingU
     // Google Jobs puede mover la antigüedad entre detected_extensions y extensions.
     // Conservamos el texto relativo: no fabricamos una fecha exacta.
     const publishedLabel = fantastic ? "" : string(object(r.detected_extensions).posted_at) || strings(r.extensions).find((v) => /^(hace |hoy$|ayer$|today$|yesterday$)|\bago$/i.test(v)) || "";
-    const relativeAge = publishedLabel.match(/(?:hace\s+)?(\d+)\s*(d[ií]as?|days?|semanas?|weeks?|meses?|months?|a[nñ]os?|years?)/i);
+    const relativeAge = publishedLabel.match(/(?:hace\s+)?(\d+)\s*(d[ií]as?|days?|semanas?|weeks?|mes(?:es)?|months?|a[nñ]os?|years?)/i);
     if (relativeAge) {
       const value = Number(relativeAge[1]); const unit = relativeAge[2].toLowerCase();
       const days = value * (/^(semana|week)/.test(unit) ? 7 : /^(mes|month)/.test(unit) ? 30 : /^(a[nñ]o|year)/.test(unit) ? 365 : 1);

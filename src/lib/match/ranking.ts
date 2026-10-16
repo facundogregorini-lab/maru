@@ -199,6 +199,9 @@ export type RankedItem = {
   reviewedAt: string;
   reviewedLabel: string;
   publishedAt: string | null;
+  /** Antigüedad relativa de la fuente cuando no hay fecha exacta (Google Jobs). */
+  postedLabel?: string;
+  logo?: string;
   excerpt: string;
   descriptionComplete: boolean;
   status: "abierta" | "cerrada";
@@ -466,6 +469,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
         const s = sourceById(p.sourceId);
         return { name: s?.name ?? p.sourceId, url: p.sourceUrl, applyUrl: p.applyUrl, attribution: p.attribution, required: p.linkRequired, kind: s?.kind ?? "portal" };
       });
+    const logoUrl = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find((u): u is string => !!u?.startsWith("https://"));
     const external = sources.length > 0 && sources.every((s) => s.kind === "usuario");
     const viaAts = sources.some((s) => s.kind === "ats");
     if (!viaAts && !external) pending.push(`Lo vimos en ${sources.map((s) => s.name.replace(/ (API|Public API|Remote Jobs API|\(API pública\))$/, "")).join(" y ")}: confirmá en el aviso que siga abierto.`);
@@ -493,6 +497,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
       reviewedAt: o.lastVerifiedAt ?? o.lastSeenAt,
       reviewedLabel: o.lastVerifiedAt ? "Revisado en el sitio del empleador" : "Visto por última vez en la fuente",
       publishedAt: o.publishedAt,
+      ...(!o.publishedAt && primary?.postedLabel ? { postedLabel: sanitizeDisplay(primary.postedLabel, 40) } : {}),
+      ...(logoUrl ? { logo: logoUrl } : {}),
       excerpt: primary ? sanitizeDisplay(primary.descriptionText.replace(/\s+/g, " "), 320) : "",
       descriptionComplete: o.descriptionComplete,
       status: o.status,
