@@ -211,7 +211,12 @@ describe.skipIf(!run)("extensión de Chrome", () => {
       await exited;
     }
     server?.close();
-    if (userDataDir) rmSync(userDataDir, { recursive: true, force: true, maxRetries: 3 });
+    // Limpieza de una carpeta temporal: Chromium puede seguir escribiendo un instante después de cerrar.
+    try {
+      if (userDataDir) rmSync(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (err) {
+      console.warn("No se pudo borrar el perfil temporal de Chromium:", err);
+    }
   });
 
   it("sin CV cargado, avisa que primero hay que cargarlo", async () => {

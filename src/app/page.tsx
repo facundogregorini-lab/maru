@@ -26,7 +26,7 @@ export default async function Home() {
       <section className="full-bleed relative -mt-8 overflow-hidden bg-sand px-5 pb-16 pt-14 sm:pb-20 sm:pt-20">
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_1.05fr] [&>*]:min-w-0">
           <div className="order-2 lg:order-1">
-            <MatchMockHero />
+            <HeroVideo />
           </div>
           <div className="order-1 lg:order-2">
             <h1 className="font-display">
@@ -228,38 +228,31 @@ function Feature({ title, body, cta, href, visual, flip = false }: { title: stri
   );
 }
 
-/** Hero: la lista de matches en una "ventana", como el video del hero de jobright. */
-function MatchMockHero() {
+/** Hero: el video de Maru en una "ventana", como el video del hero de jobright (se regenera con scripts/render-intro-video.mjs). */
+function HeroVideo() {
   return (
     <div className="animate-rise relative [animation-delay:200ms]">
-      <div className="overflow-hidden rounded-2xl border-2 border-ink bg-white shadow-[8px_8px_0_#0a0a0a]">
-        <div className="flex items-center gap-1.5 border-b-2 border-ink px-4 py-2.5">
+      <div className="overflow-hidden rounded-2xl border-2 border-ink bg-white">
+        <div className="flex items-center gap-1.5 border-b-2 border-ink bg-white px-4 py-2.5" aria-hidden>
           <span className="h-2.5 w-2.5 rounded-full bg-ink" />
           <span className="h-2.5 w-2.5 rounded-full bg-ink" />
           <span className="h-2.5 w-2.5 rounded-full bg-ink" />
-          <span className="ml-3 truncate text-xs font-medium text-muted">maru · tus matches de hoy</span>
         </div>
-        <div className="space-y-3 bg-sand/60 p-4 sm:p-5">
-          {[
-            { t: "Product Manager Sr.", c: "Tucán", w: "Híbrido · Buenos Aires", s: 92 },
-            { t: "Product Owner · Pagos", c: "Andina Fintech", w: "Remoto · LATAM", s: 88 },
-            { t: "Product Lead", c: "Ceibo Labs", w: "Remoto", s: 81 },
-          ].map((j, i) => (
-            <div key={j.t} className="animate-rise flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-line" style={{ animationDelay: `${450 + i * 140}ms` }}>
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ink font-display font-bold text-white">{j.c[0]}</span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-display font-bold leading-tight">{j.t}</p>
-                <p className="truncate text-xs text-muted">
-                  {j.c} · {j.w}
-                </p>
-              </div>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 font-display text-sm font-bold ${i === 0 ? "bg-brand text-white" : "bg-brand-soft text-brand-dark"}`}>
-                {j.s}%
-              </span>
-            </div>
-          ))}
-          <p className="pt-1 text-center text-[11px] text-muted">Ejemplo ilustrativo</p>
-        </div>
+        <video
+          className="block aspect-video w-full bg-[#f2f4f3]"
+          poster="/video/maru-intro-poster.jpg"
+          aria-label="Presentación de Maru: estrategia, matches, autocompletado y CV a medida"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          preload="auto"
+        >
+          {/* H.264 para Safari y Chrome; VP9 para los navegadores sin H.264. */}
+          <source src="/video/maru-intro.mp4" type='video/mp4; codecs="avc1.640020"' />
+          <source src="/video/maru-intro.webm" type="video/webm; codecs=vp9" />
+        </video>
       </div>
     </div>
   );

@@ -8,7 +8,10 @@ import { MaruHead } from "@/components/maru/PixelMaru";
 export function MockPanel({ children, caption }: { children: React.ReactNode; caption?: string }) {
   return (
     <figure className="relative">
-      <div className="relative overflow-hidden rounded-[28px] bg-sand px-5 py-10 sm:px-10 sm:py-12">{children}</div>
+      {/* Como en jobright: panel menta de 24 px de radio y proporción 4:3 (768 × 576). */}
+      <div className="relative grid place-items-center overflow-hidden rounded-[24px] bg-sand px-5 py-10 sm:aspect-[4/3] sm:px-10 sm:py-12">
+        <div className="w-full">{children}</div>
+      </div>
       {caption && <figcaption className="mt-2 text-center text-xs text-muted">{caption}</figcaption>}
     </figure>
   );
