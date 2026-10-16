@@ -80,9 +80,9 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
   },
 ];
 
-/** La oferta del final del recorrido. */
-export { PLAN_PRICE, PLAN_PRICE_TEXT } from "@/lib/plans";
-export const PLAN_PER_DAY_TEXT = "$333";
+/** La oferta del final del recorrido: el plan trimestral, expresado por mes ($22.500 / 3) y por día (/ 90). */
+export const PLAN_PRICE_TEXT = "$7.500";
+export const PLAN_PER_DAY_TEXT = "$250";
 
 export const GUIDE_KEY = "maru:guia:v1";
 

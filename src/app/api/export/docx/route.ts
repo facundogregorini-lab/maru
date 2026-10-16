@@ -1,5 +1,6 @@
 import { Packer, type Document } from "docx";
 import { authRequired, sessionEmail } from "@/lib/auth";
+import { paidFeatures } from "@/lib/billing/http";
 import { buildCvDocx } from "@/lib/export/docx";
 import { buildLetterDocx } from "@/lib/export/letterDocx";
 import type { CartaDoc, CvDoc } from "@/lib/schemas";
@@ -12,6 +13,8 @@ type Body = { kind?: "cv" | "carta"; doc?: CvDoc | CartaDoc };
 /** Word del CV o de la carta. Igual que el PDF, exige haber ingresado. */
 export async function POST(req: Request) {
   if (!sessionEmail(req)) return authRequired();
+  if (!(await paidFeatures(req)))
+    return Response.json({ error: "La descarga en Word es parte de los planes de Maru. El PDF sigue gratis.", code: "PLAN_FEATURE", upgradeUrl: "/precios" }, { status: 402 });
   const { kind = "cv", doc } = (await req.json().catch(() => ({}))) as Body;
   let file: Document;
   if (kind === "carta" && doc && "parrafos" in doc && Array.isArray(doc.parrafos)) file = buildLetterDocx(doc);

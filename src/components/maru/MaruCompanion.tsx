@@ -469,7 +469,7 @@ function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean;
           {PLAN_PRICE_TEXT}
           <span className="ml-1 text-base font-semibold text-white/70">/mes</span>
         </p>
-        <p className="mt-1.5 text-xs text-neon">Son {PLAN_PER_DAY_TEXT} por día, en pesos.</p>
+        <p className="mt-1.5 text-xs text-neon">Con el plan trimestral: {PLAN_PER_DAY_TEXT} por día, en pesos.</p>
       </div>
       <ul className="mt-3 space-y-1.5">
         {perks.map((p, i) => (

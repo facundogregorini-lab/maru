@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { Informe, Intercambio } from "@/lib/schemas";
 import CopyButton from "../CopyButton";
@@ -27,7 +28,7 @@ export function informeToText(inf: Informe): string {
     "A mejorar:",
     ...inf.a_mejorar.map((f) => `• ${f}`),
     "",
-    ...inf.respuestas.flatMap((r, i) => [`${i + 1}. ${r.pregunta} (${r.puntaje}/5)`, `Funcionó: ${r.funciono}`, `Mejorar: ${r.mejorar}`, `Respuesta sugerida: ${r.respuesta_sugerida}`, ""]),
+    ...inf.respuestas.flatMap((r, i) => [`${i + 1}. ${r.pregunta} (${r.puntaje}/5)`, `Funcionó: ${r.funciono}`, `Mejorar: ${r.mejorar}`, ...(r.respuesta_sugerida ? [`Respuesta sugerida: ${r.respuesta_sugerida}`] : []), ""]),
     "Próximos pasos:",
     ...inf.proximos_pasos.map((p) => `• ${p}`),
   ].join("\n");
@@ -104,13 +105,20 @@ export default function Report({ informe, historial }: { informe: Informe; histo
                     <p>
                       <b className="text-brand-dark">Mejorar:</b> {x.mejorar}
                     </p>
-                    <div className="rounded-2xl bg-cream px-4 py-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <b>Una respuesta más fuerte</b>
-                        <CopyButton text={x.respuesta_sugerida} />
+                    {x.respuesta_sugerida ? (
+                      <div className="rounded-2xl bg-cream px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <b>Una respuesta más fuerte</b>
+                          <CopyButton text={x.respuesta_sugerida} />
+                        </div>
+                        <p className="mt-1 whitespace-pre-line">{x.respuesta_sugerida}</p>
                       </div>
-                      <p className="mt-1 whitespace-pre-line">{x.respuesta_sugerida}</p>
-                    </div>
+                    ) : (
+                      <p className="rounded-2xl bg-cream px-4 py-3">
+                        <b>Una respuesta más fuerte (STAR)</b> para cada pregunta viene con los planes de Maru.{" "}
+                        <Link href="/precios" className="font-semibold underline underline-offset-4">Ver planes</Link>
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
