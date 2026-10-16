@@ -8,13 +8,15 @@ import { useAuth } from "./AuthProvider";
 const LAST_EMAIL_KEY = "maru:email";
 
 /**
- * Pide el email y manda el magic link. Mientras espera, consulta la sesión cada 3 s:
- * si la persona abre el link en otra pestaña de este navegador, este diálogo se entera solo y sigue.
+ * Ingreso con Google (en una ventana aparte, para no perder lo que hay en esta pestaña) o con magic link.
+ * Mientras espera, consulta la sesión cada 3 s (y escucha a la ventana de Google):
+ * si la persona entra en otra pestaña o ventana de este navegador, este diálogo se entera solo y sigue.
  */
 export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { open: boolean; reason: string; onClose: () => void; onLoggedIn: () => void }) {
-  const { refresh } = useAuth();
+  const { refresh, google } = useAuth();
   const [email, setEmail] = useState("");
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [withGoogle, setWithGoogle] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -26,6 +28,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
     if (open && !d.open) {
       setEmail((e) => e || load<string>(LAST_EMAIL_KEY) || "");
       setSentTo(null);
+      setWithGoogle(false);
       setError("");
       d.showModal();
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -34,12 +37,38 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
   }, [open]);
 
   useEffect(() => {
-    if (!open || !sentTo) return;
-    const id = setInterval(async () => {
+    if (!open || (!sentTo && !withGoogle)) return;
+    const check = async () => {
       if (await refresh()) onLoggedIn();
-    }, 3000);
-    return () => clearInterval(id);
-  }, [open, sentTo, refresh, onLoggedIn]);
+    };
+    const id = setInterval(check, 3000);
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel("maru-auth");
+      channel.onmessage = (e) => {
+        if (e.data === "ok") void check();
+        else if (e.data === "error") {
+          setWithGoogle(false);
+          setError("No pudimos ingresar con Google. Probá de nuevo o usá tu email.");
+        }
+      };
+    } catch {
+      // sin BroadcastChannel: queda la consulta cada 3 s
+    }
+    return () => {
+      clearInterval(id);
+      channel?.close();
+    };
+  }, [open, sentTo, withGoogle, refresh, onLoggedIn]);
+
+  function continueWithGoogle() {
+    setError("");
+    const next = encodeURIComponent(window.location.pathname);
+    const w = window.open(`/api/auth/google?popup=1&next=${next}`, "maru-google", "popup,width=500,height=650");
+    // Si el navegador bloquea la ventana, vamos a Google en esta misma pestaña (y volvemos a esta página).
+    if (!w) return void window.location.assign(`/api/auth/google?next=${next}`);
+    setWithGoogle(true);
+  }
 
   async function send(e?: React.FormEvent) {
     e?.preventDefault();
@@ -116,6 +145,26 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
               Ingresá a <strong>Maru</strong>
             </h2>
             {reason !== "entrar a Maru" && <p className="mt-1 text-center text-sm text-muted">para {reason}</p>}
+            {google && (
+              <>
+                <button
+                  type="button"
+                  onClick={continueWithGoogle}
+                  className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg bg-white px-6 py-3 font-bold text-ink ring-1 ring-ink/20 transition hover:bg-[#f5f6f7] disabled:opacity-60"
+                >
+                  <GoogleIcon />
+                  Continuar con Google
+                </button>
+                {withGoogle && (
+                  <p aria-live="polite" className="mt-2 text-center text-xs text-muted">
+                    Terminá en la ventana de Google: apenas entres, seguimos acá.
+                  </p>
+                )}
+                <p className="mt-6 flex items-center gap-3 text-xs uppercase text-muted before:h-px before:flex-1 before:bg-ink/10 after:h-px after:flex-1 after:bg-ink/10">
+                  o con tu email
+                </p>
+              </>
+            )}
             <label className="sr-only" htmlFor="login-email">
               Tu email
             </label>
@@ -129,7 +178,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Tu email"
-              className="mt-8 w-full rounded-lg bg-[#f5f6f7] px-4 py-3 text-base outline-none transition placeholder:text-ink/40 focus:ring-2 focus:ring-ink"
+              className={`${google ? "mt-6" : "mt-8"} w-full rounded-lg bg-[#f5f6f7] px-4 py-3 text-base outline-none transition placeholder:text-ink/40 focus:ring-2 focus:ring-ink`}
             />
             {error && (
               <p role="alert" className="mt-2 text-sm text-brand-dark">
@@ -144,7 +193,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
               {sending ? "Enviando…" : "Mandame el link"}
             </button>
             <p className="mt-4 text-center text-xs leading-relaxed text-muted">
-              Sin contraseña: te mandamos un link a tu email. Lo que armaste queda guardado mientras tanto.
+              Sin contraseña: {google ? "entrá con Google o con " : "te mandamos "}un link a tu email. Lo que armaste queda guardado mientras tanto.
             </p>
           </form>
         ) : (
@@ -182,5 +231,16 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
       </div>
       </div>
     </dialog>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 48 48">
+      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z" />
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
+      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" />
+      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" />
+    </svg>
   );
 }

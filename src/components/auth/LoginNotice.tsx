@@ -3,15 +3,15 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthProvider";
 
-/** Aviso al volver del magic link (?ingreso=ok | vencido), en cualquier página. */
+/** Aviso al volver del magic link o de Google (?ingreso=ok | vencido | google-error), en cualquier página. */
 export default function LoginNotice() {
   const { email } = useAuth();
-  const [notice, setNotice] = useState<"ok" | "vencido" | null>(null);
+  const [notice, setNotice] = useState<"ok" | "vencido" | "google-error" | null>(null);
 
   useEffect(() => {
     const url = new URL(window.location.href);
     const ingreso = url.searchParams.get("ingreso");
-    if (ingreso !== "ok" && ingreso !== "vencido") return;
+    if (ingreso !== "ok" && ingreso !== "vencido" && ingreso !== "google-error") return;
     setNotice(ingreso);
     url.searchParams.delete("ingreso");
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
@@ -30,6 +30,8 @@ export default function LoginNotice() {
           <>
             <b className="text-sage">¡Listo{email ? `, entraste como ${email}` : ""}!</b> Este navegador te va a recordar. Lo que estabas armando sigue acá.
           </>
+        ) : notice === "google-error" ? (
+          "No pudimos ingresar con Google. Tocá «Ingresar» y probá de nuevo, o entrá con tu email."
         ) : (
           "El link venció o no es válido. Tocá «Ingresar» y te mandamos uno nuevo."
         )}

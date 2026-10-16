@@ -128,3 +128,90 @@ describe("redirección después del link", () => {
     expect(back.headers.get("location")).toBe("http://maru.test/entrevista?ingreso=ok");
   });
 });
+
+describe("ingreso con Google", () => {
+  const idToken = (claims: Record<string, unknown>) =>
+    ["e30", Buffer.from(JSON.stringify(claims)).toString("base64url"), "sig"].join(".");
+  const valid = { aud: "cliente-test", iss: "https://accounts.google.com", exp: Math.floor(Date.now() / 1000) + 600, email: "Ana@Gmail.com", email_verified: true };
+
+  function withGoogleEnv() {
+    vi.stubEnv("GOOGLE_CLIENT_ID", "cliente-test");
+    vi.stubEnv("GOOGLE_CLIENT_SECRET", "secreto-test");
+  }
+  afterEach(() => vi.unstubAllEnvs());
+
+  async function start(query: string) {
+    const { GET } = await import("@/app/api/auth/google/route");
+    const res = await GET(new Request(`http://maru.test/api/auth/google?${query}`));
+    const location = new URL(res.headers.get("location")!);
+    const nonce = res.headers.get("set-cookie")!.match(/^maru_oauth=([^;]+)/)![1];
+    return { res, location, state: location.searchParams.get("state")!, cookie: `maru_oauth=${nonce}` };
+  }
+
+  async function callback(state: string, cookie: string | null, claims: Record<string, unknown> = valid) {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ id_token: idToken(claims) }));
+    const { GET } = await import("@/app/api/auth/google/callback/route");
+    return GET(new Request(`http://maru.test/api/auth/google/callback?code=abc&state=${encodeURIComponent(state)}`, { headers: cookie ? { cookie } : {} }));
+  }
+
+  it("sin credenciales: /me no ofrece Google y la ruta vuelve con error", async () => {
+    const { GET: me } = await import("@/app/api/auth/me/route");
+    expect((await (await me(new Request("http://maru.test/api/auth/me"))).json()).google).toBe(false);
+    const { GET } = await import("@/app/api/auth/google/route");
+    const res = await GET(new Request("http://maru.test/api/auth/google?next=%2Fcv"));
+    expect(res.headers.get("location")).toBe("http://maru.test/cv?ingreso=google-error");
+  });
+
+  it("manda a Google con la URI de vuelta y un estado atado a este navegador", async () => {
+    withGoogleEnv();
+    const { GET: me } = await import("@/app/api/auth/me/route");
+    expect((await (await me(new Request("http://maru.test/api/auth/me"))).json()).google).toBe(true);
+    const { res, location, cookie } = await start("next=%2Fcv");
+    expect(res.status).toBe(302);
+    expect(location.origin + location.pathname).toBe("https://accounts.google.com/o/oauth2/v2/auth");
+    expect(location.searchParams.get("client_id")).toBe("cliente-test");
+    expect(location.searchParams.get("redirect_uri")).toBe("http://maru.test/api/auth/google/callback");
+    expect(location.searchParams.get("scope")).toBe("openid email");
+    expect(cookie).toMatch(/^maru_oauth=.+/);
+  });
+
+  it("vuelta válida: sesión con el email de Google y regreso a la página", async () => {
+    withGoogleEnv();
+    const { state, cookie } = await start("next=%2Fcv");
+    const back = await callback(state, cookie);
+    expect(back.status).toBe(303);
+    expect(back.headers.get("location")).toBe("http://maru.test/cv?ingreso=ok");
+    const session = back.headers.getSetCookie().find((c) => c.startsWith(`${SESSION_COOKIE}=`))!;
+    expect(verifySessionToken(session.split(";")[0].split("=")[1])).toBe("ana@gmail.com");
+  });
+
+  it("en ventana aparte: responde una página que avisa y se cierra", async () => {
+    withGoogleEnv();
+    const { state, cookie } = await start("popup=1&next=%2Fcarta");
+    const back = await callback(state, cookie);
+    expect(back.status).toBe(200);
+    expect(back.headers.getSetCookie().some((c) => c.startsWith(`${SESSION_COOKIE}=`))).toBe(true);
+    const html = await back.text();
+    expect(html).toContain('BroadcastChannel("maru-auth").postMessage("ok")');
+    expect(html).toContain("window.close()");
+  });
+
+  it("rechaza estado sin cookie, de otro navegador, email sin verificar u otro cliente", async () => {
+    withGoogleEnv();
+    const { state, cookie } = await start("next=%2Fcv");
+    const other = await start("next=%2Fcv");
+    for (const [s, c, claims] of [
+      [state, null, valid],
+      [state, other.cookie, valid],
+      [state, cookie, { ...valid, email_verified: false }],
+      [state, cookie, { ...valid, aud: "otro-cliente" }],
+      ["basura", cookie, valid],
+    ] as const) {
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      const back = await callback(s, c, claims);
+      expect(back.headers.get("location")).toBe(s === "basura" ? "http://maru.test/?ingreso=google-error" : "http://maru.test/cv?ingreso=google-error");
+      expect(back.headers.getSetCookie().some((x) => x.startsWith(`${SESSION_COOKIE}=`))).toBe(false);
+      vi.restoreAllMocks();
+    }
+  });
+});
