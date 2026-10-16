@@ -266,7 +266,7 @@ function JobCard({
     <article className="flex overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04]">
       <div className="min-w-0 flex-1 p-4 sm:p-5">
         <div className="flex gap-4">
-          <CompanyTile name={item.company} size={56} />
+          <CompanyTile name={item.company} logo={item.logo} size={56} />
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
@@ -332,6 +332,12 @@ function JobCard({
             <dt className="text-muted">Salario:</dt>
             <dd>{item.salary ?? "No informado"}</dd>
           </div>
+          {(item.publishedAt || item.postedLabel) && (
+            <div className="flex gap-2">
+              <dt className="text-muted">Publicada:</dt>
+              <dd>{item.publishedAt ? fmtDate(item.publishedAt) : `${item.postedLabel} (según Google, al verla)`}</dd>
+            </div>
+          )}
           <div className="flex gap-2">
             <dt className="text-muted">{item.reviewedLabel}:</dt>
             <dd>{fmtDate(item.reviewedAt)}</dd>

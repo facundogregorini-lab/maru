@@ -1,14 +1,16 @@
 import { countBy } from "@/lib/match/inventory";
 import { loadInventory } from "@/lib/match/load";
-import { enabledSources } from "@/lib/match/sources";
+import { enabledSources, SOURCES } from "@/lib/match/sources";
 
 export const runtime = "nodejs";
 
 /** Cifras reales y públicas del inventario (sin datos de usuarios). */
 export async function GET() {
-  const { inv } = await loadInventory();
+  const { inv, postings } = await loadInventory();
   const open = inv.opportunities.filter((o) => o.status === "abierta");
-  const active = enabledSources();
+  // Fuentes diarias + importaciones puntuales que hoy aportan avisos abiertos (nada más).
+  const imported = new Set([...postings.values()].filter((p) => p.status === "abierta").map((p) => p.sourceId));
+  const active = [...enabledSources(), ...SOURCES.filter((s) => s.imported && imported.has(s.id))];
   return Response.json(
     {
       generatedAt: inv.generatedAt,

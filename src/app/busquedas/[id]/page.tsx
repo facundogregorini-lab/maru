@@ -45,7 +45,7 @@ export default async function JobPage({ params }: Props) {
           </div>
 
           <div className="mt-5 flex gap-4">
-            <CompanyTile name={j.company} size={56} />
+            <CompanyTile name={j.company} logo={j.logo} size={56} />
             <div className="min-w-0">
               <p className="text-sm">
                 <span className="font-semibold">{j.company}</span>
@@ -53,7 +53,7 @@ export default async function JobPage({ params }: Props) {
               </p>
               <h1 className="text-xl font-bold leading-snug sm:text-2xl">{j.title}</h1>
               <p className="mt-1.5 flex flex-wrap gap-1.5">
-                <TimeTag iso={j.postedAt} />
+                <TimeTag iso={j.postedAt} known={j.postedKnown} />
                 {j.eligible && <ArgTag />}
               </p>
             </div>

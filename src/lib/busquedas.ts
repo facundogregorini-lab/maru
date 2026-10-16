@@ -17,6 +17,9 @@ export type JobResult = {
   salario: string;
   eligible: boolean;
   postedAt: string;
+  /** false si la fuente no da fecha exacta: postedAt es cuando Maru la vio por primera vez. */
+  postedKnown: boolean;
+  logo?: string;
   applyUrl: string;
   attribution: string;
 };
@@ -61,6 +64,7 @@ type Postings = Awaited<ReturnType<typeof loadInventory>>["postings"];
 function toResult(o: Opportunity, postings: Postings): JobResult | null {
   const p = postings.get(o.primaryKey);
   if (!p?.applyUrl) return null;
+  const logo = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find(Boolean);
   return {
     id: o.id,
     title: o.title,
@@ -74,6 +78,8 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     salario: salaryText(o.salary?.value),
     eligible: o.eligibility.status === "elegible",
     postedAt: o.publishedAt ?? o.firstSeenAt,
+    postedKnown: !!o.publishedAt,
+    ...(logo ? { logo } : {}),
     applyUrl: p.applyUrl,
     attribution: p.attribution ?? "",
   };

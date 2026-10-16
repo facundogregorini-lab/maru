@@ -171,11 +171,29 @@ function close(p: StoredPosting, now: string, reason: string) {
 
 const daysSince = (a: string, now: string) => (new Date(now).getTime() - new Date(a).getTime()) / 86_400_000;
 
-/** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio. */
+/**
+ * Avisos importados de proveedores con cuota (no los consulta la sync diaria): se cierran por el
+ * vencimiento informado o si pasan `staleDays` sin volver a verse. Así el catálogo no arrastra
+ * avisos viejos cuando se termina el saldo de un proveedor.
+ */
+export function expireImported(inv: Inventory, now: string): number {
+  let closed = 0;
+  for (const p of inv.postings) {
+    const source = sourceById(p.sourceId);
+    if (!source?.imported || p.status !== "abierta") continue;
+    if (p.expiresAt && Date.parse(p.expiresAt) < Date.parse(now)) close(p, now, "Venció según la fuente");
+    else if (daysSince(p.lastSeenAt, now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
+    else continue;
+    closed++;
+  }
+  return closed;
+}
+
+/** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio (salvo importados). */
 export function purge(inv: Inventory, now: string, activeBoards?: Set<string>): number {
   const before = inv.postings.length;
   inv.postings = inv.postings.filter((p) => {
-    if (activeBoards && !activeBoards.has(p.boardId)) return false;
+    if (activeBoards && !activeBoards.has(p.boardId) && !sourceById(p.sourceId)?.imported) return false;
     return !(p.status === "cerrada" && p.closedAt && daysSince(p.closedAt, now) > RETAIN_CLOSED_DAYS);
   });
   return before - inv.postings.length;

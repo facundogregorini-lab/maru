@@ -21,6 +21,8 @@ Conclusión: **para generalistas el problema principal es de adquisición (H1)**
 - **E1** si el trial de Fantastic sigue vigente: se corre desde el panel con sesión real. Desde los entornos de Claude en la nube no hay red ni claves de producción.
 - **E2** en paralelo: sumar empleadores argentinos generalistas.
 
+**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md). **Bloqueo del dueño:** cargar `FANTASTIC_JOBS`, `SERP_API` y `APIFY_TOKEN` como *secrets de GitHub Actions* (las de Vercel no llegan a Actions; el repo es público, nunca como inputs). Las claves que se pegaron en el chat del 16/10 deben rotarse después de cargarlas.
+
 Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
 ## Implementado en esta tanda
