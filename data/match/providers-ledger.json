@@ -1,0 +1,200 @@
+{
+  "entries": [
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 248,
+        "total_searches_left": 248,
+        "searches_per_month": 250,
+        "this_month_usage": 2,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "administrativo contable Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de finanzas Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "vendedor La Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "asistente administrativo Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de recursos humanos Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de logística Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "ejecutivo comercial Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contador Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "compras Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 5,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:42:12.651Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "administrativo Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    }
+  ]
+}
