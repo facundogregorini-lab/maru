@@ -7,14 +7,16 @@ import { findGaps } from "@/lib/gaps";
 import { profileToText, saveProfile } from "@/lib/profileStore";
 import type { Carta, CartaDoc, CartaLargo, CartaOpciones, CartaTono, GapQuestion, Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { takeHandoff } from "@/lib/match/clientStore";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import StylePanel from "../cv/StylePanel";
 import { CATEGORIES, TEMPLATES } from "../cv/themes";
-import { Chips, ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, inputClass, post } from "../ui";
+import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post } from "../ui";
 import VoiceButton from "../VoiceButton";
 import LetterPaper, { type Rewrite } from "./LetterPaper";
+import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
 
 type Stage = "inicio" | "escribiendo" | "resultado";
 type Modo = "busqueda" | "espontanea";
@@ -74,7 +76,20 @@ export default function CartaFlow() {
   const jobTextRef = useRef<HTMLTextAreaElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
+  const restoredRef = useRef(false);
   useEffect(() => {
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    // Viene de una búsqueda de Maru ("Escribí tu carta"): arrancamos con ella y no con la carta anterior.
+    const h = takeHandoff("carta");
+    if (h) {
+      remove(SESSION_KEY);
+      setModo("busqueda");
+      setJobUrl(h.jobUrl);
+      setJobText(h.jobText);
+      setShowJobText(!!h.jobText);
+      return;
+    }
     const s = load<Session>(SESSION_KEY);
     if (!s?.doc || !s.carta) return;
     setModo(s.modo);
@@ -172,9 +187,8 @@ export default function CartaFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Carta de presentación" title={<>Una carta que <em className="text-brand">se lee de verdad</em>.</>}>
-            Traé la búsqueda, contanos con tus palabras (o en un audio) qué querés transmitir, y Maru escribe una carta concreta, humana y con tus mejores logros.
-          </SectionHero>
+          <ProductHero id="carta" />
+          <ToolHeading />
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="La búsqueda" hint="Pegá el link de la publicación, o escribile a una empresa aunque no haya una búsqueda abierta.">
@@ -278,6 +292,7 @@ export default function CartaFlow() {
               {!canWrite && <p className="text-xs text-muted">Completá la búsqueda, lo que querés contar y tu experiencia.</p>}
             </div>
           </div>
+          <ProductMore id="carta" />
         </>
       )}
 

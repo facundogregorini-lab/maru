@@ -8,6 +8,7 @@ import { track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import { roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
+import CompanyTile from "../busquedas/CompanyTile";
 import { ErrorBanner, inputClass, post } from "../ui";
 import { MultiChips } from "./fields";
 
@@ -233,143 +234,198 @@ function JobCard({
   }
 
   return (
-    <article className="rounded-3xl border border-line bg-paper p-5 sm:p-7">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          <h3 className="font-display text-xl leading-snug tracking-tight sm:text-2xl">{item.title}</h3>
-          <p className="mt-1 text-sm text-muted">
-            {[item.company, item.locations.slice(0, 2).join(" · ") || null, item.workplace !== "desconocido" ? item.workplaceLabel : "Modalidad no informada"].filter(Boolean).join(" · ")}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5 text-xs">
-            {item.seniority && <span className="rounded-full bg-sand px-2.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
-            <span className="rounded-full bg-sand px-2.5 py-1">{FAMILY_LABEL[item.family]}</span>
-            {item.external && <span className="rounded-full bg-sage-soft px-2.5 py-1 text-sage">Agregada por vos · privada</span>}
-            {item.status === "cerrada" && <span className="rounded-full bg-danger-soft px-2.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
-          </div>
-        </div>
-        <div className={`shrink-0 rounded-2xl px-4 py-2 text-center ${tone}`} title="Compatibilidad estimada a partir de tu perfil y lo que buscás. No es una probabilidad de contratación.">
-          <p className="font-display text-2xl leading-none">{item.score}%</p>
-          <p className="mt-1 text-[11px] font-medium uppercase tracking-wide">Compatibilidad estimada</p>
-          <p className="text-[11px]">Información {item.confidence === "alta" ? "completa" : item.confidence === "media" ? "parcial" : "escasa"}</p>
-        </div>
-      </div>
-
-      {item.reasons.length > 0 && (
-        <div className="mt-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sage">Por qué te la mostramos</p>
-          <ul className="mt-1.5 space-y-1 text-sm leading-relaxed">
-            {item.reasons.map((r) => (
-              <li key={r}>• {r}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {(item.gaps.length > 0 || item.pending.length > 0) && (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          {item.gaps.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-danger">Brechas</p>
-              <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-muted">
-                {item.gaps.map((g) => (
-                  <li key={g}>• {g}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {item.pending.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-honey">Para confirmar</p>
-              <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-muted">
-                {item.pending.map((g) => (
-                  <li key={g}>• {g}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
-      <dl className="mt-4 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-        <div className="flex gap-2">
-          <dt className="text-muted">Salario:</dt>
-          <dd>{item.salary ?? "No informado"}</dd>
-        </div>
-        <div className="flex gap-2">
-          <dt className="text-muted">{item.reviewedLabel}:</dt>
-          <dd>{fmtDate(item.reviewedAt)}</dd>
-        </div>
-        <div className="flex gap-2 sm:col-span-2">
-          <dt className="text-muted">Fuente:</dt>
-          <dd className="min-w-0">
-            {item.sources.map((s, i) => (
-              <span key={s.url}>
-                {i > 0 && " · "}
-                {s.kind === "usuario" ? (
-                  "Agregada por vos"
-                ) : (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
-                    {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
-                  </a>
-                )}
+    <article className="flex overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04]">
+      <div className="min-w-0 flex-1 p-4 sm:p-5">
+        <div className="flex gap-4">
+          <CompanyTile name={item.company} size={56} />
+          <div className="min-w-0">
+            <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
+              {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
+              <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1">{FAMILY_LABEL[item.family]}</span>
+              {item.external && <span className="rounded-md bg-sage-soft px-1.5 py-1 text-sage">Agregada por vos · privada</span>}
+              {item.status === "cerrada" && <span className="rounded-md bg-danger-soft px-1.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
+            </p>
+            <h3 className="mt-1.5 text-lg font-semibold leading-snug sm:text-xl">{item.title}</h3>
+            <p className="text-[15px]">
+              {item.company}
+              <span className="text-ink/50">
+                {" / "}
+                {[item.locations.slice(0, 2).join(" · ") || null, item.workplace !== "desconocido" ? item.workplaceLabel : "Modalidad no informada"].filter(Boolean).join(" · ")}
               </span>
-            ))}
-          </dd>
-        </div>
-      </dl>
-
-      {err && <p className="mt-3 text-sm text-brand-dark">{err}</p>}
-
-      <div className="mt-5 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={prepare}
-          disabled={preparing}
-          className="rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:bg-muted/40"
-        >
-          {preparing ? "Abriendo…" : "Preparar mi postulación"}
-        </button>
-        {main && main.kind !== "usuario" && (
-          <a
-            href={(required[0] ?? main).url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            onClick={() => track("match_ver_busqueda", { fuente: (required[0] ?? main).kind })}
-            className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:text-brand"
-          >
-            Ver búsqueda
-          </a>
-        )}
-        {external?.url && (
-          <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:text-brand">
-            Ver búsqueda
-          </a>
-        )}
-        <button type="button" onClick={onSave} aria-pressed={saved} className={`rounded-full border px-4 py-2.5 text-sm transition ${saved ? "border-sage bg-sage-soft text-sage" : "border-line bg-paper hover:border-brand"}`}>
-          {saved ? "Guardada ✓" : "Guardar"}
-        </button>
-        {onRemoveExternal ? (
-          <button type="button" onClick={onRemoveExternal} className="px-3 py-2.5 text-sm text-muted hover:text-brand-dark">
-            Quitar
-          </button>
-        ) : (
-          <button type="button" onClick={() => setDiscarding((x) => !x)} className="px-3 py-2.5 text-sm text-muted hover:text-brand-dark">
-            Descartar
-          </button>
-        )}
-      </div>
-      {discarding && (
-        <div className="mt-3 rounded-2xl bg-sand p-4">
-          <p className="text-sm font-medium">¿Por qué la descartás? Lo usamos para ordenar mejor.</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {DISCARD_REASONS.map(([r, label]) => (
-              <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm transition hover:border-brand">
-                {label}
-              </button>
-            ))}
+            </p>
+          </div>
+          {/* En celular el puntaje va arriba a la derecha; en compu, en el panel negro. */}
+          <div className={`ml-auto shrink-0 self-start rounded-xl px-3 py-1.5 text-center sm:hidden ${tone}`}>
+            <p className="text-xl font-bold leading-none">{item.score}%</p>
+            <p className="text-[10px] font-semibold uppercase">match</p>
           </div>
         </div>
-      )}
+        <hr className="my-3 border-black/[0.07]" />
+
+        {item.reasons.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sage">Por qué te la mostramos</p>
+            <ul className="mt-1.5 space-y-1 text-sm leading-relaxed">
+              {item.reasons.map((r) => (
+                <li key={r}>✓ {r}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {(item.gaps.length > 0 || item.pending.length > 0) && (
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {item.gaps.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-danger">Brechas</p>
+                <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-muted">
+                  {item.gaps.map((g) => (
+                    <li key={g}>• {g}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {item.pending.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-honey">Para confirmar</p>
+                <ul className="mt-1.5 space-y-1 text-sm leading-relaxed text-muted">
+                  {item.pending.map((g) => (
+                    <li key={g}>• {g}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        <hr className="my-3 border-black/[0.07]" />
+        <dl className="grid gap-x-6 gap-y-1 text-[13px] sm:grid-cols-2">
+          <div className="flex gap-2">
+            <dt className="text-muted">Salario:</dt>
+            <dd>{item.salary ?? "No informado"}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-muted">{item.reviewedLabel}:</dt>
+            <dd>{fmtDate(item.reviewedAt)}</dd>
+          </div>
+          <div className="flex gap-2 sm:col-span-2">
+            <dt className="text-muted">Fuente:</dt>
+            <dd className="min-w-0">
+              {item.sources.map((s, i) => (
+                <span key={s.url}>
+                  {i > 0 && " · "}
+                  {s.kind === "usuario" ? (
+                    "Agregada por vos"
+                  ) : (
+                    <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
+                      {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
+                    </a>
+                  )}
+                </span>
+              ))}
+            </dd>
+          </div>
+        </dl>
+
+        {err && <p className="mt-3 text-sm text-brand-dark">{err}</p>}
+
+        <hr className="my-3 border-black/[0.07]" />
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {onRemoveExternal ? (
+            <button type="button" onClick={onRemoveExternal} className="mr-auto px-2 py-2 text-sm text-muted hover:text-brand-dark">
+              Quitar
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setDiscarding((x) => !x)}
+              aria-label="Descartar"
+              title="Descartar"
+              aria-expanded={discarding}
+              className="grid h-9 w-9 place-items-center rounded-full bg-[#f5f6f7] hover:bg-black/[0.08]"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                <circle cx="12" cy="12" r="8" />
+                <path d="m6.5 6.5 11 11" />
+              </svg>
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onSave}
+            aria-pressed={saved}
+            aria-label={saved ? "Guardada" : "Guardar"}
+            title={saved ? "Guardada" : "Guardar"}
+            className={`grid h-9 w-9 place-items-center rounded-full ${saved ? "bg-neon/20 text-brand-dark" : "bg-[#f5f6f7] hover:bg-black/[0.08]"}`}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden>
+              <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+            </svg>
+          </button>
+          <button type="button" onClick={prepare} disabled={preparing} className="press rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white hover:bg-black disabled:bg-muted/40">
+            {preparing ? "Abriendo…" : "Preparar mi postulación"}
+          </button>
+          {main && main.kind !== "usuario" && (
+            <a
+              href={(required[0] ?? main).url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              onClick={() => track("match_ver_busqueda", { fuente: (required[0] ?? main).kind })}
+              className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase"
+            >
+              Postularme
+            </a>
+          )}
+          {external?.url && (
+            <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase">
+              Ver búsqueda
+            </a>
+          )}
+        </div>
+        {discarding && (
+          <div className="mt-3 rounded-2xl bg-[#f5f6f7] p-4">
+            <p className="text-sm font-medium">¿Por qué la descartás? Lo usamos para ordenar mejor.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {DISCARD_REASONS.map(([r, label]) => (
+                <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full bg-white px-3 py-1.5 text-sm ring-1 ring-line transition hover:ring-ink">
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* El panel negro de jobright, con la compatibilidad real. */}
+      <div
+        className="m-1 hidden w-[164px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:flex"
+        title="Compatibilidad estimada a partir de tu perfil y lo que buscás. No es una probabilidad de contratación."
+      >
+        <ScoreRing value={item.score} />
+        <p className="mt-3 text-sm font-semibold uppercase">{item.score >= 70 ? "Match fuerte" : item.score >= 45 ? "Buen match" : "Match posible"}</p>
+        <p className="mt-3 w-full border-t border-white/20 pt-3 text-[11px] leading-relaxed text-white/80">
+          Compatibilidad estimada
+          <br />
+          Información {item.confidence === "alta" ? "completa" : item.confidence === "media" ? "parcial" : "escasa"}
+        </p>
+      </div>
     </article>
+  );
+}
+
+function ScoreRing({ value }: { value: number }) {
+  const r = 34;
+  const c = 2 * Math.PI * r;
+  return (
+    <span className="relative grid h-20 w-20 place-items-center">
+      <svg viewBox="0 0 80 80" className="absolute inset-0 -rotate-90" aria-hidden>
+        <circle cx="40" cy="40" r={r} fill="none" strokeWidth="5" stroke="rgba(255,255,255,0.15)" />
+        <circle cx="40" cy="40" r={r} fill="none" strokeWidth="5" strokeLinecap="round" stroke="#00f0a0" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} />
+      </svg>
+      <span className="text-2xl font-bold">
+        {value}
+        <span className="text-xs">%</span>
+      </span>
+    </span>
   );
 }
 

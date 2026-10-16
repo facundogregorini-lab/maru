@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { takeHandoff, type HandoffTarget } from "@/lib/match/clientStore";
 import type { TargetInput } from "@/lib/schemas";
 import { inputClass } from "./ui";
 
 export type JobFieldState = ReturnType<typeof useJobInput>;
 
 /** "Para qué búsqueda": link/texto de una vacante concreta, o un rol/empresa en general. */
-export function useJobInput() {
+export function useJobInput(target?: HandoffTarget) {
   const [modo, setModo] = useState<"busqueda" | "general">("busqueda");
   const [jobUrl, setJobUrl] = useState("");
   const [jobText, setJobText] = useState("");
@@ -15,6 +16,19 @@ export function useJobInput() {
   const [empresa, setEmpresa] = useState("");
   const [rol, setRol] = useState("");
   const textRef = useRef<HTMLTextAreaElement>(null);
+
+  // Viene de una búsqueda de Maru ("Entrená la entrevista", "Grabá tu video"): arrancamos con ella.
+  const tookRef = useRef(false);
+  useEffect(() => {
+    if (!target || tookRef.current) return;
+    tookRef.current = true;
+    const h = takeHandoff(target);
+    if (!h) return;
+    setModo("busqueda");
+    setJobUrl(h.jobUrl);
+    setJobText(h.jobText);
+    setShowJobText(!!h.jobText);
+  }, [target]);
 
   const ready = modo === "busqueda" ? !!jobUrl.trim() || jobText.trim().length > 100 : !!rol.trim();
   const payload = (): TargetInput =>

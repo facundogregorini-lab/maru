@@ -28,27 +28,35 @@ const FAQ = [
   },
 ];
 
-export default function Faq() {
+/**
+ * Bloque final verde menta, como en jobright: preguntas frecuentes, el cierre y el buscador
+ * (lo que venga en children), pegado al footer que también es menta.
+ */
+export default function Faq({ children }: { children?: React.ReactNode }) {
   return (
-    <section id="faq" aria-labelledby="faq-t" className="full-bleed relative mt-28 scroll-mt-24 overflow-hidden rounded-t-[64px] bg-sand px-5 py-20 sm:rounded-t-[120px]">
-      <Reveal className="mx-auto max-w-3xl">
-        <h2 id="faq-t" data-reveal className="text-center font-display text-4xl font-bold uppercase leading-tight sm:text-5xl">
-          Preguntas frecuentes
+    <section id="faq" aria-labelledby="faq-t" className="full-bleed relative -mb-28 mt-28 scroll-mt-24 rounded-tl-[64px] bg-sand px-5 pt-20 sm:mt-36 sm:rounded-tl-[160px]">
+      <Reveal className="mx-auto max-w-[800px]">
+        <h2 id="faq-t" data-reveal className="text-center font-display text-4xl font-bold uppercase leading-[1.05] sm:text-5xl">
+          Preguntas
+          <br />
+          frecuentes
         </h2>
-        <div className="mt-10 space-y-3">
+        <div className="mt-10 space-y-2">
           {FAQ.map((f, i) => (
-            <details key={f.q} data-reveal style={{ "--i": i } as React.CSSProperties} className="group rounded-2xl bg-white ring-1 ring-black/5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium [&::-webkit-details-marker]:hidden">
+            <details key={f.q} data-reveal style={{ "--i": i } as React.CSSProperties} className="group rounded-xl bg-brand-soft">
+              <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium [&::-webkit-details-marker]:hidden">
                 {f.q}
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border-[1.5px] border-ink text-sm leading-none transition-transform duration-300 group-open:rotate-45">
-                  +
-                </span>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden className="shrink-0 transition-transform duration-300 group-open:rotate-45">
+                  <circle cx="12" cy="12" r="10.5" />
+                  <path d="M12 7v10M7 12h10" />
+                </svg>
               </summary>
-              <p className="px-5 pb-5 leading-relaxed text-ink/70">{f.a}</p>
+              <p className="-mt-1 px-5 pb-5 leading-relaxed text-ink/70">{f.a}</p>
             </details>
           ))}
         </div>
       </Reveal>
+      {children}
     </section>
   );
 }

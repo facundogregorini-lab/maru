@@ -1,13 +1,20 @@
 import Link from "next/link";
-import { Evidence, ResultsList } from "@/components/landing/Evidence";
+import CompanyTile from "@/components/busquedas/CompanyTile";
+import JobSearchBar from "@/components/busquedas/JobSearchBar";
 import AutofillDemo from "@/components/landing/AutofillDemo";
+import CtaScene from "@/components/landing/CtaScene";
+import { ResultsList } from "@/components/landing/Evidence";
+import EvidenceWall from "@/components/landing/EvidenceWall";
 import Faq from "@/components/landing/Faq";
+import Laurels from "@/components/landing/Laurels";
 import { ChatMock, CvMock, MatchMock, MockPanel, VideoMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import Reveal from "@/components/magic/Reveal";
+import ScrollFade from "@/components/magic/ScrollFade";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
 import { landingData } from "@/lib/landing";
+import { POPULAR } from "@/lib/popular";
 
 // Los números y la cinta salen del inventario real; se regeneran cada hora.
 export const revalidate = 3600;
@@ -22,90 +29,116 @@ export default async function Home() {
 
   return (
     <SiteShell>
-      {/* ---------- Hero: bloque menta de lado a lado ---------- */}
-      <section className="full-bleed relative -mt-8 overflow-hidden bg-sand px-5 pb-16 pt-14 sm:pb-20 sm:pt-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_1.05fr] [&>*]:min-w-0">
+      {/* ---------- Hero: bloque menta de lado a lado, que termina en globo de diálogo ---------- */}
+      <section className="full-bleed relative -mt-8 overflow-hidden rounded-br-[64px] bg-sand px-5 pb-14 pt-10 sm:rounded-br-[120px] sm:pt-16 lg:pb-20">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-[640px_1fr] lg:gap-12 [&>*]:min-w-0">
           <div className="order-2 lg:order-1">
             <HeroVideo />
           </div>
-          <div className="order-1 lg:order-2">
+          <div className="order-1 text-center lg:order-2 lg:text-left">
             {/* El gancho de jobright ("No More Solo Job Hunting / Do it with AI"), en español y con Maru. */}
             <h1 className="font-display">
-              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
-                <span style={{ "--i": 0 } as React.CSSProperties}>Basta de buscar</span>
+              <span className="line-mask text-[2rem] font-light uppercase leading-[1] sm:text-[38px] lg:normal-case lg:leading-[1.2]">
+                <span style={{ "--i": 0 } as React.CSSProperties}>
+                  Basta de buscar <br className="lg:hidden" />
+                  trabajo solo
+                </span>
               </span>
-              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
-                <span style={{ "--i": 1 } as React.CSSProperties}>trabajo solo</span>
-              </span>
-              <span className="line-mask mt-2 text-[3.1rem] font-bold leading-[1] sm:text-[4.6rem]">
-                <span style={{ "--i": 2 } as React.CSSProperties}>Hacelo con Maru AI</span>
+              <span className="line-mask mt-1 text-[3.25rem] font-bold leading-[1.05] sm:text-[4.4rem] lg:mt-0 xl:text-[80px]">
+                <span style={{ "--i": 1 } as React.CSSProperties}>Hacelo con Maru AI</span>
               </span>
             </h1>
-            <p className="animate-rise mt-6 max-w-lg text-lg leading-relaxed text-ink/75 [animation-delay:400ms]">
+            <p className="animate-rise mx-auto mt-3 max-w-[512px] text-[15px] leading-snug sm:text-base lg:mx-0 [animation-delay:400ms]">
               Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en menos de 1 minuto!
             </p>
-            <div className="animate-rise mt-8 flex flex-wrap items-center gap-4 [animation-delay:500ms]">
-              <Link href="/match" className="press inline-flex items-center rounded-full bg-ink px-10 py-4 font-display text-lg font-bold uppercase tracking-wide text-white hover:bg-black sm:px-14">
-                Empezar ahora
+            {/* Escritorio: un solo botón grande, como "TRY FOR FREE". Celular: dos botones, como jobright. */}
+            <div className="animate-rise mt-5 flex flex-wrap justify-center gap-3 lg:mt-14 lg:justify-start [animation-delay:500ms]">
+              <Link href="/match" className="press hidden h-14 w-[280px] items-center justify-center rounded-full bg-ink font-display text-2xl font-bold uppercase text-white hover:bg-black lg:inline-flex">
+                Empezar gratis
               </Link>
-              <Link href="#herramientas" className="text-sm font-semibold underline underline-offset-4 hover:no-underline">
-                Ver qué hace Maru
+              <Link href="/match" className="press inline-flex h-11 items-center rounded-full bg-ink px-7 font-semibold text-white lg:hidden">
+                Empezar gratis
+              </Link>
+              <Link href={EXTENSION_URL} className="press inline-flex h-11 items-center rounded-full border-2 border-ink bg-white px-6 font-semibold lg:hidden">
+                Bajar la extensión
               </Link>
             </div>
           </div>
         </div>
 
         {/* Resultados reales, no promesas */}
-        <Reveal className="mx-auto mt-16 grid max-w-7xl items-center gap-10 border-t border-ink/10 pt-12 lg:grid-cols-[1fr_1.2fr]">
-          <h2 data-reveal className="font-display text-4xl font-bold uppercase leading-[1.05] sm:text-5xl">
-            Resultados reales,
-            <br />
-            no promesas
-            <span className="mt-3 block text-base font-normal normal-case text-ink/60">Estudios de terceros sobre postulaciones personalizadas. Fuentes abajo.</span>
-          </h2>
+        <Reveal className="relative mx-auto mt-14 grid max-w-[1200px] gap-10 lg:mt-12 lg:grid-cols-[1fr_512px] lg:gap-12">
+          <div data-reveal className="flex flex-col justify-between gap-8">
+            <Laurels
+              items={[
+                { top: "Búsquedas reales", main: `${fmt(data.total)}+` },
+                { top: "Funciona en", main: "Greenhouse · Lever" },
+                { top: "Sin tarjeta", main: "100% gratis" },
+              ]}
+            />
+            <div className="relative flex items-center">
+              <h2 className="font-display text-[2.4rem] font-bold uppercase leading-[1] sm:text-5xl">
+                Resultados reales,
+                <br />
+                no promesas
+              </h2>
+              {/* Conector punteado hacia las métricas (sólo escritorio). */}
+              <span aria-hidden className="ml-auto hidden h-[220px] items-center lg:flex">
+                <span className="h-2 w-2 rounded-full bg-ink" />
+                <span className="w-8 border-t-2 border-dotted border-ink" />
+                <span className="h-full w-6 rounded-l-2xl border-2 border-r-0 border-dotted border-ink" />
+              </span>
+            </div>
+          </div>
           <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
             <ResultsList />
           </div>
         </Reveal>
       </section>
+      {/* La colita del globo. */}
+      <div aria-hidden className="full-bleed relative h-0">
+        <svg viewBox="0 0 160 72" className="absolute left-[18%] top-[-1px] h-12 w-28 sm:h-[72px] sm:w-40">
+          <path d="M0 0H160L0 72Z" fill="var(--color-sand)" />
+        </svg>
+      </div>
 
       {/* ---------- Búsquedas reales ---------- */}
-      <section aria-labelledby="hub-t" className="mt-20">
+      <section aria-labelledby="hub-t" className="mt-24 sm:mt-28">
         <Reveal>
-          <h2 id="hub-t" data-reveal className="font-display text-3xl font-light uppercase sm:text-5xl">
-            Accedé a <strong className="font-bold">búsquedas reales</strong>
+          <h2 id="hub-t" data-reveal className="font-display text-[2rem] font-light uppercase leading-[1.05] sm:text-5xl">
+            Accedé a <strong className="font-bold">búsquedas reales!</strong>
           </h2>
-          <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8 grid items-end gap-8 sm:grid-cols-[auto_1fr]">
-            <div className="hidden sm:block">
-              <WalkingSprite />
-            </div>
-            <dl className="space-y-3">
+          <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8 sm:mt-10">
+            <div className="relative">
+              <div className="absolute bottom-0 left-0">
+                <MaruSprite size={64} frame="walkA" className="sm:hidden" />
+                <MaruSprite size={86} frame="walkA" className="hidden sm:block" />
+              </div>
               <HubRow label="Búsquedas abiertas hoy" value={`${fmt(data.total)}+`} />
-              <HubRow label="Empresas" value={fmt(data.companies)} />
-              <HubRow label="Que podés tomar desde Argentina" value={fmt(data.eligible)} />
-            </dl>
+            </div>
+            <div className="ml-[84px] h-0.5 bg-ink sm:ml-[120px]" />
+            <HubRow label="Que podés tomar desde Argentina" value={fmt(data.eligible)} />
           </div>
         </Reveal>
       </section>
 
       {data.latest.length > 0 && (
-        <div className="full-bleed relative mt-12 overflow-hidden bg-ink py-5 text-white" aria-label="Búsquedas que acaban de entrar">
-          <div className="marquee gap-4">
+        <div className="full-bleed relative mt-14 overflow-hidden bg-ink py-6 text-white" aria-label="Búsquedas que acaban de entrar">
+          <div className="marquee gap-12">
             {[...data.latest, ...data.latest].map((j, i) => (
               <Link
                 key={`${j.id}-${i}`}
-                href="/match"
+                href={`/busquedas/${j.id}`}
                 tabIndex={i >= data.latest.length ? -1 : undefined}
                 aria-hidden={i >= data.latest.length || undefined}
-                className="flex shrink-0 items-center gap-3 rounded-xl px-3 py-1.5 transition-colors hover:bg-white/10"
+                className="flex shrink-0 items-center gap-3 rounded-xl transition-opacity hover:opacity-80"
               >
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white font-display text-lg font-bold text-ink">{j.company.trim()[0]?.toUpperCase()}</span>
+                <CompanyTile name={j.company} />
                 <span className="min-w-0">
-                  <span className="block text-xs text-white/60">
-                    {j.company} · <TimeAgo iso={j.firstSeenAt} />
-                    {j.workplace && ` · ${j.workplace}`}
+                  <span className="block text-[13px] text-white/90">
+                    <span className="font-semibold">{j.company}</span> · <TimeAgo iso={j.firstSeenAt} />
                   </span>
-                  <span className="block max-w-[260px] truncate font-semibold">{j.title}</span>
+                  <span className="block max-w-[340px] truncate text-lg font-medium">{j.title}</span>
                 </span>
               </Link>
             ))}
@@ -114,32 +147,30 @@ export default async function Home() {
       )}
 
       {/* ---------- Lo que hace Maru ---------- */}
-      <section id="herramientas" aria-labelledby="tools-t" className="mt-24 scroll-mt-24">
+      <section id="herramientas" aria-labelledby="tools-t" className="mt-24 scroll-mt-24 sm:mt-40">
         <Reveal>
-          <h2 id="tools-t" data-reveal className="flex flex-wrap items-center gap-x-4 font-display text-[2.6rem] font-bold uppercase leading-[1.02] sm:text-7xl">
-            Tu coach de carrera
-            <span className="flex items-center gap-3">
-              con IA
-              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-soft sm:h-16 sm:w-16">
-                <MaruSprite size={30} frame="wave" />
-              </span>
+          <h2 id="tools-t" data-reveal className="font-display text-[2.6rem] font-bold uppercase leading-[1] sm:text-[80px]">
+            <span className="flex items-end gap-3">
+              Tu coach
+              <MaruSprite size={56} frame="wave" className="mb-2 hidden sm:block" />
+              <MaruSprite size={36} frame="wave" className="mb-1 sm:hidden" />
             </span>
+            de carrera con IA
           </h2>
         </Reveal>
 
-        <div className="mt-14 space-y-24 sm:space-y-32">
+        <div className="mt-14 space-y-24 sm:mt-24 lg:space-y-[200px]">
           <Feature
             title="Búsquedas a tu medida"
-            body="Cruzamos tu CV con miles de búsquedas abiertas y te mostramos primero las que encajan con vos, con el porqué de cada una, las brechas y lo que falta confirmar."
+            body="Cruzamos tu CV con miles de búsquedas abiertas y te mostramos primero las que encajan con vos, con el porqué de cada una y lo que falta confirmar."
             cta="Ver mis matches"
             href="/match"
             visual={<MatchMock />}
           />
           <Feature
-            flip
             title="Autocompletá en 1 clic"
-            body="Con la extensión para Chrome, Maru completa los formularios de postulación por vos: datos, respuestas y tu CV adjunto. Funciona en Greenhouse, Lever y otros formularios web. Vos revisás y enviás."
-            cta="Descargar la extensión"
+            body="Con la extensión para Chrome, Maru completa los formularios de postulación por vos: datos, respuestas y tu CV adjunto. Funciona en Greenhouse, Lever y otros formularios web."
+            cta="Bajar la extensión"
             href={EXTENSION_URL}
             visual={
               <MockPanel>
@@ -149,15 +180,14 @@ export default async function Home() {
           />
           <Feature
             title="Un CV a medida de cada búsqueda"
-            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más una respuesta para cada campo del formulario y tu carta de presentación."
-            cta="Personalizar mi postulación"
+            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más una respuesta para cada campo del formulario."
+            cta="Mejorar mi CV"
             href="/postulacion"
             visual={<CvMock />}
           />
           <Feature
-            flip
             title="Entrená tu entrevista"
-            body="Una entrevista simulada por voz, como en una videollamada. Maru repregunta si tu respuesta queda corta y al final te da un informe con puntaje y respuestas más fuertes."
+            body="Una entrevista simulada por voz, como en una videollamada. Maru repregunta si tu respuesta queda corta y al final te da un informe con puntaje."
             cta="Practicar ahora"
             href="/entrevista"
             visual={<ChatMock />}
@@ -172,59 +202,62 @@ export default async function Home() {
         </div>
       </section>
 
-      <Evidence />
+      <EvidenceWall />
 
-      <Faq />
-
-      {/* ---------- Cierre ---------- */}
-      <section className="relative mt-24 overflow-hidden rounded-[36px] bg-sand px-6 py-16 text-center sm:py-20">
-        <div className="mx-auto w-fit">
-          <MaruSprite size={72} frame="wave" />
+      {/* ---------- Cierre: preguntas, el globo con Maru y el buscador, todo en menta hasta el footer ---------- */}
+      <Faq>
+        <div className="mt-24 sm:mt-28">
+          <CtaScene />
         </div>
-        <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-light leading-tight sm:text-6xl">
-          Dejá que Maru te lleve a <strong className="font-bold">tu próximo trabajo</strong>
-        </h2>
-        <Link
-          href="/match"
-          className="press mt-10 inline-flex items-center rounded-full border-2 border-ink bg-neon px-12 py-4 font-display text-xl font-bold uppercase tracking-wide text-ink shadow-[4px_4px_0_#0a0a0a] hover:shadow-[6px_6px_0_#0a0a0a]"
-        >
-          Empezar ahora
-        </Link>
-      </section>
+        <div className="mx-auto max-w-[1200px] pb-20 pt-16 sm:pt-20">
+          <h2 className="text-center font-display text-2xl font-bold uppercase sm:text-[32px]">Encontrá tu trabajo ideal en un clic!</h2>
+          <div className="mt-8">
+            <JobSearchBar />
+          </div>
+          <h3 className="mt-12 text-center font-display text-xl font-semibold sm:text-2xl">Búsquedas populares</h3>
+          <div className="mx-auto mt-5 flex max-w-3xl flex-wrap justify-center gap-2.5">
+            {POPULAR.map((p) => (
+              <Link key={p.href} href={p.href} className="press rounded-full bg-ink px-4 py-2 text-[13px] font-medium text-white hover:bg-black">
+                {p.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Faq>
     </SiteShell>
   );
 }
 
 function HubRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-baseline gap-4 border-b border-ink/15 pb-3">
-      <dt className="text-lg text-ink/80">{label}</dt>
-      <span aria-hidden className="flex-1" />
-      <dd className="font-display text-4xl font-bold tabular-nums sm:text-5xl">{value}</dd>
+    <div className="ml-[84px] grid py-3 sm:ml-[120px] lg:grid-cols-[1fr_512px]">
+      <span />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <p className="text-sm sm:font-display sm:text-2xl sm:font-normal">{label}</p>
+        <p className="font-display text-2xl font-bold tabular-nums leading-tight sm:text-[64px]">{value}</p>
+      </div>
     </div>
   );
 }
 
-function WalkingSprite() {
+function Feature({ title, body, cta, href, visual }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode }) {
+  // Como en jobright: siempre texto a la izquierda y la maqueta a la derecha; en celular, centrado
+  // y con el botón debajo de la maqueta.
   return (
-    <div className="grid h-24 w-24 place-items-center rounded-3xl bg-sand">
-      <MaruSprite size={52} frame="walkA" />
-    </div>
-  );
-}
-
-function Feature({ title, body, cta, href, visual, flip = false }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; flip?: boolean }) {
-  return (
-    <Reveal className="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr] [&>*]:min-w-0">
-      <div data-reveal className={flip ? "lg:order-2" : ""}>
-        <h3 className="font-display text-[2.4rem] font-semibold leading-[1.05] sm:text-5xl">{title}</h3>
-        <p className="mt-4 max-w-md text-lg leading-relaxed text-ink/70">{body}</p>
-        <Link href={href} className="press mt-7 inline-flex rounded-full bg-ink px-8 py-3 text-lg font-medium text-white hover:bg-black">
+    <Reveal className="grid items-center gap-6 lg:grid-cols-[384px_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-0">
+      <ScrollFade className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left">
+        <div data-reveal>
+          <h3 className="font-display text-[2rem] font-semibold leading-[1] sm:text-5xl">{title}</h3>
+          <p className="mx-auto mt-3 max-w-md text-[15px] leading-snug text-ink/80 sm:text-base lg:mx-0">{body}</p>
+        </div>
+      </ScrollFade>
+      <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        {visual}
+      </div>
+      <div className="text-center lg:col-start-1 lg:row-start-2 lg:self-start lg:pt-9 lg:text-left">
+        <Link href={href} className="press inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-ink px-8 text-lg font-medium text-white hover:bg-black sm:min-w-[256px] sm:text-xl">
           {cta}
         </Link>
-      </div>
-      <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className={flip ? "lg:order-1" : ""}>
-        {visual}
       </div>
     </Reveal>
   );

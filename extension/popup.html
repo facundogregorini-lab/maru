@@ -9,8 +9,8 @@
     <header>
       <img class="logo" src="icons/48.png" alt="" />
       <div>
-        <strong>Maru Coach</strong>
-        <span class="muted">Completá postulaciones con tu CV</span>
+        <strong class="brand">Maru</strong>
+        <span class="muted small">Autocompletá postulaciones con tu CV</span>
       </div>
     </header>
 
@@ -39,8 +39,18 @@
         </div>
         <button id="change" class="link">Cambiar CV</button>
       </div>
-      <button id="fill" class="primary big">Completar esta postulación</button>
+      <button id="fill" class="autofill">Completar esta postulación</button>
       <p class="muted small center">También con <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>. Maru nunca envía el formulario: lo revisás y lo enviás vos.</p>
+      <!-- Como el "Application Dashboard" del plugin de jobright: completitud y campos. -->
+      <div id="dashboard" class="dashboard" hidden>
+        <div class="row"><strong>Completitud</strong><strong id="pct">0%</strong></div>
+        <div class="bar"><span id="bar"></span></div>
+        <ul>
+          <li><span class="dot ok">✓</span><span>De tu CV</span><b id="n-ok">0</b></li>
+          <li><span class="dot warn">!</span><span>Para revisar</span><b id="n-warn">0</b></li>
+          <li><span class="dot todo">–</span><span>Para completar vos</span><b id="n-todo">0</b></li>
+        </ul>
+      </div>
       <label class="extras">
         <strong>Datos que suelen pedir y no están en tu CV</strong>
         <textarea id="extras" rows="5" placeholder="Pretensión salarial: USD 3.000 netos por mes&#10;Disponibilidad: inmediata&#10;Permiso de trabajo: ciudadana argentina; necesito sponsorship para EE. UU.&#10;Modalidad: remoto o híbrido en CABA&#10;Cómo me enteré: LinkedIn"></textarea>

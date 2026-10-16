@@ -37,15 +37,23 @@ export function forgetEverything(): void {
   forgetProfile();
 }
 
-export type Handoff = { jobUrl: string; jobText: string; title: string; company: string; at: number };
+export type HandoffTarget = "postulacion" | "carta" | "entrevista" | "video";
+export type Handoff = { jobUrl: string; jobText: string; title: string; company: string; at: number; to?: HandoffTarget };
 
-/** "Preparar mi postulación": deja la búsqueda lista para el coach de postulación. */
-export function handoffToPostulacion(h: Omit<Handoff, "at">): void {
-  save(HANDOFF_KEY, { ...h, at: Date.now() } satisfies Handoff);
+/** Deja una búsqueda lista para otra herramienta (postulación, carta, entrevista o video). */
+export function handoffJob(to: HandoffTarget, h: Omit<Handoff, "at" | "to">): void {
+  save(HANDOFF_KEY, { ...h, to, at: Date.now() } satisfies Handoff);
 }
 
-export function takeHandoff(maxAgeMs = 60 * 60_000): Handoff | null {
+/** "Preparar mi postulación": deja la búsqueda lista para el coach de postulación. */
+export function handoffToPostulacion(h: Omit<Handoff, "at" | "to">): void {
+  handoffJob("postulacion", h);
+}
+
+/** Toma la búsqueda que dejaron para esta herramienta (y sólo para esta). */
+export function takeHandoff(to: HandoffTarget = "postulacion", maxAgeMs = 60 * 60_000): Handoff | null {
   const h = load<Handoff>(HANDOFF_KEY);
+  if (!h || (h.to ?? "postulacion") !== to) return null;
   remove(HANDOFF_KEY);
-  return h && Date.now() - h.at < maxAgeMs ? h : null;
+  return Date.now() - h.at < maxAgeMs ? h : null;
 }

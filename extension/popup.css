@@ -21,7 +21,8 @@ body {
 }
 header { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
 header div:last-child { display: flex; flex-direction: column; }
-.logo { width: 36px; height: 36px; border-radius: 10px; image-rendering: pixelated; }
+.logo { width: 36px; height: 36px; border-radius: 50%; background: #00f0a0; padding: 4px; image-rendering: pixelated; }
+.brand { font-size: 20px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; }
 h1 { font-size: 17px; margin: 0 0 4px; }
 p { margin: 0 0 12px; }
 .muted { color: var(--muted); }
@@ -60,3 +61,22 @@ kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; backgro
 #status.error { color: #8f3519; }
 .advanced { margin-top: 14px; font-size: 12px; }
 .advanced label { display: flex; flex-direction: column; gap: 4px; }
+
+/* Botón grande verde y tablero de completitud, como el plugin de jobright. */
+.autofill {
+  border: 0; border-radius: 10px; background: #1c8c4c; color: #fff; padding: 14px 16px; font-size: 16px; font-weight: 700;
+}
+.autofill:hover { background: #136c39; }
+.autofill:disabled { opacity: 0.6; cursor: default; }
+.card { background: #f5f6f7; border: 0; }
+.dashboard { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.dashboard .row { display: flex; justify-content: space-between; }
+.bar { height: 6px; border-radius: 999px; background: #e4f7d4; overflow: hidden; }
+.bar span { display: block; height: 100%; width: 0; background: #1c8c4c; transition: width 0.5s ease; }
+.dashboard ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dashboard li { display: flex; align-items: center; gap: 8px; }
+.dashboard li span:nth-child(2) { flex: 1; }
+.dot { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; }
+.dot.ok { background: #1c8c4c; }
+.dot.warn { background: #d49a1c; }
+.dot.todo { background: #c5cad1; }
