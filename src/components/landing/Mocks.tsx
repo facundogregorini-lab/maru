@@ -9,7 +9,7 @@ export function MockPanel({ children, caption }: { children: React.ReactNode; ca
   return (
     <figure className="relative">
       {/* Como en jobright: panel menta de 24 px de radio y proporción 4:3 (768 × 576). */}
-      <div className="relative grid place-items-center overflow-hidden rounded-[24px] bg-sand px-5 py-10 sm:aspect-[4/3] sm:px-10 sm:py-12">
+      <div className="relative grid grid-cols-[minmax(0,1fr)] place-items-center overflow-hidden rounded-[24px] bg-sand px-5 py-10 sm:aspect-[4/3] sm:px-10 sm:py-12">
         <div className="w-full">{children}</div>
       </div>
       {caption && <figcaption className="mt-2 text-center text-xs text-muted">{caption}</figcaption>}

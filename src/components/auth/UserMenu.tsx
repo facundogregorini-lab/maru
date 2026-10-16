@@ -17,7 +17,7 @@ export default function UserMenu() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="press rounded-full bg-black/[0.04] px-4 py-2 text-[13px] font-medium uppercase tracking-wide hover:bg-black/[0.08]"
+          className="press h-9 rounded-full px-1 text-[13px] font-medium uppercase hover:bg-black/[0.08] sm:w-[120px] sm:bg-black/[0.04] sm:px-0 sm:text-sm"
         >
           Ingresar
         </button>

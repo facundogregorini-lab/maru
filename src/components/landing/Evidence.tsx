@@ -1,6 +1,5 @@
 import NumberTicker from "@/components/magic/NumberTicker";
-import Reveal from "@/components/magic/Reveal";
-import { FRONTS, HERO_STATS, SOURCES, type Stat } from "@/lib/evidence";
+import { HERO_STATS } from "@/lib/evidence";
 
 function Ref({ n }: { n: number }) {
   return (
@@ -48,74 +47,5 @@ export function ResultsList() {
         </div>
       ))}
     </dl>
-  );
-}
-
-function FrontStat({ s }: { s: Stat }) {
-  return (
-    <div className="rounded-2xl bg-sand p-4">
-      <p className="font-display text-4xl font-bold leading-none">
-        <NumberTicker value={s.value} />
-      </p>
-      <p className="mt-1.5 text-sm font-semibold leading-snug">
-        {s.label}
-        <Ref n={s.source} />
-      </p>
-      <p className="mt-0.5 text-xs leading-snug text-muted">{s.note}</p>
-    </div>
-  );
-}
-
-/** Evidencia por frente de la postulación + qué hace Maru + fuentes. */
-export function Evidence() {
-  return (
-    <section id="evidencia" aria-labelledby="evidencia-t" className="mt-28 scroll-mt-24">
-      <Reveal>
-        <h2 id="evidencia-t" data-reveal className="max-w-4xl font-display text-4xl font-light uppercase leading-[1.05] sm:text-6xl">
-          Personalizar <em>cambia los resultados</em>
-        </h2>
-        <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-4 max-w-2xl text-lg leading-relaxed text-ink/70">
-          Hacerlo a mano para cada búsqueda lleva horas. Maru lo hace en minutos, en los tres frentes donde se decide si te llaman.
-        </p>
-      </Reveal>
-
-      <Reveal className="mt-10 grid gap-4 lg:grid-cols-3">
-        {FRONTS.map((f, i) => (
-          <article key={f.title} data-reveal style={{ "--i": i } as React.CSSProperties} className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-line">
-            <p className="font-display text-sm font-bold uppercase tracking-wide text-brand">{f.kicker}</p>
-            <h3 className="mt-1 font-display text-3xl">{f.title}</h3>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {f.stats.map((s) => (
-                <FrontStat key={s.value + s.label} s={s} />
-              ))}
-            </div>
-            <p className="mt-5 text-sm leading-relaxed">
-              <span className="font-semibold text-brand">Cómo lo hace Maru: </span>
-              {f.how}
-            </p>
-          </article>
-        ))}
-      </Reveal>
-
-      <div id="fuentes" className="mt-6 scroll-mt-24 rounded-3xl bg-black/[0.03] p-6 sm:p-8">
-        <h3 className="font-display text-sm font-bold uppercase tracking-wide">Fuentes</h3>
-        <ol className="mt-3 space-y-2.5 text-xs leading-relaxed text-muted">
-          {SOURCES.map((s) => (
-            <li key={s.id} id={`fuente-${s.id}`} className="flex scroll-mt-24 gap-2">
-              <span className="font-semibold text-ink">{s.id}.</span>
-              <span>
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-ink underline decoration-line underline-offset-2 hover:decoration-ink">
-                  {s.name}
-                </a>
-                . {s.detail}
-              </span>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-4 text-xs leading-relaxed text-muted">
-          Son estudios de terceros sobre postulaciones en general, no resultados medidos de Maru. Cada búsqueda es distinta: Maru mejora tus chances, no garantiza un resultado.
-        </p>
-      </div>
-    </section>
   );
 }
