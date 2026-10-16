@@ -1,4 +1,4 @@
-import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
+import { FAST_MODEL, UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { clampHistorial, contextoEntrevista, historialTexto } from "@/lib/entrevista";
 import { ENTREVISTA_TURNO_SYSTEM } from "@/lib/prompts";
 import { TurnoSchema, type EntrevistaOpciones, type EntrevistaPlan, type Intercambio } from "@/lib/schemas";
@@ -18,6 +18,8 @@ export async function POST(req: Request) {
       schema: TurnoSchema,
       effort: "low",
       maxTokens: 2000,
+      // En una llamada por voz cada segundo de silencio se nota: modelo rápido.
+      model: FAST_MODEL,
       content: [
         {
           type: "text",

@@ -311,11 +311,15 @@ export async function fetchAshby(board: Board, opts?: RetryOptions): Promise<Boa
 
 /* ---------- Remotive ---------- */
 
+/** Sólo logos servidos por https (se muestran tal cual en la web). */
+const logo = (u: string | undefined | null): { companyLogo?: string } => (typeof u === "string" && /^https:\/\/\S+$/.test(u.trim()) ? { companyLogo: u.trim() } : {});
+
 type RemotiveJob = {
   id: number;
   url: string;
   title: string;
   company_name: string;
+  company_logo?: string;
   category?: string;
   job_type?: string;
   publication_date?: string;
@@ -333,6 +337,7 @@ export function normalizeRemotive(j: RemotiveJob, board: Board): NormalizedPosti
     externalId: String(j.id),
     title: j.title.trim(),
     company: j.company_name.trim(),
+    ...logo(j.company_logo),
     sourceUrl: j.url,
     applyUrl: j.url,
     linkRequired: true,
@@ -367,6 +372,7 @@ type JobicyJob = {
   url: string;
   jobTitle: string;
   companyName: string;
+  companyLogo?: string;
   jobIndustry?: string[];
   jobType?: string[];
   jobGeo?: string;
@@ -392,6 +398,7 @@ export function normalizeJobicy(j: JobicyJob, board: Board): NormalizedPosting {
     externalId: String(j.id),
     title: j.jobTitle.trim(),
     company: j.companyName.trim(),
+    ...logo(j.companyLogo),
     sourceUrl: j.url,
     applyUrl: j.url,
     linkRequired: true,
@@ -443,7 +450,7 @@ type GobJob = {
     min_salary?: number | null;
     max_salary?: number | null;
     published_at?: number;
-    company?: { data?: { id?: string; attributes?: { name?: string } } };
+    company?: { data?: { id?: string; attributes?: { name?: string; logo?: string } } };
     seniority?: { data?: { id?: number | string } };
     modality?: { data?: { id?: number | string } };
   };
@@ -487,6 +494,7 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
     externalId: j.id,
     title: (a.title ?? "").trim(),
     company: a.company?.data?.attributes?.name?.trim() || "",
+    ...logo(a.company?.data?.attributes?.logo),
     sourceUrl: url,
     applyUrl: url,
     linkRequired: true,

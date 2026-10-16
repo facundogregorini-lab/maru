@@ -29,11 +29,14 @@ export default function CvEditor({
   doc,
   setDoc,
   context,
+  before,
   cambios,
 }: {
   doc: CvDoc;
   setDoc: (fn: (d: CvDoc) => CvDoc) => void;
   context: CvContext;
+  /** Puntaje ATS del CV original, para mostrar cuánto mejoró. */
+  before?: number;
   cambios: string[];
 }) {
   const [regenerating, setRegenerating] = useState<string | null>(null);
@@ -190,7 +193,7 @@ export default function CvEditor({
             </p>
           </div>
 
-          <AtsPanel report={report} />
+          <AtsPanel report={report} before={before} />
 
           <div className="rounded-3xl bg-paper p-5">
             <div className="flex items-center justify-between gap-3">

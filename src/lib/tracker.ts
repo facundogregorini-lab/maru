@@ -180,7 +180,50 @@ export function setNotes(id: string, notes: string): void {
 export function removeTracked(id: string): void {
   const items = read();
   const next = items.filter((it) => it.id !== id);
-  if (next.length !== items.length) write(next);
+  if (next.length === items.length) return;
+  // Se recuerda el borrado para que la sincronización no la traiga de vuelta desde otro dispositivo.
+  save(REMOVED_KEY, { ...readRemoved(), [id]: Date.now() });
+  write(next);
+}
+
+/* ---------- sincronización con la cuenta ---------- */
+
+export const REMOVED_KEY = "maru:tracker:borradas:v1";
+export type Removed = Record<string, number>;
+
+export function readRemoved(): Removed {
+  const r = load<Removed>(REMOVED_KEY);
+  return r && typeof r === "object" ? r : {};
+}
+
+/**
+ * Junta dos tableros (este navegador y la cuenta): por tarjeta gana la versión más nueva,
+ * y una tarjeta borrada después de su última edición no vuelve.
+ */
+export function mergeTracked(a: TrackItem[], b: TrackItem[], removed: Removed = {}): TrackItem[] {
+  const byId = new Map<string, TrackItem>();
+  for (const it of [...a, ...b]) {
+    const prev = byId.get(it.id);
+    if (!prev || it.updatedAt > prev.updatedAt) byId.set(it.id, it);
+  }
+  return [...byId.values()].filter((it) => !(removed[it.id] && removed[it.id] >= it.updatedAt));
+}
+
+export const mergeRemoved = (a: Removed, b: Removed): Removed => {
+  const out = { ...a };
+  for (const [id, at] of Object.entries(b)) out[id] = Math.max(out[id] ?? 0, at);
+  return out;
+};
+
+/** Reemplaza el tablero local con el ya sincronizado (sin volver a disparar la subida). */
+export function replaceTracked(items: TrackItem[], removed: Removed): void {
+  save(TRACKER_KEY, items);
+  save(REMOVED_KEY, removed);
+  try {
+    window.dispatchEvent(new Event(TRACKER_EVENT));
+  } catch {
+    // sin window
+  }
 }
 
 export function findTracked(input: Pick<TrackInput, "id" | "jobUrl" | "title" | "company">): TrackItem | null {

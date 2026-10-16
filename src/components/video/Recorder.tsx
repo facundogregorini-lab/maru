@@ -34,6 +34,8 @@ function fmt(s: number) {
  */
 export default function Recorder({ script, target, lang, filename }: { script: string; target: number; lang: string; filename: string }) {
   const [phase, setPhase] = useState<Phase>("off");
+  /** Grabamos sin micrófono (no hay o está bloqueado): sin sonido ni transcripción. */
+  const [noMic, setNoMic] = useState(false);
   const [error, setError] = useState("");
   const [count, setCount] = useState(3);
   const [elapsed, setElapsed] = useState(0);
@@ -73,30 +75,35 @@ export default function Recorder({ script, target, lang, filename }: { script: s
 
   useEffect(() => () => void (take && URL.revokeObjectURL(take.url)), [take]);
 
+  // Conecta la cámara al <video> cada vez que está en pantalla (al empezar y al volver de revisar una toma).
+  useEffect(() => {
+    const v = videoRef.current;
+    const stream = streamRef.current;
+    if (!v || !stream || phase === "off" || phase === "review") return;
+    if (v.srcObject !== stream) v.srcObject = stream;
+    void v.play().catch(() => null);
+  }, [phase]);
+
   async function startCamera() {
     setError("");
+    setNoMic(false);
+    if (!window.isSecureContext) return setError("La cámara sólo funciona en una página segura (https). Abrí Maru desde su dirección https.");
     if (!navigator.mediaDevices?.getUserMedia) return setError("Tu navegador no permite usar la cámara. Probá con Chrome, Edge o Safari actualizados.");
+    const video = { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } };
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: { echoCancellation: true, noiseSuppression: true },
-      });
-      streamRef.current = stream;
-      setPhase("preview");
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          void videoRef.current.play().catch(() => null);
-        }
-      });
+      stream = await navigator.mediaDevices.getUserMedia({ video, audio: { echoCancellation: true, noiseSuppression: true } });
     } catch (e) {
-      const name = (e as DOMException).name;
-      setError(
-        name === "NotAllowedError"
-          ? "Necesitamos permiso para usar la cámara y el micrófono. Habilitalo en el candado de la barra de direcciones."
-          : "No encontramos una cámara disponible. Revisá que no la esté usando otra app.",
-      );
+      // Sin micrófono (o bloqueado) igual se puede grabar: intentamos sólo con la cámara.
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video });
+        setNoMic(true);
+      } catch (e2) {
+        return setError(cameraError((e2 as DOMException).name || (e as DOMException).name));
+      }
     }
+    streamRef.current = stream;
+    setPhase("preview");
   }
 
   function grabFrame(): string | null {
@@ -167,7 +174,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     scrollPos.current = 0;
     if (prompterRef.current) prompterRef.current.scrollTop = 0;
     dictation.reset();
-    if (dictation.supported) dictation.start();
+    if (dictation.supported && !noMic) dictation.start();
     setFrames([]);
     setFeedback(null);
     // Un fotograma cada 2,5 s; al terminar elegimos 3 repartidos en la toma (encuadre, luz, mirada).
@@ -200,12 +207,6 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     setTake(null);
     setFeedback(null);
     setPhase("preview");
-    requestAnimationFrame(() => {
-      if (videoRef.current && streamRef.current) {
-        videoRef.current.srcObject = streamRef.current;
-        void videoRef.current.play().catch(() => null);
-      }
-    });
   }
 
   const stats = take ? speechStats(dictation.text, take.seconds) : null;
@@ -242,17 +243,40 @@ export default function Recorder({ script, target, lang, filename }: { script: s
   return (
     <div className="space-y-4">
       {gate.dialog}
+      {noMic && phase !== "off" && (
+        <p role="status" className="rounded-2xl bg-honey/15 px-4 py-3 text-sm">
+          No pudimos usar el micrófono, así que grabamos sólo la imagen: sin sonido ni análisis de ritmo. Si querés audio, habilitá el micrófono en el candado de la barra de direcciones y volvé a abrir la cámara.
+        </p>
+      )}
       {error && (
         <div role="alert" className="rounded-2xl border border-brand/30 bg-brand-soft px-4 py-3 text-sm text-brand-dark">
           {error}
         </div>
       )}
 
-      <div className="relative overflow-hidden rounded-3xl bg-ink shadow-xl" style={{ aspectRatio: "16 / 9" }}>
+      {/* data-maru-away: Maru se corre para no tapar los controles del video. */}
+      <div data-maru-away className="relative overflow-hidden rounded-3xl bg-ink shadow-xl" style={{ aspectRatio: "16 / 9" }}>
         {phase === "review" && take ? (
-          <video key={take.url} src={take.url} controls playsInline className="h-full w-full bg-ink object-contain" />
+          <video
+            key={take.url}
+            src={take.url}
+            controls
+            playsInline
+            // Chrome graba el webm sin duración (muestra 0:00 y no deja adelantar): la calculamos yendo al final y volviendo.
+            onLoadedMetadata={(e) => {
+              const v = e.currentTarget;
+              if (v.duration !== Infinity && !Number.isNaN(v.duration)) return;
+              const back = () => {
+                v.removeEventListener("timeupdate", back);
+                v.currentTime = 0;
+              };
+              v.addEventListener("timeupdate", back);
+              v.currentTime = 1e101;
+            }}
+            className="h-full w-full bg-ink object-contain"
+          />
         ) : (
-          <video ref={videoRef} muted playsInline className={`h-full w-full object-cover [transform:scaleX(-1)] ${phase === "off" ? "hidden" : ""}`} />
+          <video ref={videoRef} muted playsInline autoPlay onLoadedMetadata={(e) => void e.currentTarget.play().catch(() => null)} className={`h-full w-full object-cover [transform:scaleX(-1)] ${phase === "off" ? "hidden" : ""}`} />
         )}
 
         {phase === "off" && (
@@ -380,4 +404,21 @@ export default function Recorder({ script, target, lang, filename }: { script: s
       )}
     </div>
   );
+}
+
+/** Qué le pasó a la cámara, en criollo y con la salida. */
+function cameraError(name: string): string {
+  switch (name) {
+    case "NotAllowedError":
+    case "SecurityError":
+      return "La cámara está bloqueada. Habilitala en el candado de la barra de direcciones y recargá la página. En Mac, revisá también Ajustes del Sistema → Privacidad y seguridad → Cámara, y habilitá tu navegador.";
+    case "NotReadableError":
+    case "AbortError":
+      return "No pudimos abrir la cámara: puede que la esté usando otra app (Zoom, Meet, Teams) o que el sistema la bloquee. Cerrala y probá de nuevo.";
+    case "NotFoundError":
+    case "OverconstrainedError":
+      return "No encontramos una cámara en este dispositivo. Conectá una y probá de nuevo.";
+    default:
+      return "No pudimos abrir la cámara. Recargá la página y probá de nuevo; si sigue, probá con Chrome actualizado.";
+  }
 }

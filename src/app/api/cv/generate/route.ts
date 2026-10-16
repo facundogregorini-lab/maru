@@ -1,4 +1,5 @@
 import { askStructured, errorResponse } from "@/lib/claude";
+import { creationGate } from "@/lib/plan";
 import { objetivoBlock } from "@/lib/objetivo";
 import { CV_GENERATE_SYSTEM } from "@/lib/prompts";
 import { CvGenerationSchema, type CvAnalysis, type Objetivo, type Profile } from "@/lib/schemas";
@@ -14,6 +15,8 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  const gate = await creationGate(req);
+  if (gate instanceof Response) return gate;
   try {
     const body = (await req.json()) as Body;
     const indexed = body.profile.experiencia.map((e, indice) => ({ indice, ...e }));
@@ -32,6 +35,7 @@ export async function POST(req: Request) {
       },
     ];
     const generation = await askStructured({ system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "high" });
+    await gate.done();
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);

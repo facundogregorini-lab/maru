@@ -7,6 +7,7 @@ import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import { roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
+import { load as loadLocal, save as saveLocal } from "@/lib/storage";
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
 import CompanyTile from "../busquedas/CompanyTile";
@@ -16,6 +17,7 @@ import { MultiChips } from "./fields";
 type RankingResponse = RankOutput & { inventory: { generatedAt: string | null; open: number } };
 type Tab = "elegibles" | "pendientes" | "guardadas";
 const PAGE = 40;
+const VISIT_KEY = "maru:match:visita";
 
 const DISCARD_REASONS: [DiscardReason, string][] = [
   ["rol", "No me interesa este rol"],
@@ -62,6 +64,13 @@ export default function Results({
   const [showFilters, setShowFilters] = useState(false);
   const [adding, setAdding] = useState(false);
   const [limit, setLimit] = useState(PAGE);
+  // "Nueva": publicada después de tu visita anterior (la de hoy se guarda para la próxima).
+  const [lastVisit] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const prev = loadLocal<number>(VISIT_KEY) ?? 0;
+    saveLocal(VISIT_KEY, Date.now());
+    return prev;
+  });
   const seq = useRef(0);
 
   const load = useCallback(async () => {
@@ -179,6 +188,7 @@ export default function Results({
               key={item.id}
               item={item}
               position={i + 1}
+              isNew={!!lastVisit && !!item.publishedAt && Date.parse(item.publishedAt) > lastVisit}
               saved={interactions.saved.includes(item.id)}
               onSave={() => save(item)}
               onDiscard={(r) => discard(item, r)}
@@ -217,6 +227,7 @@ export default function Results({
 function JobCard({
   item,
   position,
+  isNew,
   saved,
   onSave,
   onDiscard,
@@ -225,6 +236,7 @@ function JobCard({
 }: {
   item: RankedItem;
   position: number;
+  isNew: boolean;
   saved: boolean;
   onSave: () => void;
   onDiscard: (r: DiscardReason) => void;
@@ -269,6 +281,7 @@ function JobCard({
           <CompanyTile name={item.company} size={56} />
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
+              {isNew && <span className="rounded-md bg-neon px-1.5 py-1 font-bold">Nueva</span>}
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
               <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1">{FAMILY_LABEL[item.family]}</span>
               {item.external && <span className="rounded-md bg-sage-soft px-1.5 py-1 text-sage">Agregada por vos · privada</span>}

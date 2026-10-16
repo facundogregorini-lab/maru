@@ -442,3 +442,10 @@ export const AutofillAnswerSchema = z.object({
 });
 
 export type AutofillAnswer = { id: string; valor: string; revisar: boolean; nota: string };
+
+export const ChatSchema = z.object({
+  respuesta: z.string().describe("El mensaje de Maru, breve"),
+  buscar: z.string().describe("Palabras clave para el buscador de Maru, o '' si no corresponde"),
+  herramienta: z.enum(["", "match", "postulacion", "cv", "carta", "entrevista", "video", "seguimiento", "extension"]),
+});
+export type ChatTurn = z.infer<typeof ChatSchema>;

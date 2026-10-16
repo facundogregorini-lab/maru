@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import AlertButton from "@/components/alertas/AlertButton";
 import AppShell from "@/components/app/AppShell";
+import ChatPanel from "@/components/busquedas/ChatPanel";
 import JobCard from "@/components/busquedas/JobCard";
 import { JobFilterChips, JobSearchPill } from "@/components/busquedas/JobSearchBar";
-import { MaruHead } from "@/components/maru/PixelMaru";
 import { PAGE_SIZE, searchJobs } from "@/lib/busquedas";
 import { AREAS, parseJobQuery, type JobQuery } from "@/lib/jobFilters";
-import { POPULAR } from "@/lib/popular";
 
 export const metadata: Metadata = {
   title: "Búsquedas · Maru",
@@ -30,7 +30,7 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
   const label = query.q || (query.area ? AREAS[query.area] : "");
 
   return (
-    <AppShell title="Búsquedas" search={<JobSearchPill value={query} />} side={<SidePanel label={label} total={total} />}>
+    <AppShell title="Búsquedas" search={<JobSearchPill value={query} />} side={<ChatPanel label={label} total={total} />}>
       <div className="flex items-center gap-3 py-1">
         {label && (
           <Link href="/busquedas" aria-label="Limpiar la búsqueda" className="grid h-8 w-8 place-items-center rounded-lg bg-white text-lg leading-none hover:bg-black/[0.05]">
@@ -47,7 +47,10 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
           )}
           {query.donde === "ar" ? " que podés tomar desde Argentina" : " en todo el mundo"}
         </p>
-        <span className="ml-auto hidden rounded-lg bg-white px-3 py-1.5 text-[13px] sm:inline">Más nuevas primero</span>
+        <span className="ml-auto flex items-center gap-2">
+          <AlertButton query={query} />
+          <span className="hidden rounded-lg bg-white px-3 py-1.5 text-[13px] sm:inline">Más nuevas primero</span>
+        </span>
       </div>
       <div className="mt-3">
         <JobFilterChips value={query} />
@@ -91,40 +94,5 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
         </nav>
       )}
     </AppShell>
-  );
-}
-
-/** El panel de la derecha: donde jobright tiene a Orion, acá Maru te guía (sin chat). */
-function SidePanel({ label, total }: { label: string; total: number }) {
-  return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center gap-3">
-        <span className="grid h-12 w-12 place-items-center rounded-full bg-neon">
-          <MaruHead size={30} />
-        </span>
-        <div>
-          <p className="text-xl font-semibold leading-tight">Maru</p>
-          <p className="text-xs">Tu coach de carrera con IA</p>
-        </div>
-      </div>
-      <div className="mt-4 rounded-[2px_12px_12px_12px] bg-[#f7f8f9] p-4 text-sm leading-relaxed">
-        <p className="text-[15px] font-bold">{label || "Búsquedas reales"}</p>
-        <p className="mt-2">
-          Encontré {total.toLocaleString("es-AR")} búsquedas abiertas{label ? ` para “${label}”` : ""}. Todas son reales y llevan al aviso original. ¿Querés saber cuáles
-          encajan con vos? Subí tu CV y te las ordeno por compatibilidad, con los motivos y lo que te falta mostrar.
-        </p>
-        <Link href="/match" className="press mt-4 inline-flex rounded-full bg-neon px-4 py-2 text-sm font-bold uppercase">
-          Ver mi match
-        </Link>
-      </div>
-      <p className="mt-6 text-sm font-semibold">Búsquedas populares</p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {POPULAR.map((p) => (
-          <Link key={p.href} href={p.href} className="rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white hover:bg-black">
-            {p.label}
-          </Link>
-        ))}
-      </div>
-    </div>
   );
 }

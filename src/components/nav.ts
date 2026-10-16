@@ -9,6 +9,7 @@ export const NAV = [
   { href: "/entrevista", label: "Entrevista" },
   { href: "/seguimiento", label: "Seguimiento" },
   { href: "/extension", label: "Extensión" },
+  { href: "/precios", label: "Precios" },
 ] as const;
 
 /** Menú "Herramientas ▾" del header (el "Features ▾" de jobright). */

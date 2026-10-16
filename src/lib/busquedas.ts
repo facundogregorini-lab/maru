@@ -1,5 +1,6 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
 import { loadInventory, resolveId } from "./match/load";
+import { isLowQuality } from "./match/quality";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
 /** Buscador simple sobre el inventario real: filtra, ordena por más nuevas y pagina. */
@@ -18,6 +19,8 @@ export type JobResult = {
   eligible: boolean;
   postedAt: string;
   applyUrl: string;
+  /** Logo de la empresa si la fuente lo publica. */
+  logo: string;
   attribution: string;
 };
 
@@ -75,6 +78,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     eligible: o.eligibility.status === "elegible",
     postedAt: o.publishedAt ?? o.firstSeenAt,
     applyUrl: p.applyUrl,
+    logo: p.companyLogo ?? "",
     attribution: p.attribution ?? "",
   };
 }
@@ -95,7 +99,9 @@ export async function searchJobs(query: JobQuery): Promise<{ total: number; resu
     return true;
   });
   const date = (o: Opportunity) => o.publishedAt ?? o.firstSeenAt;
-  matches.sort((a, b) => date(b).localeCompare(date(a)));
+  // Más nuevas primero; los avisos masivos de baja calidad, al final.
+  const low = (o: Opportunity) => (isLowQuality(o.title) ? 1 : 0);
+  matches.sort((a, b) => low(a) - low(b) || date(b).localeCompare(date(a)));
   const page = matches.slice((query.pagina - 1) * PAGE_SIZE, query.pagina * PAGE_SIZE);
   return { total: matches.length, results: page.flatMap((o) => toResult(o, postings) ?? []) };
 }

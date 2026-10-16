@@ -114,7 +114,7 @@ export function ProductHero({ id, stats, ctaHref = "#empezar" }: { id: ProductId
           <div className="animate-rise text-center lg:text-left">
             <Laurels
               items={[
-                { top: "Sin tarjeta", main: "100% gratis" },
+                { top: "Sin tarjeta", main: "Empezá gratis" },
                 { top: "Con la IA de", main: "Claude" },
                 { top: "Nunca inventa", main: "tu experiencia" },
               ]}

@@ -374,9 +374,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
     }
     if (matchedReq.length) reasonsScored.push([0.9, `Tu CV menciona ${list(matchedReq.slice(0, 3))}, que el aviso pide como requisito${matchedReq.length > 1 ? "s" : ""}.`]);
     else if (matchedDes.length) reasonsScored.push([0.6, `Tu CV menciona ${list(matchedDes.slice(0, 3))}, que el aviso valora.`]);
+    let expReason: { label: string; toks: Set<string>; text: string } | null = null;
     if (titleSim >= 0.5 && pastTitles[0]) {
       const best = pastTitles.reduce((a, b) => (dice(b.toks, roleTokens(o.title)) > dice(a.toks, roleTokens(o.title)) ? b : a));
       reasonsScored.push([0.7 + titleSim * 0.2, `Tu experiencia como ${best.label} se relaciona directamente con este puesto.`]);
+      expReason = { label: best.label, toks: best.toks, text: reasonsScored[reasonsScored.length - 1][1] };
     }
     for (const s of req.filter((s) => !pSkills.has(s)).slice(0, 3)) {
       gaps.push(`Pide ${s} como requisito: no aparece en tu CV. Si lo manejás, sumalo.`);
@@ -394,7 +396,12 @@ export function rankOpportunities(input: RankInput): RankOutput {
     } else intent = prefs.carrera === "cambio" ? 0.3 : titleSim;
     if (desiredSim >= 0.5) {
       const best = desiredTokens.reduce((a, b) => (dice(b.toks, titleToks) > dice(a.toks, titleToks) ? b : a));
-      reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
+      const want = `Coincide con lo que buscás: “${best.label}”.`;
+      // "Lo que buscás" y "tu experiencia" suelen decir lo mismo: un solo motivo y queda lugar para uno más concreto.
+      if (expReason && dice(expReason.toks, best.toks) >= 0.8) {
+        reasonsScored.splice(reasonsScored.findIndex((r) => r[1] === expReason!.text), 1);
+        reasonsScored.push([0.97, `Es el rol que buscás y ya tenés experiencia como “${best.label}”.`]);
+      } else reasonsScored.push([0.95, want]);
     } else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
     if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore >= 0.4) {
       reasonsScored.push([0.75, "Es un cambio de área, pero varias de tus habilidades se transfieren."]);

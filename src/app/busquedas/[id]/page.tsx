@@ -45,7 +45,7 @@ export default async function JobPage({ params }: Props) {
           </div>
 
           <div className="mt-5 flex gap-4">
-            <CompanyTile name={j.company} size={56} />
+            <CompanyTile name={j.company} logo={j.logo} size={56} />
             <div className="min-w-0">
               <p className="text-sm">
                 <span className="font-semibold">{j.company}</span>

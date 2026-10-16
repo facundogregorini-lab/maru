@@ -135,6 +135,8 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
       delete prev.closedAt;
     }
     if (prev.contentHash === hash) {
+      // El logo no cambia el aviso: se toma aunque el contenido sea el mismo.
+      if (p.companyLogo && prev.companyLogo !== p.companyLogo) prev.companyLogo = p.companyLogo;
       stats.unchanged++;
       continue;
     }

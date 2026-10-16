@@ -9,7 +9,7 @@ export const SESSION_COOKIE = "maru_session";
 export const LOGIN_TTL_S = 15 * 60;
 export const SESSION_TTL_S = 180 * 24 * 60 * 60;
 
-type TokenPayload = { typ: "login" | "session"; email: string; exp: number; n: string };
+type TokenPayload = { typ: "login" | "session" | "baja"; email: string; exp: number; n: string };
 
 function secret(): string {
   const s = process.env.AUTH_SECRET;
@@ -51,6 +51,9 @@ export const createLoginToken = (email: string, now?: number) => createToken("lo
 export const createSessionToken = (email: string, now?: number) => createToken("session", email, SESSION_TTL_S, now);
 export const verifyLoginToken = (token: string | null, now?: number) => readToken(token, "login", now)?.email ?? null;
 export const verifySessionToken = (token: string | null | undefined, now?: number) => readToken(token, "session", now)?.email ?? null;
+/** Link para darse de baja de las alertas desde el email, sin tener que ingresar (vale un año). */
+export const createUnsubToken = (email: string, now?: number) => createToken("baja", email, 365 * 24 * 3600, now);
+export const verifyUnsubToken = (token: string | null, now?: number) => readToken(token, "baja", now)?.email ?? null;
 
 export function normalizeEmail(raw: unknown): string | null {
   if (typeof raw !== "string") return null;

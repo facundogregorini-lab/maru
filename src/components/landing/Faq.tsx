@@ -28,7 +28,11 @@ const FAQ = [
   },
   {
     q: "¿Necesito una cuenta?",
-    a: "Podés usar todo sin cuenta. Para descargar o copiar tu CV, tu carta o tu video, ingresás con tu email: te mandamos un link, sin contraseña.",
+    a: "Podés empezar sin cuenta. Para descargar o copiar tu CV, tu carta o tu video, ingresás con tu cuenta de Google o con tu email (te mandamos un link, sin contraseña).",
+  },
+  {
+    q: "¿Cuánto cuesta?",
+    a: "Empezás gratis: búsquedas, match, seguimiento y extensión sin límite, y 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. El plan Maru cuesta $10.000 por mes, hace todo ilimitado y lo das de baja cuando quieras.",
   },
 ];
 

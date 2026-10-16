@@ -14,7 +14,9 @@
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
 
-Lo que falta y cómo seguir: [docs/PENDIENTES.md](docs/PENDIENTES.md).
+**Cuenta y plan:** ingreso con Google o con email (magic link), plan gratis con 3 creaciones por mes y plan Maru ($10.000/mes, Mercado Pago) con todo ilimitado, alertas diarias de búsquedas por email y seguimiento sincronizado entre dispositivos. Todo eso se activa al configurar la base (Upstash desde Vercel → Storage) y las credenciales: ver [.env.example](.env.example).
+
+Lo que falta, lo que depende del dueño y cómo seguir: [docs/PENDIENTES.md](docs/PENDIENTES.md).
 
 ## Coach de postulación
 

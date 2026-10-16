@@ -74,7 +74,7 @@ export default async function Home() {
               items={[
                 { top: "Búsquedas reales", main: `${fmt(data.total)}+` },
                 { top: "Funciona en", main: "Greenhouse · Lever" },
-                { top: "Sin tarjeta", main: "100% gratis" },
+                { top: "Sin tarjeta", main: "Empezá gratis" },
               ]}
             />
             <div className="relative flex items-center">

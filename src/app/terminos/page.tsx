@@ -35,11 +35,25 @@ export default function TerminosPage() {
       <h2>Contenido</h2>
       <p>Lo que creás con Maru (tu CV, tus cartas, tus guiones) es tuyo. La marca, el diseño y el software de Maru son nuestros.</p>
 
-      <h2>Plan pago</h2>
-      <p>
-        Maru puede ofrecer un plan pago con suscripción mensual. El precio, lo que incluye, la renovación y cómo darlo de baja se informan antes de pagar. Podés arrepentirte de la compra dentro de los 10 días
-        corridos, como establece la Ley 24.240 de Defensa del Consumidor.
-      </p>
+      <h2>Planes y pagos</h2>
+      <ul>
+        <li>
+          El plan gratis incluye búsquedas, match, seguimiento y extensión sin límite, y una cantidad de creaciones por mes (CV a medida, CV, carta, entrevista y video) que se informa en{" "}
+          <Link href="/precios" className="underline underline-offset-4">
+            Precios
+          </Link>
+          .
+        </li>
+        <li>El plan Maru es una suscripción mensual en pesos que se cobra por Mercado Pago y se renueva sola cada mes. El precio vigente está en Precios.</li>
+        <li>Lo das de baja cuando quieras desde «Mi cuenta»: seguís con el plan hasta el final del período pagado y no se vuelve a cobrar.</li>
+        <li>
+          Podés arrepentirte de la compra dentro de los 10 días corridos desde la contratación, sin dar motivos, con el{" "}
+          <Link href="/arrepentimiento" className="underline underline-offset-4">
+            botón de arrepentimiento
+          </Link>{" "}
+          (Ley 24.240 y Resolución 424/2020): damos de baja el plan y te devolvemos lo pagado en el mismo medio de pago.
+        </li>
+      </ul>
 
       <h2>Cambios y disponibilidad</h2>
       <p>Podemos mejorar, cambiar o discontinuar funciones. Si cambian estos términos de forma importante, lo avisamos en el sitio.</p>

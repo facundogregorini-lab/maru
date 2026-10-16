@@ -11,7 +11,8 @@ export default function PrivacidadPage() {
   return (
     <LegalPage title="Privacidad" updated="16 de octubre de 2026">
       <p>
-        Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador. Esta página explica qué datos usamos, para qué y dónde quedan.
+        Maru está pensada para guardar lo mínimo. Tu perfil y lo que armás viven en tu navegador; si ingresás, tu cuenta guarda tu plan, tu seguimiento y tus alertas. Esta página explica qué
+        datos usamos, para qué y dónde quedan.
       </p>
 
       <h2>Lo que queda en tu navegador</h2>
@@ -33,11 +34,19 @@ export default function PrivacidadPage() {
         <li>Cuando pegás el link de un aviso, nuestro servidor lo lee desde el sitio público donde está publicado.</li>
       </ul>
 
-      <h2>Tu email y tu sesión</h2>
+      <h2>Tu cuenta</h2>
       <ul>
-        <li>Si ingresás, usamos tu email para mandarte un link de acceso (sin contraseña) a través de un proveedor de envío de emails.</li>
+        <li>Podés ingresar con tu cuenta de Google (recibimos tu email, tu nombre y tu foto) o con tu email: te mandamos un link de acceso, sin contraseña, a través de un proveedor de envío de emails.</li>
         <li>Al ingresar se guarda una cookie de sesión firmada en tu navegador, que dura hasta 180 días o hasta que salgas.</li>
+        <li>
+          En nuestra base de datos guardamos, asociado a tu email: el estado de tu plan, cuántas creaciones usaste en el mes, tu seguimiento de postulaciones (para tenerlo en todos tus
+          dispositivos) y tus alertas de búsquedas. Sin cuenta, el uso del plan gratis se cuenta por la dirección IP.
+        </li>
+        <li>Si querés que borremos los datos de tu cuenta, escribinos y lo hacemos.</li>
       </ul>
+
+      <h2>Chat con Maru</h2>
+      <p>Lo que le escribís a Maru en el chat se envía al proveedor de inteligencia artificial para responderte, junto con un resumen de tu perfil si cargaste tu CV. No guardamos la conversación: queda en tu navegador hasta que cerrás la pestaña.</p>
 
       <h2>Extensión de Chrome</h2>
       <ul>
@@ -53,12 +62,12 @@ export default function PrivacidadPage() {
       <h2>Medición y pagos</h2>
       <ul>
         <li>Medimos visitas y el uso de las secciones de forma agregada (Vercel Analytics), sin datos personales ni cookies de publicidad.</li>
-        <li>Si contratás un plan, el pago lo procesa la plataforma de pagos. Maru nunca ve ni guarda los datos de tu tarjeta.</li>
+        <li>Si contratás el plan, el pago lo procesa Mercado Pago. Maru nunca ve ni guarda los datos de tu tarjeta: sólo recibe el estado de la suscripción.</li>
       </ul>
 
       <h2>Tus derechos</h2>
       <p>
-        Podés pedirnos acceso, corrección o eliminación de los datos que tengamos sobre vos (en la práctica, tu email). Como titular de los datos, tenés los derechos que establece la Ley 25.326 de Protección
+        Podés pedirnos acceso, corrección o eliminación de los datos que tengamos sobre vos (los de tu cuenta). Como titular de los datos, tenés los derechos que establece la Ley 25.326 de Protección
         de los Datos Personales. La Agencia de Acceso a la Información Pública es el órgano de control de esa ley.
       </p>
     </LegalPage>

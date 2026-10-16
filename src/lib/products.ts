@@ -28,7 +28,7 @@ export type Product = {
   faq: [string, string][];
 };
 
-const FREE = "Gratis, sin tarjeta";
+const FREE = "Empezás gratis, sin tarjeta";
 
 export const PRODUCTS: Record<ProductId, Product> = {
   match: {
@@ -158,7 +158,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios salen de tu CV. Si un dato ayudaría pero falta, queda un [completar] resaltado."],
       ["¿Qué recibo al final?", "Tu CV adaptado a esa búsqueda, listo para descargar en PDF o copiar como texto, y una respuesta sugerida para cada campo del formulario."],
       ["¿Funciona con cualquier portal?", "Lee la mayoría de los links. Si un portal no deja leer la vacante, pegás el texto y listo."],
-      ["¿Es gratis?", "Sí. Para descargar tu CV ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", "Empezás gratis: tenés 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. Con el plan Maru ($10.000 por mes) son ilimitadas. Para descargar ingresás con tu email o tu cuenta de Google."],
     ],
   },
 
@@ -224,7 +224,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Los diseños pasan los filtros ATS?", "Sí: los 24 son de una columna, con títulos estándar y texto seleccionable."],
       ["¿Puedo editarlo después?", "Sí. Tocás cualquier texto del CV y lo cambiás, y ajustás color, tipografía, espaciado y orden de secciones."],
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios se copian tal cual; si falta algo, te lo pregunta."],
-      ["¿Es gratis?", "Sí. Para descargarlo ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", "Empezás gratis: tenés 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. Con el plan Maru ($10.000 por mes) son ilimitadas. Para descargar ingresás con tu email o tu cuenta de Google."],
     ],
   },
 
@@ -290,7 +290,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Puedo editar la carta?", "Sí: la editás directo, pedís que reescriba un párrafo o generás otra versión con otro tono o largo."],
       ["¿En qué idiomas?", "Elegís el idioma de la carta al armarla."],
       ["¿Inventa logros?", "No. Usa tu experiencia real y lo que vos le contás."],
-      ["¿Es gratis?", "Sí. Para descargarla o copiarla ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", "Empezás gratis: tenés 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. Con el plan Maru ($10.000 por mes) son ilimitadas. Para descargar ingresás con tu email o tu cuenta de Google."],
     ],
   },
 
@@ -349,7 +349,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué necesito?", "Una compu con cámara y micrófono y un navegador actual."],
       ["¿Cuánto dura el video?", "Elegís 30, 60 o 90 segundos."],
       ["¿Puedo grabar varias tomas?", "Sí, y cada una tiene su feedback."],
-      ["¿Es gratis?", "Sí. Para descargar el video ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", "Empezás gratis: tenés 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. Con el plan Maru ($10.000 por mes) son ilimitadas. Para descargar ingresás con tu email o tu cuenta de Google."],
     ],
   },
 
@@ -406,7 +406,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué tipos de entrevista hay?", "Primera entrevista con RR. HH., con quien sería tu líder y técnica o de caso, con dificultad amable, estándar o exigente."],
       ["¿En qué idioma?", "Elegís el idioma antes de empezar."],
       ["¿Qué tiene el informe?", "Un puntaje, un veredicto, fortalezas, qué mejorar y una respuesta más fuerte con el método STAR para cada pregunta."],
-      ["¿Es gratis?", "Sí, y no necesitás cuenta para practicar."],
+      ["¿Es gratis?", "Empezás gratis: tenés 3 creaciones por mes entre CV a medida, CV, carta, entrevista y video. Con el plan Maru ($10.000 por mes) son ilimitadas. Para descargar ingresás con tu email o tu cuenta de Google."],
     ],
   },
 
@@ -465,7 +465,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Envía la postulación por mí?", "No. Completa el formulario y vos revisás y enviás."],
       ["¿Qué no completa?", "Datos demográficos (género, etnia, discapacidad) ni aceptaciones legales: eso lo decidís siempre vos."],
       ["¿Dónde queda mi CV?", "Sólo en tu navegador, junto con el archivo para adjuntarlo."],
-      ["¿Es gratis?", "Sí."],
+      ["¿Es gratis?", "Sí: la extensión y el autocompletado no tienen costo ni límite."],
     ],
   },
 };

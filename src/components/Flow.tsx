@@ -1,5 +1,6 @@
 "use client";
 
+import { atsBefore } from "@/lib/ats";
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
 import { applyGapAnswers, findGaps } from "@/lib/gaps";
@@ -120,7 +121,8 @@ export default function Flow() {
 
   const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && feedback.trim().length > 20 && cv.ready;
+  // La motivación ayuda pero no es obligatoria (jobright adapta con un clic): si falta, Maru la pregunta después.
+  const canAnalyze = (jobUrl.trim() || jobText.trim().length > 100) && cv.ready;
   const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
   async function analyze() {
@@ -236,7 +238,7 @@ export default function Flow() {
               )}
             </StepCard>
 
-            <StepCard n={2} title="¿Por qué esta vacante?" hint="Contalo con tus palabras, como si se lo contaras a alguien de confianza. Escribilo o grabalo.">
+            <StepCard n={2} title="¿Por qué esta vacante? (opcional)" hint="Contalo con tus palabras, como si se lo contaras a alguien de confianza. Si lo salteás, te lo preguntamos después.">
               <ul className="mb-3 grid gap-2 sm:grid-cols-3">
                 {GUIDE.map((g) => (
                   <li key={g} className="rounded-xl bg-sand px-3 py-2 text-xs leading-snug text-muted">
@@ -264,7 +266,7 @@ export default function Flow() {
               <PrimaryButton onClick={analyze} disabled={!canAnalyze}>
                 Empezar
               </PrimaryButton>
-              {!canAnalyze && <p className="text-xs text-muted">Completá los tres pasos para seguir.</p>}
+              {!canAnalyze && <p className="text-xs text-muted">Sumá la vacante y tu experiencia para seguir.</p>}
             </div>
           </div>
           <ProductMore id="postulacion" />
@@ -295,7 +297,7 @@ export default function Flow() {
       )}
 
       {stage === "resultado" && doc && generation && analysis && (
-        <Results doc={doc} setDoc={setDoc} generation={generation} analysis={analysis} onRestart={restart} onBack={() => setStage("preguntas")} />
+        <Results doc={doc} setDoc={setDoc} generation={generation} analysis={analysis} profile={profile} onRestart={restart} onBack={() => setStage("preguntas")} />
       )}
     </div>
   );
@@ -308,6 +310,7 @@ function Results({
   setDoc,
   generation,
   analysis,
+  profile,
   onRestart,
   onBack,
 }: {
@@ -315,6 +318,7 @@ function Results({
   setDoc: (fn: (d: CvDoc) => CvDoc) => void;
   generation: Generation;
   analysis: Analysis;
+  profile: Profile | null;
   onRestart: () => void;
   onBack: () => void;
 }) {
@@ -345,7 +349,7 @@ function Results({
         ))}
       </div>
 
-      {tab === "cv" && <CvEditor doc={doc} setDoc={setDoc} context={contextFromAnalysis(analysis)} cambios={generation.cambios_clave} />}
+      {tab === "cv" && <CvEditor doc={doc} setDoc={setDoc} context={contextFromAnalysis(analysis)} cambios={generation.cambios_clave} before={profile ? atsBefore(profile, contextFromAnalysis(analysis)) : undefined} />}
 
       {tab === "form" && (
         <div className="mt-6 space-y-4">

@@ -1,4 +1,5 @@
 import { UserFacingError, askStructured, cvBlocks, errorResponse } from "@/lib/claude";
+import { creationGate } from "@/lib/plan";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { VIDEO_GUION_SYSTEM } from "@/lib/prompts";
 import { VideoGuionSchema, type CvSource, type TargetInput, type VideoOpciones } from "@/lib/schemas";
@@ -9,6 +10,8 @@ export const maxDuration = 300;
 type Body = TargetInput & { motivacion: string; source?: CvSource; opciones: VideoOpciones };
 
 export async function POST(req: Request) {
+  const gate = await creationGate(req);
+  if (gate instanceof Response) return gate;
   try {
     const body = (await req.json()) as Body;
     if (!body.motivacion?.trim()) throw new UserFacingError("Contanos qué querés transmitir en tu video.", "FEEDBACK_MISSING");
@@ -20,6 +23,7 @@ export async function POST(req: Request) {
       { type: "text" as const, text: `<opciones>\nDuración: ${o.duracion} segundos\nTono: ${o.tono}\nIdioma: ${o.idioma}\n</opciones>` },
     ];
     const guion = await askStructured({ system: VIDEO_GUION_SYSTEM, content, schema: VideoGuionSchema, effort: "medium" });
+    await gate.done();
     return Response.json({ guion });
   } catch (err) {
     return errorResponse(err);

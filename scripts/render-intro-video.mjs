@@ -21,7 +21,18 @@ const OUT_DIR = path.join(ROOT, "public", "video");
 /** Números y búsquedas reales del inventario. */
 function inventoryData() {
   const inv = JSON.parse(readFileSync(path.join(ROOT, "data", "match", "inventory.json"), "utf8"));
-  const open = inv.opportunities.filter((o) => o.status === "abierta");
+  // Igual que la web (src/lib/match/group.ts): el mismo puesto de la misma empresa en varias ciudades es una búsqueda.
+  const fold = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const groups = new Map();
+  for (const o of inv.opportunities.filter((x) => x.status === "abierta")) {
+    const k = `${fold(o.title)}|${fold(o.company)}`;
+    const prev = groups.get(k);
+    // Representante: el que se puede tomar desde Argentina, si hay.
+    if (!prev || (prev.eligibility?.status !== "elegible" && o.eligibility?.status === "elegible")) groups.set(k, o);
+  }
+  const open = [...groups.values()];
+  // Los avisos masivos de baja calidad no van al muro (src/lib/match/quality.ts).
+  const LOW = /\b(ai trainer|ai tutor|ai training|data annotat\w*|annotator|label(l)?ing|rater|evaluator|linguist|transcri\w+|crowd\w*|freelance ai|survey)\b/i;
   const eligible = open.filter((o) => o.eligibility?.status === "elegible");
   // Búsquedas publicadas por día en los últimos 7 días completos (el día en curso queda afuera).
   const byDay = new Map();
@@ -33,7 +44,7 @@ function inventoryData() {
   const seen = new Set();
   const jobs = [];
   for (const o of [...eligible].sort((a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt))) {
-    if (seen.has(o.company) || o.title.length > 38) continue;
+    if (seen.has(o.company) || o.title.length > 38 || LOW.test(o.title)) continue;
     seen.add(o.company);
     jobs.push([o.title, o.company]);
     if (jobs.length === 72) break;

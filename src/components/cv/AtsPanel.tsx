@@ -25,7 +25,8 @@ function Ring({ score }: { score: number }) {
   );
 }
 
-export default function AtsPanel({ report }: { report: AtsReport }) {
+export default function AtsPanel({ report, before }: { report: AtsReport; before?: number }) {
+  const gain = before != null ? report.score - before : 0;
   const verdict = report.score >= 80 ? "Muy buena" : report.score >= 60 ? "Buena, con margen" : "Mejorable";
   return (
     <div className="rounded-3xl bg-paper p-5">
@@ -36,6 +37,15 @@ export default function AtsPanel({ report }: { report: AtsReport }) {
           <p className="text-sm text-muted">{verdict} · se actualiza mientras editás</p>
         </div>
       </div>
+      {/* El "momento wow": cuánto mejoró respecto del CV que subió. */}
+      {before != null && gain > 0 && (
+        <div className="mt-4 flex items-center justify-between rounded-2xl bg-neon/15 px-4 py-3 text-sm">
+          <span>
+            Tu CV original: <b>{before}</b> → con Maru: <b>{report.score}</b>
+          </span>
+          <span className="rounded-full bg-neon px-2.5 py-0.5 text-xs font-extrabold">+{gain}</span>
+        </div>
+      )}
       <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-muted">
         Palabras clave · {report.covered.length}/{report.covered.length + report.missing.length}
       </p>

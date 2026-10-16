@@ -69,6 +69,8 @@ export type NormalizedPosting = {
   title: string;
   company: string;
   companySlug?: string;
+  /** Logo de la empresa, sólo si la fuente lo publica (Remotive, Jobicy, Get on Board). */
+  companyLogo?: string;
   sourceUrl: string; // URL del aviso en la fuente
   applyUrl: string; // URL de postulación que exige/ofrece la fuente
   /** true si la fuente obliga a usar sus enlaces (atribución). No se reemplazan por el ATS. */

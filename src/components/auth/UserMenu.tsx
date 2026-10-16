@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import LoginDialog from "./LoginDialog";
 
 /** Header: "Ingresar" sin sesión; email y "Salir" con sesión. */
 export default function UserMenu() {
-  const { email, logout } = useAuth();
+  const { email, paid, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
   if (email === undefined) return <span className="h-8 w-20" aria-hidden />;
@@ -28,12 +29,13 @@ export default function UserMenu() {
 
   return (
     <div className="flex min-w-0 items-center gap-3 text-sm">
-      <span className="hidden max-w-[220px] truncate text-muted sm:inline" title={email}>
-        {email}
-      </span>
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sage-soft font-medium text-sage sm:hidden" aria-label={email}>
+      <Link href="/cuenta" className="hidden max-w-[220px] items-center gap-1.5 truncate text-muted hover:text-ink sm:inline-flex" title={`${email} · Mi cuenta`}>
+        {paid && <span className="rounded bg-neon px-1.5 py-0.5 text-[10px] font-bold uppercase text-ink">Plan Maru</span>}
+        <span className="truncate">{email}</span>
+      </Link>
+      <Link href="/cuenta" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sage-soft font-medium text-sage sm:hidden" aria-label={`Mi cuenta (${email})`}>
         {email[0]?.toUpperCase()}
-      </span>
+      </Link>
       <button type="button" onClick={logout} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs text-muted transition hover:border-brand hover:text-brand">
         Salir
       </button>

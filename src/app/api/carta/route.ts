@@ -1,4 +1,5 @@
 import { UserFacingError, askStructured, cvBlocks, errorResponse, jobBlock } from "@/lib/claude";
+import { creationGate } from "@/lib/plan";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { CARTA_SYSTEM } from "@/lib/prompts";
 import { CartaSchema, type CartaOpciones, type CvSource, type JobInput } from "@/lib/schemas";
@@ -16,6 +17,8 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  const gate = await creationGate(req);
+  if (gate instanceof Response) return gate;
   try {
     const body = (await req.json()) as Body;
     if (!body.motivacion?.trim()) throw new UserFacingError("Contanos qué querés transmitir en tu carta.", "FEEDBACK_MISSING");
@@ -50,6 +53,7 @@ export async function POST(req: Request) {
       },
     ];
     const carta = await askStructured({ system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
+    await gate.done();
     return Response.json({ carta });
   } catch (err) {
     return errorResponse(err);

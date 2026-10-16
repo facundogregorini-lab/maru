@@ -10,6 +10,8 @@ import type { CvSource, JobInput } from "./schemas";
 let client: Anthropic | null = null;
 const anthropic = () => (client ??= new Anthropic());
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-opus-5-5";
+/** Para respuestas que tienen que ser rápidas (los turnos de la entrevista por voz). */
+export const FAST_MODEL = process.env.ANTHROPIC_FAST_MODEL ?? "claude-sonnet-5-5";
 
 type Block = Anthropic.Beta.BetaContentBlockParam;
 
@@ -94,8 +96,14 @@ export function unreadable(): UserFacingError {
   );
 }
 
+/** Por qué le interesa la vacante. Es opcional: sin eso, la IA no inventa motivos y lo pregunta. */
 export function feedbackBlock(feedback: string | undefined): Block {
-  if (!feedback?.trim()) throw new UserFacingError("Contanos por qué te interesa la vacante.", "FEEDBACK_MISSING");
+  if (!feedback?.trim()) {
+    return {
+      type: "text",
+      text: "<feedback_de_la_persona>\n(La persona no contó por qué le interesa la vacante. No inventes motivaciones: si hace falta para las respuestas, incluí una pregunta sobre eso.)\n</feedback_de_la_persona>",
+    };
+  }
   return { type: "text", text: `<feedback_de_la_persona>\n${feedback.trim()}\n</feedback_de_la_persona>` };
 }
 
@@ -106,16 +114,28 @@ export async function askStructured<T extends z.ZodType>(opts: {
   schema: T;
   effort: "low" | "medium" | "high";
   maxTokens?: number;
+  /** Otro modelo para pedidos donde importa la velocidad; si la cuenta no lo tiene, se usa el principal. */
+  model?: string;
 }): Promise<z.infer<T>> {
-  const response = await anthropic().beta.messages.parse({
-    model: MODEL,
-    max_tokens: opts.maxTokens ?? 16000,
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    system: opts.system,
-    output_config: { effort: opts.effort, format: betaZodOutputFormat(opts.schema) },
-    messages: [{ role: "user", content: opts.content }],
-  });
+  const call = (model: string) =>
+    anthropic().beta.messages.parse({
+      model,
+      max_tokens: opts.maxTokens ?? 16000,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      system: opts.system,
+      output_config: { effort: opts.effort, format: betaZodOutputFormat(opts.schema) },
+      messages: [{ role: "user", content: opts.content }],
+    });
+  let response;
+  try {
+    response = await call(opts.model ?? MODEL);
+  } catch (err) {
+    const modelProblem = err instanceof Anthropic.NotFoundError || (err instanceof Anthropic.BadRequestError && /model/i.test(err.message));
+    if (!opts.model || opts.model === MODEL || !modelProblem) throw err;
+    console.warn(`[claude] el modelo ${opts.model} no está disponible; uso ${MODEL}`);
+    response = await call(MODEL);
+  }
 
   if (response.stop_reason === "refusal") {
     throw new UserFacingError("No pudimos procesar este pedido. Revisá el contenido e intentá de nuevo.", "REFUSAL", 422);

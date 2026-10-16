@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import SubscribeButton from "@/components/plan/SubscribeButton";
+import { PLAN_EVENT } from "@/components/ui";
 import { load, save } from "@/lib/storage";
 import {
-  CHECKOUT_URL,
   CLIENT_KEY,
   GUIDE_KEY,
   GUIDE_STEPS,
@@ -34,7 +36,11 @@ export default function MaruCompanion() {
   const svg = useRef<SVGSVGElement>(null);
   const [guide, setGuideState] = useState<GuideState>(NEW_GUIDE);
   const [mode, setModeState] = useState<Mode>("work");
-  const [client, setClient] = useState(false);
+  const [localClient, setClient] = useState(false);
+  const { paid } = useAuth();
+  const client = paid || localClient;
+  /** Mensaje cuando se terminó el plan gratis (lo manda post() con un 402). */
+  const [paywall, setPaywall] = useState("");
   const [ready, setReady] = useState(false);
   const hopEl = useRef<HTMLSpanElement>(null);
   /** El panel toma el foco sólo si lo abrió la persona (no al cargar la página). */
@@ -177,10 +183,23 @@ export default function MaruCompanion() {
   const close = useCallback(
     (status: GuideState["status"]) => {
       setGuide((g) => ({ ...g, status, min: false }));
+      setPaywall("");
       setMode("work");
     },
     [setGuide, setMode],
   );
+
+  // Se terminó el plan gratis (un 402 en cualquier herramienta): Maru levanta la vista y muestra el plan.
+  useEffect(() => {
+    const onPlan = (e: Event) => {
+      setPaywall(String((e as CustomEvent<string>).detail ?? ""));
+      focusPanel.current = true;
+      setGuide((g) => ({ ...g, status: "abierta", min: false, step: OFFER }));
+      setMode("guide", { wave: true, talk: true });
+    };
+    window.addEventListener(PLAN_EVENT, onPlan);
+    return () => window.removeEventListener(PLAN_EVENT, onPlan);
+  }, [setGuide, setMode]);
 
   const goTo = useCallback(
     (step: number) => {
@@ -240,7 +259,7 @@ export default function MaruCompanion() {
           }}
         />
       )}
-      {mode === "guide" && <Guide focus={focusPanel} state={guide} client={client} onGo={goTo} onTry={tryIt} onClose={() => close("cerrada")} onFinish={() => close("terminada")} />}
+      {mode === "guide" && <Guide focus={focusPanel} state={guide} client={client} paywall={paywall} onGo={goTo} onTry={tryIt} onClose={() => close("cerrada")} onFinish={() => close("terminada")} />}
       {mode === "mini" && (
         <button
           type="button"
@@ -321,6 +340,7 @@ function Guide({
   focus,
   state,
   client,
+  paywall,
   onGo,
   onTry,
   onClose,
@@ -329,6 +349,7 @@ function Guide({
   focus: React.RefObject<boolean>;
   state: GuideState;
   client: boolean;
+  paywall: string;
   onGo: (step: number) => void;
   onTry: () => void;
   onClose: () => void;
@@ -385,7 +406,7 @@ function Guide({
 
       <div className="overflow-y-auto overscroll-contain">
         {isOffer ? (
-          <Offer key="offer" client={client} sawAll={done === total} onFinish={onFinish} />
+          <Offer key="offer" client={client} sawAll={done === total} paywall={paywall} onFinish={onFinish} />
         ) : (
           <div key={step.id} className="maru-step-in px-4 pb-3 pt-4">
             <div className="flex items-start gap-3">
@@ -446,7 +467,8 @@ function Guide({
 }
 
 /** El final: si no es cliente, la oferta "no-brainer"; si ya lo es, gracias. */
-function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean; onFinish: () => void }) {
+function Offer({ client, sawAll, paywall, onFinish }: { client: boolean; sawAll: boolean; paywall: string; onFinish: () => void }) {
+  const { payments } = useAuth();
   if (client)
     return (
       <div className="maru-step-in px-4 py-5 text-center">
@@ -461,11 +483,15 @@ function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean;
       </div>
     );
 
-  const perks = ["Match con búsquedas reales", "CV y carta a medida de cada aviso", "Extensión que completa formularios", "Entrevistas de práctica con informe", "Video con teleprompter y feedback", "Tu seguimiento, todo en un lugar"];
+  const perks = ["CV a medida de cada aviso, ilimitados", "Cartas de presentación ilimitadas", "Entrevistas de práctica con informe", "Videos con teleprompter y feedback", "Match, búsquedas y seguimiento", "Descargas en PDF y Word"];
   return (
     <div className="maru-step-in relative overflow-hidden px-4 pb-4 pt-5">
       <Confetti />
-      <p className="text-center text-[11px] font-bold uppercase tracking-wide text-ink/50">{sawAll ? "Ya lo viste todo 🎉" : "Llegaste al final 🎉"}</p>
+      {paywall ? (
+        <p className="rounded-xl bg-neon/15 px-3 py-2 text-center text-[13px] font-semibold">{paywall}</p>
+      ) : (
+        <p className="text-center text-[11px] font-bold uppercase tracking-wide text-ink/50">{sawAll ? "Ya lo viste todo 🎉" : "Llegaste al final 🎉"}</p>
+      )}
       <h2 className="mt-1 text-center text-xl font-extrabold leading-tight">Todo Maru, para toda tu búsqueda</h2>
       <div className="mt-3 rounded-2xl bg-ink px-4 py-4 text-center text-white">
         <p className="font-display text-[40px] font-extrabold leading-none tracking-tight">
@@ -482,10 +508,12 @@ function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean;
           </li>
         ))}
       </ul>
-      {CHECKOUT_URL ? (
-        <a href={CHECKOUT_URL} className="maru-shine press relative mt-4 block overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase">
-          Quiero a Maru conmigo
-        </a>
+      {payments ? (
+        <div className="mt-4">
+          <SubscribeButton className="maru-shine press relative block w-full overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase disabled:opacity-70">
+            Quiero a Maru conmigo
+          </SubscribeButton>
+        </div>
       ) : (
         <>
           <Link href="/match" onClick={onFinish} className="maru-shine press relative mt-4 block overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase">

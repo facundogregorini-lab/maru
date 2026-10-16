@@ -57,10 +57,10 @@ export default function JobCard({ j }: { j: JobResult }) {
       <div className="min-w-0 flex-1 p-4">
         <div className="flex gap-4">
           <span className="hidden sm:block">
-            <CompanyTile name={j.company} size={72} />
+            <CompanyTile name={j.company} logo={j.logo} size={72} />
           </span>
           <span className="sm:hidden">
-            <CompanyTile name={j.company} size={44} />
+            <CompanyTile name={j.company} logo={j.logo} size={44} />
           </span>
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5">

@@ -2,6 +2,7 @@ import Link from "next/link";
 import LoginNotice from "@/components/auth/LoginNotice";
 import UserMenu from "@/components/auth/UserMenu";
 import MaruCompanion from "@/components/maru/MaruCompanion";
+import TrackerSync from "@/components/tracker/TrackerSync";
 import { MaruHead } from "@/components/maru/PixelMaru";
 import { NavMenu } from "@/components/NavPills";
 import SideNav from "./SideNav";
@@ -61,6 +62,7 @@ export default function AppShell({
         {side && <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-[348px] shrink-0 overflow-y-auto bg-white p-4 xl:block">{side}</aside>}
       </div>
       <MaruCompanion />
+      <TrackerSync />
     </div>
   );
 }

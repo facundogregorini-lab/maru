@@ -2,6 +2,7 @@ import Link from "next/link";
 import LoginNotice from "./auth/LoginNotice";
 import UserMenu from "./auth/UserMenu";
 import MaruCompanion from "./maru/MaruCompanion";
+import TrackerSync from "@/components/tracker/TrackerSync";
 import { MaruHead } from "./maru/PixelMaru";
 import { POPULAR } from "@/lib/popular";
 import { TOOLS } from "./nav";
@@ -77,8 +78,11 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
                 { href: "/entrevista", label: "Entrevista con IA" },
                 { href: "/#evidencia", label: "La evidencia" },
                 { href: "/#faq", label: "Preguntas frecuentes" },
+                { href: "/precios", label: "Precios" },
+                { href: "/cuenta", label: "Mi cuenta" },
                 { href: "/terminos", label: "Términos y condiciones" },
                 { href: "/privacidad", label: "Privacidad" },
+                { href: "/arrepentimiento", label: "Botón de arrepentimiento" },
               ]}
             />
             <div>
@@ -92,6 +96,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
       </footer>
 
       <MaruCompanion />
+      <TrackerSync />
     </div>
   );
 }

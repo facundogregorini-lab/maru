@@ -242,6 +242,8 @@
 .maru-glow { animation: maru-glow 2s ease-out infinite; }
 .maru-dock { transition: transform 0.35s var(--ease-out), opacity 0.35s; }
 .maru-dock[data-away] { transform: translateX(120%); opacity: 0; }
+/* En el estudio de video Maru no tapa los controles de la grabación. */
+body:has([data-maru-away]) .maru-dock { transform: translateX(120%); opacity: 0; pointer-events: none; }
 /* Si la página tiene una barra fija abajo (detalle de búsqueda en celular), Maru se sienta arriba de ella. */
 @media (max-width: 1023px) {
   body:has([data-bottom-bar]) .maru-dock { bottom: 84px; }

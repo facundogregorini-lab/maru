@@ -1,5 +1,6 @@
 "use client";
 
+import { atsBefore } from "@/lib/ats";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { buildCvDoc } from "@/lib/cv";
@@ -272,7 +273,7 @@ export default function CvBuilderFlow() {
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu CV para</p>
           <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">{analysis.rol_objetivo}</h1>
 
-          <CvEditor doc={doc} setDoc={setDoc} context={contextFromCvAnalysis(analysis, objetivo)} cambios={generation.cambios_clave} />
+          <CvEditor doc={doc} setDoc={setDoc} context={contextFromCvAnalysis(analysis, objetivo)} cambios={generation.cambios_clave} before={profile ? atsBefore(profile, contextFromCvAnalysis(analysis, objetivo)) : undefined} />
 
           {generation.consejos.length > 0 && (
             <section className="mt-8 rounded-3xl bg-sage-soft p-6 sm:p-8">

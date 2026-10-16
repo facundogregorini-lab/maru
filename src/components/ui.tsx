@@ -98,6 +98,8 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
   );
 }
 
+export const PLAN_EVENT = "maru:plan";
+
 export async function post<T>(url: string, body: unknown): Promise<T> {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (res.status === 413) {
@@ -106,6 +108,8 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
     });
   }
   const data = await res.json().catch(() => ({ error: "Respuesta inesperada del servidor." }));
+  // Sin creaciones gratis: Maru abre la oferta del plan (ver MaruCompanion).
+  if (res.status === 402) window.dispatchEvent(new CustomEvent(PLAN_EVENT, { detail: data.error }));
   if (!res.ok) throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
   return data as T;
 }

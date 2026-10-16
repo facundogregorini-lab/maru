@@ -6,12 +6,12 @@ import { useAuth } from "./AuthProvider";
 /** Aviso al volver del magic link (?ingreso=ok | vencido), en cualquier página. */
 export default function LoginNotice() {
   const { email } = useAuth();
-  const [notice, setNotice] = useState<"ok" | "vencido" | null>(null);
+  const [notice, setNotice] = useState<"ok" | "vencido" | "google-no" | null>(null);
 
   useEffect(() => {
     const url = new URL(window.location.href);
     const ingreso = url.searchParams.get("ingreso");
-    if (ingreso !== "ok" && ingreso !== "vencido") return;
+    if (ingreso !== "ok" && ingreso !== "vencido" && ingreso !== "google-no") return;
     setNotice(ingreso);
     url.searchParams.delete("ingreso");
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
@@ -30,8 +30,10 @@ export default function LoginNotice() {
           <>
             <b className="text-sage">¡Listo{email ? `, entraste como ${email}` : ""}!</b> Este navegador te va a recordar. Lo que estabas armando sigue acá.
           </>
+        ) : notice === "google-no" ? (
+          "El ingreso con Google todavía no está disponible. Tocá «Ingresar» y entrá con tu email."
         ) : (
-          "El link venció o no es válido. Tocá «Ingresar» y te mandamos uno nuevo."
+          "El ingreso venció o no es válido. Tocá «Ingresar» y probá de nuevo."
         )}
       </span>
       <button type="button" onClick={() => setNotice(null)} aria-label="Cerrar aviso" className="shrink-0 text-muted hover:text-ink">

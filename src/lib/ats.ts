@@ -1,5 +1,5 @@
-import { cvToText, visible } from "./cv";
-import type { CvDoc } from "./schemas";
+import { buildCvDoc, cvToText, visible, type CvWriting } from "./cv";
+import type { CvContext, CvDoc, Profile } from "./schemas";
 
 export type AtsCheck = { ok: boolean; label: string };
 export type AtsReport = { score: number; covered: string[]; missing: string[]; checks: AtsCheck[] };
@@ -42,4 +42,10 @@ export function atsReport(doc: CvDoc, keywords: string[]): AtsReport {
   const kwScore = unique.length ? covered.length / unique.length : 1;
   const structure = checks.filter((c) => c.ok).length / checks.length;
   return { score: Math.round((kwScore * 0.7 + structure * 0.3) * 100), covered, missing, checks };
+}
+
+/** Puntaje ATS del CV tal como llegó (sin la reescritura de Maru), para mostrar el antes y el después. */
+export function atsBefore(profile: Profile, ctx: CvContext): number {
+  const original: CvWriting = { titular: profile.titulo, resumen: profile.resumen, logros_clave: [], habilidades: profile.aptitudes, experiencias: [] };
+  return atsReport(buildCvDoc(profile, original, ctx), ctx.palabrasClave).score;
 }

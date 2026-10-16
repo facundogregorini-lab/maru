@@ -1,5 +1,7 @@
 # Auditoría de punta a punta (16/10/2026)
 
+> **Actualización:** después de esta auditoría se implementó todo lo que dependía del código (cuentas con Google, base de datos, plan y cobro con Mercado Pago, límites del plan gratis, alertas, seguimiento sincronizado, chat con Maru, logos, calidad de búsquedas, ATS antes/después, cámara del video). Los puntajes vigentes, lo que falta y lo que depende del dueño están en [docs/PENDIENTES.md](PENDIENTES.md). Este documento queda como registro de la auditoría original.
+
 Referente: jobright.ai (job match, autofill, resume tailor, cover letter, job tracker, mock interview, Orion, planes pagos).
 Objetivo: una suite irresistible para el candidato argentino, lista para cobrar $10.000/mes.
 

@@ -93,3 +93,31 @@ describe("jobFromPage", () => {
     expect(jobFromPage("", "https://careers.globant.com/x")).toEqual({ title: "Postulación", company: "Globant" });
   });
 });
+
+describe("sincronización del seguimiento", () => {
+  it("junta dos tableros: gana la versión más nueva y no revive lo borrado", async () => {
+    const { mergeTracked, mergeRemoved } = await import("@/lib/tracker");
+    const base = { title: "PM", company: "Acme", jobUrl: "", status: "guardada" as const, artifacts: [], notes: "", createdAt: 1 };
+    const local = [
+      { ...base, id: "a", notes: "vieja", updatedAt: 10 },
+      { ...base, id: "b", updatedAt: 5 },
+    ];
+    const remote = [
+      { ...base, id: "a", notes: "nueva", updatedAt: 20 },
+      { ...base, id: "c", updatedAt: 7 },
+    ];
+    const merged = mergeTracked(local, remote, { b: 6 });
+    expect(merged.map((m) => m.id).sort()).toEqual(["a", "c"]);
+    expect(merged.find((m) => m.id === "a")!.notes).toBe("nueva");
+    // Si la tarjeta se editó después de borrarla en otro lado, vuelve.
+    expect(mergeTracked([{ ...base, id: "b", updatedAt: 9 }], [], { b: 6 })).toHaveLength(1);
+    expect(mergeRemoved({ x: 1 }, { x: 3, y: 2 })).toEqual({ x: 3, y: 2 });
+  });
+
+  it("borrar deja constancia para la sincronización", async () => {
+    const { removeTracked, readRemoved, upsertTracked } = await import("@/lib/tracker");
+    const it = upsertTracked({ title: "PM", company: "Acme" })!;
+    removeTracked(it.id);
+    expect(readRemoved()[it.id]).toBeGreaterThan(0);
+  });
+});

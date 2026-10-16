@@ -1,4 +1,5 @@
 import { askStructured, cvBlocks, errorResponse } from "@/lib/claude";
+import { creationGate } from "@/lib/plan";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { ENTREVISTA_PLAN_SYSTEM } from "@/lib/prompts";
 import { EntrevistaPlanSchema, type CvSource, type EntrevistaOpciones, type TargetInput } from "@/lib/schemas";
@@ -9,6 +10,8 @@ export const maxDuration = 300;
 type Body = TargetInput & { source?: CvSource; opciones: EntrevistaOpciones };
 
 export async function POST(req: Request) {
+  const gate = await creationGate(req);
+  if (gate instanceof Response) return gate;
   try {
     const body = (await req.json()) as Body;
     const o = body.opciones;
@@ -21,6 +24,7 @@ export async function POST(req: Request) {
       },
     ];
     const plan = await askStructured({ system: ENTREVISTA_PLAN_SYSTEM, content, schema: EntrevistaPlanSchema, effort: "medium" });
+    await gate.done();
     return Response.json({ plan: { ...plan, preguntas: plan.preguntas.slice(0, o.preguntas) } });
   } catch (err) {
     return errorResponse(err);
