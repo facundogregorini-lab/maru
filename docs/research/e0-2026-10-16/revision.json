@@ -1,0 +1,768 @@
+{
+  "$comment": "Revisión manual de los 5 primeros resultados elegibles por perfil (E0). Revisor: IA (Claude) sobre título, empresa, ubicaciones, evidencia de elegibilidad, fechas y motivos; sin abrir los avisos originales. Criterios fijos: rol, seniority (igual o a un escalón), Argentina confirmada en la evidencia, datos suficientes (descripción completa), contradicción fuerte (ciudad/modalidad/seniority/antigüedad >6 meses/idioma). 'dudoso' = falta un dato para decidir o hay una contradicción no excluyente. El score no se usó como etiqueta. Perfiles con reserva:true no deben usarse para ajustar reglas.",
+  "fecha": "2026-10-16",
+  "resumen": {
+    "G1-adm-contable-jr": {
+      "util": 3,
+      "dudoso": 1,
+      "falso_positivo": 1
+    },
+    "G1-finanzas-ssr": {
+      "util": 2,
+      "dudoso": 2,
+      "falso_positivo": 1
+    },
+    "G1-rrhh-ssr": {
+      "util": 3,
+      "dudoso": 1,
+      "falso_positivo": 1
+    },
+    "G2-ventas-jr": {
+      "util": 1,
+      "dudoso": 4,
+      "falso_positivo": 0
+    },
+    "G2-logistica-ssr": {
+      "util": 0,
+      "dudoso": 1,
+      "falso_positivo": 4
+    },
+    "T1-dev-ssr": {
+      "util": 3,
+      "dudoso": 2,
+      "falso_positivo": 0
+    },
+    "G1-atencion-jr": {
+      "util": 4,
+      "dudoso": 1,
+      "falso_positivo": 0
+    },
+    "T1-datos-jr": {
+      "util": 3,
+      "dudoso": 0,
+      "falso_positivo": 2
+    }
+  },
+  "items": [
+    {
+      "perfil": "G1-adm-contable-jr",
+      "reserva": false,
+      "pos": 1,
+      "id": "7cc0051be648c6",
+      "title": "Accountant",
+      "company": "Sezzle",
+      "score": 76,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Contable remoto LATAM."
+    },
+    {
+      "perfil": "G1-adm-contable-jr",
+      "reserva": false,
+      "pos": 2,
+      "id": "ab29c9e48577c2",
+      "title": "Accounting Analyst",
+      "company": "Mutt Data",
+      "score": 68,
+      "criterios": {
+        "rol": "si",
+        "seniority": "no",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "dudoso",
+      "nota": "Senior para un perfil junior."
+    },
+    {
+      "perfil": "G1-adm-contable-jr",
+      "reserva": false,
+      "pos": 3,
+      "id": "48066fc63191fb",
+      "title": "Executive Assistant",
+      "company": "Wing Assistant",
+      "score": 65,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Asistente ejecutivo ≈ administrativo."
+    },
+    {
+      "perfil": "G1-adm-contable-jr",
+      "reserva": false,
+      "pos": 4,
+      "id": "7b8548dad84d1e",
+      "title": "General Virtual Assistant",
+      "company": "Wing Assistant",
+      "score": 62,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Asistente virtual general."
+    },
+    {
+      "perfil": "G1-adm-contable-jr",
+      "reserva": false,
+      "pos": 5,
+      "id": "93ee74ef5da3d6",
+      "title": "Accounting Expert",
+      "company": "Anyone AI",
+      "score": 58,
+      "criterios": {
+        "rol": "no",
+        "seniority": "desconocido",
+        "argentina": "no",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Proyecto de entrenamiento de IA (Anyone AI); 'Fully Remote' sin Argentina explícita."
+    },
+    {
+      "perfil": "G1-finanzas-ssr",
+      "reserva": false,
+      "pos": 1,
+      "id": "b4a17df2a419ec",
+      "title": "Analista de Tesorería y Pagos",
+      "company": "Rehire",
+      "score": 73,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "dudoso",
+      "nota": "Presencial en Buenos Aires para un perfil de Rosario que pide híbrido/remoto: igual sale #1."
+    },
+    {
+      "perfil": "G1-finanzas-ssr",
+      "reserva": false,
+      "pos": 2,
+      "id": "ab29c9e48577c2",
+      "title": "Accounting Analyst",
+      "company": "Mutt Data",
+      "score": 63,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Contable más que financiero."
+    },
+    {
+      "perfil": "G1-finanzas-ssr",
+      "reserva": false,
+      "pos": 3,
+      "id": "83daf9fcd76b85",
+      "title": "Junior Asset Analyst",
+      "company": "Scale Army",
+      "score": 62,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Agencia offshore (Scale Army)."
+    },
+    {
+      "perfil": "G1-finanzas-ssr",
+      "reserva": false,
+      "pos": 4,
+      "id": "83d606498d6397",
+      "title": "Quant Finance Expert (Argentina)",
+      "company": "Anyone AI",
+      "score": 59,
+      "criterios": {
+        "rol": "no",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Entrenamiento de IA (Anyone AI), no un empleo de finanzas."
+    },
+    {
+      "perfil": "G1-finanzas-ssr",
+      "reserva": false,
+      "pos": 5,
+      "id": "09c1753cffb634",
+      "title": "Finance Administrator",
+      "company": "Halter",
+      "score": 58,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "dudoso",
+      "nota": "Presencial en Buenos Aires; perfil en Rosario, híbrido/remoto."
+    },
+    {
+      "perfil": "G1-rrhh-ssr",
+      "reserva": false,
+      "pos": 1,
+      "id": "7a4f99474b38c4",
+      "title": "Healthcare Recruiter",
+      "company": "Scale Army",
+      "score": 78,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Agencia offshore."
+    },
+    {
+      "perfil": "G1-rrhh-ssr",
+      "reserva": false,
+      "pos": 2,
+      "id": "b1d48320948135",
+      "title": "Senior Recruiter (HR-Focused)",
+      "company": "Hire Hangar",
+      "score": 71,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Argentina está en la evidencia pero no se ve en la tarjeta."
+    },
+    {
+      "perfil": "G1-rrhh-ssr",
+      "reserva": false,
+      "pos": 3,
+      "id": "2a77c5202cd8e0",
+      "title": "High-Volume Internal Recruiter",
+      "company": "Hire Hangar",
+      "score": 65,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Misma empresa que #2 y #5: poca variedad."
+    },
+    {
+      "perfil": "G1-rrhh-ssr",
+      "reserva": false,
+      "pos": 4,
+      "id": "d5a6fa2ed67681",
+      "title": "Technology Talent Pool",
+      "company": "dLocal",
+      "score": 63,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "'Talent pool' (no es una vacante), híbrido en otras ciudades."
+    },
+    {
+      "perfil": "G1-rrhh-ssr",
+      "reserva": false,
+      "pos": 5,
+      "id": "c0db2ba1a9fd47",
+      "title": "Internal Recruiter – High-Volume Staffing",
+      "company": "Hire Hangar",
+      "score": 62,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "dudoso",
+      "nota": "Tercera de Hire Hangar en el top 5."
+    },
+    {
+      "perfil": "G2-ventas-jr",
+      "reserva": false,
+      "pos": 1,
+      "id": "b7631f3c574fd6",
+      "title": "Ejecutivo/a de Ventas",
+      "company": "Khipu",
+      "score": 92,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Venta en español, híbrido Argentina."
+    },
+    {
+      "perfil": "G2-ventas-jr",
+      "reserva": false,
+      "pos": 2,
+      "id": "b64ec353dc151d",
+      "title": "Account Executive, Marketplace Sales",
+      "company": "Xometry",
+      "score": 87,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "desconocido"
+      },
+      "veredicto": "dudoso",
+      "nota": "Empresa de EE. UU.: probablemente pide inglés y el perfil marcó idioma indispensable (sólo español)."
+    },
+    {
+      "perfil": "G2-ventas-jr",
+      "reserva": false,
+      "pos": 3,
+      "id": "47f5816e1b70b6",
+      "title": "Sales Account Executive (Zoho)",
+      "company": "Scale Army",
+      "score": 85,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "desconocido"
+      },
+      "veredicto": "dudoso",
+      "nota": "Probable inglés requerido."
+    },
+    {
+      "perfil": "G2-ventas-jr",
+      "reserva": false,
+      "pos": 4,
+      "id": "710283b0f3cddd",
+      "title": "Sales Administrator",
+      "company": "Hire Hangar",
+      "score": 82,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "desconocido"
+      },
+      "veredicto": "dudoso",
+      "nota": "Administración de ventas; probable inglés."
+    },
+    {
+      "perfil": "G2-ventas-jr",
+      "reserva": false,
+      "pos": 5,
+      "id": "82f6661c063d45",
+      "title": "Technical Account Executive",
+      "company": "Scale Army",
+      "score": 80,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "desconocido"
+      },
+      "veredicto": "dudoso",
+      "nota": "Venta técnica; probable inglés."
+    },
+    {
+      "perfil": "G2-logistica-ssr",
+      "reserva": false,
+      "pos": 1,
+      "id": "206a53f7c3c0d5",
+      "title": "Revenue Operations Analyst",
+      "company": "Scale Army",
+      "score": 66,
+      "criterios": {
+        "rol": "no",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Revenue Operations (ventas), no logística."
+    },
+    {
+      "perfil": "G2-logistica-ssr",
+      "reserva": false,
+      "pos": 2,
+      "id": "9dcb92674bad31",
+      "title": "Operations Analyst",
+      "company": "Caylent",
+      "score": 61,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "dudoso",
+      "nota": "Operaciones de negocio en consultora cloud."
+    },
+    {
+      "perfil": "G2-logistica-ssr",
+      "reserva": false,
+      "pos": 3,
+      "id": "ded4367d6f67bb",
+      "title": "IT Operations Analyst",
+      "company": "Sezzle",
+      "score": 59,
+      "criterios": {
+        "rol": "no",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "IT Operations: otra área."
+    },
+    {
+      "perfil": "G2-logistica-ssr",
+      "reserva": false,
+      "pos": 4,
+      "id": "03940620d7ba57",
+      "title": "IT Operations Analyst",
+      "company": "UpGuard",
+      "score": 58,
+      "criterios": {
+        "rol": "no",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "no",
+        "contradiccion": "no"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "IT Operations: otra área."
+    },
+    {
+      "perfil": "G2-logistica-ssr",
+      "reserva": false,
+      "pos": 5,
+      "id": "74b1d9936b0b4b",
+      "title": "Client Implementation & Operations Analyst",
+      "company": "Hire Hangar",
+      "score": 58,
+      "criterios": {
+        "rol": "no",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "no",
+        "contradiccion": "no"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Implementación de clientes, no logística."
+    },
+    {
+      "perfil": "T1-dev-ssr",
+      "reserva": false,
+      "pos": 1,
+      "id": "419e81e140ec49",
+      "title": "Software Engineer II with Accounting Experience",
+      "company": "Sezzle",
+      "score": 83,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "dudoso",
+      "nota": "Pide experiencia contable; publicado hace 11 meses."
+    },
+    {
+      "perfil": "T1-dev-ssr",
+      "reserva": false,
+      "pos": 2,
+      "id": "03f3f5459406b5",
+      "title": "Software Engineer: Frontend",
+      "company": "Whippy",
+      "score": 81,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "no",
+        "contradiccion": "si"
+      },
+      "veredicto": "dudoso",
+      "nota": "Publicado hace 14 meses."
+    },
+    {
+      "perfil": "T1-dev-ssr",
+      "reserva": false,
+      "pos": 3,
+      "id": "d684da8ab5f114",
+      "title": "Full Stack Applications Developer",
+      "company": "Scale Army",
+      "score": 80,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Agencia offshore."
+    },
+    {
+      "perfil": "T1-dev-ssr",
+      "reserva": false,
+      "pos": 4,
+      "id": "303afb105a6204",
+      "title": "Senior Frontend Engineer",
+      "company": "Hire Hangar",
+      "score": 80,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Senior, un escalón arriba."
+    },
+    {
+      "perfil": "T1-dev-ssr",
+      "reserva": false,
+      "pos": 5,
+      "id": "68fc98f8107a35",
+      "title": "Full Stack Engineer",
+      "company": "Hire Hangar",
+      "score": 79,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Argentina en la evidencia, no en la tarjeta."
+    },
+    {
+      "perfil": "G1-atencion-jr",
+      "reserva": true,
+      "pos": 1,
+      "id": "389fd534e573ae",
+      "title": "Customer Service Specialist",
+      "company": "Hire Hangar",
+      "score": 79,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "desconocido"
+      },
+      "veredicto": "dudoso",
+      "nota": "Probable inglés; Argentina no se ve en la tarjeta."
+    },
+    {
+      "perfil": "G1-atencion-jr",
+      "reserva": true,
+      "pos": 2,
+      "id": "3160608f611eb2",
+      "title": "Receptionist & Customer Support Assistant",
+      "company": "Assist World",
+      "score": 77,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": ""
+    },
+    {
+      "perfil": "G1-atencion-jr",
+      "reserva": true,
+      "pos": 3,
+      "id": "fa3661b8406867",
+      "title": "Customer Support & Order Specialist",
+      "company": "Scale Army",
+      "score": 68,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Agencia offshore."
+    },
+    {
+      "perfil": "G1-atencion-jr",
+      "reserva": true,
+      "pos": 4,
+      "id": "1b222549dba794",
+      "title": "Client Service Representative",
+      "company": "1840 & Company",
+      "score": 63,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Remoto con Mendoza/Rosario."
+    },
+    {
+      "perfil": "G1-atencion-jr",
+      "reserva": true,
+      "pos": 5,
+      "id": "e2f9c1dea4725b",
+      "title": "Customer Support Specialist (LATAM Only)",
+      "company": "Whippy",
+      "score": 63,
+      "criterios": {
+        "rol": "si",
+        "seniority": "desconocido",
+        "argentina": "si",
+        "datos": "no",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "LATAM remoto."
+    },
+    {
+      "perfil": "T1-datos-jr",
+      "reserva": true,
+      "pos": 1,
+      "id": "fb8e10465c1014",
+      "title": "Junior Data Analyst",
+      "company": "Hire Hangar",
+      "score": 88,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": "Argentina en la evidencia, no en la tarjeta."
+    },
+    {
+      "perfil": "T1-datos-jr",
+      "reserva": true,
+      "pos": 2,
+      "id": "0f93e9d9b7a629",
+      "title": "Fraud Data Analyst",
+      "company": "Sezzle",
+      "score": 78,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": ""
+    },
+    {
+      "perfil": "T1-datos-jr",
+      "reserva": true,
+      "pos": 3,
+      "id": "a245ece176e513",
+      "title": "Sales Operations Data Analyst",
+      "company": "Xometry",
+      "score": 70,
+      "criterios": {
+        "rol": "si",
+        "seniority": "si",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "no"
+      },
+      "veredicto": "util",
+      "nota": ""
+    },
+    {
+      "perfil": "T1-datos-jr",
+      "reserva": true,
+      "pos": 4,
+      "id": "bdca37189ba3eb",
+      "title": "Lead Data Analyst",
+      "company": "Hire Hangar",
+      "score": 62,
+      "criterios": {
+        "rol": "si",
+        "seniority": "no",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Lead para un perfil junior."
+    },
+    {
+      "perfil": "T1-datos-jr",
+      "reserva": true,
+      "pos": 5,
+      "id": "c9b38ef3846dda",
+      "title": "Sr Data Scientist",
+      "company": "Despegar",
+      "score": 56,
+      "criterios": {
+        "rol": "parcial",
+        "seniority": "no",
+        "argentina": "si",
+        "datos": "si",
+        "contradiccion": "si"
+      },
+      "veredicto": "falso_positivo",
+      "nota": "Data Scientist senior, híbrido en Buenos Aires, para un junior de Neuquén."
+    }
+  ]
+}
