@@ -85,7 +85,7 @@ Abrí http://localhost:3000.
 
 Cualquier persona puede **ingresar** desde el header de todas las páginas. Para **descargar o copiar el CV y la carta, o descargar el video**, es obligatorio: con **Continuar con Google** o con un link que Maru manda por email (sin contraseña). El navegador queda recordado por 180 días y la persona sigue donde estaba.
 
-- Sin base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos; al abrirlo se crea una sesión firmada en una cookie `httpOnly`.
+- El login no usa la base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos; al abrirlo se crea una sesión firmada en una cookie `httpOnly`.
 - Las descargas se validan en el servidor (`/api/export/pdf` y `/api/export/docx` devuelven 401 sin sesión).
 - Si la persona abre el link en otra pestaña del mismo navegador, la pestaña original lo detecta y sigue con la descarga sola.
 
@@ -100,6 +100,19 @@ Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL`
   2. En **Credenciales → Crear credenciales → ID de cliente de OAuth**: tipo *Aplicación web*. En **URIs de redirección autorizadas**: `https://maru-grego7.vercel.app/api/auth/google/callback` (y la del dominio propio cuando exista, más `http://localhost:3000/api/auth/google/callback` para desarrollo).
   3. Copiar el ID y el secreto a `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en Vercel y hacer redeploy. Sin esas variables el botón no aparece.
 - Los previews de Vercel tienen otra URL: Google sólo acepta las URIs cargadas, así que ahí conviene probar con el magic link o agregar la URL del preview.
+
+## Base de datos: tu cuenta en cualquier dispositivo
+
+Con sesión, el **perfil**, el **match** (preferencias, búsquedas guardadas y descartadas) y el **seguimiento** se copian a la cuenta y aparecen en cualquier dispositivo donde ingreses. Lo armado en cada herramienta (CV, carta, entrevista, video) sigue sólo en el navegador. Sin sesión, todo funciona como antes.
+
+- La base es un **Redis de Upstash** que se usa por su API REST (`src/lib/db.ts`, sin dependencias). Cada cuenta guarda un documento por clave (`maru:u:<hash del email>:perfil|match|tracker`), con la fecha del servidor.
+- `localStorage` sigue siendo la fuente de la app; `src/lib/sync/client.ts` sube cada cambio a los segundos y baja lo de la cuenta al ingresar, al cargar y al volver a la pestaña. Si cambiaron los dos lados, se juntan (`mergeDoc` en `src/lib/sync/docs.ts`: el seguimiento por tarjeta, el resto el más reciente). Si en ese navegador había otra cuenta, no se mezclan.
+- «Borrar mis datos» con sesión deja una marca sin datos en la cuenta, así se borra también en los demás dispositivos.
+- API: `GET /api/sync` y `PUT /api/sync` `{doc, data}`, ambas con sesión.
+
+**Base actual:** `upstash-kv-gray-notebook`, compartida con los proyectos de `lab` (Manuelita, Biblioteca). Por eso todas las claves de Maru empiezan con `maru:`; las de esos proyectos usan otros prefijos (`user:`, `session:`, `biblio:`…). Si más adelante se quiere separar, alcanza con conectar otra base y cambiar las variables.
+
+**Conectarla en Vercel:** en el proyecto, **Storage → Create Database → Upstash for Redis** (plan gratis) y conectala a Production y Preview. Vercel agrega `KV_REST_API_URL` y `KV_REST_API_TOKEN` (también sirven `UPSTASH_REDIS_REST_URL`/`_TOKEN`, o los mismos nombres con prefijo). Después, **Redeploy**. Sin esas variables, en producción la sincronización queda apagada y en desarrollo usa una base en memoria.
 
 ## Deploy
 
@@ -122,10 +135,11 @@ src/app/api/cv/*              Análisis y redacción del CV sin vacante
 src/app/api/carta, carta/parrafo  Carta completa y reescritura de un párrafo
 src/components/video/, src/app/api/video/*   Video: guion, estudio (cámara + teleprompter) y feedback
 src/components/entrevista/, src/app/api/entrevista/*  Entrevista: plan, llamada (voz), turnos y informe
-src/lib/tracker.ts, src/components/tracker/, src/app/seguimiento/  Seguimiento de postulaciones (localStorage)
+src/lib/tracker.ts, src/components/tracker/, src/app/seguimiento/  Seguimiento de postulaciones (localStorage + cuenta)
 src/components/speech.ts      Dictado continuo, voz de la entrevistadora y métricas de ritmo
 src/components/auth/, src/lib/auth.ts, src/lib/google.ts, src/app/api/auth/*  Login con Google y magic link
 src/app/api/export/pdf, docx  Descargas (exigen sesión)
+src/lib/db.ts, src/lib/sync/, src/app/api/sync  Base de datos y sincronización de la cuenta
 src/app/api/autofill, src/lib/autofill.ts  Autocompletar formularios desde la extensión
 extension/                    Extensión de Chrome (Manifest V3, sin build)
 src/lib/job.ts                Scraping de la vacante y de LinkedIn

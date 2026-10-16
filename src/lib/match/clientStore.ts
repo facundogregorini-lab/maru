@@ -4,8 +4,8 @@ import type { ExternalJob } from "./api-schemas";
 import type { Interactions, MatchPrefs, MatchProfile } from "./types";
 
 /**
- * Datos personales del match: viven sólo en este navegador, como el resto de Maru.
- * El servidor los recibe para ordenar el ranking y no los guarda.
+ * Datos personales del match: viven en este navegador y, con sesión, se copian a la cuenta (src/lib/sync/client.ts).
+ * El ranking los recibe para ordenar y no los guarda.
  */
 
 const KEY = "maru:match:v1";

@@ -1,7 +1,8 @@
 import { load, save } from "./storage";
 
 /**
- * Seguimiento de postulaciones (el "Job Tracker" de jobright): vive sólo en este navegador, como el perfil.
+ * Seguimiento de postulaciones (el "Job Tracker" de jobright): vive en este navegador, como el perfil, y con sesión
+ * se copia a la cuenta (src/lib/sync/client.ts).
  * Las herramientas de Maru crean y actualizan las tarjetas solas; la persona mueve el estado y anota.
  */
 
