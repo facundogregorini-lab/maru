@@ -4,42 +4,57 @@ import { FRONTS, HERO_STATS, SOURCES, type Stat } from "@/lib/evidence";
 
 function Ref({ n }: { n: number }) {
   return (
-    <a href={`#fuente-${n}`} className="ml-0.5 align-super text-[0.6em] font-semibold text-celeste-dark no-underline hover:underline" aria-label={`Fuente ${n}`}>
+    <a href={`#fuente-${n}`} className="ml-0.5 align-super text-[0.65em] font-semibold text-brand no-underline hover:underline" aria-label={`Fuente ${n}`}>
       {n}
     </a>
   );
 }
 
-/** Las 4 métricas del hero en un solo panel de vidrio, con los números contando y su fuente. */
-export function HeroStats() {
+const ICONS = [
+  // entrevistas: globo de diálogo
+  <path key="a" d="M5 6h14v9H9l-4 3z" />,
+  // llamados: teléfono
+  <path key="b" d="M7 4h3l1.5 4-2 1.5a10 10 0 0 0 5 5L16 12.5l4 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 5 6a2 2 0 0 1 2-2z" />,
+  // contrataciones: check
+  <path key="c" d="m5 12.5 4.5 4.5L19 7.5" />,
+  // lectura: reloj
+  <>
+    <circle key="d1" cx="12" cy="12" r="8" />
+    <path key="d2" d="M12 8v4l3 2" />
+  </>,
+];
+
+/** "Resultados reales, no promesas": las 4 métricas con línea punteada e ícono, como en jobright. */
+export function ResultsList() {
   return (
-    <div className="relative">
-      <div aria-hidden className="absolute -inset-4 -z-10 rounded-[40px] bg-[conic-gradient(from_180deg_at_50%_50%,rgba(31,111,168,0.18),rgba(88,196,211,0.16),rgba(31,111,168,0.05),rgba(31,111,168,0.18))] blur-2xl" />
-      <dl className="grid grid-cols-2 overflow-hidden rounded-[28px] bg-paper/70 shadow-[0_30px_70px_-40px_rgba(21,82,126,0.55),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-white/70 backdrop-blur-xl">
-        {HERO_STATS.map((s, i) => (
-          <div
-            key={s.value + s.label}
-            className={`flex flex-col p-5 sm:p-7 ${i % 2 === 0 ? "border-r border-line/70" : ""} ${i < 2 ? "border-b border-line/70" : ""}`}
-          >
-            <dt className="order-2 mt-2 text-sm font-semibold leading-snug text-ink">
+    <dl className="space-y-5">
+      {HERO_STATS.map((s, i) => (
+        <div key={s.value + s.label} className="flex items-end gap-4">
+          <div className="min-w-0 shrink-0">
+            <dd className="font-display text-4xl font-bold leading-none sm:text-[2.75rem]">
+              <NumberTicker value={s.value} />
+            </dd>
+            <dt className="mt-1 text-sm text-ink/70">
               {s.label}
               <Ref n={s.source} />
             </dt>
-            <dd className="order-1 font-serif text-[2.6rem] leading-none text-celeste sm:text-[3.4rem]">
-              <NumberTicker value={s.value} />
-            </dd>
-            <dd className="order-3 mt-1.5 text-xs leading-snug text-muted">{s.note}</dd>
           </div>
-        ))}
-      </dl>
-    </div>
+          <span aria-hidden className="leader" />
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-2 border-ink">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              {ICONS[i % ICONS.length]}
+            </svg>
+          </span>
+        </div>
+      ))}
+    </dl>
   );
 }
 
 function FrontStat({ s }: { s: Stat }) {
   return (
-    <div className="rounded-2xl bg-sand/70 p-4">
-      <p className="font-serif text-4xl leading-none text-celeste">
+    <div className="rounded-2xl bg-sand p-4">
+      <p className="font-display text-4xl font-bold leading-none">
         <NumberTicker value={s.value} />
       </p>
       <p className="mt-1.5 text-sm font-semibold leading-snug">
@@ -51,55 +66,45 @@ function FrontStat({ s }: { s: Stat }) {
   );
 }
 
-/** "Por qué funciona": evidencia por frente de la postulación + qué hace Maru + fuentes. */
+/** Evidencia por frente de la postulación + qué hace Maru + fuentes. */
 export function Evidence() {
   return (
-    <section aria-labelledby="evidencia" className="mt-28 scroll-mt-24">
+    <section id="evidencia" aria-labelledby="evidencia-t" className="mt-28 scroll-mt-24">
       <Reveal>
-        <p data-reveal className="flex items-center gap-3 text-sm font-medium text-muted">
-          <span className="font-serif text-lg italic text-celeste">La evidencia</span>
-          <span aria-hidden className="h-px w-8 bg-line" />
-          Estudios de terceros
-        </p>
-        <h2 id="evidencia" data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-4 max-w-3xl font-serif text-4xl leading-[1.05] sm:text-5xl">
-          Personalizar cada postulación no es un detalle: <em className="text-celeste">cambia los resultados</em>.
+        <h2 id="evidencia-t" data-reveal className="max-w-4xl font-display text-4xl font-light uppercase leading-[1.05] sm:text-6xl">
+          Personalizar <em>cambia los resultados</em>
         </h2>
-        <p data-reveal style={{ "--i": 2 } as React.CSSProperties} className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">
+        <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-4 max-w-2xl text-lg leading-relaxed text-ink/70">
           Hacerlo a mano para cada búsqueda lleva horas. Maru lo hace en minutos, en los tres frentes donde se decide si te llaman.
         </p>
       </Reveal>
 
       <Reveal className="mt-10 grid gap-4 lg:grid-cols-3">
         {FRONTS.map((f, i) => (
-          <article
-            key={f.title}
-            data-reveal
-            style={{ "--i": i } as React.CSSProperties}
-            className="flex flex-col rounded-[28px] bg-paper p-6 ring-1 ring-line/70 transition-shadow duration-300 hover:shadow-[0_30px_60px_-40px_rgba(21,82,126,0.5)]"
-          >
-            <p className="text-sm font-medium text-celeste-dark">{f.kicker}</p>
-            <h3 className="mt-1 font-serif text-3xl">{f.title}</h3>
+          <article key={f.title} data-reveal style={{ "--i": i } as React.CSSProperties} className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-line">
+            <p className="font-display text-sm font-bold uppercase tracking-wide text-brand">{f.kicker}</p>
+            <h3 className="mt-1 font-display text-3xl">{f.title}</h3>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {f.stats.map((s) => (
                 <FrontStat key={s.value + s.label} s={s} />
               ))}
             </div>
             <p className="mt-5 text-sm leading-relaxed">
-              <span className="font-semibold text-sage">Cómo lo hace Maru: </span>
+              <span className="font-semibold text-brand">Cómo lo hace Maru: </span>
               {f.how}
             </p>
           </article>
         ))}
       </Reveal>
 
-      <div id="fuentes" className="mt-8 scroll-mt-24 rounded-[28px] bg-sand/60 p-6 sm:p-8">
-        <h3 className="text-sm font-semibold">Fuentes</h3>
+      <div id="fuentes" className="mt-6 scroll-mt-24 rounded-3xl bg-black/[0.03] p-6 sm:p-8">
+        <h3 className="font-display text-sm font-bold uppercase tracking-wide">Fuentes</h3>
         <ol className="mt-3 space-y-2.5 text-xs leading-relaxed text-muted">
           {SOURCES.map((s) => (
-            <li key={s.id} id={`fuente-${s.id}`} className="scroll-mt-24 flex gap-2">
-              <span className="font-semibold text-celeste-dark">{s.id}.</span>
+            <li key={s.id} id={`fuente-${s.id}`} className="flex scroll-mt-24 gap-2">
+              <span className="font-semibold text-ink">{s.id}.</span>
               <span>
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-ink underline decoration-line underline-offset-2 hover:decoration-celeste">
+                <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-ink underline decoration-line underline-offset-2 hover:decoration-ink">
                   {s.name}
                 </a>
                 . {s.detail}
@@ -108,8 +113,7 @@ export function Evidence() {
           ))}
         </ol>
         <p className="mt-4 text-xs leading-relaxed text-muted">
-          Son estudios de terceros sobre postulaciones en general, no resultados medidos de Maru. Cada búsqueda es distinta: Maru mejora tus chances, no
-          garantiza un resultado.
+          Son estudios de terceros sobre postulaciones en general, no resultados medidos de Maru. Cada búsqueda es distinta: Maru mejora tus chances, no garantiza un resultado.
         </p>
       </div>
     </section>

@@ -8,7 +8,7 @@ function Dots({ n }: { n: number }) {
   return (
     <span className="flex gap-1" aria-label={`${n} de 5`}>
       {[1, 2, 3, 4, 5].map((i) => (
-        <span key={i} className={`h-2.5 w-2.5 rounded-full ${i <= Math.round(n) ? "bg-celeste" : "bg-line"}`} />
+        <span key={i} className={`h-2.5 w-2.5 rounded-full ${i <= Math.round(n) ? "bg-brand" : "bg-line"}`} />
       ))}
     </span>
   );
@@ -51,8 +51,8 @@ export default function Report({ informe, historial }: { informe: Informe; histo
           </text>
         </svg>
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu informe</p>
-          <h1 className="mt-1 font-serif text-3xl leading-tight tracking-tight">{informe.veredicto}</h1>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu informe</p>
+          <h1 className="mt-1 font-display text-3xl leading-tight tracking-tight">{informe.veredicto}</h1>
           <p className="mt-2 leading-relaxed text-muted">{informe.resumen}</p>
         </div>
       </section>
@@ -67,7 +67,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
           </ul>
         </div>
         <div className="rounded-3xl bg-paper p-5">
-          <h2 className="text-sm font-semibold text-celeste-dark">Para trabajar</h2>
+          <h2 className="text-sm font-semibold text-brand-dark">Para trabajar</h2>
           <ul className="mt-2 space-y-1.5 text-sm leading-relaxed">
             {informe.a_mejorar.map((f) => (
               <li key={f}>○ {f}</li>
@@ -77,7 +77,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
       </div>
 
       <section>
-        <h2 className="font-serif text-2xl tracking-tight">Respuesta por respuesta</h2>
+        <h2 className="font-display text-2xl tracking-tight">Respuesta por respuesta</h2>
         <div className="mt-4 space-y-3">
           {informe.respuestas.map((x, i) => {
             const mine = historial.find((h) => h.pregunta === x.pregunta)?.respuesta ?? historial[i]?.respuesta;
@@ -86,7 +86,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
               <div key={i} className="overflow-hidden rounded-3xl border border-line bg-paper">
                 <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="flex w-full items-center justify-between gap-4 p-5 text-left">
                   <span className="font-medium">
-                    <span className="mr-2 font-serif text-celeste">{i + 1}.</span>
+                    <span className="mr-2 font-display text-brand">{i + 1}.</span>
                     {x.pregunta}
                   </span>
                   <Dots n={x.puntaje} />
@@ -102,7 +102,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
                       <b className="text-sage">Funcionó:</b> {x.funciono}
                     </p>
                     <p>
-                      <b className="text-celeste-dark">Mejorar:</b> {x.mejorar}
+                      <b className="text-brand-dark">Mejorar:</b> {x.mejorar}
                     </p>
                     <div className="rounded-2xl bg-cream px-4 py-3">
                       <div className="flex items-start justify-between gap-3">

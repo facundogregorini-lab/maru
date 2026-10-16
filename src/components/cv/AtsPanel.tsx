@@ -46,7 +46,7 @@ export default function AtsPanel({ report }: { report: AtsReport }) {
           </span>
         ))}
         {report.missing.map((k) => (
-          <span key={k} className="rounded-full border border-dashed border-celeste/40 px-2.5 py-1 text-xs text-celeste-dark">
+          <span key={k} className="rounded-full border border-dashed border-brand/40 px-2.5 py-1 text-xs text-brand-dark">
             {k}
           </span>
         ))}

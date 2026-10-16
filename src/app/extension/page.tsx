@@ -14,16 +14,15 @@ const ZIP_URL = "/extension/maru-extension.zip";
 export default function ExtensionPage() {
   return (
     <SiteShell tagline="Extensión para Chrome">
-      <section className="relative isolate overflow-hidden rounded-[32px] bg-paper px-6 py-12 ring-1 ring-line/70 sm:px-12 sm:py-16">
-        <div aria-hidden className="aurora -z-10" />
+      <section className="relative overflow-hidden rounded-[32px] bg-sand px-6 py-12 sm:px-12 sm:py-16">
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr] [&>*]:min-w-0">
           <div>
-            <p className="animate-rise inline-flex items-center gap-2 rounded-full bg-paper/80 px-3 py-1 text-sm font-medium text-celeste-dark ring-1 ring-celeste/15">
-              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-celeste" />
-              Extensión para Chrome
-            </p>
-            <h1 className="animate-rise mt-5 font-serif text-[2.6rem] leading-[1.02] [animation-delay:90ms] sm:text-6xl">
-              Completá postulaciones con <em className="shine-text -mr-[0.06em] pr-[0.06em]">un clic</em>.
+            <p className="animate-rise font-display text-sm font-bold uppercase tracking-[0.12em] text-brand">Extensión para Chrome</p>
+            <h1 className="animate-rise mt-3 font-display [animation-delay:90ms]">
+              <span className="block text-3xl font-light sm:text-4xl">Completá postulaciones</span>
+              <span className="block text-5xl font-bold leading-[1.02] sm:text-7xl">
+                con <span className="marker">un clic</span>
+              </span>
             </h1>
             <p className="animate-rise mt-5 max-w-xl text-lg leading-relaxed text-muted [animation-delay:180ms]">
               Cargás tu CV una vez y Maru completa los formularios de postulación por vos. Vos revisás y enviás: nunca manda nada sola.
@@ -32,7 +31,7 @@ export default function ExtensionPage() {
               <a
                 href={ZIP_URL}
                 download
-                className="beam press group mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-7 py-4 font-medium text-paper shadow-[0_18px_40px_-18px_rgba(14,27,44,0.7)] hover:bg-celeste-dark"
+                className="press group mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-10 py-4 font-display text-lg font-bold uppercase tracking-wide text-white hover:bg-black"
               >
                 Descargar la extensión
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-y-0.5">
@@ -49,8 +48,8 @@ export default function ExtensionPage() {
       </section>
 
       <section aria-labelledby="instalar-t" className="mt-20">
-        <h2 id="instalar-t" className="font-serif text-4xl sm:text-5xl">
-          Instalala en <em className="text-celeste">1 minuto</em>
+        <h2 id="instalar-t" className="font-display text-4xl font-light uppercase sm:text-5xl">
+          Instalala en <strong className="font-bold">1 minuto</strong>
         </h2>
         <Reveal as="div">
           <ol className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -76,8 +75,8 @@ export default function ExtensionPage() {
         </Reveal>
       </section>
 
-      <section aria-labelledby="usar-t" className="mt-16 rounded-[32px] bg-[linear-gradient(160deg,var(--color-celeste-soft),var(--color-paper)_60%)] p-6 ring-1 ring-celeste/15 sm:p-10">
-        <h2 id="usar-t" className="font-serif text-4xl">
+      <section aria-labelledby="usar-t" className="mt-16 rounded-[32px] bg-sand p-6 sm:p-10">
+        <h2 id="usar-t" className="font-display text-4xl">
           Cómo se usa
         </h2>
         <ul className="mt-5 space-y-3 text-lg leading-relaxed text-muted">
@@ -100,7 +99,7 @@ export default function ExtensionPage() {
 function Step({ n, children }: { n: number; children: React.ReactNode }) {
   return (
     <li data-reveal style={{ "--i": n - 1 } as React.CSSProperties} className="flex gap-4 rounded-[24px] bg-paper p-5 ring-1 ring-line/70">
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-celeste-soft font-serif text-xl italic text-celeste-dark">{n}</span>
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-display text-lg font-bold text-white">{n}</span>
       <div className="leading-relaxed">{children}</div>
     </li>
   );

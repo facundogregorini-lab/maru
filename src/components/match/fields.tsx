@@ -16,7 +16,7 @@ export function MultiChips<T extends string>({ value, options, onChange }: { val
             type="button"
             aria-pressed={on}
             onClick={() => onChange(on ? value.filter((x) => x !== v) : [...value, v])}
-            className={`rounded-full border px-3.5 py-1.5 text-sm transition ${on ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"}`}
+            className={`rounded-full border px-3.5 py-1.5 text-sm transition ${on ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"}`}
           >
             {label}
           </button>

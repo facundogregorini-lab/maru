@@ -103,7 +103,7 @@ export default function VideoFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Video de presentación" title={<>Un minuto para que <em className="text-celeste">te conozcan</em>.</>}>
+          <SectionHero kicker="Video de presentación" title={<>Un minuto para que <em className="text-brand">te conozcan</em>.</>}>
             Maru te escribe el guion a medida, lo leés en un teleprompter mientras grabás con tu cámara y te da feedback de cada toma: ritmo, mirada, luz y
             contenido.
           </SectionHero>
@@ -156,8 +156,8 @@ export default function VideoFlow() {
 
       {stage === "guion" && guion && (
         <div className="animate-rise">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu guion para</p>
-          <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">{guion.titulo}</h1>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu guion para</p>
+          <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">{guion.titulo}</h1>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
             <div className="space-y-3">
@@ -166,8 +166,8 @@ export default function VideoFlow() {
                 return (
                   <div key={i} className="rounded-3xl border border-line bg-paper p-5">
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="font-serif text-lg">
-                        <span className="mr-2 text-celeste">{i + 1}.</span>
+                      <h2 className="font-display text-lg">
+                        <span className="mr-2 text-brand">{i + 1}.</span>
                         {b.nombre}
                       </h2>
                       <span className="text-xs text-muted">~{secs} s</span>
@@ -176,7 +176,7 @@ export default function VideoFlow() {
                       value={b.texto}
                       onChange={(e) => setBloque(i, { texto: e.target.value })}
                       rows={Math.max(2, Math.ceil(b.texto.length / 70))}
-                      className="mt-2 w-full resize-y rounded-xl border border-transparent bg-cream px-3 py-2 text-[15px] leading-relaxed outline-none transition hover:border-line focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
+                      className="mt-2 w-full resize-y rounded-xl border border-transparent bg-cream px-3 py-2 text-[15px] leading-relaxed outline-none transition hover:border-line focus:border-brand focus:ring-4 focus:ring-brand-soft"
                       aria-label={`Texto del bloque ${b.nombre}`}
                     />
                     <p className="mt-2 text-xs text-sage">
@@ -190,12 +190,12 @@ export default function VideoFlow() {
             <aside className="space-y-4">
               <div className="rounded-3xl bg-paper p-5 lg:sticky lg:top-4">
                 <p className="text-xs text-muted">Duración estimada</p>
-                <p className="font-serif text-4xl text-celeste">
+                <p className="font-display text-4xl text-brand">
                   {estSeconds}s <span className="text-base text-muted">/ {opciones.duracion}s</span>
                 </p>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-sand">
                   <div
-                    className={`h-full ${estSeconds > opciones.duracion * 1.15 ? "bg-celeste" : "bg-sage"}`}
+                    className={`h-full ${estSeconds > opciones.duracion * 1.15 ? "bg-brand" : "bg-sage"}`}
                     style={{ width: `${Math.min(100, (estSeconds / opciones.duracion) * 100)}%` }}
                   />
                 </div>
@@ -205,7 +205,7 @@ export default function VideoFlow() {
                 <button
                   type="button"
                   onClick={() => setStage("estudio")}
-                  className="mt-4 w-full rounded-full bg-celeste px-4 py-3 text-sm font-medium text-paper transition hover:bg-celeste-dark"
+                  className="mt-4 w-full rounded-full bg-brand px-4 py-3 text-sm font-medium text-paper transition hover:bg-brand-dark"
                 >
                   ● Grabar con teleprompter
                 </button>
@@ -237,7 +237,7 @@ export default function VideoFlow() {
             <button type="button" onClick={() => setStage("inicio")} className="px-5 py-3 text-sm text-muted hover:text-ink">
               ← Cambiar datos y reescribir
             </button>
-            <button type="button" onClick={restart} className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-celeste hover:text-celeste">
+            <button type="button" onClick={restart} className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-brand hover:text-brand">
               Empezar otro video
             </button>
           </div>
@@ -248,8 +248,8 @@ export default function VideoFlow() {
         <div className="animate-rise">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Estudio</p>
-              <h1 className="mt-1 font-serif text-3xl tracking-tight">{guion.titulo}</h1>
+              <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Estudio</p>
+              <h1 className="mt-1 font-display text-3xl tracking-tight">{guion.titulo}</h1>
             </div>
             <button type="button" onClick={() => setStage("guion")} className="text-sm text-muted hover:text-ink">
               ← Volver al guion

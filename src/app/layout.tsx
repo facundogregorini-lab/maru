@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Instrument_Serif } from "next/font/google";
+import { Inter, Titillium_Web } from "next/font/google";
 // Fuentes de los templates de CV (las mismas que se embeben en el PDF).
 import "@fontsource/inter/300.css";
 import "@fontsource/inter/400.css";
@@ -14,8 +14,8 @@ import "@fontsource/source-sans-3/700.css";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const titillium = Titillium_Web({ subsets: ["latin"], weight: ["300", "400", "600", "700"], variable: "--font-titillium" });
 
 export const metadata: Metadata = {
   title: "Maru Coach · Encontrá tu trabajo perfecto con IA",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     // suppressHydrationWarning: el script de abajo agrega la clase "js" antes de que React hidrate.
-    <html lang="es" className={`${geist.variable} ${instrument.variable}`} suppressHydrationWarning>
+    <html lang="es" className={`${inter.variable} ${titillium.variable}`} suppressHydrationWarning>
       <head>
         {/* Las animaciones de entrada sólo esconden contenido si hay JavaScript para mostrarlo. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

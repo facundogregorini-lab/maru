@@ -39,7 +39,7 @@ export function Ctl({ children, onClick, label, busy }: { children: ReactNode; o
       title={label}
       aria-label={label}
       disabled={busy}
-      className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[13px] text-muted transition hover:bg-celeste-soft hover:text-celeste-dark disabled:opacity-60"
+      className="grid h-7 min-w-7 place-items-center rounded-md px-1.5 text-[13px] text-muted transition hover:bg-brand-soft hover:text-brand-dark disabled:opacity-60"
     >
       {children}
     </button>
@@ -59,7 +59,7 @@ export function AddButton({ children, onClick }: { children: ReactNode; onClick:
     <button
       type="button"
       onClick={onClick}
-      className="mt-1.5 rounded-full border border-dashed [@media(hover:none)]:hidden [@media(hover:none)]:group-focus-within/section:inline-block border-line px-3 py-1 text-[11.5px] font-sans text-muted transition hover:border-celeste hover:text-celeste"
+      className="mt-1.5 rounded-full border border-dashed [@media(hover:none)]:hidden [@media(hover:none)]:group-focus-within/section:inline-block border-line px-3 py-1 text-[11.5px] font-sans text-muted transition hover:border-brand hover:text-brand"
     >
       {children}
     </button>

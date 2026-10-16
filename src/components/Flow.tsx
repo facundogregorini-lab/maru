@@ -203,7 +203,7 @@ export default function Flow() {
                 placeholder="https://…"
                 value={jobUrl}
                 onChange={(e) => setJobUrl(e.target.value)}
-                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
+                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand-soft"
               />
               {showJobText ? (
                 <textarea
@@ -212,10 +212,10 @@ export default function Flow() {
                   placeholder="Pegá acá el texto completo de la vacante (y, si los ves, los campos del formulario)."
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
-                  className="mt-3 w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
+                  className="mt-3 w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition focus:border-brand focus:ring-4 focus:ring-brand-soft"
                 />
               ) : (
-                <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-celeste">
+                <button type="button" onClick={() => setShowJobText(true)} className="mt-2 text-sm text-muted underline decoration-line underline-offset-4 hover:text-brand">
                   ¿No tenés link? Pegá el texto de la vacante
                 </button>
               )}
@@ -234,7 +234,7 @@ export default function Flow() {
                 placeholder="Me encanta que… Creo que encajo porque… Lo que más me entusiasma es…"
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base leading-relaxed outline-none transition placeholder:text-muted/60 focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
+                className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-base leading-relaxed outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand-soft"
               />
               <div className="mt-3">
                 <VoiceButton onText={(t) => setFeedback((f) => (f ? `${f.trimEnd()} ${t}` : t))} />
@@ -289,7 +289,7 @@ export default function Flow() {
 
 function Hero() {
   return (
-    <SectionHero kicker="Encontraste una vacante que te encanta" title={<>Postulate con un CV pensado <em className="text-celeste">para ese rol</em>.</>}>
+    <SectionHero kicker="Encontraste una vacante que te encanta" title={<>Postulate con un CV pensado <em className="text-brand">para ese rol</em>.</>}>
       Subí tu LinkedIn, contanos qué te entusiasma y respondé un par de preguntas cortas: Maru te devuelve tu CV optimizado para ATS y para las personas que lo
       van a leer, más una sugerencia para cada campo del formulario.
     </SectionHero>
@@ -315,8 +315,8 @@ function Results({
 
   return (
     <div className="animate-rise">
-      <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu postulación para</p>
-      <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">
+      <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu postulación para</p>
+      <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">
         {analysis.puesto} <span className="text-muted">· {analysis.empresa}</span>
       </h1>
 
@@ -345,7 +345,7 @@ function Results({
           {generation.recomendaciones_formulario.map((f, i) => (
             <div key={i} className="rounded-3xl border border-line bg-paper p-5 sm:p-7">
               <div className="flex items-start justify-between gap-4">
-                <h3 className="font-serif text-xl tracking-tight">{f.campo}</h3>
+                <h3 className="font-display text-xl tracking-tight">{f.campo}</h3>
                 <CopyButton text={f.respuesta_sugerida} />
               </div>
               <p className="mt-3 whitespace-pre-line rounded-2xl bg-cream px-4 py-3 leading-relaxed">{f.respuesta_sugerida}</p>
@@ -371,7 +371,7 @@ function Results({
         <button
           type="button"
           onClick={onRestart}
-          className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-celeste hover:text-celeste"
+          className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-brand hover:text-brand"
         >
           Postularme a otra vacante
         </button>

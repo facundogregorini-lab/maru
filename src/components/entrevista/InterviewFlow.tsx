@@ -129,7 +129,7 @@ export default function InterviewFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Entrená para tu entrevista" title={<>Practicá la entrevista <em className="text-celeste">antes</em> de la entrevista.</>}>
+          <SectionHero kicker="Entrená para tu entrevista" title={<>Practicá la entrevista <em className="text-brand">antes</em> de la entrevista.</>}>
             Una entrevistadora con IA te hace las preguntas en voz alta, como en una videollamada, y repregunta si tu respuesta queda corta. Al final te
             llevás un informe con puntaje, qué mejorar y una respuesta más fuerte para cada pregunta.
           </SectionHero>
@@ -187,7 +187,7 @@ export default function InterviewFlow() {
           ) : (
             <div className="rounded-3xl bg-paper p-6 text-center">
               <p>No pudimos armar tu informe.</p>
-              <button type="button" onClick={() => void evaluate(historial)} className="mt-4 rounded-full bg-celeste px-6 py-3 font-medium text-paper hover:bg-celeste-dark">
+              <button type="button" onClick={() => void evaluate(historial)} className="mt-4 rounded-full bg-brand px-6 py-3 font-medium text-paper hover:bg-brand-dark">
                 Intentar de nuevo
               </button>
             </div>
@@ -203,7 +203,7 @@ export default function InterviewFlow() {
                 setInforme(null);
                 setStage("llamada");
               }}
-              className="rounded-full bg-celeste px-6 py-3 text-sm font-medium text-paper transition hover:bg-celeste-dark"
+              className="rounded-full bg-brand px-6 py-3 text-sm font-medium text-paper transition hover:bg-brand-dark"
             >
               Practicar de nuevo con las mismas preguntas
             </button>

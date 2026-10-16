@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { MaruHead } from "@/components/maru/PixelMaru";
 
 /**
  * Demo animada de la extensión: un formulario de postulación que se completa solo,
@@ -59,7 +60,7 @@ export default function AutofillDemo() {
 
   return (
     <div ref={ref} className="relative" aria-label="Demostración: la extensión completa un formulario de postulación" role="img">
-      <div aria-hidden className="absolute -inset-6 -z-10 rounded-[40px] bg-[radial-gradient(circle_at_70%_30%,rgba(88,196,211,0.18),transparent_60%)]" />
+      <div aria-hidden className="absolute -inset-6 -z-10 rounded-[40px] bg-[radial-gradient(circle_at_70%_30%,rgba(0,240,160,0.16),transparent_60%)]" />
       <div className="overflow-hidden rounded-2xl bg-paper shadow-[0_40px_80px_-40px_rgba(21,82,126,0.5)] ring-1 ring-line">
         {/* Barra del navegador */}
         <div className="flex items-center gap-3 border-b border-line bg-sand/70 px-4 py-2.5">
@@ -70,9 +71,9 @@ export default function AutofillDemo() {
           </div>
           <span className="min-w-0 flex-1 truncate rounded-md bg-paper px-2.5 py-1 text-[11px] text-muted ring-1 ring-line/70">jobs.lever.co/tucan/senior-frontend/apply</span>
           <span
-            className={`grid h-6 w-6 place-items-center rounded-md bg-ink font-serif text-xs italic text-paper transition-transform duration-300 ${step === -1 ? "scale-110 ring-4 ring-celeste/30" : ""}`}
+            className={`grid h-6 w-6 place-items-center rounded-md bg-brand-soft transition-transform duration-300 ${step === -1 ? "scale-125 ring-4 ring-neon/50" : ""}`}
           >
-            m
+            <MaruHead size={16} />
           </span>
         </div>
 
@@ -117,7 +118,9 @@ export default function AutofillDemo() {
           done ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
         }`}
       >
-        <span className="grid h-5 w-5 shrink-0 place-items-center rounded-md bg-ink font-serif text-[10px] italic text-paper">m</span>
+        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand-soft">
+          <MaruHead size={16} />
+        </span>
         <span>
           <strong className="font-semibold">Listo: 5 campos.</strong> Revisá el amarillo y enviá cuando quieras.
         </span>
