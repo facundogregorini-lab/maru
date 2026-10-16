@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import BillingPanel from "@/components/billing/BillingPanel";
 import { landingData } from "@/lib/landing";
-import { BILLING_ENABLED, FREE_LIMITS } from "@/lib/plans";
+import { FREE_LIMITS } from "@/lib/plans";
 
 export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Elegí tu plan de Maru: semanal, mensual o trimestral. CV a medida, cartas, entrevistas y videos sin esperar al día siguiente." };
 // Los números del inventario se regeneran cada hora, como en la home.
@@ -47,7 +47,6 @@ export default async function PreciosPage() {
       <p className="text-center text-sm font-bold uppercase tracking-wider text-ink/60">Tu próxima oportunidad empieza con vos</p>
       <h1 id="planes-titulo" className="mt-4 text-center font-display text-4xl font-bold uppercase leading-tight sm:text-6xl">Postulate sin esperar<br />a mañana.</h1>
       <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-ink/70">El plan gratis te da pedidos cada día. Con un plan de Maru armás un CV y una carta para cada búsqueda que te interesa, y practicás todas las veces que quieras.</p>
-      {!BILLING_ENABLED && <p className="mx-auto mt-6 max-w-2xl rounded-2xl bg-sand p-4 text-center leading-relaxed">Los planes todavía no están a la venta: hoy podés usar todas las herramientas gratis. Los precios y límites de abajo son los del lanzamiento.</p>}
 
       <div className="mt-12"><BillingPanel /></div>
 

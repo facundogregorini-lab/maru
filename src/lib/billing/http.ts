@@ -1,6 +1,6 @@
 import { sessionEmail } from "../auth";
-import { BILLING_ENABLED, type UsageKind } from "../plans";
-import { allowUsage, hasPaidPlan } from "./server";
+import type { UsageKind } from "../plans";
+import { allowUsage, billingReady, hasPaidPlan } from "./server";
 
 export const billingJson = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 export function billingSession(req: Request): string | null {
@@ -14,7 +14,7 @@ export function billingSession(req: Request): string | null {
 }
 export const loginRequired = () => billingJson({ error: "Ingresá con tu email desde el menú para continuar.", code: "AUTH_REQUIRED" }, 401);
 export async function planGuard(req: Request, kind?: UsageKind): Promise<Response | null> {
-  if (!BILLING_ENABLED) return null;
+  if (!billingReady()) return null;
   const email = billingSession(req);
   if (!email) return loginRequired();
   if (!kind) return null;
@@ -25,7 +25,7 @@ export async function planGuard(req: Request, kind?: UsageKind): Promise<Respons
 }
 /** Funciones exclusivas del plan: true con cobro apagado o plan activo. Si no se puede verificar, se trata como gratis. */
 export async function paidFeatures(req: Request): Promise<boolean> {
-  if (!BILLING_ENABLED) return true;
+  if (!billingReady()) return true;
   const email = billingSession(req);
   if (!email) return false;
   try { return await hasPaidPlan(email); } catch { return false; }

@@ -75,6 +75,7 @@ export default function BillingPanel() {
         <p className="font-semibold">Tu plan {status.tier ? PLANS[status.tier].nombre.toLowerCase() : ""} está activo hasta el {status.paidThrough && new Date(status.paidThrough).toLocaleDateString("es-AR")}.</p>
         {status.status === "cancelled" ? <p className="mt-2 text-sm">La renovación está cancelada.</p> : <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm font-semibold disabled:opacity-50">Cancelar renovación</button>}
       </>}
+      {status && !status.enabled && <p className="rounded-2xl bg-sand p-4 text-sm leading-relaxed">Los planes todavía no están a la venta: hoy podés usar todas las herramientas gratis.</p>}
       {pending && <>
         <p className="text-sm">{status?.status === "authorized" ? "Estamos esperando que Mercado Pago confirme tu pago." : "Tenés un pago iniciado sin terminar."}</p>
         <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm disabled:opacity-50">Cancelar suscripción pendiente</button>

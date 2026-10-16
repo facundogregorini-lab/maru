@@ -1,5 +1,12 @@
-/** El modo pago se habilita explícitamente después de validar la cuenta de Mercado Pago. */
+/** Sólo para textos de páginas estáticas y del navegador: se fija al compilar. */
 export const BILLING_ENABLED = process.env.NEXT_PUBLIC_BILLING_ENABLED === "true";
+
+// La clave armada en tiempo de ejecución evita que Next la reemplace al compilar.
+const flagValue = () => (process.env[["BILLING", "ENABLED"].join("_")] ?? process.env[["NEXT_PUBLIC", "BILLING", "ENABLED"].join("_")] ?? "").trim();
+/** El servidor lee el modo pago en cada pedido: cambiar la variable no exige recompilar (sí un redeploy para que Vercel la cargue). */
+export const billingEnabled = () => flagValue().toLowerCase() === "true";
+/** Diagnóstico sin valores: si la bandera falta o tiene otro texto. */
+export const billingFlagState = (): "true" | "missing" | "other" => (billingEnabled() ? "true" : flagValue() ? "other" : "missing");
 
 export type PlanId = "semanal" | "mensual" | "trimestral";
 export type Plan = {

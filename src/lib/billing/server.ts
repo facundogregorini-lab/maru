@@ -1,14 +1,24 @@
 import { randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter } from "../db";
 import { userId } from "../sync/server";
-import { BILLING_ENABLED, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
+import { billingEnabled, billingFlagState, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
 
 /** `plan` falta en suscripciones creadas antes de los tres planes: eran mensuales. */
 export type Subscription = { id: string; reference: string; status: string; plan?: PlanId; checkoutUrl?: string; paidThrough?: number; paymentId?: number; paymentAt?: number; updatedAt: number };
 const key = (email: string) => `maru:billing:${userId(email)}`;
-export const billingReady = () => BILLING_ENABLED && dbConfigured() && !!process.env.MERCADOPAGO_ACCESS_TOKEN && !!process.env.MERCADOPAGO_WEBHOOK_SECRET;
+export const billingReady = () => billingEnabled() && dbConfigured() && !!process.env.MERCADOPAGO_ACCESS_TOKEN && !!process.env.MERCADOPAGO_WEBHOOK_SECRET;
+/** Qué falta para cobrar, sólo con nombres (nunca valores), para diagnosticar desde /api/billing/status. */
+export function billingMissing(): string[] {
+  const flag = billingFlagState();
+  return [
+    flag === "missing" ? "NEXT_PUBLIC_BILLING_ENABLED" : flag === "other" ? "NEXT_PUBLIC_BILLING_ENABLED (no es true)" : "",
+    process.env.MERCADOPAGO_ACCESS_TOKEN ? "" : "MERCADOPAGO_ACCESS_TOKEN",
+    process.env.MERCADOPAGO_WEBHOOK_SECRET ? "" : "MERCADOPAGO_WEBHOOK_SECRET",
+    dbConfigured() ? "" : "Redis (KV_REST_API_URL / KV_REST_API_TOKEN o REDIS_URL)",
+  ].filter(Boolean);
+}
 export const readSubscription = async (email: string) => (await getManyJson<Subscription>([key(email)]))[0];
 export const hasPaidAccess = (sub: Subscription | null, now = Date.now()) => !!sub?.paidThrough && sub.paidThrough > now;
 export const subscriptionPlan = (sub: Subscription | null): PlanId => sub?.plan ?? "mensual";
@@ -124,12 +134,12 @@ export function usageWindow(window: "dia" | "semana", now = Date.now()): string 
   return `${window === "semana" ? "s" : "d"}${local.toISOString().slice(0, 10)}`;
 }
 export async function hasPaidPlan(email: string): Promise<boolean> {
-  if (!BILLING_ENABLED) return true;
-  if (!billingReady()) throw new Error("No pudimos verificar tu plan.");
+  // Con la bandera encendida pero sin credenciales o base, Maru sigue como en el lanzamiento en lugar de cortar la IA.
+  if (!billingReady()) return true;
   return hasPaidAccess(await readSubscription(email));
 }
 export async function allowUsage(email: string, kind: UsageKind, now = Date.now()): Promise<boolean> {
-  if (!BILLING_ENABLED) return true;
+  if (!billingReady()) return true;
   const paid = await hasPaidPlan(email);
   const { limit, window } = paid ? { limit: PAID_DAILY_LIMIT, window: "dia" as const } : FREE_LIMITS[kind];
   const ttl = (window === "semana" ? 8 : 2) * 86400_000;
