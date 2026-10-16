@@ -21,7 +21,9 @@ Conclusión: **para generalistas el problema principal es de adquisición (H1)**
 - **E1** si el trial de Fantastic sigue vigente: se corre desde el panel con sesión real. Desde los entornos de Claude en la nube no hay red ni claves de producción.
 - **E2** en paralelo: sumar empleadores argentinos generalistas.
 
-**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md). ### Avisos: qué falta (actualizado 16/10 noche, para seguir con otra IA)
+**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md).
+
+### Avisos: qué falta (actualizado 16/10 noche, para seguir con otra IA)
 
 Hecho:
 - E0 (línea de base).
@@ -43,7 +45,15 @@ Detalle operativo y saldos en [IMPORTACIONES.md](IMPORTACIONES.md). Pendiente, e
 
 Seguridad: las claves se cargaron como secrets de GitHub Actions. Si las que se pegaron en el chat del 16/10 no se rotaron, rotarlas y actualizar los secrets y Vercel. El repo es público: nunca pasarlas como inputs ni en archivos.
 
-El dueño cargó los secrets y el 16/10 a la noche se corrió la primera importación: +88 Google Jobs, +272 Fantastic, +1.092 Apify (US$2,73 reales). **Elegibles desde Argentina: 909 → 2.229 grupos; empleadores 90 → 847.** Medición en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md). Pendientes: segundo corte de Fantastic con los ~177 créditos que quedan antes del 23/10, reintentar Indeed (arreglo de campos), repetir Google Jobs cada mes con el plan gratuito y sumar al directorio los empleadores de `providers-discoveries.json` con ATS admitido.
+Resultado de la primera importación (16/10, noche), con los secrets cargados:
+- Google Jobs: +88.
+- Fantastic: +272.
+- Apify: +1.305, de los cuales Indeed aportó 213 después del arreglo de campos. Costó unos US$2,8 reales.
+- La sync manual sumó 360 avisos de 6 empleadores descubiertos.
+
+**Elegibles desde Argentina: 909 grupos (E0) → 2.722 oportunidades; empleadores con elegibles 90 → 847.** Medición en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md).
+
+La PR #10 (borrador "Login: Continuar con Google + magic link") sigue abierta, pero `main` ya tiene esa funcionalidad por #22/#23. Es del dueño: cerrarla si ya no hace falta.
 
 Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
