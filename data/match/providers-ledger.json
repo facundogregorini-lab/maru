@@ -195,6 +195,157 @@
       "rows": 10,
       "consumed": 1,
       "quota": {}
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-ats-count",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina"
+      },
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "jobs-this-request": 0,
+        "jobs-remaining": 450,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50,
+        "count": 953
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "administrativo OR administrativa OR contable OR contador OR finanzas OR tesorería OR \"recursos humanos\" OR recruiter OR \"talent acquisition\" OR facturación",
+        "limit": "60",
+        "description_format": "text"
+      },
+      "rows": 12,
+      "consumed": 12,
+      "quota": {
+        "jobs-this-request": 12,
+        "jobs-remaining": 438,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "administrativo OR administrativa OR contable OR contador OR finanzas OR tesorería OR \"recursos humanos\" OR recruiter OR \"talent acquisition\" OR facturación",
+        "limit": "60",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 55,
+      "consumed": 55,
+      "quota": {
+        "jobs-this-request": 55,
+        "jobs-remaining": 395,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "comercial OR ventas OR vendedor OR \"account executive\" OR operaciones OR logística OR \"supply chain\" OR depósito OR compras OR \"atención al cliente\"",
+        "limit": "60",
+        "description_format": "text"
+      },
+      "rows": 26,
+      "consumed": 26,
+      "quota": {
+        "jobs-this-request": 26,
+        "jobs-remaining": 424,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "comercial OR ventas OR vendedor OR \"account executive\" OR operaciones OR logística OR \"supply chain\" OR depósito OR compras OR \"atención al cliente\"",
+        "limit": "60",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 60,
+      "consumed": 60,
+      "quota": {
+        "jobs-this-request": 60,
+        "jobs-remaining": 390,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "developer OR desarrollador OR \"software engineer\" OR \"data analyst\" OR \"analista de datos\" OR QA OR \"product manager\"",
+        "limit": "60",
+        "description_format": "text"
+      },
+      "rows": 60,
+      "consumed": 60,
+      "quota": {
+        "jobs-this-request": 60,
+        "jobs-remaining": 390,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-16T22:44:34.896Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "developer OR desarrollador OR \"software engineer\" OR \"data analyst\" OR \"analista de datos\" OR QA OR \"product manager\"",
+        "limit": "60",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 60,
+      "consumed": 60,
+      "quota": {
+        "jobs-this-request": 60,
+        "jobs-remaining": 390,
+        "jobs-limit": 500,
+        "requests-remaining": 35,
+        "requests-limit": 50
+      }
     }
   ]
 }
