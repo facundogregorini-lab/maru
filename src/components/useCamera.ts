@@ -26,8 +26,12 @@ export function useCamera(audio: boolean) {
   const attach = useCallback(() => {
     const video = nodeRef.current;
     if (!video || !streamRef.current) return;
-    video.srcObject = streamRef.current;
-    void video.play().catch(() => setError("Tocá la vista previa para ver la cámara."));
+    const stream = streamRef.current;
+    const request = requestRef.current;
+    video.srcObject = stream;
+    void video.play().catch(() => {
+      if (request === requestRef.current && video.srcObject === stream) setError("Tocá la vista previa para ver la cámara.");
+    });
   }, []);
   const videoRef = useCallback((node: HTMLVideoElement | null) => {
     nodeRef.current = node;

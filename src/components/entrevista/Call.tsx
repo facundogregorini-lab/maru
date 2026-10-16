@@ -165,7 +165,7 @@ export default function Call({
             </label>
           </div>
           {media.pending && <p role="status" className="mt-3 text-sm text-muted">Esperando permiso de cámara…</p>}
-          {camera && <label className="mt-3 block text-sm">Cámara <select aria-label="Cámara" value={media.cameraId} onChange={(e) => void media.start(e.target.value)} className="w-full rounded-xl border border-line p-2">
+          {camera && <label className="mt-3 block text-sm">Cámara <select aria-label="Cámara" disabled={media.pending} value={media.cameraId} onChange={(e) => void media.start(e.target.value)} className="w-full rounded-xl border border-line p-2">
             {media.devices.filter((d) => d.kind === "videoinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Cámara ${i + 1}`}</option>)}
           </select></label>}
           {media.error && <p role="alert" className="mt-3 text-sm text-danger-dark">{media.error} Podés seguir sin cámara.</p>}

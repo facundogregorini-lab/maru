@@ -299,11 +299,12 @@ export default function Recorder({ script, target, lang, filename }: { script: s
         )}
       </div>
 
+      {phase === "preview" && camera.pending && <p role="status" className="text-sm text-muted">Conectando cámara y micrófono…</p>}
       {phase === "preview" && <div className="flex flex-wrap gap-3 text-sm">
-        <label>Cámara <select aria-label="Cámara" value={camera.cameraId} onChange={(e) => void camera.start(e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
+        <label>Cámara <select aria-label="Cámara" disabled={camera.pending} value={camera.cameraId} onChange={(e) => void camera.start(e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
           {camera.devices.filter((d) => d.kind === "videoinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Cámara ${i + 1}`}</option>)}
         </select></label>
-        <label>Micrófono <select aria-label="Micrófono" value={camera.microphoneId} onChange={(e) => void camera.start(camera.cameraId, e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
+        <label>Micrófono <select aria-label="Micrófono" disabled={camera.pending} value={camera.microphoneId} onChange={(e) => void camera.start(camera.cameraId, e.target.value)} className="max-w-full rounded-xl border border-line bg-paper p-2">
           {camera.devices.filter((d) => d.kind === "audioinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Micrófono ${i + 1}`}</option>)}
         </select></label>
         <button type="button" onClick={() => { camera.stop(); setPhase("off"); }}>Apagar cámara</button>
