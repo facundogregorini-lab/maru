@@ -11,7 +11,8 @@ import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
 import CvSourceField, { useCvInput } from "./CvSourceField";
 import Questions from "./Questions";
-import { ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, post } from "./ui";
+import { ProductHero, ProductMore, ToolHeading } from "./product/ProductLanding";
+import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "./ui";
 import VoiceButton from "./VoiceButton";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
@@ -194,7 +195,8 @@ export default function Flow() {
 
       {stage === "inicio" && (
         <>
-          <Hero />
+          <ProductHero id="postulacion" />
+          <ToolHeading />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="La vacante que te gustó" hint="Pegá el link de la publicación (LinkedIn, Greenhouse, Lever, Workable, la web de la empresa…).">
               <input
@@ -252,6 +254,7 @@ export default function Flow() {
               {!canAnalyze && <p className="text-xs text-muted">Completá los tres pasos para seguir.</p>}
             </div>
           </div>
+          <ProductMore id="postulacion" />
         </>
       )}
 
@@ -286,15 +289,6 @@ export default function Flow() {
 }
 
 /* ---------- piezas ---------- */
-
-function Hero() {
-  return (
-    <SectionHero kicker="Encontraste una vacante que te encanta" title={<>Postulate con un CV pensado <em className="text-brand">para ese rol</em>.</>}>
-      Subí tu LinkedIn, contanos qué te entusiasma y respondé un par de preguntas cortas: Maru te devuelve tu CV optimizado para ATS y para las personas que lo
-      van a leer, más una sugerencia para cada campo del formulario.
-    </SectionHero>
-  );
-}
 
 function Results({
   doc,

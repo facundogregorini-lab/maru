@@ -5,9 +5,10 @@ import type { EntrevistaOpciones, EntrevistaPlan, Informe, Intercambio } from "@
 import { load, remove, save } from "@/lib/storage";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import JobField, { useJobInput } from "../JobField";
-import { Chips, ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, post } from "../ui";
+import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
 import Call from "./Call";
 import Report from "./Report";
+import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
 
 type Stage = "inicio" | "preparando" | "llamada" | "evaluando" | "informe";
 const SESSION_KEY = "maru:entrevista:v1";
@@ -129,10 +130,8 @@ export default function InterviewFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Entrená para tu entrevista" title={<>Practicá la entrevista <em className="text-brand">antes</em> de la entrevista.</>}>
-            Una entrevistadora con IA te hace las preguntas en voz alta, como en una videollamada, y repregunta si tu respuesta queda corta. Al final te
-            llevás un informe con puntaje, qué mejorar y una respuesta más fuerte para cada pregunta.
-          </SectionHero>
+          <ProductHero id="entrevista" />
+          <ToolHeading />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="¿Para qué entrevista?" hint="Con la búsqueda, las preguntas apuntan a lo que piden. Sin búsqueda, al rol en general.">
               <JobField input={job} generalLabel="Un rol en general" />
@@ -171,6 +170,7 @@ export default function InterviewFlow() {
               {!canStart && <p className="text-xs text-muted">Completá los dos primeros pasos para seguir.</p>}
             </div>
           </div>
+          <ProductMore id="entrevista" />
         </>
       )}
 

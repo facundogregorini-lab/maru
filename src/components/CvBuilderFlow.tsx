@@ -11,8 +11,9 @@ import { load, remove, save } from "@/lib/storage";
 import CvEditor from "./cv/CvEditor";
 import CvSourceField, { useCvInput } from "./CvSourceField";
 import Questions from "./Questions";
-import { Chips, ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, inputClass, post } from "./ui";
+import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post } from "./ui";
 import VoiceButton from "./VoiceButton";
+import { ProductHero, ProductMore, ToolHeading } from "./product/ProductLanding";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
 const SESSION_KEY = "maru:cv:v1";
@@ -152,10 +153,8 @@ export default function CvBuilderFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Creá tu CV perfecto" title={<>Un CV pensado para <em className="text-brand">ganar búsquedas</em>.</>}>
-            Contanos a dónde querés llegar y Maru reescribe tu CV para que pase los filtros automáticos y convenza a quien lo lee. Después elegí entre más de 20
-            diseños y personalizalo a tu gusto.
-          </SectionHero>
+          <ProductHero id="cv" />
+          <ToolHeading hint="Tu CV queda guardado sólo en este navegador." />
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="Tu experiencia" hint="La usamos tal cual: cargos, fechas y estudios se copian de tu perfil, sin inventar nada.">
@@ -238,6 +237,7 @@ export default function CvBuilderFlow() {
               {!cv.ready && <p className="text-xs text-muted">Cargá tu experiencia para seguir.</p>}
             </div>
           </div>
+          <ProductMore id="cv" />
         </>
       )}
 

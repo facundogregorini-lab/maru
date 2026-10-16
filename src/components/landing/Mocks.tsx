@@ -5,7 +5,15 @@ import { MaruHead } from "@/components/maru/PixelMaru";
  * sobre un panel verde menta. Son ejemplos, no datos de una persona real.
  */
 
-export function MockPanel({ children, caption }: { children: React.ReactNode; caption?: string }) {
+export function MockPanel({ children, caption, bare = false }: { children: React.ReactNode; caption?: string; bare?: boolean }) {
+  // bare: sin el panel menta, para usarla sobre otro fondo (las landings de producto).
+  if (bare)
+    return (
+      <figure className="relative">
+        <div className="relative px-2 py-6">{children}</div>
+        {caption && <figcaption className="mt-2 text-center text-xs text-muted">{caption}</figcaption>}
+      </figure>
+    );
   return (
     <figure className="relative">
       {/* Como en jobright: panel menta de 24 px de radio y proporción 4:3 (768 × 576). */}
@@ -49,9 +57,9 @@ function Ring({ value, size = 64, stroke = 6, label, big = false }: { value: num
 }
 
 /** Match: la búsqueda número 1 con su puntaje y el porqué. */
-export function MatchMock() {
+export function MatchMock({ bare = false }: { bare?: boolean }) {
   return (
-    <MockPanel caption="Ejemplo ilustrativo de una recomendación">
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo de una recomendación">
       <div aria-hidden className="absolute left-10 right-16 top-6 h-24 -rotate-3 rounded-2xl bg-white/60" />
       <div className="animate-float relative mx-auto max-w-md rounded-2xl bg-white p-5 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
         <div className="absolute -right-4 -top-6 grid h-20 w-20 place-items-center rounded-full bg-brand text-center text-white shadow-lg">
@@ -87,9 +95,9 @@ export function MatchMock() {
 }
 
 /** CV a medida: papel con mejoras resaltadas. */
-export function CvMock() {
+export function CvMock({ bare = false }: { bare?: boolean }) {
   return (
-    <MockPanel caption="Ejemplo ilustrativo">
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo">
       <div className="relative mx-auto max-w-md">
         <div className="rounded-2xl bg-white p-5 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
           <div className="flex items-start justify-between">
@@ -132,9 +140,9 @@ export function CvMock() {
 }
 
 /** Entrevista: chat con Maru. */
-export function ChatMock() {
+export function ChatMock({ bare = false }: { bare?: boolean }) {
   return (
-    <MockPanel caption="Ejemplo ilustrativo de una práctica">
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo de una práctica">
       <div className="mx-auto max-w-md rounded-2xl bg-white p-4 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)] sm:p-5">
         <div className="flex items-center gap-2.5 border-b border-line pb-3">
           <span className="grid h-10 w-10 place-items-center rounded-full bg-brand-soft">
@@ -161,9 +169,9 @@ export function ChatMock() {
 }
 
 /** Video: teleprompter con feedback. */
-export function VideoMock() {
+export function VideoMock({ bare = false }: { bare?: boolean }) {
   return (
-    <MockPanel caption="Ejemplo ilustrativo">
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo">
       <div className="relative mx-auto max-w-md">
         <div className="overflow-hidden rounded-2xl bg-ink shadow-[0_24px_50px_-30px_rgba(0,0,0,0.5)]">
           <div className="flex items-center justify-between px-4 py-2.5 text-[11px] text-white/70">

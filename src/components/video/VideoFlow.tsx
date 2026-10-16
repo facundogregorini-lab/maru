@@ -6,9 +6,10 @@ import { load, remove, save } from "@/lib/storage";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import JobField, { useJobInput } from "../JobField";
-import { Chips, ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, inputClass, post } from "../ui";
+import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post } from "../ui";
 import VoiceButton from "../VoiceButton";
 import Recorder from "./Recorder";
+import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
 
 type Stage = "inicio" | "escribiendo" | "guion" | "estudio";
 const SESSION_KEY = "maru:video:v1";
@@ -103,10 +104,8 @@ export default function VideoFlow() {
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Video de presentación" title={<>Un minuto para que <em className="text-brand">te conozcan</em>.</>}>
-            Maru te escribe el guion a medida, lo leés en un teleprompter mientras grabás con tu cámara y te da feedback de cada toma: ritmo, mirada, luz y
-            contenido.
-          </SectionHero>
+          <ProductHero id="video" />
+          <ToolHeading />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="¿Para qué es el video?" hint="Una búsqueda concreta, o una presentación general para el rol al que apuntás.">
               <JobField input={job} generalLabel="Presentación general" />
@@ -149,6 +148,7 @@ export default function VideoFlow() {
               {!canWrite && <p className="text-xs text-muted">Completá los tres primeros pasos para seguir.</p>}
             </div>
           </div>
+          <ProductMore id="video" />
         </>
       )}
 

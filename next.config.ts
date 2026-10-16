@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "/busquedas": ["./data/match/inventory.json"],
     // La home lee los números del inventario al regenerarse (ISR).
     "/": ["./data/match/inventory.json"],
+    "/match": ["./data/match/inventory.json"],
     "/api/export/pdf": [
       // Chromium comprimido: nadie lo importa, así que el tracing no lo detecta solo.
       // Sin esto, chromium.executablePath() falla en Vercel ("bin does not exist").

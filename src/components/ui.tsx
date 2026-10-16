@@ -61,19 +61,6 @@ export function ErrorBanner({ message }: { message: string }) {
   );
 }
 
-/** Encabezado grande de cada sección: bloque verde menta con titular fuerte (estilo jobright). */
-export function SectionHero({ kicker, title, children }: { kicker: string; title: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <section className="relative overflow-hidden rounded-[32px] bg-sand px-6 py-12 sm:px-14 sm:py-16">
-      <div className="relative max-w-3xl">
-        <p className="animate-rise font-display text-sm font-bold uppercase tracking-[0.12em] text-brand">{kicker}</p>
-        <h1 className="animate-rise mt-3 font-display text-[2.6rem] leading-[1.05] [animation-delay:90ms] sm:text-6xl">{title}</h1>
-        <p className="animate-rise mt-5 max-w-2xl text-lg leading-relaxed text-ink/70 [animation-delay:180ms]">{children}</p>
-      </div>
-    </section>
-  );
-}
-
 /** Maru caminando en el lugar: la espera tiene compañía. */
 function WalkingMaru() {
   const [frame, setFrame] = useState<"walkA" | "walkB">("walkA");

@@ -8,7 +8,9 @@ import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
 import { saveProfile } from "@/lib/profileStore";
 import type { Profile } from "@/lib/schemas";
 import CvSourceField, { useCvInput } from "../CvSourceField";
-import { ErrorBanner, Loading, PrimaryButton, SectionHero, StepCard, post } from "../ui";
+import type { Stat } from "@/lib/products";
+import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
+import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
 import PrefsForm, { EMPTY_PREFS } from "./PrefsForm";
 import ProfileConfirm from "./ProfileConfirm";
 import Results from "./Results";
@@ -18,7 +20,7 @@ type Stage = "cv" | "leyendo" | "confirmar" | "preferencias" | "resultados";
 const LOADING = ["Leyendo tu CV…", "Ordenando tu experiencia…", "Detectando tus habilidades…"];
 
 /** "Encontrá tu trabajo perfecto": CV → confirmar → preferencias → ranking. */
-export default function MatchFlow() {
+export default function MatchFlow({ stats }: { stats?: Stat[] }) {
   const [hydrated, setHydrated] = useState(false);
   const [state, setState] = useState<MatchState>(EMPTY_STATE);
   const [stage, setStage] = useState<Stage>("cv");
@@ -85,10 +87,8 @@ export default function MatchFlow() {
 
       {stage === "cv" && (
         <>
-          <SectionHero kicker="Encontrá tu trabajo perfecto" title={<>Búsquedas reales, ordenadas <em className="text-brand">para vos</em>.</>}>
-            Subí tu CV, contanos qué querés hacer y te mostramos oportunidades donde podés trabajar desde Argentina, con el porqué de cada coincidencia, las brechas y lo que
-            falta confirmar.
-          </SectionHero>
+          <ProductHero id="match" stats={stats} />
+          <ToolHeading hint="Reutilizamos el CV que ya cargaste en Maru o subís uno nuevo. Queda guardado sólo en este navegador." />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="Tu CV" hint="Reutilizamos el que ya cargaste en Maru o subís uno nuevo. Queda guardado sólo en este navegador.">
               <CvSourceField input={cv} />
@@ -104,6 +104,7 @@ export default function MatchFlow() {
               )}
             </div>
           </div>
+          <ProductMore id="match" />
         </>
       )}
 

@@ -180,7 +180,7 @@ export default async function Home() {
           />
           <Feature
             title="Un CV a medida de cada búsqueda"
-            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más tu carta de presentación."
+            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más una respuesta para cada campo del formulario."
             cta="Mejorar mi CV"
             href="/postulacion"
             visual={<CvMock />}
