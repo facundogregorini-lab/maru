@@ -13,7 +13,7 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, normalizeApifyJobs, type ApifyJobSource } from "../src/lib/match/apify";
-import { applyBoard, buildOpportunities, emptyInventory, recordRun } from "../src/lib/match/inventory";
+import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
 import { FANTASTIC_COHORTS, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
 import type { BoardSyncResult, Inventory, NormalizedPosting } from "../src/lib/match/types";
@@ -191,7 +191,7 @@ async function main() {
     inv.opportunities = buildOpportunities(inv.postings);
     inv.generatedAt = nowIso;
     recordRun(inv, { startedAt: nowIso, finishedAt: new Date().toISOString(), mode: "incremental", boards, ...totals, errors: result.stopped ? 1 : 0 });
-    await writeJson(INV, inv);
+    await writeJson(INV, forStorage(inv));
   }
 
   ledger.entries = [...ledger.entries, ...result.ledger].slice(-1000);
@@ -209,7 +209,7 @@ async function main() {
     await writeJson(DISCOVERIES, disc, true);
   }
 
-  const open = inv.opportunities.filter((o) => o.status === "abierta");
+  const open = opportunitiesOf(inv).filter((o) => o.status === "abierta");
   const rejected: Record<string, number> = {};
   for (const b of result.batches) for (const [k, v] of Object.entries(b.rejected)) rejected[k] = (rejected[k] ?? 0) + v;
   summary.push(

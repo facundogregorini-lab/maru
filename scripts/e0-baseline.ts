@@ -10,9 +10,10 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { opportunitiesOf } from "../src/lib/match/inventory";
 import { loadInventory } from "../src/lib/match/load";
 import { rankOpportunities, weightsFromEnv, type RankedItem } from "../src/lib/match/ranking";
-import { SENIORITY_ORDER, type MatchPrefs, type MatchProfile, type Opportunity, type RoleFamily, type Seniority } from "../src/lib/match/types";
+import { SENIORITY_ORDER, type Inventory, type MatchPrefs, type MatchProfile, type RoleFamily, type Seniority } from "../src/lib/match/types";
 
 type Perfil = { id: string; publico: string; area: RoleFamily; reserva: boolean; profile: MatchProfile; prefs: MatchPrefs };
 
@@ -70,7 +71,8 @@ async function main() {
   const t = now.getTime();
 
   // ---------- catálogo: registros, oportunidades canónicas y grupos visuales ----------
-  const rawInv = JSON.parse(readFileSync(path.join("data", "match", "inventory.json"), "utf8")) as { opportunities: Opportunity[]; postings: { status: string; sourceId: string }[] };
+  const rawInv = JSON.parse(readFileSync(process.env.MATCH_INVENTORY_PATH ?? path.join("data", "match", "inventory.json"), "utf8")) as Inventory;
+  const canonical = opportunitiesOf(rawInv);
   const openGroups = inv.opportunities.filter((o) => o.status === "abierta");
   const elig = openGroups.filter((o) => o.eligibility.status === "elegible");
   const pend = openGroups.filter((o) => o.eligibility.status === "por_confirmar");
@@ -80,7 +82,7 @@ async function main() {
     niveles: {
       registros: rawInv.postings.length,
       registrosAbiertos: rawInv.postings.filter((p) => p.status === "abierta").length,
-      oportunidadesCanonicasAbiertas: rawInv.opportunities.filter((o) => o.status === "abierta").length,
+      oportunidadesCanonicasAbiertas: canonical.filter((o) => o.status === "abierta").length,
       gruposVisualesAbiertos: openGroups.length,
     },
     elegibilidad: countBy(openGroups, (o) => o.eligibility.status),

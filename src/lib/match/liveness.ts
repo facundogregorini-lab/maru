@@ -6,7 +6,6 @@
  * Pocos pedidos por corrida, en serie, con pausa y sin reintentos.
  */
 import { safeFetch } from "./http";
-import { buildOpportunities } from "./inventory";
 import { sourceById } from "./sources";
 import { fold } from "./text";
 import type { Inventory } from "./types";
@@ -100,6 +99,5 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
     else stats.unknown++;
     if (pauseMs) await new Promise((r) => setTimeout(r, pauseMs));
   }
-  if (stats.closed) inv.opportunities = buildOpportunities(inv.postings);
   return stats;
 }

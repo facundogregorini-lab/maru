@@ -7,7 +7,7 @@
  */
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { emptyInventory } from "../src/lib/match/inventory";
+import { emptyInventory, forStorage } from "../src/lib/match/inventory";
 import { checkImportedLiveness } from "../src/lib/match/liveness";
 import type { Inventory } from "../src/lib/match/types";
 
@@ -21,7 +21,7 @@ async function main() {
   const inv = { ...emptyInventory("real"), ...(JSON.parse(await readFile(INV, "utf8")) as Inventory) };
   if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
   const stats = await checkImportedLiveness(inv, new Date().toISOString(), { max: Number.isFinite(max) ? Math.min(max, 500) : 150, log: (m) => console.log(m) });
-  await writeFile(`${INV}.tmp`, JSON.stringify(inv) + "\n");
+  await writeFile(`${INV}.tmp`, JSON.stringify(forStorage(inv)) + "\n");
   await rename(`${INV}.tmp`, INV);
   console.log(`Vigencia de importados: ${stats.checked} revisados, ${stats.closed} cerrados, ${stats.open} siguen publicados, ${stats.unknown} sin dato.`);
 }

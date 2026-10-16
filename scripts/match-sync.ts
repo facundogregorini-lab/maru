@@ -12,7 +12,7 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { boardsFrom, type Directory } from "../src/lib/match/directory";
-import { emptyInventory } from "../src/lib/match/inventory";
+import { emptyInventory, forStorage, opportunitiesOf } from "../src/lib/match/inventory";
 import { runSync, type SyncState } from "../src/lib/match/sync";
 import type { Inventory } from "../src/lib/match/types";
 
@@ -54,7 +54,7 @@ async function main() {
       if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real: no se mezcla con fixtures.");
       return { ...emptyInventory("real"), ...inv };
     },
-    saveInventory: (inv) => writeJson(INV, inv),
+    saveInventory: (inv) => writeJson(INV, forStorage(inv)),
     loadState: () => readJson<SyncState>(STATE, { lock: null, checkpoint: null }),
     saveState: (s) => writeJson(STATE, s, true),
     budgetMs: Number(process.env.MATCH_SYNC_BUDGET_MS) || 20 * 60_000,
@@ -62,7 +62,7 @@ async function main() {
   });
 
   const inv = await readJson<Inventory>(INV, emptyInventory("real"));
-  const open = inv.opportunities.filter((o) => o.status === "abierta");
+  const open = opportunitiesOf(inv).filter((o) => o.status === "abierta");
   const by = (s: string) => open.filter((o) => o.eligibility.status === s).length;
   console.log(
     `\nResultado: ${outcome.status}. Bolsas procesadas: ${outcome.processed}, pendientes: ${outcome.pending}, con error: ${outcome.results.filter((r) => !r.ok).length}.`,
