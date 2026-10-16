@@ -47,6 +47,12 @@ describe("pruebas privadas de proveedores", () => {
     expect(rows[0]).toMatchObject({ usable: true, duplicate: true }); expect(rows.slice(1).every((r) => !r.usable)).toBe(true);
     expect(rows[3].url).toBe("");
   });
+  it("conserva la antigüedad relativa de Google Jobs sin inventar timestamps y detecta avisos viejos", () => {
+    const row = { title: "Analista", company_name: "Empresa", location: "Buenos Aires", description, apply_options: [{ link: job.url }] };
+    const jobs = pilotJobs("serp", [{ ...row, extensions: ["hace 3 días", "Tiempo completo"] }, { ...row, detected_extensions: { posted_at: "2 months ago" } }, row], []);
+    expect(jobs[0]).toMatchObject({ publishedAt: "", publishedLabel: "hace 3 días", usable: true });
+    expect(jobs[1].usable).toBe(false); expect(jobs[2].publishedLabel).toBe("");
+  });
   it("impone un tope global de dos intentos diarios aun si falla el proveedor", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("fallo")));
     const request = () => new Request("https://maru.test/api/match/admin/proveedores", { method: "POST", headers: { origin: "https://maru.test", cookie: `${SESSION_COOKIE}=${createSessionToken("admin@example.com")}` }, body: JSON.stringify({ provider: "serp", action: "sample" }) });

@@ -2,7 +2,7 @@
 import { canonicalUrl, htmlToText } from "./text";
 
 export type PilotProvider = "fantastic" | "serp";
-export type PilotJob = { id: string; title: string; company: string; location: string; source: string; url: string; publishedAt: string; descriptionChars: number; excerpt: string; usable: boolean; issues: string[]; duplicate: boolean };
+export type PilotJob = { id: string; title: string; company: string; location: string; source: string; url: string; publishedAt: string; publishedLabel: string; descriptionChars: number; excerpt: string; usable: boolean; issues: string[]; duplicate: boolean };
 export type PilotResult = { provider: PilotProvider; checkedAt: string; action: "status" | "sample"; quota: Record<string, string | number | null>; counts?: Record<string, number>; jobs?: PilotJob[]; summary?: { received: number; usable: number; newUsable: number; duplicates: number }; note: string };
 const object = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 const string = (v: unknown) => typeof v === "string" ? v.trim() : "";
@@ -85,11 +85,20 @@ export function pilotJobs(provider: PilotProvider, rawRows: unknown[], existingU
     if (description.length < 300) issues.push("Descripción menor a 300 caracteres");
     if (!country) issues.push("Argentina por confirmar; el filtro de búsqueda no alcanza como evidencia");
     const expiry = string(r.date_valid_through); const published = string(r.date_posted);
+    // Google Jobs puede mover la antigüedad entre detected_extensions y extensions.
+    // Conservamos el texto relativo: no fabricamos una fecha exacta.
+    const publishedLabel = fantastic ? "" : string(object(r.detected_extensions).posted_at) || strings(r.extensions).find((v) => /^(hace |hoy$|ayer$|today$|yesterday$)|\bago$/i.test(v)) || "";
+    const relativeAge = publishedLabel.match(/(?:hace\s+)?(\d+)\s*(d[ií]as?|days?|semanas?|weeks?|meses?|months?|a[nñ]os?|years?)/i);
+    if (relativeAge) {
+      const value = Number(relativeAge[1]); const unit = relativeAge[2].toLowerCase();
+      const days = value * (/^(semana|week)/.test(unit) ? 7 : /^(mes|month)/.test(unit) ? 30 : /^(a[nñ]o|year)/.test(unit) ? 365 : 1);
+      if (days > 30) issues.push("Antigüedad relativa mayor a 30 días");
+    }
     if (expiry && Number.isFinite(Date.parse(expiry)) && Date.parse(expiry) <= now) issues.push("Aviso vencido");
     if (published && Number.isFinite(Date.parse(published)) && now - Date.parse(published) > 30 * 86400000) issues.push("Publicado hace más de 30 días");
     const canonical = link ? canonicalUrl(link) : ""; const duplicate = !!canonical && seen.has(canonical);
     if (canonical) seen.add(canonical);
-    return { id: String(r.id ?? r.job_id ?? "").slice(0, 300), title, company, location: locations.slice(0, 800), source: string(fantastic ? r.source : r.via).slice(0, 100), url: link, publishedAt: published, descriptionChars: description.length, excerpt: description.slice(0, 350), usable: !issues.length, issues, duplicate };
+    return { id: String(r.id ?? r.job_id ?? "").slice(0, 300), title, company, location: locations.slice(0, 800), source: string(fantastic ? r.source : r.via).slice(0, 100), url: link, publishedAt: published, publishedLabel, descriptionChars: description.length, excerpt: description.slice(0, 350), usable: !issues.length, issues, duplicate };
   });
 }
 
