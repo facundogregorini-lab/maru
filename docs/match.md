@@ -12,7 +12,7 @@ No hay cobertura total del mercado: Maru muestra sólo lo que puede leer gratis 
 GitHub Actions (1 vez por día)          Vercel (app)
 scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──lee──►  /api/match/*  ──►  /match
   conectores (GET públicos)              (inventario compartido,         ranking sin estado    UI (datos personales
-  lotes · checkpoint · lock               sin datos de usuarios)                                sólo en el navegador)
+  lotes · checkpoint · lock               sin datos de usuarios)                                locales + cuenta Redis)
 ```
 
 - **Catálogo sin base adicional.** El inventario compartido es un archivo versionado en el repo que genera la sincronización programada. Las cuentas ya usan Redis para perfil, match y seguimiento; eso no convierte Redis en la base del catálogo. El código de inventario (`src/lib/match/inventory.ts`) es puro y recibe/devuelve objetos: una migración futura requiere adaptar carga y escritura, pero no está indicada para la próxima fase.
@@ -167,4 +167,4 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 3. **Datos `schema.org/JobPosting`** de sitios corporativos argentinos que lo publiquen, sólo donde la reutilización sea compatible.
 4. **Himalayas**, si autorizan por escrito el uso en Maru (aporta remoto global).
 5. Enriquecimiento con IA de avisos nuevos o modificados (habilidades obligatorias/deseables) para mejorar la confianza, con tope por ejecución.
-6. Base de datos para guardar el perfil del match por cuenta y alertas por email.
+6. Alertas por email, después de validar inventario y consentimiento. El perfil por cuenta ya se guarda en Redis; no requiere crear otra base.
