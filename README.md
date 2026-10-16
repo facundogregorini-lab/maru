@@ -13,6 +13,8 @@
 
 **Diseño del CV:** 24 templates en 5 estilos (clásicos, modernos, ejecutivos, minimalistas y creativos), todos de una columna y ATS-friendly, con color, tipografía, espaciado, tamaño de letra y orden de secciones personalizables. La carta usa los mismos templates para armar un set con el CV. El perfil que Maru lee queda guardado sólo en el navegador para reutilizarlo en las otras secciones.
 
+Lo que falta y cómo seguir: [docs/PENDIENTES.md](docs/PENDIENTES.md).
+
 ## Coach de postulación
 
 Para quienes encontraron una vacante que les encanta:
