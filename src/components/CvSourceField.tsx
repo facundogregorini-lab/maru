@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { DOCX_MIME, MAX_FILE_BYTES, PDF_MIME, buildCvSource, looksLikeDocx, looksLikePdf, type CvFile, type CvMode } from "@/lib/cvSource";
+import { DOCX_MIME, MAX_FILE_BYTES, MIN_TEXT_CHARS, PDF_MIME, buildCvSource, looksLikeDocx, looksLikePdf, type CvFile, type CvMode } from "@/lib/cvSource";
 import { forgetProfile, loadProfile, profileToText, type SavedProfile } from "@/lib/profileStore";
 import { SYNC_EVENT } from "@/lib/sync/client";
 import type { CvSource } from "@/lib/schemas";
@@ -119,6 +119,7 @@ export function useCvInput() {
     savedProfile,
     source,
     ready: !!source && !reading,
+    issue: reading ? "Esperá a que termine de leerse tu archivo." : source ? null : mode === "texto" && text.trim() ? `Ampliá tu experiencia: faltan ${Math.max(0, MIN_TEXT_CHARS - text.trim().length)} caracteres para poder leerla.` : "Cargá tu experiencia: un archivo, texto o tu perfil guardado.",
     fallbackToText,
   };
 }

@@ -69,7 +69,8 @@ export default function VideoFlow() {
     topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [stage]);
 
-  const canWrite = job.ready && cv.ready && motivacion.trim().length > 15;
+  const missing = [job.issue, cv.issue, !motivacion.trim() ? "Contanos qué querés transmitir en el video." : null].filter(Boolean);
+  const canWrite = missing.length === 0;
 
   async function write() {
     setError("");
@@ -120,6 +121,7 @@ export default function VideoFlow() {
             </StepCard>
             <StepCard n={3} title="Lo que querés que se lleven" hint="Por qué te entusiasma, qué te hace distinta o distinto. Escribilo o grabalo.">
               <textarea
+                aria-label="Lo que querés transmitir en el video"
                 rows={5}
                 placeholder="Quiero que sepan que… Lo que más disfruto es… Un logro que me enorgullece…"
                 value={motivacion}
@@ -150,7 +152,7 @@ export default function VideoFlow() {
               <PrimaryButton onClick={write} disabled={!canWrite}>
                 Escribir mi guion
               </PrimaryButton>
-              {!canWrite && <p className="text-xs text-muted">Completá los tres primeros pasos para seguir.</p>}
+              {!canWrite && <ul aria-live="polite" className="max-w-xl space-y-1 text-sm text-muted">{missing.map((message) => <li key={message}>{message}</li>)}</ul>}
             </div>
           </div>
           <ProductMore id="video" />

@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { EntrevistaOpciones, EntrevistaPlan, Intercambio, Turno } from "@/lib/schemas";
 import { speak, stopSpeaking, ttsSupported, useDictation } from "../speech";
 import { post } from "../ui";
+import { useCamera } from "../useCamera";
 
 type Phase = "lobby" | "speaking" | "listening" | "thinking" | "done";
 
@@ -34,7 +35,8 @@ export default function Call({
   const dictation = useDictation(lang);
   const [phase, setPhase] = useState<Phase>("lobby");
   const [voice, setVoice] = useState(true);
-  const [camera, setCamera] = useState(false);
+  const media = useCamera(false);
+  const camera = media.active;
   const [caption, setCaption] = useState("");
   const [idx, setIdx] = useState(0); // pregunta del plan en curso
   const [current, setCurrent] = useState<{ texto: string; repregunta: boolean }>({ texto: "", repregunta: false });
@@ -42,9 +44,7 @@ export default function Call({
   const [typed, setTyped] = useState("");
   const [answerStart, setAnswerStart] = useState(0);
   const [now, setNow] = useState(0);
-  const [error, setError] = useState("");
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+
   const total = plan.preguntas.length;
 
   const useVoice = voice && dictation.supported;
@@ -55,45 +55,7 @@ export default function Call({
     return () => clearInterval(id);
   }, [answerStart]);
 
-  // La sala de espera y la llamada tienen cada una su <video>: reconectamos la cámara al cambiar de vista.
-  const inCall = phase !== "lobby";
-  useEffect(() => {
-    const v = videoRef.current;
-    if (camera && v && streamRef.current && v.srcObject !== streamRef.current) {
-      v.srcObject = streamRef.current;
-      void v.play().catch(() => null);
-    }
-  }, [camera, inCall]);
-
-  useEffect(
-    () => () => {
-      stopSpeaking();
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-    },
-    [],
-  );
-
-  async function toggleCamera(on: boolean) {
-    setCamera(on);
-    if (!on) {
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-      return;
-    }
-    try {
-      const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-      streamRef.current = s;
-      requestAnimationFrame(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = s;
-          void videoRef.current.play().catch(() => null);
-        }
-      });
-    } catch {
-      setCamera(false);
-      setError("No pudimos prender la cámara. Podés seguir sin cámara.");
-    }
-  }
+  useEffect(() => () => stopSpeaking(), []);
 
   /** La entrevistadora dice algo y, al terminar, abrimos el turno de respuesta. */
   const say = useCallback(
@@ -174,7 +136,7 @@ export default function Call({
       <div className="animate-rise grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="relative grid place-items-center overflow-hidden rounded-3xl bg-ink" style={{ aspectRatio: "16 / 9" }}>
           {camera ? (
-            <video ref={videoRef} muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
+            <video ref={media.videoRef} autoPlay muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
           ) : (
             <span className="grid h-24 w-24 place-items-center rounded-full bg-paper/10 font-display text-3xl text-paper">Vos</span>
           )}
@@ -199,11 +161,16 @@ export default function Call({
             </label>
             <label className="flex items-center justify-between gap-3">
               <span>Prender mi cámara (sólo para vos, no se graba)</span>
-              <input type="checkbox" checked={camera} onChange={(e) => void toggleCamera(e.target.checked)} className="h-5 w-5 accent-brand" />
+              <input type="checkbox" checked={camera} disabled={media.pending} onChange={(e) => { if (e.target.checked) void media.start(); else media.stop(); }} className="h-5 w-5 accent-brand" />
             </label>
           </div>
+          {media.pending && <p role="status" className="mt-3 text-sm text-muted">Esperando permiso de cámara…</p>}
+          {camera && <label className="mt-3 block text-sm">Cámara <select aria-label="Cámara" disabled={media.pending} value={media.cameraId} onChange={(e) => void media.start(e.target.value)} className="w-full rounded-xl border border-line p-2">
+            {media.devices.filter((d) => d.kind === "videoinput").map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Cámara ${i + 1}`}</option>)}
+          </select></label>}
+          {media.error && <p role="alert" className="mt-3 text-sm text-danger-dark">{media.error} Podés seguir sin cámara.</p>}
           {!ttsSupported() && <p className="mt-3 text-xs text-muted">Tu navegador no tiene voz: vas a leer las preguntas en pantalla.</p>}
-          {error && <p className="mt-3 text-sm text-danger-dark">{error}</p>}
+
           <button type="button" onClick={join} className="mt-6 w-full rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark">
             Unirme a la entrevista
           </button>
@@ -245,7 +212,7 @@ export default function Call({
         {/* Vos */}
         <div className="relative grid aspect-[3/4] place-items-center overflow-hidden rounded-2xl bg-[#2f2825] sm:aspect-[16/10]">
           {camera ? (
-            <video ref={videoRef} muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
+            <video ref={media.videoRef} autoPlay muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
           ) : (
             <span className={`grid h-16 w-16 place-items-center rounded-full bg-paper/10 font-display text-xl transition sm:h-24 sm:w-24 sm:text-2xl ${phase === "listening" && dictation.listening ? "ring-4 ring-sage ring-offset-4 ring-offset-[#2f2825]" : ""}`}>
               Vos
@@ -339,6 +306,10 @@ export default function Call({
             </button>
           </>
         )}
+        <button type="button" onClick={() => { if (camera) media.stop(); else void media.start(); }} disabled={media.pending} className="rounded-full bg-paper/10 px-4 py-2.5 text-sm">
+          {media.pending ? "Esperando cámara…" : camera ? "Apagar cámara" : "Prender cámara"}
+        </button>
+        {media.error && <p role="alert" className="w-full text-center text-sm">{media.error}</p>}
         <button type="button" onClick={finishEarly} className="rounded-full bg-red-600/90 px-4 py-2.5 text-sm font-medium transition hover:bg-red-600">
           Terminar
         </button>

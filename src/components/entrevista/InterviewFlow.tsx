@@ -180,7 +180,7 @@ export default function InterviewFlow() {
               <PrimaryButton onClick={prepare} disabled={!canStart}>
                 Preparar mi entrevista
               </PrimaryButton>
-              {!canStart && <p className="text-xs text-muted">Completá los dos primeros pasos para seguir.</p>}
+              {!canStart && <p className="text-xs text-muted">{[job.issue, cv.issue].filter(Boolean).join(" ")}</p>}
             </div>
           </div>
           <ProductMore id="entrevista" />
