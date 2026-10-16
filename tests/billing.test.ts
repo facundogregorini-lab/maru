@@ -162,4 +162,20 @@ describe("suscripción validada en el servidor", () => {
     ({ POST } = await import("@/app/api/export/docx/route"));
     expect((await POST(req())).status).toBe(400);
   });
+  it("lee la bandera en tiempo de ejecución y dice qué falta sin mostrar valores", async () => {
+    vi.stubEnv("NEXT_PUBLIC_BILLING_ENABLED", " TRUE ");
+    vi.stubEnv("MERCADOPAGO_ACCESS_TOKEN", "");
+    vi.stubEnv("MERCADOPAGO_WEBHOOK_SECRET", "secreto");
+    const s = await import("@/lib/billing/server");
+    expect(s.billingReady()).toBe(false);
+    expect(s.billingMissing()).toEqual(["MERCADOPAGO_ACCESS_TOKEN"]);
+    // Bandera encendida sin credenciales: las herramientas siguen andando en lugar de cortarse.
+    expect(await s.allowUsage("ana@example.com", "cv")).toBe(true);
+    const { GET } = await import("@/app/api/billing/status/route");
+    const body = await (await GET(new Request("https://maru.test/api/billing/status"))).json();
+    expect(body).toMatchObject({ enabled: false, missing: ["MERCADOPAGO_ACCESS_TOKEN"] });
+    expect(JSON.stringify(body)).not.toContain("secreto");
+    vi.stubEnv("NEXT_PUBLIC_BILLING_ENABLED", "si");
+    expect(s.billingMissing()[0]).toBe("NEXT_PUBLIC_BILLING_ENABLED (no es true)");
+  });
 });
