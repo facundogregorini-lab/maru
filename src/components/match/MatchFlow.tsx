@@ -88,9 +88,9 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
       {stage === "cv" && (
         <>
           <ProductHero id="match" stats={stats} />
-          <ToolHeading hint="Reutilizamos el CV que ya cargaste en Maru o subís uno nuevo. Queda guardado sólo en este navegador." />
+          <ToolHeading hint="Reutilizamos el CV que ya cargaste en Maru o subís uno nuevo. Queda guardado en este navegador y, si ingresás, en tu cuenta." />
           <div className="mt-10 space-y-6">
-            <StepCard n={1} title="Tu CV" hint="Reutilizamos el que ya cargaste en Maru o subís uno nuevo. Queda guardado sólo en este navegador.">
+            <StepCard n={1} title="Tu CV" hint="Reutilizamos el que ya cargaste en Maru o subís uno nuevo. Queda guardado en este navegador y, si ingresás, en tu cuenta.">
               <CvSourceField input={cv} />
             </StepCard>
             <div className="flex flex-col items-center gap-3 pt-2">
@@ -153,7 +153,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
 
       {stage !== "leyendo" && (state.profile || state.prefs) && (
         <p className="mt-12 text-center text-xs text-muted">
-          Tu perfil y tus preferencias se guardan sólo en este navegador; para ordenar las búsquedas se envían a Maru sin quedar registrados.{" "}
+          Tu perfil y tus preferencias se guardan en este navegador y, si ingresás, en tu cuenta; para ordenar las búsquedas se envían a Maru sin quedar registrados.{" "}
           <button type="button" onClick={wipe} className="underline underline-offset-4 hover:text-brand-dark">
             Borrar mis datos
           </button>

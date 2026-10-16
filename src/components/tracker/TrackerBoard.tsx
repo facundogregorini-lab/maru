@@ -75,7 +75,7 @@ export default function TrackerBoard() {
       <div className="flex flex-wrap items-center gap-3 py-1">
         <p className="text-[13px]" aria-live="polite">
           {items.length === 0 ? "Todavía no seguís ninguna postulación" : `${items.length} ${items.length === 1 ? "postulación" : "postulaciones"} en seguimiento`}
-          <span className="text-ink/50"> · se guarda sólo en este navegador</span>
+          <span className="text-ink/50"> · se guarda en este navegador y, si ingresás, en tu cuenta</span>
         </p>
         <button
           type="button"

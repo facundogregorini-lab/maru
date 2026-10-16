@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { setSyncAccount } from "@/lib/sync/client";
 
 type AuthState = {
   /** undefined = cargando; null = sin sesión. */
@@ -36,6 +37,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  // Con sesión, el perfil, el match y el seguimiento se guardan también en la cuenta.
+  useEffect(() => {
+    if (email !== undefined) setSyncAccount(email);
+  }, [email]);
 
   return <AuthCtx.Provider value={{ email, refresh, logout }}>{children}</AuthCtx.Provider>;
 }
