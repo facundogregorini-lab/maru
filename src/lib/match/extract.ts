@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 2;
+export const EXTRACTION_VERSION = 3;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -129,9 +129,9 @@ const FAMILY_RULES: [RoleFamily, RegExp][] = [
   ["datos", /\b(data (analyst|scientist|engineer|reporting)|analista de datos|analista de reporting|cientific[oa] de datos|business intelligence|\bbi\b|analytics engineer|machine learning|ml engineer)/],
   ["producto", /\b(product (manager|owner|lead|director|operations|analyst)|desarrollo de producto|gerente de producto|\bpm\b|product ops)/],
   ["diseno", /\b(designer|diseñador|disenador|ux|ui|product design|motion|graphic|grafic)/],
-  ["software", /\b(engineer|developer|desarrollador|programador|software|devops|sre|qa|tester|frontend|backend|full ?stack|architect|tech lead|cto|mobile|ios|android|infraestructura|sistemas y aplicaciones|funcional cloud|it networking|redes y telecomunicaciones|seguridad electronica|security analyst|aiops)/],
+  ["software", /\b(it operations|cloud operations|network operations|security operations|noc\b|soc analyst|engineer|developer|desarrollador|programador|software|devops|sre|qa|tester|frontend|backend|full ?stack|architect|tech lead|cto|mobile|ios|android|infraestructura|sistemas y aplicaciones|funcional cloud|it networking|redes y telecomunicaciones|seguridad electronica|security analyst|aiops)/],
   ["marketing", /\b(marketing|growth|seo|sem|content|contenido|brand|community|social media|media buyer|paid media|performance|crm|lifecycle|comunicaci)/],
-  ["ventas", /\b(sales|ventas|account executive|sdr|bdr|business development|desarrollo de negocios|comercial|vendedor|ejecutivo de cuentas|partnerships|key account)/],
+  ["ventas", /\b(revenue operations|revops|sales operations|sales ops|sales|ventas|account executive|sdr|bdr|business development|desarrollo de negocios|comercial|vendedor|ejecutivo de cuentas|partnerships|key account)/],
   ["atencion_cliente", /\b(customer (support|service|success|experience)|support (agent|specialist)|atencion al cliente|soporte|help ?desk|call center|onboarding specialist)/],
   ["finanzas", /\b(finance|financ|finanz|accountant|accounting|contador|contable|contabilidad|cuentas a pagar|cuentas corrientes|cobranzas|pago a proveedores|accounts payables|pricing|precios|costos|presupuesto|riesgo crediticio|credit associate|derivatives|rates analysis|record to report|fp&a|controller|tesorer|treasury|tax|impuest|auditor|billing|facturaci|impositivo|payroll)/],
   ["rrhh", /\b(recruit|talent|people|human resources|recursos humanos|rrhh|hr |hrbp|seleccion)/],

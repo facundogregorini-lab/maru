@@ -456,6 +456,21 @@ export function rankOpportunities(input: RankInput): RankOutput {
       if (d.reason === "rol" && d.family === ex.family.value && dice(new Set(d.titleTokens ?? []), titleToks) >= 0.5) raw *= 0.75;
       if (d.reason === "seniority" && d.titleTokens && ex.seniority && dice(new Set(d.titleTokens), titleToks) >= 0.3) raw *= 0.9;
     }
+    // Ajustes del benchmark E0 (docs/research/e0-2026-10-16): preferencias que no son indispensables
+    // igual tienen que pesar, y los avisos viejos o que no son vacantes puntuales no deben liderar.
+    if (wpValue !== "desconocido" && prefs.modalidades.length && !prefs.modalidades.includes(wpValue)) raw *= 0.85;
+    if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
+      raw *= 0.8;
+      gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`);
+    }
+    if (ex.seniority && targetSen.length && Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - SENIORITY_ORDER.indexOf(ex.seniority!.value)))) >= 2) raw *= 0.85;
+    const ageDays = (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
+    if (ageDays > 180) raw *= 0.85;
+    else if (ageDays > 90) raw *= 0.93;
+    if (OPEN_CALL.test(` ${titleF} `) || AI_TASKS.test(fold(primary?.descriptionText.slice(0, 3000) ?? ""))) {
+      raw *= 0.7;
+      pending.push("Parece una convocatoria abierta o un proyecto por tareas, no una vacante puntual: confirmalo en el aviso.");
+    }
     if (isSaved) raw = Math.min(1, raw * 1.03);
 
     if (o.eligibility.status === "elegible") reasonsScored.push([0.45, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
@@ -479,7 +494,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       id: o.id,
       title: sanitizeDisplay(o.title, 160),
       company: sanitizeDisplay(o.company, 100),
-      locations: o.locations.map((l) => sanitizeDisplay(l, 80)),
+      locations: argentinaFirst(o.locations).map((l) => sanitizeDisplay(l, 80)),
       workplace: wpValue,
       workplaceLabel: WORKPLACE_LABEL[wpValue],
       eligibility: o.eligibility,
@@ -511,7 +526,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     (bucket === "eligible" ? elig : pend).push(scored);
   }
 
-  const sortTop = (arr: Scored[]) => arr.sort((a, b) => b.raw - a.raw).slice(0, limit).map((s) => s.item);
+  const sortTop = (arr: Scored[]) => diversify(arr.sort((a, b) => b.raw - a.raw)).slice(0, limit).map((s) => s.item);
   return {
     eligible: sortTop(elig),
     pending: sortTop(pend),
@@ -520,6 +535,31 @@ export function rankOpportunities(input: RankInput): RankOutput {
   };
 }
 
+
+/** Convocatorias abiertas, pools y proyectos por tarea (entrenamiento de IA, transcripción, lingüística masiva). */
+const OPEN_CALL = /\b(talent (pool|community|network)|general application|open application|candidatura espontanea|join our talent|future opportunities|oportunidades futuras|ai (trainer|training|tutor)|data annotat|annotator|rater|search evaluator|transcri(ber|ptionist|pcion)|freelance (translator|linguist|writer)|linguist|language (expert|specialist) for ai)/;
+
+/** Proyectos para entrenar o evaluar modelos de IA, aunque el título parezca un puesto del área. */
+const AI_TASKS = /\b(train(ing)? (ai|llm|large language) models?|training data for( frontier)? ai|frontier (ai )?models?|leading ai labs?|improve (model )?reasoning|rlhf|improve (the )?(ai|llm) models?|evaluate ai (responses|outputs)|ai training (project|platform)|search quality rat(er|ing)|entrenar modelos de (ia|inteligencia artificial))\b/;
+
+const AR_PLACE = /argentin|buenos aires|caba|capital federal|c[oó]rdoba|rosario|mendoza|tucum[aá]n|la plata|mar del plata|neuqu[eé]n|salta|santa fe/i;
+/** Si se puede trabajar desde Argentina, que la tarjeta lo muestre primero. */
+export const argentinaFirst = (locs: string[]) => [...locs.filter((l) => AR_PLACE.test(l)), ...locs.filter((l) => !AR_PLACE.test(l))];
+
+/** Variedad: como mucho 2 avisos de la misma empresa en los primeros 10 (el resto baja, no desaparece). */
+function diversify(sorted: Scored[], top = 10, perCompany = 2): Scored[] {
+  const head: Scored[] = [];
+  const rest: Scored[] = [];
+  const count = new Map<string, number>();
+  for (const s of sorted) {
+    const c = fold(s.item.company);
+    if (head.length < top && (count.get(c) ?? 0) < perCompany) {
+      head.push(s);
+      count.set(c, (count.get(c) ?? 0) + 1);
+    } else rest.push(s);
+  }
+  return [...head, ...rest];
+}
 
 function applyFilters(o: Opportunity, primary: StoredPosting | undefined, f: Filters, now: Date): boolean {
   if (f.families?.length && !f.families.includes(o.extracted.family.value)) return false;

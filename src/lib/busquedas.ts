@@ -1,5 +1,6 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
 import { loadInventory, resolveId } from "./match/load";
+import { argentinaFirst } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
 /** Buscador simple sobre el inventario real: filtra, ordena por más nuevas y pagina. */
@@ -70,7 +71,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     title: o.title,
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
-    where: o.locations.slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
+    where: argentinaFirst(o.locations).slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
     modalidad: MODALIDADES[o.workplace.value] ?? "",
     contrato: o.extracted.employmentType ? CONTRATOS[o.extracted.employmentType.value] : "",
     nivel: o.extracted.seniority ? (NIVELES[o.extracted.seniority.value] ?? "") : "",

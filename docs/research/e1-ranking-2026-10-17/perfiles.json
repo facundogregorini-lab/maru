@@ -1,0 +1,71 @@
+{
+  "$comment": "Perfiles SINTÉTICOS para el benchmark E0 (docs/PLAN-AVISOS.md §3). No contienen datos de ninguna persona real. Versionados: no editarlos para 'mejorar' resultados; si cambian, crear perfiles-v2. 'reserva': true = no se usan para ajustar reglas, sólo para la comprobación final.",
+  "version": 1,
+  "creado": "2026-10-16",
+  "perfiles": [
+    {
+      "id": "G1-adm-contable-jr",
+      "publico": "generalista",
+      "area": "administracion",
+      "reserva": false,
+      "profile": { "headline": "Asistente administrativo contable", "titles": ["Asistente administrativo", "Auxiliar contable"], "skills": ["Excel", "facturación", "conciliaciones bancarias", "Tango Gestión", "cuentas a pagar", "liquidación de impuestos"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "básico" }], "yearsExperience": 2, "location": "Córdoba, Argentina", "summary": "Administración y contabilidad en pymes; facturación, pagos y conciliaciones." },
+      "prefs": { "objetivo": "Trabajar en administración o contabilidad", "rolesDeseados": ["Asistente administrativo", "Auxiliar contable", "Analista contable"], "evitar": [], "ciudad": "Córdoba", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["presencial", "hibrido", "remoto"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": ["ubicacion"], "carrera": "continuidad" }
+    },
+    {
+      "id": "G1-finanzas-ssr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": false,
+      "profile": { "headline": "Analista de finanzas semi senior", "titles": ["Analista financiero", "Analista de tesorería"], "skills": ["Excel avanzado", "presupuesto", "flujo de fondos", "SAP", "reportes de gestión", "tesorería"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 4, "location": "Rosario, Santa Fe, Argentina", "summary": "Finanzas corporativas: presupuesto, cash flow y reporting mensual." },
+      "prefs": { "objetivo": "Seguir en finanzas corporativas", "rolesDeseados": ["Analista financiero", "Analista de tesorería", "Analista de planeamiento financiero"], "evitar": [], "ciudad": "Rosario", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "G1-rrhh-ssr",
+      "publico": "generalista",
+      "area": "rrhh",
+      "reserva": false,
+      "profile": { "headline": "Analista de recursos humanos", "titles": ["Analista de RR. HH.", "Recruiter"], "skills": ["reclutamiento y selección", "entrevistas por competencias", "onboarding", "liquidación de sueldos", "LinkedIn Recruiter", "clima laboral"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 4, "location": "Mendoza, Argentina", "summary": "Selección de perfiles operativos y profesionales; procesos de ingreso y clima." },
+      "prefs": { "objetivo": "Trabajar en recursos humanos o selección", "rolesDeseados": ["Analista de recursos humanos", "Recruiter", "Talent Acquisition"], "evitar": [], "ciudad": "Mendoza", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "G2-ventas-jr",
+      "publico": "generalista",
+      "area": "ventas",
+      "reserva": false,
+      "profile": { "headline": "Ejecutivo comercial junior", "titles": ["Vendedor", "Ejecutivo comercial"], "skills": ["ventas B2B", "prospección", "CRM", "negociación", "atención de cuentas", "HubSpot"], "languages": [{ "language": "Español", "level": "nativo" }], "yearsExperience": 2, "location": "La Plata, Buenos Aires, Argentina", "summary": "Venta consultiva a pymes y seguimiento de cartera." },
+      "prefs": { "objetivo": "Crecer en ventas B2B", "rolesDeseados": ["Ejecutivo comercial", "Account Executive", "Vendedor"], "evitar": [], "ciudad": "La Plata", "pais": "AR", "otrosLugares": ["Buenos Aires"], "autorizacion": [], "modalidades": ["presencial", "hibrido", "remoto"], "seniorities": ["junior", "semi_senior"], "contratos": [], "salario": null, "indispensables": ["idioma"], "carrera": "continuidad" }
+    },
+    {
+      "id": "G2-logistica-ssr",
+      "publico": "generalista",
+      "area": "logistica",
+      "reserva": false,
+      "profile": { "headline": "Analista de logística y operaciones", "titles": ["Analista de logística", "Supervisor de depósito"], "skills": ["gestión de inventario", "distribución", "WMS", "Excel", "planificación de demanda", "comercio exterior"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "básico" }], "yearsExperience": 5, "location": "Tucumán, Argentina", "summary": "Operaciones de depósito, distribución y control de stock." },
+      "prefs": { "objetivo": "Trabajar en logística u operaciones", "rolesDeseados": ["Analista de logística", "Analista de operaciones", "Supply chain"], "evitar": [], "ciudad": "Tucumán", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["presencial", "hibrido", "remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "T1-dev-ssr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": false,
+      "profile": { "headline": "Desarrollador full stack semi senior", "titles": ["Desarrollador full stack", "Desarrollador frontend"], "skills": ["JavaScript", "TypeScript", "React", "Node.js", "SQL", "Git"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "B2" }], "yearsExperience": 3, "location": "Córdoba, Argentina", "summary": "Aplicaciones web con React y Node para productos B2B." },
+      "prefs": { "objetivo": "Trabajar remoto como desarrollador", "rolesDeseados": ["Full Stack Developer", "Frontend Developer", "Software Engineer"], "evitar": [], "ciudad": "Córdoba", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": ["modalidad"], "carrera": "continuidad" }
+    },
+    {
+      "id": "G1-atencion-jr",
+      "publico": "generalista",
+      "area": "atencion_cliente",
+      "reserva": true,
+      "profile": { "headline": "Representante de atención al cliente", "titles": ["Representante de atención al cliente", "Operador de call center"], "skills": ["atención telefónica", "resolución de reclamos", "Zendesk", "chat", "ventas cruzadas"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 2, "location": "Mar del Plata, Buenos Aires, Argentina", "summary": "Atención multicanal y gestión de reclamos." },
+      "prefs": { "objetivo": "Atención al cliente o soporte", "rolesDeseados": ["Atención al cliente", "Customer Support", "Customer Service"], "evitar": [], "ciudad": "Mar del Plata", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "T1-datos-jr",
+      "publico": "tecnologia",
+      "area": "datos",
+      "reserva": true,
+      "profile": { "headline": "Analista de datos junior", "titles": ["Analista de datos", "Analista de reporting"], "skills": ["SQL", "Power BI", "Excel", "Python", "visualización de datos"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 1, "location": "Neuquén, Argentina", "summary": "Tableros y reportes para áreas comerciales." },
+      "prefs": { "objetivo": "Primer trabajo fuerte en datos", "rolesDeseados": ["Data Analyst", "Analista de datos", "BI Analyst"], "evitar": [], "ciudad": "Neuquén", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    }
+  ]
+}
