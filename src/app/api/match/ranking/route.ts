@@ -1,7 +1,7 @@
 import { RankingRequestSchema, type ExternalJob } from "@/lib/match/api-schemas";
 import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
-import { loadInventory } from "@/lib/match/load";
+import { loadInventory, resolveId } from "@/lib/match/load";
 import { rankOpportunities, weightsFromEnv } from "@/lib/match/ranking";
 import type { NormalizedPosting, StoredPosting } from "@/lib/match/types";
 
@@ -22,10 +22,13 @@ export async function POST(req: Request) {
   }
   const parsed = RankingRequestSchema.safeParse(body);
   if (!parsed.success) return Response.json({ error: "Revisá tus datos: hay campos inválidos.", code: "BAD_REQUEST" }, { status: 400 });
-  const { profile, prefs, interactions, filters, external = [] } = parsed.data;
+  const { profile, prefs, interactions, filters, external = [], limit } = parsed.data;
 
   try {
-    const { inv, postings } = await loadInventory();
+    const { inv, postings, alias } = await loadInventory();
+    // Guardadas y descartadas con el id de una copia ya agrupada apuntan al representante.
+    const ids = (xs: string[]) => xs.map((id) => resolveId(alias, id));
+    const inter = { saved: ids(interactions.saved), discarded: interactions.discarded.map((d) => ({ ...d, id: resolveId(alias, d.id) })) };
     const now = new Date();
     const own = external.map((e) => analyzeStandalone(externalToPosting(e), e.addedAt || now.toISOString()));
     const ownOpps = buildOpportunities(own).map((o) => ({ ...o, id: own.find((p) => p.key === o.primaryKey)!.externalId }));
@@ -37,9 +40,10 @@ export async function POST(req: Request) {
       postings: allPostings,
       profile,
       prefs,
-      interactions,
+      interactions: inter,
       filters,
       weights: weightsFromEnv(),
+      limit,
       now,
     });
 

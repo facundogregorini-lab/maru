@@ -89,7 +89,7 @@ describe("administración protegida", () => {
     expect(ok.status).toBe(200);
     const m = await ok.json();
     expect(m.uniqueOpen).toBeGreaterThan(0);
-    expect(m.duplicatesMerged).toBe(1); // GH 101 + Remotive 555
+    expect(m.duplicatesMerged).toBe(2); // GH 101 + Remotive 555, y el mismo puesto de la misma empresa en otra ciudad
     expect(m.sources.find((s: { id: string }) => s.id === "remotive").exclusive).toBeGreaterThan(0);
   });
   it("agregar empresa exige admin y rechaza URLs no admitidas", async () => {

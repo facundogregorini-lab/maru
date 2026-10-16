@@ -6,6 +6,7 @@ import CtaScene from "@/components/landing/CtaScene";
 import { ResultsList } from "@/components/landing/Evidence";
 import EvidenceWall from "@/components/landing/EvidenceWall";
 import Faq from "@/components/landing/Faq";
+import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
 import Laurels from "@/components/landing/Laurels";
 import { ChatMock, CvMock, MatchMock, MockPanel, TrackerMock, VideoMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
@@ -49,7 +50,7 @@ export default async function Home() {
               </span>
             </h1>
             <p className="animate-rise mx-auto mt-3 max-w-[512px] text-[15px] leading-snug sm:text-base lg:mx-0 [animation-delay:400ms]">
-              Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en menos de 1 minuto!
+              Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en minutos!
             </p>
             {/* Escritorio: un solo botón grande, como "TRY FOR FREE". Celular: dos botones, como jobright. */}
             <div className="animate-rise mt-5 flex flex-wrap justify-center gap-3 lg:mt-14 lg:justify-start [animation-delay:500ms]">
@@ -280,21 +281,7 @@ function HeroVideo() {
           <span className="h-2.5 w-2.5 rounded-full bg-ink" />
           <span className="h-2.5 w-2.5 rounded-full bg-ink" />
         </div>
-        <video
-          className="block aspect-video w-full bg-[#f2f4f3]"
-          poster="/video/maru-intro-poster.jpg"
-          aria-label="Presentación de Maru: estrategia, matches, autocompletado y CV a medida"
-          autoPlay
-          muted
-          loop
-          playsInline
-          controls
-          preload="auto"
-        >
-          {/* H.264 para Safari y Chrome; VP9 para los navegadores sin H.264. */}
-          <source src="/video/maru-intro.mp4" type='video/mp4; codecs="avc1.640020"' />
-          <source src="/video/maru-intro.webm" type="video/webm; codecs=vp9" />
-        </video>
+        <HeroVideoPlayer />
       </div>
     </div>
   );

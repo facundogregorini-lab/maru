@@ -77,6 +77,8 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
                 { href: "/entrevista", label: "Entrevista con IA" },
                 { href: "/#evidencia", label: "La evidencia" },
                 { href: "/#faq", label: "Preguntas frecuentes" },
+                { href: "/terminos", label: "Términos y condiciones" },
+                { href: "/privacidad", label: "Privacidad" },
               ]}
             />
             <div>

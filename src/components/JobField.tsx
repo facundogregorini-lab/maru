@@ -81,7 +81,7 @@ export default function JobField({ input, generalLabel = "Sin búsqueda concreta
   const { modo, setModo, jobUrl, setJobUrl, jobText, setJobText, showJobText, setShowJobText, empresa, setEmpresa, rol, setRol, textRef } = input;
   return (
     <>
-      <div className="mb-4 inline-flex flex-wrap gap-1 rounded-full bg-sand p-1 text-sm">
+      <div className="mb-4 inline-flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
         {(
           [
             ["busqueda", "Tengo la búsqueda"],
@@ -92,7 +92,7 @@ export default function JobField({ input, generalLabel = "Sin búsqueda concreta
             key={m}
             type="button"
             onClick={() => setModo(m)}
-            className={`rounded-full px-4 py-1.5 transition ${modo === m ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+            className={`rounded-full px-4 py-1.5 transition ${modo === m ? "bg-ink font-medium text-white" : "text-ink/70 hover:text-ink"}`}
           >
             {label}
           </button>

@@ -188,3 +188,24 @@ export function findTracked(input: Pick<TrackInput, "id" | "jobUrl" | "title" | 
   const i = findIndex(items, input);
   return i >= 0 ? items[i] : null;
 }
+
+/**
+ * Puesto y empresa a partir del título de la página de un formulario (lo que manda la extensión).
+ * Greenhouse: "Job Application for Product Manager at Acme"; Lever: "Acme - Product Manager"; si no, el título tal cual.
+ */
+export function jobFromPage(title: string, url: string): { title: string; company: string } {
+  const t = title.replace(/\s+/g, " ").trim();
+  const at = t.match(/^(?:job application for\s+)?(.+?)\s+(?:at|en|@)\s+(.+)$/i);
+  if (at) return { title: at[1].trim(), company: at[2].trim() };
+  const dash = t.split(/\s+[-–|]\s+/);
+  if (/lever\.co/.test(url) && dash.length >= 2) return { company: dash[0], title: dash.slice(1).join(" - ") };
+  let company = "";
+  try {
+    const u = new URL(url);
+    // boards.greenhouse.io/acme/…, jobs.lever.co/acme/…, jobs.ashbyhq.com/acme/…: la empresa es la primera parte de la ruta.
+    company = /greenhouse|lever|ashby|workable|recruitee|breezy/.test(u.host) ? (u.pathname.split("/")[1] ?? "") : u.host.replace(/^(www|jobs|careers|apply)\./, "").split(".")[0];
+  } catch {
+    // link inválido: sin empresa
+  }
+  return { title: t || "Postulación", company: company.replace(/[-_]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) };
+}

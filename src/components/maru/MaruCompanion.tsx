@@ -205,6 +205,25 @@ export default function MaruCompanion() {
     setMode("mini");
   }, [setGuide, setMode]);
 
+  // En celular se corre mientras scrolleás (para no tapar lo que leés) y vuelve al frenar.
+  const dock = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = dock.current;
+    if (!el) return;
+    let t = 0;
+    const onScroll = () => {
+      if (window.innerWidth >= 640 || modeRef.current !== "work") return;
+      el.dataset.away = "1";
+      clearTimeout(t);
+      t = window.setTimeout(() => delete el.dataset.away, 900);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(t);
+    };
+  }, []);
+
   const onMaru = () => {
     if (mode === "guide") return close("cerrada");
     if (mode === "ask") return open(0);
@@ -212,7 +231,7 @@ export default function MaruCompanion() {
   };
 
   return (
-    <div className="pointer-events-none fixed bottom-3 right-3 z-50 flex flex-col items-end print:hidden sm:bottom-4 sm:right-5">
+    <div ref={dock} className="maru-dock pointer-events-none fixed bottom-3 right-3 z-50 flex flex-col items-end print:hidden sm:bottom-4 sm:right-5">
       {mode === "ask" && (
         <Ask
           onYes={() => open(0)}
@@ -366,7 +385,7 @@ function Guide({
 
       <div className="overflow-y-auto overscroll-contain">
         {isOffer ? (
-          <Offer key="offer" client={client} onFinish={onFinish} />
+          <Offer key="offer" client={client} sawAll={done === total} onFinish={onFinish} />
         ) : (
           <div key={step.id} className="maru-step-in px-4 pb-3 pt-4">
             <div className="flex items-start gap-3">
@@ -427,7 +446,7 @@ function Guide({
 }
 
 /** El final: si no es cliente, la oferta "no-brainer"; si ya lo es, gracias. */
-function Offer({ client, onFinish }: { client: boolean; onFinish: () => void }) {
+function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean; onFinish: () => void }) {
   if (client)
     return (
       <div className="maru-step-in px-4 py-5 text-center">
@@ -446,7 +465,7 @@ function Offer({ client, onFinish }: { client: boolean; onFinish: () => void }) 
   return (
     <div className="maru-step-in relative overflow-hidden px-4 pb-4 pt-5">
       <Confetti />
-      <p className="text-center text-[11px] font-bold uppercase tracking-wide text-ink/50">Ya lo viste todo 🎉</p>
+      <p className="text-center text-[11px] font-bold uppercase tracking-wide text-ink/50">{sawAll ? "Ya lo viste todo 🎉" : "Llegaste al final 🎉"}</p>
       <h2 className="mt-1 text-center text-xl font-extrabold leading-tight">Todo Maru, para toda tu búsqueda</h2>
       <div className="mt-3 rounded-2xl bg-ink px-4 py-4 text-center text-white">
         <p className="font-display text-[40px] font-extrabold leading-none tracking-tight">

@@ -105,6 +105,8 @@ export const RankingRequestSchema = z.object({
   interactions: InteractionsSchema,
   filters: FiltersSchema,
   external: z.array(ExternalJobSchema).max(30).optional(),
+  /** Cuántas mostrar por lista ("Ver más" suma de a 40). */
+  limit: z.number().int().min(10).max(400).optional(),
 });
 
 export type ExternalJob = z.infer<typeof ExternalJobSchema>;

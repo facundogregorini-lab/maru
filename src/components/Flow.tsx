@@ -236,7 +236,7 @@ export default function Flow() {
               )}
             </StepCard>
 
-            <StepCard n={2} title="¿Por qué esta vacante?" hint="Contalo con tus palabras, como si se lo contaras a una amiga. Escribilo o grabalo.">
+            <StepCard n={2} title="¿Por qué esta vacante?" hint="Contalo con tus palabras, como si se lo contaras a alguien de confianza. Escribilo o grabalo.">
               <ul className="mb-3 grid gap-2 sm:grid-cols-3">
                 {GUIDE.map((g) => (
                   <li key={g} className="rounded-xl bg-sand px-3 py-2 text-xs leading-snug text-muted">
@@ -327,7 +327,7 @@ function Results({
         {analysis.puesto} <span className="text-muted">· {analysis.empresa}</span>
       </h1>
 
-      <div className="mt-6 inline-flex rounded-full bg-sand p-1 text-sm">
+      <div className="mt-6 inline-flex rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
         {(
           [
             ["cv", "CV optimizado"],
@@ -338,7 +338,7 @@ function Results({
             key={key}
             type="button"
             onClick={() => setTab(key)}
-            className={`rounded-full px-5 py-2 transition ${tab === key ? "bg-paper font-medium shadow-sm" : "text-muted hover:text-ink"}`}
+            className={`rounded-full px-5 py-2 transition ${tab === key ? "bg-ink font-medium text-white" : "text-ink/70 hover:text-ink"}`}
           >
             {label}
           </button>

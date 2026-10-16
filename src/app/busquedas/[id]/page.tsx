@@ -144,6 +144,18 @@ export default async function JobPage({ params }: Props) {
           </Boost>
         </aside>
       </div>
+
+      {/* Celular: lo importante siempre a mano, sin bajar hasta el final del aviso. */}
+      <div data-bottom-bar className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-black/[0.06] bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:hidden">
+        <div className="flex-1">
+          <PrepareJob id={j.id} to="postulacion" className="press block w-full rounded-full bg-ink py-3 text-center text-sm font-semibold text-white disabled:opacity-60">
+            Adaptar mi CV
+          </PrepareJob>
+        </div>
+        <ApplyLink job={track} className="press flex flex-1 items-center justify-center rounded-full bg-neon py-3 text-sm font-extrabold uppercase">
+          Postularme ↗
+        </ApplyLink>
+      </div>
     </AppShell>
   );
 }

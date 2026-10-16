@@ -1,6 +1,7 @@
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import type { Directory } from "./directory";
+import { groupOpportunities } from "./group";
 import { emptyInventory } from "./inventory";
 import type { Inventory, StoredPosting } from "./types";
 
@@ -15,7 +16,8 @@ import type { Inventory, StoredPosting } from "./types";
 
 const DATA_DIR = path.join(process.cwd(), "data", "match");
 
-type Loaded = { inv: Inventory; postings: Map<string, StoredPosting>; mtime: number };
+/** `inv.opportunities` llega agrupado (un puesto por empresa); `alias` lleva los ids de las copias al representante. */
+type Loaded = { inv: Inventory; postings: Map<string, StoredPosting>; alias: Map<string, string>; mtime: number };
 let cache: Loaded | null = null;
 
 export async function loadInventory(file = process.env.MATCH_INVENTORY_PATH ?? path.join(DATA_DIR, "inventory.json")): Promise<Loaded> {
@@ -23,12 +25,19 @@ export async function loadInventory(file = process.env.MATCH_INVENTORY_PATH ?? p
   try {
     mtime = (await stat(file)).mtimeMs;
   } catch {
-    return { inv: emptyInventory("real"), postings: new Map(), mtime: 0 };
+    return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
   }
   if (cache && cache.mtime === mtime) return cache;
-  const inv = { ...emptyInventory("real"), ...(JSON.parse(await readFile(file, "utf8")) as Inventory) };
-  cache = { inv, postings: new Map(inv.postings.map((p) => [p.key, p])), mtime };
+  const raw = { ...emptyInventory("real"), ...(JSON.parse(await readFile(file, "utf8")) as Inventory) };
+  const { opportunities, alias } = groupOpportunities(raw.opportunities);
+  const inv = { ...raw, opportunities };
+  cache = { inv, postings: new Map(inv.postings.map((p) => [p.key, p])), alias, mtime };
   return cache;
+}
+
+/** El id de una búsqueda agrupada: si era una copia, el del representante. */
+export function resolveId(alias: Map<string, string>, id: string): string {
+  return alias.get(id) ?? id;
 }
 
 export async function loadDirectory(): Promise<Directory> {

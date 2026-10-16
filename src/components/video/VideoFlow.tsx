@@ -121,7 +121,7 @@ export default function VideoFlow() {
             <StepCard n={3} title="Lo que querés que se lleven" hint="Por qué te entusiasma, qué te hace distinta o distinto. Escribilo o grabalo.">
               <textarea
                 rows={5}
-                placeholder="Quiero que sepan que… Lo que más disfruto es… Algo de lo que estoy orgullosa/o…"
+                placeholder="Quiero que sepan que… Lo que más disfruto es… Un logro que me enorgullece…"
                 value={motivacion}
                 onChange={(e) => setMotivacion(e.target.value)}
                 className={`${inputClass} leading-relaxed`}

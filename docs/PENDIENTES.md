@@ -1,5 +1,7 @@
 # Pendientes y traspaso (para seguir con otra IA)
 
+> Auditoría completa con puntajes por producto y mejoras priorizadas: [docs/AUDITORIA.md](AUDITORIA.md).
+
 Estado al 16/10/2026. Todo lo anterior está mergeado en `main` y publicado en https://maru-grego7.vercel.app.
 
 ## Objetivo del producto
@@ -27,7 +29,6 @@ Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español 
 
 ## PENDIENTE 1: Seguimiento, lo que quedó afuera
 
-- **Extensión → seguimiento**: corre en otros dominios y no puede escribir el localStorage de Maru. Opciones: guardar en `chrome.storage` y leerlo con un content script en el dominio de Maru, o abrir `/seguimiento?add=<url>`.
 - **Landing con la plantilla** (opcional): agregar `"seguimiento"` a `src/lib/products.ts` y usar `ProductHero` + tablero en `#empezar` + `ProductMore`, como jobright `/tools/job-tracker`.
 
 ## PENDIENTE 2: lo que jobright tiene y Maru todavía no
@@ -41,8 +42,6 @@ Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español 
 ## PENDIENTE 3: pulido
 
 - Resultados del Match: el encabezado ("Oportunidades para vos" + pestañas) todavía no usa `AppShell`; podría pasar al formato app.
-- "¡en menos de 1 minuto!" del hero: armar un CV puede tardar ~1 minuto; evaluar "¡en minutos!".
-- Selector "Tengo la búsqueda / Carta espontánea" de los flujos sigue en menta; pasar a blanco/negro como el resto.
 
 ## Cómo trabajar en el repo
 

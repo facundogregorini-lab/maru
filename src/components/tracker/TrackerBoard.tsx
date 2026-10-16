@@ -9,6 +9,7 @@ import {
   ARTIFACT_LABELS,
   STATUSES,
   TRACKER_EVENT,
+  jobFromPage,
   TRACKER_KEY,
   listTracked,
   removeTracked,
@@ -51,6 +52,17 @@ const fmtDate = (t: number) => new Date(t).toLocaleDateString("es-AR", { day: "n
 /** Tablero tipo kanban como el "Job Tracker" de jobright: columnas por estado; en celular, pestañas. */
 export default function TrackerBoard() {
   const items = useTracked();
+  const router = useRouter();
+
+  // Viene de la extensión ("Guardar en mi seguimiento"): sumamos la postulación y limpiamos la URL.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const url = q.get("add");
+    if (!url || !/^https?:\/\//.test(url)) return;
+    const job = jobFromPage(q.get("title") ?? "", url);
+    upsertTracked({ ...job, jobUrl: url, artifact: "extension" });
+    router.replace("/seguimiento");
+  }, [router]);
   const [tab, setTab] = useState<TrackStatus>("guardada");
   const [adding, setAdding] = useState(false);
 

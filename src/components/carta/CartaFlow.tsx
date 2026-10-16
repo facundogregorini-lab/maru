@@ -202,7 +202,7 @@ export default function CartaFlow() {
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="La búsqueda" hint="Pegá el link de la publicación, o escribile a una empresa aunque no haya una búsqueda abierta.">
-              <div className="mb-4 inline-flex flex-wrap gap-1 rounded-full bg-sand p-1 text-sm">
+              <div className="mb-4 inline-flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
                 {(
                   [
                     ["busqueda", "Tengo la búsqueda"],
@@ -213,7 +213,7 @@ export default function CartaFlow() {
                     key={m}
                     type="button"
                     onClick={() => setModo(m)}
-                    className={`rounded-full px-4 py-1.5 transition ${modo === m ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+                    className={`rounded-full px-4 py-1.5 transition ${modo === m ? "bg-ink font-medium text-white" : "text-ink/70 hover:text-ink"}`}
                   >
                     {label}
                   </button>
@@ -246,7 +246,7 @@ export default function CartaFlow() {
               )}
             </StepCard>
 
-            <StepCard n={2} title="Lo que querés contar" hint="Con tus palabras, como si se lo contaras a una amiga. Escribilo o grabalo.">
+            <StepCard n={2} title="Lo que querés contar" hint="Con tus palabras, como si se lo contaras a alguien de confianza. Escribilo o grabalo.">
               <ul className="mb-3 grid gap-2 sm:grid-cols-3">
                 {GUIDE.map((g) => (
                   <li key={g} className="rounded-xl bg-sand px-3 py-2 text-xs leading-snug text-muted">
