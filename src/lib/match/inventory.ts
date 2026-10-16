@@ -336,6 +336,20 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
   });
 }
 
+/**
+ * Lo que se guarda en data/match/inventory.json: las oportunidades se derivan de las publicaciones
+ * (ids estables por hash), así que no se guardan y se reconstruyen al cargar. Ahorra ~30% del archivo,
+ * que GitHub limita a 100 MB.
+ */
+export function forStorage(inv: Inventory): Inventory {
+  return { ...inv, opportunities: [] };
+}
+
+/** Oportunidades del inventario: las guardadas (fixtures viejos) o reconstruidas desde las publicaciones. */
+export function opportunitiesOf(inv: Pick<Inventory, "opportunities" | "postings">): Opportunity[] {
+  return inv.opportunities?.length ? inv.opportunities : buildOpportunities(inv.postings);
+}
+
 export function recordRun(inv: Inventory, run: Omit<SyncRun, "id">, keep = 30) {
   inv.runs = [{ id: sha(run.startedAt, 10), ...run }, ...inv.runs].slice(0, keep);
 }

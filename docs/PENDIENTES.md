@@ -41,6 +41,10 @@ Detalle operativo y saldos en [IMPORTACIONES.md](IMPORTACIONES.md). Pendiente, e
 4. **Interior del país:** hay poca oferta en Tucumán, Mendoza y Neuquén en todas las fuentes. Sumar búsquedas de Google Jobs por ciudad cada mes (gratis) y palabras de Computrabajo por provincia si se usa el saldo de Apify.
 5. **Revisión manual (E1/E3):** repetir la revisión de 40 casos del E0 sobre `research/e1-importacion-2026-10-16/resultados.json`. Las métricas automáticas mejoraron, pero falta la mirada humana: falsos positivos, avisos vencidos en el origen y calidad de Computrabajo.
 6. ~~**Vigencia de importados**~~ (hecho 16/10): `scripts/match-liveness.ts` corre en `match-sync` después de la sincronización. Revisa hasta 150 importados por día, cada uno cada 3 días como mínimo. Cierra con 404/410 o con frases explícitas ("ya no está disponible", "No longer accepting applications"). Bloqueos y errores no cierran nada. Falta mirar en los logs qué fuentes responden con bloqueos (LinkedIn suele hacerlo) y sumar frases reales si aparecen avisos cerrados sin detectar.
+8. **Tamaño de `data/match/inventory.json`:** desde el 16/10 no guarda las oportunidades, que se reconstruyen al cargar en 0,4 s: pasó de 50 a 36 MB. GitHub rechaza archivos de más de 100 MB. Si vuelve a crecer:
+   - recortar descripciones guardadas (hoy hasta 6.000–12.000 caracteres);
+   - acortar la retención de cerrados (30 días);
+   - o mover el inventario a una base o a Vercel Blob.
 7. **Probar en el producto con Computer Use** (PLAN-AVISOS §5.6): búsquedas generalistas, filtro Argentina, logos, "vista hace…", detalle y destino original, también en celular.
 
 Seguridad: las claves se cargaron como secrets de GitHub Actions. Si las que se pegaron en el chat del 16/10 no se rotaron, rotarlas y actualizar los secrets y Vercel. El repo es público: nunca pasarlas como inputs ni en archivos.
