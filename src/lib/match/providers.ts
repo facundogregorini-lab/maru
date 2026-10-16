@@ -33,6 +33,9 @@ export type Cohort = { id: string; label: string; title: string };
 export const FANTASTIC_COHORTS: Cohort[] = [
   { id: "G1", label: "Administración, finanzas y RR. HH.", title: 'administrativo OR administrativa OR contable OR contador OR finanzas OR tesorería OR "recursos humanos" OR recruiter OR "talent acquisition" OR facturación' },
   { id: "G2", label: "Ventas, operaciones y logística", title: 'comercial OR ventas OR vendedor OR "account executive" OR operaciones OR logística OR "supply chain" OR depósito OR compras OR "atención al cliente"' },
+  // Segundo corte (17/10): títulos generalistas que G1/G2 no pidieron, para no pagar repetidos.
+  { id: "G3", label: "Generalistas por rol (analista, asistente, coordinación)", title: 'analista OR asistente OR auxiliar OR coordinador OR coordinadora OR supervisor OR encargado OR responsable OR "jefe de"' },
+  { id: "G4", label: "Atención, salud, educación y retail", title: 'recepcionista OR cajero OR "call center" OR "customer service" OR enfermero OR enfermera OR docente OR farmacéutico OR repositor OR "promotor"' },
   { id: "T1", label: "Tecnología, datos y producto", title: 'developer OR desarrollador OR "software engineer" OR "data analyst" OR "analista de datos" OR QA OR "product manager"' },
 ];
 

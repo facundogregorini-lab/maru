@@ -67,7 +67,7 @@ describe("Fantastic.jobs → aviso normalizado", () => {
     expect(rejected).toEqual({ repetido_en_la_respuesta: 1, vencido: 1, antiguo: 1, descripcion_corta: 1, faltan_campos: 1 });
   });
   it("las cohortes cubren generalistas y tecnología", () => {
-    expect(FANTASTIC_COHORTS.map((c) => c.id)).toEqual(["G1", "G2", "T1"]);
+    expect(FANTASTIC_COHORTS.map((c) => c.id)).toEqual(["G1", "G2", "G3", "G4", "T1"]);
   });
 });
 
