@@ -1,6 +1,6 @@
 # Estado y próximos pasos de Maru
 
-Actualizado el 16/10/2026. La PR #23 (cuentas, sincronización y planes) y la PR #24 (teleprompter, cámaras y perfil en texto) ya están integradas en `main`. El login Google de la PR #22 está preservado. El piloto de Apify se documenta en [APIFY.md](APIFY.md); su salida queda separada del inventario público y no se activaron consumos recurrentes.
+Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto) y #26 (piloto Apify y calidad de avisos) ya están integradas en `main`. El login Google de la PR #22 está preservado. El piloto de Apify se documenta en [APIFY.md](APIFY.md); su salida queda separada del inventario público y no se activaron consumos recurrentes.
 
 ## Implementado en esta tanda
 
@@ -29,7 +29,7 @@ Actualizado el 16/10/2026. La PR #23 (cuentas, sincronización y planes) y la PR
 1. **Definición comercial.** Confirmar o ajustar la propuesta antes de habilitar cobro: semanal $4.500, mensual $10.000 y trimestral $22.500 (destacado); gratis 1 CV y 1 carta por día y 1 entrevista y 1 guion por semana; pago ilimitado con uso razonable (25 pedidos por día); STAR, feedback de cámara y Word sólo con plan. Detalle en [COBROS.md](COBROS.md). El modo actual sigue siendo gratis. El buscador, ranking, lectura de perfil y extensión siguen gratis.
 2. **Mercado Pago.** Crear/configurar la aplicación y cargar `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET` en Vercel. Configurar notificaciones firmadas a `<dominio>/api/billing/webhook` para suscripciones, comprobantes y pagos. El circuito exacto debe probarse con la cuenta: no se hicieron cobros reales. No sirve pegar un link de pago genérico ni volver con `?suscripcion=ok`. Pasos y fuentes en [COBROS.md](COBROS.md).
 3. **Datos del negocio y legales.** Titular/razón social, identificación fiscal, domicilio y contacto; revisión de términos y privacidad, política/procedimiento de arrepentimiento y reembolso, y su botón antes de vender. La cancelación de renovación ya existe; este circuito legal depende de la definición del negocio.
-4. **Google.** Ya está en main y hay sesión real observada durante el QC. Sólo si cambia el dominio o falta configuración en otro entorno: revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
+4. **Google y email.** El código está en main. En el dominio nuevo, Google devuelve `redirect_uri_mismatch`: agregar `https://www.marucoach.com/api/auth/google/callback` al cliente OAuth. El ingreso por email falla porque Production no tiene `SMTP_URL`; configurar también `EMAIL_FROM`. Sólo si cambia el dominio o falta configuración en otro entorno: revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
 5. **Validación real.** Ingresar con la misma cuenta en compu y celular, guardar una búsqueda, editar desde ambos y comprobar el borrado. Confirmar que están las variables de Redis, IA y envío de emails. No fue posible comprobar el Redis productivo con una sesión real desde este entorno.
 6. **Chrome Web Store.** Crear/completar la cuenta de publicador, ficha, datos de privacidad y subir el ZIP generado por `/extension`. La instalación por ZIP sigue disponible hasta publicar. Usar únicamente testimonios de usuarios reales que autoricen publicarlos.
 7. **Dominio y medición.** Confirmar dominio canónico en `NEXT_PUBLIC_SITE_URL`, email en `NEXT_PUBLIC_CONTACT_EMAIL` y activar Vercel Analytics si se desea usarlo.
@@ -56,3 +56,7 @@ Mantener el idioma rioplatense, datos reales y los tokens existentes. No inventa
 ## Próximo paso para avisos pagos
 
 La conexión MCP de Codex ya funciona. Para correr el pipeline fuera del chat hace falta `APIFY_TOKEN` como secreto del runner, un presupuesto recurrente aprobado y una selección de consultas por rol/provincia. El permiso de US$0,50 fue sólo para el piloto. Comparar las fuentes con muestras más amplias antes de prometer cobertura nacional. El comando `match:apify` por defecto es dry-run y produce candidatos separados del inventario de producción.
+
+## Fantastic.jobs y SerpAPI
+
+Variables `FANTASTIC_JOBS` y `SERP_API` cargadas por el dueño en Production. Panel de pruebas privadas y límites documentados en [PROVEEDORES-AVISOS.md](PROVEEDORES-AVISOS.md). Completar mediciones reales tras recuperar login del dominio nuevo. No se incorporan resultados al inventario ni se crean recurrencias con esta prueba.

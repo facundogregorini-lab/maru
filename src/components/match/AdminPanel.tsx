@@ -7,6 +7,8 @@ import { FAMILY_LABEL, SENIORITY_LABEL } from "@/lib/match/labels";
 import type { coverageMetrics } from "@/lib/match/metrics";
 import { ErrorBanner, inputClass, post } from "../ui";
 
+import ProviderPilot from "./ProviderPilot";
+
 type Metrics = ReturnType<typeof coverageMetrics>;
 
 const STATE_LABEL: Record<string, string> = {
@@ -153,6 +155,7 @@ export default function AdminPanel() {
         </Section>
       )}
 
+      <ProviderPilot />
       <AddCompany />
     </div>
   );
