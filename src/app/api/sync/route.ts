@@ -15,7 +15,10 @@ const NO_STORE = { "Cache-Control": "no-store" };
 
 function who(req: Request): string | null {
   try {
-    return sessionEmail(req);
+    const email = sessionEmail(req);
+    const expected = req.headers.get("X-Maru-Account");
+    // La cookie puede cambiar desde otra pestaña antes de que React reciba la nueva sesión.
+    return expected && expected !== email ? null : email;
   } catch (err) {
     console.error("[sync]", err instanceof Error ? err.message : err);
     return null;
@@ -48,19 +51,20 @@ export async function PUT(req: Request) {
   if (!dbConfigured()) return noDb();
 
   const raw = await req.text();
-  if (raw.length > MAX_DOC_BYTES + 100) return json({ error: "Es demasiado para guardar de una vez.", code: "TOO_LARGE" }, 413);
-  let body: { doc?: unknown; data?: unknown };
+  if (new TextEncoder().encode(raw).byteLength > MAX_DOC_BYTES + 200) return json({ error: "Es demasiado para guardar de una vez.", code: "TOO_LARGE" }, 413);
+  let body: { doc?: unknown; data?: unknown; baseVersion?: unknown };
   try {
     body = JSON.parse(raw);
   } catch {
     return json({ error: "Pedido inválido.", code: "BAD_REQUEST" }, 400);
   }
-  const { doc, data = null } = body ?? {};
-  if (!isSyncDoc(doc) || !validDocData(doc, data)) return json({ error: "Pedido inválido.", code: "BAD_REQUEST" }, 400);
+  const { doc, data = null, baseVersion = 0 } = body ?? {};
+  if (!Number.isSafeInteger(baseVersion) || (baseVersion as number) < 0 || !isSyncDoc(doc) || !validDocData(doc, data)) return json({ error: "Pedido inválido.", code: "BAD_REQUEST" }, 400);
 
   try {
-    const stored = await writeDoc(email, doc, data);
-    return json({ updatedAt: stored.updatedAt });
+    const result = await writeDoc(email, doc, data, baseVersion as number);
+    if (!result.ok) return json({ code: "SYNC_CONFLICT", current: result.current }, 409);
+    return json(result.current);
   } catch (err) {
     return failed(err);
   }

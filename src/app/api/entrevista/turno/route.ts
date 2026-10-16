@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { clampHistorial, contextoEntrevista, historialTexto } from "@/lib/entrevista";
 import { ENTREVISTA_TURNO_SYSTEM } from "@/lib/prompts";
@@ -9,6 +10,8 @@ type Body = { plan: EntrevistaPlan; opciones?: EntrevistaOpciones; historial: In
 
 /** Reacción a la última respuesta y, si hace falta, una repregunta. Rápido: esfuerzo bajo. */
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const b = (await req.json()) as Body;
     const historial = clampHistorial(b.historial);

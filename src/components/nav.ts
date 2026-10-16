@@ -1,5 +1,6 @@
 /** Secciones del sitio (header, menú y footer). Va aparte: los componentes de servidor no pueden importar datos de un módulo "use client". */
 export const NAV = [
+  { href: "/precios", label: "Planes" },
   { href: "/match", label: "Match" },
   { href: "/busquedas", label: "Búsquedas" },
   { href: "/postulacion", label: "Postulación" },

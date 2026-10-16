@@ -80,7 +80,8 @@ describe("/api/sync", () => {
 
   it("un borrado queda como marca sin datos", async () => {
     await PUT(req("PUT", "ana@example.com", { doc: "perfil", data: { profile: { nombre: "Ana" }, savedAt: 1 } }));
-    await PUT(req("PUT", "ana@example.com", { doc: "perfil", data: null }));
+    const { docs: before } = await (await GET(req("GET", "ana@example.com"))).json();
+    await PUT(req("PUT", "ana@example.com", { doc: "perfil", data: null, baseVersion: before.perfil.updatedAt }));
     const { docs } = await (await GET(req("GET", "ana@example.com"))).json();
     expect(docs.perfil.data).toBeNull();
   });
@@ -197,5 +198,76 @@ describe("sincronización entre dispositivos", () => {
     const { docs } = await (await GET(req("GET", "beto@example.com"))).json();
     // Sólo lo que Beto hizo con su sesión, no la tarjeta de Ana.
     expect(docs.tracker.data.map((c: TrackItem) => c.company)).toEqual(["Beto SA"]);
+  });
+});
+
+
+describe("regresiones de concurrencia", () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+  it("conserva altas desde dos dispositivos ya conectados", async () => {
+    const pc = await device("ana@example.com");
+    await pc.run(() => pc.sync.setSyncAccount("ana@example.com"));
+    await pc.run(() => pc.tracker.upsertTracked({ title: "Original", company: "Acme" }));
+    const cel = await device("ana@example.com");
+    await cel.run(() => cel.sync.setSyncAccount("ana@example.com"));
+    await pc.run(() => pc.tracker.upsertTracked({ title: "Desde PC", company: "Acme" }));
+    await cel.run(() => cel.tracker.upsertTracked({ title: "Desde celular", company: "Acme" }));
+    const { docs } = await (await GET(req("GET", "ana@example.com"))).json();
+    expect(docs.tracker.data.map((x: TrackItem) => x.title).sort()).toEqual(["Desde PC", "Desde celular", "Original"]);
+    expect(cel.read("maru:tracker:v1")).toHaveLength(3);
+  });
+  it("un borrado remoto no resucita con cambios pendientes", async () => {
+    const pc = await device("ana@example.com");
+    await pc.run(() => pc.sync.setSyncAccount("ana@example.com"));
+    await pc.run(() => pc.tracker.upsertTracked({ title: "Original", company: "Acme" }));
+    const cel = await device("ana@example.com");
+    await cel.run(() => cel.sync.setSyncAccount("ana@example.com"));
+    await pc.run(() => pc.sync.setSyncAccount(null));
+    await pc.run(() => pc.tracker.upsertTracked({ title: "Cambio pendiente", company: "Acme" }));
+    const { forgetEverything } = await import("@/lib/match/clientStore");
+    await cel.run(() => forgetEverything());
+    await pc.run(() => pc.sync.setSyncAccount("ana@example.com"));
+    const { docs } = await (await GET(req("GET", "ana@example.com"))).json();
+    expect(docs.tracker.data).toBeNull();
+    expect(pc.read("maru:tracker:v1")).toBeNull();
+  });
+  it("no devuelve una tarjeta borrada al conciliar cambios de otra tarjeta", () => {
+    const base = [card("a", 1), card("b", 1)];
+    const out = mergeDoc("tracker", [card("b", 1)], [card("a", 1), card("b", 2)], base) as TrackItem[];
+    expect(out.map((c) => c.id)).toEqual(["b"]);
+    expect(out[0].updatedAt).toBe(2);
+  });
+});
+
+describe("versiones del servidor", () => {
+  it("sólo acepta una de dos escrituras sobre la misma versión", async () => {
+    const [a, b] = await Promise.all([
+      PUT(req("PUT", "ana@example.com", { doc: "tracker", data: [card("a", 1)], baseVersion: 0 })),
+      PUT(req("PUT", "ana@example.com", { doc: "tracker", data: [card("b", 1)], baseVersion: 0 })),
+    ]);
+    expect([a.status,b.status].sort()).toEqual([200,409]);
+    const conflict = await (a.status === 409 ? a : b).json();
+    expect(conflict.current.updatedAt).toBeGreaterThan(0);
+  });
+  it("mantiene removidas las búsquedas guardadas al combinar con otro dispositivo", () => {
+    const base = { interactions: { saved: ["a"], discarded: [] }, updatedAt: 1 };
+    const local = { interactions: { saved: [], discarded: [] }, updatedAt: 3 };
+    const remote = { interactions: { saved: ["a", "b"], discarded: [] }, updatedAt: 2 };
+    expect((mergeDoc("match", local, remote, base) as {interactions:{saved:string[]}}).interactions.saved).toEqual(["b"]);
+  });
+  it("rechaza claves heredadas de Object.prototype", async () => {
+    expect((await PUT(req("PUT", "ana@example.com", { doc: "__proto__", data: {} }))).status).toBe(400);
+  });
+});
+
+
+describe("cambio de sesión desde otra pestaña", () => {
+  it("no guarda en B lo que el cliente todavía cree que pertenece a A", async () => {
+    const request = req("PUT", "beto@example.com", { doc: "tracker", data: [card("privada-de-ana", 1)], baseVersion: 0 });
+    request.headers.set("X-Maru-Account", "ana@example.com");
+    expect((await PUT(request)).status).toBe(401);
+    const { docs } = await (await GET(req("GET", "beto@example.com"))).json();
+    expect(docs.tracker).toBeNull();
   });
 });

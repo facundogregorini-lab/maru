@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { askStructured, cvBlocks, errorResponse } from "@/lib/claude";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { objetivoBlock } from "@/lib/objetivo";
@@ -9,6 +10,8 @@ export const maxDuration = 300;
 type Body = { source?: CvSource; objetivo: Objetivo; notas?: string };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const body = (await req.json()) as Body;
     const content = [...(await cvBlocks(normalizeCvSource(body))), objetivoBlock(body.objetivo, body.notas ?? "")];

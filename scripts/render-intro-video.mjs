@@ -17,11 +17,15 @@ const CHROME = process.env.CHROME_PATH ?? "/opt/pw-browsers/chromium-1194/chrome
 const FFMPEG = process.env.FFMPEG_PATH ?? "ffmpeg";
 const FPS = 30;
 const OUT_DIR = path.join(ROOT, "public", "video");
+// La misma agrupación que /busquedas y la home: no contar un aviso por cada ciudad.
+const grouping = await build({ entryPoints: [path.join(ROOT, "src/lib/match/group.ts")], bundle: true, write: false, format: "esm", platform: "node", logLevel: "silent" });
+const { groupOpportunities } = await import(`data:text/javascript;base64,${Buffer.from(grouping.outputFiles[0].text).toString("base64")}`);
+
 
 /** Números y búsquedas reales del inventario. */
 function inventoryData() {
   const inv = JSON.parse(readFileSync(path.join(ROOT, "data", "match", "inventory.json"), "utf8"));
-  const open = inv.opportunities.filter((o) => o.status === "abierta");
+  const open = groupOpportunities(inv.opportunities).opportunities.filter((o) => o.status === "abierta");
   const eligible = open.filter((o) => o.eligibility?.status === "elegible");
   // Búsquedas publicadas por día en los últimos 7 días completos (el día en curso queda afuera).
   const byDay = new Map();

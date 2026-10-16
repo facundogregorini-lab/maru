@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { VIDEO_FEEDBACK_SYSTEM } from "@/lib/prompts";
 import { VideoFeedbackSchema } from "@/lib/schemas";
@@ -17,6 +18,8 @@ type Body = {
 const MAX_FRAME_B64 = 400_000;
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const b = (await req.json()) as Body;
     if (!b.guion?.trim()) throw new UserFacingError("Falta el guion del video.", "BAD_REQUEST");

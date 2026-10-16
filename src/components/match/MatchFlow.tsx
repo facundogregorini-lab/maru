@@ -1,10 +1,13 @@
 "use client";
 
+import AppShell from "@/components/app/AppShell";
+import SiteShell from "@/components/SiteShell";
 import { useEffect, useRef, useState } from "react";
 import { EMPTY_STATE, forgetEverything, loadMatch, saveMatch, type MatchState } from "@/lib/match/clientStore";
 import { track } from "@/lib/match/events";
 import { profileToMatch } from "@/lib/match/profile";
 import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
+import { forgetAccountData, SYNC_EVENT } from "@/lib/sync/client";
 import { saveProfile } from "@/lib/profileStore";
 import type { Profile } from "@/lib/schemas";
 import CvSourceField, { useCvInput } from "../CvSourceField";
@@ -27,18 +30,31 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
   const [error, setError] = useState("");
   const cv = useCvInput();
   const topRef = useRef<HTMLDivElement>(null);
+  const skipSave = useRef(true);
 
   useEffect(() => {
-    const s = loadMatch();
-    setState(s);
-    if (s.profile && s.prefs) setStage("resultados");
-    else if (s.profile) setStage("preferencias");
-    setHydrated(true);
+    const refresh = () => {
+      const s = loadMatch();
+      skipSave.current = true;
+      setState(s);
+      if (s.profile && s.prefs) setStage("resultados");
+      else if (s.profile) setStage("preferencias");
+      else setStage("cv");
+      setHydrated(true);
+    };
+    refresh();
+    const onSync = (e: Event) => { if ((e as CustomEvent).detail?.doc === "match") refresh(); };
+    const onStorage = (e: StorageEvent) => { if (e.key === "maru:match:v1") refresh(); };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener(SYNC_EVENT, onSync);
     track("match_inicio");
+    return () => { window.removeEventListener(SYNC_EVENT, onSync); window.removeEventListener("storage", onStorage); };
   }, []);
 
   useEffect(() => {
-    if (hydrated) saveMatch(state);
+    if (!hydrated) return;
+    if (skipSave.current) { skipSave.current = false; return; }
+    saveMatch(state);
   }, [state, hydrated]);
 
   useEffect(() => {
@@ -70,18 +86,19 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
     }
   }
 
-  function wipe() {
-    if (!window.confirm("¿Borrar todos tus datos de Maru en este navegador? Perfil, preferencias, búsquedas, lo que armaste y tu seguimiento.")) return;
+  async function wipe() {
+    if (!window.confirm("¿Borrar tus datos de este navegador y, si ingresaste, de tu cuenta? Perfil, preferencias, búsquedas, lo que armaste y tu seguimiento.")) return;
     forgetEverything();
     cv.forgetSaved();
     setState(EMPTY_STATE);
     setStage("cv");
-    track("match_datos_borrados");
+    try { await forgetAccountData(); track("match_datos_borrados"); }
+    catch (err) { setError(err instanceof Error ? err.message : "No pudimos confirmar el borrado de tu cuenta."); }
   }
 
-  if (!hydrated) return <div className="min-h-[50vh]" />;
+  if (!hydrated) return <SiteShell><div className="min-h-[50vh]" /></SiteShell>;
 
-  return (
+  const content = (
     <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
@@ -161,6 +178,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
       )}
     </div>
   );
+  return stage === "resultados" ? <AppShell title="Mi match">{content}</AppShell> : <SiteShell>{content}</SiteShell>;
 }
 
 function guessCity(location: string): string {

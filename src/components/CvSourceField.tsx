@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DOCX_MIME, MAX_FILE_BYTES, PDF_MIME, buildCvSource, looksLikeDocx, looksLikePdf, type CvFile, type CvMode } from "@/lib/cvSource";
 import { forgetProfile, loadProfile, profileToText, type SavedProfile } from "@/lib/profileStore";
+import { SYNC_EVENT } from "@/lib/sync/client";
 import type { CvSource } from "@/lib/schemas";
 import LinkedinGuide from "./LinkedinGuide";
 
@@ -32,10 +33,21 @@ export function useCvInput() {
   const readSeq = useRef(0);
   const textRef = useRef<HTMLTextAreaElement>(null);
 
+  const editing = useRef(false);
+  editing.current = !!file || !!text.trim();
   useEffect(() => {
-    const s = loadProfile();
-    setSaved(s);
-    setUseSaved(!!s);
+    const refresh = () => {
+      const s = loadProfile();
+      setSaved(s);
+      if (!s) setUseSaved(false);
+      else if (!editing.current) setUseSaved(true);
+    };
+    refresh();
+    const onSync = (e: Event) => { if ((e as CustomEvent).detail?.doc === "perfil") refresh(); };
+    const onStorage = (e: StorageEvent) => { if (e.key === "maru:perfil:v1") refresh(); };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener(SYNC_EVENT, onSync);
+    return () => { window.removeEventListener(SYNC_EVENT, onSync); window.removeEventListener("storage", onStorage); };
   }, []);
 
   function switchMode(m: CvMode) {

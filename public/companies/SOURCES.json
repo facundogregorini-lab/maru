@@ -1,0 +1,104 @@
+{
+  "package": "simple-icons@16.35.0",
+  "icons": [
+    {
+      "slug": "airbnb",
+      "title": "Airbnb",
+      "hex": "FF5A5F",
+      "source": "https://www.airbnb.com"
+    },
+    {
+      "slug": "anthropic",
+      "title": "Anthropic",
+      "hex": "191919",
+      "source": "https://www.anthropic.com"
+    },
+    {
+      "slug": "cloudflare",
+      "title": "Cloudflare",
+      "hex": "F38020",
+      "source": "https://www.cloudflare.com/logo/",
+      "guidelines": "https://www.cloudflare.com/trademark/"
+    },
+    {
+      "slug": "figma",
+      "title": "Figma",
+      "hex": "F24E1E",
+      "source": "https://www.figma.com/using-the-figma-brand/",
+      "guidelines": "https://www.figma.com/using-the-figma-brand/"
+    },
+    {
+      "slug": "github",
+      "title": "GitHub",
+      "hex": "181717",
+      "source": "https://github.com/logos",
+      "guidelines": "https://github.com/logos"
+    },
+    {
+      "slug": "gitlab",
+      "title": "GitLab",
+      "hex": "FC6D26",
+      "source": "https://about.gitlab.com/press/press-kit/",
+      "guidelines": "https://about.gitlab.com/handbook/marketing/corporate-marketing/brand-activation/trademark-guidelines/"
+    },
+    {
+      "slug": "mercadopago",
+      "title": "Mercado Pago",
+      "hex": "00B1EA",
+      "source": "https://www.mercadopago.com"
+    },
+    {
+      "slug": "notion",
+      "title": "Notion",
+      "hex": "000000",
+      "source": "https://www.notion.so"
+    },
+    {
+      "slug": "nubank",
+      "title": "Nubank",
+      "hex": "820AD1",
+      "source": "https://nubank.com.br/en/press/"
+    },
+    {
+      "slug": "pinterest",
+      "title": "Pinterest",
+      "hex": "BD081C",
+      "source": "https://business.pinterest.com/en/brand-guidelines",
+      "guidelines": "https://business.pinterest.com/en/brand-guidelines"
+    },
+    {
+      "slug": "shopify",
+      "title": "Shopify",
+      "hex": "7AB55C",
+      "source": "https://www.shopify.com/brand-assets",
+      "guidelines": "https://www.shopify.com/brand-assets"
+    },
+    {
+      "slug": "spotify",
+      "title": "Spotify",
+      "hex": "1ED760",
+      "source": "https://developer.spotify.com/documentation/general/design-and-branding/#using-our-logo",
+      "guidelines": "https://developer.spotify.com/documentation/general/design-and-branding/#using-our-logo"
+    },
+    {
+      "slug": "stripe",
+      "title": "Stripe",
+      "hex": "635BFF",
+      "source": "https://stripe.com/newsroom/information"
+    },
+    {
+      "slug": "vercel",
+      "title": "Vercel",
+      "hex": "000000",
+      "source": "https://vercel.com/geist/brands",
+      "guidelines": "https://vercel.com/geist/brands"
+    },
+    {
+      "slug": "zapier",
+      "title": "Zapier",
+      "hex": "FF4F00",
+      "source": "https://www.figma.com/file/NQFxTCE5pGR3dHZt0DkOyy/Zapier-Brand-Guidelines-%5BExternal%5D?type=design&node-id=101-9701&mode=design",
+      "guidelines": "https://www.figma.com/file/NQFxTCE5pGR3dHZt0DkOyy/Zapier-Brand-Guidelines-%5BExternal%5D?type=design&node-id=101-9701&mode=design"
+    }
+  ]
+}

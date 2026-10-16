@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { load, save } from "@/lib/storage";
 import {
-  CHECKOUT_URL,
-  CLIENT_KEY,
   GUIDE_KEY,
   GUIDE_STEPS,
   NEW_GUIDE,
@@ -70,19 +69,17 @@ export default function MaruCompanion() {
     kickRef.current();
   }, []);
 
-  // Estado guardado + volver de pagar (?suscripcion=ok) marca a la persona como cliente.
+  const { email: accountEmail } = useAuth();
+  useEffect(() => {
+    let active = true;
+    setClient(false);
+    if (accountEmail) fetch("/api/billing/status", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((s) => { if (active) setClient(s?.plan === "maru"); }).catch(() => {});
+    return () => { active = false; };
+  }, [accountEmail]);
+
+  // El recorrido es local; el plan se consulta al servidor.
   useEffect(() => {
     const g = { ...NEW_GUIDE, ...(load<GuideState>(GUIDE_KEY) ?? {}) };
-    let isClient = load<boolean>(CLIENT_KEY) === true;
-    try {
-      if (new URLSearchParams(window.location.search).get("suscripcion") === "ok") {
-        isClient = true;
-        save(CLIENT_KEY, true);
-      }
-    } catch {
-      // sin URL legible: seguimos
-    }
-    setClient(isClient);
     setGuideState(g);
     setReady(true);
     if (g.status === "abierta") setMode(g.min ? "mini" : "guide");
@@ -482,18 +479,8 @@ function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean;
           </li>
         ))}
       </ul>
-      {CHECKOUT_URL ? (
-        <a href={CHECKOUT_URL} className="maru-shine press relative mt-4 block overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase">
-          Quiero a Maru conmigo
-        </a>
-      ) : (
-        <>
-          <Link href="/match" onClick={onFinish} className="maru-shine press relative mt-4 block overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase">
-            Empezar ahora
-          </Link>
-          <p className="mt-2 text-center text-[11px] text-ink/50">La suscripción se habilita muy pronto. Mientras tanto, probá todo.</p>
-        </>
-      )}
+      <Link href="/precios" onClick={onFinish} className="maru-shine press relative mt-4 block overflow-hidden rounded-full bg-neon py-3 text-center text-[15px] font-extrabold uppercase">Conocer los planes</Link>
+      <p className="mt-2 text-center text-[11px] text-ink/60">Consultá disponibilidad, límites y condiciones antes de contratar.</p>
       <button type="button" onClick={onFinish} className="mt-2 block w-full rounded-full py-2 text-center text-[13px] text-ink/60 hover:bg-black/[0.04] hover:text-ink">
         Ahora no, gracias
       </button>

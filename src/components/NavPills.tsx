@@ -58,8 +58,8 @@ export function NavPills() {
       <Link href="/busquedas" aria-current={path === "/busquedas" ? "page" : undefined} className="text-[13px] hover:text-brand aria-[current=page]:font-semibold">
         Búsquedas
       </Link>
-      <Link href="/entrevista" aria-current={path === "/entrevista" ? "page" : undefined} className="text-[13px] hover:text-brand aria-[current=page]:font-semibold">
-        Entrevista IA
+      <Link href="/precios" aria-current={path === "/precios" ? "page" : undefined} className="text-[13px] hover:text-brand aria-[current=page]:font-semibold">
+        Planes
       </Link>
     </nav>
   );

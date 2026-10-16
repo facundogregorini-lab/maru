@@ -1,10 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { bucketFor, clientIp, take } from "@/lib/rateLimit";
+import { bucketFor, clientIp, takeShared } from "@/lib/rateLimit";
 
 /** Límite de uso de las rutas de IA (ver src/lib/rateLimit.ts). */
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   if (req.method !== "POST") return NextResponse.next();
-  const wait = take(clientIp(req.headers), bucketFor(req.nextUrl.pathname));
+  let wait: number;
+  try { wait = await takeShared(clientIp(req.headers), bucketFor(req.nextUrl.pathname)); }
+  catch {
+    return NextResponse.json({ error: "No pudimos comprobar el límite de uso. Probá en un momento.", code: "SERVICE_UNAVAILABLE" }, { status: 503, headers: { "Retry-After": "30" } });
+  }
   if (!wait) return NextResponse.next();
   const minutes = Math.max(1, Math.ceil(wait / 60));
   return NextResponse.json(
@@ -16,6 +20,10 @@ export function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/api/analyze",
+    "/api/chat",
+    "/api/billing/checkout",
+    "/api/billing/cancel",
+    "/api/billing/status",
     "/api/generate",
     "/api/profile",
     "/api/cv/:path*",

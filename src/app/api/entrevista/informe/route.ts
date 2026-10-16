@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { clampHistorial, contextoEntrevista, historialTexto } from "@/lib/entrevista";
 import { ENTREVISTA_INFORME_SYSTEM } from "@/lib/prompts";
@@ -8,6 +9,8 @@ export const maxDuration = 300;
 type Body = { plan: EntrevistaPlan; opciones?: EntrevistaOpciones; historial: Intercambio[] };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const b = (await req.json()) as Body;
     const historial = clampHistorial(b.historial).filter((x) => x.respuesta.trim());

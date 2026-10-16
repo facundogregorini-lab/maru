@@ -81,14 +81,10 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
 ];
 
 /** La oferta del final del recorrido. */
-export const PLAN_PRICE = 10000;
-export const PLAN_PRICE_TEXT = `$${PLAN_PRICE.toLocaleString("es-AR")}`;
-export const PLAN_PER_DAY_TEXT = `$${Math.round(PLAN_PRICE / 30).toLocaleString("es-AR")}`;
-/** Link de pago (p. ej. una suscripción de Mercado Pago). Al volver del pago, que redirija a `/?suscripcion=ok`. */
-export const CHECKOUT_URL = process.env.NEXT_PUBLIC_CHECKOUT_URL ?? "";
+export { PLAN_PRICE, PLAN_PRICE_TEXT } from "@/lib/plans";
+export const PLAN_PER_DAY_TEXT = "$333";
 
 export const GUIDE_KEY = "maru:guia:v1";
-export const CLIENT_KEY = "maru:cliente";
 
 export type GuideState = {
   /** nueva: todavía no se la ofrecimos · rechazada: "ahora no" · abierta: en curso · cerrada: la cerró a mitad · terminada. */

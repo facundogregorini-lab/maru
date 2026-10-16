@@ -1,11 +1,12 @@
+import { BILLING_ENABLED } from "./plans";
 /**
  * Contenido de las páginas de producto, con la estructura de las landings de jobright
  * (hero, banda de números, "por qué", "cómo funciona", "más razones", evidencia y preguntas).
  * Regla: sólo lo que Maru hace hoy. Los números son de Maru o de estudios con fuente.
  */
 
-export type ProductId = "match" | "postulacion" | "cv" | "carta" | "video" | "entrevista" | "extension";
-export type VisualId = "jobs" | "match" | "cv" | "carta" | "chat" | "video" | "autofill" | "form" | "prefs" | "report" | "ats";
+export type ProductId = "match" | "postulacion" | "cv" | "carta" | "video" | "entrevista" | "extension" | "seguimiento";
+export type VisualId = "jobs" | "match" | "cv" | "carta" | "chat" | "video" | "autofill" | "form" | "prefs" | "report" | "ats" | "tracker";
 
 export type Stat = { value: string; label: string; source?: string };
 export type Bullet = [lead: string, text: string];
@@ -28,7 +29,7 @@ export type Product = {
   faq: [string, string][];
 };
 
-const FREE = "Gratis, sin tarjeta";
+const FREE = BILLING_ENABLED ? "Incluido según tu plan" : "Gratis durante el lanzamiento, sin tarjeta";
 
 export const PRODUCTS: Record<ProductId, Product> = {
   match: {
@@ -91,8 +92,8 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Cómo se calcula el puntaje?", "Es una compatibilidad estimada, nunca una probabilidad de contratación: 40% skills y experiencia, 35% lo que querés hacer, 15% seniority y 10% preferencias como modalidad, contrato, salario e idiomas."],
       ["¿De dónde salen las búsquedas?", "De portales de empleo y de las páginas de empleo de las empresas, todas públicas. Se actualizan todos los días y cada aviso lleva a la publicación original."],
       ["¿Puedo buscar remoto o por ubicación?", "Sí. Elegís modalidad y ubicación, y podés marcar como indispensable cualquier condición. Si el aviso no informa el dato, no se excluye: te avisamos que falta confirmarlo."],
-      ["¿Qué pasa con mis datos?", "Tu perfil y tus preferencias quedan sólo en tu navegador. Para ordenar las búsquedas se envían a Maru sin quedar registrados."],
-      ["¿Es gratis?", "Sí, el match es gratis y no necesitás cuenta."],
+      ["¿Qué pasa con mis datos?", "Tu perfil y preferencias quedan en tu navegador y, al ingresar, también en tu cuenta. El ranking los procesa sin guardar una copia adicional."],
+      ["¿Es gratis?", "El ranking es gratis. Para reutilizar tu perfil entre dispositivos, ingresá a tu cuenta."],
     ],
   },
 
@@ -158,7 +159,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios salen de tu CV. Si un dato ayudaría pero falta, queda un [completar] resaltado."],
       ["¿Qué recibo al final?", "Tu CV adaptado a esa búsqueda, listo para descargar en PDF o copiar como texto, y una respuesta sugerida para cada campo del formulario."],
       ["¿Funciona con cualquier portal?", "Lee la mayoría de los links. Si un portal no deja leer la vacante, pegás el texto y listo."],
-      ["¿Es gratis?", "Sí. Para descargar tu CV ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis por mes y un plan con más capacidad. Consultá Planes para ver los límites." : "Sí. Para descargar tu CV ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -224,7 +225,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Los diseños pasan los filtros ATS?", "Sí: los 24 son de una columna, con títulos estándar y texto seleccionable."],
       ["¿Puedo editarlo después?", "Sí. Tocás cualquier texto del CV y lo cambiás, y ajustás color, tipografía, espaciado y orden de secciones."],
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios se copian tal cual; si falta algo, te lo pregunta."],
-      ["¿Es gratis?", "Sí. Para descargarlo ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis por mes y un plan con más capacidad. Consultá Planes para ver los límites." : "Sí. Para descargarlo ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -290,7 +291,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Puedo editar la carta?", "Sí: la editás directo, pedís que reescriba un párrafo o generás otra versión con otro tono o largo."],
       ["¿En qué idiomas?", "Elegís el idioma de la carta al armarla."],
       ["¿Inventa logros?", "No. Usa tu experiencia real y lo que vos le contás."],
-      ["¿Es gratis?", "Sí. Para descargarla o copiarla ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis por mes y un plan con más capacidad. Consultá Planes para ver los límites." : "Sí. Para descargarla o copiarla ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -349,7 +350,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué necesito?", "Una compu con cámara y micrófono y un navegador actual."],
       ["¿Cuánto dura el video?", "Elegís 30, 60 o 90 segundos."],
       ["¿Puedo grabar varias tomas?", "Sí, y cada una tiene su feedback."],
-      ["¿Es gratis?", "Sí. Para descargar el video ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis por mes y un plan con más capacidad. Consultá Planes para ver los límites." : "Sí. Para descargar el video ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -406,7 +407,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué tipos de entrevista hay?", "Primera entrevista con RR. HH., con quien sería tu líder y técnica o de caso, con dificultad amable, estándar o exigente."],
       ["¿En qué idioma?", "Elegís el idioma antes de empezar."],
       ["¿Qué tiene el informe?", "Un puntaje, un veredicto, fortalezas, qué mejorar y una respuesta más fuerte con el método STAR para cada pregunta."],
-      ["¿Es gratis?", "Sí, y no necesitás cuenta para practicar."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés una práctica gratis por mes al ingresar y más capacidad con el plan mensual." : "Sí, y no necesitás cuenta para practicar."],
     ],
   },
 
@@ -459,7 +460,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
         ["Enviá vos", "Maru nunca envía el formulario."],
       ],
     },
-    reasons: ["Greenhouse, Lever y formularios web", "También dentro de la web de la empresa", "Tu CV queda en tu navegador", "Nunca envía sola", "No toca datos sensibles", FREE],
+    reasons: ["Greenhouse, Lever y formularios web", "También dentro de la web de la empresa", "Tu CV queda en tu navegador", "Nunca envía sola", "No toca datos sensibles", "Gratis, sin tarjeta"],
     faq: [
       ["¿En qué portales funciona?", "En Greenhouse, Lever y formularios web estándar, incluidos los que vienen dentro de la web de una empresa. Workday y los formularios de varios pasos todavía no."],
       ["¿Envía la postulación por mí?", "No. Completa el formulario y vos revisás y enviás."],
@@ -467,5 +468,12 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Dónde queda mi CV?", "Sólo en tu navegador, junto con el archivo para adjuntarlo."],
       ["¿Es gratis?", "Sí."],
     ],
+  },
+  seguimiento: {
+    name: "Seguimiento de postulaciones", strong: "Tu búsqueda,", light: "en un solo tablero", desc: "Guardá cada oportunidad, seguí el avance y encontrá lo que preparaste para cada empresa. Con tu cuenta, también desde otro dispositivo.", cta: "Organizar mis postulaciones", hero: "tracker", stats: [],
+    why: { title: "Cada oportunidad tiene su lugar", rows: [{ title: "De guardada a oferta", bullets: [["Un tablero claro", "Mové cada postulación entre guardada, postulada, entrevista, oferta y descartada."], ["Notas y materiales", "Anotá lo importante y volvé al CV, la carta o la práctica que necesitás preparar."]], cta: "Ver mi seguimiento", visual: "tracker" }] },
+    how: { tag: "Paso a paso", title: "Organizá tu próxima oportunidad", text: "Maru suma las búsquedas que preparás desde sus herramientas. También podés agregar una por tu cuenta.", steps: [["Guardá una búsqueda", "Desde el listado, Match o el detalle del aviso."], ["Prepará tu postulación", "Adaptá tu CV, escribí la carta o practicá una entrevista."], ["Actualizá el estado", "Mové la tarjeta y dejá tus notas."], ["Retomá desde otro dispositivo", "Ingresá con la misma cuenta para ver tu tablero."]] },
+    reasons: ["Estados claros", "Notas por oportunidad", "Carga manual", "Se integra con las herramientas", "Sin envíos automáticos", "Sincronización con tu cuenta"],
+    faq: [["¿Tengo que cargar todo a mano?", "No. Las herramientas de Maru agregan las búsquedas que preparás. También podés cargar una manualmente."], ["¿Se ve desde otro dispositivo?", "Sí, si ingresás con la misma cuenta. Sin cuenta, se guarda en este navegador."], ["¿Maru envía mi postulación?", "No. Vos decidís cuándo y cómo enviarla."]],
   },
 };

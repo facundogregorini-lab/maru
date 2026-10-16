@@ -106,13 +106,24 @@ Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL`
 Con sesión, el **perfil**, el **match** (preferencias, búsquedas guardadas y descartadas) y el **seguimiento** se copian a la cuenta y aparecen en cualquier dispositivo donde ingreses. Lo armado en cada herramienta (CV, carta, entrevista, video) sigue sólo en el navegador. Sin sesión, todo funciona como antes.
 
 - La base es un **Redis de Upstash** que se usa por su API REST (`src/lib/db.ts`, sin dependencias). Cada cuenta guarda un documento por clave (`maru:u:<hash del email>:perfil|match|tracker`), con la fecha del servidor.
-- `localStorage` sigue siendo la fuente de la app; `src/lib/sync/client.ts` sube cada cambio a los segundos y baja lo de la cuenta al ingresar, al cargar y al volver a la pestaña. Si cambiaron los dos lados, se juntan (`mergeDoc` en `src/lib/sync/docs.ts`: el seguimiento por tarjeta, el resto el más reciente). Si en ese navegador había otra cuenta, no se mezclan.
+- `localStorage` sigue siendo la fuente de la app; `src/lib/sync/client.ts` sube cada cambio a los segundos y baja lo de la cuenta al ingresar, al cargar y al volver a la pestaña. Si cambiaron los dos lados, se concilian con su versión común (`mergeDoc` en `src/lib/sync/docs.ts`: el seguimiento por tarjeta, el resto el más reciente). Si en ese navegador había otra cuenta, no se mezclan.
 - «Borrar mis datos» con sesión deja una marca sin datos en la cuenta, así se borra también en los demás dispositivos.
-- API: `GET /api/sync` y `PUT /api/sync` `{doc, data}`, ambas con sesión.
+- API: `GET /api/sync` y `PUT /api/sync` `{doc, data, baseVersion}`, ambas con sesión. `baseVersion` es el `updatedAt` confirmado (0 si nunca se guardó). Redis compara y escribe atómicamente: una versión vieja recibe 409 y el documento actual; el cliente concilia y reintenta. `X-Maru-Account` impide que una subida pendiente se asigne a otra cuenta si cambia la cookie desde otra pestaña.
+- Los borrados tienen prioridad frente a copias pendientes anteriores; las tarjetas y búsquedas removidas no se reintroducen al conciliar. Match y los selectores de perfil se refrescan al recibir datos y al cambiar otra pestaña.
+
 
 **Base actual:** `upstash-kv-gray-notebook`, compartida con los proyectos de `lab` (Manuelita, Biblioteca). Por eso todas las claves de Maru empiezan con `maru:`; las de esos proyectos usan otros prefijos (`user:`, `session:`, `biblio:`…). Si más adelante se quiere separar, alcanza con conectar otra base y cambiar las variables.
 
 **Conectarla en Vercel:** en el proyecto, **Storage → Create Database → Upstash for Redis** (plan gratis) y conectala a Production y Preview. Vercel agrega `KV_REST_API_URL` y `KV_REST_API_TOKEN` (también sirven `UPSTASH_REDIS_REST_URL`/`_TOKEN`, o los mismos nombres con prefijo). Después, **Redeploy**. Sin esas variables, en producción la sincronización queda apagada y en desarrollo usa una base en memoria.
+
+
+## Planes, protección de uso y chat
+
+- `/precios`: comparación de planes, checkout por cuenta, estado y cancelación. La suscripción queda **apagada** por defecto (`NEXT_PUBLIC_BILLING_ENABLED=false`). Precio y límites son una propuesta pendiente de confirmar. Activación, credenciales, pruebas y límites: [docs/COBROS.md](docs/COBROS.md).
+- La cuenta y el plan se identifican igual con Google y con magic link. Un retorno de pago o una marca del navegador no otorgan acceso: se verifica el pago del lado del servidor.
+- La protección por IP usa contadores atómicos en Redis con TTL y claves `maru:rate:` (IP con hash). Sin base configurada queda la alternativa en memoria. Si hay base y falla, las APIs protegidas devuelven 503 para no gastar IA sin control.
+- Chat en `/busquedas`: consultas de carrera y avisos del inventario, enlaces validados por el servidor, consentimiento para enviar el perfil y conversación sin persistencia. Requiere la clave de IA habitual. El historial se limpia al cambiar de cuenta.
+- Guía del seguimiento: `/seguimiento/guia`. Los resultados de Match usan `AppShell`. Logos locales verificados: `public/companies/SOURCES.json` (Simple Icons, versión fijada; sin seguimiento externo de imágenes).
 
 ## Deploy
 

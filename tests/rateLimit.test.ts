@@ -28,3 +28,14 @@ describe("límite de uso de la IA", () => {
     expect(clientIp(new Headers())).toBe("anon");
   });
 });
+
+describe("contador compartido", () => {
+  it("comparte el límite entre consumidores y libera al vencer", async () => {
+    const { takeCounter, resetMemoryCounters } = await import("@/lib/db");
+    resetMemoryCounters();
+    const requests = await Promise.all(Array.from({ length: 12 }, () => takeCounter("maru:test:contador", 5, 1000, 100)));
+    expect(requests.filter((wait) => wait === 0)).toHaveLength(5);
+    expect(requests.filter((wait) => wait > 0)).toHaveLength(7);
+    expect(await takeCounter("maru:test:contador", 5, 1000, 1101)).toBe(0);
+  });
+});
