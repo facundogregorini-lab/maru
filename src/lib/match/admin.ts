@@ -1,11 +1,11 @@
-import { sessionEmail } from "../auth";
+import { normalizeEmail, sessionEmail } from "../auth";
 
 /**
- * Administración del match: sólo emails listados en ADMIN_EMAILS (separados por coma) y con sesión iniciada.
+ * Administración del match: sólo emails listados en ADMIN_EMAILS (separados por comas, espacios o saltos de línea) y con sesión iniciada.
  * Sin ADMIN_EMAILS configurado, nadie es administrador.
  */
 export function adminEmails(env: Record<string, string | undefined> = process.env): Set<string> {
-  return new Set((env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean));
+  return new Set((env.ADMIN_EMAILS ?? "").split(/[,\s]+/).map(normalizeEmail).filter((e): e is string => e !== null));
 }
 
 export function isAdmin(req: Request): boolean {
