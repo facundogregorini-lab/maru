@@ -866,6 +866,206 @@
         "spentUsd": 4.253,
         "budgetUsd": 4.5
       }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "iVsTCvIkTaDG9Jajo",
+        "datasetId": "C79E9RdTpjZE8Ti3r"
+      },
+      "rows": 48,
+      "consumed": 0.0145,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.267,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "g9MM1AGppklIzOeiB",
+        "datasetId": "DdKVcAC9eIkp72vIV"
+      },
+      "rows": 22,
+      "consumed": 0.0067,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.274,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "efh3DNUfjFHoafJfM",
+        "datasetId": "fFMcf1PWykZP8swbx"
+      },
+      "rows": 22,
+      "consumed": 0.0067,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.28,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "vendedor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "CIba0e0SwQ6cm0b8n",
+        "datasetId": "IOzLmlxw9Igi3Y8Vp"
+      },
+      "rows": 9,
+      "consumed": 0.0028,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.283,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "logística",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "ou3HG2i6Gumrl0nQj",
+        "datasetId": "t2xolpYRMydM4SqD6"
+      },
+      "rows": 29,
+      "consumed": 0.0088,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.292,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "atención al cliente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "RIrcRQdDjx7ly6AZu",
+        "datasetId": "YBjCu3cV7ZoMC6quj"
+      },
+      "rows": 58,
+      "consumed": 0.0175,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.31,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "kGcaGtMZOSfshELc0",
+        "datasetId": "rjPhtFFVodrqupxck"
+      },
+      "rows": 25,
+      "consumed": 0.0076,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.317,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "analista",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "Bhgeq67MQFKiwpWOh",
+        "datasetId": "8qiVwkMyXM2cwiEKg"
+      },
+      "rows": 41,
+      "consumed": 0.0124,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.33,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "desarrollador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "xDbuUhbfMgkBieZRe",
+        "datasetId": "Ne2ceXRkxTYY6T4hC"
+      },
+      "rows": 12,
+      "consumed": 0.0037,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.333,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-16T23:02:54.433Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "data analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "bTTh2R8Zixu2Yo2zF",
+        "datasetId": "cksdwdoKdjnlQx7cZ"
+      },
+      "rows": 47,
+      "consumed": 0.0142,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 4.347,
+        "budgetUsd": 5
+      }
     }
   ]
 }
