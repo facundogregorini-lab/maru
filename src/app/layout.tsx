@@ -13,14 +13,27 @@ import "@fontsource/source-sans-3/600.css";
 import "@fontsource/source-sans-3/700.css";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
+import { SITE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const titillium = Titillium_Web({ subsets: ["latin"], weight: ["300", "400", "600", "700"], variable: "--font-titillium" });
 
+const DESCRIPTION =
+  "Búsquedas reales que podés tomar desde Argentina, ordenadas por compatibilidad con tu CV. Maru adapta tu CV y tu carta a cada aviso, completa formularios y te entrena para la entrevista.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Maru Coach · Encontrá tu trabajo perfecto con IA",
-  description:
-    "Cruzamos tu perfil con las miles de búsquedas abiertas en el mercado, personalizamos cada postulación y aplicamos por vos.",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    siteName: "Maru Coach",
+    title: "Maru Coach · Tu coach de carrera con IA",
+    description: DESCRIPTION,
+    images: [{ url: "/video/maru-intro-poster.jpg", alt: "Maru Coach" }],
+  },
+  twitter: { card: "summary_large_image", title: "Maru Coach · Tu coach de carrera con IA", description: DESCRIPTION, images: ["/video/maru-intro-poster.jpg"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -30,6 +43,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         {/* Las animaciones de entrada sólo esconden contenido si hay JavaScript para mostrarlo. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Vercel Analytics sin dependencia: sólo cuenta visitas y los eventos de track(); se activa en el panel de Vercel. */}
+        <script dangerouslySetInnerHTML={{ __html: "window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};" }} />
+        {process.env.VERCEL && <script defer src="/_vercel/insights/script.js" />}
       </head>
       <body className="font-sans antialiased">
         <AuthProvider>{children}</AuthProvider>

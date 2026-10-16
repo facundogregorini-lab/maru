@@ -84,7 +84,8 @@ async function fillTab(tab) {
 
   const summary = summarize(total);
   await toast(tabId, summary);
-  return { ...total, summary };
+  // Para "Guardar en mi seguimiento" desde el popup.
+  return { ...total, summary, page: { url: tab.url, title: top.title || tab.title || "" } };
 }
 
 function summarize({ completados, revisar, pendientes }) {

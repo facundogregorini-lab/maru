@@ -1,4 +1,4 @@
-import { loadInventory } from "@/lib/match/load";
+import { loadInventory, resolveId } from "@/lib/match/load";
 
 export const runtime = "nodejs";
 
@@ -6,8 +6,9 @@ export const runtime = "nodejs";
 export async function GET(req: Request) {
   const id = new URL(req.url).searchParams.get("id") ?? "";
   if (!/^[a-f0-9]{6,40}$/.test(id)) return Response.json({ error: "Oportunidad inválida.", code: "BAD_REQUEST" }, { status: 400 });
-  const { inv, postings } = await loadInventory();
-  const opp = inv.opportunities.find((o) => o.id === id);
+  const { inv, postings, alias } = await loadInventory();
+  const real = resolveId(alias, id);
+  const opp = inv.opportunities.find((o) => o.id === real);
   if (!opp) return Response.json({ error: "Esta búsqueda ya no está en el inventario.", code: "NOT_FOUND" }, { status: 404 });
   const primary = postings.get(opp.primaryKey);
   return Response.json({

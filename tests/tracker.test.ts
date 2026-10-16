@@ -83,3 +83,13 @@ describe("tracker", () => {
     expect(normalizeUrl("")).toBe("");
   });
 });
+
+describe("jobFromPage", () => {
+  it("entiende los títulos de Greenhouse y Lever", async () => {
+    const { jobFromPage } = await import("@/lib/tracker");
+    expect(jobFromPage("Job Application for Product Manager at Acme", "https://boards.greenhouse.io/acme/jobs/1")).toEqual({ title: "Product Manager", company: "Acme" });
+    expect(jobFromPage("Tucán - Senior Frontend", "https://jobs.lever.co/tucan/123/apply")).toEqual({ title: "Senior Frontend", company: "Tucán" });
+    expect(jobFromPage("Apply now", "https://jobs.ashbyhq.com/mercado-pago/9")).toEqual({ title: "Apply now", company: "Mercado Pago" });
+    expect(jobFromPage("", "https://careers.globant.com/x")).toEqual({ title: "Postulación", company: "Globant" });
+  });
+});

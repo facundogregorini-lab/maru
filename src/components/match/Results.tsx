@@ -15,6 +15,7 @@ import { MultiChips } from "./fields";
 
 type RankingResponse = RankOutput & { inventory: { generatedAt: string | null; open: number } };
 type Tab = "elegibles" | "pendientes" | "guardadas";
+const PAGE = 40;
 
 const DISCARD_REASONS: [DiscardReason, string][] = [
   ["rol", "No me interesa este rol"],
@@ -60,6 +61,7 @@ export default function Results({
   const [filters, setFilters] = useState<Filters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [limit, setLimit] = useState(PAGE);
   const seq = useRef(0);
 
   const load = useCallback(async () => {
@@ -67,7 +69,7 @@ export default function Results({
     setLoading(true);
     setError("");
     try {
-      const res = await post<RankingResponse>("/api/match/ranking", { profile, prefs, interactions, filters, external });
+      const res = await post<RankingResponse>("/api/match/ranking", { profile, prefs, interactions, filters, external, limit });
       if (n !== seq.current) return;
       setData(res);
       track("match_ranking_visto", { resultados: res.counts.eligible, pendientes: res.counts.pending, filtros: Object.keys(filters).length });
@@ -76,7 +78,7 @@ export default function Results({
     } finally {
       if (n === seq.current) setLoading(false);
     }
-  }, [profile, prefs, interactions, filters, external]);
+  }, [profile, prefs, interactions, filters, external, limit]);
 
   useEffect(() => {
     const t = setTimeout(load, 250);
@@ -129,7 +131,7 @@ export default function Results({
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
-        <div className="inline-flex flex-wrap rounded-full bg-sand p-1 text-sm">
+        <div className="inline-flex flex-wrap rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
           {(
             [
               ["elegibles", `Para vos${data ? ` (${data.counts.eligible})` : ""}`],
@@ -137,7 +139,7 @@ export default function Results({
               ["guardadas", `Guardadas (${interactions.saved.length})`],
             ] as const
           ).map(([k, label]) => (
-            <button key={k} type="button" onClick={() => setTab(k)} className={`rounded-full px-4 py-2 transition ${tab === k ? "bg-paper font-medium shadow-sm" : "text-muted hover:text-ink"}`}>
+            <button key={k} type="button" onClick={() => setTab(k)} className={`rounded-full px-4 py-2 transition ${tab === k ? "bg-ink font-medium text-white" : "text-ink/70 hover:text-ink"}`}>
               {label}
             </button>
           ))}
@@ -185,6 +187,21 @@ export default function Results({
             />
           ))}
         </div>
+        {data && tab !== "guardadas" && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setLimit((l) => l + PAGE)}
+              disabled={loading}
+              className="press rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white hover:bg-black disabled:opacity-60"
+            >
+              {loading ? "Buscando…" : "Ver más búsquedas"}
+            </button>
+            <p className="mt-2 text-xs text-muted">
+              Viendo {list.length} de {(tab === "elegibles" ? data.counts.eligible : data.counts.pending).toLocaleString("es-AR")}
+            </p>
+          </div>
+        )}
         {data && tab === "elegibles" && data.eligible.length > 0 && data.eligible.length < 5 && (
           <p className="mt-6 text-center text-sm text-muted">
             Encontramos pocas coincidencias. Probá sumar roles, quitar alguna condición indispensable o mirar las búsquedas por confirmar.

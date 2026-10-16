@@ -1,5 +1,5 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
-import { loadInventory } from "./match/load";
+import { loadInventory, resolveId } from "./match/load";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
 /** Buscador simple sobre el inventario real: filtra, ordena por más nuevas y pagina. */
@@ -66,7 +66,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     title: o.title,
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
-    where: o.locations.slice(0, 2).join(" · "),
+    where: o.locations.slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
     modalidad: MODALIDADES[o.workplace.value] ?? "",
     contrato: o.extracted.employmentType ? CONTRATOS[o.extracted.employmentType.value] : "",
     nivel: o.extracted.seniority ? (NIVELES[o.extracted.seniority.value] ?? "") : "",
@@ -103,8 +103,9 @@ export async function searchJobs(query: JobQuery): Promise<{ total: number; resu
 /** Una búsqueda abierta con todo lo que sabemos de ella, para su página. */
 export async function getJob(id: string): Promise<JobDetail | null> {
   if (!/^[a-f0-9]{6,40}$/.test(id)) return null;
-  const { inv, postings } = await loadInventory();
-  const o = inv.opportunities.find((x) => x.id === id && x.status === "abierta");
+  const { inv, postings, alias } = await loadInventory();
+  const real = resolveId(alias, id);
+  const o = inv.opportunities.find((x) => x.id === real && x.status === "abierta");
   if (!o) return null;
   const base = toResult(o, postings);
   if (!base) return null;

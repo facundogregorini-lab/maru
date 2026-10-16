@@ -71,7 +71,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
   }
 
   function wipe() {
-    if (!window.confirm("¿Borrar tu perfil, tus preferencias, búsquedas guardadas y descartes de este navegador?")) return;
+    if (!window.confirm("¿Borrar todos tus datos de Maru en este navegador? Perfil, preferencias, búsquedas, lo que armaste y tu seguimiento.")) return;
     forgetEverything();
     cv.forgetSaved();
     setState(EMPTY_STATE);

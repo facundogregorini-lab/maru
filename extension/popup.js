@@ -139,6 +139,9 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg && msg.type === "progress") status(msg.step);
 });
 
+/** La última página completada, para "Guardar en mi seguimiento". */
+let lastPage = null;
+
 $("fill").addEventListener("click", async () => {
   $("fill").disabled = true;
   status("Empezando…");
@@ -146,7 +149,17 @@ $("fill").addEventListener("click", async () => {
   $("fill").disabled = false;
   if (!result) return status("Algo salió mal. Probá de nuevo.", true);
   status(result.error || result.summary, !!result.error);
-  if (!result.error) dashboard(result);
+  if (!result.error) {
+    lastPage = result.page || null;
+    dashboard(result);
+  }
+});
+
+/** Abre el seguimiento de Maru con esta postulación agregada (la extensión no puede escribir en el sitio de Maru). */
+$("track").addEventListener("click", async () => {
+  if (!lastPage) return;
+  const q = new URLSearchParams({ add: lastPage.url, title: lastPage.title.slice(0, 200) });
+  await chrome.tabs.create({ url: `${await server()}/seguimiento?${q}` });
 });
 
 /** Completitud: los campos que Maru completó (los "para revisar" incluidos) sobre esos más los obligatorios vacíos. */

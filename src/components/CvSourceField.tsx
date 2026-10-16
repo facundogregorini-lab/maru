@@ -147,7 +147,7 @@ export default function CvSourceField({ input }: { input: CvInput }) {
           ← Usar mi perfil guardado ({saved.profile.nombre || "último cargado"})
         </button>
       )}
-      <div className="mb-4 flex flex-wrap gap-1 rounded-full bg-sand p-1 text-sm sm:inline-flex">
+      <div className="mb-4 flex flex-wrap gap-1 rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08] sm:inline-flex">
         {(
           [
             ["linkedin", "PDF de LinkedIn", "Recomendado"],
@@ -159,7 +159,7 @@ export default function CvSourceField({ input }: { input: CvInput }) {
             key={m}
             type="button"
             onClick={() => switchMode(m)}
-            className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 transition ${mode === m ? "bg-paper font-medium text-ink shadow-sm" : "text-muted hover:text-ink"}`}
+            className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 transition ${mode === m ? "bg-ink font-medium text-white" : "text-ink/70 hover:text-ink"}`}
           >
             {label}
             {badge && <span className="rounded-full bg-sage-soft px-1.5 py-0.5 text-[10px] font-semibold text-sage">{badge}</span>}

@@ -30,10 +30,14 @@ export function saveMatch(s: MatchState): void {
   save(KEY, { ...s, updatedAt: Date.now() });
 }
 
-/** Borra perfil, preferencias, guardados, descartes y búsquedas propias (y el CV leído por Maru). */
+/** Lo último armado en cada herramienta y el seguimiento: también son datos de la persona. */
+const TOOL_KEYS = ["maru:sesion:v2", "maru:cv:v1", "maru:carta:v1", "maru:entrevista:v1", "maru:video:v1", "maru:tracker:v1"];
+
+/** Borra todo lo de Maru en este navegador: perfil, match, búsquedas propias, lo armado en cada herramienta y el seguimiento. */
 export function forgetEverything(): void {
   remove(KEY);
   remove(HANDOFF_KEY);
+  for (const k of TOOL_KEYS) remove(k);
   forgetProfile();
 }
 
