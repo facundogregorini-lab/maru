@@ -54,6 +54,23 @@ export const SERP_QUERIES: SerpQuery[] = [
   { id: "cont-ros", q: "contador Rosario" },
   { id: "compras-mza", q: "compras Mendoza" },
   { id: "admin-tuc", q: "administrativo Tucumán" },
+  // Interior con poca oferta en todas las fuentes (PENDIENTES, punto 4).
+  { id: "adm-salta", q: "administrativo Salta" },
+  { id: "ventas-salta", q: "vendedor Salta" },
+  { id: "adm-santafe", q: "administrativo Santa Fe" },
+  { id: "log-santafe", q: "logística Santa Fe" },
+  { id: "adm-bb", q: "administrativo Bahía Blanca" },
+  { id: "ventas-bb", q: "vendedor Bahía Blanca" },
+  { id: "adm-parana", q: "administrativo Paraná" },
+  { id: "adm-sanjuan", q: "administrativo San Juan Argentina" },
+  { id: "adm-corrientes", q: "administrativo Corrientes" },
+  { id: "adm-posadas", q: "administrativo Posadas Misiones" },
+  { id: "adm-jujuy", q: "administrativo Jujuy" },
+  { id: "rrhh-cba", q: "recursos humanos Córdoba" },
+  { id: "log-mza", q: "logística Mendoza" },
+  { id: "ventas-tuc", q: "vendedor Tucumán" },
+  { id: "fin-mza", q: "analista contable Mendoza" },
+  { id: "log-ros", q: "logística Rosario" },
 ];
 
 export type Rejections = Record<string, number>;
