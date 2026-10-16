@@ -37,7 +37,7 @@ Bumeran/ZonaJobs puede complementar empleo local: se encontró el Actor `blackfa
 
 ## Medición real del 16/10/2026
 
-Las muestras se ejecutaron en los playgrounds autenticados de los proveedores, sin descargar los secretos de Vercel. El panel de Maru ya está en main (PR 27); la verificación de sus claves en Production espera el login del dominio nuevo.
+Las muestras se ejecutaron en los playgrounds autenticados de los proveedores, sin descargar los secretos de Vercel. El panel de Maru ya está en main (PR 27); la verificación de sus claves en Production espera habilitar la cuenta del dueño en `ADMIN_EMAILS`.
 
 | Muestra | Filas | Con datos suficientes | Nuevas por URL frente al inventario | Empresas | Descripción mínima / mediana |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -45,7 +45,7 @@ Las muestras se ejecutaron en los playgrounds autenticados de los proveedores, s
 | Fantastic LinkedIn | 25 | 25 | 25 | 24 | 918 / 2.323 caracteres |
 | SerpAPI Google Jobs | 10 | 10 | 10 | 10 | 914 / 1.898 caracteres |
 
-“Nuevas por URL” no es deduplicación semántica entre los pilotos ni prueba de cobertura nacional. En Google Jobs los diez avisos carecen de fecha de publicación: falta validar vigencia en el sitio original antes de importarlos. Los destinos incluyen ZonaJobs, Bumeran, Computrabajo, Halaxia, Verisure, LinkedIn, Michael Page, Talent.com y Universia, junto a agregadores secundarios en opciones alternativas. Fantastic ATS aportó Teamtailor, SuccessFactors, Manatal, Workday y Eightfold, conectores que amplían los ATS directos actuales.
+“Nuevas por URL” no es deduplicación semántica entre los pilotos ni prueba de cobertura nacional. En Google Jobs siete avisos traen antigüedad relativa dentro de `extensions` (entre uno y siete días) y tres no traen fecha. El panel conserva ese texto sin inventar timestamps y rechaza antigüedades relativas mayores a 30 días; falta validar vigencia en el sitio original antes de importarlos. Los destinos incluyen ZonaJobs, Bumeran, Computrabajo, Halaxia, Verisure, LinkedIn, Michael Page, Talent.com y Universia, junto a agregadores secundarios en opciones alternativas. Fantastic ATS aportó Teamtailor, SuccessFactors, Manatal, Workday y Eightfold, conectores que amplían los ATS directos actuales.
 
 Consumo Fantastic confirmado en headers después de las dos muestras: 50 avisos y dos requests; saldo 450 avisos y 48 requests. Luego se realizaron cuatro conteos sin créditos de avisos: saldo esperado 44 requests. SerpAPI: una búsqueda del plan gratuito; sin paginación. Sin contratación, sobreconsumo habilitado ni recurrencias.
 
@@ -69,4 +69,4 @@ La suma mensual bruta es 21.076 entregas antes de deduplicar entre feeds, ligera
 
 Fuente adicional de precios: [Apify](https://apify.com/pricing).
 
-Google del dominio nuevo respondió `redirect_uri_mismatch` para `https://www.marucoach.com/api/auth/google/callback`; el dueño está agregando esa URI. Magic link falla porque falta `SMTP_URL` en Production.
+Google del dominio nuevo respondió `redirect_uri_mismatch` para `https://www.marucoach.com/api/auth/google/callback`; el dueño está agregando esa URI. Después se observó sesión iniciada de `axellaban@gmail.com`, pero el panel la rechaza por `ADMIN_EMAILS`: falta incorporar esa cuenta al allowlist conservando las demás. Magic link falló por ausencia de `SMTP_URL` en Production.

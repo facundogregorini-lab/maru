@@ -36,7 +36,7 @@ function Result({ result }: { result: PilotResult }) {
     <p className="text-xs text-muted">{result.note}</p>
     {result.jobs && <details open><summary className="cursor-pointer">Ver avisos y observaciones</summary><ul className="mt-3 space-y-3">{result.jobs.map((job, i) => <li key={`${job.id}-${i}`} className="border-t border-line pt-3">
       {job.url ? <a href={job.url} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-dark underline">{job.title || "Sin título"}</a> : <strong>{job.title || "Sin título"}</strong>}
-      <p>{job.company} · {job.location} · {job.source}</p><p className="text-xs text-muted">{job.descriptionChars} caracteres · {job.publishedAt || "Fecha sin dato"}{job.duplicate ? " · URL repetida" : ""}</p>
+      <p>{job.company} · {job.location} · {job.source}</p><p className="text-xs text-muted">{job.descriptionChars} caracteres · {job.publishedAt || (job.publishedLabel ? `Fecha relativa: ${job.publishedLabel}` : "Fecha sin dato")}{job.duplicate ? " · URL repetida" : ""}</p>
       {job.issues.length > 0 && <p className="mt-1 text-danger-dark">{job.issues.join(". ")}</p>}
       <p className="mt-1 text-xs text-muted">{job.excerpt}</p>
     </li>)}</ul></details>}
