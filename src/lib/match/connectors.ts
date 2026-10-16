@@ -79,11 +79,22 @@ export function workplaceFromText(text: string): Workplace {
  */
 export function workplaceFromDescription(text: string): { value: Workplace; evidence: string } | null {
   const t = fold(text.slice(0, 6000));
-  const declared = t.match(/\b(modalidad|esquema|formato|lugar de trabajo|work ?(?:mode|model|arrangement))(?: de (?:trabajo|contratacion))?\s*(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
-  const hit = declared?.[2] ?? t.match(/\b(100\s*(por ciento)?\s*(remot[oa]|home office)|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|work)|trabajo presencial|puesto presencial|jornada presencial|on-?site (role|position))\b/)?.[0];
+  // Días repartidos entre oficina y casa ("3 días presenciales y 2 home office", "2 days per week on-site").
+  const split = t.match(/\b\d\s*(\/\s*\d\s*)?(dias?|days?)\s*((per|a la|por) (week|semana)\s*)?(de\s*)?(presencial(es)?|en (la )?oficina|on-?site|in (the )?office|home office|remot[oa]s?)\b/);
+  const declared = t.match(/\b(modalidad|esquema|modelo|formato|lugar de trabajo|work ?(?:mode|model|arrangement))(?: de (?:trabajo|contratacion|empleo))?\s*(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
+  // "5 días presenciales" es presencial; sólo un reparto parcial de la semana indica híbrido.
+  const fullWeek = split && Number(split[0].match(/\d/)![0]) >= 5 && !split[1];
+  const hit = split
+    ? fullWeek
+      ? split[0]
+      : `hibrido: ${split[0]}`
+    : (declared?.[2] ??
+      t.match(
+        /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote|presencial)|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|work(ing)?( model)?|schedule)|(position|role) (will be|is) (hybrid|remote|on-?site)|remote (position|role)|#li-(remote|hybrid|onsite)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|on-?site (role|position))\b/,
+      )?.[0]);
   if (!hit) return null;
   const value: Workplace = /hibrid|hybrid/.test(hit) ? "hibrido" : /remot|teletrabajo|home office/.test(hit) ? "remoto" : "presencial";
-  return { value, evidence: (declared?.[0] ?? hit).slice(0, 80) };
+  return { value, evidence: (split?.[0] ?? declared?.[0] ?? hit).slice(0, 80) };
 }
 
 function wp(value: Workplace, from: Field<Workplace>["from"], evidence?: string): Field<Workplace> {

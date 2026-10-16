@@ -185,6 +185,13 @@ describe("inventario con importaciones parciales", () => {
     expect(workplaceFromDescription("Modalidad híbrida de trabajo, 3 días en oficina.")?.value).toBe("hibrido");
     expect(workplaceFromDescription("Equipo bajo modalidad 100% home office.")?.value).toBe("remoto");
     expect(workplaceFromDescription("Beneficios: home office los viernes, prepaga.")).toBeNull();
+    expect(workplaceFromDescription("Esquema de empleo híbrido: 3 días presenciales y 2 días home office.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Lunes a viernes de 9 a 18. 2 días home office.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("You'll be 3 days per week on-site in Buenos Aires.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Jornada full-time presencial de lunes a viernes.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("Trabajo de 5 días presenciales en planta.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("This role is a full-time remote position.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Monitoreo remoto de cámaras y control de accesos.")).toBeNull();
     const inv = emptyInventory("fixture");
     const [p] = normalizeFantastic([{ ...fantasticRow, remote_derived: undefined }], "fantastic_ats", "G1", T).postings;
     applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: [p], complete: false }, NOW);
