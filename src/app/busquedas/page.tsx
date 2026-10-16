@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import CompanyTile from "@/components/busquedas/CompanyTile";
-import JobSearchBar from "@/components/busquedas/JobSearchBar";
-import TimeAgo from "@/components/landing/TimeAgo";
-import SiteShell from "@/components/SiteShell";
+import AppShell from "@/components/app/AppShell";
+import JobCard from "@/components/busquedas/JobCard";
+import { JobFilterChips, JobSearchPill } from "@/components/busquedas/JobSearchBar";
+import { MaruHead } from "@/components/maru/PixelMaru";
 import { PAGE_SIZE, searchJobs } from "@/lib/busquedas";
-import { parseJobQuery } from "@/lib/jobFilters";
+import { AREAS, parseJobQuery, type JobQuery } from "@/lib/jobFilters";
 import { POPULAR } from "@/lib/popular";
 
 export const metadata: Metadata = {
@@ -15,115 +15,116 @@ export const metadata: Metadata = {
 
 const fmt = (n: number) => n.toLocaleString("es-AR");
 
+function hrefFor(query: JobQuery, pagina: number) {
+  const sp = new URLSearchParams();
+  for (const [k, v] of Object.entries(query)) if (v && k !== "pagina" && !(k === "donde" && v === "ar")) sp.set(k, String(v));
+  if (pagina > 1) sp.set("pagina", String(pagina));
+  const s = sp.toString();
+  return s ? `/busquedas?${s}` : "/busquedas";
+}
+
 export default async function BusquedasPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const query = parseJobQuery(await searchParams);
   const { total, results } = await searchJobs(query);
-  const pages = Math.ceil(total / PAGE_SIZE);
-  const pageHref = (n: number) => {
-    const sp = new URLSearchParams();
-    for (const [k, v] of Object.entries(query)) if (v && k !== "pagina" && !(k === "donde" && v === "ar")) sp.set(k, String(v));
-    if (n > 1) sp.set("pagina", String(n));
-    const s = sp.toString();
-    return s ? `/busquedas?${s}` : "/busquedas";
-  };
+  const pages = Math.min(50, Math.ceil(total / PAGE_SIZE));
+  const label = query.q || (query.area ? AREAS[query.area] : "");
 
   return (
-    <SiteShell>
-      <section className="full-bleed -mt-8 bg-sand px-5 pb-10 pt-12 sm:pt-16">
-        <div className="mx-auto max-w-[1200px]">
-          <h1 className="font-display text-[2.2rem] font-light uppercase leading-[1.05] sm:text-6xl">
-            Encontrá tu trabajo <strong className="font-bold">en un clic</strong>
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-ink/70">Búsquedas reales y abiertas, actualizadas todos los días. Para ver cuáles encajan con tu CV, usá el Match.</p>
-          <div className="mt-8">
-            <JobSearchBar value={query} />
-          </div>
-        </div>
-      </section>
-
-      <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_300px]">
-        <div className="min-w-0">
-          <p className="text-sm text-muted" aria-live="polite">
-            <strong className="font-semibold text-ink">{fmt(total)}</strong> {total === 1 ? "búsqueda" : "búsquedas"}
-            {query.donde === "ar" ? " que podés tomar desde Argentina" : " en todo el mundo"}
-            {pages > 1 && ` · página ${query.pagina} de ${fmt(pages)}`}
-          </p>
-
-          {results.length === 0 ? (
-            <div className="mt-6 rounded-3xl bg-sand p-8 text-center">
-              <p className="font-display text-2xl font-semibold">No encontramos búsquedas con esos filtros</p>
-              <p className="mt-2 text-ink/70">Probá con menos filtros o con otra palabra.</p>
-              <Link href="/busquedas" className="press mt-6 inline-flex rounded-full bg-ink px-6 py-3 font-medium text-white">
-                Ver todas
-              </Link>
-            </div>
-          ) : (
-            <ul className="mt-4 divide-y divide-line">
-              {results.map((j) => (
-                <li key={j.id} className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center">
-                  <div className="flex min-w-0 flex-1 items-start gap-4">
-                    <CompanyTile name={j.company} />
-                    <div className="min-w-0">
-                      <p className="text-sm text-muted">
-                        <span className="font-semibold text-ink">{j.company}</span> · <TimeAgo iso={j.postedAt} />
-                      </p>
-                      <h2 className="mt-0.5 font-display text-xl font-semibold leading-snug">{j.title}</h2>
-                      <p className="mt-1.5 flex flex-wrap gap-1.5 text-xs">
-                        {j.modalidad && <span className="rounded-md bg-black/[0.05] px-2 py-1">{j.modalidad}</span>}
-                        {j.where && <span className="max-w-[260px] truncate rounded-md bg-black/[0.05] px-2 py-1">{j.where}</span>}
-                        {j.eligible && <span className="rounded-md bg-brand-soft px-2 py-1 font-semibold text-brand-dark">✓ Desde Argentina</span>}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 flex-col items-start gap-1 sm:items-end">
-                    <a href={j.applyUrl} target="_blank" rel="noopener noreferrer" className="press rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white hover:bg-black">
-                      Ver y postularme ↗
-                    </a>
-                    {j.attribution && <span className="text-[11px] text-muted">{j.attribution}</span>}
-                  </div>
-                </li>
-              ))}
-            </ul>
+    <AppShell title="Búsquedas" search={<JobSearchPill value={query} />} side={<SidePanel label={label} total={total} />}>
+      <div className="flex items-center gap-3 py-1">
+        {label && (
+          <Link href="/busquedas" aria-label="Limpiar la búsqueda" className="grid h-8 w-8 place-items-center rounded-lg bg-white text-lg leading-none hover:bg-black/[0.05]">
+            ×
+          </Link>
+        )}
+        <p className="text-[13px]" aria-live="polite">
+          {fmt(total)} {total === 1 ? "búsqueda" : "búsquedas"}
+          {label && (
+            <>
+              {" "}
+              para <strong>“{label}”</strong>
+            </>
           )}
-
-          {pages > 1 && (
-            <nav aria-label="Páginas" className="mt-8 flex items-center justify-between gap-4">
-              {query.pagina > 1 ? (
-                <Link href={pageHref(query.pagina - 1)} className="press rounded-full bg-black/[0.05] px-5 py-2.5 text-sm font-medium hover:bg-black/[0.08]">
-                  ← Anteriores
-                </Link>
-              ) : (
-                <span />
-              )}
-              {query.pagina < Math.min(pages, 50) && (
-                <Link href={pageHref(query.pagina + 1)} className="press rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white hover:bg-black">
-                  Más búsquedas →
-                </Link>
-              )}
-            </nav>
-          )}
-        </div>
-
-        <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-3xl bg-ink p-6 text-white">
-            <p className="font-display text-2xl font-semibold leading-tight">¿Cuáles encajan con vos?</p>
-            <p className="mt-2 text-sm text-white/70">Subí tu CV y Maru te ordena estas búsquedas por compatibilidad, con el porqué de cada una.</p>
-            <Link href="/match" className="press mt-5 inline-flex rounded-full bg-neon px-5 py-2.5 text-sm font-bold uppercase text-ink">
-              Ver mi match
-            </Link>
-          </div>
-          <div>
-            <h2 className="font-display text-lg font-semibold">Búsquedas populares</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {POPULAR.map((p) => (
-                <Link key={p.href} href={p.href} className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-medium text-white hover:bg-black">
-                  {p.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </aside>
+          {query.donde === "ar" ? " que podés tomar desde Argentina" : " en todo el mundo"}
+        </p>
+        <span className="ml-auto hidden rounded-lg bg-white px-3 py-1.5 text-[13px] sm:inline">Más nuevas primero</span>
       </div>
-    </SiteShell>
+      <div className="mt-3">
+        <JobFilterChips value={query} />
+      </div>
+
+      {results.length === 0 ? (
+        <div className="mt-4 rounded-2xl bg-white p-10 text-center">
+          <p className="text-xl font-semibold">No encontramos búsquedas con esos filtros</p>
+          <p className="mt-2 text-ink/70">Probá con menos filtros o con otra palabra.</p>
+          <Link href="/busquedas" className="press mt-6 inline-flex rounded-full bg-ink px-6 py-3 font-medium text-white">
+            Ver todas
+          </Link>
+        </div>
+      ) : (
+        <div className="mt-3 space-y-3">
+          {results.map((j) => (
+            <JobCard key={j.id} j={j} />
+          ))}
+        </div>
+      )}
+
+      {pages > 1 && (
+        <nav aria-label="Páginas" className="mt-6 flex items-center justify-between gap-4">
+          {query.pagina > 1 ? (
+            <Link href={hrefFor(query, query.pagina - 1)} className="press rounded-full bg-white px-5 py-2.5 text-sm font-medium hover:bg-black/[0.05]">
+              ← Anteriores
+            </Link>
+          ) : (
+            <span />
+          )}
+          <span className="text-xs text-ink/60">
+            Página {query.pagina} de {fmt(pages)}
+          </span>
+          {query.pagina < pages ? (
+            <Link href={hrefFor(query, query.pagina + 1)} className="press rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white hover:bg-black">
+              Más búsquedas →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </AppShell>
+  );
+}
+
+/** El panel de la derecha: donde jobright tiene a Orion, acá Maru te guía (sin chat). */
+function SidePanel({ label, total }: { label: string; total: number }) {
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center gap-3">
+        <span className="grid h-12 w-12 place-items-center rounded-full bg-neon">
+          <MaruHead size={30} />
+        </span>
+        <div>
+          <p className="text-xl font-semibold leading-tight">Maru</p>
+          <p className="text-xs">Tu coach de carrera con IA</p>
+        </div>
+      </div>
+      <div className="mt-4 rounded-[2px_12px_12px_12px] bg-[#f7f8f9] p-4 text-sm leading-relaxed">
+        <p className="text-[15px] font-bold">{label || "Búsquedas reales"}</p>
+        <p className="mt-2">
+          Encontré {total.toLocaleString("es-AR")} búsquedas abiertas{label ? ` para “${label}”` : ""}. Todas son reales y llevan al aviso original. ¿Querés saber cuáles
+          encajan con vos? Subí tu CV y te las ordeno por compatibilidad, con los motivos y lo que te falta mostrar.
+        </p>
+        <Link href="/match" className="press mt-4 inline-flex rounded-full bg-neon px-4 py-2 text-sm font-bold uppercase">
+          Ver mi match
+        </Link>
+      </div>
+      <p className="mt-6 text-sm font-semibold">Búsquedas populares</p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {POPULAR.map((p) => (
+          <Link key={p.href} href={p.href} className="rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white hover:bg-black">
+            {p.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

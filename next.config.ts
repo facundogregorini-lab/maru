@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     // Inventario compartido de vacantes (lo genera la sincronización programada).
     "/api/match/**": ["./data/match/*.json"],
     "/busquedas": ["./data/match/inventory.json"],
+    "/busquedas/[id]": ["./data/match/inventory.json"],
     // La home lee los números del inventario al regenerarse (ISR).
     "/": ["./data/match/inventory.json"],
     "/match": ["./data/match/inventory.json"],

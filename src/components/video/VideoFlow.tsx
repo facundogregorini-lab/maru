@@ -41,7 +41,7 @@ const words = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);
 export default function VideoFlow() {
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
-  const job = useJobInput();
+  const job = useJobInput("video");
   const cv = useCvInput();
   const [motivacion, setMotivacion] = useState("");
   const [opciones, setOpciones] = useState<VideoOpciones>({ duracion: 60, tono: "calido", idioma: "auto" });

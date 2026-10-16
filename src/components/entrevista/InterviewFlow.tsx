@@ -46,7 +46,7 @@ type Session = {
 export default function InterviewFlow() {
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
-  const job = useJobInput();
+  const job = useJobInput("entrevista");
   const cv = useCvInput();
   const [opciones, setOpciones] = useState<EntrevistaOpciones>({ tipo: "rrhh", dificultad: "estandar", preguntas: 6, idioma: "auto" });
   const [plan, setPlan] = useState<EntrevistaPlan | null>(null);

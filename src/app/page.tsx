@@ -128,7 +128,7 @@ export default async function Home() {
             {[...data.latest, ...data.latest].map((j, i) => (
               <Link
                 key={`${j.id}-${i}`}
-                href="/busquedas"
+                href={`/busquedas/${j.id}`}
                 tabIndex={i >= data.latest.length ? -1 : undefined}
                 aria-hidden={i >= data.latest.length || undefined}
                 className="flex shrink-0 items-center gap-3 rounded-xl transition-opacity hover:opacity-80"
