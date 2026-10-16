@@ -346,6 +346,526 @@
         "requests-remaining": 35,
         "requests-limit": 50
       }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "FVZOmEp6xuDFdSrjf",
+        "datasetId": "qPOtLZdHxsqdA23wd"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 0.171,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "pqOqmLGqExwtcnExh",
+        "datasetId": "3e7k6ChESAMyRGQom"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 0.342,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "7SWz1gytoU4Wqxl5g",
+        "datasetId": "bsYzbRhMmjdogjU6R"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 0.513,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "vendedor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "viptTsACOIuiwr9nb",
+        "datasetId": "Z3NZNfKV4WdzNwlYR"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 0.684,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "logística",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "f6XCAkbckdpRdK6th",
+        "datasetId": "LkDGU5VBISKbiaKTW"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 0.854,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "atención al cliente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "A825t79bR68JBal9V",
+        "datasetId": "log0fzYYdwWa3T9v3"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 1.024,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "PS38GiYbMKB2shj5w",
+        "datasetId": "u79talnwiOtH7drzn"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 1.195,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "tesorería",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "tAEyp1WdGVpDaqJSl",
+        "datasetId": "qAxQgIfpgg8FfVzMl"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 1.366,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "RT7hTZdWF3zqMZpOi",
+        "datasetId": "Y0misuX6AczeYD3KN"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 1.537,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "asistente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "QbP69MmFfewnerKwi",
+        "datasetId": "kb0mVS7ELpyVpKW2q"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 1.707,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "inkSG5W9ua9tp9t1x",
+        "datasetId": "sUjvbIe9jmhomjFbe"
+      },
+      "rows": 49,
+      "consumed": 0.0148,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.722,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "w1OdzN0mXOq6dIduu",
+        "datasetId": "F8H95zujBqXTGDRvA"
+      },
+      "rows": 21,
+      "consumed": 0.0063,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 1.728,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "UkHU2Mc5tdljidf5Q",
+        "datasetId": "fsEkEObyAoFA1DNxk"
+      },
+      "rows": 22,
+      "consumed": 0.0067,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.735,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "vendedor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "wKjD6T05cE03PAQEI",
+        "datasetId": "sInNylkJR9N11J1fD"
+      },
+      "rows": 9,
+      "consumed": 0.0028,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.738,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "logística",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "AnhQyCdt7m3uHAWn7",
+        "datasetId": "j3cFEX8qNZReF3Dwr"
+      },
+      "rows": 29,
+      "consumed": 0.0088,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.746,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "atención al cliente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "ucw1T1BcHa3PEnHw5",
+        "datasetId": "ZOTU6yxM6E0scJtCT"
+      },
+      "rows": 58,
+      "consumed": 0.0175,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.764,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "aB0fIwScO8JX3hx6K",
+        "datasetId": "RdJjIhtEcg1jpU8un"
+      },
+      "rows": 25,
+      "consumed": 0.0076,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.771,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "analista",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "YaCIKhTGsivffMZqO",
+        "datasetId": "mWcPs9f2wie9bQtkI"
+      },
+      "rows": 41,
+      "consumed": 0.0124,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.784,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "desarrollador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "cW16u5K2fLHHk5hMY",
+        "datasetId": "tjxbbfJhRutXm6IJX"
+      },
+      "rows": 12,
+      "consumed": 0.0037,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.788,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "data analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "runId": "Hpxrq81SgSUvdVOL1",
+        "datasetId": "kXDIEQJwuVuSE9gNa"
+      },
+      "rows": 48,
+      "consumed": 0.0145,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 1.802,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "analista administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "5VV6wQRjvhSr847bJ",
+        "datasetId": "n0n6sfNK4Evg2p0KN"
+      },
+      "rows": 99,
+      "consumed": 0.3819,
+      "quota": {
+        "usageTotalUsd": 0.16405,
+        "spentUsd": 2.184,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "contador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "yFCHN9ph40HcvmlH9",
+        "datasetId": "lwegN9GcXh7VHM8hr"
+      },
+      "rows": 100,
+      "consumed": 0.4161,
+      "quota": {
+        "usageTotalUsd": 0.19605,
+        "spentUsd": 2.6,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "xaRezZf9CeNeSodsO",
+        "datasetId": "4m7cfb7eCKL23ax5k"
+      },
+      "rows": 100,
+      "consumed": 0.4161,
+      "quota": {
+        "usageTotalUsd": 0.19605,
+        "spentUsd": 3.016,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "ejecutivo comercial",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "daanPtsxWave4O6me",
+        "datasetId": "eWX3SmcAKWJDHQRWn"
+      },
+      "rows": 100,
+      "consumed": 0.4001,
+      "quota": {
+        "usageTotalUsd": 0.18005,
+        "spentUsd": 3.416,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "logística",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "hvzoFDfjlh937qWQp",
+        "datasetId": "xEE6linWNyHkyY6lw"
+      },
+      "rows": 100,
+      "consumed": 0.4181,
+      "quota": {
+        "usageTotalUsd": 0.19805,
+        "spentUsd": 3.834,
+        "budgetUsd": 4.5
+      }
+    },
+    {
+      "at": "2026-10-16T22:45:29.187Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/linkedin-jobs-scraper",
+        "keyword": "analista de datos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "xcyNL9pIwcjew3F6a",
+        "datasetId": "4BLSmJIZdmrpXq9wa"
+      },
+      "rows": 100,
+      "consumed": 0.4181,
+      "quota": {
+        "usageTotalUsd": 0.19805,
+        "spentUsd": 4.253,
+        "budgetUsd": 4.5
+      }
     }
   ]
 }
