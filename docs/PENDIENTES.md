@@ -59,4 +59,4 @@ La conexión MCP de Codex ya funciona. Para correr el pipeline fuera del chat ha
 
 ## Fantastic.jobs y SerpAPI
 
-Variables `FANTASTIC_JOBS` y `SERP_API` cargadas por el dueño en Production. Panel de pruebas privadas y límites documentados en [PROVEEDORES-AVISOS.md](PROVEEDORES-AVISOS.md). Completar mediciones reales tras recuperar login del dominio nuevo. No se incorporan resultados al inventario ni se crean recurrencias con esta prueba.
+Variables `FANTASTIC_JOBS` y `SERP_API` cargadas por el dueño en Production. Panel de pruebas privadas y límites documentados en [PROVEEDORES-AVISOS.md](PROVEEDORES-AVISOS.md). Muestras reales completadas desde los playgrounds: 50 avisos Fantastic y diez Google Jobs. Conteos argentinos Fantastic: 5.682 ATS y 15.394 job boards indexados en 31 días; 223 y 550 activos de la ventana 24h. Falta probar las claves de Production desde el panel de Maru tras recuperar login. No se incorporan resultados al inventario ni se crean recurrencias con esta prueba.
