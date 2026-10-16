@@ -3,9 +3,9 @@ import { Evidence, HeroStats } from "@/components/landing/Evidence";
 import PostulacionTools from "@/components/landing/PostulacionTools";
 import SiteShell from "@/components/SiteShell";
 
-/** Dónde se instala la extensión. Mientras no esté en la Chrome Web Store, lleva a las instrucciones del repo. */
-const EXTENSION_URL =
-  process.env.NEXT_PUBLIC_EXTENSION_URL || "https://github.com/facundogregorini-lab/maru#extensi%C3%B3n-de-chrome-completar-postulaciones";
+/** Dónde se instala la extensión. Mientras no esté en la Chrome Web Store, lleva a la página de descarga. */
+const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
+const EXTENSION_EXTERNAL = /^https?:/.test(EXTENSION_URL);
 
 export default function Home() {
   return (
@@ -105,8 +105,7 @@ export default function Home() {
           </div>
           <a
             href={EXTENSION_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(EXTENSION_EXTERNAL ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-[#4a5f43] px-7 py-3.5 font-medium text-white transition hover:bg-[#3d4f37] lg:self-auto"
           >
             Agregar a Chrome <span aria-hidden>→</span>

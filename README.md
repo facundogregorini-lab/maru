@@ -39,7 +39,9 @@ Probado contra formularios reales (sin enviar nada): Lever (Palantir, Spotify) y
 
 Todavía no: buscadores que cargan opciones recién al tipear (ciudades), las listas de Workday (son botones, no inputs), formularios de varios pasos que cambian de página y editores de texto enriquecido. Quedan sin tocar y, si son obligatorios, marcados en amarillo.
 
-**Instalarla:** abrí `chrome://extensions`, activá *Modo de desarrollador* → *Cargar descomprimida* → elegí la carpeta `extension/`. Por defecto usa la Maru publicada (`https://maru-grego7.vercel.app`); para desarrollo local, poné `http://localhost:3000` en *Avanzado* dentro del popup.
+**Descargarla:** la página `/extension` de Maru tiene el botón de descarga y los 4 pasos; el `.zip` se arma al compilar desde `extension/` (`src/lib/extensionZip.ts`), así que siempre coincide con main.
+
+**Instalarla desde el repo:** abrí `chrome://extensions`, activá *Modo de desarrollador* → *Cargar descomprimida* → elegí la carpeta `extension/`. Por defecto usa la Maru publicada (`https://maru-grego7.vercel.app`); para desarrollo local, poné `http://localhost:3000` en *Avanzado* dentro del popup.
 
 **Cómo está hecha:** JavaScript plano con Manifest V3, sin build. `background.js` coordina (inyecta `content.js` en todos los frames, llama a la API y reparte las respuestas por frame), `content.js` lee y completa los campos, `popup.*` es la interfaz. El servidor valida todo lo que devuelve la IA (`src/lib/autofill.ts`): sólo opciones que existen en la página, fechas y números con formato válido, largo máximo y nada de campos inventados.
 
