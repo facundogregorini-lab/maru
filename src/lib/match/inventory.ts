@@ -1,5 +1,5 @@
 import { classifyEligibility } from "./eligibility";
-import { extract } from "./extract";
+import { EXTRACTION_VERSION, extract } from "./extract";
 import { sourceById } from "./sources";
 import { sha } from "./hash";
 import { canonicalUrl, fold, shingleSimilarity } from "./text";
@@ -37,6 +37,7 @@ export const postingKey = (p: Pick<NormalizedPosting, "boardId" | "externalId">)
 export function contentHash(p: NormalizedPosting): string {
   return sha(
     JSON.stringify([
+      EXTRACTION_VERSION,
       p.title,
       p.company,
       p.descriptionText,
