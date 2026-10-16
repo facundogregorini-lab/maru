@@ -1,5 +1,7 @@
 # Encontrá tu trabajo perfecto (`/match`)
 
+Actualización de continuidad, 16/10/2026: [estrategia de avisos](ESTRATEGIA-AVISOS.md), [plan de la próxima etapa](PLAN-AVISOS.md) y [evidencia](research/avisos-2026-10-16/README.md). El catálogo productivo sigue con fuentes gratuitas; hay pilotos privados de proveedores sin importación ni cron pago. El dueño descartó el abono de Fantastic y autorizó aprovechar su trial gratuito. Este documento describe el motor actual, no autoriza proveedores nuevos.
+
 Primera versión del match de Maru: una persona que vive en Argentina carga (o reutiliza) su CV, confirma lo que Maru entendió, cuenta qué trabajo quiere y en qué condiciones, y recibe un ranking de búsquedas **reales** con el porqué de cada coincidencia, las brechas y lo que falta confirmar. Desde cada búsqueda puede guardar, descartar con motivo, abrir el aviso original o **preparar la postulación** con el coach existente.
 
 No hay cobertura total del mercado: Maru muestra sólo lo que puede leer gratis y con permiso, y todas las cifras que aparecen son conteos reales del inventario.
@@ -13,8 +15,8 @@ scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──
   lotes · checkpoint · lock               sin datos de usuarios)                                sólo en el navegador)
 ```
 
-- **Sin base de datos nueva.** Maru no tenía base de datos ni storage de servidor (el login es una cookie firmada y el perfil vive en `localStorage`). Para no contratar ni activar servicios, el inventario compartido es un archivo versionado en el repo que genera la sincronización programada. El código de inventario (`src/lib/match/inventory.ts`) es puro y recibe/devuelve objetos: para pasar a una base de datos alcanza con reemplazar `loadInventory` (`src/lib/match/load.ts`) y `saveInventory` del script.
-- **Datos personales**: perfil, preferencias, guardados, descartes y búsquedas propias quedan en el navegador (`maru:match:v1`). El ranking (`POST /api/match/ranking`) los recibe, ordena y responde **sin guardarlos ni registrarlos**. Dos personas no pueden ver los datos de la otra porque el servidor no los conserva. "Borrar mis datos" elimina todo (incluido el CV leído).
+- **Catálogo sin base adicional.** El inventario compartido es un archivo versionado en el repo que genera la sincronización programada. Las cuentas ya usan Redis para perfil, match y seguimiento; eso no convierte Redis en la base del catálogo. El código de inventario (`src/lib/match/inventory.ts`) es puro y recibe/devuelve objetos: una migración futura requiere adaptar carga y escritura, pero no está indicada para la próxima fase.
+- **Datos personales**: sin sesión, perfil y preferencias viven en el navegador (`maru:match:v1`). Con sesión se sincronizan a la cuenta mediante Redis, con aislamiento y control de versiones. El ranking (`POST /api/match/ranking`) los recibe, ordena y responde sin registrarlos como parte del catálogo. "Borrar mis datos" también propaga el borrado a la cuenta. Detalle actual en el README, sección de base de datos.
 - **Separación del modelo**: oportunidad canónica (`Opportunity`), publicaciones por fuente (`StoredPosting`), perfil y preferencias (`MatchProfile`, `MatchPrefs`), interacciones (`Interactions`) y ejecuciones (`SyncRun`). Ver `src/lib/match/types.ts`.
 
 ### Archivos
@@ -38,7 +40,7 @@ scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──
 
 | Variable | Para qué |
 | --- | --- |
-| `ADMIN_EMAILS` | Emails (separados por coma) con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere el login existente (`AUTH_SECRET`, `SMTP_URL`). |
+| `ADMIN_EMAILS` | Emails separados por comas, espacios o saltos de línea con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere sesión del login existente, por Google o magic link. |
 | `MATCH_WEIGHTS` | Opcional. Pesos del ranking `habilidades,intención,seniority,extras`. Default `40,35,15,10`. |
 | `MATCH_DISABLED_SOURCES` | Opcional. Fuentes a apagar sin tocar código, ej. `remotive,jobicy`. |
 | `MATCH_SYNC_BUDGET_MS` | Opcional (script). Tiempo máximo de una ejecución antes de guardar checkpoint. Default 20 min. |
@@ -130,7 +132,7 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 
 ## Privacidad y seguridad
 
-- CV y preferencias: sólo en el navegador; el servidor no los guarda ni los registra en logs.
+- CV y preferencias: en el navegador y, con sesión, sincronizados a la cuenta en Redis; nunca dentro del inventario compartido ni en logs del ranking.
 - Ningún dato personal se envía a las fuentes de vacantes (sólo hacemos GET públicos).
 - Importación de URLs: sólo desde ATS admitidos y a hosts fijos de sus APIs; cualquier otro link pide pegar la descripción. `safeFetch`/`assertPublicUrl` bloquean protocolos no http(s), credenciales en la URL, puertos raros, redes privadas/loopback/link-local y redirecciones hacia ellas.
 - Contenido de avisos: HTML convertido a texto plano; React escapa todo al mostrar.
@@ -152,10 +154,10 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 
 ## Bloqueos y costos
 
-- **Importación real**: el entorno donde se construyó esta versión no tiene salida de red a las APIs de vacantes, así que el inventario arranca **vacío** y la primera importación real ocurre al correr el workflow (o `npm run match:sync` con red). No se cargaron datos simulados.
+- **Importación real**: el inventario gratuito ya fue poblado y sincronizado. La foto histórica del 16/10 tenía 6.439 grupos abiertos, 909 elegibles desde Argentina; recalcular si se necesitan números actuales. Las muestras pagas/trial siguen separadas y no se cargaron fixtures como avisos reales.
 - **Get on Board**: no se pudo leer su referencia técnica; el conector valida el formato en la primera sincronización y, si no coincide, la fuente queda "fallida" sin afectar a las demás.
-- **`ADMIN_EMAILS`** tiene que configurarse en Vercel para usar el panel.
-- **Persistencia entre dispositivos**: hoy los datos del match viven en el navegador. Guardarlos por cuenta requiere sumar una base de datos (decisión pendiente; no se activó ninguna).
+- **`ADMIN_EMAILS`** ya se configuró y se comprobó acceso al panel de Production después de PR #30; sólo revisar si cambia la cuenta o el entorno.
+- **Persistencia entre dispositivos**: ya implementada por cuenta en Redis. Falta la comprobación real de edición/borrado entre dos dispositivos; no crear otra base por una nota histórica de este documento.
 - **Costos que pueden subir**: la lectura de CV usa Claude (la misma llamada que ya usa Maru); el ranking no usa IA. Cada "Preparar mi postulación" dispara las llamadas existentes del coach. Hosting: un deploy diario por el commit del inventario y funciones de Vercel que leen un JSON de pocos MB. GitHub Actions: ~5 min por día de sincronización más el CI de los PRs.
 
 ## Próximas incorporaciones (por cobertura incremental esperada)

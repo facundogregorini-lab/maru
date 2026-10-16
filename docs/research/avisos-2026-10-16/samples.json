@@ -1,0 +1,4494 @@
+{
+  "observedDate": "2026-10-16",
+  "scope": "185 selected public records; capped pilot samples, not a census or production inventory",
+  "descriptionPolicy": "Lengths and SHA-256 only; no full job descriptions, CVs, recruiter fields or credentials. Hashes are per exported text, not cross-source identity.",
+  "records": [
+    {
+      "sample": "apify_linkedin",
+      "id": "4477242646",
+      "title": "Lead Business Analyst",
+      "company": "EPAM Systems",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/lead-business-analyst-at-epam-systems-4477242646",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/lead-business-analyst-at-epam-systems-4477242646",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-11T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2879,
+      "descriptionSha256": "2e18d67d90efd4cf5fad5e6263996a45c3061e745479bc57539bbf98d237d9f5",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4471624003",
+      "title": "Crossborder Product Analyst",
+      "company": "Prex",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/crossborder-product-analyst-at-prex-4471624003",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/crossborder-product-analyst-at-prex-4471624003",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3937,
+      "descriptionSha256": "d6ac13dbd9525b4d6806db5b2f3a66421d7478b26fb7c44e3c6fd01bd5ec0625",
+      "familyByExistingRules": "producto",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4467278165",
+      "title": "Senior SAP S2C Business Analyst",
+      "company": "BM Global Services Buenos Aires",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/senior-sap-s2c-business-analyst-at-bm-global-services-buenos-aires-4467278165",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/senior-sap-s2c-business-analyst-at-bm-global-services-buenos-aires-4467278165",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2883,
+      "descriptionSha256": "a8b79cea40d894d42648f322c1fbdfe25d88be03c14272cab497b64aa0754d88",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4461688858",
+      "title": "EY - GDS - PowerPlan Analyst - Staff - EY GDS",
+      "company": "EY",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/ey-gds-powerplan-analyst-staff-ey-gds-at-ey-4461688858",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/ey-gds-powerplan-analyst-staff-ey-gds-at-ey-4461688858",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1757,
+      "descriptionSha256": "23eeb710eec91869c6f809f51a14b8b027c7e2caa7bf1e8e6439dd164792d139",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4462096825",
+      "title": "Pricing Senior Analyst",
+      "company": "DiDi",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/pricing-senior-analyst-at-didi-4462096825",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/pricing-senior-analyst-at-didi-4462096825",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 7264,
+      "descriptionSha256": "ae1da29cb2acaf722abe0438106262b77707cb811ea1b6e01312cf6fb9d9f7b5",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479128502",
+      "title": "IT Business Analyst",
+      "company": "Seeds",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/it-business-analyst-at-seeds-4479128502",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/it-business-analyst-at-seeds-4479128502",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2797,
+      "descriptionSha256": "77ffc94eda97360d9ac6b9e13fa530cec4686bc85602434511a2ca180b262ef4",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4478101937",
+      "title": "Analista de Procesos",
+      "company": "Santa Catalina - Neurorehabilitación Clínica",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-procesos-at-santa-catalina-neurorehabilitaci%C3%B3n-cl%C3%ADnica-4478101937",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-procesos-at-santa-catalina-neurorehabilitaci%C3%B3n-cl%C3%ADnica-4478101937",
+      "locations": [
+        "Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1742,
+      "descriptionSha256": "553edab3aa5940dbbaac5c5da9a9c707208e74631c67a5892532a38330235ab5",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479095366",
+      "title": "Analista de Canales On Line",
+      "company": "NergisTalent",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-canales-on-line-at-nergistalent-4479095366",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-canales-on-line-at-nergistalent-4479095366",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1476,
+      "descriptionSha256": "2d12887f424814f72ce0b9d95d7b3abc98e20ce307e0d48b4b1bdd77a6331321",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479349903",
+      "title": "Analista de Planificación de Abastecimiento",
+      "company": "FarmaPlus",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-planificaci%C3%B3n-de-abastecimiento-at-farmaplus-4479349903",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-planificaci%C3%B3n-de-abastecimiento-at-farmaplus-4479349903",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3272,
+      "descriptionSha256": "8bcd4f569ead6232d1260befcf46ed553870c3c23ce3770279ba61a9c59e6189",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4471811915",
+      "title": "Senior Commercial Real Estate Analyst - 65204390955",
+      "company": "Somewhere",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/senior-commercial-real-estate-analyst-65204390955-at-somewhere-4471811915",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/senior-commercial-real-estate-analyst-65204390955-at-somewhere-4471811915",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2750,
+      "descriptionSha256": "e6b04bcf3990f2d1628ef59fbebd0cc9921632b7c2478dd46949e1a624f73ec5",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4453155036",
+      "title": "Analyst, Credit Associate",
+      "company": "CHS Inc.",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analyst-credit-associate-at-chs-inc-4453155036",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analyst-credit-associate-at-chs-inc-4453155036",
+      "locations": [
+        "San Isidro, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3372,
+      "descriptionSha256": "ac35bb81e69ece7b76d7c03ce2305f70197a5b7f85e598b01d1d2b56fa83178c",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4476691348",
+      "title": "Analista de Datos",
+      "company": "Clarín",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-datos-at-clar%C3%ADn-4476691348",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-datos-at-clar%C3%ADn-4476691348",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2972,
+      "descriptionSha256": "4f8beebde38305ec6ee5bcfd834eeda542c3c3da9c02f343dcd6be4e38469270",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4469773249",
+      "title": "Sr. Analyst, Procurement",
+      "company": "SC Johnson",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/sr-analyst-procurement-at-sc-johnson-4469773249",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/sr-analyst-procurement-at-sc-johnson-4469773249",
+      "locations": [
+        "San Isidro, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4521,
+      "descriptionSha256": "e419a073b7333cd632d2c3f6fd9e61fbf3c84dc65d69c1da639a81df9d625135",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4476863495",
+      "title": "Suscriptor/a - Analista de Datos y Pricing",
+      "company": "Provincia ART",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/suscriptor-a-analista-de-datos-y-pricing-at-provincia-art-4476863495",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/suscriptor-a-analista-de-datos-y-pricing-at-provincia-art-4476863495",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1311,
+      "descriptionSha256": "638ba118b9084aeedb62f2efecdbafbd7900f701e1ed1b8f0a044242783d0c81",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479246418",
+      "title": "Analista Senior de Pricing",
+      "company": "Bunge",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-senior-de-pricing-at-bunge-4479246418",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-senior-de-pricing-at-bunge-4479246418",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4234,
+      "descriptionSha256": "1389b9ab223e2988e0b32a4ad0384eb7f134f732f583620c263c83a24f0651b5",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4453139148",
+      "title": "Analyst, Credit Associate",
+      "company": "CHS América do Sul",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analyst-credit-associate-at-chs-am%C3%A9rica-do-sul-4453139148",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analyst-credit-associate-at-chs-am%C3%A9rica-do-sul-4453139148",
+      "locations": [
+        "San Isidro, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3372,
+      "descriptionSha256": "ac35bb81e69ece7b76d7c03ce2305f70197a5b7f85e598b01d1d2b56fa83178c",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4477892364",
+      "title": "BI Analyst",
+      "company": "Ryz Labs",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/bi-analyst-at-ryz-labs-4477892364",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/bi-analyst-at-ryz-labs-4477892364",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4088,
+      "descriptionSha256": "e24e1470b4409f56ab15b3063d64bfcac36e43efe7755bd36fc51c983489a0ba",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4477339642",
+      "title": "Accounting Analyst - GL",
+      "company": "Vylor",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/accounting-analyst-gl-at-vylor-4477339642",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/accounting-analyst-gl-at-vylor-4477339642",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3830,
+      "descriptionSha256": "8d36a8a9e4d4d1df2fc11ab57bce02221d600858965906a545192b9ab5f6b545",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4477705744",
+      "title": "Analista Junior de Costos de Mercadería (Costeo de Receta)",
+      "company": "Cecilia Prado G.",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-junior-de-costos-de-mercader%C3%ADa-costeo-de-receta-at-cecilia-prado-g-4477705744",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-junior-de-costos-de-mercader%C3%ADa-costeo-de-receta-at-cecilia-prado-g-4477705744",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1394,
+      "descriptionSha256": "036d42460eb1d2fe06343d5e0b0b98082ce76cd868ff52434efb6bbb579652f8",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4462465209",
+      "title": "Analista Sr Riesgo Crediticio - Personal Pay",
+      "company": "Personal",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-sr-riesgo-crediticio-personal-pay-at-personal-4462465209",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-sr-riesgo-crediticio-personal-pay-at-personal-4462465209",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2475,
+      "descriptionSha256": "ce99e9282b3da539aeb28664c2de1e63b287be3a601ac8e07529c354ee8798ae",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4459675652",
+      "title": "Equity Derivatives Confirmations Analyst",
+      "company": "JPMorganChase",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/equity-derivatives-confirmations-analyst-at-jpmorganchase-4459675652",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/equity-derivatives-confirmations-analyst-at-jpmorganchase-4459675652",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4846,
+      "descriptionSha256": "8ef4bb3257b11a746b2a5d4155687ee9c3e4d335c7b3ea10d340569f0caeeb52",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4461556044",
+      "title": "Market Asset Services Financial Analyst - Corporate Investment Bank",
+      "company": "JPMorganChase",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/market-asset-services-financial-analyst-corporate-investment-bank-at-jpmorganchase-4461556044",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/market-asset-services-financial-analyst-corporate-investment-bank-at-jpmorganchase-4461556044",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3718,
+      "descriptionSha256": "2ff686d998d4d3ebc1ba924c7fa629200ce12b4b071071e8ce249acf8f1279a8",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4476697683",
+      "title": "Analista Senior de Planificación Financiera para Créditos",
+      "company": "Mercado Libre",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-senior-de-planificaci%C3%B3n-financiera-para-cr%C3%A9ditos-at-mercado-libre-4476697683",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-senior-de-planificaci%C3%B3n-financiera-para-cr%C3%A9ditos-at-mercado-libre-4476697683",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2919,
+      "descriptionSha256": "1a036dc310f3f415c32d9c31467baaef0a5a8a133af4ebe54525ffeb2fbefc08",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479358624",
+      "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+      "company": "EY",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/ey-analista-junior-de-gesti%C3%B3n-de-riesgos-para-la-industria-financiera-at-ey-4479358624",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/ey-analista-junior-de-gesti%C3%B3n-de-riesgos-para-la-industria-financiera-at-ey-4479358624",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 5285,
+      "descriptionSha256": "5c2f48b3e7e6ee08d2bdb29b9357c4c67aaae6fd862da9fc1e2b1e3dbf587f8f",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4477710712",
+      "title": "Senior Treasury Analyst I",
+      "company": "ChampionX",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/senior-treasury-analyst-i-at-championx-4477710712",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/senior-treasury-analyst-i-at-championx-4477710712",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2154,
+      "descriptionSha256": "ee82e41c1097284169b566c9064927e53df8f55796e5d0db927dc7eff6a85f8d",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4449748508",
+      "title": "Vendor Growth Analytics Sr Analyst",
+      "company": "PedidosYa",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/vendor-growth-analytics-sr-analyst-at-pedidosya-4449748508",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/vendor-growth-analytics-sr-analyst-at-pedidosya-4449748508",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-11T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4471,
+      "descriptionSha256": "5f9e938008444728ad9373769c0f7e84619d064d258929d4c7365dbb6cd6cd42",
+      "familyByExistingRules": "marketing",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4468024154",
+      "title": "Business Analyst",
+      "company": "Cognizant",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/business-analyst-at-cognizant-4468024154",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/business-analyst-at-cognizant-4468024154",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3610,
+      "descriptionSha256": "ebd689c7302b604eda47126662939d1f95272ce23cb45517bed0c296d18a8566",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4476895699",
+      "title": "Analista de Planeamiento Comercial",
+      "company": "Bidcom",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-planeamiento-comercial-at-bidcom-4476895699",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-planeamiento-comercial-at-bidcom-4476895699",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1897,
+      "descriptionSha256": "6c39a56e1c2705ac2027ddb82565fec5baa35c5c47346682ef8f82ab291608ea",
+      "familyByExistingRules": "ventas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4457704883",
+      "title": "Billing & Revenue Analyst",
+      "company": "NCR Atleos",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/billing-revenue-analyst-at-ncr-atleos-4457704883",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/billing-revenue-analyst-at-ncr-atleos-4457704883",
+      "locations": [
+        "Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4644,
+      "descriptionSha256": "eac7dfd194e1bf0f85c6dc6033594fa215d1419cd3bbeaff4f86ede6930f496d",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4462474858",
+      "title": "Financial Risk Analyst",
+      "company": "Prex",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/financial-risk-analyst-at-prex-4462474858",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/financial-risk-analyst-at-prex-4462474858",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2815,
+      "descriptionSha256": "11f05ee5ca8d4e4a39696f9ff1197ef187eeca8b4e375961583702f15fbded99",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4469340532",
+      "title": "Business Analyst",
+      "company": "Chevron",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/business-analyst-at-chevron-4469340532",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/business-analyst-at-chevron-4469340532",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2804,
+      "descriptionSha256": "2019eb7bb48174326abdc3d9bb2bcfc2f6b3bf989c61fb6e7d3b9a3366d4a59b",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4473944622",
+      "title": "Rates Analysis Analyst",
+      "company": "BM Global Services Buenos Aires",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/rates-analysis-analyst-at-bm-global-services-buenos-aires-4473944622",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/rates-analysis-analyst-at-bm-global-services-buenos-aires-4473944622",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3581,
+      "descriptionSha256": "b11e6aa6aecd3509383300c18083a37606224d1a2a4e4bd44765d179bf1b6f0b",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4471666786",
+      "title": "Data Reporting Analyst",
+      "company": "Syneos Health Commercial Solutions",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/data-reporting-analyst-at-syneos-health-commercial-solutions-4471666786",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/data-reporting-analyst-at-syneos-health-commercial-solutions-4471666786",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2828,
+      "descriptionSha256": "6ba854abce11e36100413f65503597e82362cd99cd35c5082e7894381ebe6739",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4473941274",
+      "title": "Analista Planificación Comercial Jr.- Cencosud",
+      "company": "Cencosud",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-planificaci%C3%B3n-comercial-jr-cencosud-at-cencosud-4473941274",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-planificaci%C3%B3n-comercial-jr-cencosud-at-cencosud-4473941274",
+      "locations": [
+        "Martínez, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2412,
+      "descriptionSha256": "515edfd0b36f900d9ebcd346853d4b6e1ffc496741a627a7e29e42573f4d72dd",
+      "familyByExistingRules": "ventas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479556934",
+      "title": "Analista de datos",
+      "company": "NergisTalent",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-datos-at-nergistalent-4479556934",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-datos-at-nergistalent-4479556934",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3318,
+      "descriptionSha256": "5b10a61824b1b2a1bee07fb6e4b4ed2df3bfc5c56a43da905de3de9eebf6b88e",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4394157841",
+      "title": "Finance Analyst",
+      "company": "Chevron",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/finance-analyst-at-chevron-4394157841",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/finance-analyst-at-chevron-4394157841",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2744,
+      "descriptionSha256": "842b02a5d6f3e9e6aa6e00c2ab8ac11e6111caf34429564437a8124abc84a177",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4469033704",
+      "title": "Quote Management Analyst",
+      "company": "Lenovo",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/quote-management-analyst-at-lenovo-4469033704",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/quote-management-analyst-at-lenovo-4469033704",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4173,
+      "descriptionSha256": "c01027d8988252ef94b490acb9fe49c758d6dcd52a44e4c29ec28897df319e73",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479879559",
+      "title": "Security Analyst",
+      "company": "Netrix Global",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/security-analyst-at-netrix-global-4479879559",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/security-analyst-at-netrix-global-4479879559",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 6775,
+      "descriptionSha256": "7b3e5cea51d551409eb08013810cc89627ffd0d0331602ef0ea5810672404b9b",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4471660719",
+      "title": "Product Analyst Tarjeta de Crédito - Personal Pay",
+      "company": "Personal",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/product-analyst-tarjeta-de-cr%C3%A9dito-personal-pay-at-personal-4471660719",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/product-analyst-tarjeta-de-cr%C3%A9dito-personal-pay-at-personal-4471660719",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3752,
+      "descriptionSha256": "bafa44602e2a7025d059483a2278a549d03e65c8966aa3a85238e411a4e74315",
+      "familyByExistingRules": "producto",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4478002575",
+      "title": "AI Business Analyst",
+      "company": "América Virtual",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/ai-business-analyst-at-am%C3%A9rica-virtual-4478002575",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/ai-business-analyst-at-am%C3%A9rica-virtual-4478002575",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3649,
+      "descriptionSha256": "0ad10fe77e286b98c842e94717d4eb0a2bbb68b47e401b172812c1b33bafdd70",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4477890858",
+      "title": "Record to Report Jr Analyst",
+      "company": "Air Liquide",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/record-to-report-jr-analyst-at-air-liquide-4477890858",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/record-to-report-jr-analyst-at-air-liquide-4477890858",
+      "locations": [
+        "Vicente López, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2363,
+      "descriptionSha256": "e272b87aa594006e494ada49c7d24ecb0c68e361130b89eca1ce9b27fc4b5f34",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4442137016",
+      "title": "SAP Functional Analyst - Tax",
+      "company": "ExxonMobil",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/sap-functional-analyst-tax-at-exxonmobil-4442137016",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/sap-functional-analyst-tax-at-exxonmobil-4442137016",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-11T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 8727,
+      "descriptionSha256": "fc3fd20d55b1eb21718732671e35926cf8aff50399423194bae96a4357686a83",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4479794984",
+      "title": "Security Analyst - Argentina",
+      "company": "SenseOn",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/security-analyst-argentina-at-senseon-4479794984",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/security-analyst-argentina-at-senseon-4479794984",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3806,
+      "descriptionSha256": "d287197cce8da4da4a0ab291f8f6a2b9d82cddf10296a97d6947277878a13bfa",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4480180460",
+      "title": "Treasury & Fx Sr. Analyst",
+      "company": "Syngenta",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/treasury-fx-sr-analyst-at-syngenta-4480180460",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/treasury-fx-sr-analyst-at-syngenta-4480180460",
+      "locations": [
+        "Vicente López, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4279,
+      "descriptionSha256": "1cce8485099369f6570dce0500aa326cf6b992ab8ee5edb8ae17619e92f1cc77",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4449786886",
+      "title": "Import Global Trade Analyst",
+      "company": "Ciena",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/import-global-trade-analyst-at-ciena-4449786886",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/import-global-trade-analyst-at-ciena-4449786886",
+      "locations": [
+        "Greater Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4498,
+      "descriptionSha256": "3c2497b9b51201ad23b92b972a5cb0870631e4ed84606a4ed53210624490059e",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4478003411",
+      "title": "Procure to Pay Junior Analyst",
+      "company": "Air Liquide",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/procure-to-pay-junior-analyst-at-air-liquide-4478003411",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/procure-to-pay-junior-analyst-at-air-liquide-4478003411",
+      "locations": [
+        "Vicente López, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2323,
+      "descriptionSha256": "7bf5030c23f7f479bf4f9e8b207045a68a8b4411e44b144b6599ea79a02e9dcf",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4433878745",
+      "title": "Trade Support Analyst",
+      "company": "ExxonMobil",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/trade-support-analyst-at-exxonmobil-4433878745",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/trade-support-analyst-at-exxonmobil-4433878745",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-12T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 5094,
+      "descriptionSha256": "11c5dd2cd6f9ac14292c65a89a1d0de0b0adad1b3700408cc7f23dffc725c021",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4478013714",
+      "title": "Middle Product Analyst",
+      "company": "Avenga",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/middle-product-analyst-at-avenga-4478013714",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/middle-product-analyst-at-avenga-4478013714",
+      "locations": [
+        "Buenos Aires, Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3375,
+      "descriptionSha256": "c603a4272df923b44bf697a0e8c81eb453706b05069106a7c472997c84b23932",
+      "familyByExistingRules": "producto",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_linkedin",
+      "id": "4434319340",
+      "title": "Accounts Payables Analyst",
+      "company": "NCR Atleos",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/accounts-payables-analyst-at-ncr-atleos-4434319340",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/accounts-payables-analyst-at-ncr-atleos-4434319340",
+      "locations": [
+        "Buenos Aires Province, Argentina"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3634,
+      "descriptionSha256": "50f47ed2d1d1801223c1445efc7d040f108806623b72d3a0f822d69f46b7da3f",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "d3d5f1f076acaf31",
+      "title": "ANALISTA JR DE CALIDAD",
+      "company": "ACEBEY S A",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=d3d5f1f076acaf31",
+      "applyUrl": "http://ar.indeed.com/job/analista-jr-de-calidad-d3d5f1f076acaf31",
+      "locations": [
+        "Tortuguitas, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T13:44:30.004Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2153,
+      "descriptionSha256": "342bed55b805d65611ace7b49c9bc81cb88fba6b2a03c0efcb4f14125e18fde3",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "723cdba3d9765a3c",
+      "title": "ANALISTA AMBIENTE",
+      "company": "YPF",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=723cdba3d9765a3c",
+      "applyUrl": "https://oportunidades.ypf.com/job/Buenos-Aires-ANALISTA-AMBIENTE-BUEN-1923/1438891100/",
+      "locations": [
+        "La Plata, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3680,
+      "descriptionSha256": "d96d8c3ae0158d9f1e107e9c9d826401c8e3960460a2374e621db7713986880c",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "a5c9de1acb3d5914",
+      "title": "Analista Jr. de Compras",
+      "company": "COMAFI",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=a5c9de1acb3d5914",
+      "applyUrl": "https://thecapitacorporation.na.teamtailor.com/jobs/719770-analista-jr-de-compras",
+      "locations": [
+        "Olivos, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1467,
+      "descriptionSha256": "b5c0a9af56809414ab88b2c722aa5815120950781a7f2c39cddfb383cdaf7075",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "9eec5e24a9c5df6a",
+      "title": "Analista Jr. de Operaciones - The Capita Corporation",
+      "company": "COMAFI",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=9eec5e24a9c5df6a",
+      "applyUrl": "https://thecapitacorporation.na.teamtailor.com/jobs/719769-analista-jr-de-operaciones-the-capita-corporation",
+      "locations": [
+        "Olivos, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1443,
+      "descriptionSha256": "9079239736fbc3c36a869f52656a240cddddbaa7ae013b0b6b395660df1db8bd",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "b8f5c4521a710b17",
+      "title": "Analista de laboratorio",
+      "company": "Cladan",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=b8f5c4521a710b17",
+      "applyUrl": "http://ar.indeed.com/job/analista-de-laboratorio-b8f5c4521a710b17",
+      "locations": [
+        "Villa Rosa, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T15:13:22.151Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2038,
+      "descriptionSha256": "81ad050820385b453bde0691cd9ebff8d9e278c691c03c2a7fdbebe64deeee40",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "edb32e2516c859ca",
+      "title": "Analista de Investigación y Desarrollo (I+D)",
+      "company": "Sapore di pane",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=edb32e2516c859ca",
+      "applyUrl": "http://ar.indeed.com/job/analista-de-investigaci%C3%B3n-y-desarrollo-id-edb32e2516c859ca",
+      "locations": [
+        "Olivos, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-10T00:57:26.385Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3013,
+      "descriptionSha256": "365217ec14aa0d26f6c06ab7bedd989cd8366e6e5205d0b123872abc906a9bfe",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "7ca66c708249159d",
+      "title": "Analista de Calidad",
+      "company": "Grupo CENOA",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=7ca66c708249159d",
+      "applyUrl": "https://grupocenoa.hiringroom.com/jobs/get_vacancy/6acc6a5134894cf43e085edc?source=indeed",
+      "locations": [
+        "Salta, Salta"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-12T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1758,
+      "descriptionSha256": "fc891a80a771038f6a351f5e10479d31d84e6a2fd26bccd8a14920e6fa2548eb",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "1be781001dab907c",
+      "title": "Accounting Analyst",
+      "company": "McCain Foods",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=1be781001dab907c",
+      "applyUrl": "https://careers.mccain.com/us/en/job/MFOMFBUS45084EXTERNALENUS/Accounting-Analyst",
+      "locations": [
+        "Balcarce, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3206,
+      "descriptionSha256": "bdd920daf55456ae1ae10aadbd3293779213f43ff9f43c020cb1a7bf95e09ecb",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "086ccaed3e6a3194",
+      "title": "Analista de Presupuesto",
+      "company": "DESA",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=086ccaed3e6a3194",
+      "applyUrl": "https://desasa.hiringroom.com/jobs/get_vacancy/6ac8f740ba4b2f6cb1fc7671?source=indeed",
+      "locations": [
+        "Mar del Plata, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1768,
+      "descriptionSha256": "5856b4753270b50d2c54760657200b4b3937ca1565a5f196de54bde354d07649",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "ad5d98062b71b5db",
+      "title": "Especialista Regional de Auditoría y Estándares de Pérdidas - Mercado Envíos",
+      "company": "Mercado Livre",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=ad5d98062b71b5db",
+      "applyUrl": "https://mercadolibre.eightfold.ai/careers/job/44563260?domain=mercadolibre.com",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-18T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3123,
+      "descriptionSha256": "b8e9dc6e2b6cc7830354258447d37a2421c4d631896e0173313353d9fd55fb9c",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "6904f1706916d8c7",
+      "title": "Analista de datos Senior",
+      "company": "MAS COBRANZAS",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=6904f1706916d8c7",
+      "applyUrl": "http://ar.indeed.com/job/analista-de-datos-senior-6904f1706916d8c7",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T20:40:20.835Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1470,
+      "descriptionSha256": "fc0e964a8411afc16888230ac3751747c9c0b19e1a09b71117a6f4c5cef32b6e",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "c660ebb97447da72",
+      "title": "Analista QA Senior",
+      "company": "Pilar Humano",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=c660ebb97447da72",
+      "applyUrl": "http://ar.indeed.com/job/analista-qa-senior-c660ebb97447da72",
+      "locations": [
+        "Parque Patricios, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T16:27:30.977Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2803,
+      "descriptionSha256": "f14d09d211415bde14803f8ee9d3b5aca9a3fd2fb07400c75835d1e3cb3577ea",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "878a5c8b420170ae",
+      "title": "Senior Experimentado- Analista Impositivo",
+      "company": "PwC",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=878a5c8b420170ae",
+      "applyUrl": "https://pwc.wd3.myworkdayjobs.com/en-US/Global_Experienced_Careers/job/Mendoza/Senior-Experimentado--Analista-Impositivo_767179WD",
+      "locations": [
+        "Mendoza, Mendoza"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2719,
+      "descriptionSha256": "230a45bdabd710953aaacd8c21865fd7e6282a979ffee7dd24432d6d840f7d54",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "0e679a60f71b32fc",
+      "title": "Analista Mejora continua / Transformación",
+      "company": "Marsh",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=0e679a60f71b32fc",
+      "applyUrl": "https://careers.marsh.com/global/en/job/R_367063/analistamejoracontinua/transformaci%C3%B3n",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2628,
+      "descriptionSha256": "1e73909149d9dbf879d6a2d396085f13e9a8624e74994fbf88c7923657dde8c1",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "516fdf53e784f2ce",
+      "title": "Analista de Control de Calidad de Fragancias",
+      "company": "IFF",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=516fdf53e784f2ce",
+      "applyUrl": "https://iff.wd5.myworkdayjobs.com/en-US/IFF_Careers/job/Garin-Argentina/Analista-de-Control-de-Calidad-de-Fragancias_R22593",
+      "locations": [
+        "Garín, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3523,
+      "descriptionSha256": "56c6e8bebe64810df3661eb4a13da41d336824e4da2cf683ed02ce7e38c4aa33",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "0e39abd4ded9bf99",
+      "title": "Analista de Planeamiento",
+      "company": "Scienza Argentina",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=0e39abd4ded9bf99",
+      "applyUrl": "https://scienza.hiringroom.com/jobs/get_vacancy/6ad0e46640bd92702c2c9721?source=indeed",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1794,
+      "descriptionSha256": "6c91f6e7314a3330b1566871ba2b243d216edccaf1a32a71fa567583d3a3dc1c",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "99d2755d0576e74e",
+      "title": "Product Owner",
+      "company": "Byma",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=99d2755d0576e74e",
+      "applyUrl": "https://empleos.byma.com.ar/jobs/720629-product-owner",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4578,
+      "descriptionSha256": "daeaaa370d5ad76215137d3287a84539da32fb08209321c3240df092e9847529",
+      "familyByExistingRules": "producto",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "8ffcde0e0d70f958",
+      "title": "Analista contable SSR",
+      "company": "Grow UP HR",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=8ffcde0e0d70f958",
+      "applyUrl": "https://growuphr.hiringroom.com/jobs/get_vacancy/6ace9df00645bcdce7a9ed22?source=indeed",
+      "locations": [
+        "Munro, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1825,
+      "descriptionSha256": "a9c93edcd99896502a1fa46695ad1d009f7e826e721b9fbdade5feb08f848879",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "7944d4281b58a7ac",
+      "title": "Analista de Gestión e Indicadores de Seguridad Personal",
+      "company": "Licenciataria de la marca Shell",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=7944d4281b58a7ac",
+      "applyUrl": "https://raizenargentina.gupy.io/job/eyJqb2JJZCI6MTI3MTc4MjIsInNvdXJjZSI6ImluZGVlZCJ9?jobBoardSource=indeed",
+      "locations": [
+        "Dock Sur, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3838,
+      "descriptionSha256": "48657aa5d965c0f140e635637779f09b621bfd9975e10ef95c839ed143308480",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "fc6dd55ceb3708fe",
+      "title": "ANALISTA DE IMPUESTOS (Oil&Gas - Buenos Aires)",
+      "company": "Human Consulting",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=fc6dd55ceb3708fe",
+      "applyUrl": "https://humanconsulting.hiringroom.com/jobs/get_vacancy/6ac90b5f0158dcad27c4c010?source=indeed",
+      "locations": [
+        "Martínez, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1802,
+      "descriptionSha256": "700aecc8327246ed113ce2979549bf1731152f5f50a558ed27c7230596dacbe3",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "30d70185fa5ce4ca",
+      "title": "Líder de Automatización & AIOps (Senior) | 211604",
+      "company": "Talent Connect",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=30d70185fa5ce4ca",
+      "applyUrl": "https://jobs.talentconnect.ai/jobs/720218-lider-de-automatizacion-aiops-senior-211604",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2874,
+      "descriptionSha256": "8f4a7b3c7c6e52b38c632e835fcf0f5687a60ae750433a82a39fd963e39bfd19",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "1911b93abf67d76a",
+      "title": "Analista Contable con Enfoque en IA y Automatización",
+      "company": "HCO Latam",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=1911b93abf67d76a",
+      "applyUrl": "http://ar.indeed.com/job/analista-contable-con-enfoque-en-ia-y-automatizaci%C3%B3n-1911b93abf67d76a",
+      "locations": [
+        "Palermo, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T13:11:24.341Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2878,
+      "descriptionSha256": "4e4464420ce93d55700694bc76cd6df1ce557dfe6a8f7733c032a124ec535bb6",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "313bdd3c649dae26",
+      "title": "ANALISTA ADMINISTRACION PROYECTO",
+      "company": "YPF",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=313bdd3c649dae26",
+      "applyUrl": "https://oportunidades.ypf.com/job/Federal-ANALISTA-ADMINISTRACION-PROYECTO-CAPI-1035/1438789300/",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 5964,
+      "descriptionSha256": "6c623f251d7ff8c61af8f352931a1db2494efcca3ffe330546cd57ba4b58b558",
+      "familyByExistingRules": "administracion",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "0e7e10037c47d434",
+      "title": "Analista Funcional / Consultor de IA",
+      "company": "ASAP Consulting",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=0e7e10037c47d434",
+      "applyUrl": "https://asapconsulting-busquedas.na.teamtailor.com/jobs/720622-analista-funcional-consultor-de-ia",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4105,
+      "descriptionSha256": "5a7d7e8ef003bee3f26bc9a2f5c14c2db66bbef4efcd9c78a0ffd833d6ab5450",
+      "familyByExistingRules": "consultoria",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "c6377669fe03ba3d",
+      "title": "Analista Pleno Gestión Comercial Eventual",
+      "company": "Natura",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=c6377669fe03ba3d",
+      "applyUrl": "https://natura.wd501.myworkdayjobs.com/en-US/NaturaCarreiras/job/Natura-Argentina---Buenos-Aires-Natura-Argentina/Analista-Pleno-Gestin-Comercial-Eventual_JR40299-1",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4218,
+      "descriptionSha256": "b39e3a2a4429bd4758095eac876dab4377bee31b476699797f4b21052640a014",
+      "familyByExistingRules": "ventas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "f166e0358f153313",
+      "title": "Analista Comercial SR",
+      "company": "Byma",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=f166e0358f153313",
+      "applyUrl": "https://empleos.byma.com.ar/jobs/720106-analista-comercial-sr",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3399,
+      "descriptionSha256": "d56f008a0e5e0e1a52e449ab75312acf8c4f50ec88c7659832c3ea9d5715539d",
+      "familyByExistingRules": "ventas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "ba05a7416152f932",
+      "title": "Senior Claims Analyst",
+      "company": "WTW",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=ba05a7416152f932",
+      "applyUrl": "https://careers.wtwco.com/jobs/senior-claims-analyst-buenos-aires-argentina-f58efa69-434b-4395-a16e-e3abab058540?source=indeed",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2630,
+      "descriptionSha256": "ce9b864fc19a2d8b8ce7566e4f453153ce61a7a598bfa1805545450dc6723e33",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "f245bc094cd053bb",
+      "title": "Analista de Reporting (Argentina)",
+      "company": "GRUPO MIRGOR",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=f245bc094cd053bb",
+      "applyUrl": "https://empleos.mirgor.com.ar/job/Analista-de-Reporting-%28Argentina%29-CABA/1439523700/",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2082,
+      "descriptionSha256": "18ab0974968c523fdc161f8d3e9fa796532af5d11e0c83ceaca3c21e51535200",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "1adc2cd7d2ec9f19",
+      "title": "ADMINISTRADOR DE DOCUMENTOS",
+      "company": "YPF",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=1adc2cd7d2ec9f19",
+      "applyUrl": "https://oportunidades.ypf.com/job/Federal-ADMINISTRADOR-DE-DOCUMENTOS-CAPI-1035/1438814500/",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 5130,
+      "descriptionSha256": "55ae6613508df2a54d8e76b61ec719b3d481a0eb3721891977e2259a65fe401f",
+      "familyByExistingRules": "administracion",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "6668a6d3e505211c",
+      "title": "Analista recursos humanos H/F",
+      "company": "Abazcu SAS",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=6668a6d3e505211c",
+      "applyUrl": "https://abazcu.jobs-talents.com/offre/dyc3awhtge",
+      "locations": [
+        "Córdoba, Córdoba"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3212,
+      "descriptionSha256": "cd4f54dc6ccaa71d78d7bd293921b18ef064fb71d037ea09627efb82db4a37f7",
+      "familyByExistingRules": "rrhh",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "abfcf00a156a84dc",
+      "title": "Analista Ténico - Seguridad Electronica",
+      "company": "Talent Solutions RRHH",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=abfcf00a156a84dc",
+      "applyUrl": "https://talentsolutionsrrhh.hiringroom.com/jobs/get_vacancy/6ace7765156ef2b9ad7fcfa3?source=indeed",
+      "locations": [
+        "Hurlingham, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2194,
+      "descriptionSha256": "fbbfe4085e742d671735cfd29d095338212b4b801b4e08dfb35da2e7036f6116",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "23414c604f07665a",
+      "title": "Analista Senior de Infraestructura",
+      "company": "Prosegur",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=23414c604f07665a",
+      "applyUrl": "https://prosegur.referrals.selectminds.com/glo/jobs/analista-senior-de-infraestructura-59666",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-01T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 6184,
+      "descriptionSha256": "6aaafe8989317f9e3ca62e7724fd6d939098865ed76f0b1db1a2b0e917fc1f04",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "94d5f191a69fd035",
+      "title": "Analista de Control de Calidad- Producto terminado - Temporal",
+      "company": "Haleon",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=94d5f191a69fd035",
+      "applyUrl": "https://gsknch.wd3.myworkdayjobs.com/en-US/GSKCareers/job/Argentina---Buenos-Aires-Province---Buenos-Aires/Analista-de-Control-de-Calidad--Producto-terminado---Temporal_548966",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-12T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": "2026-10-30T06:00:00.000Z",
+      "descriptionChars": 5176,
+      "descriptionSha256": "55fdf5b560e57292d01557064019f72d6cc17d13bbef9f921b24c456d2ff4d6b",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "1e03874b88ac6bf9",
+      "title": "Analista de Seguridad Física - Mercado Envíos",
+      "company": "Mercado Livre",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=1e03874b88ac6bf9",
+      "applyUrl": "https://mercadolibre.eightfold.ai/careers/job/44878389?domain=mercadolibre.com",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-08T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3165,
+      "descriptionSha256": "19f73dfc73b92b31006be45e419fc789e97203546242b4dfa0c30bf7e172c18a",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "d1ac9b7eadb45b47",
+      "title": "Analista Comercial On line (Argentina)",
+      "company": "GRUPO MIRGOR",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=d1ac9b7eadb45b47",
+      "applyUrl": "https://empleos.mirgor.com.ar/job/Analista-Comercial-On-line-%28Argentina%29-CABA/1439552400/",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1660,
+      "descriptionSha256": "f56a0a439c7184a2a021f54c536dc1c4ca2c22803a9c828fe016e1edea245460",
+      "familyByExistingRules": "ventas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "9ee63b0b2763e457",
+      "title": "Analista Jr. de Cobranzas y Cuentas Corrientes",
+      "company": "Swiss Medical Group",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=9ee63b0b2763e457",
+      "applyUrl": "https://swissmedical.jobs2web.com/job/Capital-Federal-Analista-Jr_-de-Cobranzas-y-Cuentas-Corrientes/1440664600/",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2408,
+      "descriptionSha256": "0ea4679994203fd6263f6d276697d4862cffd5f88d0dea245c942fde722c6d29",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "806511b8023888a7",
+      "title": "Analista Funcional Cloud",
+      "company": "Stefanini",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=806511b8023888a7",
+      "applyUrl": "https://stefaninilatam.gupy.io/job/eyJqb2JJZCI6MTI3MjAxOTAsInNvdXJjZSI6ImluZGVlZCJ9?jobBoardSource=indeed",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2527,
+      "descriptionSha256": "854fcbc1d17f8c3fa01c5d6fe9707beef161a8bf95258b0566d1e4dab30ec4ae",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "88d5065668834d81",
+      "title": "Analista de Contabilidad",
+      "company": "Helmerich & Payne, Inc.",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=88d5065668834d81",
+      "applyUrl": "https://hpinc.wd5.myworkdayjobs.com/en-US/hpinc/job/Martinez-Buenos-Aires-Argentina/Analista-de-Contabilidad_REQ-2913",
+      "locations": [
+        "Martínez, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2720,
+      "descriptionSha256": "b517ba43a33f9eec5e9401ccc95ba430eda10ad4f6f6ba00498198d8c1d6d063",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "0168f3638668d8c7",
+      "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+      "company": "EY",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=0168f3638668d8c7",
+      "applyUrl": "https://careers.ey.com/ey/job/Buenos-Aires-EY-Analista-Junior-de-Gesti%C3%B3n-de-Riesgos-para-la-Industria-Financiera-CABA-1437/1448547733/",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 5375,
+      "descriptionSha256": "da1c4de656dba95b4630137c9c1269008ccef8e253d500cb374f07b241b4336b",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "49ec4777b64705ec",
+      "title": "Analista Senior de Pricing",
+      "company": "Bunge",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=49ec4777b64705ec",
+      "applyUrl": "https://jobs.bunge.com/job/Capital-Federal-Analista-Senior-de-Pricing-1002/1447122333/",
+      "locations": [
+        "Capital Federal, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4270,
+      "descriptionSha256": "9c992b02925587a282808410072e75c2681a0ed8645acf99a1ce84fe4b61b330",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "ce4d5fc9c23b4fb7",
+      "title": "Analista Técnico Ssr",
+      "company": "Prosegur",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=ce4d5fc9c23b4fb7",
+      "applyUrl": "https://prosegur.referrals.selectminds.com/glo/jobs/analista-t%C3%A9cnico-ssr-59671",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-01T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4854,
+      "descriptionSha256": "5baf95ebc43fb8f6eada3c2ed0dd05648bce2fa4caf5ee702e8870a743b79c6e",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_indeed",
+      "id": "6a009f0757d6159d",
+      "title": "ANALISTA SGEO",
+      "company": "YPF",
+      "sourceUrl": "https://ar.indeed.com/viewjob?jk=6a009f0757d6159d",
+      "applyUrl": "https://oportunidades.ypf.com/job/Federal-ANALISTA-SGEO-CAPI-1035/1439981000/",
+      "locations": [
+        "Buenos Aires, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-14T05:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4936,
+      "descriptionSha256": "0e99e6282ea2499b9d6fdcad4b6895b5485f7458de6c99024b00909df9d25a49",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "FE35476561D562DE61373E686DCF3405",
+      "title": "Analista de Recursos Humanos - Plan Primer Paso PPP",
+      "company": "GRUPO FAMAP S.R.L",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-recursos-humanos-plan-primer-paso-ppp-en-cordoba-FE35476561D562DE61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=FE35476561D562DE61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Córdoba, Córdoba"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1565,
+      "descriptionSha256": "f020b43a4d7386a343410607d3b19f53f2ab3bb2536960d0645f04c98ae7ddbb",
+      "familyByExistingRules": "rrhh",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "F44DE1A98073A72B61373E686DCF3405",
+      "title": "bu834 Analista de cuentas a pagar y comex, movilidad propia, Gba Sur, Ezeiza",
+      "company": "Cona Consultores SRL",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-bu834-analista-de-cuentas-a-pagar-y-comex-movilidad-propia-gba-sur-ezeiza-en-ezeiza-F44DE1A98073A72B61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=F44DE1A98073A72B61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Ezeiza, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4264,
+      "descriptionSha256": "be2f3141e493efca1e218394109e92d3875af5b2520b2fc269a96402c531fe34",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "5B020CB4DD7E4E8961373E686DCF3405",
+      "title": "Ref. 21550  Analista de Facturación Jr. Puerto Madero, CABA - Puerto Madero, CABA",
+      "company": "ADN - Recursos Humanos",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-ref-21550-analista-de-facturacion-jr-puerto-madero-caba-puerto-madero-caba-en-puerto-madero-5B020CB4DD7E4E8961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=5B020CB4DD7E4E8961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Puerto Madero, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2088,
+      "descriptionSha256": "e6d89b331abea9c0824eaaf1bc843a3c37286ef5d2ae7967aa1d0afa8c3809d3",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "47875AF632CEF77E61373E686DCF3405",
+      "title": "Analista de administración y finanzas",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-administracion-y-finanzas-en-san-miguel-de-tucuman-47875AF632CEF77E61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=47875AF632CEF77E61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "San Miguel de Tucumán, Tucumán"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1619,
+      "descriptionSha256": "d9df50d8c049ac0cc6e32fbad9b62503e5ef812bc8251f283d9740a5486465cd",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "5106A182E1A031F761373E686DCF3405",
+      "title": "analista de cobranzas - experiecia minima 2 años",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-cobranzas-experiecia-minima-2-anos-en-puerto-madero-5106A182E1A031F761373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=5106A182E1A031F761373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Puerto Madero, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-22T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2219,
+      "descriptionSha256": "b92825e285929145bc04dc25fd82245b9ab603dbf0e7aebf77cc0eaed5e6fb33",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "1AFDF71001FA52E961373E686DCF3405",
+      "title": "Analista Contable - para Importante ART en Rosario",
+      "company": "Bayton",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-contable-para-importante-art-en-rosario-en-rosario-1AFDF71001FA52E961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=1AFDF71001FA52E961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Rosario, Santa Fe"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1592,
+      "descriptionSha256": "7877920d3195d321de12d9e5f6bfb9bc108081da631cfab8c2891d6d48695e66",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "5B7BC1D76F6CEAD661373E686DCF3405",
+      "title": "Analista Técnico Funcional de Sistemas y Aplicaciones",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-tecnico-funcional-de-sistemas-y-aplicaciones-en-monte-grande-5B7BC1D76F6CEAD661373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=5B7BC1D76F6CEAD661373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Monte Grande, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2088,
+      "descriptionSha256": "8c94e34c569de5d897b1063cbb0deb9074161772b60398f2c3e1e38211e4951d",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "A1BDC0715040957C61373E686DCF3405",
+      "title": "Ref. 21550  Analista de Facturación Jr. Puerto Madero, CABA - Puerto Madero, CABA",
+      "company": "ADN - Recursos Humanos",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-ref-21550-analista-de-facturacion-jr-puerto-madero-caba-puerto-madero-caba-en-puerto-madero-A1BDC0715040957C61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=A1BDC0715040957C61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Puerto Madero, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2088,
+      "descriptionSha256": "e6d89b331abea9c0824eaaf1bc843a3c37286ef5d2ae7967aa1d0afa8c3809d3",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "B1047464BA30A4B861373E686DCF3405",
+      "title": "Analista de compras",
+      "company": "Grupo Gamma",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-compras-en-rosario-B1047464BA30A4B861373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=B1047464BA30A4B861373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Rosario, Santa Fe"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1767,
+      "descriptionSha256": "e03b0e8f02bdfef7a6b8d77518d43dc6ea94062ac7d136297b397733bf545ff7",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "309FE06E7BF9EE6961373E686DCF3405",
+      "title": "analista administrativo",
+      "company": "NAUCRATES",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-administrativo-en-quilmes-309FE06E7BF9EE6961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=309FE06E7BF9EE6961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Quilmes, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2731,
+      "descriptionSha256": "3a872de430ffc8aa0d04ecacdc4eaace8b24278044307e0f4b24203b36341cc3",
+      "familyByExistingRules": "administracion",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "7463FED786CF915A61373E686DCF3405",
+      "title": "Analista Contable - Ssr",
+      "company": "CONSULTORA LIC. ANALIA COIRE",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-contable-ssr-en-recoleta-7463FED786CF915A61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=7463FED786CF915A61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Recoleta, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1514,
+      "descriptionSha256": "da27174653a396a948211d5ac6b57259cb9224ea33b75c0b2c845f2b3d9834fd",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "93B867B28EC5B3F861373E686DCF3405",
+      "title": "Analista IT Networking",
+      "company": "South America Implants",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-it-networking-sede-canning-en-mataderos-93B867B28EC5B3F861373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=93B867B28EC5B3F861373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Ezeiza, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-16T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1939,
+      "descriptionSha256": "3fe3d3700076bc89102af15cd2ff126a9e7422874362c61b8e8688e435b16f9b",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "E2466CE7428DA23A61373E686DCF3405",
+      "title": "Analista Contable y Financiero - Con experiencia en administración y finanzas",
+      "company": "CECICO DESARROLLO HUMANO S. A.",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-contable-y-financiero-con-experiencia-en-administracion-y-finanzas-en-cordoba-E2466CE7428DA23A61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=E2466CE7428DA23A61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Córdoba, Córdoba"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1395,
+      "descriptionSha256": "08941bd5bdbeb83ed2bafb1aaf12a14aec90f56ed2540389f02515b2f62efe1f",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "4D742A325F7C2A9461373E686DCF3405",
+      "title": "Analista de comercio exterior sr",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-comercio-exterior-sr-en-paso-del-rey-4D742A325F7C2A9461373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=4D742A325F7C2A9461373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Paso del Rey, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-05T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1123,
+      "descriptionSha256": "962ea94993878e67b2c655f94984a5ade5082e808db0d57c3aa4ed55e58bd965",
+      "familyByExistingRules": "logistica",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "99EB9A2F72C1821261373E686DCF3405",
+      "title": "Analista Jr. de Pago a Proveedores",
+      "company": "Verisure Argentina",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-jr-de-pago-a-proveedores-en-palermo-99EB9A2F72C1821261373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=99EB9A2F72C1821261373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Palermo, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-22T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2558,
+      "descriptionSha256": "86631a035102f07ce8de32397ff880dfa7f0107990574b42773927aeb4c78f08",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "ED89646EE90DD6EF61373E686DCF3405",
+      "title": "Analista de Desarrollo de producto zona CABA",
+      "company": "Grupo Gestión",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-desarrollo-de-producto-zona-caba-en-nueva-pompeya-ED89646EE90DD6EF61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=ED89646EE90DD6EF61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Nueva Pompeya, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-08T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1022,
+      "descriptionSha256": "13cac34aaf992ad641c5fb57da505b989216634926aecc923f28e59f5b50c658",
+      "familyByExistingRules": "producto",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "E75559421E0EEDFB61373E686DCF3405",
+      "title": "Analista de finanzas",
+      "company": "Milicic S.A",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-finanzas-en-rosario-E75559421E0EEDFB61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=E75559421E0EEDFB61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Rosario, Santa Fe"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2316,
+      "descriptionSha256": "ca111511294f04dd2dd05141364d23e18d2e9eb84ae62614314a81e2ac5b3e0e",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "C57A27904ED1D89961373E686DCF3405",
+      "title": "Analista de Redes y Telecomunicaciones",
+      "company": "Suministra SRL",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-redes-y-telecomunicaciones-en-villa-lugano-C57A27904ED1D89961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=C57A27904ED1D89961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Villa Lugano, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-22T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 555,
+      "descriptionSha256": "2f4eb040494decc0b970c4a1305a1fce573ecd754843962ed5915eb81cb3b0ac",
+      "familyByExistingRules": "software",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "DABE294922B14CED61373E686DCF3405",
+      "title": "Analista de Facturación Jr. - / Híbrido Puerto Madero CABA",
+      "company": "ADN - Recursos Humanos",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-facturacion-jr--hibrido-puerto-madero-caba-en-puerto-madero-DABE294922B14CED61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=DABE294922B14CED61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Puerto Madero, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2079,
+      "descriptionSha256": "3da9c494831249d9031453b9486c7e269656dacbe1ef4c0f0b44e1644f5058ce",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "01AF163973A8EE5261373E686DCF3405",
+      "title": "Analista de Seguridad Vial  (REQ20261729) Eventual",
+      "company": "ManpowerGroup",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-seguridad-vial-req20261729-eventual-en-centenario-01AF163973A8EE5261373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=01AF163973A8EE5261373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Centenario, Neuquén"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1920,
+      "descriptionSha256": "a07052e3d3757da20247ded7f3318239947d13f8d0a8db11f13bcaf9ae47b174",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "617340ECAE0C4D2761373E686DCF3405",
+      "title": "Analista de datos",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-datos-en-belgrano-617340ECAE0C4D2761373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=617340ECAE0C4D2761373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Belgrano, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-13T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1677,
+      "descriptionSha256": "2c707decdb0786b704d1a10a1f45878e5c743faaab013c8400a52a7012bd93f4",
+      "familyByExistingRules": "datos",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "A9690A306638851A61373E686DCF3405",
+      "title": "Analista de Calidad",
+      "company": "DROGUERIA PHARMA CENTER SRL",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-calidad-en-yerba-buena-A9690A306638851A61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=A9690A306638851A61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Yerba Buena, Tucumán"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1436,
+      "descriptionSha256": "6cca678d2f862b2a352c37a771c6fde40342d309a0efc5a92a51bba90c6d4ba8",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "13C29D80607DE2EA61373E686DCF3405",
+      "title": "Analista de Selección, Capacitación y Desarrollo para cubrir licencia por maternidad",
+      "company": "Consultores de Empresas",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-seleccion-capacitacion-y-desarrollo-para-cubrir-licencia-por-maternidad-en-cordoba-13C29D80607DE2EA61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=13C29D80607DE2EA61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Córdoba, Córdoba"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3187,
+      "descriptionSha256": "61884a7e05d8aa91eb3fcadece33992608b49d9e12457e1cd2fd62d8cb49a584",
+      "familyByExistingRules": "rrhh",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "BE44B05FF075032F61373E686DCF3405",
+      "title": "Analista de Oficina Tecnica - Con Experiencia",
+      "company": "Grupo Mitre",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-oficina-tecnica-con-experiencia-en-munro-BE44B05FF075032F61373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=BE44B05FF075032F61373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Munro, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-07T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2296,
+      "descriptionSha256": "b6a0697bae4413a3fdcdd9a45cc3c5756eeb78ffe2730e02cc4c27cb8eeb7bd4",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "E2056B42DA03253761373E686DCF3405",
+      "title": "Analista Contable Ssr",
+      "company": "ManpowerGroup",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista%C2%A0contable%C2%A0ssr-en-puerto-madero-E2056B42DA03253761373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=E2056B42DA03253761373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Puerto Madero, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-08T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1797,
+      "descriptionSha256": "87d8ac919f484fb7db98304a23301b8fec6856068d9cb95472e6d4e5f2cd38de",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "62AAB2227EC0AF8461373E686DCF3405",
+      "title": "Analista de Facturación Zona Fátima Pilar",
+      "company": "Grupo Gestión",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-facturacion-zona-fatima-pilar-en-pilar-62AAB2227EC0AF8461373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=62AAB2227EC0AF8461373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Pilar, Buenos Aires"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 502,
+      "descriptionSha256": "0ca192118f5030fd78ce6fdc274e19417c00f234cccb2e1063929d335c5947bd",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "478E9D48E4685D1961373E686DCF3405",
+      "title": "Analista de Facturación - Importante Cadena de Heladerías Zona San Martín",
+      "company": "Umano HR",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-facturacion-importante-cadena-de-heladerias-zona-san-martin-en-san-martin-478E9D48E4685D1961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=478E9D48E4685D1961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "San Martín, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1377,
+      "descriptionSha256": "d7ce6040601d9f4906b2cbab59f7adc425117a8a9d610c14a6d03ce76209e143",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "33C658F3932D51C061373E686DCF3405",
+      "title": "Analista de cuentas a pagar - Villa Luro",
+      "company": "Importante empresa del sector gastronómico",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-cuentas-a-pagar-villa-luro-en-villa-luro-33C658F3932D51C061373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=33C658F3932D51C061373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Villa Luro, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-09T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 967,
+      "descriptionSha256": "c353ebc355b481ff2900ed17a0625555a0af81a53ffe56c07a796bf77169fd9d",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "B8C56BFF05FE4F8661373E686DCF3405",
+      "title": "CX Analista E commerce (Req20261410)",
+      "company": "ManpowerGroup",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-cx-analista-e-commerce-req20261410-en-palermo-B8C56BFF05FE4F8661373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=B8C56BFF05FE4F8661373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Palermo, Capital Federal"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-08T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1615,
+      "descriptionSha256": "a4914a3a56dff84c295e5c21b2ac9499cb9c08b10c55bb8f019ec3ad796c4a93",
+      "familyByExistingRules": "otros",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "FE81409FC0B5186961373E686DCF3405",
+      "title": "Analista de calidad",
+      "company": "LOG IN Farma",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-calidad-en-tortuguitas-FE81409FC0B5186961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=FE81409FC0B5186961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Tortuguitas, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1949,
+      "descriptionSha256": "21f7f35f0c0449989a54359d0107dac670dd2705e8f0be6b003dda8da29d892a",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "BEFF77B9E37239B161373E686DCF3405",
+      "title": "876SI Analista Jr de Recursos Humanos / Logistica",
+      "company": "Cona Consultores SRL",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-876si-analista-jr-de-recursos-humanos-logistica-en-tigre-BEFF77B9E37239B161373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=BEFF77B9E37239B161373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Tigre, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3868,
+      "descriptionSha256": "2acb6096cebf860931bcb30d91d876f555dcf5cfb8bb3fbb425b588bc9c1f4bb",
+      "familyByExistingRules": "rrhh",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "A225C75C1026B54361373E686DCF3405",
+      "title": "Analista de Precios - Con experiencia",
+      "company": "Importante empresa del sector",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-precios-con-experiencia-en-rosario-A225C75C1026B54361373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=A225C75C1026B54361373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Rosario, Santa Fe"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-30T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1224,
+      "descriptionSha256": "984337d7d026ff665f6678c972f288e16545c1fc19882656f191928ee77ce140",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "A7AA1E0AA012297961373E686DCF3405",
+      "title": "Analista de Gestión de Producción Jr/Ssr",
+      "company": "Grupo Ceta Argentina",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-gestion-de-produccion-jrssr-en-san-justo-A7AA1E0AA012297961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=A7AA1E0AA012297961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "San Justo, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-09-22T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2073,
+      "descriptionSha256": "723eb9a6e2cf5131ff54c49d4f95fbee8108faa71f28d43462328d666f8c5028",
+      "familyByExistingRules": "operaciones",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "apify_computrabajo",
+      "id": "030FAA59B6ED791961373E686DCF3405",
+      "title": "Analista de Administración Financiera",
+      "company": "Industrias Frigorificas Sur S.A.",
+      "sourceUrl": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-administracion-financiera-en-loma-hermosa-030FAA59B6ED791961373E686DCF3405",
+      "applyUrl": "https://candidato.ar.computrabajo.com/candidate/apply/?oi=030FAA59B6ED791961373E686DCF3405&p=47&idb=1",
+      "locations": [
+        "Loma Hermosa, Buenos Aires-GBA"
+      ],
+      "countries": [
+        "AR"
+      ],
+      "publishedAt": "2026-10-15T00:00:00.000Z",
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1476,
+      "descriptionSha256": "dd03b456e13a69d650a31ae9c51671920c6a921c9e2904214f1e46ae04f99a73",
+      "familyByExistingRules": "finanzas",
+      "eligibilityByExistingRules": {
+        "status": "elegible",
+        "evidence": [
+          "La fuente informa Argentina entre los países del puesto."
+        ]
+      }
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2418320363",
+      "title": "Analista Ssr/Sr de Talent Management",
+      "company": "Bidcom",
+      "sourceUrl": "https://bidcom.na.teamtailor.com/jobs/721286-analista-ssr-sr-de-talent-management",
+      "applyUrl": "https://bidcom.na.teamtailor.com/jobs/721286-analista-ssr-sr-de-talent-management",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T16:33:51",
+      "indexedAt": "2026-10-16T17:01:02.395084",
+      "expiresAt": null,
+      "descriptionChars": 2477,
+      "descriptionSha256": "477b10b3b4b1af0530c84bd3ae0e47878403138d56b9bf3bafb7bd7cebee2a29",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2418320365",
+      "title": "Analista Comercial de Ecommerce",
+      "company": "Bidcom",
+      "sourceUrl": "https://bidcom.na.teamtailor.com/jobs/721267-analista-comercial-de-ecommerce",
+      "applyUrl": "https://bidcom.na.teamtailor.com/jobs/721267-analista-comercial-de-ecommerce",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T16:04:59",
+      "indexedAt": "2026-10-16T17:01:02.532167",
+      "expiresAt": null,
+      "descriptionChars": 2678,
+      "descriptionSha256": "eaa78ad04bb729504d30e65a626f172c5e8d27ebdfae15200ba7c16da8f74a44",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2417961089",
+      "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+      "company": "EY",
+      "sourceUrl": "https://careers.ey.com/ey/job/Buenos-Aires-EY-Analista-Junior-de-Gesti%C3%B3n-de-Riesgos-para-la-Industria-Financiera-CABA-1437/1448547733/",
+      "applyUrl": "https://careers.ey.com/ey/job/Buenos-Aires-EY-Analista-Junior-de-Gesti%C3%B3n-de-Riesgos-para-la-Industria-Financiera-CABA-1437/1448547733/",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T00:00:00",
+      "indexedAt": "2026-10-16T13:34:21.195048",
+      "expiresAt": null,
+      "descriptionChars": 5327,
+      "descriptionSha256": "64e2db81019053f8c651ca699329c980718b3c4fc84a62c882c39d67e0eb5a24",
+      "source": "successfactors"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2416077982",
+      "title": "Analista de QC Bioensayos - Documental - Eventual",
+      "company": "mAbxience",
+      "sourceUrl": "https://careers-page.com/mabxience/job/X975W9XR",
+      "applyUrl": "https://careers-page.com/mabxience/job/X975W9XR",
+      "locations": [
+        "Garín, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T16:14:03.368",
+      "indexedAt": "2026-10-15T16:14:03.572027",
+      "expiresAt": null,
+      "descriptionChars": 5455,
+      "descriptionSha256": "3ec31eaf453bb86d009b8d3d17574e403788ba4a7ec1ec9ef6f812fb023370a9",
+      "source": "manatal"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2415753177",
+      "title": "Analista BI",
+      "company": "Diagnóstico Maipú / Labmedicina",
+      "sourceUrl": "https://diagnosticomaipu.na.teamtailor.com/jobs/720514-analista-bi",
+      "applyUrl": "https://diagnosticomaipu.na.teamtailor.com/jobs/720514-analista-bi",
+      "locations": [
+        "Vicente López, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T11:45:33",
+      "indexedAt": "2026-10-15T13:03:28.801168",
+      "expiresAt": null,
+      "descriptionChars": 1836,
+      "descriptionSha256": "6319f3c4c6601d1543e87bada16c9002e93f267279d237e3accfdd84be8fc960",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2416863614",
+      "title": "Analista Mejora continua / Transformación",
+      "company": "Marsh McLennan",
+      "sourceUrl": "https://mmc.wd1.myworkdayjobs.com/MMC/job/Buenos-Aires---Cordoba/Analista-Mejora-continua---Transformacin_R_367063",
+      "applyUrl": "https://mmc.wd1.myworkdayjobs.com/MMC/job/Buenos-Aires---Cordoba/Analista-Mejora-continua---Transformacin_R_367063",
+      "locations": [
+        "Cordoba, Córdoba, Argentina",
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina",
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T00:00:00",
+      "indexedAt": "2026-10-15T23:42:54.846672",
+      "expiresAt": null,
+      "descriptionChars": 2620,
+      "descriptionSha256": "3b691035751fc8cedeb038e341f1c6513de7291a24fe84f0c1987a885e52aff5",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2416629355",
+      "title": "Analista Jr. de Cobranzas y Cuentas Corrientes",
+      "company": "Swiss Medical Group",
+      "sourceUrl": "https://swissmedical.jobs2web.com/job/Capital-Federal-Analista-Jr_-de-Cobranzas-y-Cuentas-Corrientes/1440664600/",
+      "applyUrl": "https://swissmedical.jobs2web.com/job/Capital-Federal-Analista-Jr_-de-Cobranzas-y-Cuentas-Corrientes/1440664600/",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T00:00:00",
+      "indexedAt": "2026-10-15T21:31:41.950039",
+      "expiresAt": "2027-10-16T03:00:00",
+      "descriptionChars": 2355,
+      "descriptionSha256": "512706ad668b965df8576628eeb64a0b110cedfb9d80697ccafc44e836d485b1",
+      "source": "successfactors"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2416380069",
+      "title": "Analista Pleno Gestión Comercial Eventual",
+      "company": "Natura (Natura Life Science)",
+      "sourceUrl": "https://natura.wd501.myworkdayjobs.com/NaturaCarreiras/job/Natura-Argentina---Buenos-Aires-Natura-Argentina/Analista-Pleno-Gestin-Comercial-Eventual_JR40299-1",
+      "applyUrl": "https://natura.wd501.myworkdayjobs.com/NaturaCarreiras/job/Natura-Argentina---Buenos-Aires-Natura-Argentina/Analista-Pleno-Gestin-Comercial-Eventual_JR40299-1",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T00:00:00",
+      "indexedAt": "2026-10-15T19:08:37.891883",
+      "expiresAt": "2026-11-16T00:00:00",
+      "descriptionChars": 4210,
+      "descriptionSha256": "2a2c663b60e932d0b28c61cf9a8570dae32708245311d32dfd7ec1c02f368100",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2415906238",
+      "title": "ANALISTA DE GESTION",
+      "company": "Cerveceria y Malteria Quilmes",
+      "sourceUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CD-Mercado-Central/ANALISTA-DE-GESTION_30104412-1",
+      "applyUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CD-Mercado-Central/ANALISTA-DE-GESTION_30104412-1",
+      "locations": [
+        "Tapiales, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-15T00:00:00",
+      "indexedAt": "2026-10-15T14:38:00.311616",
+      "expiresAt": null,
+      "descriptionChars": 2117,
+      "descriptionSha256": "4644145b405acec2904ef9d29b6162c9e51844c25bdf905d0e9e2291aff3cae7",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2414276723",
+      "title": "Analista Comercial SR",
+      "company": "BYMA",
+      "sourceUrl": "https://empleos.byma.com.ar/jobs/720106-analista-comercial-sr",
+      "applyUrl": "https://empleos.byma.com.ar/jobs/720106-analista-comercial-sr",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T18:19:15",
+      "indexedAt": "2026-10-14T20:06:10.736013",
+      "expiresAt": null,
+      "descriptionChars": 3404,
+      "descriptionSha256": "a3d20f4d8456a00e54eec49df840a4a0234f137c8782d18fde97fb6dbe93b74c",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2413966096",
+      "title": "Analista Sr. de Marketing y Comunicación",
+      "company": "Umbral Capital Humano",
+      "sourceUrl": "https://umbralcapitalhumano.na.teamtailor.com/jobs/719924-analista-sr-de-marketing-y-comunicacion",
+      "applyUrl": "https://umbralcapitalhumano.na.teamtailor.com/jobs/719924-analista-sr-de-marketing-y-comunicacion",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T16:17:17",
+      "indexedAt": "2026-10-14T17:00:51.574692",
+      "expiresAt": null,
+      "descriptionChars": 2607,
+      "descriptionSha256": "28b4e87f4e22795db4bdbbab4a4fae3fcbad27d515ffd1003d9c36ccc495fbe1",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2414870704",
+      "title": "Analista Senior de Prevención de Fraude - Commerce",
+      "company": "Mercado Libre",
+      "sourceUrl": "https://mercadolibre.eightfold.ai/careers/job/43128419-analista-senior-de-prevenci%C3%B3n-de-fraude-commerce-buenos-aires-argentina",
+      "applyUrl": "https://mercadolibre.eightfold.ai/careers/job/43128419-analista-senior-de-prevenci%C3%B3n-de-fraude-commerce-buenos-aires-argentina",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T02:15:25",
+      "indexedAt": "2026-10-15T01:48:39.843784",
+      "expiresAt": null,
+      "descriptionChars": 2789,
+      "descriptionSha256": "3443dce8706155946797eee08eef87f3c613a3d92bb9a0fbabdf9b24d02c3f2d",
+      "source": "eightfold"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2414330113",
+      "title": "Analista de Compliance",
+      "company": "Cerveceria y Malteria Quilmes",
+      "sourceUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CEL---Centro-Empresarial-Libertador/Analista-de-Compliance_30104866",
+      "applyUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CEL---Centro-Empresarial-Libertador/Analista-de-Compliance_30104866",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T00:00:00",
+      "indexedAt": "2026-10-14T20:37:31.241853",
+      "expiresAt": null,
+      "descriptionChars": 2997,
+      "descriptionSha256": "772e4501ebcff940c3f93c8b4885fd45de57d503637c081a92b6960623e351b2",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2414246961",
+      "title": "Analista de Control de Calidad de Fragancias",
+      "company": "IFF",
+      "sourceUrl": "https://iff.wd5.myworkdayjobs.com/IFF_Careers/job/Garin-Argentina/Analista-de-Control-de-Calidad-de-Fragancias_R22593",
+      "applyUrl": "https://iff.wd5.myworkdayjobs.com/IFF_Careers/job/Garin-Argentina/Analista-de-Control-de-Calidad-de-Fragancias_R22593",
+      "locations": [
+        "Garín, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T00:00:00",
+      "indexedAt": "2026-10-14T19:43:49.152763",
+      "expiresAt": "2026-10-22T00:00:00",
+      "descriptionChars": 3523,
+      "descriptionSha256": "6a5c4e57103c4a5561d953cb333b8a5323b32cb00befafaf73b8e72bbba8f97e",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2413700458",
+      "title": "Analista de Contabilidad",
+      "company": "Helmerich & Payne",
+      "sourceUrl": "https://hpinc.wd5.myworkdayjobs.com/HPINC/job/Martinez-Buenos-Aires-Argentina/Analista-de-Contabilidad_REQ-2913",
+      "applyUrl": "https://hpinc.wd5.myworkdayjobs.com/HPINC/job/Martinez-Buenos-Aires-Argentina/Analista-de-Contabilidad_REQ-2913",
+      "locations": [
+        "Martínez, Buenos Aires, Argentina",
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina",
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-14T00:00:00",
+      "indexedAt": "2026-10-14T14:15:54.782592",
+      "expiresAt": null,
+      "descriptionChars": 2690,
+      "descriptionSha256": "f7fbc1da7acced942249ab466d5fcf0f1acd8e2a92e7fce57ad28825d3c9c6a2",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2412113867",
+      "title": "Analista de Payroll (Contrato por proyecto)",
+      "company": "Suessa",
+      "sourceUrl": "https://suessa.teamtailor.com/jobs/8541514-analista-de-payroll-contrato-por-proyecto",
+      "applyUrl": "https://suessa.teamtailor.com/jobs/8541514-analista-de-payroll-contrato-por-proyecto",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T19:17:48",
+      "indexedAt": "2026-10-13T19:56:51.106854",
+      "expiresAt": null,
+      "descriptionChars": 3083,
+      "descriptionSha256": "da4e3579c889271bcece46b9b7e1dc6b6754ff0c35cdf2bcd1b4450488e75218",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2415560953",
+      "title": "Analista de Desarrollo de Modelos de Riesgo Crediticio - Fintech",
+      "company": "Mercado Libre",
+      "sourceUrl": "https://mercadolibre.eightfold.ai/careers/job/43707026-analista-de-desarrollo-de-modelos-de-riesgo-crediticio-fintech-buenos-aires-argentina",
+      "applyUrl": "https://mercadolibre.eightfold.ai/careers/job/43707026-analista-de-desarrollo-de-modelos-de-riesgo-crediticio-fintech-buenos-aires-argentina",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T18:25:45",
+      "indexedAt": "2026-10-15T10:50:43.423476",
+      "expiresAt": null,
+      "descriptionChars": 3281,
+      "descriptionSha256": "169ed815bed798fab16aae524ee43ef33597d22d2db833522311d3a2725ea373",
+      "source": "eightfold"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2412735450",
+      "title": "Analista de Seguridad Física - Mercado Envíos",
+      "company": "Mercado Libre",
+      "sourceUrl": "https://mercadolibre.eightfold.ai/careers/job/44878389-analista-de-seguridad-f%C3%ADsica-mercado-env%C3%ADos-buenos-aires-argentina",
+      "applyUrl": "https://mercadolibre.eightfold.ai/careers/job/44878389-analista-de-seguridad-f%C3%ADsica-mercado-env%C3%ADos-buenos-aires-argentina",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T18:19:30",
+      "indexedAt": "2026-10-14T01:48:31.867627",
+      "expiresAt": null,
+      "descriptionChars": 3157,
+      "descriptionSha256": "3df73b82d44cab8e197f5ba8c04f0d201b1916e76310be265ef5651ccc666c82",
+      "source": "eightfold"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2416176990",
+      "title": "Analista de Finanzas",
+      "company": "PECOM",
+      "sourceUrl": "https://pecom.na.teamtailor.com/jobs/718796-analista-de-finanzas",
+      "applyUrl": "https://pecom.na.teamtailor.com/jobs/718796-analista-de-finanzas",
+      "locations": [
+        "Victoria, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T12:49:30",
+      "indexedAt": "2026-10-15T17:02:32.69555",
+      "expiresAt": null,
+      "descriptionChars": 2063,
+      "descriptionSha256": "a7c9d457efde705e562e38407ebf53bf52144e1e21023f6008765a4dd1ac2d3b",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2412686359",
+      "title": "Analista Senior de Pricing",
+      "company": "Bunge",
+      "sourceUrl": "https://jobs.bunge.com/job/Capital-Federal-Analista-Senior-de-Pricing-1002/1447122333/",
+      "applyUrl": "https://jobs.bunge.com/job/Capital-Federal-Analista-Senior-de-Pricing-1002/1447122333/",
+      "locations": [
+        "Municipio de Garupá, Misiones, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T00:00:00",
+      "indexedAt": "2026-10-14T01:30:37.147543",
+      "expiresAt": "2026-11-14T03:00:00",
+      "descriptionChars": 4206,
+      "descriptionSha256": "833c218c6bd5229a7b02a8c1131cb3a7b0102f9e55ad832c0c3742fa09fe58cd",
+      "source": "successfactors"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2412056275",
+      "title": "Analista de Compliance",
+      "company": "Cerveceria y Malteria Quilmes",
+      "sourceUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CEL---Centro-Empresarial-Libertador/Analista-de-Compliance_30104815",
+      "applyUrl": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/CEL---Centro-Empresarial-Libertador/Analista-de-Compliance_30104815",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T00:00:00",
+      "indexedAt": "2026-10-13T19:35:04.16961",
+      "expiresAt": null,
+      "descriptionChars": 2996,
+      "descriptionSha256": "8bf8f7c4b13155d2b3f17236f56bafafa4abee97d969335b33b0871a8eebdcb1",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2411402652",
+      "title": "Senior Experimentado- Analista Impositivo",
+      "company": "PwC",
+      "sourceUrl": "https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers/job/Mendoza/Senior-Experimentado--Analista-Impositivo_767179WD",
+      "applyUrl": "https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers/job/Mendoza/Senior-Experimentado--Analista-Impositivo_767179WD",
+      "locations": [
+        "Municipio de Campo Grande, Misiones, Argentina",
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina",
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-13T00:00:00",
+      "indexedAt": "2026-10-13T13:48:35.457617",
+      "expiresAt": null,
+      "descriptionChars": 2690,
+      "descriptionSha256": "7bd447770c2a077ecefe16e2e693937bd88efe076583400b5deda394c266201c",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2410349405",
+      "title": "Analista de Control de Calidad- Producto terminado - Temporal",
+      "company": "Haleon",
+      "sourceUrl": "https://careers.haleon.com/careers/job/563705892957621-analista-de-control-de-calidad-producto-terminado-temporal-san-fernando-buenos-aires-argentina",
+      "applyUrl": "https://careers.haleon.com/careers/job/563705892957621-analista-de-control-de-calidad-producto-terminado-temporal-san-fernando-buenos-aires-argentina",
+      "locations": [
+        "San Fernando, Catamarca, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-12T00:00:00",
+      "indexedAt": "2026-10-13T01:53:17.175769",
+      "expiresAt": null,
+      "descriptionChars": 5170,
+      "descriptionSha256": "80d545690214c681bcf5af97215ff92e9041d8b14225f155f8de714f3177e846",
+      "source": "eightfold"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2410049649",
+      "title": "Analista de Control de Calidad- Producto terminado - Temporal",
+      "company": "Haleon",
+      "sourceUrl": "https://gsknch.wd3.myworkdayjobs.com/GSKCareers/job/Argentina---Buenos-Aires-Province---Buenos-Aires/Analista-de-Control-de-Calidad--Producto-terminado---Temporal_548966",
+      "applyUrl": "https://gsknch.wd3.myworkdayjobs.com/GSKCareers/job/Argentina---Buenos-Aires-Province---Buenos-Aires/Analista-de-Control-de-Calidad--Producto-terminado---Temporal_548966",
+      "locations": [
+        "San Fernando, Buenos Aires, Argentina",
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina",
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-12T00:00:00",
+      "indexedAt": "2026-10-12T17:37:47.313939",
+      "expiresAt": "2026-10-30T00:00:00",
+      "descriptionChars": 5170,
+      "descriptionSha256": "80d545690214c681bcf5af97215ff92e9041d8b14225f155f8de714f3177e846",
+      "source": "workday"
+    },
+    {
+      "sample": "fantastic_ats",
+      "id": "2407397167",
+      "title": "Analista de Planeamiento Comercial",
+      "company": "Bidcom",
+      "sourceUrl": "https://bidcom.na.teamtailor.com/jobs/717719-analista-de-planeamiento-comercial",
+      "applyUrl": "https://bidcom.na.teamtailor.com/jobs/717719-analista-de-planeamiento-comercial",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-10T00:34:17",
+      "indexedAt": "2026-10-10T01:01:16.836329",
+      "expiresAt": null,
+      "descriptionChars": 1857,
+      "descriptionSha256": "0937cad3d2c3f93e494d912021d78a4cdbb7cc9cf969b28f112b916a567d1398",
+      "source": "teamtailor"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418671350",
+      "title": "Analista de Facturación Web",
+      "company": "El Balcón",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-facturaci%C3%B3n-web-at-el-balc%C3%B3n-4480551130",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-facturaci%C3%B3n-web-at-el-balc%C3%B3n-4480551130",
+      "locations": [
+        "Cordoba, Córdoba, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T20:05:32",
+      "indexedAt": "2026-10-16T20:14:28.014277",
+      "expiresAt": "2026-11-15T20:05:32",
+      "descriptionChars": 1633,
+      "descriptionSha256": "df131fb817fd23e692180876bb046e5e6029d7d269d4e9cd9679ca1842dc1b08",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418670434",
+      "title": "Analista de Administración Salarial",
+      "company": "Ecoclean",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-administraci%C3%B3n-salarial-at-ecoclean-4475217593",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-administraci%C3%B3n-salarial-at-ecoclean-4475217593",
+      "locations": [
+        "Cordoba, Córdoba, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T19:58:40",
+      "indexedAt": "2026-10-16T20:13:56.768904",
+      "expiresAt": "2026-11-15T19:58:40",
+      "descriptionChars": 1761,
+      "descriptionSha256": "ebe6c13ea21ef8804f719b2bc0eebf9c43f587c10128e570682cf148a8450239",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418670348",
+      "title": "Analista de redes Jr",
+      "company": "BVS",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-redes-jr-at-bvs-4477731264",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-redes-jr-at-bvs-4477731264",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T19:53:07",
+      "indexedAt": "2026-10-16T20:13:55.246111",
+      "expiresAt": "2026-11-15T19:53:07",
+      "descriptionChars": 3253,
+      "descriptionSha256": "e52e2a7513ba3dd4a2c0d82622f01255e9284db2b5e44d751e8777ebca917a9a",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418670262",
+      "title": "Analista Contable Junior",
+      "company": "Randstad Argentina",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-contable-junior-at-randstad-argentina-4477731170",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-contable-junior-at-randstad-argentina-4477731170",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T19:07:24",
+      "indexedAt": "2026-10-16T20:13:53.21123",
+      "expiresAt": "2026-11-15T19:07:24",
+      "descriptionChars": 2450,
+      "descriptionSha256": "da64c7e684f10ed3b25b804fc8fa94a0a1e4b95f2c171f8fd6b9c15611f01d1f",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418512181",
+      "title": "Analista Administrativa Contable",
+      "company": "Plotkin & Asociados",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-administrativa-contable-at-plotkin-asociados-4480537308",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-administrativa-contable-at-plotkin-asociados-4480537308",
+      "locations": [
+        "Rosario, Santa Fe, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T18:44:11",
+      "indexedAt": "2026-10-16T19:02:32.860543",
+      "expiresAt": "2026-11-15T18:44:11",
+      "descriptionChars": 1980,
+      "descriptionSha256": "ab1267d9c9d50e935fb3cc0ddf42f462758c575e6a4d4530fbc758c83d6030e1",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418512475",
+      "title": "Analista de Desarrollo Analítico",
+      "company": "Laboratorios Andrómaco",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-desarrollo-anal%C3%ADtico-at-laboratorios-andr%C3%B3maco-4480535232",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-desarrollo-anal%C3%ADtico-at-laboratorios-andr%C3%B3maco-4480535232",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T18:32:05",
+      "indexedAt": "2026-10-16T19:02:41.763067",
+      "expiresAt": "2026-11-15T18:32:05",
+      "descriptionChars": 1577,
+      "descriptionSha256": "3ad150be300a2ca70adb7522e1018c8fa141ca9312f64d6c7d900c69fbecdcc6",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418513616",
+      "title": "Analista de infraestructura",
+      "company": "Novatium - Consulting & Outsourcing",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-infraestructura-at-novatium-consulting-outsourcing-4477721303",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-infraestructura-at-novatium-consulting-outsourcing-4477721303",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T18:28:04",
+      "indexedAt": "2026-10-16T19:03:07.505081",
+      "expiresAt": "2026-11-15T18:28:04",
+      "descriptionChars": 3025,
+      "descriptionSha256": "7e5598e30f2f81c07c4c51fdbece4fc47504fa75c364b8c58877296a45e0e8e9",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418511761",
+      "title": "Analista DTC & Marketplace",
+      "company": "Media Marketing Lab",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-dtc-marketplace-at-media-marketing-lab-4477713626",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-dtc-marketplace-at-media-marketing-lab-4477713626",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T18:17:06",
+      "indexedAt": "2026-10-16T19:02:12.39943",
+      "expiresAt": "2027-04-14T18:17:06",
+      "descriptionChars": 2300,
+      "descriptionSha256": "d85aceec890bacc5faf837eea2923d7fc7bde3a94f7ca096f5e9b7b7e45354fe",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418511458",
+      "title": "Analista Junior de Costos de Mercadería (Costeo de Receta)",
+      "company": "Cecilia Prado G.",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-junior-de-costos-de-mercader%C3%ADa-costeo-de-receta-at-cecilia-prado-g-4477705744",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-junior-de-costos-de-mercader%C3%ADa-costeo-de-receta-at-cecilia-prado-g-4477705744",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T18:00:42",
+      "indexedAt": "2026-10-16T19:01:58.809286",
+      "expiresAt": "2027-04-14T18:00:42",
+      "descriptionChars": 1394,
+      "descriptionSha256": "036d42460eb1d2fe06343d5e0b0b98082ce76cd868ff52434efb6bbb579652f8",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418512105",
+      "title": "Analista de Control de Gestión",
+      "company": "Wiener lab.",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-control-de-gesti%C3%B3n-at-wiener-lab-4477713370",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-control-de-gesti%C3%B3n-at-wiener-lab-4477713370",
+      "locations": [
+        "Rosario, Santa Fe, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T17:57:38",
+      "indexedAt": "2026-10-16T19:02:29.746099",
+      "expiresAt": "2027-04-14T17:57:38",
+      "descriptionChars": 2525,
+      "descriptionSha256": "e9d0e4f309026c62c02670ba2720e91c5c7a4dbcebd0ed0f78a9e0f33a74b0e9",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418513181",
+      "title": "Analista Jr Tesorería",
+      "company": "Grupo Emepa",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-jr-tesorer%C3%ADa-at-grupo-emepa-4479380966",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-jr-tesorer%C3%ADa-at-grupo-emepa-4479380966",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T17:50:30",
+      "indexedAt": "2026-10-16T19:02:57.868292",
+      "expiresAt": "2026-11-15T17:50:30",
+      "descriptionChars": 924,
+      "descriptionSha256": "8a4a785c3f8264377f70a41c7a2f1d4c7a294b0d8b41b56c0809865e99b94d04",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418512071",
+      "title": "Analista Comex Ssr/SR Compañia Global transporte y logística- Puerto Madero ",
+      "company": "ManpowerGroup Argentina",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-comex-ssr-sr-compa%C3%B1ia-global-transporte-y-log%C3%ADstica-puerto-madero-at-manpowergroup-argentina-4480511114",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-comex-ssr-sr-compa%C3%B1ia-global-transporte-y-log%C3%ADstica-puerto-madero-at-manpowergroup-argentina-4480511114",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T15:55:43",
+      "indexedAt": "2026-10-16T19:02:28.350531",
+      "expiresAt": "2026-11-15T15:55:43",
+      "descriptionChars": 2767,
+      "descriptionSha256": "a3c2f1ce8d0aec0ebc0323c84a2f0f0e3434dd0524fa26e12a1e1682169a1a9f",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418512067",
+      "title": "Analista de distribución",
+      "company": "Sinerlogic",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-distribuci%C3%B3n-at-sinerlogic-4477394803",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-distribuci%C3%B3n-at-sinerlogic-4477394803",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T15:37:46",
+      "indexedAt": "2026-10-16T19:02:28.095559",
+      "expiresAt": "2027-04-14T15:37:46",
+      "descriptionChars": 1234,
+      "descriptionSha256": "299fda267ba9a08db52d9db1fce008babe87d7223293cebcbf86b40087eb549c",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139385",
+      "title": "Analista en Liquidación de Sueldos",
+      "company": "GROW | Connections",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-en-liquidaci%C3%B3n-de-sueldos-at-grow-connections-4479377118",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-en-liquidaci%C3%B3n-de-sueldos-at-grow-connections-4479377118",
+      "locations": [
+        "Cordoba, Córdoba, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T14:48:07",
+      "indexedAt": "2026-10-16T15:14:08.061997",
+      "expiresAt": "2026-11-15T14:48:07",
+      "descriptionChars": 1853,
+      "descriptionSha256": "b1c255646c1510f9bba2e84ffae45fe5b230a143759b61b3559ee58595845a7c",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139348",
+      "title": "876SI JUNIOR ANALISTA ADMINISTRACION DE PERSONAL Y RECURSOS HUMANOS JUNIOR | EVENTUAL | REEMPLAZO MATERNIDAD | ZONA NORTE GBA",
+      "company": "Cona Consultores",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/876si-junior-analista-administracion-de-personal-y-recursos-humanos-junior-eventual-reemplazo-maternidad-zona-norte-gba-at-cona-consultores-srl-4480388716",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/876si-junior-analista-administracion-de-personal-y-recursos-humanos-junior-eventual-reemplazo-maternidad-zona-norte-gba-at-cona-consultores-srl-4480388716",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T14:46:37",
+      "indexedAt": "2026-10-16T15:14:06.227546",
+      "expiresAt": "2026-11-15T14:46:37",
+      "descriptionChars": 3874,
+      "descriptionSha256": "27d532e28ce0778a0e927bfaa22d77b5413221a4db51af762a5d5223f9f55320",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139308",
+      "title": "Analista SSr de Impuestos",
+      "company": "Nergis Consulting",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-ssr-de-impuestos-at-nergis-consulting-4480386647",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-ssr-de-impuestos-at-nergis-consulting-4480386647",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T14:44:01",
+      "indexedAt": "2026-10-16T15:14:04.697985",
+      "expiresAt": "2026-11-15T14:44:01",
+      "descriptionChars": 1013,
+      "descriptionSha256": "baaed8e7654981988dae1722046b22aee06e79ad8d5c41c750ac3eef1f2b29f9",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139402",
+      "title": "Analista Semi Sr. Impuestos",
+      "company": "WNS & Asociados",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-semi-sr-impuestos-at-wns-asociados-4479352939",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-semi-sr-impuestos-at-wns-asociados-4479352939",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T14:06:08",
+      "indexedAt": "2026-10-16T15:14:09.358724",
+      "expiresAt": "2026-11-15T14:06:08",
+      "descriptionChars": 2323,
+      "descriptionSha256": "aa5b3ed7a65a1ce9b5da2a81c1e44cda84497d3002cb84dd2d9a5d18693ec210",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139277",
+      "title": "Analista de Planificación de Abastecimiento",
+      "company": "FarmaPlus",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-planificaci%C3%B3n-de-abastecimiento-at-farmaplus-4479349903",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-planificaci%C3%B3n-de-abastecimiento-at-farmaplus-4479349903",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T13:11:28",
+      "indexedAt": "2026-10-16T15:14:02.479285",
+      "expiresAt": "2026-11-15T13:11:28",
+      "descriptionChars": 3228,
+      "descriptionSha256": "d0f3aab1aa95a6ced4d93c4d791d68fb515aebe38dff632bdf52ec285ad63aaa",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2418139216",
+      "title": "Analista comercial canal E-Commerce",
+      "company": "Adecco",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-comercial-canal-e-commerce-at-adecco-4477702020",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-comercial-canal-e-commerce-at-adecco-4477702020",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T13:01:34",
+      "indexedAt": "2026-10-16T15:13:59.839942",
+      "expiresAt": "2026-11-15T13:01:34",
+      "descriptionChars": 2302,
+      "descriptionSha256": "8f4441aceb81f2934062ced5f80b3d58283447f035dfb036f0819fc175b155a7",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417931423",
+      "title": "Analista Funcional Cloud Oracle Alloy",
+      "company": "Claro Argentina",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-funcional-cloud-oracle-alloy-at-claro-argentina-4479356342",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-funcional-cloud-oracle-alloy-at-claro-argentina-4479356342",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T13:01:12.408",
+      "indexedAt": "2026-10-16T13:01:12.476726",
+      "expiresAt": null,
+      "descriptionChars": 4177,
+      "descriptionSha256": "6d32c99bb221230eeed5fd54ba79aaa3e2e639ad80c8ddc955ca19522b370e03",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417931633",
+      "title": "Analista comercial",
+      "company": "Patagonia Candles",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-comercial-at-patagonia-candles-4477382927",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-comercial-at-patagonia-candles-4477382927",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T12:43:21",
+      "indexedAt": "2026-10-16T13:01:26.323117",
+      "expiresAt": "2027-04-14T12:43:21",
+      "descriptionChars": 2754,
+      "descriptionSha256": "49195a39bb48567769432636338ed83709987537d1e24c52e0e78101e86d375f",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417931907",
+      "title": "Analista de control de calidad",
+      "company": "Knight Therapeutics Argentina",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-control-de-calidad-at-knight-therapeutics-argentina-4479345990",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-control-de-calidad-at-knight-therapeutics-argentina-4479345990",
+      "locations": [
+        "San Justo, Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T12:17:58",
+      "indexedAt": "2026-10-16T13:01:45.802725",
+      "expiresAt": "2026-11-15T12:17:58",
+      "descriptionChars": 1326,
+      "descriptionSha256": "65b608cca09ab3e5ce51428e8e3689de4dd7b15c8fe0c54893046f1759fbf700",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417931596",
+      "title": "Analista Contable Jr",
+      "company": "TCba Centro de Diagnóstico",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-contable-jr-at-tcba-centro-de-diagn%C3%B3stico-4477391401",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-contable-jr-at-tcba-centro-de-diagn%C3%B3stico-4477391401",
+      "locations": [
+        "Buenos Aires, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T12:17:20",
+      "indexedAt": "2026-10-16T13:01:24.166465",
+      "expiresAt": "2026-11-15T12:17:20",
+      "descriptionChars": 2304,
+      "descriptionSha256": "acca086e1271000a6d5388190447763841471d17148c1d06d22b1bc85a96a8f6",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417556874",
+      "title": "Analista de Vulnerabilidades | Ciberseguridad",
+      "company": "Joppy",
+      "sourceUrl": "https://es.linkedin.com/jobs/view/analista-de-vulnerabilidades-ciberseguridad-at-joppy-4479329555",
+      "applyUrl": "https://es.linkedin.com/jobs/view/analista-de-vulnerabilidades-ciberseguridad-at-joppy-4479329555",
+      "locations": [
+        "Resistencia, Chaco, Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T07:14:02",
+      "indexedAt": "2026-10-16T07:50:27.105813",
+      "expiresAt": "2026-11-15T07:14:02",
+      "descriptionChars": 3212,
+      "descriptionSha256": "b97187bc3fcdcb1b4e4e0c91b909ac163a261735d8d0509ad755d7e8db43fed3",
+      "source": "linkedin"
+    },
+    {
+      "sample": "fantastic_linkedin",
+      "id": "2417368489",
+      "title": "Analista Funcional Cloud Oracle Alloy",
+      "company": "Claro Argentina",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-funcional-cloud-oracle-alloy-at-claro-argentina-4466834470",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-funcional-cloud-oracle-alloy-at-claro-argentina-4466834470",
+      "locations": [
+        "Argentina"
+      ],
+      "countries": [
+        "Argentina"
+      ],
+      "publishedAt": "2026-10-16T05:14:09.141",
+      "indexedAt": "2026-10-16T05:14:09.206371",
+      "expiresAt": null,
+      "descriptionChars": 4177,
+      "descriptionSha256": "6d32c99bb221230eeed5fd54ba79aaa3e2e639ad80c8ddc955ca19522b370e03",
+      "source": "linkedin"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBTZW5pb3IgUGF5cm9sbCIsImNvbXBhbnlfbmFtZSI6IlJ1c3NlbGwgQmVkZm9yZCBBcmdlbnRpbmEiLCJodGlkb2NpZCI6Ik5XZUNiWlE3YVNkWndXYkhBQUFBQUE9PSIsInV1bGUiOiJ3K0NBSVFJQ0lXUW5WbGJtOXpJRUZwY21WekxFRnlaMlZ1ZEdsdVlRIiwiZ2wiOiJhciIsImhsIjoiZXMiLCJmYyI6IkVzd0JDb3dCUVVwcFZEUjBTVXB0T0dOTlh6QkNOWEpQUkhjelRVUm9hemRyUjNRemIzSmtZM1JzY0RBMlNFTk9NVXR5YjB4TGEydHlRMUJTYWtNNU9EVlZSM1ptWWtSc05tWktSMU5xTkVSTFlrRjZlWFJqZFRSVVFsbDJNbTlLYmxSYWVYcGpTSFZzWDFOelJsRTJZMlJuZEVWcVIwaFBVRVJMYjFOQmNqQkNZMGRrTldOeWVsQlFjRTV6UWt0dFZFNFNGM2sxVEZOaGIzbHhSV1JoV0hoak9GQTVOMkl6YVVGekdpSkJSSE55T1daVE1WODRla3RhY2pSelpXWmhkamxQUVVoMk9VdzRPWFV0Vm01MyIsImZjdiI6IjMiLCJmY19pZCI6Ik5XZUNiWlE3YVNkWndXYkhBQUFBQUE9PSJ9",
+      "title": "Analista Senior Payroll",
+      "company": "Russell Bedford Argentina",
+      "sourceUrl": "https://www.zonajobs.com.ar/empleos/analista-senior-payroll-russell-bedford-argentina-2191899.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://www.zonajobs.com.ar/empleos/analista-senior-payroll-russell-bedford-argentina-2191899.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://www.jobleads.com/ar/job/analista-senior-payroll--buenos-aires--e5fcda788095ed74b2d833c615dc7cf9a?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://ar.jooble.org/jdp/-5453636098336391067?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 2579,
+      "descriptionSha256": "5f3ca305adc76d3c1087476fbbe7c4d5220ede65bb22dbeca9b2348302b9da11",
+      "source": "ZonaJobs",
+      "relativeAgeLabel": "hace 3 días"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBkZSBHb2JpZXJubyBDb3Jwb3JhdGl2byAoYXVkaXRvcikiLCJjb21wYW55X25hbWUiOiJTZXJlbmRpcGlhIENvbnN1bHRvcmEiLCJodGlkb2NpZCI6IkZxOEIxWGhjWVdLT0VnbHlBQUFBQUE9PSIsInV1bGUiOiJ3K0NBSVFJQ0lXUW5WbGJtOXpJRUZwY21WekxFRnlaMlZ1ZEdsdVlRIiwiZ2wiOiJhciIsImhsIjoiZXMiLCJmYyI6IkVzd0JDb3dCUVVwcFZEUjBTa1UwZVdsbGNIWjJObUZ5WkVwWU9YVnBRME5uUnpaaGJqQk5XWE4yYWxkM1FXOUdNMU41VVhJeVEyYzFiRWhWTVVWalpVUlVVbWRDWkcxSlF6ZzFkbUZIZGt0bmJFUkVZVGt6YkRsd2MyUTBhemw0ZDB0NVMyZFhPWFkzVUVodVdsSjFWR3BCWTFwU2FFcFBSbTV5YkdJME9HeExiVWxwTm5WVFVsRkJjek5zTW5aelZUZ1NGM2sxVEZOaGIzbHhSV1JoV0hoak9GQTVOMkl6YVVGekdpSkJSSE55T1daVVRWbzJlVkpKUnpsQlpFRkZaMjV6UjBFNVZFRlZNSEZKYkRkQiIsImZjdiI6IjMiLCJmY19pZCI6IkZxOEIxWGhjWVdLT0VnbHlBQUFBQUE9PSJ9",
+      "title": "Analista de Gobierno Corporativo (auditor)",
+      "company": "Serendipia Consultora",
+      "sourceUrl": "https://www.halaxia.com/empleos/analista-de-gobierno-corporativo-auditor-en-buenos-aires/28680?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://www.halaxia.com/empleos/analista-de-gobierno-corporativo-auditor-en-buenos-aires/28680?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3041,
+      "descriptionSha256": "dc459208d18afb542cdb70c13864b9103b46b3fa67dcf941d1894bd1d4e46bfc",
+      "source": "Halaxia",
+      "relativeAgeLabel": "hace 2 días"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBkZSBQbGFuZWFtaWVudG8gQ29tZXJjaWFsIiwiY29tcGFueV9uYW1lIjoiQmlkY29tIiwiaHRpZG9jaWQiOiJDOGlHZnRPSU1FNkstSkhoQUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJV1FuVmxibTl6SUVGcGNtVnpMRUZ5WjJWdWRHbHVZUSIsImdsIjoiYXIiLCJobCI6ImVzIiwiZmMiOiJFc3dCQ293QlFVcHBWRFIwVEVscFVrOXVOSGQ2UkVoaWNrSXhXREJVVEZWclNWZGFURWx3YzJ4dWEzbHNObk5FVUdoUWNVZEVObFZCVkdaVGNESlZTMmN4WVRRMWJqaFJjVVl3T0RVMlprVkNhVk5MVWkxbGRYQlFlRjlQYjFGaVFqbEZTVWRJUTNWamVGODVVMWxMTlhGWE5WbFVibVF4Wm5abmNEWlNTVnBGWjIxMk5taEtjekoxVEhkSWRUVkxWbWdTRjNrMVRGTmhiM2x4UldSaFdIaGpPRkE1TjJJemFVRnpHaUpCUkhOeU9XWlRSbGRMWWxKcE9XbzNRV052YTNoUVJqWTJOMk5SY2pGRlNYaDMiLCJmY3YiOiIzIiwiZmNfaWQiOiJDOGlHZnRPSU1FNkstSkhoQUFBQUFBPT0ifQ==",
+      "title": "Analista de Planeamiento Comercial",
+      "company": "Bidcom",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-planeamiento-comercial-at-bidcom-4476895699?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-planeamiento-comercial-at-bidcom-4476895699?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://bebee.com/ar/jobs/analista-de-planeamiento-comercial-bidcom-buenos-aires--fj-2407397167?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://www.bumeran.com.ar/empleos/analista-de-planeamiento-comercial-zona-pompeya-grupo-gestion-1118449444.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-planeamiento-comercial-en-nueva-pompeya-D6FA182802AB571D61373E686DCF3405?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://www.trabajoar.com/empleo/analista-de-planeamiento-comercial-zona-pompeya-grupo-gestion-75930?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1855,
+      "descriptionSha256": "f0f646f87f3da887d0aaaceadeca33387f9a29fd972d2eef619d8785571e1f8e",
+      "source": "LinkedIn",
+      "relativeAgeLabel": "hace 7 días"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YXMgSnVuaW9yIiwiY29tcGFueV9uYW1lIjoiR3JhbnQgVGhvcm50b24gQXJnZW50aW5hIiwiaHRpZG9jaWQiOiJLcUo3c05MVFdxR2RJR0tiQUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJV1FuVmxibTl6SUVGcGNtVnpMRUZ5WjJWdWRHbHVZUSIsImdsIjoiYXIiLCJobCI6ImVzIiwiZmMiOiJFc3dCQ293QlFVcHBWRFIwU1dKUVVVWjNNbWRRTFhsYVNXaEJVekp3UTNkQlVIZzVVMmhzUTBsMGVUZE1iM0V5U0ZoVE1tSmlMV040VWxwYWIwTldTbDl6UlhwSWRrVkxlQzF1WWxSdVRURjNRV1UzTjBaeWRtVkhZWEpWTlhwaU1qUlRiVEJqVjJoc2VtWTFXRXRITVZJNVMxRXhTMVZMUzFFNFVYUlJlRkEwVGpOTWRYSXljVGd0U0dFek0xbHRXRUVTRjNrMVRGTmhiM2x4UldSaFdIaGpPRkE1TjJJemFVRnpHaUpCUkhOeU9XWlViRlI2VUdWUU16YzJiR0pSZUU5YVluWnJjVWRSZVMxeFRUSm4iLCJmY3YiOiIzIiwiZmNfaWQiOiJLcUo3c05MVFdxR2RJR0tiQUFBQUFBPT0ifQ==",
+      "title": "Analistas Junior",
+      "company": "Grant Thornton Argentina",
+      "sourceUrl": "https://www.bumeran.com.ar/empleos/analistas-junior-grant-thornton-argentina-1118431224.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://www.bumeran.com.ar/empleos/analistas-junior-grant-thornton-argentina-1118431224.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analistas-en-palermo-14170ADB4B52D33161373E686DCF3405?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://ar.trabajo.bz/view/9593095.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1906,
+      "descriptionSha256": "aebabd9b8133f92ff70e847c84d3c235c1dff10c943c86363be4d51d07ed7d1c",
+      "source": "Bumeran",
+      "relativeAgeLabel": null
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBkZSBQYWdvIGEgUHJvdmVlZG9yZXMiLCJjb21wYW55X25hbWUiOiJWZXJpc3VyZSIsImh0aWRvY2lkIjoiSXljQkxQMFJQNWZSQl9qY0FBQUFBQT09IiwidXVsZSI6IncrQ0FJUUlDSVdRblZsYm05eklFRnBjbVZ6TEVGeVoyVnVkR2x1WVEiLCJnbCI6ImFyIiwiaGwiOiJlcyIsImZjIjoiRXN3QkNvd0JRVXBwVkRSMFNrWkhiamN6WjBSd2EwMWZPRzVhYURaMVVIVkhWR3BQVkhOcmExWlhOWFZQYTFaTVFYTXllR2RRYlhWV2VrNXFNME5SYW01MUxVTTNWbUozU1ZsRlpWQk9OMVYzVTBWT1FqQnFRbWhsY1ZjMlFuSm1hekJDTmsxVWNFUjFjRXAyT0MxMFdXdHdiM3BpVHpSNVRFOXRiblZ0ZEU5SVZqZFJWVmhvYVdKRmIxVTNZMDlpTjBrU0YzazFURk5oYjNseFJXUmhXSGhqT0ZBNU4ySXphVUZ6R2lKQlJITnlPV1pUWlMxVlVsaFhNa0Y1TW1SM1ZrVTBWM2hqTXpCa1NEVTRabXBCIiwiZmN2IjoiMyIsImZjX2lkIjoiSXljQkxQMFJQNWZSQl9qY0FBQUFBQT09In0=",
+      "title": "Analista de Pago a Proveedores",
+      "company": "Verisure",
+      "sourceUrl": "https://careers.verisure.com/ar/es/job/r2026080125/Analista-de-Pago-a-Proveedores?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://careers.verisure.com/ar/es/job/r2026080125/Analista-de-Pago-a-Proveedores?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://www.bumeran.com.ar/empleos/analista-de-pago-a-proveedores-1118416945.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-jr-de-pago-a-proveedores-en-palermo-99EB9A2F72C1821261373E686DCF3405?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://bebee.com/ar/jobs/analista-de-pago-a-proveedores-latcom-buenos-aires--techmap_ar_4472117343?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://www.jobleads.com/ar/job/analista-pago-a-proveedores--buenos-aires--e023538eae62f3ef358e97191c1d8d35e?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://ar.jooble.org/jdp/4304995521779016557?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://toka.lat/ar/buenos-aires/contabilidad/buenos-aires-contabilidad-82589a38b4bc?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://www.buscojobs.com.ar/analista-de-pago-a-proveedores-en-capital-federal-ID-13742202?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 3451,
+      "descriptionSha256": "16fa3c48d3fadb2b095f85a41f1a36e3aea30e0437071c9175961d6858c97e0c",
+      "source": "Careers.verisure.com",
+      "relativeAgeLabel": null
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBlbiBwcmV2ZW5jaW9uIGRlIHJpZXNnb3MgLSBzZWd1cmlkYWQgZSBoaWdpZW5lIiwiY29tcGFueV9uYW1lIjoiZHNz4oG6IiwiaHRpZG9jaWQiOiI3MGQ0TlQ5U05lQ1BHU2dwQUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJV1FuVmxibTl6SUVGcGNtVnpMRUZ5WjJWdWRHbHVZUSIsImdsIjoiYXIiLCJobCI6ImVzIiwiZmMiOiJFc3dCQ293QlFVcHBWRFIwVERjMk1GaGljVlZhUWpsSVRHdFNiMUp4ZEMxQk1WcHNiSE4zV0UxeU0ya3pkV3B4WWxwT1RVYzVSbWROYkMwMWFHeE5lRlJOZG5GaVVXRXhiV3hmY25rNVlVVmxkMUJDV21jNFFrMHRRbW96YjJwa1JXbFVkemxpU1hWeWIycFVWbEpUTkhsQk1GSjRUSFJ5WDJsMVNqRmZRalU1VjJjNVdpMXJRVUZWYURNdFRqRlpaRGtTRjNrMVRGTmhiM2x4UldSaFdIaGpPRkE1TjJJemFVRnpHaUpCUkhOeU9XWlViRU5mUlRsVU5ESkliSGhDVGxWU09XMUtUa3RYVXpCaUxWSm4iLCJmY3YiOiIzIiwiZmNfaWQiOiI3MGQ0TlQ5U05lQ1BHU2dwQUFBQUFBPT0ifQ==",
+      "title": "Analista en prevencion de riesgos - seguridad e higiene",
+      "company": "dss⁺",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-en-prevencion-de-riesgos-seguridad-e-higiene-at-dss%2B-4477309571?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-en-prevencion-de-riesgos-seguridad-e-higiene-at-dss%2B-4477309571?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [],
+      "locations": [
+        "Belén de Escobar, Provincia de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 4861,
+      "descriptionSha256": "5cb72f4081120f190a41fd336909cbecf14c46694ed301adf8f53a3a94aec186",
+      "source": "LinkedIn",
+      "relativeAgeLabel": "hace 1 día"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBkZSBMb2fDrXN0aWNhIiwiY29tcGFueV9uYW1lIjoiTG9naXN0aWNhIE1pbG8gUy5BLiIsImh0aWRvY2lkIjoiZ2lNTG5XZTFWeXZGWWtfTkFBQUFBQT09IiwidXVsZSI6IncrQ0FJUUlDSVdRblZsYm05eklFRnBjbVZ6TEVGeVoyVnVkR2x1WVEiLCJnbCI6ImFyIiwiaGwiOiJlcyIsImZjIjoiRXN3QkNvd0JRVXBwVkRSMFNtaHZlVk5WUVRSb04zSTBNRVZvVm5jd1VURk9SV2Q0V210UmMyWjBhM2xuVUhsQ1VGbE9URUU0U2xSb1VuVnVZemR2VlZoM1dtZElaRGxzVDFkRlRHd3RMWEI0UkVKd1pqVjRSRzk1TjNkYU9FNU5jakZXYW5neFJUbG9jVk5HYlRoUWVUaDZjRTF0TUcxcFZXRk5Ta1JMY0UxUFpXbHpVbGxVVkROTU1WbDVXWFpPYnpjU0YzazFURk5oYjNseFJXUmhXSGhqT0ZBNU4ySXphVUZ6R2lKQlJITnlPV1pVV1ZvMk4yNWFRMnQ2VlUxcFgxTTFhMEZZUm5sS2MwbERlRFZSIiwiZmN2IjoiMyIsImZjX2lkIjoiZ2lNTG5XZTFWeXZGWWtfTkFBQUFBQT09In0=",
+      "title": "Analista de Logística",
+      "company": "Logistica Milo S.A.",
+      "sourceUrl": "https://ar.linkedin.com/jobs/view/analista-de-log%C3%ADstica-at-logistica-milo-s-a-4477223411?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://ar.linkedin.com/jobs/view/analista-de-log%C3%ADstica-at-logistica-milo-s-a-4477223411?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://bebee.com/ar/jobs/analista-de-logistica-logistica-milo-sa-gerli--techmap_ar_54236121769?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://app.scovai.com/it/jobs/952c497c-32f2-497e-859e-ed8efa2a117f/gerli-analista-de-logistica-logistica-milo?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Gerli, Provincia de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1574,
+      "descriptionSha256": "a1deed86ca7d481d43556ab7c41c70520585feaef6ed9592ad6b8e66c1372659",
+      "source": "LinkedIn",
+      "relativeAgeLabel": "hace 6 días"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBCYWNrT2ZmaWNlIEpyIC0gUG9zaWNpw7NuIFBvciA2IE1lc2VzIiwiY29tcGFueV9uYW1lIjoiTWljaGFlbCBQYWdlIiwiaHRpZG9jaWQiOiJwRFFvNHdBblJwNHpWVmY5QUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJV1FuVmxibTl6SUVGcGNtVnpMRUZ5WjJWdWRHbHVZUSIsImdsIjoiYXIiLCJobCI6ImVzIiwiZmMiOiJFc3dCQ293QlFVcHBWRFIwU1ZVNFpWVlBabDlwU0cxb01UaDNSRWhpZUdneWVtVnRRVEZYUW5GUlh6TjNNRUo2ZWtsVFVqTTFVRjlNZVRSNmRYUjVNVzFYTUZCU1psbDBSWFE0VkhkSFV6TXRSbXMzVkRock9VRkdlbU5sYlMxSGJ6WnBaRGxZUlVJeVQwWXhkM1F3WmxsS01GVjZSRE5yYTNscVNIUTFTVTFwVkZVNGFYZFZkbVJXVm5GcFZsOTJjMUVTRjNrMVRGTmhiM2x4UldSaFdIaGpPRkE1TjJJemFVRnpHaUpCUkhOeU9XWlJOMnRtY1hCWFJXdDZVVkF3Y0ROWWEyNVhZbFpLZFZGa2FURlIiLCJmY3YiOiIzIiwiZmNfaWQiOiJwRFFvNHdBblJwNHpWVmY5QUFBQUFBPT0ifQ==",
+      "title": "Analista BackOffice Jr - Posición Por 6 Meses",
+      "company": "Michael Page",
+      "sourceUrl": "https://www.michaelpage.com.ar/job-detail/analista-backoffice-jr-posici%C3%B3n-por-6-meses/ref/jn-062026-7038614?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://www.michaelpage.com.ar/job-detail/analista-backoffice-jr-posici%C3%B3n-por-6-meses/ref/jn-062026-7038614?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://www.buscojobs.com.ar/analista-backoffice-jr-posicion-por-6-meses-en-capital-federal-ID-13700954?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+        "https://buenosaires.ar.expertini.com/job/analista-backoffice-jr-posicion-por-6-meses-buenos-aires-michael-page-623407629422699406/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1377,
+      "descriptionSha256": "ca601076e4b9bf75be1a3f7abfa2046288882ed3e2a49c1a5fbce2e4ef9b3c6e",
+      "source": "Michael Page",
+      "relativeAgeLabel": null
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBDb21lcmNpYWwgT24gbGluZSAoQXJnZW50aW5hKSIsImNvbXBhbnlfbmFtZSI6Ik1pcmdvciIsImh0aWRvY2lkIjoiWWRUZ0pQSWc5NjhHSnIySEFBQUFBQT09IiwidXVsZSI6IncrQ0FJUUlDSVdRblZsYm05eklFRnBjbVZ6TEVGeVoyVnVkR2x1WVEiLCJnbCI6ImFyIiwiaGwiOiJlcyIsImZjIjoiRXN3QkNvd0JRVXBwVkRSMFNWUlphSE5GWVZGelZYRmpYMkUxTFVGQlN6QlRUR1ZFTjA1bmQyOVJWbEZPTld4T1duRjFNVlIxU0daeWJHTmZlbWN6UkU1aVRtUkpNakZGWDNsUFRucE9TV1l0UzFodFNEQnBSbTQyUkVaVWIzZFZabTU1UzJocVprd3RXRVUwWDNWTWEyRTJWakZFZVdkS05VcGxVWEZxUkhGMmVWSnNYMHM1TFRCcGRFNWhkR1p5TTNrU0YzazFURk5oYjNseFJXUmhXSGhqT0ZBNU4ySXphVUZ6R2lKQlJITnlPV1pVVlhGR01qUkJOVzVsWm1oUmVEUkJhemRYVVdKVmRqbFhNVXhSIiwiZmN2IjoiMyIsImZjX2lkIjoiWWRUZ0pQSWc5NjhHSnIySEFBQUFBQT09In0=",
+      "title": "Analista Comercial On line (Argentina)",
+      "company": "Mirgor",
+      "sourceUrl": "https://ar.talent.com/view?id=641372805709431590&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://ar.talent.com/view?id=641372805709431590&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://www.recruit.net/job/analista-comercial-line-argentina-jobs/B1CFA6D1D98A548B?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Buenos Aires, Cdad. Autónoma de Buenos Aires (y 1 ubicación más)"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 1588,
+      "descriptionSha256": "8cdab17b98ebfc00084d6bdb9f90b1a681191bf245397f7948d82b76603cf2d4",
+      "source": "Talent.com",
+      "relativeAgeLabel": "hace 4 días"
+    },
+    {
+      "sample": "serp",
+      "id": "eyJqb2JfdGl0bGUiOiJBbmFsaXN0YSBkZSBSUkhIIiwiY29tcGFueV9uYW1lIjoiY29uZmlkZW50aWFsIiwiaHRpZG9jaWQiOiJxNGZncTZLdXg5bGVXVXVJQUFBQUFBPT0iLCJ1dWxlIjoidytDQUlRSUNJV1FuVmxibTl6SUVGcGNtVnpMRUZ5WjJWdWRHbHVZUSIsImdsIjoiYXIiLCJobCI6ImVzIiwiZmMiOiJFc3dCQ293QlFVcHBWRFIwUzI5T2JUZzFVVGswU3pSc01uWkZXVFJuUm1aU1MzRmtVakZ5WW1wV0xURnZNbU5TYzAxVWRVNXBhV3haV21aaVQwaDBOemRSZFc1M1dIWnphVEJKYlZGYVNGa3pRVnBzTWxoSFlrSjBlV2R4VmpjMFJTMDJiVkpZV0hVM1lVUmhWR1pCVlZGS1RucEZZMnB0T1VGMVUycDNWMFF5TTBKamQzcGFPV28wVldOWlNrOWllbDhTRjNrMVRGTmhiM2x4UldSaFdIaGpPRkE1TjJJemFVRnpHaUpCUkhOeU9XWlJWRlJRYUVaTFlWaG5abTlEU1hkcFduSlpUelUzYUcxdE1uWlIiLCJmY3YiOiIzIiwiZmNfaWQiOiJxNGZncTZLdXg5bGVXVXVJQUFBQUFBPT0ifQ==",
+      "title": "Analista de RRHH",
+      "company": "confidential",
+      "sourceUrl": "https://www.universia.net/ar/empleo/6197baac-aaef-4746-b4b0-d39fce6947f5/human-resources-officer-analista-de-rrhh-villa-tesei.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "applyUrl": "https://www.universia.net/ar/empleo/6197baac-aaef-4746-b4b0-d39fce6947f5/human-resources-officer-analista-de-rrhh-villa-tesei.html?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+      "alternativeApplyUrls": [
+        "https://ar.jooble.org/jdp/-2366585310468483678?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic"
+      ],
+      "locations": [
+        "Villa Tesei, Provincia de Buenos Aires"
+      ],
+      "countries": [],
+      "publishedAt": null,
+      "indexedAt": null,
+      "expiresAt": null,
+      "descriptionChars": 914,
+      "descriptionSha256": "04aa98d678e2e69ba0542e2c52690e21364bd963bc6d39a6c9e01573b448ad9d",
+      "source": "Universia",
+      "relativeAgeLabel": "hace 1 día"
+    }
+  ]
+}

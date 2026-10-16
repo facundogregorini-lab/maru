@@ -1,0 +1,14 @@
+{
+  "observedAt": "2026-10-16T21:52:33.217Z",
+  "country": "Argentina",
+  "timeFrame": "1m (predeterminado: últimos 31 días; incluye indexados luego vencidos)",
+  "atsCount": 5671,
+  "jobBoardCount": 15394,
+  "jobBoardCountExcludeAtsDuplicates": 13757,
+  "notes": [
+    "Tres consultas de conteo del trial. No se descargaron nuevos avisos.",
+    "Los portales incluyen LinkedIn, Wellfound y Y Combinator. No equivalen al mercado argentino completo.",
+    "El filtro de duplicados usa las reglas del proveedor; no garantiza deduplicación perfecta.",
+    "Las consultas se hicieron en momentos próximos; el catálogo cambia durante la observación."
+  ]
+}

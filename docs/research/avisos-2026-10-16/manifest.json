@@ -1,0 +1,68 @@
+{
+  "cutoffDate": "2026-10-16",
+  "baseCommit": "9c2f17d49a5d0e9af972383717c5d20c23b11642",
+  "purpose": "Static handoff evidence; no experiments scheduled or paid sources enabled.",
+  "knownSamples": {
+    "apify_linkedin": {
+      "received": 50,
+      "accepted": 49,
+      "query": "analista, Argentina, pastWeek; limit 50",
+      "runId": "NZCsRQZKTa1Xpmhgu",
+      "datasetId": "xWsvDMVBRjitYVzXi",
+      "runCapUsd": 0.2
+    },
+    "apify_indeed": {
+      "received": 44,
+      "accepted": 42,
+      "query": "analista; country ar; location Argentina; postedWithinDays 7; count 50",
+      "runId": "ddcdykwxgz4ea5dmS",
+      "datasetId": "Yfqsr0hzihvcdbOuW",
+      "runCapUsd": 0.05
+    },
+    "apify_computrabajo": {
+      "received": 50,
+      "accepted": 34,
+      "query": "analista; countryCode ar; maxJobs 50; no temporal filter; reject older than 30 days downstream",
+      "runId": "8SEpu5TIfxkzbgPS0",
+      "datasetId": "15hDI5SrOKyZ2EgBc",
+      "runCapUsd": 0.2
+    },
+    "fantastic_ats": {
+      "rows": 25,
+      "query": "title analista; location Argentina; time_frame 7d; limit 25; description_format text"
+    },
+    "fantastic_linkedin": {
+      "rows": 25,
+      "query": "title analista; location Argentina; time_frame 7d; limit 25; description_format text; exclude_recruiter_fields true",
+      "note": "Sample sources were linkedin; month job board counts also include other boards."
+    },
+    "serp": {
+      "rows": 10,
+      "query": "engine google_jobs; q analista Argentina; location Buenos Aires, Argentina; gl ar; hl es; first page only"
+    }
+  },
+  "knownQuotaSnapshots": {
+    "fantasticJobsRemaining": 450,
+    "fantasticRequestsRemaining": "Recheck: multiple count calls followed the 48-request snapshot.",
+    "fantasticExpectedTrialEnd": "2026-10-23; verify live status and exact time",
+    "serpPlan": "Free",
+    "serpPlanMonthlyPrice": 0,
+    "serpSearchesRemaining": 248,
+    "serpSearchesLimit": 250,
+    "note": "Snapshots, not reserved balances."
+  },
+  "authorization": {
+    "fantastic": "Owner allows intelligent use of all remaining free trial quota. No paid plan, renewal or overage.",
+    "apify": "Completed one pilot of up to USD 0.50 total for three sources. No new paid runs or recurring budget approved.",
+    "recurringDataSubscriptions": "USD 95 Fantastic subscription rejected for this stage."
+  },
+  "limitations": [
+    "Single initial snapshot per provider; keyword, order and result cap bias.",
+    "Cross-source grouping is heuristic, not human adjudicated ground truth.",
+    "Temporal recurrence experiment has not been run.",
+    "Age and liveness are time-dependent: use original observation time.",
+    "Original scratch overlap analysis used current inventory/group code and full selected source text; metadata alone cannot reproduce every extraction/grouping result.",
+    "No evidence of national coverage percentages or retention uplift.",
+    "Full responses omitted; recover existing Apify datasets by ID if retained, without rerunning paid Actors."
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "current": {
+    "open": 6439,
+    "eligible": 909
+  },
+  "pilot": {
+    "postings": 125,
+    "canonicalOpportunities": 123,
+    "displayedOpportunities": 122,
+    "companies": 94,
+    "byFamily": {
+      "operaciones": 18,
+      "producto": 5,
+      "otros": 15,
+      "finanzas": 45,
+      "logistica": 7,
+      "datos": 8,
+      "marketing": 1,
+      "ventas": 5,
+      "software": 10,
+      "administracion": 3,
+      "consultoria": 1,
+      "rrhh": 4
+    },
+    "eligible": {
+      "elegible": 122
+    },
+    "newDisplayedOpportunities": 122
+  }
+}

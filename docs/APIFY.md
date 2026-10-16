@@ -2,6 +2,8 @@
 
 Revisado el 16/10/2026. Se siguió https://apify.com/agents.md. MCP de Codex registrado en `https://mcp.apify.com` con OAuth y verificado con búsquedas y ejecuciones reales. La app usa el cliente oficial `apify-client`; el token para CLI se configura aparte en `APIFY_TOKEN`, nunca en el navegador ni en argumentos.
 
+**Continuación vigente:** [estrategia](ESTRATEGIA-AVISOS.md) y [plan](PLAN-AVISOS.md). Este documento describe el piloto histórico, no aprueba nuevas corridas ni una frecuencia permanente. El dueño descartó el abono de Fantastic de US$95 y autorizó aprovechar sólo su trial gratuito; eso no amplía el permiso anterior de Apify. Las [muestras y métricas](research/avisos-2026-10-16/README.md) ya están en el repo para reutilizarlas.
+
 ## Prueba realizada
 
 Se autorizaron hasta US$0,50 para una prueba sin recurrencias. Consulta común: **analista, Argentina**, hasta 50 resultados por fuente. LinkedIn e Indeed limitaron publicación a la última semana; el Actor de Computrabajo se evaluó con su búsqueda por palabra y se filtraron avisos antiguos al normalizar.
@@ -30,7 +32,7 @@ LinkedIn e Indeed ofrecen descripciones largas (medianas 3.383 y 2.838 caractere
 
 Las reglas de clasificación mejoraron con títulos locales explícitos: “Otros” pasa de 66 a 15 oportunidades de esta misma muestra. No se fuerza una familia para títulos ambiguos. También se corrige “10–15 años” para tomar 10 como mínimo y “Semi Senior” para conservar su nivel. La versión de extracción forma parte del hash: el inventario existente se recalcula al recibir nuevamente cada aviso.
 
-Recomendación inicial: sumar LinkedIn + Indeed a un piloto mayor con varias familias y provincias, y usar Computrabajo con filtro temporal. Bumeran, ZonaJobs y HiringRoom requieren una evaluación específica antes de afirmar cobertura generalista. Deduplicar después de la extracción mejora el producto, pero no evita pagar resultados repetidos: la frecuencia y la ventana temporal deben presupuestarse.
+La recomendación inicial de sumar LinkedIn + Indeed a un piloto mayor quedó pendiente de presupuesto y medición marginal; no constituye una elección de fuentes diarias. El plan vigente reutiliza estos datasets, amplía primero la base gratuita y compara utilidad para perfiles concretos. Bumeran, ZonaJobs y HiringRoom requieren una evaluación específica antes de afirmar cobertura generalista. Deduplicar después de la extracción mejora el producto, pero no evita pagar resultados repetidos: la frecuencia y la ventana temporal deben presupuestarse.
 
 ## Uso del comando
 

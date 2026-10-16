@@ -1,6 +1,18 @@
 # Estado y próximos pasos de Maru
 
-Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto) y #26 (piloto Apify y calidad de avisos) ya están integradas en `main`. El login Google de la PR #22 está preservado. El piloto de Apify se documenta en [APIFY.md](APIFY.md); su salida queda separada del inventario público y no se activaron consumos recurrentes.
+Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
+
+## Prioridad inmediata: próxima etapa de avisos
+
+El dueño pidió un traspaso para que otra IA implemente por etapas y después se revisen los resultados. Público principal: **profesionales generalistas**; secundario: tecnología/remoto. **US$95/mes por Fantastic fue rechazado** para esta etapa. Se puede aprovechar inteligentemente todo el saldo gratuito del trial, sin contratar ni habilitar sobreconsumos.
+
+1. Leer [ESTRATEGIA-AVISOS.md](ESTRATEGIA-AVISOS.md): decisiones, hipótesis, evidencia, costos y límites de lo que sabemos.
+2. Seguir [PLAN-AVISOS.md](PLAN-AVISOS.md): E0 benchmark offline; E1 trial estratificado y temporal; E2 ampliar base gratuita; E3 descubrimiento selectivo; E4 decidir si aún hace falta una fuente adicional.
+3. Reutilizar [muestras y métricas](research/avisos-2026-10-16/README.md). No repetir corridas para recuperar números ya guardados.
+4. Priorizar la verificación de vigencia/cuota del trial: comenzó el 16/10; vencimiento esperado 23/10, confirmar hora real. Último saldo observado: 450 avisos. La propuesta reparte hasta 360 en cortes comparables, 60 en remoto/huecos y 30 de reserva; no obliga a consumir si no aporta aprendizaje.
+5. Conservar el catálogo gratuito y el ranking actual; demostrar que la mejora funciona cuando Fantastic quede deshabilitado. No hay presupuesto recurrente aprobado para Apify ni otro proveedor.
+
+Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
 ## Implementado en esta tanda
 
@@ -8,7 +20,7 @@ Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (
 - **Interfaz al día**: Match y el selector de perfil reciben los cambios de la cuenta y de otras pestañas, sin recargar ni guardar automáticamente un estado vacío. El borrado de cuenta informa éxito sólo tras confirmación; sin conexión informa que falta confirmar.
 - **Google preservado**: mismo email y cookie de sesión que magic link. El proveedor de autenticación escucha cambios entre ventanas y al recuperar el foco. Prueba de integración: una sesión Google recupera el perfil guardado con una sesión por email.
 - **Protección de IA en Redis**: contadores atómicos compartidos entre instancias, TTL y hashes de IP; se agregan chat y acciones de facturación. Sin base hay alternativa local; con base caída se evita llamar a IA sin control.
-- **Planes y cobro preparados**: `/precios`, estado por cuenta, checkout mensual de Mercado Pago, notificaciones firmadas, consulta del proveedor, acreditación idempotente, cancelación de renovación, recuperación de pagos y cuotas mensuales. Se mantiene **apagado** (`NEXT_PUBLIC_BILLING_ENABLED=false`) hasta decisiones y pruebas del dueño. Ver [COBROS.md](COBROS.md).
+- **Planes y cobro preparados**: `/precios`, estado por cuenta, checkout mensual de Mercado Pago, notificaciones firmadas, consulta del proveedor, acreditación idempotente, cancelación de renovación, recuperación de pagos y cuotas mensuales. El default es apagado (`NEXT_PUBLIC_BILLING_ENABLED=false`); comprobar la bandera efectiva de Production antes de afirmar su estado actual. No se verificaron cobros reales. Ver [COBROS.md](COBROS.md).
 - **Chat con Maru**: panel de Búsquedas en escritorio y desplegable en celular. Referencias sólo a avisos abiertos proporcionados desde el inventario. Perfil opcional, historial de la página sin persistencia y limpieza al cambiar de cuenta.
 - **Pulido**: resultados de Match en `AppShell`, guía del seguimiento en `/seguimiento/guia`, links de Planes y textos de privacidad corregidos.
 - **Logos**: 15 marcas verificadas desde Simple Icons 16.35.0, servidas como SVG local. Correspondencia por nombre exacto; el resto conserva inicial y color. Fuentes y licencias en `public/companies/`.
@@ -26,20 +38,20 @@ Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (
 
 ## Lo que tiene que resolver el dueño
 
-1. **Definición comercial.** Confirmar o ajustar la propuesta antes de habilitar cobro: semanal $4.500, mensual $10.000 y trimestral $22.500 (destacado); gratis 1 CV y 1 carta por día y 1 entrevista y 1 guion por semana; pago ilimitado con uso razonable (25 pedidos por día); STAR, feedback de cámara y Word sólo con plan. Detalle en [COBROS.md](COBROS.md). El modo actual sigue siendo gratis. El buscador, ranking, lectura de perfil y extensión siguen gratis.
-2. **Mercado Pago.** Crear/configurar la aplicación y cargar `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET` en Vercel. Configurar notificaciones firmadas a `<dominio>/api/billing/webhook` para suscripciones, comprobantes y pagos. El circuito exacto debe probarse con la cuenta: no se hicieron cobros reales. No sirve pegar un link de pago genérico ni volver con `?suscripcion=ok`. Pasos y fuentes en [COBROS.md](COBROS.md).
+1. **Definición comercial.** Confirmar o ajustar la propuesta antes de habilitar cobro: semanal $4.500, mensual $10.000 y trimestral $22.500 (destacado); gratis 1 CV y 1 carta por día y 1 entrevista y 1 guion por semana; pago ilimitado con uso razonable (25 pedidos por día); STAR, feedback de cámara y Word sólo con plan. Detalle en [COBROS.md](COBROS.md). Comprobar el estado de la bandera de cobro de Production; no asumir que sigue igual al default. El diseño mantiene gratis el buscador, ranking, lectura de perfil y extensión.
+2. **Mercado Pago.** El dueño informó que cargó las claves; falta comprobar configuración y circuito real con la cuenta, sin volver a solicitar secretos ya cargados. Revisar `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET` y notificaciones firmadas a `<dominio>/api/billing/webhook` para suscripciones, comprobantes y pagos. No se hicieron cobros reales. No sirve pegar un link de pago genérico ni volver con `?suscripcion=ok`. Pasos y fuentes en [COBROS.md](COBROS.md).
 3. **Datos del negocio y legales.** Titular/razón social, identificación fiscal, domicilio y contacto; revisión de términos y privacidad, política/procedimiento de arrepentimiento y reembolso, y su botón antes de vender. La cancelación de renovación ya existe; este circuito legal depende de la definición del negocio.
-4. **Google y email.** El código está en main. En el dominio nuevo, Google devuelve `redirect_uri_mismatch`: agregar `https://www.marucoach.com/api/auth/google/callback` al cliente OAuth. El ingreso por email falla porque Production no tiene `SMTP_URL`; configurar también `EMAIL_FROM`. Sólo si cambia el dominio o falta configuración en otro entorno: revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
-5. **Validación real.** Ingresar con la misma cuenta en compu y celular, guardar una búsqueda, editar desde ambos y comprobar el borrado. Confirmar que están las variables de Redis, IA y envío de emails. No fue posible comprobar el Redis productivo con una sesión real desde este entorno.
+4. **Google y email.** El dueño informó que agregó `https://www.marucoach.com/api/auth/google/callback` y se observó sesión real en `www.marucoach.com`; el panel y sus claves ya funcionan después de PR 30. No volver a tratar `ADMIN_EMAILS` como bloqueo pendiente. Falta comprobar un ingreso Google fresco desde cero. Magic link falló por ausencia de `SMTP_URL`; configurar también `EMAIL_FROM`. Si cambia el dominio, revisar su URI específica. Los previews requieren su propia URI o magic link.
+5. **Validación real.** Ingresar con la misma cuenta en compu y celular, guardar una búsqueda, editar desde ambos y comprobar el borrado. Los contadores Redis del panel de proveedores se verificaron en Production, pero eso no reemplaza una prueba real de perfil/match/seguimiento entre dos dispositivos. Evitar modificar el perfil real del dueño durante QC; usar un perfil de prueba autorizado.
 6. **Chrome Web Store.** Crear/completar la cuenta de publicador, ficha, datos de privacidad y subir el ZIP generado por `/extension`. La instalación por ZIP sigue disponible hasta publicar. Usar únicamente testimonios de usuarios reales que autoricen publicarlos.
-7. **Dominio y medición.** Confirmar dominio canónico en `NEXT_PUBLIC_SITE_URL`, email en `NEXT_PUBLIC_CONTACT_EMAIL` y activar Vercel Analytics si se desea usarlo.
+7. **Dominio y medición.** El dominio canónico productivo ya es `https://www.marucoach.com`. Revisar `NEXT_PUBLIC_CONTACT_EMAIL` y activar Vercel Analytics si se desea usarlo; no cambiar el dominio para las pruebas de proveedores.
 8. **Habilitar venta al final.** Sólo tras aprobar precio, textos, legales y pruebas de pago: `NEXT_PUBLIC_BILLING_ENABLED=true` en Production y nuevo build/deploy. La bandera pública se fija al compilar. La rama se puede desplegar con cobro apagado mientras se resuelven esos puntos.
 
 ## Validación técnica
 
 TypeScript, ESLint, suite de tests y build de Next. Nuevas regresiones de concurrencia, borrado, sesión Google/email, cobro simulado, firmas y chat. QA con Chromium en 1440 y 390 px sobre Planes, Búsquedas, guía de Seguimiento y Match; perfil remoto visible sin recarga. Los tests de extensión/PDF que dependen del Chromium Linux configurado se omiten en macOS; no se reportan como ejecutados.
 
-La IA del chat y el circuito financiero se probaron con respuestas simuladas: calidad de las respuestas, entrega real de Google/email, persistencia productiva y pagos de la cuenta necesitan la prueba real indicada arriba.
+La IA del chat y el circuito financiero se probaron con respuestas simuladas. Hubo además QC real con perfil ficticio en postulación, CV, carta, teleprompter y entrevista, y estado real de proveedores en Production. Eso no prueba entrega de email, sincronización entre dos dispositivos ni pagos reales; quedan las verificaciones indicadas arriba.
 
 ## Backlog de producto posterior al lanzamiento
 
@@ -55,8 +67,8 @@ Mantener el idioma rioplatense, datos reales y los tokens existentes. No inventa
 
 ## Próximo paso para avisos pagos
 
-La conexión MCP de Codex ya funciona. Para correr el pipeline fuera del chat hace falta `APIFY_TOKEN` como secreto del runner, un presupuesto recurrente aprobado y una selección de consultas por rol/provincia. El permiso de US$0,50 fue sólo para el piloto. Comparar las fuentes con muestras más amplias antes de prometer cobertura nacional. El comando `match:apify` por defecto es dry-run y produce candidatos separados del inventario de producción.
+La conexión MCP de Codex funciona. Para correr Apify fuera del chat hace falta `APIFY_TOKEN` como secreto del runner y una selección de consultas/ventanas; ese secreto del runner no está confirmado. El permiso de US$0,50 fue sólo para el piloto ya realizado y no hay presupuesto recurrente aprobado. El comando `match:apify` por defecto es dry-run y produce candidatos separados. La nueva prioridad es [el plan sin abonos](PLAN-AVISOS.md), no habilitar un cron pago.
 
 ## Fantastic.jobs y SerpAPI
 
-Variables `FANTASTIC_JOBS` y `SERP_API` cargadas por el dueño en Production. Panel de pruebas privadas y límites documentados en [PROVEEDORES-AVISOS.md](PROVEEDORES-AVISOS.md). Muestras reales completadas desde los playgrounds: 50 avisos Fantastic y diez Google Jobs. Conteos argentinos Fantastic: 5.682 ATS y 15.394 job boards indexados en 31 días; 223 y 550 activos de la ventana 24h. Falta probar las claves de Production desde el panel de Maru tras recuperar login. No se incorporan resultados al inventario ni se crean recurrencias con esta prueba.
+Variables `FANTASTIC_JOBS` y `SERP_API` cargadas y verificadas desde el panel de Production con sesión real. Límites actuales en [PROVEEDORES-AVISOS.md](PROVEEDORES-AVISOS.md). Se completaron 50 filas Fantastic y diez Google Jobs en los playgrounds; el paquete del research conserva 185 registros públicos de los seis pilotos. El último conteo `1m` fue 5.671 ATS y 15.394 job boards; al excluir duplicados con ATS quedaron 13.757 job boards, 19.428 sumados. No equivale a avisos abiertos hoy ni justifica un abono rechazado. No se importaron estas muestras ni se crearon recurrencias. La autorización actual es para aprovechar sólo el saldo gratuito de Fantastic según E1, revalidando antes vigencia y cuotas.

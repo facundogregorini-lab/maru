@@ -1,0 +1,296 @@
+{
+  "note": "Single snapshot, capped keyword samples, not repeated refresh overlap or national coverage. Pair matches are candidates under existing code, not human adjudication.",
+  "summary": {
+    "apify_linkedin": {
+      "postings": 49,
+      "displayGroups": 49,
+      "companies": 39,
+      "oldest": "2026-10-09T00:00:00.000Z",
+      "newest": "2026-10-16T00:00:00.000Z",
+      "byFamily": {
+        "operaciones": 7,
+        "producto": 3,
+        "otros": 5,
+        "finanzas": 20,
+        "logistica": 4,
+        "datos": 5,
+        "marketing": 1,
+        "ventas": 2,
+        "software": 2
+      },
+      "allSourceGroupsAdded": 49
+    },
+    "apify_indeed": {
+      "postings": 42,
+      "displayGroups": 42,
+      "companies": 34,
+      "oldest": "2026-09-18T05:00:00.000Z",
+      "newest": "2026-10-16T05:00:00.000Z",
+      "byFamily": {
+        "operaciones": 8,
+        "logistica": 1,
+        "otros": 7,
+        "finanzas": 11,
+        "datos": 2,
+        "software": 5,
+        "producto": 1,
+        "administracion": 2,
+        "consultoria": 1,
+        "ventas": 3,
+        "rrhh": 1
+      },
+      "allSourceGroupsAdded": 42
+    },
+    "apify_computrabajo": {
+      "postings": 34,
+      "displayGroups": 33,
+      "companies": 23,
+      "oldest": "2026-09-22T00:00:00.000Z",
+      "newest": "2026-10-16T00:00:00.000Z",
+      "byFamily": {
+        "rrhh": 3,
+        "finanzas": 17,
+        "software": 3,
+        "logistica": 2,
+        "administracion": 1,
+        "producto": 1,
+        "otros": 3,
+        "datos": 1,
+        "operaciones": 3
+      },
+      "allSourceGroupsAdded": 33
+    },
+    "fantastic_ats": {
+      "postings": 25,
+      "displayGroups": 23,
+      "companies": 18,
+      "oldest": "2026-10-10T00:34:17",
+      "newest": "2026-10-16T16:33:51",
+      "byFamily": {
+        "rrhh": 1,
+        "ventas": 4,
+        "finanzas": 8,
+        "otros": 4,
+        "datos": 1,
+        "operaciones": 4,
+        "marketing": 1,
+        "legal": 2
+      },
+      "allSourceGroupsAdded": 23
+    },
+    "fantastic_linkedin": {
+      "postings": 25,
+      "displayGroups": 24,
+      "companies": 24,
+      "oldest": "2026-10-16T05:14:09.141",
+      "newest": "2026-10-16T20:05:32",
+      "byFamily": {
+        "finanzas": 7,
+        "administracion": 1,
+        "otros": 7,
+        "software": 3,
+        "logistica": 2,
+        "rrhh": 1,
+        "marketing": 1,
+        "ventas": 2,
+        "operaciones": 1
+      },
+      "allSourceGroupsAdded": 24
+    },
+    "serp": {
+      "postings": 10,
+      "displayGroups": 10,
+      "companies": 10,
+      "oldest": null,
+      "newest": null,
+      "byFamily": {
+        "finanzas": 3,
+        "ventas": 2,
+        "otros": 3,
+        "logistica": 1,
+        "rrhh": 1
+      },
+      "allSourceGroupsAdded": 10
+    }
+  },
+  "pairs": [
+    {
+      "a": "apify_linkedin",
+      "b": "apify_indeed",
+      "exactUrl": 0,
+      "exactCompanyTitle": [
+        {
+          "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+          "company": "EY"
+        },
+        {
+          "title": "Analista Senior de Pricing",
+          "company": "Bunge"
+        }
+      ],
+      "mergedByExistingRules": 2
+    },
+    {
+      "a": "apify_linkedin",
+      "b": "fantastic_ats",
+      "exactUrl": 0,
+      "exactCompanyTitle": [
+        {
+          "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+          "company": "EY"
+        },
+        {
+          "title": "Analista Senior de Pricing",
+          "company": "Bunge"
+        },
+        {
+          "title": "Analista de Planeamiento Comercial",
+          "company": "Bidcom"
+        }
+      ],
+      "mergedByExistingRules": 3
+    },
+    {
+      "a": "apify_linkedin",
+      "b": "fantastic_linkedin",
+      "exactUrl": 2,
+      "exactCompanyTitle": [
+        {
+          "title": "Analista Junior de Costos de Mercadería (Costeo de Receta)",
+          "company": "Cecilia Prado G."
+        },
+        {
+          "title": "Analista de Planificación de Abastecimiento",
+          "company": "FarmaPlus"
+        }
+      ],
+      "mergedByExistingRules": 2
+    },
+    {
+      "a": "apify_linkedin",
+      "b": "serp",
+      "exactUrl": 1,
+      "exactCompanyTitle": [
+        {
+          "title": "Analista de Planeamiento Comercial",
+          "company": "Bidcom"
+        }
+      ],
+      "mergedByExistingRules": 1
+    },
+    {
+      "a": "apify_indeed",
+      "b": "fantastic_ats",
+      "exactUrl": 4,
+      "exactCompanyTitle": [
+        {
+          "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+          "company": "EY"
+        },
+        {
+          "title": "Analista Jr. de Cobranzas y Cuentas Corrientes",
+          "company": "Swiss Medical Group"
+        },
+        {
+          "title": "Analista Comercial SR",
+          "company": "BYMA"
+        },
+        {
+          "title": "Analista de Control de Calidad de Fragancias",
+          "company": "IFF"
+        },
+        {
+          "title": "Analista Senior de Pricing",
+          "company": "Bunge"
+        },
+        {
+          "title": "Senior Experimentado- Analista Impositivo",
+          "company": "PwC"
+        },
+        {
+          "title": "Analista de Control de Calidad- Producto terminado - Temporal",
+          "company": "Haleon"
+        },
+        {
+          "title": "Analista de Control de Calidad- Producto terminado - Temporal",
+          "company": "Haleon"
+        }
+      ],
+      "mergedByExistingRules": 7
+    },
+    {
+      "a": "apify_indeed",
+      "b": "serp",
+      "exactUrl": 0,
+      "exactCompanyTitle": [],
+      "mergedByExistingRules": 1
+    },
+    {
+      "a": "fantastic_ats",
+      "b": "serp",
+      "exactUrl": 0,
+      "exactCompanyTitle": [
+        {
+          "title": "Analista de Planeamiento Comercial",
+          "company": "Bidcom"
+        }
+      ],
+      "mergedByExistingRules": 1
+    }
+  ],
+  "all": {
+    "names": [
+      "apify_linkedin",
+      "apify_indeed",
+      "apify_computrabajo",
+      "fantastic_ats",
+      "fantastic_linkedin",
+      "serp"
+    ],
+    "rows": 185,
+    "groups": 167,
+    "newVsBase": 167
+  },
+  "combos": [
+    {
+      "names": [
+        "apify_linkedin",
+        "fantastic_linkedin"
+      ],
+      "rows": 74,
+      "groups": 71,
+      "newVsBase": 71
+    },
+    {
+      "names": [
+        "fantastic_ats",
+        "fantastic_linkedin"
+      ],
+      "rows": 50,
+      "groups": 47,
+      "newVsBase": 47
+    },
+    {
+      "names": [
+        "apify_linkedin",
+        "apify_indeed",
+        "apify_computrabajo"
+      ],
+      "rows": 125,
+      "groups": 122,
+      "newVsBase": 122
+    },
+    {
+      "names": [
+        "fantastic_ats",
+        "fantastic_linkedin",
+        "apify_indeed",
+        "apify_computrabajo",
+        "serp"
+      ],
+      "rows": 136,
+      "groups": 123,
+      "newVsBase": 123
+    }
+  ]
+}
