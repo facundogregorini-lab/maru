@@ -9,7 +9,7 @@ export const SESSION_COOKIE = "maru_session";
 export const LOGIN_TTL_S = 15 * 60;
 export const SESSION_TTL_S = 180 * 24 * 60 * 60;
 
-type TokenPayload = { typ: "login" | "session"; email: string; exp: number; n: string };
+type TokenPayload = { typ: "login" | "session" | "oauth"; email: string; exp: number; n: string; next?: string; popup?: boolean };
 
 function secret(): string {
   const s = process.env.AUTH_SECRET;
@@ -24,8 +24,8 @@ function sign(data: string): string {
   return b64url(createHmac("sha256", secret()).update(data).digest());
 }
 
-function createToken(typ: TokenPayload["typ"], email: string, ttlSeconds: number, now = Date.now()): string {
-  const payload: TokenPayload = { typ, email, exp: Math.floor(now / 1000) + ttlSeconds, n: b64url(randomBytes(9)) };
+function createToken(typ: TokenPayload["typ"], email: string, ttlSeconds: number, now = Date.now(), extra: Pick<TokenPayload, "next" | "popup"> = {}): string {
+  const payload: TokenPayload = { typ, email, exp: Math.floor(now / 1000) + ttlSeconds, n: b64url(randomBytes(9)), ...extra };
   const body = b64url(Buffer.from(JSON.stringify(payload)));
   return `${body}.${sign(body)}`;
 }
@@ -52,6 +52,21 @@ export const createSessionToken = (email: string, now?: number) => createToken("
 export const verifyLoginToken = (token: string | null, now?: number) => readToken(token, "login", now)?.email ?? null;
 export const verifySessionToken = (token: string | null | undefined, now?: number) => readToken(token, "session", now)?.email ?? null;
 
+/** Estado firmado del ingreso con Google (vence en 10 minutos). `n` va también en una cookie: ata la vuelta a este navegador. */
+export const OAUTH_COOKIE = "maru_oauth";
+export const OAUTH_TTL_S = 10 * 60;
+export const createOAuthState = (opts: { next: string; popup: boolean }, now?: number) => createToken("oauth", "", OAUTH_TTL_S, now, opts);
+export function readOAuthState(token: string | null, now?: number): { n: string; next: string; popup: boolean } | null {
+  const p = readToken(token, "oauth", now);
+  return p ? { n: p.n, next: safeNext(p.next), popup: p.popup === true } : null;
+}
+
+export function readCookie(req: Request, name: string): string | null {
+  const cookie = req.headers.get("cookie") ?? "";
+  const match = cookie.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 export function normalizeEmail(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
   const email = raw.trim().toLowerCase();
@@ -61,9 +76,7 @@ export function normalizeEmail(raw: unknown): string | null {
 
 /** Lee la cookie de sesión de un request. */
 export function sessionEmail(req: Request): string | null {
-  const cookie = req.headers.get("cookie") ?? "";
-  const match = cookie.match(new RegExp(`(?:^|;\\s*)${SESSION_COOKIE}=([^;]+)`));
-  return verifySessionToken(match ? decodeURIComponent(match[1]) : null);
+  return verifySessionToken(readCookie(req, SESSION_COOKIE));
 }
 
 export function sessionCookie(token: string, maxAge = SESSION_TTL_S): string {

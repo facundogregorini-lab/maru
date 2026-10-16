@@ -1,4 +1,5 @@
 import { sessionEmail } from "@/lib/auth";
+import { googleEnabled } from "@/lib/google";
 
 export const runtime = "nodejs";
 
@@ -9,5 +10,5 @@ export async function GET(req: Request) {
   } catch (err) {
     console.error("[auth]", err instanceof Error ? err.message : err);
   }
-  return Response.json({ email }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json({ email, google: googleEnabled() }, { headers: { "Cache-Control": "no-store" } });
 }
