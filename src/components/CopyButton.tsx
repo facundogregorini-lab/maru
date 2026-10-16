@@ -14,7 +14,7 @@ export default function CopyButton({ text, label = "Copiar", guard }: { text: st
     <button
       type="button"
       onClick={() => (guard ? guard(copy) : copy())}
-      className="shrink-0 rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:border-celeste hover:text-celeste"
+      className="shrink-0 rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:border-brand hover:text-brand"
     >
       {copied ? "¡Copiado!" : label}
     </button>

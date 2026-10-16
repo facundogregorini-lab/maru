@@ -47,6 +47,19 @@ Todavía no: buscadores que cargan opciones recién al tipear (ciudades), las li
 
 **Tests:** `tests/extension.test.ts` levanta Chromium con la extensión cargada contra páginas de prueba (HTML común, iframe de otro origen, un formulario React controlado y listas de react-select como las de Greenhouse) y las rutas reales; sólo simula la respuesta de la IA.
 
+## Video de la home
+
+El video del hero (`public/video/maru-intro.mp4` y `.webm`, 33,6 s, 1280 × 720) sigue la estructura del video de jobright.ai, en español y con funciones reales de Maru: estrategia de búsqueda, muro de búsquedas reales del inventario, matches, Maru explicando el match, la extensión completando un formulario, "Postularme" y el CV a medida.
+
+Es una escena animada (`video/intro.html`) donde todo depende del tiempo, así cada cuadro sale exacto. Para regenerarlo (por ejemplo, con números nuevos del inventario):
+
+```bash
+FFMPEG_PATH=/ruta/a/ffmpeg node scripts/render-intro-video.mjs            # video + póster
+node scripts/render-intro-video.mjs --preview=2.9,13.45,25.35 --out=/tmp  # capturas sueltas
+```
+
+Necesita Chromium (`CHROME_PATH`) y un ffmpeg con libx264 y libvpx (por ejemplo, el de `pip install imageio-ffmpeg`). Abrir `video/intro.html` en el navegador lo reproduce en vivo.
+
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS v4

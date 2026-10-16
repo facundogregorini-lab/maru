@@ -1,222 +1,261 @@
 import Link from "next/link";
-import { Evidence, HeroStats } from "@/components/landing/Evidence";
-import PostulacionTools from "@/components/landing/PostulacionTools";
+import { Evidence, ResultsList } from "@/components/landing/Evidence";
+import AutofillDemo from "@/components/landing/AutofillDemo";
+import Faq from "@/components/landing/Faq";
+import { ChatMock, CvMock, MatchMock, MockPanel, VideoMock } from "@/components/landing/Mocks";
+import TimeAgo from "@/components/landing/TimeAgo";
+import Reveal from "@/components/magic/Reveal";
+import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
+import { landingData } from "@/lib/landing";
+
+// Los números y la cinta salen del inventario real; se regeneran cada hora.
+export const revalidate = 3600;
 
 /** Dónde se instala la extensión. Mientras no esté en la Chrome Web Store, lleva a la página de descarga. */
 const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
-const EXTENSION_EXTERNAL = /^https?:/.test(EXTENSION_URL);
 
-export default function Home() {
+const fmt = (n: number) => n.toLocaleString("es-AR");
+
+export default async function Home() {
+  const data = await landingData();
+
   return (
-    <SiteShell tagline="Tu coach profesional">
-      <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-12 sm:px-12 sm:py-16">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-celeste-soft" />
-        <div className="pointer-events-none absolute -bottom-20 left-1/3 h-40 w-40 rounded-full bg-sage-soft" />
-        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Maru Coach, tu coach profesional</p>
-            <h1 className="mt-3 font-serif text-4xl leading-[1.08] tracking-tight sm:text-6xl">
-              Encontrá tu trabajo perfecto, con todo el poder de la <em className="text-celeste">IA</em>.
+    <SiteShell>
+      {/* ---------- Hero: bloque menta de lado a lado ---------- */}
+      <section className="full-bleed relative -mt-8 overflow-hidden bg-sand px-5 pb-16 pt-14 sm:pb-20 sm:pt-20">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_1.05fr] [&>*]:min-w-0">
+          <div className="order-2 lg:order-1">
+            <HeroVideo />
+          </div>
+          <div className="order-1 lg:order-2">
+            {/* El gancho de jobright ("No More Solo Job Hunting / Do it with AI"), en español y con Maru. */}
+            <h1 className="font-display">
+              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
+                <span style={{ "--i": 0 } as React.CSSProperties}>Basta de buscar</span>
+              </span>
+              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
+                <span style={{ "--i": 1 } as React.CSSProperties}>trabajo solo</span>
+              </span>
+              <span className="line-mask mt-2 text-[3.1rem] font-bold leading-[1] sm:text-[4.6rem]">
+                <span style={{ "--i": 2 } as React.CSSProperties}>Hacelo con Maru AI</span>
+              </span>
             </h1>
-            <p className="mt-5 max-w-xl text-xl font-medium leading-snug text-ink">Cruzamos tu perfil con las miles de búsquedas abiertas en el mercado.</p>
-            <p className="mt-2 max-w-xl text-lg leading-relaxed text-muted">
-              Encontramos las que encajan con vos, personalizamos cada postulación y aplicamos por vos.
+            <p className="animate-rise mt-6 max-w-lg text-lg leading-relaxed text-ink/75 [animation-delay:400ms]">
+              Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en menos de 1 minuto!
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <a
-                href="#ayuda"
-                className="inline-flex items-center gap-2 rounded-full bg-celeste px-7 py-3.5 font-medium text-white transition hover:bg-celeste-dark"
-              >
-                Empezar ahora <span aria-hidden>↓</span>
-              </a>
-              <a href="#evidencia" className="text-sm font-medium text-celeste-dark underline decoration-celeste/40 underline-offset-4 hover:decoration-celeste">
-                Ver la evidencia
-              </a>
+            <div className="animate-rise mt-8 flex flex-wrap items-center gap-4 [animation-delay:500ms]">
+              <Link href="/match" className="press inline-flex items-center rounded-full bg-ink px-10 py-4 font-display text-lg font-bold uppercase tracking-wide text-white hover:bg-black sm:px-14">
+                Empezar ahora
+              </Link>
+              <Link href="#herramientas" className="text-sm font-semibold underline underline-offset-4 hover:no-underline">
+                Ver qué hace Maru
+              </Link>
             </div>
           </div>
-          <HeroStats />
+        </div>
+
+        {/* Resultados reales, no promesas */}
+        <Reveal className="mx-auto mt-16 grid max-w-7xl items-center gap-10 border-t border-ink/10 pt-12 lg:grid-cols-[1fr_1.2fr]">
+          <h2 data-reveal className="font-display text-4xl font-bold uppercase leading-[1.05] sm:text-5xl">
+            Resultados reales,
+            <br />
+            no promesas
+            <span className="mt-3 block text-base font-normal normal-case text-ink/60">Estudios de terceros sobre postulaciones personalizadas. Fuentes abajo.</span>
+          </h2>
+          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+            <ResultsList />
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ---------- Búsquedas reales ---------- */}
+      <section aria-labelledby="hub-t" className="mt-20">
+        <Reveal>
+          <h2 id="hub-t" data-reveal className="font-display text-3xl font-light uppercase sm:text-5xl">
+            Accedé a <strong className="font-bold">búsquedas reales</strong>
+          </h2>
+          <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8 grid items-end gap-8 sm:grid-cols-[auto_1fr]">
+            <div className="hidden sm:block">
+              <WalkingSprite />
+            </div>
+            <dl className="space-y-3">
+              <HubRow label="Búsquedas abiertas hoy" value={`${fmt(data.total)}+`} />
+              <HubRow label="Empresas" value={fmt(data.companies)} />
+              <HubRow label="Que podés tomar desde Argentina" value={fmt(data.eligible)} />
+            </dl>
+          </div>
+        </Reveal>
+      </section>
+
+      {data.latest.length > 0 && (
+        <div className="full-bleed relative mt-12 overflow-hidden bg-ink py-5 text-white" aria-label="Búsquedas que acaban de entrar">
+          <div className="marquee gap-4">
+            {[...data.latest, ...data.latest].map((j, i) => (
+              <Link
+                key={`${j.id}-${i}`}
+                href="/match"
+                tabIndex={i >= data.latest.length ? -1 : undefined}
+                aria-hidden={i >= data.latest.length || undefined}
+                className="flex shrink-0 items-center gap-3 rounded-xl px-3 py-1.5 transition-colors hover:bg-white/10"
+              >
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white font-display text-lg font-bold text-ink">{j.company.trim()[0]?.toUpperCase()}</span>
+                <span className="min-w-0">
+                  <span className="block text-xs text-white/60">
+                    {j.company} · <TimeAgo iso={j.firstSeenAt} />
+                    {j.workplace && ` · ${j.workplace}`}
+                  </span>
+                  <span className="block max-w-[260px] truncate font-semibold">{j.title}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ---------- Lo que hace Maru ---------- */}
+      <section id="herramientas" aria-labelledby="tools-t" className="mt-24 scroll-mt-24">
+        <Reveal>
+          <h2 id="tools-t" data-reveal className="flex flex-wrap items-center gap-x-4 font-display text-[2.6rem] font-bold uppercase leading-[1.02] sm:text-7xl">
+            Tu coach de carrera
+            <span className="flex items-center gap-3">
+              con IA
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-soft sm:h-16 sm:w-16">
+                <MaruSprite size={30} frame="wave" />
+              </span>
+            </span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-14 space-y-24 sm:space-y-32">
+          <Feature
+            title="Búsquedas a tu medida"
+            body="Cruzamos tu CV con miles de búsquedas abiertas y te mostramos primero las que encajan con vos, con el porqué de cada una, las brechas y lo que falta confirmar."
+            cta="Ver mis matches"
+            href="/match"
+            visual={<MatchMock />}
+          />
+          <Feature
+            flip
+            title="Autocompletá en 1 clic"
+            body="Con la extensión para Chrome, Maru completa los formularios de postulación por vos: datos, respuestas y tu CV adjunto. Funciona en Greenhouse, Lever y otros formularios web. Vos revisás y enviás."
+            cta="Descargar la extensión"
+            href={EXTENSION_URL}
+            visual={
+              <MockPanel>
+                <AutofillDemo />
+              </MockPanel>
+            }
+          />
+          <Feature
+            title="Un CV a medida de cada búsqueda"
+            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más una respuesta para cada campo del formulario y tu carta de presentación."
+            cta="Personalizar mi postulación"
+            href="/postulacion"
+            visual={<CvMock />}
+          />
+          <Feature
+            flip
+            title="Entrená tu entrevista"
+            body="Una entrevista simulada por voz, como en una videollamada. Maru repregunta si tu respuesta queda corta y al final te da un informe con puntaje y respuestas más fuertes."
+            cta="Practicar ahora"
+            href="/entrevista"
+            visual={<ChatMock />}
+          />
+          <Feature
+            title="Un video que te presente"
+            body="Maru te escribe el guion, lo leés en un teleprompter mientras grabás y recibís feedback de cada toma: ritmo, mirada y luz."
+            cta="Grabar mi video"
+            href="/video"
+            visual={<VideoMock />}
+          />
         </div>
       </section>
 
-      <section id="ayuda" aria-labelledby="ayuda-t" className="mt-16 scroll-mt-6">
-        <h2 id="ayuda-t" className="font-serif text-3xl tracking-tight sm:text-4xl">
-          ¿En qué te ayudamos hoy?
-        </h2>
-
-        {/* 1 · Match */}
-        <article aria-labelledby="match-t" className="mt-6 grid items-center gap-8 rounded-3xl border border-line bg-paper p-6 sm:p-10 lg:grid-cols-[1fr_1.05fr]">
-          <div>
-            <PillarLabel icon="search" tone="celeste">
-              1 · Match
-            </PillarLabel>
-            <h3 id="match-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
-              Encontrá tu trabajo perfecto
-            </h3>
-            <p className="mt-3 max-w-md text-lg leading-relaxed text-muted">Las que mejor encajan con vos, primero. Y el porqué de cada una.</p>
-            <Link
-              href="/match"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-celeste px-6 py-3 font-medium text-white transition hover:bg-celeste-dark"
-            >
-              Ver mis matches <span aria-hidden>→</span>
-            </Link>
-          </div>
-          <MatchCardExample />
-        </article>
-
-        {/* 2 · Postulación */}
-        <article aria-labelledby="postulacion-t" className="relative mt-4 overflow-hidden rounded-3xl bg-ink p-6 text-paper sm:p-10">
-          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-celeste/45" />
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <PillarLabel icon="target" tone="dark">
-                2 · Coach de postulación
-              </PillarLabel>
-              <h3 id="postulacion-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
-                Optimizá y personalizá tu postulación
-              </h3>
-              <p className="mt-3 leading-relaxed text-paper/75">
-                Traé el link de la vacante y armamos tu CV personalizado, sacando el 100% de tu potencial, más una respuesta para cada campo del formulario. Todo para maximizar tus chances de que te contacten.
-              </p>
-            </div>
-            <Link
-              href="/postulacion"
-              className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-paper px-6 py-3.5 font-medium text-celeste-dark transition hover:bg-celeste-soft lg:self-auto"
-            >
-              Empezar mi postulación <span aria-hidden>→</span>
-            </Link>
-          </div>
-          <PostulacionTools />
-        </article>
-
-        {/* 3 · Aplicación automática */}
-        <article
-          aria-labelledby="auto-t"
-          className="mt-4 flex flex-col gap-6 rounded-3xl border border-line bg-paper p-6 sm:p-10 lg:flex-row lg:items-center lg:justify-between"
-        >
-          <div>
-            <PillarLabel icon="bolt" tone="sage">
-              3 · Extensión para Chrome
-            </PillarLabel>
-            <h3 id="auto-t" className="mt-4 font-serif text-3xl leading-tight tracking-tight sm:text-4xl">
-              Aplicá automáticamente
-            </h3>
-            <p className="mt-3 max-w-md text-lg leading-relaxed text-muted">Te postulamos a las búsquedas con buen fit, con tu CV y respuestas listas. Vos sólo aprobás.</p>
-          </div>
-          <a
-            href={EXTENSION_URL}
-            {...(EXTENSION_EXTERNAL ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-[#4a5f43] px-7 py-3.5 font-medium text-white transition hover:bg-[#3d4f37] lg:self-auto"
-          >
-            Agregar a Chrome <span aria-hidden>→</span>
-          </a>
-        </article>
-      </section>
-
       <Evidence />
+
+      <Faq />
+
+      {/* ---------- Cierre ---------- */}
+      <section className="relative mt-24 overflow-hidden rounded-[36px] bg-sand px-6 py-16 text-center sm:py-20">
+        <div className="mx-auto w-fit">
+          <MaruSprite size={72} frame="wave" />
+        </div>
+        <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-light leading-tight sm:text-6xl">
+          Dejá que Maru te lleve a <strong className="font-bold">tu próximo trabajo</strong>
+        </h2>
+        <Link
+          href="/match"
+          className="press mt-10 inline-flex items-center rounded-full border-2 border-ink bg-neon px-12 py-4 font-display text-xl font-bold uppercase tracking-wide text-ink shadow-[4px_4px_0_#0a0a0a] hover:shadow-[6px_6px_0_#0a0a0a]"
+        >
+          Empezar ahora
+        </Link>
+      </section>
     </SiteShell>
   );
 }
 
-/** Ejemplo ilustrativo de cómo se ve la recomendación número 1 del ranking. */
-function MatchCardExample() {
+function HubRow({ label, value }: { label: string; value: string }) {
   return (
-    <figure className="relative pt-9" aria-label="Ejemplo de la búsqueda número 1 recomendada">
-      <div aria-hidden className="absolute inset-x-9 top-0 h-20 rounded-3xl bg-line" />
-      <div aria-hidden className="absolute inset-x-4 top-[18px] h-20 rounded-3xl border border-line bg-sand" />
-      <div className="relative rounded-3xl border-[1.5px] border-celeste bg-white p-6 shadow-[0_30px_60px_-36px_rgba(22,84,127,0.55)]">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <span className="inline-flex rounded-full bg-[#f6e3be] px-3 py-1 text-xs font-bold text-[#6a4608]">#1 para vos</span>
-            <p className="mt-3 font-serif text-2xl leading-tight">Product Manager Sr.</p>
-            <p className="mt-1 text-sm text-muted">[Empresa] · Buenos Aires · Híbrido</p>
-            <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs">
-              <span className="rounded-full bg-sand px-2.5 py-1">Senior</span>
-              <span className="rounded-full bg-sand px-2.5 py-1">Producto</span>
-              <span className="rounded-full bg-sage-soft px-2.5 py-1 text-[#4a5f43]">Contrata desde Argentina</span>
-            </div>
-          </div>
-          <div className="shrink-0 text-center">
-            <div className="relative h-20 w-20">
-              <svg viewBox="0 0 84 84" className="h-20 w-20" aria-hidden>
-                <circle cx="42" cy="42" r="34" fill="none" strokeWidth="8" className="stroke-celeste-soft" />
-                <circle
-                  cx="42"
-                  cy="42"
-                  r="34"
-                  fill="none"
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                  strokeDasharray="196.5 213.6"
-                  transform="rotate(-90 42 42)"
-                  className="stroke-celeste"
-                />
-              </svg>
-              <p className="absolute inset-0 grid place-items-center font-serif text-2xl text-celeste-dark">92%</p>
-            </div>
-            <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-muted">Compatibilidad</p>
-          </div>
-        </div>
-
-        <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-sage">Por qué te la mostramos</p>
-        <ul className="mt-2 space-y-1.5 text-sm leading-snug">
-          {["Tu experiencia coincide con lo que piden", "El seniority que buscan es el tuyo", "Modalidad y zona dentro de lo que querés"].map((r) => (
-            <li key={r} className="flex gap-2">
-              <span aria-hidden className="font-bold text-celeste">
-                ✓
-              </span>
-              {r}
-            </li>
-          ))}
-        </ul>
-
-        <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 text-sm">
-          <div>
-            <dt className="text-xs text-muted">Salario</dt>
-            <dd className="mt-0.5 font-semibold">USD 3.500 – 4.500 / mes</dd>
-          </div>
-          <div>
-            <dt className="text-xs text-muted">Modalidad</dt>
-            <dd className="mt-0.5 font-semibold">Híbrido · 2 días oficina</dd>
-          </div>
-        </dl>
-      </div>
-      <figcaption className="mt-2.5 text-center text-xs text-muted">Ejemplo ilustrativo de una recomendación</figcaption>
-    </figure>
+    <div className="flex items-baseline gap-4 border-b border-ink/15 pb-3">
+      <dt className="text-lg text-ink/80">{label}</dt>
+      <span aria-hidden className="flex-1" />
+      <dd className="font-display text-4xl font-bold tabular-nums sm:text-5xl">{value}</dd>
+    </div>
   );
 }
 
-const ICONS = {
-  target: (
-    <>
-      <circle cx="12" cy="12" r="8" />
-      <circle cx="12" cy="12" r="4" />
-    </>
-  ),
-  search: (
-    <>
-      <circle cx="11" cy="11" r="6" />
-      <path d="m20 20-4.5-4.5" />
-    </>
-  ),
-  bolt: <path d="M13 3 5 14h6l-1 7 8-11h-6z" />,
-};
-
-const TONES = {
-  celeste: { icon: "bg-celeste-soft text-celeste-dark", text: "text-celeste-dark" },
-  dark: { icon: "bg-celeste text-white", text: "text-celeste-light" },
-  sage: { icon: "bg-sage-soft text-[#4a5f43]", text: "text-[#4a5f43]" },
-};
-
-function PillarLabel({ icon, tone, children }: { icon: keyof typeof ICONS; tone: keyof typeof TONES; children: React.ReactNode }) {
+function WalkingSprite() {
   return (
-    <div className="flex items-center gap-3">
-      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${TONES[tone].icon}`}>
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          {ICONS[icon]}
-        </svg>
-      </span>
-      <span className={`text-xs font-semibold uppercase tracking-[0.16em] ${TONES[tone].text}`}>{children}</span>
+    <div className="grid h-24 w-24 place-items-center rounded-3xl bg-sand">
+      <MaruSprite size={52} frame="walkA" />
+    </div>
+  );
+}
+
+function Feature({ title, body, cta, href, visual, flip = false }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; flip?: boolean }) {
+  return (
+    <Reveal className="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr] [&>*]:min-w-0">
+      <div data-reveal className={flip ? "lg:order-2" : ""}>
+        <h3 className="font-display text-[2.4rem] font-semibold leading-[1.05] sm:text-5xl">{title}</h3>
+        <p className="mt-4 max-w-md text-lg leading-relaxed text-ink/70">{body}</p>
+        <Link href={href} className="press mt-7 inline-flex rounded-full bg-ink px-8 py-3 text-lg font-medium text-white hover:bg-black">
+          {cta}
+        </Link>
+      </div>
+      <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className={flip ? "lg:order-1" : ""}>
+        {visual}
+      </div>
+    </Reveal>
+  );
+}
+
+/** Hero: el video de Maru en una "ventana", como el video del hero de jobright (se regenera con scripts/render-intro-video.mjs). */
+function HeroVideo() {
+  return (
+    <div className="animate-rise relative [animation-delay:200ms]">
+      <div className="overflow-hidden rounded-2xl border-2 border-ink bg-white">
+        <div className="flex items-center gap-1.5 border-b-2 border-ink bg-white px-4 py-2.5" aria-hidden>
+          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
+          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
+          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
+        </div>
+        <video
+          className="block aspect-video w-full bg-[#f2f4f3]"
+          poster="/video/maru-intro-poster.jpg"
+          aria-label="Presentación de Maru: estrategia, matches, autocompletado y CV a medida"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          preload="auto"
+        >
+          {/* H.264 para Safari y Chrome; VP9 para los navegadores sin H.264. */}
+          <source src="/video/maru-intro.mp4" type='video/mp4; codecs="avc1.640020"' />
+          <source src="/video/maru-intro.webm" type="video/webm; codecs=vp9" />
+        </video>
+      </div>
     </div>
   );
 }

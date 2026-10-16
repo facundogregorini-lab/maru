@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MaruSprite } from "./maru/PixelMaru";
 
 /** Piezas visuales compartidas por todas las secciones de Maru. */
 
 export function StepCard({ n, title, hint, children }: { n: number; title: string; hint: string; children: React.ReactNode }) {
   return (
-    <section className="animate-rise rounded-3xl border border-line bg-paper/70 p-5 sm:p-8" style={{ animationDelay: `${n * 70}ms` }}>
-      <div className="mb-4 flex items-start gap-4">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-celeste-soft font-serif text-lg text-celeste-dark">{n}</span>
+    <section
+      className="animate-rise rounded-3xl bg-paper p-5 ring-1 ring-line sm:p-8"
+      style={{ animationDelay: `${n * 70}ms` }}
+    >
+      <div className="mb-5 flex items-start gap-4">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink font-display text-lg font-bold text-white">{n}</span>
         <div>
-          <h2 className="font-serif text-2xl tracking-tight">{title}</h2>
+          <h2 className="font-display text-2xl leading-tight">{title}</h2>
           <p className="mt-1 text-sm text-muted">{hint}</p>
         </div>
       </div>
@@ -24,7 +28,7 @@ export function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes
     <button
       type="button"
       {...props}
-      className="rounded-full bg-celeste px-8 py-3.5 text-base font-medium text-paper shadow-[0_10px_30px_-12px_rgba(192,98,58,0.8)] transition hover:bg-celeste-dark disabled:cursor-not-allowed disabled:bg-muted/40 disabled:shadow-none"
+      className="press rounded-full bg-ink px-10 py-3.5 text-base font-bold text-white hover:bg-black disabled:cursor-not-allowed disabled:bg-black/15 disabled:text-white"
     >
       {children}
     </button>
@@ -39,8 +43,8 @@ export function Loading({ messages }: { messages: string[] }) {
   }, [messages.length]);
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center" aria-live="polite">
-      <div className="animate-breathe h-20 w-20 rounded-full bg-gradient-to-br from-celeste to-honey" />
-      <p key={i} className="animate-rise mt-8 font-serif text-2xl">
+      <WalkingMaru />
+      <p key={i} className="animate-rise mt-6 font-display text-2xl">
         {messages[i]}
       </p>
       <p className="mt-2 text-sm text-muted">Puede tardar un minuto. Vale la pena.</p>
@@ -51,29 +55,42 @@ export function Loading({ messages }: { messages: string[] }) {
 export function ErrorBanner({ message }: { message: string }) {
   if (!message) return null;
   return (
-    <div role="alert" className="animate-rise mb-6 rounded-2xl border border-celeste/30 bg-celeste-soft px-5 py-4 text-sm text-celeste-dark">
+    <div role="alert" className="animate-rise mb-6 rounded-2xl border border-danger/25 bg-danger-soft px-5 py-4 text-sm text-danger-dark">
       {message}
     </div>
   );
 }
 
-/** Encabezado grande de cada sección. */
+/** Encabezado grande de cada sección: bloque verde menta con titular fuerte (estilo jobright). */
 export function SectionHero({ kicker, title, children }: { kicker: string; title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-12 sm:px-12 sm:py-16">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-celeste-soft" />
-      <div className="pointer-events-none absolute -bottom-20 right-24 h-40 w-40 rounded-full bg-sage-soft" />
-      <div className="relative max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">{kicker}</p>
-        <h1 className="mt-3 font-serif text-4xl leading-[1.1] tracking-tight sm:text-5xl">{title}</h1>
-        <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">{children}</p>
+    <section className="relative overflow-hidden rounded-[32px] bg-sand px-6 py-12 sm:px-14 sm:py-16">
+      <div className="relative max-w-3xl">
+        <p className="animate-rise font-display text-sm font-bold uppercase tracking-[0.12em] text-brand">{kicker}</p>
+        <h1 className="animate-rise mt-3 font-display text-[2.6rem] leading-[1.05] [animation-delay:90ms] sm:text-6xl">{title}</h1>
+        <p className="animate-rise mt-5 max-w-2xl text-lg leading-relaxed text-ink/70 [animation-delay:180ms]">{children}</p>
       </div>
     </section>
   );
 }
 
+/** Maru caminando en el lugar: la espera tiene compañía. */
+function WalkingMaru() {
+  const [frame, setFrame] = useState<"walkA" | "walkB">("walkA");
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setFrame((f) => (f === "walkA" ? "walkB" : "walkA")), 180);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="grid h-28 w-28 place-items-center rounded-full bg-sand">
+      <MaruSprite size={56} frame={frame} />
+    </div>
+  );
+}
+
 export const inputClass =
-  "w-full rounded-xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-celeste focus:ring-4 focus:ring-celeste-soft";
+  "w-full rounded-2xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 hover:border-ink/30 focus:border-ink focus:ring-4 focus:ring-brand-soft";
 
 /** Opciones tipo "chip" de selección única. */
 export function Chips<T extends string>({ value, options, onChange }: { value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void }) {
@@ -85,7 +102,7 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
           type="button"
           aria-pressed={value === v}
           onClick={() => onChange(v)}
-          className={`rounded-full border px-3.5 py-1.5 text-sm transition ${value === v ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"}`}
+          className={`press rounded-full border px-3.5 py-1.5 text-sm font-medium ${value === v ? "border-ink bg-ink text-white" : "border-line bg-paper hover:border-ink/40"}`}
         >
           {label}
         </button>

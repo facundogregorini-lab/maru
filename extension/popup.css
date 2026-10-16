@@ -1,12 +1,13 @@
 :root {
-  --cream: #fbf6ef;
-  --paper: #fffdf9;
-  --line: #eadfd3;
-  --ink: #2b2420;
-  --muted: #75685f;
-  --clay: #1f6fa8;
-  --clay-dark: #16547f;
-  --sage: #6f8466;
+  --cream: #ffffff;
+  --paper: #ffffff;
+  --line: #e5e7eb;
+  --ink: #0a0a0a;
+  --muted: #5f6672;
+  --clay: #0a0a0a; /* botones principales: negro, como la web */
+  --clay-dark: #000000;
+  --sage: #1c8c4c;
+  --mint: #effbe8;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -20,10 +21,7 @@ body {
 }
 header { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
 header div:last-child { display: flex; flex-direction: column; }
-.logo {
-  width: 34px; height: 34px; border-radius: 50%; background: var(--clay); color: #fff;
-  display: grid; place-items: center; font-weight: 700; font-size: 17px;
-}
+.logo { width: 36px; height: 36px; border-radius: 10px; image-rendering: pixelated; }
 h1 { font-size: 17px; margin: 0 0 4px; }
 p { margin: 0 0 12px; }
 .muted { color: var(--muted); }

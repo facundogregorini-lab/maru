@@ -96,8 +96,8 @@ export default function Results({
     <div className="animate-rise">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tus búsquedas</p>
-          <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">Oportunidades para vos</h1>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tus búsquedas</p>
+          <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">Oportunidades para vos</h1>
           {data && (
             <p className="mt-2 text-sm text-muted">
               {data.inventory.generatedAt
@@ -107,10 +107,10 @@ export default function Results({
           )}
         </div>
         <div className="flex shrink-0 flex-wrap gap-2 text-sm">
-          <button type="button" onClick={onEditProfile} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-celeste hover:text-celeste">
+          <button type="button" onClick={onEditProfile} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-brand hover:text-brand">
             Mi perfil
           </button>
-          <button type="button" onClick={onEditPrefs} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-celeste hover:text-celeste">
+          <button type="button" onClick={onEditPrefs} className="rounded-full border border-line bg-paper px-4 py-2 transition hover:border-brand hover:text-brand">
             Lo que busco
           </button>
         </div>
@@ -130,10 +130,10 @@ export default function Results({
             </button>
           ))}
         </div>
-        <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"}`}>
+        <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"}`}>
           Filtros{hasActiveFilters ? " activos" : ""}
         </button>
-        <button type="button" onClick={() => setAdding(true)} className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition hover:border-celeste hover:text-celeste">
+        <button type="button" onClick={() => setAdding(true)} className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition hover:border-brand hover:text-brand">
           + Agregar una búsqueda
         </button>
       </div>
@@ -150,7 +150,7 @@ export default function Results({
       <div className="mt-6">
         <ErrorBanner message={error} />
         {error && (
-          <button type="button" onClick={load} className="mb-6 text-sm text-celeste-dark underline underline-offset-4">
+          <button type="button" onClick={load} className="mb-6 text-sm text-brand-dark underline underline-offset-4">
             Reintentar
           </button>
         )}
@@ -236,7 +236,7 @@ function JobCard({
     <article className="rounded-3xl border border-line bg-paper p-5 sm:p-7">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h3 className="font-serif text-xl leading-snug tracking-tight sm:text-2xl">{item.title}</h3>
+          <h3 className="font-display text-xl leading-snug tracking-tight sm:text-2xl">{item.title}</h3>
           <p className="mt-1 text-sm text-muted">
             {[item.company, item.locations.slice(0, 2).join(" · ") || null, item.workplace !== "desconocido" ? item.workplaceLabel : "Modalidad no informada"].filter(Boolean).join(" · ")}
           </p>
@@ -248,7 +248,7 @@ function JobCard({
           </div>
         </div>
         <div className={`shrink-0 rounded-2xl px-4 py-2 text-center ${tone}`} title="Compatibilidad estimada a partir de tu perfil y lo que buscás. No es una probabilidad de contratación.">
-          <p className="font-serif text-2xl leading-none">{item.score}%</p>
+          <p className="font-display text-2xl leading-none">{item.score}%</p>
           <p className="mt-1 text-[11px] font-medium uppercase tracking-wide">Compatibilidad estimada</p>
           <p className="text-[11px]">Información {item.confidence === "alta" ? "completa" : item.confidence === "media" ? "parcial" : "escasa"}</p>
         </div>
@@ -307,7 +307,7 @@ function JobCard({
                 {s.kind === "usuario" ? (
                   "Agregada por vos"
                 ) : (
-                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-celeste">
+                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
                     {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
                   </a>
                 )}
@@ -317,14 +317,14 @@ function JobCard({
         </div>
       </dl>
 
-      {err && <p className="mt-3 text-sm text-celeste-dark">{err}</p>}
+      {err && <p className="mt-3 text-sm text-brand-dark">{err}</p>}
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={prepare}
           disabled={preparing}
-          className="rounded-full bg-celeste px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:bg-muted/40"
+          className="rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:bg-muted/40"
         >
           {preparing ? "Abriendo…" : "Preparar mi postulación"}
         </button>
@@ -334,25 +334,25 @@ function JobCard({
             target="_blank"
             rel="noopener noreferrer nofollow"
             onClick={() => track("match_ver_busqueda", { fuente: (required[0] ?? main).kind })}
-            className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-celeste hover:text-celeste"
+            className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:text-brand"
           >
             Ver búsqueda
           </a>
         )}
         {external?.url && (
-          <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-celeste hover:text-celeste">
+          <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:text-brand">
             Ver búsqueda
           </a>
         )}
-        <button type="button" onClick={onSave} aria-pressed={saved} className={`rounded-full border px-4 py-2.5 text-sm transition ${saved ? "border-sage bg-sage-soft text-sage" : "border-line bg-paper hover:border-celeste"}`}>
+        <button type="button" onClick={onSave} aria-pressed={saved} className={`rounded-full border px-4 py-2.5 text-sm transition ${saved ? "border-sage bg-sage-soft text-sage" : "border-line bg-paper hover:border-brand"}`}>
           {saved ? "Guardada ✓" : "Guardar"}
         </button>
         {onRemoveExternal ? (
-          <button type="button" onClick={onRemoveExternal} className="px-3 py-2.5 text-sm text-muted hover:text-celeste-dark">
+          <button type="button" onClick={onRemoveExternal} className="px-3 py-2.5 text-sm text-muted hover:text-brand-dark">
             Quitar
           </button>
         ) : (
-          <button type="button" onClick={() => setDiscarding((x) => !x)} className="px-3 py-2.5 text-sm text-muted hover:text-celeste-dark">
+          <button type="button" onClick={() => setDiscarding((x) => !x)} className="px-3 py-2.5 text-sm text-muted hover:text-brand-dark">
             Descartar
           </button>
         )}
@@ -362,7 +362,7 @@ function JobCard({
           <p className="text-sm font-medium">¿Por qué la descartás? Lo usamos para ordenar mejor.</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {DISCARD_REASONS.map(([r, label]) => (
-              <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm transition hover:border-celeste">
+              <button key={r} type="button" onClick={() => onDiscard(r)} className="rounded-full border border-line bg-paper px-3 py-1.5 text-sm transition hover:border-brand">
                 {label}
               </button>
             ))}
@@ -417,7 +417,7 @@ function FilterPanel({ filters, setFilters }: { filters: Filters; setFilters: (f
         </label>
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={!!filters.salaryPublished} onChange={(e) => set("salaryPublished", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-celeste)]" />
+        <input type="checkbox" checked={!!filters.salaryPublished} onChange={(e) => set("salaryPublished", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-brand)]" />
         Sólo con salario publicado
       </label>
     </div>
@@ -465,7 +465,7 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
   }
 
   return (
-    <div className="mt-4 space-y-3 rounded-3xl border border-celeste/40 bg-paper p-5">
+    <div className="mt-4 space-y-3 rounded-3xl border border-brand/40 bg-paper p-5">
       <p className="font-medium">Agregar una búsqueda que encontraste</p>
       <p className="text-sm text-muted">Queda privada, sólo en tu navegador. Si el link es de Greenhouse, Lever o Ashby la leemos sola; si no, pegá la descripción.</p>
       <input type="url" inputMode="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className={inputClass} aria-label="Link de la búsqueda" />
@@ -478,7 +478,7 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
           <textarea rows={6} value={text} onChange={(e) => setText(e.target.value)} placeholder="Pegá la descripción completa de la búsqueda." className={`${inputClass} text-sm`} />
         </>
       ) : (
-        <button type="button" onClick={() => setNeedsText(true)} className="text-sm text-muted underline underline-offset-4 hover:text-celeste">
+        <button type="button" onClick={() => setNeedsText(true)} className="text-sm text-muted underline underline-offset-4 hover:text-brand">
           No tengo link: pegar la descripción
         </button>
       )}
@@ -488,7 +488,7 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
           type="button"
           onClick={submit}
           disabled={busy || (!url.trim() && text.trim().length < 200)}
-          className="rounded-full bg-celeste px-5 py-2 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:bg-muted/40"
+          className="rounded-full bg-brand px-5 py-2 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:bg-muted/40"
         >
           {busy ? "Leyendo…" : "Agregar"}
         </button>
@@ -515,7 +515,7 @@ function Skeleton() {
 function EmptyInventory() {
   return (
     <div className="rounded-3xl border border-line bg-paper p-8 text-center">
-      <p className="font-serif text-2xl">Estamos cargando las primeras búsquedas</p>
+      <p className="font-display text-2xl">Estamos cargando las primeras búsquedas</p>
       <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted">
         El inventario se actualiza una vez por día desde fuentes públicas y gratuitas. Mientras tanto, tu perfil y lo que buscás quedan guardados en este navegador, y podés agregar una búsqueda que ya
         tengas para ver qué tan compatible es.
@@ -527,16 +527,16 @@ function EmptyInventory() {
 function EmptyResults({ tab, hasFilters, pending, onShowPending, onClearFilters }: { tab: Tab; hasFilters: boolean; pending: number; onShowPending: () => void; onClearFilters: () => void }) {
   return (
     <div className="rounded-3xl border border-line bg-paper p-8 text-center">
-      <p className="font-serif text-2xl">{tab === "guardadas" ? "Todavía no guardaste búsquedas" : "No encontramos coincidencias con estas condiciones"}</p>
+      <p className="font-display text-2xl">{tab === "guardadas" ? "Todavía no guardaste búsquedas" : "No encontramos coincidencias con estas condiciones"}</p>
       {tab !== "guardadas" && (
         <div className="mt-4 flex flex-wrap justify-center gap-2 text-sm">
           {hasFilters && (
-            <button type="button" onClick={onClearFilters} className="rounded-full border border-line px-4 py-2 hover:border-celeste">
+            <button type="button" onClick={onClearFilters} className="rounded-full border border-line px-4 py-2 hover:border-brand">
               Quitar filtros
             </button>
           )}
           {tab === "elegibles" && pending > 0 && (
-            <button type="button" onClick={onShowPending} className="rounded-full border border-line px-4 py-2 hover:border-celeste">
+            <button type="button" onClick={onShowPending} className="rounded-full border border-line px-4 py-2 hover:border-brand">
               Ver {pending} por confirmar
             </button>
           )}

@@ -176,13 +176,13 @@ export default function Call({
           {camera ? (
             <video ref={videoRef} muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
           ) : (
-            <span className="grid h-24 w-24 place-items-center rounded-full bg-paper/10 font-serif text-3xl text-paper">Vos</span>
+            <span className="grid h-24 w-24 place-items-center rounded-full bg-paper/10 font-display text-3xl text-paper">Vos</span>
           )}
           <span className="absolute bottom-3 left-3 rounded-full bg-ink/60 px-3 py-1 text-xs text-paper">Vista previa</span>
         </div>
         <div className="rounded-3xl bg-paper p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-celeste">Sala de espera</p>
-          <h2 className="mt-1 font-serif text-2xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">Sala de espera</p>
+          <h2 className="mt-1 font-display text-2xl">
             {plan.entrevistador.nombre} te está esperando
           </h2>
           <p className="mt-1 text-sm text-muted">
@@ -195,16 +195,16 @@ export default function Call({
                 Responder con la voz
                 {!dictation.supported && <span className="block text-xs text-muted">Tu navegador no transcribe: vas a responder por escrito.</span>}
               </span>
-              <input type="checkbox" checked={useVoice} disabled={!dictation.supported} onChange={(e) => setVoice(e.target.checked)} className="h-5 w-5 accent-celeste" />
+              <input type="checkbox" checked={useVoice} disabled={!dictation.supported} onChange={(e) => setVoice(e.target.checked)} className="h-5 w-5 accent-brand" />
             </label>
             <label className="flex items-center justify-between gap-3">
               <span>Prender mi cámara (sólo para vos, no se graba)</span>
-              <input type="checkbox" checked={camera} onChange={(e) => void toggleCamera(e.target.checked)} className="h-5 w-5 accent-celeste" />
+              <input type="checkbox" checked={camera} onChange={(e) => void toggleCamera(e.target.checked)} className="h-5 w-5 accent-brand" />
             </label>
           </div>
           {!ttsSupported() && <p className="mt-3 text-xs text-muted">Tu navegador no tiene voz: vas a leer las preguntas en pantalla.</p>}
           {error && <p className="mt-3 text-sm text-danger-dark">{error}</p>}
-          <button type="button" onClick={join} className="mt-6 w-full rounded-full bg-celeste px-6 py-3 font-medium text-paper transition hover:bg-celeste-dark">
+          <button type="button" onClick={join} className="mt-6 w-full rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark">
             Unirme a la entrevista
           </button>
           <button type="button" onClick={onCancel} className="mt-2 w-full px-6 py-2 text-sm text-muted hover:text-ink">
@@ -233,7 +233,7 @@ export default function Call({
       <div className="grid grid-cols-2 gap-2 px-2 sm:gap-3 sm:px-3">
         {/* Entrevistadora */}
         <div className="relative grid aspect-[3/4] place-items-center rounded-2xl bg-[#3a302b] sm:aspect-[16/10]">
-          <div className={`grid h-16 w-16 place-items-center rounded-full bg-celeste font-serif text-2xl transition sm:h-28 sm:w-28 sm:text-3xl ${speakingNow ? "ring-4 ring-honey/80 ring-offset-4 ring-offset-[#3a302b]" : ""}`}>
+          <div className={`grid h-16 w-16 place-items-center rounded-full bg-brand font-display text-2xl transition sm:h-28 sm:w-28 sm:text-3xl ${speakingNow ? "ring-4 ring-honey/80 ring-offset-4 ring-offset-[#3a302b]" : ""}`}>
             {initials(plan.entrevistador.nombre)}
           </div>
           {phase === "thinking" && <span className="absolute top-3 rounded-full bg-paper/10 px-3 py-1 text-xs">pensando…</span>}
@@ -247,7 +247,7 @@ export default function Call({
           {camera ? (
             <video ref={videoRef} muted playsInline className="h-full w-full object-cover [transform:scaleX(-1)]" />
           ) : (
-            <span className={`grid h-16 w-16 place-items-center rounded-full bg-paper/10 font-serif text-xl transition sm:h-24 sm:w-24 sm:text-2xl ${phase === "listening" && dictation.listening ? "ring-4 ring-sage ring-offset-4 ring-offset-[#2f2825]" : ""}`}>
+            <span className={`grid h-16 w-16 place-items-center rounded-full bg-paper/10 font-display text-xl transition sm:h-24 sm:w-24 sm:text-2xl ${phase === "listening" && dictation.listening ? "ring-4 ring-sage ring-offset-4 ring-offset-[#2f2825]" : ""}`}>
               Vos
             </span>
           )}
@@ -275,7 +275,7 @@ export default function Call({
         <div className="mx-3 mb-3 mt-3 rounded-2xl bg-paper p-4 text-ink">
           <div className="mb-2 flex items-center justify-between text-xs text-muted">
             <span>Tu respuesta {useVoice ? (dictation.listening ? "· te escuchamos" : "· micrófono en pausa") : ""}</span>
-            <span className={elapsed > 150 ? "font-semibold text-celeste-dark" : ""}>
+            <span className={elapsed > 150 ? "font-semibold text-brand-dark" : ""}>
               {Math.floor(elapsed / 60)}:{String(elapsed % 60).padStart(2, "0")} {elapsed > 150 ? "· intentá cerrar" : ""}
             </span>
           </div>
@@ -292,7 +292,7 @@ export default function Call({
               value={typed}
               onChange={(e) => setTyped(e.target.value)}
               placeholder="Escribí tu respuesta como si la dijeras…"
-              className="w-full resize-y rounded-xl border border-line bg-cream px-3 py-2 text-[15px] leading-relaxed outline-none focus:border-celeste focus:ring-4 focus:ring-celeste-soft"
+              className="w-full resize-y rounded-xl border border-line bg-cream px-3 py-2 text-[15px] leading-relaxed outline-none focus:border-brand focus:ring-4 focus:ring-brand-soft"
             />
           )}
           {dictation.error && <p className="mt-2 text-sm text-danger-dark">{dictation.error}</p>}

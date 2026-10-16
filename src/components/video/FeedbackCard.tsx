@@ -5,7 +5,7 @@ export default function FeedbackCard({ feedback: f }: { feedback: VideoFeedback 
   return (
     <section className="animate-rise space-y-4 rounded-3xl border border-line bg-paper p-6" aria-label="Feedback de Maru">
       <div className="flex items-center gap-4">
-        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-sage-soft font-serif text-3xl text-sage">{Math.round(f.puntaje)}</span>
+        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-sage-soft font-display text-3xl text-sage">{Math.round(f.puntaje)}</span>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sage">Feedback de Maru · {Math.round(f.puntaje)}/10</p>
           <p className="mt-1 leading-relaxed">{f.resumen}</p>
@@ -23,7 +23,7 @@ export default function FeedbackCard({ feedback: f }: { feedback: VideoFeedback 
       )}
       {f.mejoras.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-celeste-dark">Para la próxima toma</h3>
+          <h3 className="text-sm font-semibold text-brand-dark">Para la próxima toma</h3>
           <ul className="mt-2 space-y-2">
             {f.mejoras.map((m) => (
               <li key={m.aspecto} className="rounded-2xl bg-cream px-4 py-3 text-sm leading-relaxed">

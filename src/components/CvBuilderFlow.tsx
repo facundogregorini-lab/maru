@@ -147,12 +147,12 @@ export default function CvBuilderFlow() {
   }
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "inicio" && (
         <>
-          <SectionHero kicker="Creá tu CV perfecto" title={<>Un CV pensado para <em className="text-celeste">ganar búsquedas</em>.</>}>
+          <SectionHero kicker="Creá tu CV perfecto" title={<>Un CV pensado para <em className="text-brand">ganar búsquedas</em>.</>}>
             Contanos a dónde querés llegar y Maru reescribe tu CV para que pase los filtros automáticos y convenza a quien lo lee. Después elegí entre más de 20
             diseños y personalizalo a tu gusto.
           </SectionHero>
@@ -269,14 +269,14 @@ export default function CvBuilderFlow() {
 
       {stage === "resultado" && doc && generation && analysis && (
         <div className="animate-rise">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">Tu CV para</p>
-          <h1 className="mt-1 font-serif text-3xl tracking-tight sm:text-4xl">{analysis.rol_objetivo}</h1>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu CV para</p>
+          <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">{analysis.rol_objetivo}</h1>
 
           <CvEditor doc={doc} setDoc={setDoc} context={contextFromCvAnalysis(analysis, objetivo)} cambios={generation.cambios_clave} />
 
           {generation.consejos.length > 0 && (
             <section className="mt-8 rounded-3xl bg-sage-soft p-6 sm:p-8">
-              <h2 className="font-serif text-2xl tracking-tight">Para seguir sumando</h2>
+              <h2 className="font-display text-2xl tracking-tight">Para seguir sumando</h2>
               <ul className="mt-3 space-y-2 leading-relaxed">
                 {generation.consejos.map((c, i) => (
                   <li key={i} className="flex gap-2">
@@ -289,14 +289,14 @@ export default function CvBuilderFlow() {
           )}
 
           <section className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Link href="/postulacion" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">¿Encontraste una búsqueda?</p>
-              <p className="mt-2 font-serif text-xl">Adaptá tu CV a esa vacante →</p>
+            <Link href="/postulacion" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">¿Encontraste una búsqueda?</p>
+              <p className="mt-2 font-display text-xl">Adaptá tu CV a esa vacante →</p>
               <p className="mt-1 text-sm text-muted">Con el coach de postulación, más respuestas para el formulario.</p>
             </Link>
-            <Link href="/carta" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-celeste">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-celeste">Sumale una carta</p>
-              <p className="mt-2 font-serif text-xl">Armá tu carta de presentación →</p>
+            <Link href="/carta" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">Sumale una carta</p>
+              <p className="mt-2 font-display text-xl">Armá tu carta de presentación →</p>
               <p className="mt-1 text-sm text-muted">Usamos el perfil que ya cargaste.</p>
             </Link>
           </section>
@@ -308,7 +308,7 @@ export default function CvBuilderFlow() {
             <button
               type="button"
               onClick={restart}
-              className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-celeste hover:text-celeste"
+              className="rounded-full border border-line bg-paper px-6 py-3 text-sm font-medium transition hover:border-brand hover:text-brand"
             >
               Empezar de nuevo
             </button>

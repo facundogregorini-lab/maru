@@ -80,12 +80,12 @@ export default function MatchFlow() {
   if (!hydrated) return <div className="min-h-[50vh]" />;
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "cv" && (
         <>
-          <SectionHero kicker="Encontrá tu trabajo perfecto" title={<>Búsquedas reales, ordenadas <em className="text-celeste">para vos</em>.</>}>
+          <SectionHero kicker="Encontrá tu trabajo perfecto" title={<>Búsquedas reales, ordenadas <em className="text-brand">para vos</em>.</>}>
             Subí tu CV, contanos qué querés hacer y te mostramos oportunidades donde podés trabajar desde Argentina, con el porqué de cada coincidencia, las brechas y lo que
             falta confirmar.
           </SectionHero>
@@ -153,7 +153,7 @@ export default function MatchFlow() {
       {stage !== "leyendo" && (state.profile || state.prefs) && (
         <p className="mt-12 text-center text-xs text-muted">
           Tu perfil y tus preferencias se guardan sólo en este navegador; para ordenar las búsquedas se envían a Maru sin quedar registrados.{" "}
-          <button type="button" onClick={wipe} className="underline underline-offset-4 hover:text-celeste-dark">
+          <button type="button" onClick={wipe} className="underline underline-offset-4 hover:text-brand-dark">
             Borrar mis datos
           </button>
         </p>

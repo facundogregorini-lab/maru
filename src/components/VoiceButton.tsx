@@ -82,11 +82,11 @@ export default function VoiceButton({ onText, lang = "es-AR", compact = false, l
         type="button"
         onClick={listening ? stop : start}
         className={`inline-flex items-center gap-2 rounded-full font-medium transition ${compact ? "px-3 py-1 text-xs" : "px-4 py-2 text-sm"} ${
-          listening ? "bg-celeste text-paper" : "border border-line bg-paper text-ink hover:border-celeste hover:text-celeste"
+          listening ? "bg-brand text-paper" : "border border-line bg-paper text-ink hover:border-brand hover:text-brand"
         }`}
         aria-pressed={listening}
       >
-        <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${listening ? "bg-paper" : "bg-celeste"}`}>
+        <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${listening ? "bg-paper" : "bg-brand"}`}>
           {listening && <span className="absolute inset-0 animate-ping rounded-full bg-paper/70" />}
         </span>
         {listening ? "Terminar de grabar" : (label ?? (compact ? "Dictar" : "Contalo en un audio"))}

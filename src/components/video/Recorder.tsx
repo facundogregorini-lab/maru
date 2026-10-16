@@ -243,7 +243,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
     <div className="space-y-4">
       {gate.dialog}
       {error && (
-        <div role="alert" className="rounded-2xl border border-celeste/30 bg-celeste-soft px-4 py-3 text-sm text-celeste-dark">
+        <div role="alert" className="rounded-2xl border border-brand/30 bg-brand-soft px-4 py-3 text-sm text-brand-dark">
           {error}
         </div>
       )}
@@ -261,9 +261,9 @@ export default function Recorder({ script, target, lang, filename }: { script: s
               <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-paper/10 text-3xl" aria-hidden>
                 ●
               </div>
-              <p className="mt-4 font-serif text-2xl">Tu estudio de grabación</p>
+              <p className="mt-4 font-display text-2xl">Tu estudio de grabación</p>
               <p className="mx-auto mt-2 max-w-md text-sm text-paper/70">El guion pasa en pantalla mientras grabás. El video se queda en tu navegador.</p>
-              <button type="button" onClick={startCamera} className="mt-6 rounded-full bg-celeste px-6 py-3 font-medium text-paper transition hover:bg-celeste-dark">
+              <button type="button" onClick={startCamera} className="mt-6 rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark">
                 Prender la cámara
               </button>
             </div>
@@ -287,7 +287,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
 
         {phase === "countdown" && (
           <div className="absolute inset-0 grid place-items-center bg-ink/40">
-            <span key={count} className="animate-rise font-serif text-8xl text-paper">
+            <span key={count} className="animate-rise font-display text-8xl text-paper">
               {count}
             </span>
           </div>
@@ -300,10 +300,10 @@ export default function Recorder({ script, target, lang, filename }: { script: s
                 <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" />
                 {fmt(elapsed)} / {fmt(target)}
               </span>
-              {over && <span className="rounded-full bg-celeste px-3 py-1 text-xs font-medium">Te pasaste del tiempo: cerrá con tu frase final</span>}
+              {over && <span className="rounded-full bg-brand px-3 py-1 text-xs font-medium">Te pasaste del tiempo: cerrá con tu frase final</span>}
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-paper/25">
-              <div className={`h-full transition-[width] ${over ? "bg-celeste" : "bg-paper"}`} style={{ width: `${pct}%` }} />
+              <div className={`h-full transition-[width] ${over ? "bg-brand" : "bg-paper"}`} style={{ width: `${pct}%` }} />
             </div>
           </div>
         )}
@@ -313,16 +313,16 @@ export default function Recorder({ script, target, lang, filename }: { script: s
         <div className="flex flex-col gap-4 rounded-3xl bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="grid flex-1 gap-3 text-sm sm:grid-cols-3">
             <label className="flex items-center gap-2">
-              <input type="checkbox" checked={prompter} onChange={(e) => setPrompter(e.target.checked)} className="h-4 w-4 accent-celeste" />
+              <input type="checkbox" checked={prompter} onChange={(e) => setPrompter(e.target.checked)} className="h-4 w-4 accent-brand" />
               Teleprompter
             </label>
             <label className="flex items-center gap-2 text-muted">
               Velocidad
-              <input type="range" min={50} max={150} step={5} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="flex-1 accent-celeste" aria-valuetext={`${speed}%`} />
+              <input type="range" min={50} max={150} step={5} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="flex-1 accent-brand" aria-valuetext={`${speed}%`} />
             </label>
             <label className="flex items-center gap-2 text-muted">
               Letra
-              <input type="range" min={18} max={40} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className="flex-1 accent-celeste" />
+              <input type="range" min={18} max={40} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className="flex-1 accent-brand" />
             </label>
           </div>
           {phase === "recording" ? (
@@ -334,7 +334,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
               type="button"
               onClick={countdownThenRecord}
               disabled={phase === "countdown"}
-              className="rounded-full bg-celeste px-6 py-3 font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-60"
+              className="rounded-full bg-brand px-6 py-3 font-medium text-paper transition hover:bg-brand-dark disabled:opacity-60"
             >
               ● Grabar
             </button>
@@ -351,7 +351,7 @@ export default function Recorder({ script, target, lang, filename }: { script: s
               [dictation.text ? `${stats.fillerCount}` : "—", "muletillas"],
             ].map(([v, l]) => (
               <div key={l} className="rounded-2xl bg-paper p-4 text-center">
-                <p className="font-serif text-3xl text-celeste">{v}</p>
+                <p className="font-display text-3xl text-brand">{v}</p>
                 <p className="text-xs text-muted">{l}</p>
               </div>
             ))}
@@ -361,14 +361,14 @@ export default function Recorder({ script, target, lang, filename }: { script: s
               type="button"
               onClick={askFeedback}
               disabled={asking}
-              className="rounded-full bg-celeste px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-celeste-dark disabled:opacity-60"
+              className="rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:opacity-60"
             >
               {asking ? "Mirando tu toma…" : feedback ? "Pedir feedback otra vez" : "✨ Feedback de Maru"}
             </button>
-            <button type="button" onClick={download} className="rounded-full border border-celeste px-5 py-2.5 text-sm font-medium text-celeste-dark transition hover:bg-celeste-soft">
+            <button type="button" onClick={download} className="rounded-full border border-brand px-5 py-2.5 text-sm font-medium text-brand-dark transition hover:bg-brand-soft">
               Descargar video
             </button>
-            <button type="button" onClick={retake} className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-celeste hover:text-celeste">
+            <button type="button" onClick={retake} className="rounded-full border border-line bg-paper px-5 py-2.5 text-sm font-medium transition hover:border-brand hover:text-brand">
               Grabar otra toma
             </button>
           </div>
