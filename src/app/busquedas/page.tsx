@@ -1,3 +1,4 @@
+import MaruChat from "@/components/chat/MaruChat";
 import type { Metadata } from "next";
 import Link from "next/link";
 import AppShell from "@/components/app/AppShell";
@@ -49,6 +50,7 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
         </p>
         <span className="ml-auto hidden rounded-lg bg-white px-3 py-1.5 text-[13px] sm:inline">Más nuevas primero</span>
       </div>
+      <details className="mt-3 rounded-2xl bg-white p-4 xl:hidden"><summary className="min-h-8 cursor-pointer font-semibold">Consultar a Maru sobre mi búsqueda</summary><MaruChat /></details>
       <div className="mt-3">
         <JobFilterChips value={query} />
       </div>
@@ -94,7 +96,7 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
   );
 }
 
-/** El panel de la derecha: donde jobright tiene a Orion, acá Maru te guía (sin chat). */
+/** El panel de la derecha: guía contextual y chat con Maru. */
 function SidePanel({ label, total }: { label: string; total: number }) {
   return (
     <div className="flex h-full flex-col">
@@ -117,6 +119,7 @@ function SidePanel({ label, total }: { label: string; total: number }) {
           Ver mi match
         </Link>
       </div>
+      <MaruChat />
       <p className="mt-6 text-sm font-semibold">Búsquedas populares</p>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {POPULAR.map((p) => (

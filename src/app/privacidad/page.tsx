@@ -37,12 +37,13 @@ export default function PrivacidadPage() {
         </li>
         <li>Para ordenar las búsquedas del match, tu perfil y tus preferencias viajan al servidor, se usan para el ranking y no se guardan ni se registran.</li>
         <li>Para el feedback del video, se envían la transcripción y 3 fotogramas de la toma. El video completo no sale de tu navegador.</li>
+        <li>El chat con Maru envía tu consulta y el historial visible a la IA. Tu perfil se incluye sólo si marcás esa opción. Maru no guarda la conversación en su base.</li>
         <li>Cuando pegás el link de un aviso, nuestro servidor lo lee desde el sitio público donde está publicado.</li>
       </ul>
 
       <h2>Tu email y tu sesión</h2>
       <ul>
-        <li>Si ingresás, usamos tu email para mandarte un link de acceso (sin contraseña) a través de un proveedor de envío de emails.</li>
+        <li>Podés ingresar con Google (usamos el email verificado que devuelve Google) o con un link de acceso que enviamos a tu email, sin contraseña. Ambos métodos abren la misma cuenta.</li>
         <li>Al ingresar se guarda una cookie de sesión firmada en tu navegador, que dura hasta 180 días o hasta que salgas.</li>
       </ul>
 
@@ -60,7 +61,8 @@ export default function PrivacidadPage() {
       <h2>Medición y pagos</h2>
       <ul>
         <li>Medimos visitas y el uso de las secciones de forma agregada (Vercel Analytics), sin datos personales ni cookies de publicidad.</li>
-        <li>Si contratás un plan, el pago lo procesa la plataforma de pagos. Maru nunca ve ni guarda los datos de tu tarjeta.</li>
+        <li>Si contratás un plan, Mercado Pago procesa el pago. Maru guarda los identificadores y el estado de la suscripción, el período acreditado y los contadores de uso; nunca ve ni guarda los datos de tu tarjeta.</li>
+        <li>El botón de borrar datos elimina perfil, preferencias y seguimiento. Para detener una renovación usá Cancelar renovación en Planes. Los registros de facturación se gestionan por separado a través del contacto del sitio.</li>
       </ul>
 
       <h2>Tus derechos</h2>

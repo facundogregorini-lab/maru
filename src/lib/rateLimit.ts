@@ -1,7 +1,7 @@
+import { dbConfigured, takeCounter } from "./db";
 /**
  * Freno de uso por IP para las rutas que llaman a la IA (cada pedido cuesta plata).
- * Vive en la memoria de cada instancia: no es exacto entre instancias, pero corta el abuso obvio
- * sin depender de una base de datos. Para algo firme, reemplazar `hits` por Upstash/Vercel KV.
+ * Usa Redis compartido cuando está configurado. La memoria local queda como alternativa sin base.
  */
 
 export type Bucket = "pesado" | "liviano";
@@ -40,4 +40,12 @@ export function clientIp(headers: Headers): string {
 /** Para tests. */
 export function resetRateLimit() {
   hits.clear();
+}
+
+/** Compartido entre instancias. La IP se guarda como SHA-256, con TTL y prefijo exclusivo de Maru. */
+export async function takeShared(key: string, bucket: Bucket, now = Date.now()): Promise<number> {
+  if (!dbConfigured()) return take(key, bucket, now);
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key));
+  const hash = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
+  return takeCounter(`maru:rate:${bucket}:${hash}`, LIMITS[bucket], WINDOW_MS, now);
 }

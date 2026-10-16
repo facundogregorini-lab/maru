@@ -36,10 +36,19 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST" }).catch(() => null);
     setEmail(null);
+    try { const channel = new BroadcastChannel("maru-auth"); channel.postMessage("logout"); channel.close(); } catch { /* sin canal */ }
   }, []);
 
   useEffect(() => {
-    refresh();
+    void refresh();
+    const onFocus = () => { void refresh(); };
+    window.addEventListener("focus", onFocus);
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel("maru-auth");
+      channel.onmessage = (e) => { if (e.data === "ok" || e.data === "logout") void refresh(); };
+    } catch { /* En navegadores sin canal queda el refresco al volver a la pestaña. */ }
+    return () => { window.removeEventListener("focus", onFocus); channel?.close(); };
   }, [refresh]);
 
   // Con sesión, el perfil, el match y el seguimiento se guardan también en la cuenta.

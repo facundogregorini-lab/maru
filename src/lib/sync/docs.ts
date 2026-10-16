@@ -23,7 +23,7 @@ export type StoredDoc = { data: unknown; updatedAt: number };
 /** Tope por documento (JSON). Un seguimiento con cientos de avisos completos entra holgado. */
 export const MAX_DOC_BYTES = 2_000_000;
 
-export const isSyncDoc = (x: unknown): x is SyncDoc => typeof x === "string" && x in SYNC_DOCS;
+export const isSyncDoc = (x: unknown): x is SyncDoc => typeof x === "string" && Object.hasOwn(SYNC_DOCS, x);
 
 export function docForKey(key: string): SyncDoc | null {
   return SYNC_DOC_IDS.find((d) => SYNC_DOCS[d] === key) ?? null;
@@ -47,13 +47,18 @@ const num = (x: unknown) => (typeof x === "number" && Number.isFinite(x) ? x : 0
  * - Perfil: el más reciente.
  * - Match: el más reciente, sumando las búsquedas guardadas y descartadas de los dos.
  */
-export function mergeDoc(doc: SyncDoc, local: unknown, remote: unknown): unknown {
+export function mergeDoc(doc: SyncDoc, local: unknown, remote: unknown, base?: unknown): unknown {
   if (local == null) return remote;
   if (remote == null) return local;
 
   if (doc === "tracker") {
     const byId = new Map<string, TrackItem>();
+    const baseIds = new Set(((base ?? []) as TrackItem[]).map((it) => it.id));
+    const localIds = new Set((local as TrackItem[]).map((it) => it.id));
+    const remoteIds = new Set((remote as TrackItem[]).map((it) => it.id));
     for (const it of [...(remote as TrackItem[]), ...(local as TrackItem[])]) {
+      // Si estaba en la base común y falta en un lado, fue borrada. No resucitarla.
+      if (baseIds.has(it.id) && (!localIds.has(it.id) || !remoteIds.has(it.id))) continue;
       const prev = byId.get(it.id);
       if (!prev || num(it.updatedAt) >= num(prev.updatedAt)) byId.set(it.id, it);
     }
@@ -69,7 +74,12 @@ export function mergeDoc(doc: SyncDoc, local: unknown, remote: unknown): unknown
   const l = local as MatchState;
   const r = remote as MatchState;
   const [newer, older] = num(l.updatedAt) >= num(r.updatedAt) ? [l, r] : [r, l];
-  const saved = [...new Set([...(newer.interactions?.saved ?? []), ...(older.interactions?.saved ?? [])])];
+  const original = base as MatchState | undefined;
+  const baseSaved = new Set(original?.interactions?.saved ?? []);
+  const baseDiscarded = new Set((original?.interactions?.discarded ?? []).map((d) => d.id));
+  const localSaved = new Set(l.interactions?.saved ?? []);
+  const remoteSaved = new Set(r.interactions?.saved ?? []);
+  const saved = [...new Set([...(newer.interactions?.saved ?? []), ...(older.interactions?.saved ?? [])])].filter((id) => !baseSaved.has(id) || (localSaved.has(id) && remoteSaved.has(id)));
   const discarded = [...(newer.interactions?.discarded ?? [])];
   for (const d of older.interactions?.discarded ?? []) if (!discarded.some((x) => x.id === d.id)) discarded.push(d);
   // Lo que la versión nueva tiene descartado no vuelve a guardadas, y viceversa.
@@ -78,7 +88,7 @@ export function mergeDoc(doc: SyncDoc, local: unknown, remote: unknown): unknown
     ...newer,
     interactions: {
       saved: saved.filter((id) => newerSaved.has(id) || !discarded.some((d) => d.id === id)),
-      discarded: discarded.filter((d) => !newerSaved.has(d.id)),
+      discarded: discarded.filter((d) => !newerSaved.has(d.id) && (!baseDiscarded.has(d.id) || (l.interactions?.discarded?.some((x) => x.id === d.id) && r.interactions?.discarded?.some((x) => x.id === d.id)))),
     },
   };
 }

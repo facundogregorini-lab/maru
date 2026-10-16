@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { getManyJson, setJson } from "../db";
+import { compareAndSetJson, getManyJson } from "../db";
 import { SYNC_DOC_IDS, type StoredDoc, type SyncDoc } from "./docs";
 
 /**
@@ -16,8 +16,7 @@ export async function readDocs(email: string): Promise<Record<SyncDoc, StoredDoc
   return Object.fromEntries(SYNC_DOC_IDS.map((d, i) => [d, values[i]])) as Record<SyncDoc, StoredDoc | null>;
 }
 
-export async function writeDoc(email: string, doc: SyncDoc, data: unknown, now = Date.now()): Promise<StoredDoc> {
-  const stored: StoredDoc = { data, updatedAt: now };
-  await setJson(keyFor(email, doc), stored);
-  return stored;
+export async function writeDoc(email: string, doc: SyncDoc, data: unknown, expectedVersion: number, now = Date.now()) {
+  const stored: StoredDoc = { data, updatedAt: Math.max(now, expectedVersion + 1) };
+  return compareAndSetJson(keyFor(email, doc), expectedVersion, stored);
 }

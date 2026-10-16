@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AutofillDemo from "@/components/landing/AutofillDemo";
 import Laurels from "@/components/landing/Laurels";
-import { ChatMock, CvMock, MatchMock, VideoMock } from "@/components/landing/Mocks";
+import { ChatMock, CvMock, MatchMock, TrackerMock, VideoMock } from "@/components/landing/Mocks";
 import { PRODUCTS, type ProductId, type Stat, type VisualId } from "@/lib/products";
 import { AtsMock, FormMock, JobStackMock, LetterMock, PrefsMock, ReportMock } from "./Visuals";
 
@@ -14,6 +14,7 @@ import { AtsMock, FormMock, JobStackMock, LetterMock, PrefsMock, ReportMock } fr
 
 function Visual({ id }: { id: VisualId }) {
   switch (id) {
+    case "tracker": return <TrackerMock bare />;
     case "jobs":
       return <JobStackMock />;
     case "match":

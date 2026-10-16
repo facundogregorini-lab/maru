@@ -1,54 +1,44 @@
-# Pendientes y traspaso (para seguir con otra IA)
+# Estado y próximos pasos de Maru
 
-> Auditoría completa con puntajes por producto y mejoras priorizadas: [docs/AUDITORIA.md](AUDITORIA.md).
+Actualizado el 16/10/2026. Esta tanda está preparada en `codex/cuentas-sync-y-planes`, basada en `main` con el login Google de la PR #22. Hasta integrar y desplegar la rama, estos cambios no deben considerarse publicados.
 
-Estado al 16/10/2026. Todo lo anterior está mergeado en `main` y publicado en https://maru-grego7.vercel.app.
+## Implementado en esta tanda
 
-## Objetivo del producto
+- **Sincronización segura**: PUT con versión, compare-and-set atómico en Redis, conflictos con 409 y reintento con la base común. Altas simultáneas desde dos dispositivos no se pierden. Se respetan borrados, tanto de toda la cuenta como de tarjetas y guardados. Subidas y respuestas se vinculan a su sesión para no contaminar otra cuenta.
+- **Interfaz al día**: Match y el selector de perfil reciben los cambios de la cuenta y de otras pestañas, sin recargar ni guardar automáticamente un estado vacío. El borrado de cuenta informa éxito sólo tras confirmación; sin conexión informa que falta confirmar.
+- **Google preservado**: mismo email y cookie de sesión que magic link. El proveedor de autenticación escucha cambios entre ventanas y al recuperar el foco. Prueba de integración: una sesión Google recupera el perfil guardado con una sesión por email.
+- **Protección de IA en Redis**: contadores atómicos compartidos entre instancias, TTL y hashes de IP; se agregan chat y acciones de facturación. Sin base hay alternativa local; con base caída se evita llamar a IA sin control.
+- **Planes y cobro preparados**: `/precios`, estado por cuenta, checkout mensual de Mercado Pago, notificaciones firmadas, consulta del proveedor, acreditación idempotente, cancelación de renovación, recuperación de pagos y cuotas mensuales. Se mantiene **apagado** (`NEXT_PUBLIC_BILLING_ENABLED=false`) hasta decisiones y pruebas del dueño. Ver [COBROS.md](COBROS.md).
+- **Chat con Maru**: panel de Búsquedas en escritorio y desplegable en celular. Referencias sólo a avisos abiertos proporcionados desde el inventario. Perfil opcional, historial de la página sin persistencia y limpieza al cambiar de cuenta.
+- **Pulido**: resultados de Match en `AppShell`, guía del seguimiento en `/seguimiento/guia`, links de Planes y textos de privacidad corregidos.
+- **Logos**: 15 marcas verificadas desde Simple Icons 16.35.0, servidas como SVG local. Correspondencia por nombre exacto; el resto conserva inicial y color. Fuentes y licencias en `public/companies/`.
+- **Video de portada**: renderer usa la misma agrupación que la web. MP4, WebM y póster regenerados: 6.439 búsquedas, 425 empresas y 909 elegibles desde Argentina al renderizar.
 
-Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español rioplatense, Argentina, y sólo lo que Maru hace de verdad). Referente de diseño y experiencia: jobright.ai (home, landings `/ai-job-match`, `/job-autofill`, `/ai-resume-builder`, `/tools/cover-letter-generator`, `/tools/job-tracker`, `/interview-landing`; app `/jobs/...`; detalle `/jobs/info/<id>`; registro `/onboarding-v3/signup`).
+## Lo que tiene que resolver el dueño
 
-**Regla de oro:** nunca mostrar algo que Maru no hace (sin testimonios inventados, sin premios, sin "cantidad de postulantes", sin chat si no existe). Los números son del inventario real (`data/match/inventory.json`) o de estudios con fuente (`src/lib/evidence.ts`).
+1. **Definición comercial.** Confirmar o ajustar la propuesta antes de habilitar cobro: $10.000 ARS/mes; gratis 2 CV, 1 carta, 1 entrevista y 1 guion por mes; pago 200 pedidos principales combinados. El modo actual sigue siendo gratis. Las cuotas son por mes calendario UTC y cuentan solicitudes admitidas, incluso si falla la IA. El buscador, ranking, lectura de perfil y extensión siguen gratis.
+2. **Mercado Pago.** Crear/configurar la aplicación y cargar `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET` en Vercel. Configurar notificaciones firmadas a `<dominio>/api/billing/webhook` para suscripciones, comprobantes y pagos. El circuito exacto debe probarse con la cuenta: no se hicieron cobros reales. No sirve pegar un link de pago genérico ni volver con `?suscripcion=ok`. Pasos y fuentes en [COBROS.md](COBROS.md).
+3. **Datos del negocio y legales.** Titular/razón social, identificación fiscal, domicilio y contacto; revisión de términos y privacidad, política/procedimiento de arrepentimiento y reembolso, y su botón antes de vender. La cancelación de renovación ya existe; este circuito legal depende de la definición del negocio.
+4. **Google, si todavía falta configurar.** El código ya está en main. Revisar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` y URI autorizada `<dominio>/api/auth/google/callback`. El README conserva los pasos. Probar una cuenta real en el dominio productivo; los previews requieren su propia URI o magic link.
+5. **Validación real.** Ingresar con la misma cuenta en compu y celular, guardar una búsqueda, editar desde ambos y comprobar el borrado. Confirmar que están las variables de Redis, IA y envío de emails. No fue posible comprobar el Redis productivo con una sesión real desde este entorno.
+6. **Chrome Web Store.** Crear/completar la cuenta de publicador, ficha, datos de privacidad y subir el ZIP generado por `/extension`. La instalación por ZIP sigue disponible hasta publicar. Usar únicamente testimonios de usuarios reales que autoricen publicarlos.
+7. **Dominio y medición.** Confirmar dominio canónico en `NEXT_PUBLIC_SITE_URL`, email en `NEXT_PUBLIC_CONTACT_EMAIL` y activar Vercel Analytics si se desea usarlo.
+8. **Habilitar venta al final.** Sólo tras aprobar precio, textos, legales y pruebas de pago: `NEXT_PUBLIC_BILLING_ENABLED=true` en Production y nuevo build/deploy. La bandera pública se fija al compilar. La rama se puede desplegar con cobro apagado mientras se resuelven esos puntos.
 
-## Lo que ya está hecho
+## Validación técnica
 
-- **Home** (`src/app/page.tsx`): hero con video, laureles con datos reales, "Resultados reales", búsquedas reales + cinta, funciones, evidencia como testimonios (`src/components/landing/EvidenceWall.tsx`), FAQ + cierre + buscador en menta.
-- **Landings de producto** con plantilla de jobright: contenido en `src/lib/products.ts`, componentes en `src/components/product/ProductLanding.tsx` (`ProductHero`, `ToolHeading` con `#empezar`, `ProductMore`) y maquetas en `src/components/product/Visuals.tsx`. Usadas por Match, Postulación, CV, Carta, Video, Entrevista y `/extension`.
-- **App de búsquedas**: `src/components/app/AppShell.tsx` + `SideNav.tsx`; `/busquedas` (lista, filtros en chips, tarjetas `src/components/busquedas/JobCard.tsx`) y `/busquedas/[id]` (detalle + "Aumentá tus chances"). Lógica en `src/lib/busquedas.ts` y `src/lib/jobFilters.ts`.
-- **Traspaso de una búsqueda entre herramientas**: `handoffJob(to, {...})` / `takeHandoff(to)` en `src/lib/match/clientStore.ts` (destinos: postulacion, carta, entrevista, video). Botón cliente: `src/components/busquedas/PrepareJob.tsx`.
-- **Video del hero** (`video/intro.html`, render con `scripts/render-intro-video.mjs`, ver README): corregido para no mostrar lo que Maru no hace.
-- **Continuar con Google** (`src/lib/google.ts`, `src/app/api/auth/google/*`): en ventana aparte, misma sesión que el magic link. Falta cargar `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en Vercel (pasos en el README).
-- **Ingreso** (`src/components/auth/LoginDialog.tsx`) y **popup de la extensión** (`extension/popup.*`) al estilo jobright.
+TypeScript, ESLint, suite de tests y build de Next. Nuevas regresiones de concurrencia, borrado, sesión Google/email, cobro simulado, firmas y chat. QA con Chromium en 1440 y 390 px sobre Planes, Búsquedas, guía de Seguimiento y Match; perfil remoto visible sin recarga. Los tests de extensión/PDF que dependen del Chromium Linux configurado se omiten en macOS; no se reportan como ejecutados.
 
-- **Seguimiento** (`/seguimiento`): `src/lib/tracker.ts` (localStorage `maru:tracker:v1`, evento `maru:tracker`, tests en `tests/tracker.test.ts`) y tablero `src/components/tracker/TrackerBoard.tsx` (kanban en escritorio, pestañas en celular, notas, estado, carga manual, "Adaptar mi CV" / "Escribir mi carta" / "Practicar la entrevista"). Las tarjetas se crean solas desde Postulación (CV + respuestas), Carta, Match (guardar, preparar, postularme), detalle y lista de búsquedas ("Guardar en mi seguimiento" y "Postularme" → postulada, `src/components/busquedas/TrackJob.tsx`), Entrevista (al terminar el informe) y Video (si la búsqueda vino de Maru o ya estaba en el seguimiento). En menú, barra lateral, footer, home (feature + FAQ) y README.
-- **Maru en su escritorio + recorrido** (`src/components/maru/MaruCompanion.tsx`, contenido en `src/components/maru/guide.ts`, frames `DESK_FRAMES` en `sprite.ts`): ya no sigue al mouse. Está sentada en un rincón tipeando con su mate; la primera vez saluda y ofrece un recorrido breve por los 9 productos en modo checklist (se tilda al avanzar o al visitar cada página; "Probarlo" la achica a "Seguimos el recorrido"). Al final, si no sos cliente, la oferta de $10.000/mes. Estado en localStorage `maru:guia:v1`; tocándola, el recorrido vuelve.
+La IA del chat y el circuito financiero se probaron con respuestas simuladas: calidad de las respuestas, entrega real de Google/email, persistencia productiva y pagos de la cuenta necesitan la prueba real indicada arriba.
 
-## PENDIENTE 0 (decisión del dueño): cobro del plan
+## Backlog de producto posterior al lanzamiento
 
-- **Link de pago**: la oferta usa `NEXT_PUBLIC_CHECKOUT_URL` (p. ej. una suscripción de Mercado Pago). Sin esa variable, el botón dice "Empezar ahora" (va a `/match`) y aclara que la suscripción se habilita pronto. Configurarla en Vercel y que el pago vuelva a `/?suscripcion=ok`: eso marca "cliente" en el navegador (`maru:cliente`) y la oferta deja de mostrarse. Es una marca local, no un control de acceso: si se quiere limitar funciones a quien paga, hace falta guardar la suscripción del lado del servidor.
-- **Coherencia del mensaje**: las landings dicen "Gratis, sin tarjeta" (`FREE` en `src/lib/products.ts`) y el FAQ "Podés usar todo sin cuenta". Con el precio, definir qué es gratis y qué es del plan y ajustar esos textos.
+- Ampliar logos verificados para las 425 empresas.
+- Extensión: Workday, buscadores de ciudad y formularios de varios pasos.
+- Alertas de búsquedas nuevas, etiquetas "nuevas desde tu visita", mejoras del razonamiento del Match, filtros de calidad y salarios normalizados.
+- Comparación ATS antes/después y mejoras de viñetas más visibles.
+- Medir latencia/costo de IA con uso real antes de cambiar modelos o precios.
 
-## PENDIENTE 1: Seguimiento, lo que quedó afuera
+## Cómo seguir
 
-- **Landing con la plantilla** (opcional): agregar `"seguimiento"` a `src/lib/products.ts` y usar `ProductHero` + tablero en `#empezar` + `ProductMore`, como jobright `/tools/job-tracker`.
-
-## PENDIENTE 2: lo que jobright tiene y Maru todavía no
-
-1. **Chat con Maru** (su "Orion"): hoy el panel derecho de `/busquedas` es una guía sin chat (`SidePanel` en `src/app/busquedas/page.tsx`). Si se hace, usar `askStructured`/Claude como el resto de las APIs y reemplazar ese panel.
-2. **Testimonios reales**: cuando haya usuarios. Hasta entonces, seguir usando estudios con fuente.
-3. ~~**Sincronizar entre dispositivos**~~: hecho (Upstash Redis, ver README «Base de datos»). La base `upstash-kv-gray-notebook` (compartida con `lab`, claves `maru:`) ya está conectada al proyecto para Production y Preview; después del merge hace falta un Redeploy para que tome las variables. Con la base ya se puede: guardar la suscripción del lado del servidor (PENDIENTE 0) y pasar el freno de uso (`src/lib/rateLimit.ts`) a la base.
-4. **Extensión en la Chrome Web Store** (hoy se instala desde el .zip de `/extension`).
-5. **Logos reales de empresas** en tarjetas (hoy `CompanyTile` con inicial y color).
-
-## PENDIENTE 3: pulido
-
-- Resultados del Match: el encabezado ("Oportunidades para vos" + pestañas) todavía no usa `AppShell`; podría pasar al formato app.
-
-## Cómo trabajar en el repo
-
-- Instalar: `npm install`. Correr: `npm run dev`. Chequeos antes de subir: `npx tsc --noEmit -p .`, `npx eslint src --quiet`, `npx vitest run`, `npx next build`.
-- Si `vitest` falla en `tests/extension.test.ts` por timeout, suele ser por procesos de Chromium colgados: matarlos y repetir.
-- Diseño: tokens en `src/app/globals.css` (menta `bg-sand`, `brand`, `neon` #00f0a0, gris de bloques `#f2f4f5`, fondo app `#f5f6f7`). Botones: negro redondo o neón; tarjetas `rounded-[24px]`; bloques `rounded-[0_80px_80px_80px]`.
-- Textos en español rioplatense (vos), claros y verdaderos.
-- Deploy: Vercel publica cada rama (preview) y `main` (producción). Flujo usado: rama → PR → esperar el check de Vercel en verde → merge.
-- Para comparar con jobright: capturas con Chromium (`/opt/pw-browsers/...` o Playwright) en 1440×900 y 390×844.
+Mantener el idioma rioplatense, datos reales y los tokens existentes. No inventar testimonios, postulantes ni promesas de empleo. Flujo: rama → PR → chequeos y preview → integrar. Chequeos: `npx tsc --noEmit -p .`, `npx eslint src --quiet`, `npx vitest run`, `npx next build`.

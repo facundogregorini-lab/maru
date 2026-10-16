@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, cvBlocks, errorResponse, jobBlock } from "@/lib/claude";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { CARTA_SYSTEM } from "@/lib/prompts";
@@ -16,6 +17,8 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const body = (await req.json()) as Body;
     if (!body.motivacion?.trim()) throw new UserFacingError("Contanos qué querés transmitir en tu carta.", "FEEDBACK_MISSING");
@@ -49,6 +52,8 @@ export async function POST(req: Request) {
         ].join("\n"),
       },
     ];
+    const limit = await planGuard(req, "carta");
+    if (limit) return limit;
     const carta = await askStructured({ system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
     return Response.json({ carta });
   } catch (err) {

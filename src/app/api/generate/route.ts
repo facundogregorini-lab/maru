@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { askStructured, errorResponse, feedbackBlock, jobBlock } from "@/lib/claude";
 import { GENERATE_SYSTEM } from "@/lib/prompts";
 import { GenerationSchema, type Analysis, type JobInput, type Profile } from "@/lib/schemas";
@@ -12,6 +13,8 @@ type Body = JobInput & {
 };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const body = (await req.json()) as Body;
     const indexed = body.profile.experiencia.map((e, indice) => ({ indice, ...e }));
@@ -30,6 +33,8 @@ export async function POST(req: Request) {
         ].join("\n\n"),
       },
     ];
+    const limit = await planGuard(req, "cv");
+    if (limit) return limit;
     const generation = await askStructured({ system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" });
     return Response.json({ generation });
   } catch (err) {

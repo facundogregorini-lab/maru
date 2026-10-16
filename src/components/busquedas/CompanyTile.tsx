@@ -1,7 +1,11 @@
-/** "Logo" de empresa: su inicial sobre un color que sale del nombre (siempre el mismo para la misma empresa). */
+import Image from "next/image";
+/** Marcas verificadas en assets locales (SOURCES.json). Sin correspondencia exacta, inicial y color. */
 const COLORS = ["#1c8c4c", "#2457d6", "#e2553d", "#7a3fd1", "#0f9fb5", "#d4831c", "#c2367a", "#3f4a5a", "#118a7e", "#5b6ee1"];
 
 export default function CompanyTile({ name, size = 48 }: { name: string; size?: number }) {
+  const brands: Record<string, string> = { pinterest: "pinterest", nubank: "nubank", "mercado pago": "mercadopago", gitlab: "gitlab", github: "github", anthropic: "anthropic", spotify: "spotify", stripe: "stripe", shopify: "shopify", cloudflare: "cloudflare", zapier: "zapier", notion: "notion", vercel: "vercel", figma: "figma", airbnb: "airbnb" };
+  const slug = brands[name.trim().toLowerCase()];
+  if (slug) return <span aria-hidden className="grid shrink-0 place-items-center rounded-[10px] bg-white ring-1 ring-black/10" style={{ width: size, height: size }}><Image src={`/companies/${slug}.svg`} alt="" width={Math.round(size * .65)} height={Math.round(size * .65)} /></span>;
   let h = 0;
   for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return (

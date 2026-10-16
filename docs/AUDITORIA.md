@@ -1,5 +1,7 @@
 # Auditoría de punta a punta (16/10/2026)
 
+> Este documento conserva la auditoría inicial. Actualización posterior en la rama `codex/cuentas-sync-y-planes`: base y sincronización con control de versiones, Redis para límites por IP, login Google de main incorporado, planes/cobro preparado y apagado, chat, logos y pulido implementados. Los puntajes y bloqueantes de abajo corresponden a la versión previa; estado actual y tareas del dueño en [PENDIENTES.md](PENDIENTES.md) y [COBROS.md](COBROS.md).
+
 Referente: jobright.ai (job match, autofill, resume tailor, cover letter, job tracker, mock interview, Orion, planes pagos).
 Objetivo: una suite irresistible para el candidato argentino, lista para cobrar $10.000/mes.
 

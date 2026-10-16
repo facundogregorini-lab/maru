@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import MatchFlow from "@/components/match/MatchFlow";
-import SiteShell from "@/components/SiteShell";
 import { landingData } from "@/lib/landing";
 
 export const metadata: Metadata = {
@@ -17,7 +16,6 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
 export default async function MatchPage() {
   const d = await landingData();
   return (
-    <SiteShell>
       <MatchFlow
         stats={[
           { value: `${fmt(d.total)}+`, label: "búsquedas abiertas hoy" },
@@ -25,6 +23,5 @@ export default async function MatchPage() {
           { value: fmt(d.eligible), label: "que podés tomar desde Argentina" },
         ]}
       />
-    </SiteShell>
   );
 }

@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { askStructured, errorResponse } from "@/lib/claude";
 import { BULLET_SYSTEM } from "@/lib/prompts";
 import { BulletSchema } from "@/lib/schemas";
@@ -15,6 +16,8 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const b = (await req.json()) as Body;
     if (!b.bullet?.trim()) return Response.json({ error: "El logro está vacío.", code: "EMPTY" }, { status: 400 });

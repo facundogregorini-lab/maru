@@ -1,3 +1,4 @@
+import { planGuard } from "@/lib/billing/http";
 import { askStructured, errorResponse } from "@/lib/claude";
 import { objetivoBlock } from "@/lib/objetivo";
 import { CV_GENERATE_SYSTEM } from "@/lib/prompts";
@@ -14,6 +15,8 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  const auth = await planGuard(req);
+  if (auth) return auth;
   try {
     const body = (await req.json()) as Body;
     const indexed = body.profile.experiencia.map((e, indice) => ({ indice, ...e }));
@@ -31,6 +34,8 @@ export async function POST(req: Request) {
         ].join("\n\n"),
       },
     ];
+    const limit = await planGuard(req, "cv");
+    if (limit) return limit;
     const generation = await askStructured({ system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "high" });
     return Response.json({ generation });
   } catch (err) {

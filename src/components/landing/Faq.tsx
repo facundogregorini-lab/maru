@@ -8,11 +8,11 @@ const FAQ = [
   },
   {
     q: "¿Dónde quedan mis datos?",
-    a: "Maru no tiene una base de datos con tu información: tu perfil queda guardado en tu navegador. Para leer tu CV y redactar, lo procesa con IA en el momento.",
+    a: "Sin cuenta, tu perfil queda en tu navegador. Si ingresás, perfil, preferencias y seguimiento se guardan también en tu cuenta para usarlos en otros dispositivos. Los documentos generados siguen en tu navegador.",
   },
   {
     q: "¿Dónde se guarda el seguimiento de mis postulaciones?",
-    a: "En tu navegador, igual que tu perfil. Maru suma solas las búsquedas que guardás o para las que armás algo, y vos las movés de estado. Si cambiás de navegador o de dispositivo, no se pasa (todavía).",
+    a: "En tu navegador y, si ingresás, también en tu cuenta. Podés verlo desde otros dispositivos con el mismo email. Maru agrega las búsquedas que guardás o para las que preparás materiales; vos elegís el estado.",
   },
   {
     q: "¿La extensión envía las postulaciones por mí?",
@@ -28,7 +28,7 @@ const FAQ = [
   },
   {
     q: "¿Necesito una cuenta?",
-    a: "Podés usar todo sin cuenta. Para descargar o copiar tu CV, tu carta o tu video, ingresás con tu email: te mandamos un link, sin contraseña. Con la cuenta, tu perfil, tus búsquedas y tu seguimiento te siguen a cualquier dispositivo.",
+    a: "Para sincronizar, descargar y usar las herramientas del plan necesitás ingresar con tu email: te mandamos un link, sin contraseña. Con la cuenta, tu perfil, tus búsquedas y tu seguimiento te siguen a cualquier dispositivo.",
   },
 ];
 
