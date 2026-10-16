@@ -234,7 +234,7 @@ export default function CvBuilderFlow() {
               <PrimaryButton onClick={analyze} disabled={!cv.ready}>
                 Armar mi CV
               </PrimaryButton>
-              {!cv.ready && <p className="text-xs text-muted">Cargá tu experiencia para seguir.</p>}
+              {!cv.ready && <p className="text-xs text-muted">{cv.issue}</p>}
             </div>
           </div>
           <ProductMore id="cv" />

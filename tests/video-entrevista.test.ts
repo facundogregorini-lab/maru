@@ -45,6 +45,13 @@ describe("/api/video/guion", () => {
     expect(content.some((b: { type: string }) => b.type === "document")).toBe(true);
   });
 
+  it("acepta una motivación breve cuando los tres pasos están completos", async () => {
+    askStructured.mockResolvedValue({ titulo: "Datos", idioma: "es", bloques: [], consejos: [], mensaje_envio: "" });
+    const { POST } = await import("@/app/api/video/guion/route");
+    const res = await POST(req({ general: { rol: "Analista de datos", empresa: "" }, motivacion: "Aporto valor", source, opciones: { duracion: 30, tono: "calido", idioma: "es" } }));
+    expect(res.status).toBe(200);
+  });
+
   it("presentación general sin búsqueda: exige el rol", async () => {
     const { POST } = await import("@/app/api/video/guion/route");
     const res = await POST(req({ general: { rol: "", empresa: "" }, motivacion: "hola", source, opciones: { duracion: 30, tono: "calido", idioma: "es" } }));

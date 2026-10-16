@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { takeHandoff, type Handoff, type HandoffTarget } from "@/lib/match/clientStore";
 import type { TargetInput } from "@/lib/schemas";
+import { jobInputIssue } from "@/lib/inputValidation";
 import { inputClass } from "./ui";
 
 export type JobFieldState = ReturnType<typeof useJobInput>;
@@ -33,7 +34,8 @@ export function useJobInput(target?: HandoffTarget) {
     setShowJobText(!!h.jobText);
   }, [target]);
 
-  const ready = modo === "busqueda" ? !!jobUrl.trim() || jobText.trim().length > 100 : !!rol.trim();
+  const issue = modo === "busqueda" ? jobInputIssue(jobUrl, showJobText ? jobText : "") : !rol.trim() ? "Contanos el rol al que apuntás." : null;
+  const ready = !issue;
   const payload = (): TargetInput =>
     modo === "busqueda"
       ? { job: { jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined } }
@@ -60,6 +62,7 @@ export function useJobInput(target?: HandoffTarget) {
     setRol,
     textRef,
     ready,
+    issue,
     payload,
     fallbackToText,
     origin,
@@ -118,8 +121,8 @@ export default function JobField({ input, generalLabel = "Sin búsqueda concreta
         </>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
-          <input placeholder="Rol al que apuntás (ej.: Product Manager)" value={rol} onChange={(e) => setRol(e.target.value)} className={inputClass} />
-          <input placeholder="Empresa o industria (opcional)" value={empresa} onChange={(e) => setEmpresa(e.target.value)} className={inputClass} />
+          <input aria-label="Rol al que apuntás" placeholder="Rol al que apuntás (ej.: Product Manager)" value={rol} onChange={(e) => setRol(e.target.value)} className={inputClass} />
+          <input aria-label="Empresa o industria (opcional)" placeholder="Empresa o industria (opcional)" value={empresa} onChange={(e) => setEmpresa(e.target.value)} className={inputClass} />
         </div>
       )}
     </>

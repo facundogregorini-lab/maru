@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import mammoth from "mammoth";
+import { MIN_JOB_TEXT_CHARS } from "./inputValidation";
 import type { z } from "zod";
 import { fetchJobPage, isHttpUrl } from "./job";
 import { DOCX_MIME, MIN_TEXT_CHARS, PDF_MIME, looksLikeDocx, looksLikePdf } from "./cvSource";
@@ -23,7 +24,7 @@ export class UserFacingError extends Error {
   }
 }
 
-const MIN_JOB_TEXT = 300;
+const MIN_JOB_TEXT = MIN_JOB_TEXT_CHARS;
 
 /** Lee la vacante (link y/o texto pegado) y la devuelve como bloque de texto para Claude. */
 export async function jobBlock(input: JobInput): Promise<Block> {
