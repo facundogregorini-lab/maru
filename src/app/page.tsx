@@ -29,18 +29,20 @@ export default async function Home() {
             <HeroVideo />
           </div>
           <div className="order-1 lg:order-2">
+            {/* El gancho de jobright ("No More Solo Job Hunting / Do it with AI"), en español y con Maru. */}
             <h1 className="font-display">
-              <span className="line-mask text-[1.9rem] font-light leading-tight sm:text-[2.6rem]">
-                <span style={{ "--i": 0 } as React.CSSProperties}>Basta de buscar trabajo solo</span>
+              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
+                <span style={{ "--i": 0 } as React.CSSProperties}>Basta de buscar</span>
               </span>
-              <span className="line-mask mt-1 text-[3.4rem] font-bold leading-[1] sm:text-[5.2rem]">
-                <span style={{ "--i": 1 } as React.CSSProperties}>
-                  Hacelo con <span className="marker">IA</span>
-                </span>
+              <span className="line-mask text-[1.9rem] font-light uppercase leading-[1.1] sm:text-[2.6rem]">
+                <span style={{ "--i": 1 } as React.CSSProperties}>trabajo solo</span>
+              </span>
+              <span className="line-mask mt-2 text-[3.1rem] font-bold leading-[1] sm:text-[4.6rem]">
+                <span style={{ "--i": 2 } as React.CSSProperties}>Hacelo con Maru AI</span>
               </span>
             </h1>
             <p className="animate-rise mt-6 max-w-lg text-lg leading-relaxed text-ink/75 [animation-delay:400ms]">
-              Búsquedas que encajan con vos, un CV a medida, respuestas para cada formulario y autocompletado en un clic. Todo en minutos.
+              Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en menos de 1 minuto!
             </p>
             <div className="animate-rise mt-8 flex flex-wrap items-center gap-4 [animation-delay:500ms]">
               <Link href="/match" className="press inline-flex items-center rounded-full bg-ink px-10 py-4 font-display text-lg font-bold uppercase tracking-wide text-white hover:bg-black sm:px-14">
