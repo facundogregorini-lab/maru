@@ -2,6 +2,16 @@
 
 Estado al 16/10/2026. Auditoría con puntajes por producto: [docs/AUDITORIA.md](AUDITORIA.md). Publicación de la extensión: [docs/chrome-web-store.md](chrome-web-store.md). Variables de entorno: [.env.example](../.env.example).
 
+## Para la próxima IA: empezá por acá
+
+1. **Verificar el último PR** (facundogregorini-lab/maru#20, rama `claude/intelligent-bohr-mmddhs`): si sigue abierto, mirar el check `check` de GitHub Actions. Si está en verde y sin conflictos, mergearlo a `main`; si está en rojo, arreglar y volver a subir. Esa tanda (cuentas, cobro, alertas, chat, cámara) **no llegó a pasar la corrida completa local** (`npx vitest run --no-file-parallelism` + `npx next build`): el CI es la verificación.
+2. **Probar en producción** lo que no se pudo probar acá (la red de este entorno no llegaba al sitio publicado ni había clave de IA):
+   - La cámara del estudio de video (`/video` → guion → Grabar) en el navegador del dueño, que reportó que no le andaba. Se hizo más robusta (sin micrófono graba igual, errores por causa); si sigue fallando, pedirle el mensaje exacto y el navegador.
+   - Los flujos con IA real: postulación, CV, carta, entrevista (turnos con modelo rápido) y el chat de Búsquedas.
+3. **Acompañar al dueño en la sección 1** (base de datos, Google, emails, Mercado Pago de prueba, cron) y, con cada pieza configurada, probarla de punta a punta.
+4. **Fuente de búsquedas con logos** (sección 4): cuando el dueño elija proveedor y pase la API key, sumar el conector en `src/lib/match/connectors.ts` + `src/lib/match/sources.ts`, apagado hasta medir una semana.
+5. Seguir con la tabla de la sección 3.
+
 ## Objetivo del producto
 
 Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español rioplatense, Argentina, y sólo lo que Maru hace de verdad), y una suite irresistible que se compre sin pensarlo: plan Maru a **$10.000 por mes**.
