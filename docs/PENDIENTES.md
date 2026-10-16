@@ -35,7 +35,7 @@ Maru tiene que ser **igual a jobright.ai de punta a punta, adaptado** (español 
 
 1. **Chat con Maru** (su "Orion"): hoy el panel derecho de `/busquedas` es una guía sin chat (`SidePanel` en `src/app/busquedas/page.tsx`). Si se hace, usar `askStructured`/Claude como el resto de las APIs y reemplazar ese panel.
 2. **Testimonios reales**: cuando haya usuarios. Hasta entonces, seguir usando estudios con fuente.
-3. ~~**Sincronizar entre dispositivos**~~: hecho (Upstash Redis, ver README «Base de datos»). Falta **crear la base en Vercel** (Storage → Upstash for Redis, conectada al proyecto) y hacer Redeploy. Con la base ya se puede: guardar la suscripción del lado del servidor (PENDIENTE 0) y pasar el freno de uso (`src/lib/rateLimit.ts`) a la base.
+3. ~~**Sincronizar entre dispositivos**~~: hecho (Upstash Redis, ver README «Base de datos»). La base `upstash-kv-gray-notebook` (compartida con `lab`, claves `maru:`) ya está conectada al proyecto para Production y Preview; después del merge hace falta un Redeploy para que tome las variables. Con la base ya se puede: guardar la suscripción del lado del servidor (PENDIENTE 0) y pasar el freno de uso (`src/lib/rateLimit.ts`) a la base.
 4. **Extensión en la Chrome Web Store** (hoy se instala desde el .zip de `/extension`).
 5. **Logos reales de empresas** en tarjetas (hoy `CompanyTile` con inicial y color).
 
