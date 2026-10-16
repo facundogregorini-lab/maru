@@ -36,10 +36,25 @@ Localmente: `npx --yes tsx@4 scripts/match-import.ts --provider=... --mode=...` 
 - Son feeds parciales: una ausencia no cierra avisos. La sync diaria no los consulta ni los purga, pero los **vence** por la fecha de la fuente o si pasan 30 días (21 en Google Jobs) sin volver a verse. Así el catálogo no arrastra avisos viejos cuando se termina el trial o el presupuesto.
 - Logos: se usan los que informa la fuente (https). Si no cargan, la tarjeta vuelve a la inicial.
 
-## Pendiente de verificar en la primera corrida
+## Estado al 16/10/2026 (noche)
 
-Desde el entorno de desarrollo no hay red hacia los proveedores; estos supuestos se validan en la primera corrida real y se corrigen si fallan (el workflow frena sin reintentar):
+Primera corrida real hecha con los secrets rotados. Se confirmaron los supuestos que no se podían probar sin red:
+- el filtro `title` con `OR` y comillas de Fantastic;
+- `source=linkedin` en `active-jb`;
+- `location=Argentina` en SerpApi;
+- más de 50 filas por Actor en Apify.
 
-- Fantastic: que `title` acepte la sintaxis `OR`/comillas y que `active-jb` acepte `source=linkedin`.
-- SerpApi: que `location=Argentina` sea aceptado (si no, quitarlo y dejar `gl=ar`).
-- Apify: que los Actors acepten más de 50 filas con el mismo input del piloto.
+| Fuente | Aceptados | Consumo | Saldo que queda |
+| --- | ---: | --- | --- |
+| Google Jobs (SerpApi) | 88 | 12 búsquedas | 236 de 250 este mes (se renueva cada mes, gratis) |
+| Fantastic ATS + LinkedIn | 272 | 273 créditos, 7 requests | ~177 créditos y ~28 requests hasta que vence el trial (~23/10) |
+| Apify Computrabajo / LinkedIn / Indeed | 575 / 517 / 213 | Real ≈ US$2,8 (ledger conservador: US$4,35) | Del tope aprobado de US$5 quedan ~US$2,2 reales; el ledger frena en US$5 estimados |
+
+Después de importar se corrió `match-sync` a mano: re-analizó todo con `EXTRACTION_VERSION` 3 y la modalidad desde el texto, y sumó 360 avisos de 6 empleadores descubiertos en Fantastic. Catálogo: **11.544 oportunidades abiertas, 2.722 elegibles desde Argentina** (E0: 909 grupos). Medición por perfil en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md).
+
+## Próximas corridas recomendadas
+
+1. **Fantastic, segundo corte (antes del 22/10):** `provider=fantastic mode=status` y después `mode=run args=--cohorts=G1,G2 --feeds=ats,jb --limit=40 --max-jobs=170 --time-frame=7d`. Prioriza generalistas; T1 ya está cubierto por los ATS gratuitos. Comparar repetidos contra el primer corte (ledger + `firstSeenAt`).
+2. **Google Jobs, una vez por mes:** `provider=serpapi mode=run args=--max-searches=24 --reserve=20`. Conviene sumar búsquedas de ciudades sin oferta (Salta, Neuquén, Santa Fe, Mar del Plata, Bahía Blanca) en `SERP_QUERIES` de `src/lib/match/providers.ts`. Las de reserva del E0 se pueden usar una vez cerrada la comprobación.
+3. **Apify:** queda ~US$2,2 real del tope. El ledger estima de más, así que para gastarlo hay que subir `--budget-usd` hasta 5 + lo ya registrado de más, o ajustar `APIFY_PRICE_PER_ROW`. Indeed es lo más barato (~US$0,01 por 100 filas). Computrabajo es lo mejor para el interior. Sin aprobación nueva, no superar US$5 reales en total; el límite mensual de la cuenta Apify también está en US$5.
+4. **Directorio gratuito:** revisar `data/match/providers-discoveries.json` después de cada corrida de Fantastic. Los empleadores con `supported` se suman a `companies.json` y quedan en la sync diaria para siempre. Los que usan Workday, Teamtailor, SuccessFactors o Workable (la mayoría) necesitan conectores nuevos: ver PENDIENTES.

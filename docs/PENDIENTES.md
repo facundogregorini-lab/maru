@@ -1,6 +1,6 @@
 # Estado y próximos pasos de Maru
 
-Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
+Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
 
 ## Prioridad inmediata: próxima etapa de avisos
 
@@ -21,7 +21,29 @@ Conclusión: **para generalistas el problema principal es de adquisición (H1)**
 - **E1** si el trial de Fantastic sigue vigente: se corre desde el panel con sesión real. Desde los entornos de Claude en la nube no hay red ni claves de producción.
 - **E2** en paralelo: sumar empleadores argentinos generalistas.
 
-**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md). El dueño cargó los secrets (rotados) y el 16/10 a la noche se corrió la primera importación: +88 Google Jobs, +272 Fantastic, +1.092 Apify (US$2,73 reales). **Elegibles desde Argentina: 909 → 2.229 grupos; empleadores 90 → 847.** Medición en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md). Pendientes: segundo corte de Fantastic con los ~177 créditos que quedan antes del 23/10, reintentar Indeed (arreglo de campos), repetir Google Jobs cada mes con el plan gratuito y sumar al directorio los empleadores de `providers-discoveries.json` con ATS admitido.
+**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md). ### Avisos: qué falta (actualizado 16/10 noche, para seguir con otra IA)
+
+Hecho:
+- E0 (línea de base).
+- Ajustes de ranking.
+- Importación de Fantastic, Google Jobs y Apify con topes (#32 a #34).
+- Primera corrida real y sync con reglas nuevas.
+
+Detalle operativo y saldos en [IMPORTACIONES.md](IMPORTACIONES.md). Pendiente, en orden de impacto:
+
+1. **Segundo corte de Fantastic antes del 22/10** con los ~177 créditos que quedan (comando en IMPORTACIONES.md). Después el trial vence y no se paga.
+2. **Conectores gratuitos nuevos para ATS que aparecieron en Fantastic.** Teamtailor (12 empleadores), Workable (10), Workday (9), SuccessFactors (6) y SmartRecruiters (3). Es la forma sostenible de cubrir empleadores argentinos generalistas (Natura, Quilmes/AB InBev, Swiss Medical, EY, Bidcom, BYMA…) sin pagar.
+   - Workday tiene un endpoint JSON público por tenant (`/wday/cxs/{tenant}/{site}/jobs`). Teamtailor y Workable tienen páginas de empleo públicas.
+   - Antes de implementarlos, revisar la documentación y las condiciones de cada endpoint (PLAN-AVISOS §5). No usar scraping indiscriminado.
+3. **Modalidad desconocida:** ~1.000 elegibles no informan modalidad. Se infiere sólo de frases explícitas; ampliar patrones con casos reales, sin adivinar.
+4. **Interior del país:** hay poca oferta en Tucumán, Mendoza y Neuquén en todas las fuentes. Sumar búsquedas de Google Jobs por ciudad cada mes (gratis) y palabras de Computrabajo por provincia si se usa el saldo de Apify.
+5. **Revisión manual (E1/E3):** repetir la revisión de 40 casos del E0 sobre `research/e1-importacion-2026-10-16/resultados.json`. Las métricas automáticas mejoraron, pero falta la mirada humana: falsos positivos, avisos vencidos en el origen y calidad de Computrabajo.
+6. **Vigencia de importados:** hoy vencen por fecha de la fuente o a los 30 días (21 en Google) sin volver a verse. Falta verificar periódicamente la URL original (404 o "aviso finalizado") para cerrarlos antes.
+7. **Probar en el producto con Computer Use** (PLAN-AVISOS §5.6): búsquedas generalistas, filtro Argentina, logos, "vista hace…", detalle y destino original, también en celular.
+
+Seguridad: las claves se cargaron como secrets de GitHub Actions. Si las que se pegaron en el chat del 16/10 no se rotaron, rotarlas y actualizar los secrets y Vercel. El repo es público: nunca pasarlas como inputs ni en archivos.
+
+El dueño cargó los secrets y el 16/10 a la noche se corrió la primera importación: +88 Google Jobs, +272 Fantastic, +1.092 Apify (US$2,73 reales). **Elegibles desde Argentina: 909 → 2.229 grupos; empleadores 90 → 847.** Medición en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md). Pendientes: segundo corte de Fantastic con los ~177 créditos que quedan antes del 23/10, reintentar Indeed (arreglo de campos), repetir Google Jobs cada mes con el plan gratuito y sumar al directorio los empleadores de `providers-discoveries.json` con ATS admitido.
 
 Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
