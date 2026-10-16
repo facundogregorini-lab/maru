@@ -189,7 +189,7 @@ export default function Flow() {
   }
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "inicio" && (

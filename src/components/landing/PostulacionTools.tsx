@@ -54,7 +54,7 @@ export default function PostulacionTools() {
 
   return (
     <div className="relative mt-8">
-      <p className="text-sm font-medium text-paper/70">También podés trabajar cada pieza por separado:</p>
+      <p className="text-sm font-medium text-muted">También podés trabajar cada pieza por separado:</p>
       <div role="tablist" aria-label="Herramientas de postulación" className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         {TOOLS.map((t, i) => {
           const on = i === active;
@@ -67,12 +67,12 @@ export default function PostulacionTools() {
               aria-selected={on}
               aria-controls="tool-panel"
               onClick={() => setActive(i)}
-              className={`flex min-h-24 flex-col items-start gap-1.5 rounded-2xl border-[1.5px] p-4 text-left transition ${
-                on ? "border-celeste-light bg-white/10" : "border-white/15 hover:border-white/35"
+              className={`press flex min-h-24 flex-col items-start gap-1.5 rounded-2xl p-4 text-left ring-1 transition-shadow duration-300 ${
+                on ? "bg-paper shadow-[0_18px_40px_-24px_rgba(21,82,126,0.55)] ring-celeste/40" : "bg-paper/50 ring-line/80 hover:bg-paper hover:ring-celeste/30"
               }`}
             >
-              <span className="font-medium">{t.title}</span>
-              <span className="text-sm leading-snug text-paper/65">{t.short}</span>
+              <span className={`font-medium ${on ? "text-celeste-dark" : ""}`}>{t.title}</span>
+              <span className="text-sm leading-snug text-muted">{t.short}</span>
             </button>
           );
         })}
@@ -81,23 +81,24 @@ export default function PostulacionTools() {
         role="tabpanel"
         id="tool-panel"
         aria-labelledby={`tool-tab-${active}`}
-        className="mt-2.5 flex flex-col gap-5 rounded-2xl bg-white/10 p-5 sm:p-6 lg:flex-row lg:items-center lg:gap-8"
+        key={active}
+        className="animate-rise mt-2.5 flex flex-col gap-5 rounded-2xl bg-paper p-5 ring-1 ring-line/70 sm:p-6 lg:flex-row lg:items-center lg:gap-8"
       >
         <div className="min-w-0 lg:flex-[1.4]">
-          <p className="font-serif text-2xl">{cur.title}</p>
-          <p className="mt-2 text-sm leading-relaxed text-paper/80">{cur.body}</p>
+          <p className="font-serif text-3xl">{cur.title}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{cur.body}</p>
         </div>
         <ul className="space-y-2 text-sm lg:flex-1">
           {cur.bullets.map((b) => (
             <li key={b} className="flex items-center gap-2.5">
-              <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-celeste-light" />
+              <span aria-hidden className="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-celeste-soft text-[9px] text-celeste-dark">✓</span>
               {b}
             </li>
           ))}
         </ul>
         <Link
           href={cur.href}
-          className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full bg-celeste px-5 py-3 font-medium text-white transition hover:bg-celeste-dark lg:self-center"
+          className="press inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-full bg-celeste px-5 py-3 font-medium text-white shadow-[0_14px_30px_-12px_rgba(31,111,168,0.7)] hover:bg-celeste-dark lg:self-center"
         >
           {cur.cta} <span aria-hidden>→</span>
         </Link>

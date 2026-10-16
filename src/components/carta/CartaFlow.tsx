@@ -167,7 +167,7 @@ export default function CartaFlow() {
   }
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "inicio" && (

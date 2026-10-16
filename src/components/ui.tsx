@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 
 export function StepCard({ n, title, hint, children }: { n: number; title: string; hint: string; children: React.ReactNode }) {
   return (
-    <section className="animate-rise rounded-3xl border border-line bg-paper/70 p-5 sm:p-8" style={{ animationDelay: `${n * 70}ms` }}>
-      <div className="mb-4 flex items-start gap-4">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-celeste-soft font-serif text-lg text-celeste-dark">{n}</span>
+    <section
+      className="animate-rise rounded-[28px] bg-paper p-5 shadow-[0_1px_2px_rgba(14,27,44,0.04),0_18px_40px_-28px_rgba(21,82,126,0.35)] ring-1 ring-line/70 sm:p-8"
+      style={{ animationDelay: `${n * 70}ms` }}
+    >
+      <div className="mb-5 flex items-start gap-4">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-celeste-soft font-serif text-xl italic text-celeste-dark">{n}</span>
         <div>
-          <h2 className="font-serif text-2xl tracking-tight">{title}</h2>
+          <h2 className="font-serif text-[1.7rem] leading-tight tracking-tight">{title}</h2>
           <p className="mt-1 text-sm text-muted">{hint}</p>
         </div>
       </div>
@@ -24,7 +27,7 @@ export function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes
     <button
       type="button"
       {...props}
-      className="rounded-full bg-celeste px-8 py-3.5 text-base font-medium text-paper shadow-[0_10px_30px_-12px_rgba(192,98,58,0.8)] transition hover:bg-celeste-dark disabled:cursor-not-allowed disabled:bg-muted/40 disabled:shadow-none"
+      className="press rounded-full bg-celeste px-8 py-3.5 text-base font-medium text-paper shadow-[0_14px_30px_-12px_rgba(31,111,168,0.7)] hover:bg-celeste-dark disabled:cursor-not-allowed disabled:bg-muted/30 disabled:text-paper/80 disabled:shadow-none"
     >
       {children}
     </button>
@@ -39,7 +42,10 @@ export function Loading({ messages }: { messages: string[] }) {
   }, [messages.length]);
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center" aria-live="polite">
-      <div className="animate-breathe h-20 w-20 rounded-full bg-gradient-to-br from-celeste to-honey" />
+      <div className="relative h-24 w-24">
+        <div className="animate-breathe absolute inset-0 rounded-full bg-[conic-gradient(from_120deg,var(--color-celeste),var(--color-aqua),var(--color-celeste-light),var(--color-celeste))] blur-md" />
+        <div className="animate-breathe absolute inset-3 rounded-full bg-[conic-gradient(from_200deg,var(--color-celeste),var(--color-aqua),var(--color-celeste))]" />
+      </div>
       <p key={i} className="animate-rise mt-8 font-serif text-2xl">
         {messages[i]}
       </p>
@@ -60,20 +66,23 @@ export function ErrorBanner({ message }: { message: string }) {
 /** Encabezado grande de cada sección. */
 export function SectionHero({ kicker, title, children }: { kicker: string; title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="animate-rise relative overflow-hidden rounded-[2rem] bg-sand px-6 py-12 sm:px-12 sm:py-16">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-celeste-soft" />
-      <div className="pointer-events-none absolute -bottom-20 right-24 h-40 w-40 rounded-full bg-sage-soft" />
+    <section className="relative isolate overflow-hidden rounded-[32px] bg-paper px-6 py-12 ring-1 ring-line/70 sm:px-12 sm:py-16">
+      <div aria-hidden className="aurora -z-10" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(14,27,44,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,27,44,0.04)_1px,transparent_1px)] bg-[size:44px_44px] [mask-image:radial-gradient(ellipse_at_top_right,#000_20%,transparent_70%)]" />
       <div className="relative max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-celeste">{kicker}</p>
-        <h1 className="mt-3 font-serif text-4xl leading-[1.1] tracking-tight sm:text-5xl">{title}</h1>
-        <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">{children}</p>
+        <p className="animate-rise inline-flex items-center gap-2 rounded-full bg-paper/80 px-3 py-1 text-sm font-medium text-celeste-dark ring-1 ring-celeste/15">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-celeste" />
+          {kicker}
+        </p>
+        <h1 className="animate-rise mt-5 font-serif text-[2.6rem] leading-[1.02] tracking-tight [animation-delay:90ms] sm:text-6xl">{title}</h1>
+        <p className="animate-rise mt-5 max-w-xl text-lg leading-relaxed text-muted [animation-delay:180ms]">{children}</p>
       </div>
     </section>
   );
 }
 
 export const inputClass =
-  "w-full rounded-xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 focus:border-celeste focus:ring-4 focus:ring-celeste-soft";
+  "w-full rounded-2xl border border-line bg-paper px-4 py-3 text-base outline-none transition placeholder:text-muted/60 hover:border-celeste/40 focus:border-celeste focus:ring-4 focus:ring-celeste-soft";
 
 /** Opciones tipo "chip" de selección única. */
 export function Chips<T extends string>({ value, options, onChange }: { value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void }) {
@@ -85,7 +94,7 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
           type="button"
           aria-pressed={value === v}
           onClick={() => onChange(v)}
-          className={`rounded-full border px-3.5 py-1.5 text-sm transition ${value === v ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste"}`}
+          className={`press rounded-full border px-3.5 py-1.5 text-sm ${value === v ? "border-celeste bg-celeste-soft text-celeste-dark" : "border-line bg-paper hover:border-celeste/50"}`}
         >
           {label}
         </button>

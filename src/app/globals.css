@@ -1,46 +1,216 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #fbf6ef;
-  --color-sand: #f4ebe0;
-  --color-paper: #fffdf9;
-  --color-line: #eadfd3;
-  --color-ink: #2b2420;
-  --color-muted: #75685f;
+  /* Paleta: neutros fríos y limpios + un solo acento (celeste). Los nombres se mantienen para no tocar cada pantalla. */
+  --color-cream: #f6f8fb; /* fondo de página */
+  --color-sand: #edf2f8; /* superficie secundaria */
+  --color-paper: #ffffff; /* tarjetas */
+  --color-line: #e1e7ef;
+  --color-ink: #0e1b2c;
+  --color-muted: #5b687a;
   --color-celeste: #1f6fa8;
-  --color-celeste-dark: #16547f;
-  --color-celeste-soft: #ddedf8;
+  --color-celeste-dark: #15527e;
+  --color-celeste-soft: #e4f0fa;
   --color-celeste-light: #a9d3f2;
+  --color-aqua: #58c4d3; /* sólo para brillos y degradés */
   --color-danger: #b4472a;
   --color-danger-dark: #8f3519;
-  --color-danger-soft: #f8e2d9;
-  --color-sage: #6f8466;
-  --color-sage-soft: #e5ece0;
-  --color-honey: #d9a441;
-  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --color-danger-soft: #f9e6df;
+  --color-sage: #3f7d62;
+  --color-sage-soft: #e2f1e9;
+  --color-honey: #c9952f;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+html,
+body {
+  /* clip (no hidden): corta los brillos decorativos sin romper el header sticky. */
+  overflow-x: clip;
 }
 
 body {
   background: var(--color-cream);
   color: var(--color-ink);
+  font-feature-settings: "ss01", "cv11";
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
   background: var(--color-celeste-soft);
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+:focus-visible {
+  outline: 2px solid var(--color-celeste);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
-.animate-rise { animation: rise 0.45s ease-out both; }
+
+/* Grano muy sutil sobre toda la página: saca lo "plano" del digital. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media print {
+  body::after {
+    display: none;
+  }
+}
+
+/* ---------- Movimiento (todo respeta prefers-reduced-motion) ---------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-rise { animation: rise 0.7s var(--ease-out) both; }
 
 @keyframes breathe {
   0%, 100% { transform: scale(1); opacity: 0.9; }
   50% { transform: scale(1.08); opacity: 1; }
 }
 .animate-breathe { animation: breathe 2.4s ease-in-out infinite; }
+
+/* Titular que sube desde atrás de su propia línea. */
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.line-mask > span { display: block; animation: line-up 1s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 110ms + 80ms); }
+@keyframes line-up {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+
+/* Texto con brillo que recorre las letras (la palabra mágica). */
+.shine-text {
+  background: linear-gradient(100deg, var(--color-celeste) 20%, var(--color-aqua) 40%, var(--color-celeste-dark) 60%, var(--color-celeste) 80%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+@keyframes shine {
+  from { background-position: 100% 0; }
+  to { background-position: -150% 0; }
+}
+
+/* Aurora: luces celestes que se mueven muy lento detrás del contenido. */
+.aurora {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.75;
+  /* Se desvanece hacia sus bordes: nunca deja un corte recto aunque el contenedor la recorte. */
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 68%);
+  mask-image: radial-gradient(ellipse at center, #000 25%, transparent 68%);
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.aurora::before {
+  width: 55%;
+  height: 60%;
+  left: 40%;
+  top: 0%;
+  background: radial-gradient(circle at center, rgba(31, 111, 168, 0.35), transparent 65%);
+  animation: drift-a 22s var(--ease-soft) infinite alternate;
+}
+.aurora::after {
+  width: 45%;
+  height: 55%;
+  left: 5%;
+  top: 35%;
+  background: radial-gradient(circle at center, rgba(88, 196, 211, 0.3), transparent 65%);
+  animation: drift-b 26s var(--ease-soft) infinite alternate;
+}
+@keyframes drift-a {
+  to { transform: translate(-18%, 22%) scale(1.15); }
+}
+@keyframes drift-b {
+  to { transform: translate(24%, -14%) scale(0.9); }
+}
+
+/* Revelado al hacer scroll (lo activa <Reveal>). Sin JS, todo se ve. */
+.js [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); transition-delay: calc(var(--i, 0) * 80ms); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Tarjeta con luz que sigue al cursor (la mueve <Spotlight>). */
+.spotlight { position: relative; isolation: isolate; }
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(31, 111, 168, 0.09), transparent 60%);
+}
+.spotlight:hover::before { opacity: 1; }
+
+/* Borde con un haz de luz que da la vuelta (para el botón principal). */
+.beam { position: relative; isolation: isolate; }
+.beam::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--beam-angle, 0deg), transparent 70%, var(--color-aqua) 85%, #fff 90%, transparent 95%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: beam 4s linear infinite;
+}
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes beam {
+  to { --beam-angle: 360deg; }
+}
+
+/* Flotar suave (tarjetas de ejemplo). */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float { animation: float 7s ease-in-out infinite; }
+
+/* Botones: responden al apretar. */
+.press { transition: transform 140ms var(--ease-out), background-color 180ms ease, box-shadow 180ms ease; }
+.press:active { transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}
 
 /* Editor de CV */
 .cv-editable { outline: none; border-radius: 3px; transition: background-color .15s, box-shadow .15s; cursor: text; }
@@ -52,3 +222,13 @@ body {
 @media (max-width: 640px) {
   .cv-scroll article { padding: 28px 18px !important; font-size: 11.5px !important; }
 }
+
+/* Instrument Serif ya es angosta: sin el tracking apretado de Tailwind respira mejor. */
+.font-serif {
+  letter-spacing: -0.003em;
+}
+
+/* Anillo de compatibilidad que se dibuja al entrar en pantalla (92% de 213,6). */
+.ring-draw { stroke-dashoffset: 17.1; }
+.js .ring-draw { stroke-dashoffset: 213.6; transition: stroke-dashoffset 1.8s var(--ease-out) 0.35s; }
+.js .is-in .ring-draw { stroke-dashoffset: 17.1; }

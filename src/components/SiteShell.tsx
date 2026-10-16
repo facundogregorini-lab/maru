@@ -6,24 +6,40 @@ import UserMenu from "./auth/UserMenu";
 export default function SiteShell({ tagline, children }: { tagline?: string; children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-6 print:hidden">
-        <Link href="/" className="flex items-center gap-2" aria-label="Maru Coach, ir al inicio">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-celeste font-serif text-lg text-paper">m</span>
-          <span className="font-serif text-2xl tracking-tight">
-            maru <em className="text-celeste">coach</em>
-          </span>
-        </Link>
-        <div className="flex min-w-0 items-center gap-5">
-          {tagline && <span className="hidden text-sm text-muted md:block">{tagline}</span>}
-          <UserMenu />
+      <a
+        href="#contenido"
+        className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-sm text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Saltar al contenido
+      </a>
+      <header className="sticky top-0 z-40 border-b border-line/60 bg-cream/75 backdrop-blur-xl backdrop-saturate-150 print:hidden">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
+          <Link href="/" className="group flex items-center gap-2.5" aria-label="Maru Coach, ir al inicio">
+            <span className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-[10px] bg-ink font-serif text-lg italic text-paper transition-transform duration-300 group-hover:rotate-[-6deg]">
+              <span aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(88,196,211,0.55),transparent_60%)]" />
+              <span className="relative">m</span>
+            </span>
+            <span className="text-[17px] font-semibold tracking-tight">
+              maru <span className="font-serif text-xl font-normal italic text-celeste">coach</span>
+            </span>
+          </Link>
+          <div className="flex min-w-0 items-center gap-5">
+            {tagline && <span className="hidden text-sm text-muted md:block">{tagline}</span>}
+            <UserMenu />
+          </div>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-5 pb-24">
+      <main id="contenido" className="mx-auto max-w-6xl px-5 pb-28 pt-8">
         <LoginNotice />
         {children}
       </main>
-      <footer className="border-t border-line py-8 text-center text-xs text-muted print:hidden">
-        Maru Coach nunca inventa experiencia: reordena, reescribe y prioriza lo que ya hiciste. Revisá todo antes de enviar.
+      <footer className="border-t border-line/70 print:hidden">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <span className="font-semibold tracking-tight text-ink">
+            maru <span className="font-serif text-base font-normal italic text-celeste">coach</span>
+          </span>
+          <p className="max-w-xl sm:text-right">Maru nunca inventa experiencia: reordena, reescribe y prioriza lo que ya hiciste. Revisá todo antes de enviar.</p>
+        </div>
       </footer>
     </div>
   );

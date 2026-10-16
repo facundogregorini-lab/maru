@@ -80,7 +80,7 @@ export default function MatchFlow() {
   if (!hydrated) return <div className="min-h-[50vh]" />;
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "cv" && (

@@ -98,7 +98,7 @@ export default function VideoFlow() {
   const filename = `Video_presentacion_${(guion?.titulo ?? "Maru").replace(/[^\p{L}\p{N}]+/gu, "_").slice(0, 40)}`;
 
   return (
-    <div ref={topRef} className="scroll-mt-6">
+    <div ref={topRef} className="scroll-mt-24">
       <ErrorBanner message={error} />
 
       {stage === "inicio" && (
