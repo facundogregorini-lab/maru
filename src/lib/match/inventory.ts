@@ -1,3 +1,4 @@
+import { workplaceFromDescription } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
 import { sourceById } from "./sources";
@@ -54,6 +55,13 @@ export function contentHash(p: NormalizedPosting): string {
   );
 }
 
+/** Si la fuente no informa modalidad, usamos la que el aviso declara explícitamente en su texto. */
+export function withWorkplace(p: NormalizedPosting): NormalizedPosting {
+  if (p.workplace.value !== "desconocido") return p;
+  const found = workplaceFromDescription(p.descriptionText);
+  return found ? { ...p, workplace: { value: found.value, from: "descripcion", evidence: found.evidence } } : p;
+}
+
 function analyze(p: NormalizedPosting): Pick<StoredPosting, "eligibility" | "extracted" | "employmentType"> {
   const eligibility = classifyEligibility(p);
   const extracted = extract({
@@ -72,7 +80,8 @@ function store(p: NormalizedPosting, a: ReturnType<typeof analyze>): NormalizedP
 }
 
 /** Publicación suelta (p. ej. agregada a mano por una persona) → registro analizado, sin guardarlo en ningún lado. */
-export function analyzeStandalone(p: NormalizedPosting, now: string): StoredPosting {
+export function analyzeStandalone(raw: NormalizedPosting, now: string): StoredPosting {
+  const p = withWorkplace(raw);
   const a = analyze(p);
   return {
     ...p,
@@ -102,8 +111,9 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
   const byKey = new Map(inv.postings.map((p) => [p.key, p]));
   const seen = new Set<string>();
 
-  for (const p of fetched.postings) {
-    if (!p.title || !p.sourceUrl) continue;
+  for (const raw of fetched.postings) {
+    if (!raw.title || !raw.sourceUrl) continue;
+    const p = withWorkplace(raw);
     const key = postingKey(p);
     if (seen.has(key)) continue; // la misma publicación repetida en una respuesta
     seen.add(key);
@@ -187,6 +197,23 @@ export function expireImported(inv: Inventory, now: string): number {
     closed++;
   }
   return closed;
+}
+
+/**
+ * Los avisos importados no se vuelven a descargar en la sync diaria: cuando cambian las reglas de análisis
+ * (EXTRACTION_VERSION, modalidad desde el texto) se re-analizan con el texto guardado.
+ */
+export function refreshImported(inv: Inventory): number {
+  let n = 0;
+  for (const p of inv.postings) {
+    if (!sourceById(p.sourceId)?.imported || p.status !== "abierta") continue;
+    const next = withWorkplace(p);
+    const hash = contentHash(next);
+    if (hash === p.contentHash) continue;
+    Object.assign(p, { workplace: next.workplace }, analyze(next), { contentHash: hash });
+    n++;
+  }
+  return n;
 }
 
 /** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio (salvo importados). */

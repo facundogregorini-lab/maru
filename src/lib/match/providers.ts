@@ -367,10 +367,18 @@ export async function runFantastic(key: string, plan: FantasticPlan, log: Log = 
     return out;
   }
   log(`Saldo Fantastic: ${quota["jobs-remaining"]} avisos, ${quota["requests-remaining"]} requests.`);
+  // Los headers de saldo pueden llegar cacheados: además llevamos la cuenta propia desde el saldo inicial.
+  const initialJobs = numberOrNull(quota["jobs-remaining"]);
+  const initialRequests = numberOrNull(quota["requests-remaining"]);
   let spent = 0;
+  let requests = 0;
   for (const cohort of cohorts) {
     for (const feed of plan.feeds) {
-      const limit = nextFantasticLimit(plan.limit, spent, plan.maxJobs, quota);
+      const known = {
+        "jobs-remaining": initialJobs === null ? null : Math.min(numberOrNull(quota["jobs-remaining"]) ?? Infinity, initialJobs - spent),
+        "requests-remaining": initialRequests === null ? null : Math.min(numberOrNull(quota["requests-remaining"]) ?? Infinity, initialRequests - requests),
+      };
+      const limit = nextFantasticLimit(plan.limit, spent, plan.maxJobs, known);
       if (limit < 1) {
         out.stopped ??= quota["jobs-remaining"] === null ? "El proveedor no informó el saldo: no descargamos a ciegas." : "Se alcanzó el tope de la corrida o el saldo incluido.";
         return out;
@@ -384,6 +392,7 @@ export async function runFantastic(key: string, plan: FantasticPlan, log: Log = 
         const q = fantasticQuota(res.headers);
         const consumed = numberOrNull(q["jobs-this-request"]) ?? rows.length;
         spent += consumed;
+        requests++;
         quota = { ...quota, ...q };
         out.ledger.push({ at: nowIso, provider: "fantastic", call: endpoint, params, rows: rows.length, consumed, quota: q });
         const batch = normalizeFantastic(rows, feed, `${cohort.id}: ${cohort.title}`, Date.parse(nowIso));

@@ -815,6 +815,66 @@
       "addedAt": "2026-10-15",
       "status": "excluida",
       "reason": "Portal propio sin API pública documentada: sin conector compatible en el MVP."
+    },
+    {
+      "name": "Agent",
+      "sourceId": "ashby",
+      "slug": "Agent",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/Agent (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Blockchain.com",
+      "sourceId": "greenhouse",
+      "slug": "blockchain",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/blockchain (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Minders",
+      "sourceId": "lever",
+      "slug": "minders",
+      "region": "us",
+      "sector": "staffing / tecnología",
+      "evidence": "https://jobs.lever.co/minders (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "RYZ Labs",
+      "sourceId": "lever",
+      "slug": "RyzLabs",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.lever.co/RyzLabs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Solvd",
+      "sourceId": "ashby",
+      "slug": "Solvd",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/Solvd (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Telnyx",
+      "sourceId": "greenhouse",
+      "slug": "telnyx54",
+      "region": "us",
+      "sector": "telecomunicaciones",
+      "evidence": "https://job-boards.greenhouse.io/telnyx54 (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
     }
   ]
 }

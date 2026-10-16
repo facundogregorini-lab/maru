@@ -463,6 +463,12 @@ export function rankOpportunities(input: RankInput): RankOutput {
       raw *= 0.8;
       gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`);
     }
+    // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.
+    const onlyCountry = o.locations.every((l) => /^\s*(argentina|remote|remoto|latam|latin america)\b/i.test(l));
+    if (wpValue === "desconocido" && o.locations.length && !onlyCountry && userPlaces.length && !placeMatches(o.locations)) {
+      raw *= hard.has("ubicacion") ? 0.75 : 0.88;
+      pending.push(`Se publica en ${argentinaFirst(o.locations).slice(0, 2).join(" · ")} y no aclara si es remoto: confirmalo antes de postularte.`);
+    }
     if (ex.seniority && targetSen.length && Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - SENIORITY_ORDER.indexOf(ex.seniority!.value)))) >= 2) raw *= 0.85;
     const ageDays = (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
     if (ageDays > 180) raw *= 0.85;

@@ -73,6 +73,19 @@ export function workplaceFromText(text: string): Workplace {
   return "desconocido";
 }
 
+/**
+ * Modalidad declarada en la descripción ("Modalidad: presencial", "esquema híbrido", "100% remoto").
+ * Sólo frases explícitas: una mención suelta de "home office" como beneficio no alcanza para decir remoto.
+ */
+export function workplaceFromDescription(text: string): { value: Workplace; evidence: string } | null {
+  const t = fold(text.slice(0, 6000));
+  const declared = t.match(/\b(modalidad|esquema|formato|lugar de trabajo|work ?(?:mode|model|arrangement))(?: de (?:trabajo|contratacion))?\s*(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
+  const hit = declared?.[2] ?? t.match(/\b(100\s*(por ciento)?\s*(remot[oa]|home office)|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|work)|trabajo presencial|puesto presencial|jornada presencial|on-?site (role|position))\b/)?.[0];
+  if (!hit) return null;
+  const value: Workplace = /hibrid|hybrid/.test(hit) ? "hibrido" : /remot|teletrabajo|home office/.test(hit) ? "remoto" : "presencial";
+  return { value, evidence: (declared?.[0] ?? hit).slice(0, 80) };
+}
+
 function wp(value: Workplace, from: Field<Workplace>["from"], evidence?: string): Field<Workplace> {
   return evidence ? { value, from, evidence } : { value, from };
 }

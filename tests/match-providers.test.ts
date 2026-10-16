@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { apifyNextCap } from "@/lib/match/apify";
-import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge } from "@/lib/match/inventory";
+import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported } from "@/lib/match/inventory";
+import { workplaceFromDescription } from "@/lib/match/connectors";
 import { FANTASTIC_COHORTS, normalizeFantastic, normalizeSerp, pickApplyLink, relativeAgeDays, runFantastic, runSerp, SERP_QUERIES } from "@/lib/match/providers";
 
 const NOW = "2026-10-17T12:00:00.000Z";
@@ -133,6 +134,17 @@ describe("saldo: nunca más de lo incluido", () => {
     expect(JSON.stringify(out)).not.toContain("secret-key");
   });
 
+  it("Fantastic no confía en un saldo cacheado: descuenta lo ya consumido", async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(json({ count: 500 }, quota(50, 10)))
+      .mockImplementation(async () => json([fantasticRow], quota(50, 10, 30)));
+    vi.stubGlobal("fetch", fetcher);
+    await runFantastic("k", { cohorts: ["G1", "G2"], feeds: ["fantastic_ats"], limit: 40, maxJobs: 500, timeFrame: "7d" }, undefined, NOW);
+    expect((fetcher.mock.calls[1][0] as URL).searchParams.get("limit")).toBe("40");
+    expect((fetcher.mock.calls[2][0] as URL).searchParams.get("limit")).toBe("20"); // 50 − 30, aunque el header repita 50
+  });
+
   it("SerpApi usa sólo búsquedas del plan menos la reserva y no guarda la clave", async () => {
     const fetcher = vi
       .fn()
@@ -168,6 +180,21 @@ describe("inventario con importaciones parciales", () => {
     inv.opportunities = buildOpportunities(inv.postings);
     expect(inv.opportunities.every((o) => o.status === "cerrada")).toBe(true);
   });
+  it("la modalidad sale del texto sólo si está declarada, y los importados se re-analizan sin volver a descargarlos", () => {
+    expect(workplaceFromDescription("Modalidad de trabajo: Presencial en Retiro.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("Modalidad híbrida de trabajo, 3 días en oficina.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Equipo bajo modalidad 100% home office.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Beneficios: home office los viernes, prepaga.")).toBeNull();
+    const inv = emptyInventory("fixture");
+    const [p] = normalizeFantastic([{ ...fantasticRow, remote_derived: undefined }], "fantastic_ats", "G1", T).postings;
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: [p], complete: false }, NOW);
+    expect(inv.postings[0].workplace.value).toBe("desconocido");
+    inv.postings[0].descriptionText += " Modalidad: presencial en Córdoba.";
+    expect(refreshImported(inv)).toBe(1);
+    expect(inv.postings[0].workplace).toMatchObject({ value: "presencial", from: "descripcion" });
+    expect(refreshImported(inv)).toBe(0);
+  });
+
   it("el aviso importado es elegible si la fuente informa Argentina", () => {
     const inv = emptyInventory("fixture");
     applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: normalizeFantastic([fantasticRow], "fantastic_ats", "G1", T).postings, complete: false }, NOW);
