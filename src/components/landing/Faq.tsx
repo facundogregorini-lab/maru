@@ -28,7 +28,7 @@ const FAQ = [
   },
   {
     q: "¿Necesito una cuenta?",
-    a: "Podés usar todo sin cuenta. Para descargar o copiar tu CV, tu carta o tu video, ingresás con tu email: te mandamos un link, sin contraseña.",
+    a: "Podés usar todo sin cuenta. Para descargar o copiar tu CV, tu carta o tu video, ingresás con tu email: te mandamos un link, sin contraseña. Con la cuenta, tu perfil, tus búsquedas y tu seguimiento te siguen a cualquier dispositivo.",
   },
 ];
 

@@ -2,7 +2,8 @@ import type { Profile } from "./schemas";
 import { load, remove, save } from "./storage";
 
 /**
- * El último perfil que Maru leyó (de LinkedIn, un CV o texto), guardado sólo en este navegador.
+ * El último perfil que Maru leyó (de LinkedIn, un CV o texto), guardado en este navegador
+ * (y, con sesión, en la cuenta: src/lib/sync/client.ts).
  * Así, si ya cargaste tu experiencia en una sección, las demás te ofrecen reutilizarla.
  */
 const KEY = "maru:perfil:v1";

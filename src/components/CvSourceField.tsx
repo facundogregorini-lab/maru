@@ -127,7 +127,7 @@ export default function CvSourceField({ input }: { input: CvInput }) {
             {last.cargo} · {last.empresa} · {p.experiencia.length} experiencia{p.experiencia.length === 1 ? "" : "s"}
           </p>
         )}
-        <p className="mt-2 text-xs text-muted">Lo cargaste el {new Date(saved.savedAt).toLocaleDateString("es-AR")}. Queda guardado sólo en este navegador.</p>
+        <p className="mt-2 text-xs text-muted">Lo cargaste el {new Date(saved.savedAt).toLocaleDateString("es-AR")}. Queda guardado en este navegador y, si ingresás, en tu cuenta.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <button type="button" onClick={() => setUseSaved(false)} className="rounded-full border border-line bg-paper px-4 py-1.5 text-sm transition hover:border-brand hover:text-brand">
             Usar otro CV

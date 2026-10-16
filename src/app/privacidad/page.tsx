@@ -4,14 +4,14 @@ import LegalPage from "@/components/legal/LegalPage";
 
 export const metadata: Metadata = {
   title: "Política de privacidad · Maru",
-  description: "Qué datos usa Maru, dónde quedan y para qué. La mayoría vive sólo en tu navegador.",
+  description: "Qué datos usa Maru, dónde quedan y para qué. Sin cuenta, todo vive en tu navegador.",
 };
 
 export default function PrivacidadPage() {
   return (
     <LegalPage title="Privacidad" updated="16 de octubre de 2026">
       <p>
-        Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador. Esta página explica qué datos usamos, para qué y dónde quedan.
+        Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador y, si ingresás con tu email, también en tu cuenta. Esta página explica qué datos usamos, para qué y dónde quedan.
       </p>
 
       <h2>Lo que queda en tu navegador</h2>
@@ -21,6 +21,13 @@ export default function PrivacidadPage() {
         <li>Se guarda en el almacenamiento local de tu navegador. Lo podés borrar cuando quieras con este botón (también está en Match, «Borrar mis datos») o borrando los datos del sitio.</li>
       </ul>
       <ForgetButton />
+
+      <h2>Lo que se guarda en tu cuenta, si ingresás</h2>
+      <ul>
+        <li>Para que los veas en cualquier dispositivo, tu perfil, tus preferencias de búsqueda, las búsquedas guardadas o descartadas y tu seguimiento se copian a una base de datos asociada a tu cuenta.</li>
+        <li>Lo armado en cada herramienta (CV, carta, guion, informe de entrevista) no se copia: sigue sólo en tu navegador.</li>
+        <li>Si borrás tus datos con el botón de arriba mientras estás adentro, se borran también de tu cuenta y de tus otros dispositivos.</li>
+      </ul>
 
       <h2>Lo que se procesa en nuestros servidores, sin guardarse</h2>
       <ul>
@@ -58,7 +65,7 @@ export default function PrivacidadPage() {
 
       <h2>Tus derechos</h2>
       <p>
-        Podés pedirnos acceso, corrección o eliminación de los datos que tengamos sobre vos (en la práctica, tu email). Como titular de los datos, tenés los derechos que establece la Ley 25.326 de Protección
+        Podés pedirnos acceso, corrección o eliminación de los datos que tengamos sobre vos (tu email y, si ingresaste, lo que se guarda en tu cuenta). Como titular de los datos, tenés los derechos que establece la Ley 25.326 de Protección
         de los Datos Personales. La Agencia de Acceso a la Información Pública es el órgano de control de esa ley.
       </p>
     </LegalPage>
