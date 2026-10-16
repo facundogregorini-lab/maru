@@ -2,6 +2,8 @@
 
 16/10/2026. Complementa el [piloto de Apify](APIFY.md). El panel privado `/match/admin` permite medir fuentes con `FANTASTIC_JOBS` y `SERP_API` sólo en servidor. Requiere sesión y email autorizado por `ADMIN_EMAILS`, origen del mismo sitio y contador compartido en Redis. Las claves de Production no se descargan al equipo ni se envían al navegador.
 
+**Definición más reciente del dueño:** US$95 mensuales por Fantastic es demasiado para esta etapa. Se autoriza aprovechar inteligentemente todo el saldo gratuito del trial, sin contratar, renovar ni habilitar sobreconsumo. [ESTRATEGIA-AVISOS.md](ESTRATEGIA-AVISOS.md) y [PLAN-AVISOS.md](PLAN-AVISOS.md) reemplazan las recomendaciones preliminares de proveedores/frecuencias. Este documento conserva las pruebas históricas y describe la herramienta actual.
+
 ## Alcance y límites
 
 - Fantastic Estado: cuatro requests de conteo para Argentina, ATS y job boards en 24h y 1m. No consume créditos de avisos. `1m` incluye indexados en 31 días que ya vencieron; no representa avisos abiertos hoy.
@@ -37,7 +39,7 @@ Bumeran/ZonaJobs puede complementar empleo local: se encontró el Actor `blackfa
 
 ## Medición real del 16/10/2026
 
-Las muestras se ejecutaron en los playgrounds autenticados de los proveedores, sin descargar los secretos de Vercel. El panel de Maru ya está en main (PR 27); la verificación de sus claves en Production espera habilitar la cuenta del dueño en `ADMIN_EMAILS`.
+Las muestras se ejecutaron en los playgrounds autenticados de los proveedores, sin descargar los secretos de Vercel. El panel de Maru está en main (PR 27); el allowlist quedó corregido en PR 30 y después se verificaron ambas claves de Production con la sesión real del dueño. No sigue pendiente habilitar `ADMIN_EMAILS`.
 
 | Muestra | Filas | Con datos suficientes | Nuevas por URL frente al inventario | Empresas | Descripción mínima / mediana |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -69,4 +71,12 @@ La suma mensual bruta es 21.076 entregas antes de deduplicar entre feeds, ligera
 
 Fuente adicional de precios: [Apify](https://apify.com/pricing).
 
-Google del dominio nuevo respondió `redirect_uri_mismatch` para `https://www.marucoach.com/api/auth/google/callback`; el dueño está agregando esa URI. Después se observó sesión iniciada de `axellaban@gmail.com`, pero el panel la rechaza por `ADMIN_EMAILS`: falta incorporar esa cuenta al allowlist conservando las demás. Magic link falló por ausencia de `SMTP_URL` en Production.
+Incidentes históricos de acceso resueltos para estas pruebas: el dueño informó que agregó la URI OAuth y se observó su sesión en el dominio nuevo. PR 30 corrigió `ADMIN_EMAILS` separado por espacios y el panel habilitó las consultas de Production. No se repitió un ciclo completo de cerrar sesión e ingresar desde cero después de ese cambio. Magic link sí sigue pendiente de `SMTP_URL` y `EMAIL_FROM`.
+
+## Revisión final de estrategia y conteos
+
+En una consulta posterior del mismo día, ATS `1m` dio 5.671, job boards 15.394 y job boards con `exclude_ats_duplicate=true` 13.757. La suma filtrada es 19.428; 1.637 filas de portales fueron reconocidas como duplicadas con ATS. Son fotos cercanas de un catálogo cambiante, no una medición de cobertura nacional. [Datos del corte](research/avisos-2026-10-16/fantastic-counts.json).
+
+El estado de Production confirmó Fantastic con 450/500 créditos de avisos restantes y SerpAPI Free, precio mensual 0, con 248/250 búsquedas disponibles. No repetir esos saldos como si estuvieran reservados: se hicieron más conteos que consumen requests de Fantastic. La matriz temporal de roles de la próxima etapa todavía no se ejecutó y el panel actual sólo consulta `analista` con filtros fijos.
+
+Las 185 filas normalizadas de los pilotos producen 167 grupos visuales con las reglas de ese corte. El [paquete de evidencia](research/avisos-2026-10-16/README.md) conserva consultas, IDs, metadatos y límites del análisis, sin credenciales. La nueva prioridad es mejorar cobertura gratuita para profesionales generalistas y aprovechar el trial como investigación finita; no convertir Fantastic en una dependencia productiva paga.

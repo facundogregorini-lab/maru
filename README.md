@@ -16,6 +16,8 @@
 
 Lo que falta y cómo seguir: [docs/PENDIENTES.md](docs/PENDIENTES.md).
 
+**Próxima etapa de avisos (16/10/2026):** [definiciones estratégicas](docs/ESTRATEGIA-AVISOS.md), [plan para la próxima IA](docs/PLAN-AVISOS.md) y [muestras/evidencia](docs/research/avisos-2026-10-16/README.md). Prioridad: profesionales generalistas, luego tecnología/remoto. Sin abono de Fantastic; se autorizó aprovechar su trial gratuito para investigar. El producto debe continuar funcionando cuando termine.
+
 ## Coach de postulación
 
 Para quienes encontraron una vacante que les encanta:
