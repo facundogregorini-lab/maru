@@ -2,6 +2,30 @@
 
 Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
 
+## Próximos pasos (17/10/2026, cierre de la base de avisos)
+
+Estado: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 empleadores con elegibles** (E0: 909 grupos y 90 empleadores).
+- Gasto total en APIs: **US$4,56**, todo en Apify. Fantastic usó el trial y Google Jobs el plan gratuito.
+- ~70% de las publicaciones elegibles vienen de las APIs.
+- Gasto, avisos por fuente, verticales y duplicación en [research/proveedores-2026-10-17](research/proveedores-2026-10-17/README.md). Para recalcularlo: `npm run match:report -- --apify-real-usd=<uso real>`.
+
+En orden de impacto:
+
+1. **Google Jobs todos los meses** (gratis). Sus avisos vencen a los 21 días sin volver a verse: sin esta corrida se pierden ~860 avisos elegibles. Correr `match-providers` con `provider=serpapi`, `--max-searches=80 --reserve=20` y las búsquedas que más rindieron (ver IMPORTACIONES, "Próximas corridas"). **Decisión del dueño:** si se agenda un cron mensual (no cuesta plata; usa sólo el plan gratuito y deja la reserva).
+2. **Clasificar "Otros"** (3.645 publicaciones abiertas, 27%). En las APIs son oficios (chofer, mozo, operario, vigilador, electricista); en los ATS son puestos que el clasificador no reconoce. Sumar familias "gastronomía y hotelería", "seguridad", "oficios y producción" y revisar una muestra de los ATS. Mejora filtros por área y la medición por perfil.
+3. **Apify: decidir presupuesto** (quedan ~US$0,44 del tope aprobado de US$5). Si se aprueba más, conviene Computrabajo:
+   - es lo que más avisos elegibles nuevos trae (900, 6,6% duplicado), a ≈ US$0,003 por aviso;
+   - Indeed es más barato (≈ US$0,0007) pero descarta 2 de cada 3 filas;
+   - LinkedIn por Apify tiene 20% duplicado con otras fuentes.
+
+   Sin presupuesto nuevo, los avisos de Apify vencen solos a los 30 días.
+4. **No renovar Fantastic.** Su feed ATS se superpone 37% con otras fuentes (20% ya estaba gratis). Lo valioso fue descubrir empleadores para la sync gratuita (`providers-discoveries.json`), y eso ya se aprovechó.
+5. **Modalidad desconocida** en 1.497 publicaciones elegibles (sobre todo Google Jobs, que casi nunca la informa). No se adivina; cada tarjeta lo avisa. Sólo mejora leyendo el aviso original o con una fuente que lo informe.
+6. **Conectores Workable / Workday / SuccessFactors** (decisión del dueño, punto 2 de "Avisos: qué falta"). Es la forma de sumar empleadores argentinos generalistas sin pagar.
+7. **QA en el producto** con navegador: búsquedas generalistas, logos, "vista hace…", detalle y destino original, en escritorio y celular.
+8. **Tamaño del inventario:** 43 MB de 100 MB permitidos por GitHub. Si pasa de ~70 MB, recortar descripciones guardadas o mover a Vercel Blob.
+9. **Seguridad:** rotar las claves pegadas en el chat del 16/10 y actualizar los secrets de GitHub y Vercel.
+
 ## Prioridad inmediata: próxima etapa de avisos
 
 El dueño pidió un traspaso para que otra IA implemente por etapas y después se revisen los resultados. Público principal: **profesionales generalistas**; secundario: tecnología/remoto. **US$95/mes por Fantastic fue rechazado** para esta etapa. Se puede aprovechar inteligentemente todo el saldo gratuito del trial, sin contratar ni habilitar sobreconsumos.
