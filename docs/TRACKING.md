@@ -5,8 +5,8 @@ Etiqueta de Google cargada **directamente en el código** (sin Google Tag Manage
 ## Estado
 
 - Código listo en la rama `claude/conversiones-google-ads`.
-- **Apagado en producción** hasta revisar la política de privacidad: hoy `/privacidad` dice que no usamos cookies de publicidad y la etiqueta de Google Ads sí las usa. Sin `NEXT_PUBLIC_GOOGLE_ADS_ID` en Vercel no se carga nada.
-- Para activarlo: actualizar `/privacidad`, cargar las variables de abajo en Vercel (Production) y hacer un deploy nuevo (las `NEXT_PUBLIC_*` se fijan al compilar).
+- `/privacidad` explica la etiqueta de Google Ads, sus cookies de medición y qué no se envía.
+- Se activa con las variables de abajo en Vercel (Production) y un deploy nuevo (las `NEXT_PUBLIC_*` se fijan al compilar). Sin `NEXT_PUBLIC_GOOGLE_ADS_ID` no se carga nada.
 
 ## Variables (Vercel → Settings → Environment Variables, sólo Production)
 

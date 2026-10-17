@@ -39,11 +39,12 @@ Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falt
 
 ## Conversiones de Google Ads (17/10/2026)
 
-Rama `claude/conversiones-google-ads` (sin mergear: el dueño pidió no publicar hasta revisar la política de privacidad). Detalle completo en `docs/TRACKING.md`.
+Rama `claude/conversiones-google-ads`. Detalle completo en `docs/TRACKING.md`.
 
 - **Hecho en código:** etiqueta de Google directa (sin GTM), capa central `src/lib/tracking`, deduplicación por cuenta en Redis, los cuatro eventos (activación, límite con planes visibles, inicio de checkout, compra verificada) y el modal de planes al chocar con el cupo gratis (`PaywallHost`). Apagado mientras no estén las variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Vercel.
 - **Hecho en Google Ads:** 4 acciones "Maru | …" (todas secundarias), objetivo personalizado "Maru | Optimización límite gratuito" (sólo "Límite alcanzado") asignado como único objetivo a las 3 campañas MARU_AR_SEARCH_*.
-- **Falta (dueño):** actualizar `/privacidad` (hoy dice "sin cookies de publicidad"), cargar las variables en Production, deploy, verificación en producción (lista en `docs/TRACKING.md`) y decidir la puja (hoy Maximizar clics: no optimiza conversiones).
+- **Hecho:** `/privacidad` actualizada con la etiqueta de Google Ads. Puja de las 3 campañas de Maru: Maximizar conversiones (objetivo personalizado).
+- **Falta:** variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Production + deploy y verificación en producción (lista en `docs/TRACKING.md`).
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 

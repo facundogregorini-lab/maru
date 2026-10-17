@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacidadPage() {
   return (
-    <LegalPage title="Privacidad" updated="16 de octubre de 2026">
+    <LegalPage title="Privacidad" updated="17 de octubre de 2026">
       <p>
         Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador y, si ingresás con tu email, también en tu cuenta. Esta página explica qué datos usamos, para qué y dónde quedan.
       </p>
@@ -60,7 +60,14 @@ export default function PrivacidadPage() {
 
       <h2>Medición y pagos</h2>
       <ul>
-        <li>Medimos visitas y el uso de las secciones de forma agregada (Vercel Analytics), sin datos personales ni cookies de publicidad.</li>
+        <li>Medimos visitas y el uso de las secciones de forma agregada (Vercel Analytics), sin datos personales.</li>
+        <li>
+          Usamos la etiqueta de Google (Google Ads) para saber qué anuncios nos traen visitas y resultados. La etiqueta guarda cookies de medición publicitaria de
+          Google en tu navegador (por ejemplo, el identificador del clic en un anuncio) y le avisa a Google cuando pasan algunos hitos: el primer resultado que
+          obtenés con Maru, ver los planes al llegar al límite gratis, iniciar un pago y confirmar una compra (con su importe). No le enviamos tu email, tu nombre,
+          tu CV, tus cartas, tus respuestas ni nada de lo que escribís. Podés bloquear o borrar esas cookies desde tu navegador y administrar la publicidad
+          personalizada en la configuración de anuncios de tu cuenta de Google.
+        </li>
         <li>Si contratás un plan, Mercado Pago procesa el pago. Maru guarda los identificadores y el estado de la suscripción, el período acreditado y los contadores de uso; nunca ve ni guarda los datos de tu tarjeta.</li>
         <li>El botón de borrar datos elimina perfil, preferencias y seguimiento. Para detener una renovación usá Cancelar renovación en Planes. Los registros de facturación se gestionan por separado a través del contacto del sitio.</li>
       </ul>
