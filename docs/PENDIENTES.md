@@ -71,7 +71,7 @@ Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron r
 - **Chat con Maru**: panel de Búsquedas en escritorio y desplegable en celular. Referencias sólo a avisos abiertos proporcionados desde el inventario. Perfil opcional, historial de la página sin persistencia y limpieza al cambiar de cuenta.
 - **Pulido**: resultados de Match en `AppShell`, guía del seguimiento en `/seguimiento/guia`, links de Planes y textos de privacidad corregidos.
 - **Logos**: 15 marcas verificadas desde Simple Icons 16.35.0, servidas como SVG local. Correspondencia por nombre exacto; el resto conserva inicial y color. Fuentes y licencias en `public/companies/`.
-- **Video de portada**: renderer usa la misma agrupación que la web. MP4, WebM y póster regenerados: 6.439 búsquedas, 425 empresas y 909 elegibles desde Argentina al renderizar.
+- **Video de portada**: el renderer usa la misma agrupación que la web y reconstruye las oportunidades desde las publicaciones. Regenerado el 17/10 con el catálogo importado: 9.005 búsquedas, 1.606 empresas y 2.967 elegibles desde Argentina al renderizar (antes 6.439 / 425 / 909). Volver a correr `node scripts/render-intro-video.mjs` cuando cambien mucho los números.
 
 ## QC y correcciones del 16/10
 
