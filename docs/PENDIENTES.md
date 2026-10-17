@@ -1,5 +1,16 @@
 # Estado y próximos pasos de Maru
 
+## QC y porcentaje de Match (17/10/2026, PR #71)
+
+- Calibración pedida por el dueño: quitar la doble penalización de intención y los topes 95/98; datos ausentes afectan confianza, sin asignarles 50%. Roles contenidos en títulos largos, equivalencias locales y deseables con peso limitado. La antigüedad de una persona no implica Lead.
+- Afinidad separada del orden: guardados, descartes y frescura mantienen el ranking sin alterar el porcentaje. Se preservan las mejoras hasta PR #70, incluidos ubicación, elegibilidad, variedad de empresas, idioma y ocultamiento a 120 días. Las búsquedas agregadas por la persona no desaparecen por el umbral de coincidencia mínima.
+- Regresión reproducible con cinco perfiles ficticios sobre el mismo catálogo: [decisiones, muestra y resultados](QC-MATCH-2026-10-17.md). Máximos administración 82→100, ventas 95→100, datos 91→92, marketing junior 74→85, operaciones 93→88 (baja al corregir ciudad/provincia). Son pruebas de coherencia, no validación de contrataciones.
+- QC visual detectó que Mar del Plata, Provincia de Buenos Aires se presentaba como la ciudad de Buenos Aires. Corregida esa comparación, con regresiones de formatos y alias CABA/Capital Federal. Guardar, preparar postulación y cambiar estado en seguimiento comprobados en preview, con datos ficticios.
+- Bug del editor CV/carta corregido: guardar mientras escribe, conservando el cursor y Escape. Antes se perdía la última edición si recargaba sin salir del campo.
+- Idioma sin nivel corregido: queda por confirmar, sin dar por cumplido inglés avanzado ni excluir por un nivel desconocido. La confianza refleja años de experiencia desconocidos y salario no comparable.
+- QC completo de postulación (CV y ocho campos, sin inventar disponibilidad/salario), entrevista (4 preguntas + 3 repreguntas, informe 70 conservado al recargar) y Match móvil a 390 px sin desborde. Límites y mejoras menores documentados en el registro.
+- Ver el registro de QC en ese documento para distinguir esta pasada de la anterior y sus limitaciones. No repetir importaciones de proveedores para validar el ranking: `scripts/match-calibration.ts` usa el inventario local.
+
 Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)

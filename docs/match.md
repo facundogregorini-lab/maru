@@ -118,14 +118,14 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 
 1. **Incompatibilidades primero**: no elegibles, roles a evitar, descartes, empresas bloqueadas y condiciones marcadas como indispensables (si el aviso no informa el dato, no se excluye: se avisa que falta confirmarlo).
 2. **Puntaje** ("Compatibilidad estimada", nunca probabilidad de contratación):
-   - 40 % habilidades y experiencia (obligatorias pesan el doble que las deseables; años pedidos vs. años en el CV; en cambio de carrera pesan más las habilidades transferibles que el cargo anterior),
+   - 40 % habilidades y experiencia (cuando hay requisitos y deseables, pesan 85/15 dentro de habilidades; años pedidos vs. años en el CV; en cambio de carrera pesan más las habilidades transferibles que el cargo anterior),
    - 35 % intención profesional (roles deseados y objetivo, con equivalencias español/inglés),
    - 15 % seniority,
-   - 10 % preferencias adicionales (modalidad, contrato, salario publicado comparable, idiomas, antigüedad del aviso).
-   - Si la persona declaró qué quiere hacer, el total se multiplica por `1 − 0,4 × (1 − intención)` para que un puesto ajeno a eso no lidere sólo por experiencia.
-3. **Confianza** ("Información completa / parcial / escasa"): baja cuando faltan habilidades, seniority, modalidad, contrato o descripción completa. Los datos faltantes no se convierten en coincidencias ni en incumplimientos.
+   - 10 % preferencias adicionales (modalidad, contrato, salario publicado comparable, idiomas).
+   - Las dimensiones ausentes se omiten y se reponderan las disponibles. No se asigna 50% por falta de información ni se penaliza dos veces la intención. Se puede alcanzar 100; no se normaliza contra el mejor aviso del catálogo. Ubicación e idioma conservan sus ajustes específicos de E0.
+3. **Confianza** ("Información amplia / parcial / escasa"): baja cuando faltan habilidades, seniority, preferencias relevantes o descripción completa. La información ausente del aviso no se convierte en un incumplimiento. Un requisito publicado que no aparece en el CV sigue siendo una brecha. Detalle, fórmulas y comparación controlada en [QC-MATCH-2026-10-17.md](QC-MATCH-2026-10-17.md).
 4. **Explicaciones**: hasta 3 motivos con datos concretos del CV o del aviso; brechas que dicen "no aparece en tu CV" (nunca "no tenés"); pendientes como salario no informado, elegibilidad por confirmar u horario.
-5. **Feedback**: descartar con motivo saca la oportunidad y ajusta el orden (mismo rol → baja; "no quiero esta empresa" → excluye la empresa).
+5. **Orden**: descartar con motivo saca la oportunidad y ajusta el orden (mismo rol → baja; "no quiero esta empresa" → excluye la empresa). Guardados, frescura, cambio de carrera y convocatorias abiertas también pueden cambiar el orden; no cambian el porcentaje de afinidad. Se conserva variedad de empresas y ocultamiento de avisos antiguos. El umbral mínimo no oculta búsquedas agregadas por la persona.
 6. No se usan edad, foto, género ni otros atributos personales. El perfil del match sólo tiene cargos, habilidades, idiomas, años de experiencia y ubicación.
 
 **Profundidad**: este ranking es básico (reglas + texto) y no usa IA ni credenciales nuevas. La evaluación detallada con IA de una búsqueda concreta ocurre al tocar "Preparar mi postulación", que reutiliza el coach existente (`/api/analyze` y `/api/generate`). La interpretación del CV reutiliza `/api/profile`.

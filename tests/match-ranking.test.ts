@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
+import { estimateSeniority, profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
 import { DEFAULT_WEIGHTS, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
-import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
+import type { MatchPrefs, MatchProfile, Opportunity } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
 
@@ -38,7 +38,7 @@ describe("antigüedad de los avisos", () => {
     const { out: old } = await rank(dataProfile, basePrefs, { now: days(75) });
     const aged = old.eligible.find((r) => r.id === target.id);
     expect(aged).toBeDefined();
-    expect(aged!.score).toBeLessThan(target.score);
+    expect(aged!.score).toBe(target.score); // La frescura cambia el orden, no la compatibilidad.
 
     const { out: gone } = await rank(dataProfile, basePrefs, { now: days(140) });
     expect([...gone.eligible, ...gone.pending]).toHaveLength(0);
@@ -62,9 +62,9 @@ describe("coincidencia mínima", () => {
     expect([...filtered.eligible, ...filtered.pending].map((r) => r.title)).toContain(low[0].title);
   });
 
-  it("el % nunca llega a 100", async () => {
+  it("el % se mantiene entre 0 y 100", async () => {
     const { out } = await rank(dataProfile, { ...basePrefs, carrera: "continuidad", rolesDeseados: ["Data Analyst"] });
-    expect(Math.max(...[...out.eligible, ...out.pending].map((r) => r.score))).toBeLessThanOrEqual(98);
+    expect([...out.eligible, ...out.pending].every((r) => r.score >= 0 && r.score <= 100)).toBe(true);
   });
 });
 
@@ -163,6 +163,147 @@ describe("ranking explicable", () => {
     expect(weightsFromEnv("40,35,15,10")).toEqual(DEFAULT_WEIGHTS);
     expect(weightsFromEnv("1,1,1,1").habilidades).toBeCloseTo(0.25);
     expect(weightsFromEnv("x")).toEqual(DEFAULT_WEIGHTS);
+    expect(weightsFromEnv("0,0,0,0")).toEqual(DEFAULT_WEIGHTS);
+  });
+});
+
+describe("calibración del porcentaje de afinidad", () => {
+  async function example(patch: Partial<Opportunity> = {}) {
+    const inv = await inventory();
+    const template = inv.opportunities.find((o) => o.title === "Senior Data Analyst")!;
+    return {
+      ...template, descriptionComplete: true,
+      eligibility: { status: "elegible", evidence: ["Argentina"] },
+      workplace: { value: "remoto", from: "fuente" },
+      extracted: {
+        family: { value: "datos", from: "titulo" }, seniority: { value: "senior", from: "titulo" },
+        employmentType: { value: "full_time", from: "fuente" }, yearsRequired: 4,
+        skillsRequired: ["sql", "python"], skillsDesirable: [], skillsMentioned: [],
+        languages: [{ language: "inglés", level: "Avanzado", required: true }],
+      },
+      ...patch,
+    } satisfies Opportunity;
+  }
+  function run(o: Opportunity, profile = dataProfile, extra: Partial<RankInput> = {}) {
+    return rankOpportunities({
+      opportunities: [o], postings: new Map(), profile,
+      prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] },
+      interactions: noInteractions, now: NOW, ...extra,
+    }).eligible[0];
+  }
+
+  it("un perfil alineado puede alcanzar 100 sin depender del resto del catálogo", async () => {
+    const o = await example();
+    expect(run(o).score).toBe(100);
+    const larger = rankOpportunities({ opportunities: [o, { ...o, id: "otra", title: "Marketing Assistant" }], postings: new Map(), profile: dataProfile, prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] }, interactions: noInteractions, now: NOW });
+    expect(larger.eligible.find((i) => i.id === o.id)?.score).toBe(100);
+  });
+
+  it("no castiga un rol contenido en un título más largo ni su traducción", async () => {
+    const o = await example({ title: "Senior Data Analyst - Risk LATAM" });
+    expect(run(o, dataProfile, { prefs: { ...basePrefs, rolesDeseados: ["Analista de datos"] } }).score).toBeGreaterThanOrEqual(95);
+  });
+
+  it("no reconoce como equivalentes dos roles que sólo comparten 'analista'", async () => {
+    const o = await example({ title: "Marketing Analyst" });
+    o.extracted.family.value = "marketing";
+    o.extracted.skillsRequired = ["seo", "sem"];
+    expect(run(o).score).toBeLessThan(70);
+  });
+
+  it("los datos ausentes bajan la confianza sin convertirse en 50% de cumplimiento", async () => {
+    const o = await example();
+    const full = run(o);
+    o.extracted.seniority = null;
+    o.extracted.skillsRequired = [];
+    o.extracted.languages = [];
+    o.descriptionComplete = false;
+    const sparse = run(o);
+    expect(sparse.score).toBe(full.score);
+    expect(sparse.confidence).not.toBe("alta");
+    expect(sparse.gaps).toEqual([]);
+  });
+
+  it("preferir un rol sin evidencia profesional no crea un match perfecto", async () => {
+    const o = await example();
+    o.extracted.skillsRequired = [];
+    o.extracted.seniority = null;
+    o.extracted.languages = [];
+    const empty = { ...dataProfile, headline: "", titles: [], skills: [], yearsExperience: null };
+    expect(run(o, empty).score).toBeLessThan(60);
+  });
+
+  it("una lista larga de deseables no desplaza los requisitos cumplidos", async () => {
+    const o = await example();
+    o.extracted.skillsDesirable = ["looker", "aws", "gcp", "azure", "sap", "crm", "erp", "seo"];
+    expect(run(o).score).toBeGreaterThanOrEqual(95);
+    o.extracted.skillsRequired = ["ruby", "php", "java"];
+    expect(run(o).score).toBeLessThan(85);
+    expect(run(o).gaps.join(" ")).toMatch(/ruby/);
+  });
+
+  it("un nivel adyacente se considera cercano y una brecha grande sigue pesando", async () => {
+    const o = await example();
+    o.extracted.seniority!.value = "semi_senior";
+    const adjacent = run(o).score;
+    o.extracted.seniority!.value = "director";
+    expect(adjacent).toBeGreaterThanOrEqual(95);
+    expect(run(o).score).toBeLessThan(adjacent - 10);
+    expect(run(o).gaps.join(" ")).toMatch(/Director/);
+  });
+
+  it("guardar o envejecer un aviso no cambia la afinidad del perfil", async () => {
+    const o = await example();
+    const initial = run(o).score;
+    const saved = run(o, dataProfile, { interactions: { saved: [o.id], discarded: [] } });
+    expect(saved.score).toBe(initial);
+    o.publishedAt = "2026-07-01T00:00:00Z";
+    expect(run(o).score).toBe(initial);
+  });
+
+  it("un aviso viejo queda detrás de uno igual reciente, con el mismo porcentaje", async () => {
+    const old = await example({ id: "viejo", publishedAt: "2026-07-01T00:00:00Z" });
+    const fresh = { ...old, id: "reciente", publishedAt: NOW.toISOString() };
+    const out = rankOpportunities({ opportunities: [old, fresh], postings: new Map(), profile: dataProfile, prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] }, interactions: noInteractions, now: NOW });
+    expect(out.eligible.map((r) => r.id)).toEqual(["reciente", "viejo"]);
+    expect(out.eligible[0].score).toBe(out.eligible[1].score);
+  });
+
+  it("reconoce administración / administrativo / administrativa sin inventar otras habilidades", async () => {
+    const o = await example({ title: "Analista administrativo" });
+    o.extracted.family.value = "administracion";
+    o.extracted.skillsRequired = ["excel"];
+    const p = { ...dataProfile, headline: "Analista administrativa", titles: ["Analista de Administración"], skills: ["Excel"] };
+    expect(run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Administrative Analyst"] } }).score).toBe(100);
+  });
+
+  it("Buenos Aires ciudad no coincide con otra ciudad de la provincia", async () => {
+    const o = await example({ workplace: { value: "presencial", from: "fuente" } });
+    const prefs: MatchPrefs = { ...basePrefs, ciudad: "Buenos Aires", rolesDeseados: ["Data Analyst"], indispensables: ["ubicacion"] };
+    for (const location of ["Mar del Plata, Provincia de Buenos Aires", "Mar del Plata, Buenos Aires, Argentina", "Tandil, Buenos Aires"] ) {
+      o.locations = [location];
+      expect(run(o, dataProfile, { prefs })).toBeUndefined();
+    }
+    for (const location of ["CABA", "Capital Federal", "Buenos Aires, Argentina", "Argentina - Buenos Aires", "Ciudad Autónoma de Buenos Aires"]) {
+      o.locations = [location];
+      expect(run(o, dataProfile, { prefs }).score).toBe(100);
+    }
+  });
+
+  it("un idioma sin nivel queda por confirmar, sin aprobarlo ni excluir por un dato desconocido", async () => {
+    const o = await example();
+    const p = { ...dataProfile, languages: [{ language: "English", level: "" }] };
+    const result = run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"], indispensables: ["idioma"] } });
+    expect(result).toBeDefined();
+    expect(result.score).toBeLessThan(80);
+    expect(result.pending.join(" ")).toMatch(/confirmá tu nivel/);
+    expect(result.gaps.join(" ")).toMatch(/no indica el nivel/);
+  });
+
+  it("no asume que los años de experiencia desconocidos cumplen el requisito", async () => {
+    const o = await example();
+    const result = run(o, { ...dataProfile, yearsExperience: null }, { prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"], seniorities: ["senior"] } });
+    expect(result.pending.join(" ")).toMatch(/4\+ años de experiencia: confirmá/);
   });
 });
 
@@ -191,6 +332,10 @@ describe("perfil para el match", () => {
     expect(m.skills).toEqual(expect.arrayContaining(["SEO", "sem", "sql"]));
     expect(JSON.stringify(m)).not.toContain("ana@mail.com");
     expect(Object.keys(m)).not.toContain("nombre");
+  });
+  it("los años por sí solos no convierten a alguien en lead", () => {
+    expect(estimateSeniority({ ...dataProfile, yearsExperience: 18 })).toBe("senior");
+    expect(estimateSeniority({ ...dataProfile, titles: ["Data Lead"], yearsExperience: 18 })).toBe("lead");
   });
 });
 

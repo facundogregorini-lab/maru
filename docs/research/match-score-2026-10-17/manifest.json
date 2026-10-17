@@ -1,0 +1,7 @@
+{
+  "baseCommit": "5255e67435c76f839150bd931eb663c36bd1516a",
+  "inventorySha256": "4a74efe4c3b157e8e05ef7d67ac75dda977e1f383487abec38414733083e115e",
+  "method": "Mismo inventario y cinco perfiles ficticios en scripts/match-calibration.ts; ranking y estimación de seniority originales de baseCommit vs propuesta. Sin APIs de proveedores ni IA.",
+  "evaluationTime": "2026-10-17T12:00:00Z",
+  "warning": "No mide contratación, precisión humana ni cobertura de mercado. Los primeros 20 incluyen variedad de empresas y preferencias de orden."
+}
