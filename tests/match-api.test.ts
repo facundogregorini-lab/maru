@@ -60,6 +60,21 @@ describe("API de ranking: privacidad", () => {
     expect((await rankingPOST(big)).status).toBe(413);
   });
 
+  it("recorta texto largo en vez de rechazar (aptitudes y cargos tal como vienen del CV)", async () => {
+    const long = "Infraestructura y Desarrollo Web: GitHub, Vercel, administración de dominios, servidores, certificados SSL y plataformas de hosting (Hostinger, Wiroos).";
+    const profile = { ...dataProfile, skills: [...dataProfile.skills, long], titles: ["x".repeat(300), ...dataProfile.titles], yearsExperience: 99 };
+    const prefs = { ...basePrefs, objetivo: "y".repeat(900), rolesDeseados: Array.from({ length: 12 }, (_, i) => `Rol ${i}`) };
+    expect((await rankingPOST(req({ profile, prefs, interactions: noInteractions }))).status).toBe(200);
+  });
+
+  it("dice qué campo falló cuando el pedido no se puede usar", async () => {
+    const res = await rankingPOST(req({ profile: dataProfile, prefs: { ...basePrefs, modalidades: ["en la luna"] }, interactions: noInteractions }));
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.fields).toEqual(["modalidad"]);
+    expect(j.error).toContain("modalidad");
+  });
+
   it("muestra cifras reales del inventario", async () => {
     const res = await inventarioGET();
     const j = await res.json();

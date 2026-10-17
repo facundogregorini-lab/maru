@@ -1,9 +1,13 @@
 import { z } from "zod";
 
-/** Validación de lo que el navegador manda al ranking. Límites estrictos: es dato no confiable. */
+/**
+ * Validación de lo que el navegador manda al ranking: es dato no confiable.
+ * El texto libre (lo que sale del CV o escribe la persona) se recorta en vez de rechazarse:
+ * una aptitud larga no puede dejar a nadie sin ranking. El tamaño total ya lo acota la ruta.
+ */
 
-const str = (max: number) => z.string().max(max);
-const list = (max: number, len = 120) => z.array(str(len)).max(max);
+const str = (max: number) => z.string().transform((s) => s.trim().slice(0, max));
+const list = (max: number, len = 120) => z.array(z.string()).transform((xs) => xs.map((s) => s.trim().slice(0, len)).filter(Boolean).slice(0, max));
 
 const WORKPLACES = ["remoto", "hibrido", "presencial", "desconocido"] as const;
 const SENIORITIES = ["pasantia", "junior", "semi_senior", "senior", "lead", "manager", "director", "ejecutivo"] as const;
@@ -32,8 +36,13 @@ export const MatchProfileSchema = z.object({
   headline: str(200),
   titles: list(10, 160),
   skills: list(60, 80),
-  languages: z.array(z.object({ language: str(40), level: str(60) })).max(10),
-  yearsExperience: z.number().min(0).max(70).nullable(),
+  languages: z
+    .array(z.object({ language: str(40), level: str(60) }))
+    .transform((xs) => xs.filter((l) => l.language).slice(0, 10)),
+  yearsExperience: z
+    .number()
+    .nullable()
+    .transform((n) => (n === null ? null : Math.min(70, Math.max(0, n)))),
   location: str(160),
   summary: str(1000),
 });
@@ -110,3 +119,34 @@ export const RankingRequestSchema = z.object({
 });
 
 export type ExternalJob = z.infer<typeof ExternalJobSchema>;
+
+const FIELD_LABEL: Record<string, string> = {
+  headline: "titular",
+  titles: "cargos",
+  skills: "habilidades",
+  languages: "idiomas",
+  yearsExperience: "años de experiencia",
+  location: "dónde vivís",
+  objetivo: "qué te gustaría hacer",
+  rolesDeseados: "roles deseados",
+  evitar: "roles a evitar",
+  ciudad: "ciudad",
+  pais: "país",
+  otrosLugares: "otros lugares",
+  autorizacion: "autorización de trabajo",
+  modalidades: "modalidad",
+  seniorities: "seniority",
+  contratos: "tipo de contrato",
+  salario: "salario",
+  indispensables: "indispensables",
+  carrera: "continuidad o cambio",
+};
+
+/** Qué campos fallaron, en palabras de la persona (sin repetir lo que mandó: puede ser dato personal). */
+export function invalidFields(error: z.ZodError): string[] {
+  const names = error.issues.map((i) => {
+    const key = [...i.path].reverse().find((k): k is string => typeof k === "string" && k in FIELD_LABEL);
+    return key ? FIELD_LABEL[key] : String(i.path[0] ?? "pedido");
+  });
+  return [...new Set(names)];
+}
