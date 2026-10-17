@@ -1,5 +1,7 @@
 # Escritura de Maru
 
+**Estado al 17/10/2026:** implementación y pruebas listas en PR #76. Publicación pendiente: Vercel rechazó la nueva preview por `build-rate-limit` y pide reintentar en 24 horas. Production sirve el home/CTA de PR #75; todavía no aplica esta política de escritura.
+
 ## Definición de producto
 
 Los textos generados tienen que servir a su lector y sonar a la persona que aportó
@@ -77,4 +79,4 @@ OAuth vencido; no se consideró una revisión completada.
 Se prueban frases en español que escapaban al checker inglés, términos técnicos,
 selección de campos, rechazo de cambios de cifras/siglas/links, esquema, duración,
 extracción literal, campos de extensión, timeout y el límite de dos llamadas.
-El QC con datos ficticios se registra sin CVs ni contactos reales.
+El smoke test de generación con el proveedor real queda pendiente del deploy. Las claves sensibles de Vercel no se exportaron a archivos locales; los tests actuales usan respuestas simuladas y verifican el recorrido de edición y las guardias. No se afirma una mejora medida en calidad de cartas o guiones todavía.
