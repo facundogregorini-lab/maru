@@ -4,8 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import LoginDialog from "@/components/auth/LoginDialog";
 import { PLAN_ORDER, PLANS, type PlanId } from "@/lib/plans";
+import { trackCheckoutCreated, trackCheckoutFailed, trackPlanClick, trackVerifiedPurchase, type VerifiedPayment } from "@/lib/tracking";
 
-type Status = { enabled: boolean; plan: string; tier: PlanId | null; status: string; paidThrough: number | null };
+type Status = { enabled: boolean; plan: string; tier: PlanId | null; status: string; paidThrough: number | null; lastPayment?: VerifiedPayment | null };
 /** Las tres tarjetas de planes pagos y el estado de la suscripción de la cuenta. */
 export default function BillingPanel() {
   const { email } = useAuth();
@@ -18,6 +19,8 @@ export default function BillingPanel() {
     const body = await res.json();
     if (!res.ok) throw new Error(`${body.error ?? "No pudimos consultar tu plan."}${body.detail ? ` Detalle: ${body.detail}` : ""}`);
     setStatus(body);
+    // Compra: sólo con el pago verificado por el servidor; una vez por pago (ver src/lib/tracking).
+    void trackVerifiedPurchase(email, body.lastPayment);
   }, [email]);
   useEffect(() => {
     let active = true;
@@ -26,6 +29,7 @@ export default function BillingPanel() {
       const body = await res.json();
       if (!res.ok) throw new Error(body.error);
       if (active) setStatus(body);
+      if (active) void trackVerifiedPurchase(email, body.lastPayment);
     }).catch(() => { if (active) setError("No pudimos consultar tu plan. Recargá la página para reintentar."); });
     return () => { active = false; };
   }, [email]);
@@ -37,11 +41,18 @@ export default function BillingPanel() {
       if (action === "status") await read(true);
       else {
         const checkout = action !== "cancel";
-        const res = await fetch(`/api/billing/${checkout ? "checkout" : "cancel"}`, { method: "POST", headers: { "X-Maru-Account": email, "Content-Type": "application/json" }, body: checkout ? JSON.stringify({ plan: action }) : undefined });
-        const body = await res.json();
-        if (!res.ok) throw new Error(body.error);
-        if (body.url) window.location.assign(body.url);
-        else await read();
+        if (checkout) trackPlanClick(action);
+        const res = await fetch(`/api/billing/${checkout ? "checkout" : "cancel"}`, { method: "POST", headers: { "X-Maru-Account": email, "Content-Type": "application/json" }, body: checkout ? JSON.stringify({ plan: action }) : undefined }).catch(() => null);
+        const body = res ? await res.json().catch(() => ({})) : {};
+        if (!res?.ok) {
+          if (checkout) trackCheckoutFailed(action, res ? body.code : "red");
+          throw new Error(body.error ?? "No pudimos completar el pedido.");
+        }
+        if (body.url) {
+          // Inicio de checkout: el servidor ya creó la suscripción. Esperamos la etiqueta como mucho 0,8 s antes de ir a Mercado Pago.
+          if (checkout && typeof body.checkoutId === "string") await trackCheckoutCreated(email, action, body.checkoutId, 800);
+          window.location.assign(body.url);
+        } else await read();
       }
     } catch (err) { setError(err instanceof Error ? err.message : "No pudimos completar el pedido."); }
     finally { setBusy(null); }
@@ -53,7 +64,7 @@ export default function BillingPanel() {
       {PLAN_ORDER.map((id) => {
         const plan = PLANS[id];
         const current = paid && status?.tier === id;
-        return <article key={id} className={`relative rounded-[24px] bg-white p-6 ${plan.badge ? "order-first border-2 border-ink md:order-none pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:pb-8" : "border border-line"}`}>
+        return <article key={id} data-plan-card={id} className={`relative rounded-[24px] bg-white p-6 ${plan.badge ? "order-first border-2 border-ink md:order-none pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:pb-8" : "border border-line"}`}>
           {plan.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{plan.badge}</p>}
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-xl font-bold">{plan.nombre}</h3>

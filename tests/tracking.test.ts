@@ -1,0 +1,221 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+beforeEach(() => { vi.resetModules(); });
+
+const ID = "AW-18500028132";
+function stubAdsEnv() {
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_ID", ID);
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_LABEL_ACTIVATION", "xDWcCOnckKAdEOSNwPVE");
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_LABEL_PAYWALL", "0QrpCObckKAdEOSNwPVE");
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_LABEL_BEGIN_CHECKOUT", "azVYCO_ckKAdEOSNwPVE");
+  vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_LABEL_PURCHASE", "pbctCOzckKAdEOSNwPVE");
+}
+/** Navegador mínimo para las funciones del cliente (vitest corre en node). */
+function stubBrowser(hostname: string, gtag?: (...args: unknown[]) => void) {
+  const target = new EventTarget();
+  const win = Object.assign(target, { location: { hostname, search: "" }, gtag, __maruAdsLoaded: gtag ? true : undefined }) as unknown as Window;
+  vi.stubGlobal("window", win);
+  return win as Window & { __maruAds?: { result: string }[] };
+}
+
+describe("configuración de Google Ads", () => {
+  it("arma send_to sólo con ID y labels válidos y usa los dominios de producción por defecto", async () => {
+    const { parseAdsConfig, DEFAULT_ADS_HOSTS } = await import("@/lib/tracking/config");
+    const ok = parseAdsConfig({ id: ID, labels: { activation: "xDWcCOnckKAdEOSNwPVE", paywall: "0QrpCObckKAdEOSNwPVE", begin_checkout: "", purchase: "mal label!" }, hosts: undefined });
+    expect(ok.sendTo.activation).toBe(`${ID}/xDWcCOnckKAdEOSNwPVE`);
+    expect(ok.sendTo.paywall).toBe(`${ID}/0QrpCObckKAdEOSNwPVE`);
+    expect(ok.sendTo.begin_checkout).toBeNull();
+    expect(ok.sendTo.purchase).toBeNull();
+    expect(ok.hosts).toEqual(DEFAULT_ADS_HOSTS);
+    const off = parseAdsConfig({ id: "G-ABC123", labels: { activation: "xDWcCOnckKAdEOSNwPVE", paywall: undefined, begin_checkout: undefined, purchase: undefined }, hosts: "x.com" });
+    expect(off.id).toBeNull();
+    expect(off.sendTo.activation).toBeNull();
+  });
+
+  it("la etiqueta se carga una vez, con el destino AW, y sólo en los dominios de producción", async () => {
+    stubAdsEnv();
+    const { googleTagSnippet } = await import("@/lib/tracking/tag");
+    const js = googleTagSnippet()!;
+    expect(js).toContain(`gtag('config',"${ID}")`);
+    expect(js).toContain("googletagmanager.com/gtag/js?id=");
+    expect(js).toContain('["www.marucoach.com","marucoach.com"]');
+    expect(js).toContain("__maruAdsInit");
+    expect(js).not.toMatch(/GTM-|gtm\.js/);
+    vi.stubEnv("NEXT_PUBLIC_GOOGLE_ADS_ID", "");
+    vi.resetModules();
+    expect((await import("@/lib/tracking/tag")).googleTagSnippet()).toBeNull();
+  });
+});
+
+describe("paywall por cupo gratis", () => {
+  it("sólo abre los planes con 429 PLAN_LIMIT de una ruta que consume cupo", async () => {
+    const win = stubBrowser("www.marucoach.com");
+    const seen: string[] = [];
+    win.addEventListener("maru:plan-limit", (e) => seen.push((e as CustomEvent).detail.tool));
+    const { notifyPlanLimit } = await import("@/lib/tracking/paywall");
+    expect(notifyPlanLimit("/api/cv/generate", 429, "PLAN_LIMIT")).toBe("cv");
+    expect(notifyPlanLimit("/api/carta", 429, "PLAN_LIMIT")).toBe("carta");
+    expect(notifyPlanLimit("/api/carta/parrafo", 429, "PLAN_LIMIT")).toBeNull();
+    expect(notifyPlanLimit("/api/cv/generate", 429, "RATE_LIMIT")).toBeNull(); // freno por exceso de uso
+    expect(notifyPlanLimit("/api/cv/generate", 503, "PLAN_UNAVAILABLE")).toBeNull(); // error técnico
+    expect(notifyPlanLimit("/api/cv/generate", 401, "AUTH_REQUIRED")).toBeNull();
+    expect(seen).toEqual(["cv", "carta"]);
+  });
+});
+
+describe("envío de conversiones", () => {
+  it("en previews o localhost no envía nada: queda registrado como prueba", async () => {
+    stubAdsEnv();
+    const gtag = vi.fn();
+    const win = stubBrowser("maru-git-rama-grego7.vercel.app", gtag);
+    const { sendAdsConversion } = await import("@/lib/tracking/ads");
+    expect(await sendAdsConversion("paywall")).toBe("dry_run");
+    expect(gtag).not.toHaveBeenCalled();
+    expect(win.__maruAds?.[0].result).toBe("dry_run");
+  });
+
+  it("en producción usa la llamada nativa con sólo send_to, value, currency y transaction_id", async () => {
+    stubAdsEnv();
+    const gtag = vi.fn((...args: unknown[]) => (args[2] as { event_callback: () => void }).event_callback());
+    stubBrowser("www.marucoach.com", gtag);
+    const { sendAdsConversion } = await import("@/lib/tracking/ads");
+    expect(await sendAdsConversion("purchase", { value: 22500, currency: "ARS", transaction_id: "mp_200" })).toBe("sent");
+    const [, name, params] = gtag.mock.calls[0];
+    expect(name).toBe("conversion");
+    expect(Object.keys(params as object).sort()).toEqual(["currency", "event_callback", "send_to", "transaction_id", "value"]);
+    expect(params).toMatchObject({ send_to: `${ID}/pbctCOzckKAdEOSNwPVE`, value: 22500, currency: "ARS", transaction_id: "mp_200" });
+  });
+
+  it("no envía parámetros con formato inválido (p. ej. un email como transaction_id) ni con la etiqueta bloqueada", async () => {
+    stubAdsEnv();
+    const gtag = vi.fn();
+    const win = stubBrowser("www.marucoach.com", gtag);
+    const { sendAdsConversion, cleanParams } = await import("@/lib/tracking/ads");
+    expect(cleanParams({ transaction_id: "ana@example.com" })).toBeNull();
+    expect(cleanParams({ value: 100 })).toBeNull(); // sin moneda
+    expect(await sendAdsConversion("purchase", { transaction_id: "ana@example.com" })).toBe("invalid");
+    (win as unknown as { __maruAdsLoaded: boolean }).__maruAdsLoaded = false;
+    expect(await sendAdsConversion("activation")).toBe("blocked");
+    expect(gtag).not.toHaveBeenCalled();
+  });
+
+  it("si la etiqueta no confirma a tiempo, igual libera la navegación", async () => {
+    stubAdsEnv();
+    stubBrowser("www.marucoach.com", vi.fn());
+    const { sendAdsConversion } = await import("@/lib/tracking/ads");
+    const started = Date.now();
+    expect(await sendAdsConversion("begin_checkout", { transaction_id: "co_abc" }, { waitMs: 50 })).toBe("queued");
+    expect(Date.now() - started).toBeLessThan(1000);
+  });
+
+  it("los eventos de producto descartan datos personales y texto libre", async () => {
+    const { safeProps } = await import("@/lib/tracking/analytics");
+    expect(safeProps({ herramienta: "cv", plan: "ana@example.com", codigo: "texto con espacios", primera: true, monto: 4500 })).toEqual({ herramienta: "cv", primera: true, monto: 4500 });
+  });
+});
+
+describe("deduplicación por cuenta en el servidor", () => {
+  async function server() {
+    const db = await import("@/lib/db");
+    db.resetMemoryDb();
+    return import("@/lib/tracking/server");
+  }
+
+  it("un solo primer límite y una sola activación por cuenta, sin el email en la clave", async () => {
+    const s = await server();
+    expect(await s.claimMilestone("ana@example.com", "paywall", undefined, "claim")).toEqual({ first: true });
+    expect(await s.claimMilestone("ANA@example.com ", "paywall", undefined, "claim")).toEqual({ first: false });
+    expect(await s.claimMilestone("ana@example.com", "activation", undefined, "check")).toEqual({ first: true });
+    expect(await s.claimMilestone("ana@example.com", "activation", undefined, "check")).toEqual({ first: true }); // el modo de prueba no consume
+    expect(await s.claimMilestone("ana@example.com", "activation", undefined, "mark")).toEqual({ first: false });
+    expect(await s.claimMilestone("ana@example.com", "activation", undefined, "claim")).toEqual({ first: false });
+    expect(s.milestoneKey("ana@example.com", "paywall")).not.toContain("ana");
+  });
+
+  it("checkout y compra se deduplican por su id y lo exigen", async () => {
+    const s = await server();
+    expect(await s.claimMilestone("ana@example.com", "begin_checkout", "abc123", "claim")).toEqual({ first: true });
+    expect(await s.claimMilestone("ana@example.com", "begin_checkout", "abc123", "claim")).toEqual({ first: false });
+    expect(await s.claimMilestone("ana@example.com", "begin_checkout", "otro", "claim")).toEqual({ first: true });
+    await expect(s.claimMilestone("ana@example.com", "purchase", undefined, "claim")).rejects.toThrow();
+    await expect(s.claimMilestone("ana@example.com", "paywall", "x", "claim")).rejects.toThrow();
+    await expect(s.claimMilestone("ana@example.com", "purchase", "a b", "claim")).rejects.toThrow();
+  });
+
+  it("la ruta exige sesión y responde sólo si es el primero", async () => {
+    (await import("@/lib/db")).resetMemoryDb();
+    const { POST } = await import("@/app/api/tracking/milestone/route");
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const req = (cookie?: string) => new Request("https://maru.test/api/tracking/milestone", {
+      method: "POST",
+      headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}) },
+      body: JSON.stringify({ milestone: "paywall" }),
+    });
+    expect((await POST(req())).status).toBe(401);
+    const cookie = `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}`;
+    expect(await (await POST(req(cookie))).json()).toEqual({ first: true });
+    expect(await (await POST(req(cookie))).json()).toEqual({ first: false });
+  });
+});
+
+describe("checkout y compra verificada", () => {
+  async function setup() {
+    vi.stubEnv("NEXT_PUBLIC_BILLING_ENABLED", "true");
+    vi.stubEnv("MERCADOPAGO_ACCESS_TOKEN", "test-token");
+    vi.stubEnv("MERCADOPAGO_WEBHOOK_SECRET", "test-secret");
+    const db = await import("@/lib/db");
+    db.resetMemoryDb(); db.resetMemoryCounters();
+    return import("@/lib/billing/server");
+  }
+  function provider(opts: { live?: boolean; amount?: number } = {}) {
+    let reference = "";
+    let paymentId = 200;
+    const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      const path = new URL(String(url)).pathname;
+      if (path === "/preapproval" && init?.method === "POST") {
+        reference = JSON.parse(String(init.body)).external_reference;
+        return Response.json({ id: "sub1", external_reference: reference, status: "pending", init_point: "https://www.mercadopago.com.ar/subscriptions/checkout?id=sub1" });
+      }
+      if (path === "/preapproval/sub1") return Response.json({ id: "sub1", external_reference: reference, status: "authorized" });
+      if (path.startsWith("/authorized_payments/")) return Response.json({ id: path.split("/").pop(), preapproval_id: "sub1", payment: { id: paymentId } });
+      if (path.startsWith("/v1/payments/")) return Response.json({ id: Number(path.split("/").pop()), status: "approved", transaction_amount: opts.amount ?? 4500, currency_id: "ARS", date_approved: new Date().toISOString(), live_mode: opts.live ?? true });
+      throw new Error(`Unexpected provider request: ${path}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    return { renew: () => { paymentId += 1; }, reference: () => reference };
+  }
+
+  it("el checkout devuelve un id estable que no expone la referencia interna", async () => {
+    const s = await setup(); const p = provider();
+    const a = await s.startCheckout("ana@example.com", "semanal");
+    const b = await s.startCheckout("ana@example.com", "semanal"); // reintento: mismo checkout pendiente
+    expect(a.url).toContain("mercadopago.com.ar");
+    expect(b.checkoutId).toBe(a.checkoutId);
+    expect(a.checkoutId).toMatch(/^[a-f0-9]{32}$/);
+    expect(a.checkoutId).not.toContain(p.reference().replace(/-/g, "").slice(0, 8));
+  });
+
+  it("informa el primer pago acreditado con su importe y distingue las renovaciones", async () => {
+    const s = await setup(); const p = provider();
+    await s.startCheckout("ana@example.com", "semanal");
+    await s.processNotification("subscription_authorized_payment", "100");
+    const first = s.lastPayment(await s.readSubscription("ana@example.com"));
+    expect(first).toMatchObject({ id: "200", amount: 4500, currency: "ARS", first: true, plan: "semanal" });
+    p.renew();
+    await s.processNotification("subscription_authorized_payment", "101");
+    expect(s.lastPayment(await s.readSubscription("ana@example.com"))).toMatchObject({ id: "201", first: false });
+  });
+
+  it("no informa pagos de prueba ni montos que no coinciden con el plan", async () => {
+    let s = await setup(); provider({ live: false });
+    await s.startCheckout("ana@example.com", "semanal");
+    await s.processNotification("subscription_authorized_payment", "100");
+    expect(s.lastPayment(await s.readSubscription("ana@example.com"))).toBeNull();
+    vi.resetModules();
+    s = await setup(); provider({ amount: 1 });
+    await s.startCheckout("ana@example.com", "semanal");
+    await s.processNotification("subscription_authorized_payment", "100");
+    expect(s.lastPayment(await s.readSubscription("ana@example.com"))).toBeNull();
+  });
+});

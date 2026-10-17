@@ -1,12 +1,17 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter } from "../db";
 import { userId } from "../sync/server";
 import { billingEnabled, billingFlagState, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
 
-/** `plan` falta en suscripciones creadas antes de los tres planes: eran mensuales. */
-export type Subscription = { id: string; reference: string; status: string; plan?: PlanId; checkoutUrl?: string; paidThrough?: number; paymentId?: number; paymentAt?: number; updatedAt: number };
+/**
+ * `plan` falta en suscripciones creadas antes de los tres planes: eran mensuales.
+ * `firstPaymentId`: el primer pago acreditado de la suscripción (los siguientes son renovaciones). Falta en
+ * suscripciones que ya tenían un pago antes de guardarlo; esas no se informan como primera compra.
+ * `paymentLive`: false si Mercado Pago marcó el último pago como de prueba (no se mide como compra).
+ */
+export type Subscription = { id: string; reference: string; status: string; plan?: PlanId; checkoutUrl?: string; paidThrough?: number; paymentId?: number; paymentAt?: number; firstPaymentId?: number; paymentLive?: boolean; updatedAt: number };
 const key = (email: string) => `maru:billing:${userId(email)}`;
 export const billingReady = () => billingEnabled() && dbConfigured() && !!process.env.MERCADOPAGO_ACCESS_TOKEN && !!process.env.MERCADOPAGO_WEBHOOK_SECRET;
 /** Qué falta para cobrar, sólo con nombres (nunca valores), para diagnosticar desde /api/billing/status. */
@@ -32,12 +37,27 @@ async function change(email: string, fn: (s: Subscription) => Subscription): Pro
   }
   throw new Error("La suscripción se está actualizando. Probá otra vez.");
 }
+/** Id público y estable del checkout para deduplicar la conversión: hash de la referencia interna (que no sale del servidor). */
+export const checkoutId = (reference: string) => createHash("sha256").update(`maru-checkout:${reference}`).digest("hex").slice(0, 32);
+
+/** Último pago acreditado, ya verificado contra Mercado Pago, sin datos personales (para medir la compra en el navegador). */
+export function lastPayment(sub: Subscription | null): { id: string; amount: number; currency: "ARS"; first: boolean; at: number; plan: PlanId } | null {
+  if (!sub?.paymentId || !sub.paymentAt || sub.paymentLive === false || !hasPaidAccess(sub)) return null;
+  const plan = subscriptionPlan(sub);
+  return { id: String(sub.paymentId), amount: PLANS[plan].price, currency: "ARS", first: sub.firstPaymentId === sub.paymentId, at: sub.paymentAt, plan };
+}
+
 export async function checkout(email: string, planId: PlanId): Promise<string> {
+  return (await startCheckout(email, planId)).url;
+}
+
+/** Igual que `checkout`, pero devuelve también el id del checkout (el mismo en reintentos de la misma suscripción pendiente). */
+export async function startCheckout(email: string, planId: PlanId): Promise<{ url: string; checkoutId: string }> {
   if (!billingReady()) throw new Error("La suscripción todavía no está habilitada.");
   const prev = await readSubscription(email);
   if (hasPaidAccess(prev)) throw new Error("Ya tenés el plan activo.");
   if (prev?.checkoutUrl && prev.status === "pending") {
-    if (subscriptionPlan(prev) === planId) return prev.checkoutUrl;
+    if (subscriptionPlan(prev) === planId) return { url: prev.checkoutUrl, checkoutId: checkoutId(prev.reference) };
     throw new Error(`Tenés un pago pendiente del plan ${PLANS[subscriptionPlan(prev)].nombre.toLowerCase()}. Cancelalo para elegir otro.`);
   }
   if (prev?.status === "authorized") throw new Error("Ya tenés una suscripción autorizada. Estamos esperando la confirmación del pago.");
@@ -57,7 +77,7 @@ export async function checkout(email: string, planId: PlanId): Promise<string> {
   });
   if (!sub.id || !sub.init_point || !/^https:\/\/([a-z0-9-]+\.)?mercadopago\.com(\.ar)?\//i.test(sub.init_point)) throw new Error("Mercado Pago no devolvió un link de pago válido.");
   await change(email, (current) => ({ ...current, id: sub.id, status: sub.status, checkoutUrl: sub.init_point }));
-  return sub.init_point;
+  return { url: sub.init_point, checkoutId: checkoutId(reference) };
 }
 export async function refreshSubscription(email: string): Promise<Subscription | null> {
   const current = await readSubscription(email);
@@ -153,7 +173,9 @@ export async function processNotification(type: string, id: string): Promise<str
     }
     if (payment.status === "approved" && !payment.transaction_amount_refunded) {
       if (at < (s.paymentAt ?? 0)) return next;
-      return { ...next, paymentId: payment.id, paymentAt: at, paidThrough: periodEnd(at, plan.frequency, plan.frequencyType) };
+      // El primer pago acreditado de la suscripción queda guardado: los siguientes son renovaciones.
+      const firstPaymentId = s.firstPaymentId ?? (s.paymentId ? undefined : payment.id);
+      return { ...next, paymentId: payment.id, paymentAt: at, paidThrough: periodEnd(at, plan.frequency, plan.frequencyType), paymentLive: payment.live_mode !== false, ...(firstPaymentId ? { firstPaymentId } : {}) };
     }
     if (s.paymentId === payment.id) return { ...next, paidThrough: 0 };
     return next;

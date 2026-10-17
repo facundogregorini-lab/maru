@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { VideoFeedback } from "@/lib/schemas";
 import { downloadBlob } from "@/lib/export/download";
+import { trackActivation } from "@/lib/tracking";
 import { useLoginGate } from "../auth/useLoginGate";
 import { speechStats, useDictation } from "../speech";
 import { post } from "../ui";
@@ -157,6 +158,8 @@ export default function Recorder({ script, target, lang, filename }: { script: s
       camera.stop();
       if (!blob.size) { setPhase("off"); setError("La toma quedó vacía. Volvé a prender la cámara e intentá otra vez."); return; }
       setTake({ url: URL.createObjectURL(blob), blob, seconds, mime: type });
+      // Activación: el video personalizado quedó grabado y disponible para ver y descargar.
+      void trackActivation(gate.email, "video", "toma");
       setPhase("review");
     };
     recorderRef.current = rec;

@@ -37,6 +37,14 @@ Próxima acción al liberarse la cuota: redeployar el último `main`, confirmar 
 
 Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
 
+## Conversiones de Google Ads (17/10/2026)
+
+Rama `claude/conversiones-google-ads` (sin mergear: el dueño pidió no publicar hasta revisar la política de privacidad). Detalle completo en `docs/TRACKING.md`.
+
+- **Hecho en código:** etiqueta de Google directa (sin GTM), capa central `src/lib/tracking`, deduplicación por cuenta en Redis, los cuatro eventos (activación, límite con planes visibles, inicio de checkout, compra verificada) y el modal de planes al chocar con el cupo gratis (`PaywallHost`). Apagado mientras no estén las variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Vercel.
+- **Hecho en Google Ads:** 4 acciones "Maru | …" (todas secundarias), objetivo personalizado "Maru | Optimización límite gratuito" (sólo "Límite alcanzado") asignado como único objetivo a las 3 campañas MARU_AR_SEARCH_*.
+- **Falta (dueño):** actualizar `/privacidad` (hoy dice "sin cookies de publicidad"), cargar las variables en Production, deploy, verificación en producción (lista en `docs/TRACKING.md`) y decidir la puja (hoy Maximizar clics: no optimiza conversiones).
+
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
 Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se anota acá**, para que otra sesión pueda seguir si se cortan los tokens. Diagnóstico de partida (17/10, sobre 3.966 oportunidades elegibles):

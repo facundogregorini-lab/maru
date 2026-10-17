@@ -10,6 +10,7 @@ import type { Carta, CartaDoc, CartaLargo, CartaOpciones, CartaTono, GapQuestion
 import { load, remove, save } from "@/lib/storage";
 import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { upsertTracked } from "@/lib/tracker";
+import { trackActivation } from "@/lib/tracking";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
@@ -392,6 +393,7 @@ function Result({
       try {
         if (kind === "pdf") await downloadLetterPdf(doc, filename);
         else await downloadLetterDocx(doc, filename);
+        void trackActivation(gate.email, "carta", kind === "pdf" ? "descarga_pdf" : "descarga_word");
       } catch (e) {
         if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") {
           gate.ask("descargar tu carta", () => doExport(kind));
@@ -449,7 +451,7 @@ function Result({
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}
             </button>
-            <CopyButton text={cartaToText(doc)} label="Copiar como texto" guard={(copy) => gate.run("copiar tu carta", copy, { resume: false })} />
+            <CopyButton text={cartaToText(doc)} label="Copiar como texto" guard={(copy) => gate.run("copiar tu carta", copy, { resume: false })} onCopied={() => void trackActivation(gate.email, "carta", "copia")} />
           </div>
 
           <div className="rounded-3xl bg-paper p-5">
@@ -508,7 +510,7 @@ function Result({
               <h2 className="font-display text-xl tracking-tight">Mensaje corto</h2>
               <p className="text-xs text-muted">Para LinkedIn o un email rápido al recruiter · {carta.mensaje_corto.length} caracteres</p>
             </div>
-            <CopyButton text={carta.mensaje_corto} />
+            <CopyButton text={carta.mensaje_corto} onCopied={() => void trackActivation(gate.email, "carta", "copia")} />
           </div>
           <p className="mt-3 whitespace-pre-line rounded-2xl bg-cream px-4 py-3 leading-relaxed">{carta.mensaje_corto}</p>
         </section>

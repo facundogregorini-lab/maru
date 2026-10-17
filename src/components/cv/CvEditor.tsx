@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { atsReport } from "@/lib/ats";
 import { cvToText, fileBaseName, photoRecommended, setTemplate } from "@/lib/cv";
 import type { CvContext, CvDoc, SectionKey } from "@/lib/schemas";
+import { trackActivation } from "@/lib/tracking";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import PhotoCropper from "../PhotoCropper";
@@ -110,6 +111,8 @@ export default function CvEditor({
       try {
         if (kind === "pdf") await downloadPdf(doc, filename);
         else await downloadDocx(doc, filename);
+        // Activación: la descarga se generó y se entregó al navegador.
+        void trackActivation(gate.email, "cv", kind === "pdf" ? "descarga_pdf" : "descarga_word");
       } catch (e) {
         // La sesión venció o se cerró en otra pestaña: pedimos ingresar de nuevo y seguimos.
         if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") {
