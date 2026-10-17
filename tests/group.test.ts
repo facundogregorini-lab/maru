@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupOpportunities } from "@/lib/match/group";
+import { companyKey, groupOpportunities } from "@/lib/match/group";
 import type { Opportunity } from "@/lib/match/types";
 
 const opp = (id: string, o: Partial<Opportunity> & { elig?: Opportunity["eligibility"]["status"] } = {}): Opportunity =>
@@ -33,6 +33,15 @@ describe("groupOpportunities", () => {
     expect(alias.get("a1")).toBe("a2");
     expect(alias.get("a3")).toBe("a2");
     expect(alias.has("b1")).toBe(false);
+  });
+
+  it("la empresa se compara sin sufijos societarios ni de rubro", () => {
+    expect(companyKey("NEO-BIZ Consultores")).toBe(companyKey("Neo-Biz"));
+    expect(companyKey("Cerámica Alberdi S.A.")).toBe("ceramica alberdi");
+    expect(companyKey("Swiss Medical Group")).toBe("swiss medical");
+    expect(companyKey("Grupo")).toBe("grupo");
+    const { opportunities } = groupOpportunities([opp("n1", { company: "NEO-BIZ Consultores" }), opp("n2", { company: "Neo-Biz" })]);
+    expect(opportunities).toHaveLength(1);
   });
 
   it("no mezcla una cerrada con una abierta", () => {
