@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { blockedSources, checkImportedLiveness, liveStatus } from "@/lib/match/liveness";
+import { blockedSources, checkImportedLiveness, liveStatus, roundRobin } from "@/lib/match/liveness";
 import { normalizeFantastic } from "@/lib/match/providers";
 
 const NOW = "2026-10-20T12:00:00.000Z";
@@ -72,6 +72,24 @@ describe("vigencia de avisos importados", () => {
     const stats = await checkImportedLiveness(inv, NOW, { fetchImpl, resolve: publicDns, pauseMs: 0 });
     expect(stats.checked).toBe(0);
     expect(n).toBe(0);
+  });
+
+  it("turna entre fuentes para que una grande no se lleve todos los pedidos", () => {
+    const items = [..."abcdef"].map((x) => ({ sourceId: "grande", x })).concat([{ sourceId: "chica", x: "1" }, { sourceId: "chica", x: "2" }]);
+    expect(roundRobin(items, 5).map((i) => i.x)).toEqual(["a", "1", "b", "2", "c"]);
+    expect(roundRobin(items, 100)).toHaveLength(8);
+  });
+
+  it("corta al pasar el tope de tiempo y deja el resto para la próxima corrida", async () => {
+    const inv = inventory();
+    let t = 0;
+    const fetchImpl = (async () => {
+      t += 60_000; // cada pedido "tarda" un minuto
+      return new Response("ok");
+    }) as typeof fetch;
+    const stats = await checkImportedLiveness(inv, NOW, { fetchImpl, resolve: publicDns, pauseMs: 0, budgetMs: 90_000, clock: () => t });
+    expect(stats.checked).toBe(2);
+    expect(inv.postings.filter((p) => p.sourceId === "fantastic_ats" && !p.lastLiveCheckAt)).toHaveLength(2);
   });
 
   it("frases en inglés de LinkedIn y ATS", async () => {

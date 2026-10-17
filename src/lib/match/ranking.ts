@@ -32,6 +32,16 @@ import {
 /** Cuánto modula la intención declarada el total (0 = nada, 1 = todo). */
 export const INTENT_GATE = 0.4;
 
+/** Desde cuántos días se esconde un aviso de los resultados (salvo que la persona lo haya guardado). */
+export const HIDE_AFTER_DAYS = 120;
+/** Desde cuántos días baja en el orden. */
+export const STALE_AFTER_DAYS = 60;
+
+/** Días desde que se publicó el aviso (o desde que lo vimos por primera vez, si la fuente no lo dice). */
+export function ageDays(o: Pick<Opportunity, "publishedAt" | "firstSeenAt">, now: Date): number {
+  return (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
+}
+
 export type Weights = { habilidades: number; intencion: number; seniority: number; extras: number };
 export const DEFAULT_WEIGHTS: Weights = { habilidades: 0.4, intencion: 0.35, seniority: 0.15, extras: 0.1 };
 
@@ -290,6 +300,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
   for (const o of input.opportunities) {
     const isSaved = savedIds.has(o.id);
     if (o.status !== "abierta" && !isSaved) continue;
+    // Un aviso de hace más de 4 meses casi nunca sigue buscando: no se ofrece, salvo que esté guardado.
+    if (!isSaved && ageDays(o, now) > HIDE_AFTER_DAYS) continue;
     if (o.status === "abierta") open++;
     if (discarded.has(o.id)) continue;
     if (blockedCompanies.has(fold(o.company))) continue;
@@ -494,9 +506,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       pending.push(`Se publica en ${argentinaFirst(o.locations).slice(0, 2).join(" · ")} y no aclara si es remoto: confirmalo antes de postularte.`);
     }
     if (ex.seniority && targetSen.length && Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - SENIORITY_ORDER.indexOf(ex.seniority!.value)))) >= 2) raw *= 0.85;
-    const ageDays = (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
-    if (ageDays > 180) raw *= 0.85;
-    else if (ageDays > 90) raw *= 0.93;
+    if (ageDays(o, now) > STALE_AFTER_DAYS) raw *= 0.85;
     if (OPEN_CALL.test(` ${titleF} `) || AI_TASKS.test(fold(primary?.descriptionText.slice(0, 3000) ?? ""))) {
       raw *= 0.7;
       pending.push("Parece una convocatoria abierta o un proyecto por tareas, no una vacante puntual: confirmalo en el aviso.");

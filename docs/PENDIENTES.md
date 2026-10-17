@@ -16,8 +16,8 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | --- | --- | --- |
 | A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
 | B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
-| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Siguiente** (instrucciones abajo) |
-| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | Pendiente |
+| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Hecho** (ver abajo) |
+| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Siguiente** (instrucciones abajo) |
 | E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | Pendiente |
 | F | Google Jobs mensual automático (gratis) | Pendiente: lo decide el dueño |
 
@@ -41,19 +41,19 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 
 ### Cómo seguir (para la próxima sesión)
 
-**C. Frescura.** Quedó empezado sin commitear. No se probó, así que hay que rehacerlo así:
-1. En `src/lib/match/ranking.ts`, exportar `HIDE_AFTER_DAYS = 120` y `ageDays(o, now)` (usa `publishedAt ?? firstSeenAt`).
-   - En `rankOpportunities`, saltear las oportunidades con más de 120 días, salvo las guardadas.
-   - Reemplazar el castigo actual (>180 ×0,85, >90 ×0,93) por >60 ×0,85.
-2. En `src/lib/busquedas.ts` (`searchJobs`), filtrar también las de más de 120 días. La página de detalle (`getJob`) sigue mostrándolas.
-3. **Ojo con los tests:** los fixtures tienen fechas viejas y `now` toma la fecha real. Pasar `now` fijo en los tests o fechas relativas. Correr `npx vitest run` antes de pushear.
-4. Liveness (`src/lib/match/liveness.ts`):
-   - turnar los pedidos entre fuentes (round-robin por `sourceId`) en vez de ordenar sólo por fecha;
-   - agregar un tope de tiempo (`budgetMs`, ~8 min);
-   - en `.github/workflows/match-sync.yml`, subir `--max` a 400 y `timeout-minutes` a 40.
-
-   Hoy 2.854 importados nunca se revisaron. Computrabajo responde "desconocido" (posible bloqueo al bot) y queda salteada por `blockedSources`. Desde la nube de Claude no hay red hacia Computrabajo para investigarlo.
-5. Medir con el diagnóstico de abajo cuántas elegibles se ocultan. Base del 17/10: 574 elegibles con más de 60 días, todas de Lever, Greenhouse, Ashby y Teamtailor.
+**C (hecho, 17/10):**
+- `src/lib/match/ranking.ts` exporta `HIDE_AFTER_DAYS` (120), `STALE_AFTER_DAYS` (60) y `ageDays(o, now)`. El Match no ofrece avisos de más de 120 días, salvo los guardados, y baja ×0,85 los de más de 60. Reemplaza el castigo anterior (>180 ×0,85, >90 ×0,93).
+- `searchJobs` (`/busquedas`) tampoco los lista. La página de detalle sigue andando para quien tenga el link.
+- Revisión de vigencia (`src/lib/match/liveness.ts`):
+  - turna entre fuentes con `roundRobin`;
+  - tiene un tope de tiempo (`budgetMs`);
+  - el workflow corre `--max=400 --budget-min=8` con `timeout-minutes: 40`.
+- Los tests usan fechas fijas (`NOW` y `vi.useFakeTimers` en `match-api`), así no se rompen cuando los avisos de prueba envejezcan.
+- Medición con el inventario commiteado al 17/10, antes de la sync con reglas nuevas:
+  - de 3.683 elegibles, 489 tienen más de 60 días;
+  - 306 tienen más de 120 y quedan ocultas, todas de ATS gratuitos que las siguen publicando (Lever 162, Greenhouse 74, Ashby 46, Teamtailor 22, Get on Board 2).
+  - Si el dueño prefiere mostrar esas búsquedas "siempre abiertas", alcanza con subir `HIDE_AFTER_DAYS`.
+- Queda abierto: Computrabajo sigue salteada por `blockedSources`. Desde la nube de Claude no hay red para investigar por qué.
 
 **D. Modalidad inferida.** En `inventory.ts` (`withWorkplace`), o en un paso después, para las fuentes `apify-computrabajo`, `apify-indeed`, `serpapi` y `apify-linkedin`: si el aviso tiene una ciudad concreta y el texto no menciona remoto, híbrido ni teletrabajo, marcar `presencial` con `from: "descripcion"` y evidencia "inferido: ciudad sin mención de remoto". Mostrarlo como "Presencial (inferido)" en la tarjeta. Hoy hay 1.552 elegibles sin modalidad: Google Jobs 568, Computrabajo 537, LinkedIn 282.
 

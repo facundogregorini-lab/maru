@@ -1,7 +1,7 @@
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
 import { fetchGreenhouse, fetchRemotive } from "@/lib/match/connectors";
 import { assertPublicUrl, safeFetch } from "@/lib/match/http";
@@ -14,6 +14,8 @@ const opts = (routes: Record<string, unknown>) => ({ fetchImpl: fakeFetch(routes
 let invPath = "";
 
 beforeAll(async () => {
+  // Los avisos de prueba son de octubre de 2026: con la fecha real, en unos meses quedarían viejos y ocultos.
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-10-17T12:00:00Z") });
   const inv = emptyInventory("fixture");
   const t = "2026-10-10T12:00:00.000Z";
   applyBoard(inv, BOARDS.gh.boardId, "greenhouse", await fetchGreenhouse(BOARDS.gh, opts({ "https://boards-api": fixture("greenhouse-board.json") })), t);

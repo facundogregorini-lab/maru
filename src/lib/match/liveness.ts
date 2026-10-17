@@ -67,10 +67,28 @@ export type LivenessOptions = {
   pauseMs?: number;
   /** No volver a mirar un aviso antes de estos días. */
   minDaysBetween?: number;
+  /** Tope de tiempo de la corrida: al pasarlo no se empieza otro pedido. */
+  budgetMs?: number;
+  clock?: () => number;
   fetchImpl?: typeof fetch;
   resolve?: (host: string) => Promise<string[]>;
   log?: (msg: string) => void;
 };
+
+/**
+ * Turna entre fuentes (una de cada una, en ronda) para que una fuente grande no se lleve todos
+ * los pedidos del día. Dentro de cada fuente, primero lo que nunca se revisó o hace más que no.
+ */
+export function roundRobin<T extends { sourceId: string }>(items: T[], max: number): T[] {
+  const queues = new Map<string, T[]>();
+  for (const it of items) (queues.get(it.sourceId) ?? queues.set(it.sourceId, []).get(it.sourceId)!).push(it);
+  const out: T[] = [];
+  const lists = [...queues.values()];
+  for (let i = 0; out.length < max && lists.some((l) => i < l.length); i++) {
+    for (const l of lists) if (i < l.length && out.length < max) out.push(l[i]);
+  }
+  return out;
+}
 
 /**
  * Fuentes que casi nunca dejan ver el aviso al bot (p. ej. responden 403): no vale la pena gastar
@@ -89,17 +107,22 @@ export function blockedSources(inv: Inventory, minChecks = 20, maxUnknownShare =
 }
 
 export async function checkImportedLiveness(inv: Inventory, now: string, opts: LivenessOptions = {}) {
-  const { max = 150, pauseMs = 700, minDaysBetween = 3, fetchImpl, resolve, log = () => {} } = opts;
+  const { max = 150, pauseMs = 700, minDaysBetween = 3, budgetMs = Infinity, clock = Date.now, fetchImpl, resolve, log = () => {} } = opts;
+  const start = clock();
   const cutoff = Date.parse(now) - minDaysBetween * 86_400_000;
   const blocked = blockedSources(inv);
   if (blocked.size) log(`Fuentes que bloquean la revisión (se saltean): ${[...blocked].join(", ")}`);
-  const due = inv.postings
+  const candidates = inv.postings
     .filter((p) => p.status === "abierta" && sourceById(p.sourceId)?.imported && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
-    .sort((a, b) => (a.lastLiveCheckAt ?? "").localeCompare(b.lastLiveCheckAt ?? "") || a.firstSeenAt.localeCompare(b.firstSeenAt))
-    .slice(0, max);
+    .sort((a, b) => (a.lastLiveCheckAt ?? "").localeCompare(b.lastLiveCheckAt ?? "") || a.firstSeenAt.localeCompare(b.firstSeenAt));
+  const due = roundRobin(candidates, max);
   const stats = { checked: 0, closed: 0, open: 0, unknown: 0 };
   const bySource: Record<string, { abierta: number; cerrada: number; desconocido: number }> = {};
   for (const p of due) {
+    if (clock() - start > budgetMs) {
+      log(`Tope de tiempo alcanzado: quedan ${due.length - stats.checked} para la próxima corrida.`);
+      break;
+    }
     let result: LiveStatus = { status: "desconocido" };
     try {
       result = await liveStatus(await safeFetch(p.sourceUrl, { fetchImpl, resolve, timeoutMs: 15_000 }));
