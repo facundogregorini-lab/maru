@@ -352,7 +352,7 @@ export function normalizeSerp(rows: unknown[], query: string, now = Date.now()):
 
 /* ---------- Ejecución con saldo ---------- */
 
-export type FantasticPlan = { cohorts: string[]; feeds: ("fantastic_ats" | "fantastic_jb")[]; limit: number; maxJobs: number; timeFrame: "24h" | "7d" | "1m" };
+export type FantasticPlan = { cohorts: string[]; feeds: ("fantastic_ats" | "fantastic_jb")[]; limit: number; maxJobs: number; timeFrame: "24h" | "7d" | "1m"; /** Saltear filas ya importadas de la misma consulta (segundo corte). */ offset?: number };
 export type SerpPlan = { queries: SerpQuery[]; maxSearches: number; reserve: number };
 type Log = (msg: string) => void;
 
@@ -404,7 +404,7 @@ export async function runFantastic(key: string, plan: FantasticPlan, log: Log = 
         return out;
       }
       const endpoint = feed === "fantastic_ats" ? "active-ats" : "active-jb";
-      const params: Record<string, string> = { time_frame: plan.timeFrame, location: "Argentina", title: cohort.title, limit: String(limit), description_format: "text", ...(feed === "fantastic_jb" ? { source: "linkedin", exclude_recruiter_fields: "true" } : {}) };
+      const params: Record<string, string> = { time_frame: plan.timeFrame, location: "Argentina", title: cohort.title, limit: String(limit), ...(plan.offset ? { offset: String(plan.offset) } : {}), description_format: "text", ...(feed === "fantastic_jb" ? { source: "linkedin", exclude_recruiter_fields: "true" } : {}) };
       try {
         const res = await call(endpoint, params);
         if (!Array.isArray(res.body)) throw new ProviderError("Cambió el formato de los avisos.");

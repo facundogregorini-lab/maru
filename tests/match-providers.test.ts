@@ -145,6 +145,16 @@ describe("saldo: nunca más de lo incluido", () => {
     expect((fetcher.mock.calls[2][0] as URL).searchParams.get("limit")).toBe("20"); // 50 − 30, aunque el header repita 50
   });
 
+  it("Fantastic pide la página siguiente con offset para no pagar repetidos", async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(json({ count: 500 }, quota(50, 10)))
+      .mockImplementation(async () => json([fantasticRow], quota(49, 9, 1)));
+    vi.stubGlobal("fetch", fetcher);
+    await runFantastic("k", { cohorts: ["G3"], feeds: ["fantastic_ats"], limit: 20, maxJobs: 50, timeFrame: "7d", offset: 45 }, undefined, NOW);
+    expect((fetcher.mock.calls[1][0] as URL).searchParams.get("offset")).toBe("45");
+  });
+
   it("SerpApi usa sólo búsquedas del plan menos la reserva y no guarda la clave", async () => {
     const fetcher = vi
       .fn()

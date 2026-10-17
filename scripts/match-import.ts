@@ -126,7 +126,7 @@ async function main() {
   const nowIso = new Date().toISOString();
   const ledger = await readJson<{ entries: LedgerEntry[] }>(LEDGER, { entries: [] });
 
-  const fantasticPlan = { cohorts: csv("cohorts", FANTASTIC_COHORTS.map((c) => c.id)), feeds: csv("feeds", ["ats", "jb"]).map((f) => (f === "jb" ? "fantastic_jb" : "fantastic_ats")) as ("fantastic_ats" | "fantastic_jb")[], limit: num("limit", 50), maxJobs: num("max-jobs", 300), timeFrame: (arg("time-frame") ?? "7d") as "24h" | "7d" | "1m" };
+  const fantasticPlan = { cohorts: csv("cohorts", FANTASTIC_COHORTS.map((c) => c.id)), feeds: csv("feeds", ["ats", "jb"]).map((f) => (f === "jb" ? "fantastic_jb" : "fantastic_ats")) as ("fantastic_ats" | "fantastic_jb")[], limit: num("limit", 50), maxJobs: num("max-jobs", 300), timeFrame: (arg("time-frame") ?? "7d") as "24h" | "7d" | "1m", offset: num("offset", 0) };
   const queryIds = csv("queries", SERP_QUERIES.map((q) => q.id));
   const serpPlan = { queries: SERP_QUERIES.filter((q) => queryIds.includes(q.id)), maxSearches: num("max-searches", 12), reserve: num("reserve", 20) };
   const apifySources = csv("sources", ["computrabajo", "indeed", "linkedin"]).filter((s): s is ApifyJobSource => Object.hasOwn(APIFY_JOBS, s));
