@@ -67,6 +67,8 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 
 **Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.
 
+**Verticales (17/10):** reparto del catálogo en la taxonomía de 15 verticales del dueño en [research/verticales-2026-10-17](research/verticales-2026-10-17/README.md). Para recalcularlo: `npm run match:verticals`. Elegibles desde AR: Ventas 19,7%, IT 17,5%, Administración/Legal 15,6%, Logística 8,1%, Ingeniería y Operaciones 7,6%. Las más flojas: Educación 0,7%, Arte y Medios 1,0%, Construcción 1,0%, Finanzas y Banca 1,9%, Salud 2,0%.
+
 ## Próximos pasos (17/10/2026, cierre de la base de avisos)
 
 Estado: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 empleadores con elegibles** (E0: 909 grupos y 90 empleadores).
