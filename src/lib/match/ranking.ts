@@ -1,7 +1,7 @@
 import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { estimateSeniority } from "./profile";
 import { sourceById } from "./sources";
-import { CONTRACT_LABEL, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
+import { CONTRACT_LABEL, displayTitle, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
 import {
   SENIORITY_ORDER,
@@ -538,7 +538,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     const item: RankedItem = {
       id: o.id,
-      title: sanitizeDisplay(o.title, 160),
+      title: sanitizeDisplay(displayTitle(o.title), 160),
       company: sanitizeDisplay(o.company, 100),
       locations: argentinaFirst(o.locations).map((l) => sanitizeDisplay(l, 80)),
       workplace: wpValue,

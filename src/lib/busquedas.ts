@@ -1,5 +1,5 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
-import { isInferred } from "./match/labels";
+import { displayTitle, isInferred } from "./match/labels";
 import { loadInventory, resolveId } from "./match/load";
 import { ageDays, argentinaFirst, HIDE_AFTER_DAYS } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
@@ -69,7 +69,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
   const logo = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find(Boolean);
   return {
     id: o.id,
-    title: o.title,
+    title: displayTitle(o.title),
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
     where: argentinaFirst(o.locations).slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),

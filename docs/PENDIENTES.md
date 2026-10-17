@@ -84,6 +84,15 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
   - La modalidad no se recorta, porque "(Remoto)" y "(Híbrido)" son búsquedas distintas.
   - Los grupos visibles pasan de 9.752 a 9.527 (225 casi-duplicados menos). Los ids viejos siguen andando como alias.
 
+**Pulido de títulos (hecho, 17/10):** `displayTitle` (`labels.ts`) muestra los títulos:
+- sin códigos internos ("Ref. 21518:", "(req208687)", "ID89121");
+- con la primera letra en mayúscula;
+- y sin gritar si vinieron todos en mayúsculas, conservando siglas como CABA o B2B.
+
+Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se sigue usando el título original. Al 17/10 había unos 300 títulos abiertos con ese ruido.
+
+**Seniority:** el 45% de los grupos elegibles no la tiene, y casi todos son avisos que no la dicen ("Vendedor", "Asesor comercial"). No se infiere, para no adivinar.
+
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 
 **Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.

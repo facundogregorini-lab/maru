@@ -1,4 +1,5 @@
 import { loadInventory } from "./match/load";
+import { displayTitle } from "./match/labels";
 
 /** Números y búsquedas reales del inventario de Maru para la home (nada inventado). */
 
@@ -17,7 +18,7 @@ export async function landingData(): Promise<LandingData> {
   for (const o of [...eligible].sort((a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt))) {
     if (seen.has(o.company) || o.title.length > 60) continue;
     seen.add(o.company);
-    latest.push({ id: o.id, title: o.title, company: o.company, workplace: WORKPLACE[o.workplace?.value ?? ""] ?? "", firstSeenAt: o.firstSeenAt });
+    latest.push({ id: o.id, title: displayTitle(o.title), company: o.company, workplace: WORKPLACE[o.workplace?.value ?? ""] ?? "", firstSeenAt: o.firstSeenAt });
     if (latest.length === 16) break;
   }
   return {
