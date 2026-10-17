@@ -1,0 +1,17 @@
+{
+  "fecha": "2026-10-17",
+  "criterios": ["rol", "seniority", "argentina/ubicacion", "datos", "contradiccion"],
+  "nota": "Revisión de una IA sobre metadatos (resultados.json de esta carpeta), sin abrir los avisos. Mismo método que e0-2026-10-16/revision.json.",
+  "resumen": {
+    "G1-adm-contable-jr": { "util": 4, "dudoso": 1, "falso": 0, "dudosos": ["Accounting Analyst (Mutt Data): semi senior para un junior"] },
+    "G1-finanzas-ssr": { "util": 3, "dudoso": 2, "falso": 0, "dudosos": ["Analista de administración y finanzas en Tucumán sin modalidad", "Finance Leaf Specialist (Philip Morris, Salta)"] },
+    "G1-rrhh-ssr": { "util": 3, "dudoso": 2, "falso": 0, "dudosos": ["Executive Recruiter (Sezzle) sin seniority", "Healthcare Recruiter (Scale Army, agencia offshore)"] },
+    "G2-ventas-jr": { "util": 3, "dudoso": 2, "falso": 0, "dudosos": ["Vendedor/Encargado presencial en Pilar (lejos de La Plata)", "Sales Representative (Thomson Reuters): probable inglés"] },
+    "G2-logistica-ssr": { "util": 1, "dudoso": 4, "falso": 0, "dudosos": ["Analista de Logística (Charata, Chaco)", "Analista logística (CABA, sin modalidad)", "Supply Chain Analyst (ITT, Buenos Aires)", "Analista de logística (José C. Paz)"] },
+    "T1-dev-ssr": { "util": 3, "dudoso": 2, "falso": 0, "dudosos": ["Senior Frontend Engineer (Hire Hangar)", "Senior Engineer (Caylent)"] },
+    "G1-atencion-jr": { "util": 1, "dudoso": 4, "falso": 0, "reserva": true, "dudosos": ["Customer Service (New Frontier Immigration Law, EE. UU.): probable inglés fluido", "Dispatcher (LeMaster Plumber, EE. UU.): probable inglés fluido", "Customer Service Specialist (Hire Hangar, offshore)", "Atención al cliente en Viedma sin modalidad"] },
+    "T1-datos-jr": { "util": 2, "dudoso": 3, "falso": 0, "reserva": true, "dudosos": ["Data Reporting Analyst (Syneos) semi senior", "Analista de datos (CABA, sin modalidad)", "Analista de Datos (Clarín, Buenos Aires)"] }
+  },
+  "total": { "util": 20, "dudoso": 20, "falso": 0 },
+  "e0": { "util": 19, "dudoso": 12, "falso": 9 }
+}

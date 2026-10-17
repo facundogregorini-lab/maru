@@ -32,7 +32,7 @@ async function main() {
     });
     const top20 = eligible.slice(0, 20);
     return {
-      profile: c.name, eligible: eligible.length, max: eligible[0]?.score ?? null,
+      profile: c.name, eligible: eligible.length, max: eligible.length ? Math.max(...eligible.map((r) => r.score)) : null,
       top20Mean: top20.length ? Math.round(top20.reduce((s, r) => s + r.score, 0) / top20.length) : null,
       atLeast70: eligible.filter((r) => r.score >= 70).length,
       atLeast90: eligible.filter((r) => r.score >= 90).length,

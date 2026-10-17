@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { estimateSeniority, profileToMatch, yearsOfExperience } from "@/lib/match/profile";
-import { DEFAULT_WEIGHTS, rankOpportunities, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
+import { estimateSeniority, profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
+import { DEFAULT_WEIGHTS, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile, Opportunity } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
@@ -25,9 +25,48 @@ async function rank(profile: MatchProfile, prefs: MatchPrefs, extra: Partial<Ran
   const inv = await inventory();
   return {
     inv,
-    out: rankOpportunities({ opportunities: inv.opportunities, postings: new Map(inv.postings.map((p) => [p.key, p])), profile, prefs, interactions: noInteractions, now: NOW, ...extra }),
+    out: rankOpportunities({ opportunities: inv.opportunities, postings: new Map(inv.postings.map((p) => [p.key, p])), profile, prefs, interactions: noInteractions, now: NOW, minScore: 0, ...extra }),
   };
 }
+
+describe("antigüedad de los avisos", () => {
+  const days = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
+
+  it("baja los de más de 60 días y esconde los de más de 120, salvo los guardados", async () => {
+    const { out: fresh } = await rank(dataProfile, basePrefs);
+    const target = fresh.eligible[0];
+    const { out: old } = await rank(dataProfile, basePrefs, { now: days(75) });
+    const aged = old.eligible.find((r) => r.id === target.id);
+    expect(aged).toBeDefined();
+    expect(aged!.score).toBe(target.score); // La frescura cambia el orden, no la compatibilidad.
+
+    const { out: gone } = await rank(dataProfile, basePrefs, { now: days(140) });
+    expect([...gone.eligible, ...gone.pending]).toHaveLength(0);
+    const { out: kept } = await rank(dataProfile, basePrefs, { now: days(140), interactions: { saved: [target.id], discarded: [] } });
+    expect(kept.saved.map((r) => r.id)).toContain(target.id);
+  });
+});
+
+describe("coincidencia mínima", () => {
+  it("lo que casi no se parece a lo que busca no se lista como para vos, salvo que filtre por área", async () => {
+    const prefs: MatchPrefs = { ...basePrefs, carrera: "continuidad", rolesDeseados: ["Data Analyst"] };
+    const { out: all } = await rank(dataProfile, prefs);
+    const low = [...all.eligible, ...all.pending].filter((r) => r.score < 25);
+    expect(low.length).toBeGreaterThan(0);
+    const { out } = await rank(dataProfile, prefs, { minScore: undefined });
+    const titles = [...out.eligible, ...out.pending].map((r) => r.title);
+    for (const r of low) expect(titles).not.toContain(r.title);
+    expect(out.counts.lowMatch).toBeGreaterThanOrEqual(low.length);
+    expect(out.eligible[0].title).toBe("Senior Data Analyst");
+    const { out: filtered } = await rank(dataProfile, prefs, { minScore: undefined, filters: { families: [low[0].family] } });
+    expect([...filtered.eligible, ...filtered.pending].map((r) => r.title)).toContain(low[0].title);
+  });
+
+  it("el % se mantiene entre 0 y 100", async () => {
+    const { out } = await rank(dataProfile, { ...basePrefs, carrera: "continuidad", rolesDeseados: ["Data Analyst"] });
+    expect([...out.eligible, ...out.pending].every((r) => r.score >= 0 && r.score <= 100)).toBe(true);
+  });
+});
 
 describe("ranking explicable", () => {
   it("la autorización de trabajo es texto libre: caracteres especiales no rompen el ranking", async () => {
@@ -218,8 +257,16 @@ describe("calibración del porcentaje de afinidad", () => {
     const initial = run(o).score;
     const saved = run(o, dataProfile, { interactions: { saved: [o.id], discarded: [] } });
     expect(saved.score).toBe(initial);
-    o.publishedAt = "2025-01-01T00:00:00Z";
+    o.publishedAt = "2026-07-01T00:00:00Z";
     expect(run(o).score).toBe(initial);
+  });
+
+  it("un aviso viejo queda detrás de uno igual reciente, con el mismo porcentaje", async () => {
+    const old = await example({ id: "viejo", publishedAt: "2026-07-01T00:00:00Z" });
+    const fresh = { ...old, id: "reciente", publishedAt: NOW.toISOString() };
+    const out = rankOpportunities({ opportunities: [old, fresh], postings: new Map(), profile: dataProfile, prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] }, interactions: noInteractions, now: NOW });
+    expect(out.eligible.map((r) => r.id)).toEqual(["reciente", "viejo"]);
+    expect(out.eligible[0].score).toBe(out.eligible[1].score);
   });
 
   it("reconoce administración / administrativo / administrativa sin inventar otras habilidades", async () => {
@@ -260,5 +307,37 @@ describe("perfil para el match", () => {
   it("los años por sí solos no convierten a alguien en lead", () => {
     expect(estimateSeniority({ ...dataProfile, yearsExperience: 18 })).toBe("senior");
     expect(estimateSeniority({ ...dataProfile, titles: ["Data Lead"], yearsExperience: 18 })).toBe("lead");
+  });
+});
+
+describe("aptitudes largas del CV", () => {
+  it("parte un párrafo de aptitudes en habilidades sueltas, sin cortar paréntesis", () => {
+    const raw = "Inteligencia Artificial y Automatización: Implementación de LLMs (OpenAI, Anthropic/Claude), diseño de flujos automatizados en n8n, ingeniería de prompts, desarrollo de agentes de IA y optimización de procesos operativos.";
+    expect(splitSkill(raw)).toEqual([
+      "Implementación de LLMs (OpenAI, Anthropic/Claude)",
+      "diseño de flujos automatizados en n8n",
+      "ingeniería de prompts",
+      "desarrollo de agentes de IA y optimización de procesos operativos",
+    ]);
+    expect(splitSkill("Google Ads")).toEqual(["Google Ads"]);
+    expect(splitSkill("  ")).toEqual([]);
+  });
+});
+
+describe("ubicaciones", () => {
+  const has = (locs: string[], place: string) => placeSegments(locs).some((seg) => samePlace(seg, place));
+  it("reconoce la ciudad por partes, sin confundir ciudades que empiezan igual", () => {
+    expect(has(["Rosario, Santa Fe"], "rosario")).toBe(true);
+    expect(has(["Rosario de Lerma, Salta, Argentina"], "rosario")).toBe(false);
+    expect(has(["San Miguel de Tucumán, Tucumán"], "tucuman")).toBe(true);
+    expect(has(["Córdoba Capital"], "cordoba")).toBe(true);
+  });
+  it("muestra cada lugar una vez, Argentina primero y aclara el remoto desde Argentina", () => {
+    expect(displayLocations(["Rosario, Santa Fe", "Rosario, Santa Fe, Argentina"])).toEqual(["Rosario, Santa Fe"]);
+    expect(displayLocations(["Argentina", "Córdoba"])).toEqual(["Córdoba"]);
+    expect(displayLocations(["Mexico - Monterrey", "Argentina - Buenos Aires"])[0]).toBe("Argentina - Buenos Aires");
+    expect(displayLocations(["South Africa - Cape Town"], true)[0]).toBe("Remoto desde Argentina");
+    expect(displayLocations(["South Africa - Cape Town"])[0]).toBe("South Africa - Cape Town");
+    expect(displayLocations(["Remote"], true)).toEqual(["Remoto desde Argentina"]);
   });
 });

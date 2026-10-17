@@ -193,16 +193,6 @@
       "status": "candidata"
     },
     {
-      "name": "Remote People",
-      "sourceId": "greenhouse",
-      "slug": "remotepeople",
-      "region": "eu",
-      "sector": "staffing / ventas",
-      "evidence": "https://job-boards.eu.greenhouse.io/remotepeople",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
       "name": "Sezzle",
       "sourceId": "greenhouse",
       "slug": "sezzle",
@@ -229,16 +219,6 @@
       "region": "us",
       "sector": "fintech / ventas",
       "evidence": "https://job-boards.greenhouse.io/figment/jobs/5595302004",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
-      "name": "Remote",
-      "sourceId": "greenhouse",
-      "slug": "remotecom",
-      "region": "us",
-      "sector": "RR. HH. / servicios",
-      "evidence": "https://job-boards.greenhouse.io/remotecom",
       "addedAt": "2026-10-15",
       "status": "candidata"
     },
@@ -475,16 +455,6 @@
     {
       "name": "Welo Global",
       "sourceId": "lever",
-      "slug": "welocalize",
-      "region": "us",
-      "sector": "servicios lingüísticos",
-      "evidence": "https://jobs.lever.co/welocalize/?location=Argentina",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
-      "name": "Welo Global",
-      "sourceId": "lever",
       "slug": "weloglobal",
       "region": "us",
       "sector": "servicios lingüísticos",
@@ -673,16 +643,6 @@
       "status": "candidata"
     },
     {
-      "name": "GovWorx",
-      "sourceId": "ashby",
-      "slug": "govworx",
-      "region": "us",
-      "sector": "tecnología / sector público",
-      "evidence": "https://jobs.ashbyhq.com/govworx/0044505a-1276-4a77-92e7-747b884b1af6",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
       "name": "Maple",
       "sourceId": "ashby",
       "slug": "maple",
@@ -815,6 +775,196 @@
       "addedAt": "2026-10-15",
       "status": "excluida",
       "reason": "Portal propio sin API pública documentada: sin conector compatible en el MVP."
+    },
+    {
+      "name": "Agent",
+      "sourceId": "ashby",
+      "slug": "Agent",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/Agent (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Blockchain.com",
+      "sourceId": "greenhouse",
+      "slug": "blockchain",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://job-boards.greenhouse.io/blockchain (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Minders",
+      "sourceId": "lever",
+      "slug": "minders",
+      "region": "us",
+      "sector": "staffing / tecnología",
+      "evidence": "https://jobs.lever.co/minders (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "RYZ Labs",
+      "sourceId": "lever",
+      "slug": "RyzLabs",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.lever.co/RyzLabs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Solvd",
+      "sourceId": "ashby",
+      "slug": "Solvd",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://jobs.ashbyhq.com/Solvd (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "Telnyx",
+      "sourceId": "greenhouse",
+      "slug": "telnyx54",
+      "region": "us",
+      "sector": "telecomunicaciones",
+      "evidence": "https://job-boards.greenhouse.io/telnyx54 (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-16",
+      "status": "candidata"
+    },
+    {
+      "name": "David Kennedy Recruitment",
+      "sourceId": "teamtailor",
+      "slug": "davidkennedyrecruitment.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://davidkennedyrecruitment.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Bidcom",
+      "sourceId": "teamtailor",
+      "slug": "bidcom.na.teamtailor.com",
+      "region": "us",
+      "sector": "retail / e-commerce",
+      "evidence": "https://bidcom.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "BYMA",
+      "sourceId": "teamtailor",
+      "slug": "empleos.byma.com.ar",
+      "region": "us",
+      "sector": "mercado de capitales",
+      "evidence": "https://empleos.byma.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "CDA Informatica",
+      "sourceId": "teamtailor",
+      "slug": "cdainformatica.na.teamtailor.com",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://cdainformatica.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Dia Argentina",
+      "sourceId": "teamtailor",
+      "slug": "empleos.supermercadosdia.com.ar",
+      "region": "us",
+      "sector": "supermercados",
+      "evidence": "https://empleos.supermercadosdia.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Naranja X",
+      "sourceId": "teamtailor",
+      "slug": "naranjax.na.teamtailor.com",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://naranjax.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "PECOM",
+      "sourceId": "teamtailor",
+      "slug": "pecom.na.teamtailor.com",
+      "region": "us",
+      "sector": "energía / industria",
+      "evidence": "https://pecom.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Talento Cumbre",
+      "sourceId": "teamtailor",
+      "slug": "talentocumbre.na.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://talentocumbre.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "CPA FERRERE",
+      "sourceId": "teamtailor",
+      "slug": "talento.cpaferrere.com",
+      "region": "us",
+      "sector": "consultoría / auditoría",
+      "evidence": "https://talento.cpaferrere.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Diagnóstico Maipú / Labmedicina",
+      "sourceId": "teamtailor",
+      "slug": "diagnosticomaipu.na.teamtailor.com",
+      "region": "us",
+      "sector": "salud",
+      "evidence": "https://diagnosticomaipu.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "IOL Inversiones",
+      "sourceId": "teamtailor",
+      "slug": "empleos.invertironline.com.ar",
+      "region": "us",
+      "sector": "finanzas / inversiones",
+      "evidence": "https://empleos.invertironline.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Spyrosoft",
+      "sourceId": "teamtailor",
+      "slug": "careers.spyro-soft.com",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://careers.spyro-soft.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Umbral Capital Humano",
+      "sourceId": "teamtailor",
+      "slug": "umbralcapitalhumano.na.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://umbralcapitalhumano.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
     }
   ]
 }

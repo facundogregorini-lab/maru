@@ -6,12 +6,14 @@ import type { ExternalJob } from "@/lib/match/api-schemas";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
-import { roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
+import { MIN_SCORE, roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
 import CompanyTile from "../busquedas/CompanyTile";
 import { ErrorBanner, inputClass, post } from "../ui";
 import { MultiChips } from "./fields";
+import CompanyName from "@/components/busquedas/CompanyName";
+import { displayCompany } from "@/lib/match/labels";
 
 type RankingResponse = RankOutput & { inventory: { generatedAt: string | null; open: number } };
 type Tab = "elegibles" | "pendientes" | "guardadas";
@@ -207,6 +209,11 @@ export default function Results({
             </p>
           </div>
         )}
+        {data && tab !== "guardadas" && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
+          <p className="mt-6 text-center text-sm text-muted">
+            Hay {data.counts.lowMatch.toLocaleString("es-AR")} búsquedas más que coinciden menos del {MIN_SCORE}% con tu perfil y lo que buscás. Para verlas, filtrá por área o sumá roles en “Lo que busco”.
+          </p>
+        )}
         {data && tab === "elegibles" && data.eligible.length > 0 && data.eligible.length < 5 && (
           <p className="mt-6 text-center text-sm text-muted">
             Encontramos pocas coincidencias. Probá sumar roles, quitar alguna condición indispensable o mirar las búsquedas por confirmar.
@@ -271,7 +278,7 @@ function JobCard({
     <article className="flex overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04]">
       <div className="min-w-0 flex-1 p-4 sm:p-5">
         <div className="flex gap-4">
-          <CompanyTile name={item.company} size={56} />
+          <CompanyTile name={displayCompany(item.company)} logo={item.logo} size={56} />
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
@@ -281,7 +288,7 @@ function JobCard({
             </p>
             <h3 className="mt-1.5 text-lg font-semibold leading-snug sm:text-xl">{item.title}</h3>
             <p className="text-[15px]">
-              {item.company}
+              <CompanyName name={item.company} />
               <span className="text-ink/50">
                 {" / "}
                 {[item.locations.slice(0, 2).join(" · ") || null, item.workplace !== "desconocido" ? item.workplaceLabel : "Modalidad no informada"].filter(Boolean).join(" · ")}
@@ -338,6 +345,12 @@ function JobCard({
             <dt className="text-muted">Salario:</dt>
             <dd>{item.salary ?? "No informado"}</dd>
           </div>
+          {(item.publishedAt || item.postedLabel) && (
+            <div className="flex gap-2">
+              <dt className="text-muted">Publicada:</dt>
+              <dd>{item.publishedAt ? fmtDate(item.publishedAt) : `${item.postedLabel} (según Google, al verla)`}</dd>
+            </div>
+          )}
           <div className="flex gap-2">
             <dt className="text-muted">{item.reviewedLabel}:</dt>
             <dd>{fmtDate(item.reviewedAt)}</dd>

@@ -39,19 +39,74 @@ const AR_PLACES = [
   "tigre",
   "olivos",
   "martinez",
+  // Provincias y ciudades del interior que no nombran "Argentina" en el aviso.
+  "chaco",
+  "resistencia",
+  "corrientes",
+  "misiones",
+  "posadas",
+  "entre rios",
+  "concordia",
+  "gualeguaychu",
+  "santiago del estero",
+  "jujuy",
+  "catamarca",
+  "la rioja",
+  "san luis",
+  "villa mercedes",
+  "chubut",
+  "comodoro rivadavia",
+  "trelew",
+  "puerto madryn",
+  "rio negro",
+  "cipolletti",
+  "general roca",
+  "viedma",
+  "la pampa",
+  "tierra del fuego",
+  "ushuaia",
+  "formosa",
+  "rio cuarto",
+  "villa maria",
+  "villa carlos paz",
+  "san rafael",
+  "godoy cruz",
+  "guaymallen",
+  "lujan de cuyo",
+  "rafaela",
+  "reconquista",
+  "venado tuerto",
+  "san nicolas",
+  "tandil",
+  "olavarria",
+  "necochea",
+  "pergamino",
+  "junin",
+  "zarate",
+  "campana",
+  "escobar",
+  "nordelta",
+  "general pacheco",
+  "quilmes",
+  "lanus",
+  "avellaneda",
+  "lomas de zamora",
+  "la matanza",
+  "moron",
+  "amba",
 ];
 // "Córdoba" también es una ciudad de España; "Santa Fe" de EE. UU. y "San Juan" de Puerto Rico.
-const AR_FALSE_FRIENDS = /\b(spain|espana|andalu|new mexico|nm\b|puerto rico|mexico|colombia|filipinas|philippines|california|texas)\b/;
+const AR_FALSE_FRIENDS = /\b(spain|espana|andalu|new mexico|nm\b|puerto rico|mexico|colombia|filipinas|philippines|california|texas|potosi)\b/;
 
 const POSITIVE_REGION = /\b(latam|latin america|latinoamerica|america latina|south america|sudamerica|southern cone|cono sur|worldwide|world wide|anywhere in the world|work from anywhere|global(ly)? remote|remote global|global|fully distributed)\b/;
 const AMBIGUOUS_REGION = /\b(americas|the americas|western hemisphere|north and south america|nearshore)\b/;
 
 const OTHER_COUNTRIES =
-  /\b(us|u\.s\.?|usa|u\.s\.a\.?|united states|canada|mexico|brazil|brasil|colombia|chile|peru|uruguay|paraguay|bolivia|ecuador|venezuela|costa rica|guatemala|panama|dominican republic|puerto rico|uk|united kingdom|england|ireland|spain|espana|portugal|france|germany|italy|netherlands|poland|romania|europe|emea|eu|apac|asia|india|philippines|australia|new zealand|singapore|japan|israel|south africa|nigeria|kenya|egypt|turkey|ukraine)\b/;
+  /\b(us|u\.s\.?|usa|u\.s\.a\.?|united states|canada|mexico|brazil|brasil|colombia|chile|peru|uruguay|paraguay|bolivia|ecuador|venezuela|costa rica|guatemala|panama|dominican republic|puerto rico|uk|united kingdom|england|ireland|spain|espana|portugal|france|germany|italy|netherlands|poland|romania|europe|emea|eu|apac|asia|india|philippines|australia|new zealand|singapore|japan|israel|south africa|nigeria|kenya|egypt|turkey|ukraine|greece|cyprus|hungary|czech republic|czechia|austria|switzerland|belgium|sweden|norway|denmark|finland|luxembourg|scotland|croatia|serbia|bulgaria|lithuania|latvia|estonia|slovakia|slovenia|united arab emirates|uae|saudi arabia|qatar|china|hong kong|south korea|korea|taiwan|vietnam|thailand|malaysia|indonesia|pakistan|bangladesh|morocco|ghana|el salvador|honduras|nicaragua|jamaica)\b/;
 
 // Ciudades frecuentes fuera de Argentina (presencial/híbrido): cuando aparecen, el puesto no es elegible.
 const OTHER_CITIES =
-  /\b(new york|nyc|san francisco|los angeles|seattle|austin|boston|chicago|denver|miami|atlanta|toronto|vancouver|montreal|london|dublin|madrid|barcelona|lisbon|lisboa|paris|berlin|amsterdam|warsaw|bangalore|bengaluru|manila|sydney|melbourne|tel aviv|sao paulo|rio de janeiro|ciudad de mexico|mexico city|cdmx|guadalajara|monterrey|bogota|medellin|santiago|lima|montevideo|asuncion|quito)\b/;
+  /\b(new york|nyc|san francisco|los angeles|seattle|austin|boston|chicago|denver|miami|atlanta|toronto|vancouver|montreal|london|dublin|madrid|barcelona|lisbon|lisboa|paris|berlin|amsterdam|warsaw|bangalore|bengaluru|manila|sydney|melbourne|tel aviv|sao paulo|rio de janeiro|ciudad de mexico|mexico city|cdmx|guadalajara|monterrey|bogota|medellin|santiago|lima|montevideo|asuncion|quito|auckland|wellington|brisbane|perth|athens|budapest|limassol|prague|vienna|zurich|geneva|munich|hamburg|frankfurt|stockholm|copenhagen|oslo|helsinki|milan|rome|brussels|edinburgh|manchester|krakow|bucharest|sofia|belgrade|kyiv|istanbul|cairo|lagos|nairobi|johannesburg|cape town|dubai|abu dhabi|riyadh|doha|hyderabad|pune|chennai|mumbai|delhi|gurgaon|gurugram|noida|tokyo|seoul|shanghai|beijing|shenzhen|taipei|jakarta|kuala lumpur|bangkok|hanoi|ho chi minh|curitiba|porto alegre|belo horizonte|florianopolis|recife|fortaleza|brasilia|campinas|cali|barranquilla|valparaiso|guayaquil|houston|dallas|phoenix|philadelphia|washington|san diego|nashville|raleigh|charlotte|minneapolis|detroit|pittsburgh|calgary|ottawa)\b/;
 
 const US_STATE = /,\s*(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC)\b/;
 
@@ -66,20 +121,32 @@ const WORK_AUTH_US = /\b(authorized|authorised|eligible|legally able) to work in
 const EXCLUDES_AR = /\b(excluding|except|not (available|open) (in|to)|no candidates from)\b[^.\n]{0,40}\bargentina\b/;
 const DESC_ALLOWS = /\b(open to (candidates|applicants) (in|from)[^.\n]{0,40}(latam|latin america|argentina|south america|anywhere)|(hiring|hire) (in|from|across) (latam|latin america|argentina)|(remote|remoto)[^.\n]{0,15}(from|desde) (argentina|latam|latin america|anywhere)|we hire anywhere|work from anywhere in the world|candidates (based|located) in (latam|latin america|argentina))\b/;
 
+// Ciudades argentinas cuyo nombre se repite en otros países (Córdoba en España, Colombia y México; Rosario en Uruguay;
+// San Juan en Puerto Rico; Santa Fe y Martinez en EE. UU.; San Isidro en Perú).
+const AR_AMBIGUOUS = /\b(cordoba|rosario|santa fe|san juan|parana|pilar|tigre|olivos|martinez|san isidro|mendoza|salta)\b/g;
+const AMBIGUOUS_HOST_COUNTRIES = new Set(["ES", "US", "MX", "CO", "PR", "PH", "PE", "UY", "VE", "CR", "CL", "PY", "BO", "EC"]);
+
 function hasArPlace(t: string): boolean {
   if (AR_FALSE_FRIENDS.test(t) && !/\bargentina\b/.test(t)) return false;
   return AR_PLACES.some((p) => new RegExp(`\\b${p}\\b`).test(t));
 }
 
-/** Cada ubicación por separado: "Martinez, CA" o "San Juan, TX" nombran una ciudad argentina pero están en EE. UU. */
-function arLocation(raw: string): boolean {
+/**
+ * Cada ubicación por separado: "Martinez, CA" o "San Juan, TX" nombran una ciudad argentina pero están en EE. UU.
+ * Si la ubicación es sólo una ciudad de nombre repetido ("Cordoba") y la fuente informa otro país donde existe
+ * (o el título lo nombra: "… en Córdoba, España"), no alcanza para decir Argentina.
+ */
+function arLocation(raw: string, otherHost: boolean): boolean {
   const t = fold(raw);
   if (!hasArPlace(t)) return false;
   if (/\bargentina\b/.test(t)) return true;
+  if (otherHost && !hasArPlace(t.replace(AR_AMBIGUOUS, " "))) return false;
   return !US_STATE.test(raw) && !OTHER_COUNTRIES.test(t);
 }
 
-export function classifyEligibility(p: Pick<NormalizedPosting, "locations" | "countries" | "regionText" | "workplace" | "remoteFlag" | "descriptionText">): EligibilityResult {
+export function classifyEligibility(
+  p: Pick<NormalizedPosting, "locations" | "countries" | "regionText" | "workplace" | "remoteFlag" | "descriptionText"> & { title?: string },
+): EligibilityResult {
   const locRaw = [...p.locations, ...p.regionText].filter(Boolean).join(" | ");
   const loc = fold(locRaw);
   const descRaw = p.descriptionText.slice(0, 8000);
@@ -96,7 +163,9 @@ export function classifyEligibility(p: Pick<NormalizedPosting, "locations" | "co
   if (countries.includes("AR")) return result("elegible", ["La fuente informa Argentina entre los países del puesto."]);
 
   // 2. Ubicación en Argentina.
-  if ([...p.locations, ...p.regionText].some((l) => l && arLocation(l))) {
+  const title = fold(p.title ?? "");
+  const otherHost = countries.some((c) => AMBIGUOUS_HOST_COUNTRIES.has(c)) || (AR_FALSE_FRIENDS.test(title) && !/\bargentina\b/.test(title));
+  if ([...p.locations, ...p.regionText].some((l) => l && arLocation(l, otherHost))) {
     return result("elegible", [`Ubicación: ${locRaw}`]);
   }
 

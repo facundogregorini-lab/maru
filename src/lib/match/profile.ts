@@ -38,12 +38,27 @@ export function yearsOfExperience(exp: Profile["experiencia"]): number | null {
   return Math.round((total / (365.25 * 86_400_000)) * 10) / 10;
 }
 
+/**
+ * Una aptitud del CV puede ser un párrafo ("Marketing digital: Google Ads, CRO, retención").
+ * La partimos en habilidades sueltas: sin el rótulo y por comas fuera de paréntesis.
+ */
+export function splitSkill(raw: string): string[] {
+  const s = raw.trim();
+  if (s.length <= 40) return s ? [s] : [];
+  const body = s.replace(/^[^:()]{2,60}:\s*/, "");
+  return body
+    .split(/[,;](?![^(]*\))/)
+    .map((x) => x.trim().replace(/[.\s]+$/, ""))
+    .filter((x) => x.length > 1)
+    .map((x) => x.slice(0, 80));
+}
+
 export function profileToMatch(p: Profile): MatchProfile {
   const text = [p.titulo, p.resumen, ...p.experiencia.flatMap((e) => [e.cargo, e.descripcion, ...e.logros]), ...p.certificaciones.map((c) => c.nombre)].join("\n");
-  const skills = [...new Set([...p.aptitudes.map((s) => s.trim()).filter(Boolean), ...findSkills(text)])].slice(0, 40);
+  const skills = [...new Set([...p.aptitudes.flatMap(splitSkill), ...findSkills(text)])].slice(0, 40);
   return {
-    headline: p.titulo,
-    titles: [...new Set(p.experiencia.map((e) => e.cargo.trim()).filter(Boolean))].slice(0, 6),
+    headline: p.titulo.slice(0, 200),
+    titles: [...new Set(p.experiencia.map((e) => e.cargo.trim().slice(0, 160)).filter(Boolean))].slice(0, 6),
     skills,
     languages: p.idiomas.map((l) => ({ language: l.idioma, level: l.nivel })),
     yearsExperience: yearsOfExperience(p.experiencia),

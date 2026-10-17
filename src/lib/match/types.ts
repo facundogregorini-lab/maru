@@ -43,6 +43,11 @@ export type RoleFamily =
   | "salud"
   | "educacion"
   | "consultoria"
+  | "produccion"
+  | "gastronomia"
+  | "comercio"
+  | "seguridad"
+  | "entrenamiento_ia"
   | "otros";
 
 /** De dónde salió cada dato: así podemos explicar y auditar sin inventar. */
@@ -93,6 +98,10 @@ export type NormalizedPosting = {
   employmentHint?: string;
   /** Seniority tal como la publica la fuente, si la informa. */
   seniorityHint?: string;
+  /** Logo de la empresa (https) tal como lo informa la fuente; la tarjeta cae a la inicial si no carga. */
+  companyLogo?: string;
+  /** Antigüedad relativa tal como la publica la fuente ("hace 3 días") cuando no hay fecha exacta. */
+  postedLabel?: string;
 };
 
 export type EligibilityResult = {
@@ -128,6 +137,10 @@ export type StoredPosting = NormalizedPosting & {
   status: PostingStatus;
   closedReason?: string;
   closedAt?: string;
+  /** Última vez que se miró la página original de un aviso importado (liveness.ts). */
+  lastLiveCheckAt?: string;
+  /** Resultado de esa revisión: "desconocido" = la fuente no respondió o bloqueó al bot. */
+  lastLiveResult?: "abierta" | "cerrada" | "desconocido";
   /** Calculados al recibir el aviso completo (después se puede recortar la descripción). */
   eligibility: EligibilityResult;
   extracted: Extracted;

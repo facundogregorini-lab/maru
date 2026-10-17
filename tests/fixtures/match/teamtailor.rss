@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:tt="https://teamtailor.com/locations">
+  <channel>
+    <title>Acme Retail - Empleos</title>
+    <link>https://acme.na.teamtailor.com/jobs</link>
+    <item>
+      <title>Analista de Cuentas a Pagar</title>
+      <description><![CDATA[<p>Buscamos <strong>Analista de Cuentas a Pagar</strong> para nuestra sede de Córdoba.</p><ul><li>Conciliaciones bancarias</li><li>Liquidación de impuestos</li><li>Excel avanzado</li></ul><p>Requisitos: estudiante avanzado de Contador Público, 2 años de experiencia en tareas administrativas contables.</p>]]></description>
+      <pubDate>Wed, 14 Oct 2026 13:45:00 +0000</pubDate>
+      <link>https://acme.na.teamtailor.com/jobs/721286-analista-de-cuentas-a-pagar</link>
+      <guid>721286</guid>
+      <remoteStatus>hybrid</remoteStatus>
+      <tt:department>Finanzas</tt:department>
+      <tt:locations>
+        <tt:location><tt:city>Córdoba</tt:city><tt:country>Argentina</tt:country></tt:location>
+      </tt:locations>
+    </item>
+    <item>
+      <title>Repositor/a</title>
+      <description><![CDATA[<p>Reposición de góndolas en sucursal Rosario. Turno mañana.</p>]]></description>
+      <pubDate>Tue, 13 Oct 2026 10:00:00 +0000</pubDate>
+      <link>https://acme.na.teamtailor.com/jobs/721300-repositor-a</link>
+      <guid>721300</guid>
+      <remoteStatus>none</remoteStatus>
+      <tt:location><tt:city>Rosario</tt:city><tt:country>Argentina</tt:country></tt:location>
+    </item>
+    <item>
+      <title></title>
+      <link>https://acme.na.teamtailor.com/jobs/1</link>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,378 @@
+{
+  "etapa": "E0",
+  "fecha": "2026-10-17T13:38:04.189Z",
+  "commit": null,
+  "nota": "Ranking actual por reglas, sin cambios. Chequeos 'auto' = señales de apoyo, no etiqueta de verdad. Ver revision.json para la revisión manual.",
+  "catalogo": {
+    "generatedAt": "2026-10-17T13:33:30.863Z",
+    "niveles": {
+      "registros": 12553,
+      "registrosAbiertos": 12245,
+      "oportunidadesCanonicasAbiertas": 12054,
+      "gruposVisualesAbiertos": 8720
+    },
+    "elegibilidad": {
+      "no_elegible": 5067,
+      "elegible": 2743,
+      "por_confirmar": 910
+    },
+    "empleadores": {
+      "abiertos": 1434,
+      "elegibles": 1040
+    },
+    "fuentesRegistrosAbiertos": {
+      "lever": 4552,
+      "greenhouse": 2578,
+      "ashby": 1368,
+      "getonbrd": 989,
+      "apify-computrabajo": 575,
+      "apify-linkedin": 517,
+      "jobicy": 469,
+      "teamtailor": 399,
+      "fantastic_jb": 250,
+      "apify-indeed": 213,
+      "fantastic_ats": 163,
+      "serpapi": 159,
+      "remotive": 13
+    },
+    "familiaElegibles": {
+      "otros": 486,
+      "software": 407,
+      "ventas": 398,
+      "finanzas": 315,
+      "logistica": 202,
+      "rrhh": 178,
+      "operaciones": 146,
+      "marketing": 124,
+      "administracion": 118,
+      "atencion_cliente": 100,
+      "datos": 88,
+      "producto": 49,
+      "diseno": 48,
+      "salud": 41,
+      "consultoria": 25,
+      "legal": 17,
+      "educacion": 1
+    },
+    "familiaPorConfirmar": {
+      "software": 334,
+      "ventas": 190,
+      "otros": 78,
+      "marketing": 70,
+      "datos": 47,
+      "atencion_cliente": 40,
+      "operaciones": 38,
+      "diseno": 23,
+      "finanzas": 22,
+      "consultoria": 17,
+      "producto": 15,
+      "rrhh": 14,
+      "legal": 8,
+      "salud": 6,
+      "educacion": 4,
+      "administracion": 3,
+      "logistica": 1
+    },
+    "seniorityElegibles": {
+      "sin_dato": 1158,
+      "semi_senior": 480,
+      "senior": 447,
+      "junior": 246,
+      "manager": 195,
+      "lead": 168,
+      "director": 28,
+      "pasantia": 18,
+      "ejecutivo": 3
+    },
+    "modalidadElegibles": {
+      "desconocido": 876,
+      "remoto": 843,
+      "presencial": 624,
+      "hibrido": 400
+    },
+    "antiguedadElegibles": {
+      "≤7d": 1334,
+      "8-30d": 692,
+      ">90d": 362,
+      "31-90d": 355
+    },
+    "elegiblesConUbicacionArgentina": 2340
+  },
+  "perfiles": [
+    {
+      "id": "G1-adm-contable-jr",
+      "publico": "generalista",
+      "area": "administracion",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 1817,
+        "pending": 693,
+        "afterHardFilters": 2510,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 17,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 5,
+        "seniorityDesconocido": 5,
+        "ubicacionPosible": 9,
+        "descripcionCompleta": 7,
+        "scoreMedio": 77
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "administracion",
+          "finanzas"
+        ],
+        "elegiblesDelArea": 433,
+        "elegiblesDelAreaConSeniorityPosible": 345,
+        "empleadoresDelArea": 296
+      }
+    },
+    {
+      "id": "G1-finanzas-ssr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 910,
+        "afterHardFilters": 3653,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 20,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 7,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 6,
+        "descripcionCompleta": 6,
+        "scoreMedio": 78
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "finanzas",
+          "administracion"
+        ],
+        "elegiblesDelArea": 433,
+        "elegiblesDelAreaConSeniorityPosible": 394,
+        "empleadoresDelArea": 296
+      }
+    },
+    {
+      "id": "G1-rrhh-ssr",
+      "publico": "generalista",
+      "area": "rrhh",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 910,
+        "afterHardFilters": 3653,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 18,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 7,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 8,
+        "descripcionCompleta": 9,
+        "scoreMedio": 75
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "rrhh"
+        ],
+        "elegiblesDelArea": 178,
+        "elegiblesDelAreaConSeniorityPosible": 162,
+        "empleadoresDelArea": 112
+      }
+    },
+    {
+      "id": "G2-ventas-jr",
+      "publico": "generalista",
+      "area": "ventas",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 912,
+        "afterHardFilters": 3655,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 20,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 7,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 10,
+        "descripcionCompleta": 9,
+        "scoreMedio": 93
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "ventas"
+        ],
+        "elegiblesDelArea": 398,
+        "elegiblesDelAreaConSeniorityPosible": 354,
+        "empleadoresDelArea": 248
+      }
+    },
+    {
+      "id": "G2-logistica-ssr",
+      "publico": "generalista",
+      "area": "logistica",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 910,
+        "afterHardFilters": 3653,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 19,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 3,
+        "seniorityDesconocido": 7,
+        "ubicacionPosible": 2,
+        "descripcionCompleta": 6,
+        "scoreMedio": 67
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "logistica",
+          "operaciones"
+        ],
+        "elegiblesDelArea": 348,
+        "elegiblesDelAreaConSeniorityPosible": 292,
+        "empleadoresDelArea": 213
+      }
+    },
+    {
+      "id": "T1-dev-ssr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": false,
+      "ranking": {
+        "open": 8720,
+        "eligible": 1719,
+        "pending": 691,
+        "afterHardFilters": 2410,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 13,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 7,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 9,
+        "descripcionCompleta": 8,
+        "scoreMedio": 76
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "software"
+        ],
+        "elegiblesDelArea": 407,
+        "elegiblesDelAreaConSeniorityPosible": 335,
+        "empleadoresDelArea": 143
+      }
+    },
+    {
+      "id": "G1-atencion-jr",
+      "publico": "generalista",
+      "area": "atencion_cliente",
+      "reserva": true,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 910,
+        "afterHardFilters": 3653,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 19,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 9,
+        "seniorityCompatible": 2,
+        "seniorityDesconocido": 8,
+        "ubicacionPosible": 5,
+        "descripcionCompleta": 10,
+        "scoreMedio": 74
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "atencion_cliente"
+        ],
+        "elegiblesDelArea": 100,
+        "elegiblesDelAreaConSeniorityPosible": 80,
+        "empleadoresDelArea": 77
+      }
+    },
+    {
+      "id": "T1-datos-jr",
+      "publico": "tecnologia",
+      "area": "datos",
+      "reserva": true,
+      "ranking": {
+        "open": 8720,
+        "eligible": 2743,
+        "pending": 910,
+        "afterHardFilters": 3653,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 16,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 6,
+        "seniorityDesconocido": 4,
+        "ubicacionPosible": 5,
+        "descripcionCompleta": 10,
+        "scoreMedio": 67
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "datos"
+        ],
+        "elegiblesDelArea": 88,
+        "elegiblesDelAreaConSeniorityPosible": 32,
+        "empleadoresDelArea": 52
+      }
+    }
+  ]
+}

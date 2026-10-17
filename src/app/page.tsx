@@ -16,6 +16,7 @@ import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
 import { landingData } from "@/lib/landing";
 import { POPULAR } from "@/lib/popular";
+import { displayCompany } from "@/lib/match/labels";
 
 // Los números y la cinta salen del inventario real; se regeneran cada hora.
 export const revalidate = 3600;
@@ -134,10 +135,10 @@ export default async function Home() {
                 aria-hidden={i >= data.latest.length || undefined}
                 className="flex shrink-0 items-center gap-3 rounded-xl transition-opacity hover:opacity-80"
               >
-                <CompanyTile name={j.company} />
+                <CompanyTile name={displayCompany(j.company)} />
                 <span className="min-w-0">
                   <span className="block text-[13px] text-white/90">
-                    <span className="font-semibold">{j.company}</span> · <TimeAgo iso={j.firstSeenAt} />
+                    <span className="font-semibold">{displayCompany(j.company)}</span> · <TimeAgo iso={j.firstSeenAt} />
                   </span>
                   <span className="block max-w-[340px] truncate text-lg font-medium">{j.title}</span>
                 </span>

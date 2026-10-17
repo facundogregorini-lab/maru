@@ -1,14 +1,16 @@
 import { countBy } from "@/lib/match/inventory";
 import { loadInventory } from "@/lib/match/load";
-import { enabledSources } from "@/lib/match/sources";
+import { enabledSources, SOURCES } from "@/lib/match/sources";
 
 export const runtime = "nodejs";
 
 /** Cifras reales y públicas del inventario (sin datos de usuarios). */
 export async function GET() {
-  const { inv } = await loadInventory();
+  const { inv, postings } = await loadInventory();
   const open = inv.opportunities.filter((o) => o.status === "abierta");
-  const active = enabledSources();
+  // Fuentes diarias + importaciones puntuales que hoy aportan avisos abiertos (nada más).
+  const imported = new Set([...postings.values()].filter((p) => p.status === "abierta").map((p) => p.sourceId));
+  const active = [...enabledSources(), ...SOURCES.filter((s) => s.imported && imported.has(s.id))];
   return Response.json(
     {
       generatedAt: inv.generatedAt,
@@ -19,7 +21,8 @@ export async function GET() {
         (o) => o.extracted.family.value,
       ),
       sources: active.map((s) => ({ id: s.id, name: s.name, attribution: s.attribution ?? null })),
-      companies: Object.values(inv.boards).filter((b) => b.lastOkAt && !["remotive", "jobicy", "getonbrd"].includes(b.sourceId)).length,
+      // Empleadores distintos con búsquedas abiertas (igual que la portada); no bolsas ni feeds importados.
+      companies: new Set(open.map((o) => o.company.trim().toLowerCase()).filter(Boolean)).size,
     },
     { headers: { "Cache-Control": "public, max-age=300" } },
   );

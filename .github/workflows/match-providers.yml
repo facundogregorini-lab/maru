@@ -1,0 +1,85 @@
+# Importa avisos de proveedores con cuota (Fantastic.jobs trial, SerpApi gratuito, Apify con tope)
+# al inventario de "Encontrá tu trabajo perfecto". SÓLO se lanza a mano (Actions → match-providers):
+# no tiene cron. Por defecto corre en modo "plan" (sin red). Ver docs/IMPORTACIONES.md.
+# Claves: secrets FANTASTIC_JOBS, SERP_API y APIFY_TOKEN del repo; nunca como inputs ni en el log.
+name: match-providers
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: "fantastic | serpapi | apify"
+        required: true
+        default: "serpapi"
+      mode:
+        description: "plan (sin red) | status (saldo) | run (importa y commitea)"
+        required: true
+        default: "plan"
+      args:
+        description: "Opcional, ej. --cohorts=G1,G2 --limit=50 --max-jobs=300 | --max-searches=12 --reserve=20 | --budget-usd=5 --rows=100 --sources=computrabajo,indeed"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+# Mismo grupo que la sincronización diaria: nunca escriben el inventario a la vez.
+concurrency:
+  group: match-sync
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # El último commit de la rama al empezar (no el de cuando se encoló): otra corrida
+          # del mismo grupo de concurrencia puede haber guardado el inventario mientras esperaba.
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Secrets disponibles (sólo si existen, nunca su valor)
+        env:
+          FANTASTIC_JOBS: ${{ secrets.FANTASTIC_JOBS }}
+          SERP_API: ${{ secrets.SERP_API }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          for k in FANTASTIC_JOBS SERP_API APIFY_TOKEN; do
+            if [ -n "${!k}" ]; then echo "$k: cargado"; else echo "$k: falta"; fi
+          done
+      - name: Importar
+        env:
+          FANTASTIC_JOBS: ${{ secrets.FANTASTIC_JOBS }}
+          SERP_API: ${{ secrets.SERP_API }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          PROVIDER: ${{ github.event.inputs.provider }}
+          MODE: ${{ github.event.inputs.mode }}
+          ARGS: ${{ github.event.inputs.args }}
+        run: |
+          case "$PROVIDER" in fantastic|serpapi|apify) ;; *) echo "provider inválido"; exit 1;; esac
+          case "$MODE" in plan|status|run) ;; *) echo "mode inválido"; exit 1;; esac
+          # Sólo opciones --nombre=valor con caracteres seguros.
+          read -r -a EXTRA <<< "$ARGS"
+          for a in "${EXTRA[@]}"; do
+            [[ "$a" =~ ^--[a-z-]+=[A-Za-z0-9,._-]*$ ]] || { echo "argumento inválido: $a"; exit 1; }
+          done
+          npx --yes tsx@4 scripts/match-import.ts --provider="$PROVIDER" --mode="$MODE" "${EXTRA[@]}"
+      - name: Guardar inventario y consumo
+        if: ${{ github.event.inputs.mode == 'run' && always() }}
+        env:
+          PROVIDER: ${{ github.event.inputs.provider }}
+        run: |
+          git config user.name "maru-match-bot"
+          git config user.email "maru-match-bot@users.noreply.github.com"
+          git add data/match/inventory.json data/match/providers-ledger.json
+          [ -f data/match/providers-discoveries.json ] && git add data/match/providers-discoveries.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          git commit -m "chore(match): importación $PROVIDER"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

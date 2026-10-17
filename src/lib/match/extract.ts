@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 2;
+export const EXTRACTION_VERSION = 7;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -125,27 +125,42 @@ export function splitSections(text: string): { required: string; desirable: stri
 
 /* ---------- Familia de rol ---------- */
 
+/**
+ * Primera regla que coincide. El orden importa: lo específico va antes que lo genérico
+ * ("Data Collector" es entrenamiento de IA, no datos; "Operario de armado de pedidos" es logística, no producción).
+ */
 const FAMILY_RULES: [RoleFamily, RegExp][] = [
-  ["datos", /\b(data (analyst|scientist|engineer|reporting)|analista de datos|analista de reporting|cientific[oa] de datos|business intelligence|\bbi\b|analytics engineer|machine learning|ml engineer)/],
-  ["producto", /\b(product (manager|owner|lead|director|operations|analyst)|desarrollo de producto|gerente de producto|\bpm\b|product ops)/],
+  ["entrenamiento_ia", /\b(ai trainers?|trainers network|ai tutor|data collector|recolector de datos|collecteur|data collection|video collection|data contributor|(audio|voice|video) (data )?contributor|rater|annotat|anotador|etiquetador|transcription|transcripci|linguists?|evaluator|validator|speech (& voice|and voice|data)|voice ai|(mathematics|physics|chemistry|biology|bioinformatics) expert)/],
+  ["datos", /\b(data (analyst|scientist|science|engineer|reporting)|analista de datos|analista de reporting|cientific[oa] de datos|business intelligence|\bbi\b|analytics|insights analyst|research scientist|machine learning|ml engineer)/],
+  ["producto", /\b(product (manager|owner|lead|director|operations|analyst|management)|desarrollo de producto|gerente de producto|\bpm\b|product ops)/],
   ["diseno", /\b(designer|diseñador|disenador|ux|ui|product design|motion|graphic|grafic)/],
-  ["software", /\b(engineer|developer|desarrollador|programador|software|devops|sre|qa|tester|frontend|backend|full ?stack|architect|tech lead|cto|mobile|ios|android|infraestructura|sistemas y aplicaciones|funcional cloud|it networking|redes y telecomunicaciones|seguridad electronica|security analyst|aiops)/],
-  ["marketing", /\b(marketing|growth|seo|sem|content|contenido|brand|community|social media|media buyer|paid media|performance|crm|lifecycle|comunicaci)/],
-  ["ventas", /\b(sales|ventas|account executive|sdr|bdr|business development|desarrollo de negocios|comercial|vendedor|ejecutivo de cuentas|partnerships|key account)/],
-  ["atencion_cliente", /\b(customer (support|service|success|experience)|support (agent|specialist)|atencion al cliente|soporte|help ?desk|call center|onboarding specialist)/],
-  ["finanzas", /\b(finance|financ|finanz|accountant|accounting|contador|contable|contabilidad|cuentas a pagar|cuentas corrientes|cobranzas|pago a proveedores|accounts payables|pricing|precios|costos|presupuesto|riesgo crediticio|credit associate|derivatives|rates analysis|record to report|fp&a|controller|tesorer|treasury|tax|impuest|auditor|billing|facturaci|impositivo|payroll)/],
-  ["rrhh", /\b(recruit|talent|people|human resources|recursos humanos|rrhh|hr |hrbp|seleccion)/],
-  ["legal", /\b(legal|lawyer|abogad|counsel|compliance|paralegal)/],
-  ["logistica", /\b(logistic|logistica|supply chain|warehouse|deposito|fleet|transport|procurement|compras|abastecimiento|last mile|comercio exterior|comex|global trade|procure to pay)/],
-  ["salud", /\b(nurse|enfermer|medic|doctor|clinical|clinic|pharma|farmac|health|salud|therap|psicolog)/],
-  ["educacion", /\b(teacher|docente|profesor|tutor|instructor|curriculum|education|educacion)/],
+  ["educacion", /\b(docente|profesor|maestr[oa] de)/],
+  // Ingenierías que no son de software: antes que "engineer" (software).
+  ["produccion", /\b((civil|mechanical|electrical|industrial|chemical|manufacturing|structural|maintenance) engineer|ingenier[oa]s? (civil|industrial|mecanic|electric|electromecanic|quimic|en alimentos|agronom|de planta|de mantenimiento|de produccion|de campo))/],
+  ["software", /\b(it operations|cloud operations|network operations|security operations?|noc\b|soc analyst|engineer|developer|desarrollador|programador|programacion|software|devops|sre|qa|sdet|tester|frontend|backend|full[ -]?stack|architect|tech lead|technical lead|technical staff|cto|mobile|ios|android|infraestructura|sistemas|funcional cloud|it networking|network (analyst|administrator|support)|redes y telecomunicaciones|seguridad electronica|security analyst|aiops|database administrator|base de datos|dba|(it|desktop|technical|application) support|soporte (it|tecnico|de sistemas)|responsable de (it|tecnologia)|sap security)/],
+  ["marketing", /\b(marketing|growth|seo\b|sem\b|ppc|programmatic|paid ads|paid social|affiliate (manager|marketing)|martech|content|contenido|copywriter|writer|editor|multimedia|podcast|ugc|creative (strategist|director)|art direction|brand|community|social media|media buyer|paid media|performance|crm|lifecycle|comunicaci|relaciones publicas|public relations|asuntos publicos)/],
+  ["comercio", /\b(cajer[oa]s?|repositor[ae]?s?|reposicion|merchandiser|visual merchandising|mystery shopper|comprador sorpresa|store manager|responsable de tienda|lider de tienda|encargad[oa] de (local|tienda|sucursal)|vendedor[a]? de salon|atencion en (local|tienda|sucursal)|personal para caja)/],
+  ["gastronomia", /\b(cocin[ae]|cociner[oa]|chef|mozo|moza|mozoa|camarer[oa]|bartender|barista|pizzero|pastel|panader|parrillero|bachero|mucama|hoteleria|room service|lavanderia|housekeeping|gastronom|restaurant)/],
+  ["ventas", /\b(revenue operations|revops|sales operations|sales ops|sales|ventas|vendas|account executive|account manager|client partner|territory manager|industry manager|(channel|strategic|alliances?) partner(ship)? manager|partnership manager|sdr|bdr|business development|desarrollo de negocios|comercial|vendedor|prevendedor|preventista|promovendedor|promotor|telemarket|cold caller|lead generation|(agente|asesor|vendedor|corredor)[a]? inmobiliari|ejecutivo[a/ ]* de cuentas|partnerships|key account)/],
+  ["atencion_cliente", /\b(customer (support|service|success|experience|care)|client service|support (agent|specialist)|atencion al (cliente|publico)|atencion a clientes|servicio al cliente|soporte|help ?desk|call center|onboarding specialist)/],
+  ["finanzas", /\b(finance|financ|finanz|accountant|accounting|contador|contable|contabilidad|cuentas (a|por) (pagar|cobrar)|cuentas corrientes|cobranza|cobros|cobrador|receptor pagador|pago a proveedores|accounts (payables?|receivables?)|pricing|precios|costos|presupuesto|riesgo crediticio|credit|underwrit|claims|fraud|fraude|risk analyst|settlement|lending|valuation|derivatives|rates analysis|record to report|order to cash|fp&a|controller|tesorer|tesour|treasury|tax|impuest|auditor|billing|facturaci|impositivo|payroll|oficial de (empresas|negocios|cuentas))/],
+  ["rrhh", /\b(recruit|talent|people|personas (y|&) cultura|(de|bp) personas\b|human resources|recursos humanos|rr\.? ?hh|hr |hrbp|seleccion|compensaci|beneficios|total rewards|relaciones laborales|liquidacion de sueldos|liquidador|job grading|bienestar)/],
+  ["legal", /\b(legal|lawyer|abogad|counsel|compliance|paralegal|attorney|patent|judicial|mediaci|privacy)/],
+  ["salud", /\b(nurse|enfermer|medic|doctor|clinical|clinic|pharma|farmac|health|salud|therap|psicolog|neurolog|cardiolog|fonoaudiolog|kinesiolog|odontolog|bioquimic|extraccionista|electromedicina|veterinari|adultos mayores|cuidador|social worker)/],
+  ["seguridad", /\b(vigilador|vigilancia|seguridad (privada|fisica|patrimonial)|security guard|guardia de seguridad|personal (para|de) (empresa de )?seguridad|supervisor de seguridad|operador de monitoreo|monitoreo de (alarmas|camaras))/],
+  ["logistica", /\b(logistic|logistica|logisitca|supply chain|warehouse|deposito|depot|fleet|transport|procurement|purchasing|compras|abastecimiento|last mile|comercio exterior|comex|global trade|procure to pay|chofer|conductor|driver|repartidor|reparto|cadete|picker|armad[oa] de pedidos|carga y descarga|mudanza|distribucion|stock|inventario|almacen|inbound|voyage)/],
+  ["educacion", /\b(teacher|docente|profesor|maestr[oa] de|tutor|instructor|curriculum|education|educacion)/],
   ["consultoria", /\b(consultant|consultor|advisory|asesor)/],
-  ["administracion", /\b(administrative|administrativ|administracion|administrador de documentos|assistant|asistente|office manager|recepcion|data entry|secretar|virtual assistant)/],
-  ["operaciones", /\b(operations|operaciones|ops\b|project manager|program manager|gerente de proyecto|coordinator|coordinador|process|procesos|business analyst|strategy|estrategia|calidad|quality analyst|mejora continua|planeamiento|gestion de produccion|analista ambiente)/],
+  ["administracion", /\b(administrative|administrativ|administracion|administrador|assistant|asistente|office manager|recepcion|data entry|secretar|virtual assistant|archivo)/],
+  ["produccion", /\b(operari[oa]s?|tecnic[oa]s? (de|en|electric|electronic|electromecanic|mecanic|industrial|de campo)|electrotecnic|electromecanic|electricista|mantenimiento|maintenance|metalurgic|soldador|tornero|plegador|albanil|pintor|carpinter|marmolero|torrero|liniero|topadorista|operador[a]? de (maquina|equipos|retro|grua|autoelevador|planta|produccion)|retroexcavadora|autoelevador|cnc|bobinad|extrusi|envasado|empaque|produccion|production|planta|industrial|construction|construccion|obra|estimator|proyectista|inspector|limpieza)/],
+  ["operaciones", /\b(operations|operaciones|operation manager|ops\b|project manager|program manager|gerente de proyecto|coordinator|coordinador|process|procesos|business analyst|strategy|estrategia|calidad|quality analyst|mejora continua|planeamiento|planificaci|planning|planner|gestion de produccion|analista de gestion|analista ambiente|seguridad e higiene|transaction management)/],
 ];
 
+/** "Operario/a", "Cocinero/a", "Repositores/as": se quita la variante de género para que las reglas no la repitan. */
+const GENDER_SUFFIX = /\/(a|as|o|os|es|ra|ras)\b/g;
+
 export function familyFromTitle(title: string): RoleFamily {
-  const t = ` ${fold(title)} `;
+  const t = ` ${fold(title).replace(GENDER_SUFFIX, "")} `;
   for (const [fam, re] of FAMILY_RULES) if (re.test(t)) return fam;
   return "otros";
 }
@@ -155,12 +170,12 @@ export function familyFromTitle(title: string): RoleFamily {
 const SENIORITY_RULES: [Seniority, RegExp][] = [
   ["ejecutivo", /\b(chief|ceo|cto|cfo|coo|cmo|vp|vice ?president|vicepresidente|country manager|general manager|gerente general)\b/],
   ["director", /\b(director|directora|head of|head,|jefe de area)\b/],
-  ["manager", /\b(manager|gerente|jefe|jefa|supervisor|supervisora)\b/],
+  ["manager", /\b(manager|gerente|jefe|jefa|supervisor|supervisora|encargad[oa])\b/],
   ["lead", /\b(lead|lider|staff|principal|architect|arquitect)\b/],
   ["semi_senior", /\b(semi ?senior|ssr\.?|mid|mid-level|ii)\b/],
   ["senior", /\b(senior|sr\.?|sssr|iii)\b/],
-  ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i)\b/],
-  ["pasantia", /\b(intern|internship|pasante|pasantia|becari)\b/],
+  ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i|ayudante|auxiliar|cadete|aprendiz|medio oficial)\b/],
+  ["pasantia", /\b(intern|internship|pasante|pasantia|becari|practicante|practicas profesionales)\b/],
 ];
 
 /** "Product Manager", "Account Manager"… suelen ser roles individuales: "manager" no indica gestión de personas. */
@@ -208,8 +223,31 @@ const LANGS: [string, RegExp][] = [
   ["francés", /\b(french|frances)\b/],
   ["alemán", /\b(german|aleman)\b/],
   ["italiano", /\b(italian|italiano)\b/],
+  ["chino", /\b(chinese|chino|mandarin)\b/],
+  ["japonés", /\b(japanese|japones)\b/],
+  ["ruso", /\b(russian|ruso)\b/],
+  ["árabe", /\b(arabic|arabe)\b/],
+  ["hebreo", /\b(hebrew|hebreo)\b/],
+  ["neerlandés", /\b(dutch|neerlandes|holandes)\b/],
 ];
 const LEVEL = /(native|nativo|bilingual|bilingue|fluent|fluido|fluency|proficient|advanced|avanzado|c2|c1|b2|b1|intermediate|intermedio|conversational|conversacional|basic|basico)/;
+
+const EN_WORDS = new Set(["the", "and", "you", "will", "with", "our", "for", "are", "we", "your", "to", "of", "is", "in", "be", "this", "team", "experience"]);
+const ES_WORDS = new Set(["el", "la", "los", "las", "de", "que", "y", "para", "con", "en", "nuestro", "nuestra", "una", "del", "por", "experiencia", "equipo"]);
+
+/** ¿El aviso está escrito en inglés? Cuenta palabras funcionales de los primeros 2.000 caracteres. */
+export function writtenInEnglish(text: string): boolean {
+  let en = 0;
+  let es = 0;
+  for (const w of fold(text.slice(0, 2000)).split(/\s+/)) {
+    if (EN_WORDS.has(w)) en++;
+    else if (ES_WORDS.has(w)) es++;
+  }
+  return en >= 12 && en > 3 * es;
+}
+
+/** Nivel que se infiere cuando el aviso está escrito en inglés y no dice cuál pide. */
+export const ENGLISH_IMPLICIT = "intermedio o más (el aviso está escrito en inglés)";
 
 export function languagesFrom(text: string, desirableText: string): LanguageReq[] {
   const out: LanguageReq[] = [];
@@ -223,6 +261,13 @@ export function languagesFrom(text: string, desirableText: string): LanguageReq[
     if (lang === "español" && !LEVEL.test(around)) continue;
     const level = around.match(LEVEL)?.[1] ?? "";
     out.push({ language: lang, level, required: !re.test(fd) });
+  }
+  // Un aviso entero en inglés (típico de empresas de EE. UU.) casi siempre exige trabajar en inglés,
+  // aunque no lo diga como requisito. Lo marcamos explícito para que el filtro de idioma funcione.
+  if (writtenInEnglish(text)) {
+    const en = out.find((l) => l.language === "inglés");
+    if (!en) out.push({ language: "inglés", level: ENGLISH_IMPLICIT, required: true });
+    else if (!en.level) en.level = ENGLISH_IMPLICIT;
   }
   return out;
 }
@@ -277,7 +322,8 @@ export function extract(input: {
     family,
     seniority,
     employmentType,
-    languages: languagesFrom(descriptionText, sections.desirable),
+    // El título también cuenta: "Recruiter con chino", "Customer Support - Portuguese".
+    languages: languagesFrom(`${title}\n${descriptionText}`, sections.desirable),
     skillsRequired: req,
     skillsDesirable: des,
     skillsMentioned: mentioned,

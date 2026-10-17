@@ -24,9 +24,13 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          # El último commit de la rama al empezar (no el de cuando se encoló): otra corrida
+          # del mismo grupo de concurrencia puede haber guardado el inventario mientras esperaba.
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -40,6 +44,11 @@ jobs:
           else
             npx --yes tsx@4 scripts/match-sync.ts
           fi
+      - name: Vigencia de avisos importados
+        # Mira la página original de hasta 400 importados (turnando entre fuentes, 8 minutos como mucho)
+        # y cierra los que ya no existen. Si falla, no frena la sync.
+        continue-on-error: true
+        run: npx --yes tsx@4 scripts/match-liveness.ts --max=400 --budget-min=8
       - name: Guardar inventario
         run: |
           git config user.name "maru-match-bot"

@@ -140,6 +140,21 @@ describe("elegibilidad desde Argentina", () => {
     expect(classifyEligibility(posting({ locations: ["Martínez, Buenos Aires"] })).status).toBe("elegible");
     expect(classifyEligibility(posting({ locations: ["Córdoba, Argentina", "London, UK"] })).status).toBe("elegible");
   });
+  it("una ciudad de nombre repetido no alcanza si la fuente informa otro país donde existe o el título lo nombra", () => {
+    expect(classifyEligibility(posting({ locations: ["Cordoba"], countries: ["ES"] })).status).not.toBe("elegible");
+    expect(classifyEligibility({ ...posting({ locations: ["Cordoba"] }), title: "Driver / Data Collector in Cordoba, Spain" }).status).not.toBe("elegible");
+    // Lever informa sólo el país de la primera sede: Buenos Aires en la lista sigue valiendo.
+    expect(classifyEligibility(posting({ locations: ["Madrid", "Buenos Aires"], countries: ["ES"] })).status).toBe("elegible");
+    expect(classifyEligibility(posting({ locations: ["Cordoba", "Medellin"], countries: ["BR"] })).status).toBe("elegible");
+  });
+  it("reconoce provincias del interior y ciudades del exterior que antes quedaban sin confirmar", () => {
+    for (const l of ["Resistencia, Chaco", "San Luis", "Comodoro Rivadavia, Chubut", "Santiago del Estero"]) {
+      expect(classifyEligibility(posting({ locations: [l] })).status).toBe("elegible");
+    }
+    for (const l of ["Auckland", "Athens, Greece", "Budapest", "Remote (Taiwan)"]) {
+      expect(classifyEligibility(posting({ locations: [l] })).status).toBe("no_elegible");
+    }
+  });
   it("un link con %-escape inválido no rompe el parser", () => {
     expect(parseBoardUrl("https://jobs.lever.co/%E0%A4")).toBeNull();
   });

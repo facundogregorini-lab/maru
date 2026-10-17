@@ -1,5 +1,7 @@
+import { workplaceFromDescription } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
+import { INFERRED, isInferred } from "./labels";
 import { sourceById } from "./sources";
 import { sha } from "./hash";
 import { canonicalUrl, fold, shingleSimilarity } from "./text";
@@ -54,6 +56,34 @@ export function contentHash(p: NormalizedPosting): string {
   );
 }
 
+/** Si la fuente no informa modalidad, usamos la que el aviso declara explícitamente en su texto. */
+/** Ubicaciones que en realidad dicen la modalidad ("Desde casa", "Remote"). */
+const REMOTE_PLACE = /^\s*(remote|remoto|remota|desde (tu |su )?casa|home office|teletrabajo|work from home|anywhere)\b/;
+
+export function withWorkplace(p: NormalizedPosting): NormalizedPosting {
+  if (p.workplace.value !== "desconocido") return p;
+  if (p.locations.length && p.locations.every((l) => REMOTE_PLACE.test(fold(l)))) return { ...p, workplace: { value: "remoto", from: "fuente", evidence: `ubicación: ${p.locations[0].slice(0, 60)}` } };
+  const found = workplaceFromDescription(p.descriptionText);
+  if (found) return { ...p, workplace: { value: found.value, from: "descripcion", evidence: found.evidence } };
+  const inferred = inferPresencial(p);
+  return inferred ? { ...p, workplace: { value: "presencial", from: "descripcion", evidence: `${INFERRED} ${inferred} sin mención de remoto` } } : p;
+}
+
+/**
+ * En los portales locales (Computrabajo, Indeed, LinkedIn, Google Jobs) un aviso con ciudad que no habla
+ * de remoto ni de híbrido casi siempre es presencial. Se marca como inferido para mostrarlo así y no
+ * usarlo como dato firme. Devuelve la ciudad usada, o null si no se puede inferir.
+ */
+const INFER_SOURCES = new Set(["serpapi", "apify-computrabajo", "apify-indeed", "apify-linkedin"]);
+const NOT_A_PLACE = /^\s*(argentina|remote|remoto|latam|latin america|america latina|anywhere|worldwide|desde (tu |su )?casa|home office|teletrabajo)\b/;
+const MENTIONS_REMOTE = /\b(remot[oa]s?|remote(ly)?|hibrid[oa]s?|hybrid|teletrabajo|home ?office|work(ing)? from home|wfh|a distancia|desde (tu |su )?casa|mixt[oa]|virtual)\b/;
+function inferPresencial(p: NormalizedPosting): string | null {
+  if (!INFER_SOURCES.has(p.sourceId)) return null;
+  const city = p.locations.find((l) => l.trim() && !NOT_A_PLACE.test(fold(l)));
+  if (!city) return null;
+  return MENTIONS_REMOTE.test(fold(`${p.title} ${p.regionText.join(" ")} ${p.locations.join(" ")} ${p.descriptionText}`)) ? null : city;
+}
+
 function analyze(p: NormalizedPosting): Pick<StoredPosting, "eligibility" | "extracted" | "employmentType"> {
   const eligibility = classifyEligibility(p);
   const extracted = extract({
@@ -72,7 +102,8 @@ function store(p: NormalizedPosting, a: ReturnType<typeof analyze>): NormalizedP
 }
 
 /** Publicación suelta (p. ej. agregada a mano por una persona) → registro analizado, sin guardarlo en ningún lado. */
-export function analyzeStandalone(p: NormalizedPosting, now: string): StoredPosting {
+export function analyzeStandalone(raw: NormalizedPosting, now: string): StoredPosting {
+  const p = withWorkplace(raw);
   const a = analyze(p);
   return {
     ...p,
@@ -102,8 +133,9 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
   const byKey = new Map(inv.postings.map((p) => [p.key, p]));
   const seen = new Set<string>();
 
-  for (const p of fetched.postings) {
-    if (!p.title || !p.sourceUrl) continue;
+  for (const raw of fetched.postings) {
+    if (!raw.title || !raw.sourceUrl) continue;
+    const p = withWorkplace(raw);
     const key = postingKey(p);
     if (seen.has(key)) continue; // la misma publicación repetida en una respuesta
     seen.add(key);
@@ -171,11 +203,46 @@ function close(p: StoredPosting, now: string, reason: string) {
 
 const daysSince = (a: string, now: string) => (new Date(now).getTime() - new Date(a).getTime()) / 86_400_000;
 
-/** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio. */
+/**
+ * Avisos importados de proveedores con cuota (no los consulta la sync diaria): se cierran por el
+ * vencimiento informado o si pasan `staleDays` sin volver a verse. Así el catálogo no arrastra
+ * avisos viejos cuando se termina el saldo de un proveedor.
+ */
+export function expireImported(inv: Inventory, now: string): number {
+  let closed = 0;
+  for (const p of inv.postings) {
+    const source = sourceById(p.sourceId);
+    if (!source?.imported || p.status !== "abierta") continue;
+    if (p.expiresAt && Date.parse(p.expiresAt) < Date.parse(now)) close(p, now, "Venció según la fuente");
+    else if (daysSince(p.lastSeenAt, now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
+    else continue;
+    closed++;
+  }
+  return closed;
+}
+
+/**
+ * Los avisos importados no se vuelven a descargar en la sync diaria: cuando cambian las reglas de análisis
+ * (EXTRACTION_VERSION, modalidad desde el texto) se re-analizan con el texto guardado.
+ */
+export function refreshImported(inv: Inventory): number {
+  let n = 0;
+  for (const p of inv.postings) {
+    if (!sourceById(p.sourceId)?.imported || p.status !== "abierta") continue;
+    const next = withWorkplace(p);
+    const hash = contentHash(next);
+    if (hash === p.contentHash) continue;
+    Object.assign(p, { workplace: next.workplace }, analyze(next), { contentHash: hash });
+    n++;
+  }
+  return n;
+}
+
+/** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio (salvo importados). */
 export function purge(inv: Inventory, now: string, activeBoards?: Set<string>): number {
   const before = inv.postings.length;
   inv.postings = inv.postings.filter((p) => {
-    if (activeBoards && !activeBoards.has(p.boardId)) return false;
+    if (activeBoards && !activeBoards.has(p.boardId) && !sourceById(p.sourceId)?.imported) return false;
     return !(p.status === "cerrada" && p.closedAt && daysSince(p.closedAt, now) > RETAIN_CLOSED_DAYS);
   });
   return before - inv.postings.length;
@@ -275,7 +342,7 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
       postingKeys: sorted.map((p) => p.key),
       locations: [...new Set(group.flatMap((p) => p.locations))].slice(0, 6),
       countries: [...new Set(group.flatMap((p) => p.countries))],
-      workplace: group.map((p) => p.workplace).find((w) => w.value !== "desconocido") ?? primary.workplace,
+      workplace: group.map((p) => p.workplace).find((w) => w.value !== "desconocido" && !isInferred(w)) ?? group.map((p) => p.workplace).find((w) => w.value !== "desconocido") ?? primary.workplace,
       eligibility: combineEligibility(group.map((p) => p.eligibility)),
       extracted: primary.extracted,
       salary: salaryPost?.salary ?? null,
@@ -289,6 +356,20 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
       contentHash: sha(group.map((p) => p.contentHash).sort().join("|")),
     };
   });
+}
+
+/**
+ * Lo que se guarda en data/match/inventory.json: las oportunidades se derivan de las publicaciones
+ * (ids estables por hash), así que no se guardan y se reconstruyen al cargar. Ahorra ~30% del archivo,
+ * que GitHub limita a 100 MB.
+ */
+export function forStorage(inv: Inventory): Inventory {
+  return { ...inv, opportunities: [] };
+}
+
+/** Oportunidades del inventario: las guardadas (fixtures viejos) o reconstruidas desde las publicaciones. */
+export function opportunitiesOf(inv: Pick<Inventory, "opportunities" | "postings">): Opportunity[] {
+  return inv.opportunities?.length ? inv.opportunities : buildOpportunities(inv.postings);
 }
 
 export function recordRun(inv: Inventory, run: Omit<SyncRun, "id">, keep = 30) {

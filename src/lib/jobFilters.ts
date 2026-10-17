@@ -19,6 +19,11 @@ export const AREAS: Record<RoleFamily, string> = {
   salud: "Salud",
   educacion: "Educación",
   consultoria: "Consultoría",
+  produccion: "Industria y oficios",
+  gastronomia: "Gastronomía y hotelería",
+  comercio: "Comercio y retail",
+  seguridad: "Seguridad",
+  entrenamiento_ia: "IA e idiomas (por proyecto)",
   otros: "Otras áreas",
 };
 

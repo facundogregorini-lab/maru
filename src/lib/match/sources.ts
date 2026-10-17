@@ -27,6 +27,12 @@ export type SourceInfo = {
   linkRequired: boolean;
   attribution?: string;
   notes?: string;
+  /**
+   * Importación manual con cuota (workflow match-providers): la sync diaria no la consulta, pero
+   * conserva sus avisos y los vence por fecha de la fuente o por `staleDays` sin volver a verlos.
+   */
+  imported?: boolean;
+  staleDays?: number;
 };
 
 const REVIEWED = "2026-10-15";
@@ -80,6 +86,23 @@ export const SOURCES: SourceInfo[] = [
     cost: "gratis",
     partialFeed: false,
     linkRequired: false,
+  },
+  {
+    id: "teamtailor",
+    name: "Teamtailor (RSS del sitio de empleo)",
+    kind: "ats",
+    docs: ["https://support.teamtailor.com/en/articles/11171756-rss-feed-how-to-guide"],
+    access: "GET https://<sitio>/jobs.rss?per_page=100&offset=N (sin autenticación).",
+    terms:
+      "La guía de Teamtailor documenta el feed RSS de cada sitio de empleo y aclara que sus datos son públicos (se usa, por ejemplo, para Job Wrapping de LinkedIn). Mismo uso conservador que Greenhouse: extracto y enlace al aviso del empleador.",
+    limits: "100 avisos por página; 1 sitio por empresa y por sincronización, en serie.",
+    reviewedAt: "2026-10-16",
+    status: "habilitada",
+    enabled: true,
+    cost: "gratis",
+    partialFeed: false,
+    linkRequired: false,
+    notes: "Las etiquetas propias (remoteStatus, tt:location, tt:department) salen de implementaciones de terceros: el parser las lee si están y si no deja el dato como desconocido.",
   },
   {
     id: "getonbrd",
@@ -167,7 +190,80 @@ export const SOURCES: SourceInfo[] = [
     partialFeed: true,
     linkRequired: true,
   },
-  ...(["JSearch (RapidAPI)", "SerpApi Google Jobs", "TheirStack"] as const).map(
+  {
+    id: "fantastic_ats",
+    name: "Fantastic.jobs · sitios de empleo de empresas",
+    kind: "portal",
+    docs: ["https://developer.fantastic.jobs/api/new-jobs", "https://developer.fantastic.jobs/documentation/credit-usage"],
+    access: "GET https://data.fantastic.jobs/v1/active-ats con Bearer FANTASTIC_JOBS (sólo servidor/Actions).",
+    terms:
+      "Índice de avisos publicados en ATS de empleadores (Workday, SuccessFactors, Teamtailor…). Enlazamos al aviso original del empleador y aclaramos el índice en la atribución.",
+    limits: "Créditos del trial (sin plan pago). Cada importación lee el saldo antes de descargar y frena sin el dato.",
+    reviewedAt: "2026-10-16",
+    status: "habilitada",
+    enabled: false,
+    cost: "cuota_finita",
+    partialFeed: true,
+    linkRequired: false,
+    imported: true,
+    staleDays: 30,
+    notes: "Los avisos importados siguen visibles hasta su vencimiento o 30 días sin volver a verse, aunque termine el trial.",
+  },
+  {
+    id: "fantastic_jb",
+    name: "Fantastic.jobs · LinkedIn",
+    kind: "portal",
+    docs: ["https://developer.fantastic.jobs/api/new-jobs"],
+    access: "GET https://data.fantastic.jobs/v1/active-jb?source=linkedin&exclude_recruiter_fields=true (sólo servidor/Actions).",
+    terms: "Avisos públicos de LinkedIn sin datos de reclutadores. Enlazamos al aviso en LinkedIn.",
+    limits: "Créditos del trial (sin plan pago).",
+    reviewedAt: "2026-10-16",
+    status: "habilitada",
+    enabled: false,
+    cost: "cuota_finita",
+    partialFeed: true,
+    linkRequired: true,
+    imported: true,
+    staleDays: 30,
+  },
+  {
+    id: "serpapi",
+    name: "Google Jobs (SerpApi)",
+    kind: "portal",
+    docs: ["https://serpapi.com/google-jobs-api", "https://serpapi.com/account-api"],
+    access: "GET https://serpapi.com/search.json?engine=google_jobs con SERP_API (sólo servidor/Actions).",
+    terms: "Resultados de Google Jobs; enlazamos al sitio donde se publicó el aviso (preferimos el del empleador y descartamos agregadores secundarios).",
+    limits: "Sólo búsquedas del plan gratuito (plan_searches_left), primera página, sin extras.",
+    reviewedAt: "2026-10-16",
+    status: "habilitada",
+    enabled: false,
+    cost: "cuota_finita",
+    partialFeed: true,
+    linkRequired: true,
+    imported: true,
+    staleDays: 21,
+    notes: "Google da antigüedad relativa: se muestra como texto y nunca se convierte en fecha exacta.",
+  },
+  ...(["linkedin", "indeed", "computrabajo"] as const).map(
+    (id): SourceInfo => ({
+      id: `apify-${id}`,
+      name: `${{ linkedin: "LinkedIn", indeed: "Indeed", computrabajo: "Computrabajo" }[id]} (vía Apify)`,
+      kind: "portal",
+      docs: ["https://docs.apify.com/platform/actors/running/usage-and-resources"],
+      access: "Actors de Apify con APIFY_TOKEN (sólo Actions), con tope de gasto por corrida y acumulado.",
+      terms: "Avisos públicos sin datos de reclutadores; enlazamos al aviso en el portal de origen.",
+      limits: "Presupuesto aprobado por el dueño: US$5 en total para importaciones (ledger en data/match/providers-ledger.json).",
+      reviewedAt: "2026-10-16",
+      status: "habilitada",
+      enabled: false,
+      cost: "pago",
+      partialFeed: true,
+      linkRequired: true,
+      imported: true,
+      staleDays: 30,
+    }),
+  ),
+  ...(["JSearch (RapidAPI)", "TheirStack"] as const).map(
     (name): SourceInfo => ({
       id: name.split(" ")[0].toLowerCase(),
       name,

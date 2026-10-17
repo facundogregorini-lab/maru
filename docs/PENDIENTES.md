@@ -1,6 +1,147 @@
 # Estado y próximos pasos de Maru
 
-Actualizado el 16/10/2026. Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
+## QC y porcentaje de Match (17/10/2026, PR #71)
+
+- Calibración pedida por el dueño: quitar la doble penalización de intención y los topes 95/98; datos ausentes afectan confianza, sin asignarles 50%. Roles contenidos en títulos largos, equivalencias locales y deseables con peso limitado. La antigüedad de una persona no implica Lead.
+- Afinidad separada del orden: guardados, descartes y frescura mantienen el ranking sin alterar el porcentaje. Se preservan las mejoras hasta PR #70, incluidos ubicación, elegibilidad, variedad de empresas, idioma y ocultamiento a 120 días. Las búsquedas agregadas por la persona no desaparecen por el umbral de coincidencia mínima.
+- Regresión reproducible con cinco perfiles ficticios sobre el mismo catálogo: [decisiones, muestra y resultados](QC-MATCH-2026-10-17.md). Máximos administración 82→100, ventas 95→100, datos 91→92, marketing junior 74→85, operaciones 93→100. Son pruebas de coherencia, no validación de contrataciones.
+- Bug del editor CV/carta corregido: guardar mientras escribe, conservando el cursor y Escape. Antes se perdía la última edición si recargaba sin salir del campo.
+- Ver el registro de QC en ese documento para distinguir esta pasada de la anterior y sus limitaciones. No repetir importaciones de proveedores para validar el ranking: `scripts/match-calibration.ts` usa el inventario local.
+
+Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
+
+## Calidad de avisos: plan en curso (desde 17/10/2026)
+
+Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se anota acá**, para que otra sesión pueda seguir si se cortan los tokens. Diagnóstico de partida (17/10, sobre 3.966 oportunidades elegibles):
+- 22% en "Otros";
+- 46% sin seniority;
+- 39% sin modalidad;
+- 14,5% con más de 60 días (todas de ATS gratuitos);
+- 2.854 importados nunca revisados por liveness;
+- "Córdoba, España" figuraba como elegible.
+
+| # | Paso | Estado |
+| --- | --- | --- |
+| A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
+| B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
+| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Hecho** (ver abajo) |
+| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Hecho** (ver abajo) |
+| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Hecho** (ver abajo) |
+| F | Google Jobs mensual automático (gratis) | **Siguiente**: lo decide el dueño |
+
+**A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
+- Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
+- Lo que queda en "Otros" son títulos sin área clara ("Manager", "Specialist", "Principal").
+- Se revisaron a mano los 319 títulos que cambiaron de área y se corrigieron los errores (inmobiliario, personas, ingenieros de procesos).
+
+**B (hecho):** `EXTRACTION_VERSION` 7. Sobre las 13.372 publicaciones abiertas, la elegibilidad queda así:
+
+| Estado | Antes | Después |
+| --- | ---: | ---: |
+| Elegibles | 4.202 | 4.290 |
+| Por confirmar | 1.027 | 619 |
+| No elegibles | 8.143 | 8.463 |
+
+- Pasan a elegibles 90 publicaciones del interior que no decían "Argentina" (Resistencia, San Luis, Corrientes, Comodoro Rivadavia, Santiago del Estero…).
+- Pasan a no elegibles 327 de ciudades o países del exterior que no se reconocían (Auckland, Atenas, Budapest, Dubái…).
+- Una ciudad de nombre repetido (Córdoba, Rosario, San Juan…) ya no cuenta como Argentina si la fuente informa otro país donde existe o el título lo nombra.
+- Los 619 "por confirmar" que quedan son casi todos "remoto sin región" (679 antes). Su antigüedad se trata en el paso C.
+
+### Cómo seguir (para la próxima sesión)
+
+**C (hecho, 17/10):**
+- `src/lib/match/ranking.ts` exporta `HIDE_AFTER_DAYS` (120), `STALE_AFTER_DAYS` (60) y `ageDays(o, now)`. El Match no ofrece avisos de más de 120 días, salvo los guardados, y baja ×0,85 los de más de 60. Reemplaza el castigo anterior (>180 ×0,85, >90 ×0,93).
+- `searchJobs` (`/busquedas`) tampoco los lista. La página de detalle sigue andando para quien tenga el link.
+- Revisión de vigencia (`src/lib/match/liveness.ts`):
+  - turna entre fuentes con `roundRobin`;
+  - tiene un tope de tiempo (`budgetMs`);
+  - el workflow corre `--max=400 --budget-min=8` con `timeout-minutes: 40`.
+- Los tests usan fechas fijas (`NOW` y `vi.useFakeTimers` en `match-api`), así no se rompen cuando los avisos de prueba envejezcan.
+- Medición con el inventario commiteado al 17/10, antes de la sync con reglas nuevas:
+  - de 3.683 elegibles, 489 tienen más de 60 días;
+  - 306 tienen más de 120 y quedan ocultas, todas de ATS gratuitos que las siguen publicando (Lever 162, Greenhouse 74, Ashby 46, Teamtailor 22, Get on Board 2).
+  - Si el dueño prefiere mostrar esas búsquedas "siempre abiertas", alcanza con subir `HIDE_AFTER_DAYS`.
+- Queda abierto: Computrabajo sigue salteada por `blockedSources`. Desde la nube de Claude no hay red para investigar por qué.
+
+**D (hecho, 17/10):**
+- `withWorkplace` (`src/lib/match/inventory.ts`) marca `presencial` con evidencia "inferido: <ciudad> sin mención de remoto". Lo hace en `serpapi`, `apify-computrabajo`, `apify-indeed` y `apify-linkedin`, cuando el aviso:
+  - tiene una ciudad concreta, es decir, no sólo "Argentina", "Remoto" o "Desde casa";
+  - y ni el título, ni la ubicación, ni el texto mencionan remoto, híbrido, home office, teletrabajo, mixto o virtual.
+- `isInferred()` vive en `labels.ts` y se puede usar en el navegador.
+- Cómo se usa lo inferido:
+  - Se muestra como "Presencial (inferido)" en `/busquedas` y en el Match.
+  - En el Match cuenta para ordenar, pero no para excluir con el indispensable de modalidad: queda como "no informa la modalidad".
+  - Al agrupar, una modalidad que declara el aviso le gana a una inferida.
+- Medición, simulando la sync con las reglas nuevas sobre el inventario commiteado:
+  - en elegibles, "sin modalidad" baja de 1.552 a 199 y 1.415 pasan a inferidas;
+  - por fuente, son 652 de Google Jobs, 530 de Computrabajo, 249 de LinkedIn y 79 de Indeed.
+- Los importados se re-analizan solos en la próxima sync (`refreshImported`), porque la modalidad entra en el hash.
+
+**E (hecho, 17/10):**
+- **Métricas:** `npm run match:report` imprime una línea "Calidad" y guarda `quality` en el JSON.
+  - Mide sobre los grupos elegibles: % en "Otros", sin modalidad (y cuántas inferidas), sin seniority, con más de 60 días, ocultas por más de 120, empresa confidencial y consultora.
+  - También cuenta los grupos "por confirmar".
+  - Con el inventario commiteado da: "Otros" 5,6%, sin modalidad 41,4% (sin re-analizar todavía con D), sin seniority 45,1%, más de 60 días 12,3%, ocultas 7,4%, confidencial 4,9% y consultora 12,8%.
+- **Empresa confidencial:** `isGenericCompany` y `displayCompany` en `labels.ts`.
+  - Muestra "Empresa confidencial" para "Importante empresa del sector…", "Confidencial" y similares.
+  - No marca empresas reales como "La Anónima" o "Sociedad Anónima".
+  - Esos avisos no se agrupan entre sí.
+- **Consultora:** `isConsultora` cubre Adecco, Manpower, Randstad, Bayton, Grupo Gestión, ADN, Consultores de Empresas, Michael Page, servicios eventuales, etc.
+  - Se ve como la etiqueta "Consultora" (`src/components/busquedas/CompanyName.tsx`) en las tarjetas de búsquedas, en el detalle y en el Match.
+- **Sufijos de lugar:** `baseTitle` en `group.ts` saca del título el lugar pegado al final, como " - Rosario", "(Argentina)" o " – Zona Norte". Toma los lugares de una lista o de las ubicaciones del aviso.
+  - La modalidad no se recorta, porque "(Remoto)" y "(Híbrido)" son búsquedas distintas.
+  - Los grupos visibles pasan de 9.752 a 9.527 (225 casi-duplicados menos). Los ids viejos siguen andando como alias.
+
+**Pulido de títulos (hecho, 17/10):** `displayTitle` (`labels.ts`) muestra los títulos:
+- sin códigos internos ("Ref. 21518:", "(req208687)", "ID89121");
+- con la primera letra en mayúscula;
+- y sin gritar si vinieron todos en mayúsculas, conservando siglas como CABA o B2B.
+
+Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se sigue usando el título original. Al 17/10 había unos 300 títulos abiertos con ese ruido.
+
+**Seniority:** el 45% de los grupos elegibles no la tiene, y casi todos son avisos que no la dicen ("Vendedor", "Asesor comercial"). No se infiere, para no adivinar.
+
+**Auditoría del Match (17/10):** corrí los 8 perfiles de E0 (`docs/research/e0-2026-10-16/perfiles.json`) contra el inventario sincronizado y corregí lo que salía mal:
+- "Para vos" contaba todos los avisos elegibles (3.443), aunque fueran de otra área con 5% de coincidencia. Ahora sólo lista los que llegan a `MIN_SCORE` (25%) y quedan entre 85 y 678 por perfil. El resto se cuenta en `counts.lowMatch` y la pantalla explica cómo verlos: filtrando por área se muestran igual.
+- La ciudad se compara por partes (`placeSegments` y `samePlace`): "Rosario de Lerma" (Salta) ya no cuenta como Rosario. La ciudad de la persona es lo que va antes de la coma.
+- Avisos de "Confidencial" duplicados: con el mismo nombre genérico, el mismo título y el mismo lugar, se juntan.
+- El % nunca es 100: el tope es 98, o 95 si falta información.
+- Ubicaciones (`displayLocations`):
+  - sin repetir el mismo lugar escrito distinto;
+  - sin "Argentina" suelto si hay una ciudad;
+  - "Remoto desde Argentina" cuando es elegible y remoto pero las ubicaciones no lo dicen.
+- "Desde casa" o "Remote" como ubicación ahora cuenta como modalidad remota.
+- Nuevo motivo: "Es en <ciudad>, donde buscás".
+- `/busquedas`: la búsqueda por texto incluye el lugar ("vendedor córdoba").
+- Sin cambiar: la seniority que falta no se infiere. Logística y datos junior siguen con poca oferta, y ahí el problema es de adquisición, no de ranking.
+
+**F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
+
+**Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.
+
+## Próximos pasos (17/10/2026, cierre de la base de avisos)
+
+Estado: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 empleadores con elegibles** (E0: 909 grupos y 90 empleadores).
+- Gasto total en APIs: **US$4,56**, todo en Apify. Fantastic usó el trial y Google Jobs el plan gratuito.
+- ~70% de las publicaciones elegibles vienen de las APIs.
+- Gasto, avisos por fuente, verticales y duplicación en [research/proveedores-2026-10-17](research/proveedores-2026-10-17/README.md). Para recalcularlo: `npm run match:report -- --apify-real-usd=<uso real>`.
+
+En orden de impacto:
+
+1. **Google Jobs todos los meses** (gratis). Sus avisos vencen a los 21 días sin volver a verse: sin esta corrida se pierden ~860 avisos elegibles. Correr `match-providers` con `provider=serpapi`, `--max-searches=80 --reserve=20` y las búsquedas que más rindieron (ver IMPORTACIONES, "Próximas corridas"). **Decisión del dueño:** si se agenda un cron mensual (no cuesta plata; usa sólo el plan gratuito y deja la reserva).
+2. ~~**Clasificar "Otros"**~~ (hecho en el paso A de "Calidad de avisos"). Era: 3.645 publicaciones abiertas, 27%. En las APIs son oficios (chofer, mozo, operario, vigilador, electricista); en los ATS son puestos que el clasificador no reconoce. Sumar familias "gastronomía y hotelería", "seguridad", "oficios y producción" y revisar una muestra de los ATS. Mejora filtros por área y la medición por perfil.
+3. **Apify: decidir presupuesto** (quedan ~US$0,44 del tope aprobado de US$5). Si se aprueba más, conviene Computrabajo:
+   - es lo que más avisos elegibles nuevos trae (900, 6,6% duplicado), a ≈ US$0,003 por aviso;
+   - Indeed es más barato (≈ US$0,0007) pero descarta 2 de cada 3 filas;
+   - LinkedIn por Apify tiene 20% duplicado con otras fuentes.
+
+   Sin presupuesto nuevo, los avisos de Apify vencen solos a los 30 días.
+4. **No renovar Fantastic.** Su feed ATS se superpone 37% con otras fuentes (20% ya estaba gratis). Lo valioso fue descubrir empleadores para la sync gratuita (`providers-discoveries.json`), y eso ya se aprovechó.
+5. **Modalidad desconocida** en 1.497 publicaciones elegibles (sobre todo Google Jobs, que casi nunca la informa). No se adivina; cada tarjeta lo avisa. Sólo mejora leyendo el aviso original o con una fuente que lo informe.
+6. **Conectores Workable / Workday / SuccessFactors** (decisión del dueño, punto 2 de "Avisos: qué falta"). Es la forma de sumar empleadores argentinos generalistas sin pagar.
+7. **QA en el producto** con navegador: búsquedas generalistas, logos, "vista hace…", detalle y destino original, en escritorio y celular.
+8. **Tamaño del inventario:** 43 MB de 100 MB permitidos por GitHub. Si pasa de ~70 MB, recortar descripciones guardadas o mover a Vercel Blob.
+9. **Seguridad:** rotar las claves pegadas en el chat del 16/10 y actualizar los secrets de GitHub y Vercel.
 
 ## Prioridad inmediata: próxima etapa de avisos
 
@@ -11,6 +152,56 @@ El dueño pidió un traspaso para que otra IA implemente por etapas y después s
 3. Reutilizar [muestras y métricas](research/avisos-2026-10-16/README.md). No repetir corridas para recuperar números ya guardados.
 4. Priorizar la verificación de vigencia/cuota del trial: comenzó el 16/10; vencimiento esperado 23/10, confirmar hora real. Último saldo observado: 450 avisos. La propuesta reparte hasta 360 en cortes comparables, 60 en remoto/huecos y 30 de reserva; no obliga a consumir si no aporta aprendizaje.
 5. Conservar el catálogo gratuito y el ranking actual; demostrar que la mejora funciona cuando Fantastic quede deshabilitado. No hay presupuesto recurrente aprobado para Apify ni otro proveedor.
+
+**E0 hecho (16/10, costo cero):** ver [research/e0-2026-10-16](research/e0-2026-10-16/README.md). Con 8 perfiles sintéticos (2 de reserva) y revisión manual del top 5:
+- De los 909 grupos elegibles desde Argentina, el 56% es de 8 empleadores, la mayoría agencias de staffing o proyectos de IA y lingüística.
+- Por área, los elegibles son 13 de administración, 21 de finanzas, 38 de RR. HH. y 4 de logística, contra 254 de software. Hay 37 junior.
+- El perfil de logística quedó 0 útiles de 5 (la familia "operaciones" mezcla IT y Revenue Ops).
+
+Conclusión: **para generalistas el problema principal es de adquisición (H1)**. El ranking tiene fallas menores (modalidad y ciudad, seniority, variedad, antigüedad) y hay candidatos de mejora listados ahí, sin implementar todavía. Siguiente:
+- **E1** si el trial de Fantastic sigue vigente: se corre desde el panel con sesión real. Desde los entornos de Claude en la nube no hay red ni claves de producción.
+- **E2** en paralelo: sumar empleadores argentinos generalistas.
+
+**Importación de proveedores (17/10):** el dueño pidió usar las APIs probadas para tener avisos a la altura del MVP y aprobó **US$5 para Apify**. Se agregó el workflow manual `match-providers` (Fantastic con saldo del trial, Google Jobs con búsquedas del plan gratuito, Apify con tope acumulado), con ledger de consumo, vencimiento automático de lo importado y logos de la fuente. Ver [IMPORTACIONES.md](IMPORTACIONES.md).
+
+### Avisos: qué falta (actualizado 16/10 noche, para seguir con otra IA)
+
+Hecho:
+- E0 (línea de base).
+- Ajustes de ranking.
+- Importación de Fantastic, Google Jobs y Apify con topes (#32 a #34).
+- Primera corrida real y sync con reglas nuevas.
+
+Detalle operativo y saldos en [IMPORTACIONES.md](IMPORTACIONES.md). Pendiente, en orden de impacto:
+
+1. ~~**Segundo corte de Fantastic**~~ (hecho 17/10). Se usaron las cohortes nuevas G3/G4 y `offset` para no pagar repetidos. El trial queda agotado: 448/450. Medición en [research/e1-corte2-2026-10-17](research/e1-corte2-2026-10-17/README.md). **Elegibles: 909 → 2.687 grupos; empleadores 90 → 1.039.**
+2. **Conectores gratuitos nuevos para ATS que aparecieron en Fantastic.** **Teamtailor ya está hecho** (17/10): usa el RSS público documentado y suma 8 empleadores argentinos (Bidcom, BYMA, Día, Naranja X, PECOM, CDA, Talento Cumbre, David Kennedy). Teamtailor suma 13 empleadores en total (incluye Diagnóstico Maipú, IOL, CPA Ferrere, Umbral y Spyrosoft). **Decisión del dueño:** Workable (10), Workday (9), SuccessFactors (6) y SmartRecruiters (3) tienen endpoints JSON públicos que usan sus propias páginas de empleo, pero **sin documentación oficial** para terceros: sólo hay descripciones de scrapers. Por la regla del plan (fuentes primarias, sin scraping indiscriminado) no se implementaron. Si el dueño acepta ese riesgo, el de Workable (`apply.workable.com/api/v1/widget/accounts/{cuenta}`) es el más simple. Es la forma sostenible de cubrir empleadores argentinos generalistas (Natura, Quilmes/AB InBev, Swiss Medical, EY, Bidcom, BYMA…) sin pagar.
+   - Workday tiene un endpoint JSON público por tenant (`/wday/cxs/{tenant}/{site}/jobs`). Teamtailor y Workable tienen páginas de empleo públicas.
+   - Antes de implementarlos, revisar la documentación y las condiciones de cada endpoint (PLAN-AVISOS §5). No usar scraping indiscriminado.
+3. **Modalidad desconocida** (avance 17/10): ~1.100 publicaciones elegibles siguen sin modalidad. Ya se toman frases explícitas en español e inglés: reparto de días, "de forma presencial", "#LI-Remote", "in-office presence N days", etc. Lo que queda casi siempre dice sólo el lugar ("lugar de trabajo: Saavedra"), y eso no prueba que sea presencial: no se adivina. Para avanzar más hace falta que la fuente lo informe o leer el aviso original.
+4. **Interior del país y oficios** (cierre 17/10, tarde): 216 búsquedas de Google Jobs este mes (tandas 1 a 5, con oficios y servicios en las ciudades grandes) y Computrabajo con 11 palabras del interior. Google Jobs pasó a 961 publicaciones abiertas y Computrabajo a 900. Apify quedó en US$4,56 reales de US$5: no se usa más sin aprobación nueva. **Elegibles: 3.683 de 1.505 empleadores** ([research/e1-final-2026-10-17](research/e1-final-2026-10-17/README.md)).
+   - Queda repetir Google Jobs cada mes con el plan gratuito: los avisos vencen a los 21 días. Ver IMPORTACIONES, "Próximas corridas".
+   - Logística en Tucumán sigue con poca oferta local.
+   - Los oficios caen en la familia "otros": falta una familia propia (gastronomía, seguridad, oficios) si se quiere filtrarlos por área.
+5. ~~**Revisión manual**~~ (hecha 17/10): [research/e1-revision-2026-10-17](research/e1-revision-2026-10-17/README.md). Falsos positivos 9 → 0, útiles 19 → 20, dudosos 12 → 20. Los dudosos son por modalidad desconocida en otra ciudad y por **inglés implícito** (avisos en inglés de empresas de EE. UU.). El idioma requerido ya se detecta: inglés implícito en avisos escritos en inglés, fluidez en puestos de cara al cliente y más idiomas ([research/e1-idioma-2026-10-17](research/e1-idioma-2026-10-17/README.md)). Sigue pendiente una revisión humana real abriendo los avisos.
+6. ~~**Vigencia de importados**~~ (hecho 16/10): `scripts/match-liveness.ts` corre en `match-sync` después de la sincronización. Revisa hasta 150 importados por día, cada uno cada 3 días como mínimo. Cierra con 404/410 o con frases explícitas ("ya no está disponible", "No longer accepting applications"). Bloqueos y errores no cierran nada. El 17/10 la corrida dio 150/150 "sin dato", casi seguro Computrabajo bloqueando al bot. Ahora cada revisión guarda su resultado y las fuentes con ≥90% "sin dato" (mínimo 20 revisiones) se saltean, para gastar los pedidos en las que responden (Fantastic y Google Jobs responden bien). El log muestra el desglose por fuente. Los avisos de Computrabajo igual vencen solos a los 30 días.
+8. **Tamaño de `data/match/inventory.json`:** desde el 16/10 no guarda las oportunidades, que se reconstruyen al cargar en 0,4 s: pasó de 50 a 36 MB. GitHub rechaza archivos de más de 100 MB. Si vuelve a crecer:
+   - recortar descripciones guardadas (hoy hasta 6.000–12.000 caracteres);
+   - acortar la retención de cerrados (30 días);
+   - o mover el inventario a una base o a Vercel Blob.
+7. **Probar en el producto con Computer Use** (PLAN-AVISOS §5.6): búsquedas generalistas, filtro Argentina, logos, "vista hace…", detalle y destino original, también en celular.
+
+Seguridad: las claves se cargaron como secrets de GitHub Actions. Si las que se pegaron en el chat del 16/10 no se rotaron, rotarlas y actualizar los secrets y Vercel. El repo es público: nunca pasarlas como inputs ni en archivos.
+
+Resultado de la primera importación (16/10, noche), con los secrets cargados:
+- Google Jobs: +88.
+- Fantastic: +272.
+- Apify: +1.305, de los cuales Indeed aportó 213 después del arreglo de campos. Costó unos US$2,8 reales.
+- La sync manual sumó 360 avisos de 6 empleadores descubiertos.
+
+**Elegibles desde Argentina: 909 grupos (E0) → 2.722 oportunidades; empleadores con elegibles 90 → 847.** Medición en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md).
+
+La PR #10 (borrador "Login: Continuar con Google + magic link") sigue abierta, pero `main` ya tiene esa funcionalidad por #22/#23. Es del dueño: cerrarla si ya no hace falta.
 
 Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron reemplazadas por este plan. Preparar PRs pequeñas y resultados por checkpoint para revisión; no empezar una migración a pgvector, una búsqueda API por CV o alertas automáticas.
 
@@ -24,7 +215,7 @@ Las recomendaciones anteriores de tres portales con frecuencias fijas quedaron r
 - **Chat con Maru**: panel de Búsquedas en escritorio y desplegable en celular. Referencias sólo a avisos abiertos proporcionados desde el inventario. Perfil opcional, historial de la página sin persistencia y limpieza al cambiar de cuenta.
 - **Pulido**: resultados de Match en `AppShell`, guía del seguimiento en `/seguimiento/guia`, links de Planes y textos de privacidad corregidos.
 - **Logos**: 15 marcas verificadas desde Simple Icons 16.35.0, servidas como SVG local. Correspondencia por nombre exacto; el resto conserva inicial y color. Fuentes y licencias en `public/companies/`.
-- **Video de portada**: renderer usa la misma agrupación que la web. MP4, WebM y póster regenerados: 6.439 búsquedas, 425 empresas y 909 elegibles desde Argentina al renderizar.
+- **Video de portada**: el renderer usa la misma agrupación que la web y reconstruye las oportunidades desde las publicaciones. Regenerado el 17/10 con el catálogo importado: 9.005 búsquedas, 1.606 empresas y 2.967 elegibles desde Argentina al renderizar (antes 6.439 / 425 / 909). Volver a correr `node scripts/render-intro-video.mjs` cuando cambien mucho los números.
 
 ## QC y correcciones del 16/10
 

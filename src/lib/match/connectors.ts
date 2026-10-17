@@ -1,5 +1,5 @@
-import { fetchJson, type RetryOptions } from "./http";
-import { fold, htmlToText } from "./text";
+import { fetchJson, fetchText, type RetryOptions } from "./http";
+import { decodeEntities, fold, htmlToText } from "./text";
 import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
 
 /**
@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -71,6 +71,35 @@ export function workplaceFromText(text: string): Workplace {
   if (/\b(remote|remoto|teletrabajo|work from home|home office|anywhere)\b/.test(t)) return "remoto";
   if (/\b(on-?site|onsite|in office|presencial|in-person)\b/.test(t)) return "presencial";
   return "desconocido";
+}
+
+/**
+ * Modalidad declarada en la descripción ("Modalidad: presencial", "esquema híbrido", "100% remoto").
+ * Sólo frases explícitas: una mención suelta de "home office" como beneficio no alcanza para decir remoto.
+ */
+export function workplaceFromDescription(text: string): { value: Workplace; evidence: string } | null {
+  const t = fold(text.slice(0, 6000));
+  // Días repartidos entre oficina y casa ("3 días presenciales y 2 home office", "2 days per week on-site").
+  const split = t.match(/\b\d\s*(\/\s*\d\s*)?(dias?|days?)\s*((per|a la|por) (week|semana)\s*)?(de\s*)?(presencial(es)?|en (la )?oficina|on-?site|in (the )?office|home office|remot[oa]s?)\b/);
+  const declared = t.match(/\b(modalidad|esquema|modelo|formato|lugar de trabajo|work ?(?:mode|model|arrangement))(?: de (?:trabajo|contratacion|empleo))?\s*(?:(?:full|part)[ -]?time\s*)?(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
+  // "5 días presenciales" es presencial; sólo un reparto parcial de la semana indica híbrido.
+  const fullWeek = !!split && Number(split[0].match(/\d/)![0]) >= 5 && !split[1];
+  // "in-office presence four days per week": días de oficina de una semana parcial → híbrido.
+  const officeDays = t.match(/\bin-?office presence (one|two|three|four|[1-4]) days?\b/);
+  const hit =
+    (officeDays ? `hibrido: ${officeDays[0]}` : null) ??
+    (split
+      ? fullWeek
+        ? split[0]
+        : `hibrido: ${split[0]}`
+      : (declared?.[2] ??
+        t.match(
+          /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote|presencial)|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma|de forma|de tipo) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|work(ing)?( model)?|schedule)|(position|role) (will be|is) (categorized as )?(hybrid|remote|on-?site)|remote (full[ -]?time )?(position|role|job|work environment)|(based|work) remotely (from|in)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|presencial (full[ -]?time|part[ -]?time|jornada)|on-?site (role|position))\b/,
+        )?.[0] ??
+        t.match(/#li-(remote|hybrid|onsite)\b/)?.[0]));
+  if (!hit) return null;
+  const value: Workplace = /hibrid|hybrid/.test(hit) ? "hibrido" : /remot|teletrabajo|home office/.test(hit) ? "remoto" : "presencial";
+  return { value, evidence: (officeDays?.[0] ?? split?.[0] ?? declared?.[0] ?? hit).slice(0, 80) };
 }
 
 function wp(value: Workplace, from: Field<Workplace>["from"], evidence?: string): Field<Workplace> {
@@ -542,6 +571,92 @@ export async function fetchGetonbrd(board: Board, opts?: RetryOptions & { perPag
 
 /* ---------- registro ---------- */
 
+/* ---------- Teamtailor (feed RSS público del sitio de empleo) ---------- */
+
+const TT_REMOTE: Record<string, Workplace> = { fully: "remoto", temporary: "remoto", hybrid: "hibrido", none: "presencial", onsite: "presencial" };
+const TT_PAGE = 100;
+
+/**
+ * Teamtailor publica cada sitio de empleo como RSS: https://<sitio>/jobs.rss (offset/per_page, 100 por página).
+ * Su documentación aclara que los datos del feed son públicos. Las etiquetas propias usan el prefijo tt:.
+ */
+/** Lector mínimo de XML para RSS (sin dependencias: los workflows corren sin npm install). */
+const unCdata = (s: string) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1");
+function xmlTag(xml: string, name: string): string {
+  const m = xml.match(new RegExp(`<(?:tt:)?${name}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:tt:)?${name}>`, "i"));
+  return m ? decodeEntities(unCdata(m[1])).trim() : "";
+}
+function xmlTags(xml: string, name: string): string[] {
+  return [...xml.matchAll(new RegExp(`<(?:tt:)?${name}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:tt:)?${name}>`, "gi"))].map((m) => m[1]);
+}
+
+export function normalizeTeamtailor(xml: string, board: Board): { postings: NormalizedPosting[]; items: number } {
+  const channel = xml.replace(/<item\b[\s\S]*?<\/item>/gi, "");
+  const channelTitle = xmlTag(channel, "title");
+  const company = board.company || channelTitle.replace(/\s*[-–|].*$/, "") || board.slug || "";
+  const postings: NormalizedPosting[] = [];
+  const items = xmlTags(xml, "item");
+  for (const it of items) {
+    const title = xmlTag(it, "title");
+    const link = xmlTag(it, "link") || xmlTag(it, "guid");
+    if (!title || !/^https?:\/\//.test(link)) continue;
+    const externalId = xmlTag(it, "guid") || link;
+    // <tt:location> puede venir suelto o dentro de <tt:locations>.
+    const locations = xmlTags(it, "location")
+      .map((loc) => {
+        const parts = ["city", "region", "country"].map((n) => xmlTag(loc, n));
+        return parts.some(Boolean) ? parts.filter(Boolean).join(", ") : decodeEntities(unCdata(loc)).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      })
+      .filter(Boolean);
+    const remote = xmlTag(it, "remoteStatus").toLowerCase();
+    const workplace = TT_REMOTE[remote] ? wp(TT_REMOTE[remote], "fuente", `remoteStatus: ${remote}`) : wp(workplaceFromText(locations.join(" ")), "fuente");
+    const text = htmlToText(xmlTag(it, "description"), DESC_MAX);
+    const countries = [...new Set(locations.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c))];
+    postings.push({
+      sourceId: "teamtailor",
+      boardId: board.boardId,
+      externalId: externalId.slice(0, 300),
+      title,
+      company,
+      companySlug: board.slug,
+      sourceUrl: link,
+      applyUrl: link,
+      linkRequired: false,
+      descriptionText: text,
+      descriptionComplete: text.length > 200 && !text.endsWith("…"),
+      locations: [...new Set(locations)].slice(0, 6),
+      countries,
+      regionText: [],
+      workplace,
+      remoteFlag: TT_REMOTE[remote] ? TT_REMOTE[remote] === "remoto" : null,
+      employmentType: null,
+      department: xmlTag(it, "department") || undefined,
+      salary: null,
+      publishedAt: iso(xmlTag(it, "pubDate")),
+      updatedAt: null,
+      expiresAt: null,
+    });
+  }
+  return { postings, items: items.length };
+}
+
+export async function fetchTeamtailor(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const host = assertSlug(board.slug);
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(decodeURIComponent(host))) throw new Error(`Sitio de Teamtailor inválido: ${board.slug}`);
+  const maxPages = opts?.maxPages ?? 10;
+  const postings: NormalizedPosting[] = [];
+  let received = 0;
+  for (let page = 0; page < maxPages; page++) {
+    const xml = await fetchText(`https://${decodeURIComponent(host)}/jobs.rss?per_page=${TT_PAGE}&offset=${page * TT_PAGE}`, opts);
+    const { postings: got, items } = normalizeTeamtailor(xml, board);
+    postings.push(...got);
+    received += items;
+    // Página incompleta = última: recibimos el listado entero.
+    if (items < TT_PAGE) return { postings, complete: true, received };
+  }
+  return { postings, complete: false, received };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -549,6 +664,7 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   remotive: fetchRemotive,
   jobicy: fetchJobicy,
   getonbrd: fetchGetonbrd,
+  teamtailor: fetchTeamtailor,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */

@@ -1,7 +1,7 @@
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
 import { fetchGreenhouse, fetchRemotive } from "@/lib/match/connectors";
 import { assertPublicUrl, safeFetch } from "@/lib/match/http";
@@ -14,6 +14,8 @@ const opts = (routes: Record<string, unknown>) => ({ fetchImpl: fakeFetch(routes
 let invPath = "";
 
 beforeAll(async () => {
+  // Los avisos de prueba son de octubre de 2026: con la fecha real, en unos meses quedarían viejos y ocultos.
+  vi.useFakeTimers({ toFake: ["Date"], now: new Date("2026-10-17T12:00:00Z") });
   const inv = emptyInventory("fixture");
   const t = "2026-10-10T12:00:00.000Z";
   applyBoard(inv, BOARDS.gh.boardId, "greenhouse", await fetchGreenhouse(BOARDS.gh, opts({ "https://boards-api": fixture("greenhouse-board.json") })), t);
@@ -60,11 +62,29 @@ describe("API de ranking: privacidad", () => {
     expect((await rankingPOST(big)).status).toBe(413);
   });
 
+  it("recorta texto largo en vez de rechazar (aptitudes y cargos tal como vienen del CV)", async () => {
+    const long = "Infraestructura y Desarrollo Web: GitHub, Vercel, administración de dominios, servidores, certificados SSL y plataformas de hosting (Hostinger, Wiroos).";
+    const profile = { ...dataProfile, skills: [...dataProfile.skills, long], titles: ["x".repeat(300), ...dataProfile.titles], yearsExperience: 99 };
+    const prefs = { ...basePrefs, objetivo: "y".repeat(900), rolesDeseados: Array.from({ length: 12 }, (_, i) => `Rol ${i}`) };
+    expect((await rankingPOST(req({ profile, prefs, interactions: noInteractions }))).status).toBe(200);
+  });
+
+  it("dice qué campo falló cuando el pedido no se puede usar", async () => {
+    const res = await rankingPOST(req({ profile: dataProfile, prefs: { ...basePrefs, modalidades: ["en la luna"] }, interactions: noInteractions }));
+    expect(res.status).toBe(400);
+    const j = await res.json();
+    expect(j.fields).toEqual(["modalidad"]);
+    expect(j.error).toContain("modalidad");
+  });
+
   it("muestra cifras reales del inventario", async () => {
     const res = await inventarioGET();
     const j = await res.json();
     expect(j.open).toBeGreaterThan(0);
     expect(j.generatedAt).toBe("2026-10-10T12:00:00.000Z");
+    // Empresas = empleadores distintos con búsquedas abiertas, nunca más que las búsquedas.
+    expect(j.companies).toBeGreaterThan(0);
+    expect(j.companies).toBeLessThanOrEqual(j.open);
   });
 });
 

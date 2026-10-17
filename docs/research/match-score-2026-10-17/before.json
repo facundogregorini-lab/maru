@@ -1,0 +1,298 @@
+{
+  "evaluatedAt": "2026-10-17T12:00:00.000Z",
+  "inventoryAt": "2026-10-17T16:17:10.908Z",
+  "note": "Perfiles sintéticos; prueba de coherencia, no validación con contrataciones ni cobertura del mercado.",
+  "profiles": [
+    {
+      "profile": "Administración semi senior",
+      "eligible": 415,
+      "max": 82,
+      "top20Mean": 67,
+      "atLeast70": 7,
+      "atLeast90": 0,
+      "top5": [
+        {
+          "id": "1bd64423133859",
+          "title": "Administrativo/a recepcionista",
+          "company": "Grupo Arkhos",
+          "score": 82,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "a924ba9fba4f50",
+          "title": "Coordinador administrativo",
+          "company": "Red Psi",
+          "score": 79,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "49fe93235ba040",
+          "title": "Analista contable administrativo",
+          "company": "Importante empresa del sector",
+          "score": 76,
+          "confidence": "alta",
+          "gaps": []
+        },
+        {
+          "id": "4179c832ec9184",
+          "title": "Administrativo/a",
+          "company": "TuTrabajoMDP.com.ar",
+          "score": 76,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "750b9a3efcaed2",
+          "title": "Asistente Administrativo/a - Retail",
+          "company": "Inspired Way",
+          "score": 75,
+          "confidence": "alta",
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "profile": "Ventas senior",
+      "eligible": 638,
+      "max": 95,
+      "top20Mean": 89,
+      "atLeast70": 82,
+      "atLeast90": 8,
+      "top5": [
+        {
+          "id": "7b8fbd91613dcb",
+          "title": "Vendedor SR",
+          "company": "Grupo Consultores de Empresas",
+          "score": 95,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "c8b62844362d82",
+          "title": "Ejecutivo/a de cuentas Semi SR - Telecomunicaciones",
+          "company": "AreaIT",
+          "score": 94,
+          "confidence": "alta",
+          "gaps": [
+            "Pide comunicación como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "bc411261b00426",
+          "title": "Enterprise Account Executive",
+          "company": "Minders",
+          "score": 93,
+          "confidence": "alta",
+          "gaps": [
+            "Pide comunicación como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "edf5513cbcdee7",
+          "title": "Account Executive",
+          "company": "GenIT",
+          "score": 93,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "25184e6b259fc0",
+          "title": "Account Executive",
+          "company": "Rindegastos",
+          "score": 93,
+          "confidence": "media",
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "profile": "Datos senior",
+      "eligible": 147,
+      "max": 91,
+      "top20Mean": 78,
+      "atLeast70": 20,
+      "atLeast90": 1,
+      "top5": [
+        {
+          "id": "e2743656b7a8e8",
+          "title": "Senior QA Data Analyst",
+          "company": "Stefanini LATAM",
+          "score": 91,
+          "confidence": "alta",
+          "gaps": [
+            "Pide gestión de proyectos como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "9935a02042cdf6",
+          "title": "Senior Data Analyst",
+          "company": "Ruby Labs",
+          "score": 85,
+          "confidence": "alta",
+          "gaps": [
+            "Pide ruby como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide gcp como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide looker como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "17fc92f8debe7c",
+          "title": "Sr Data Analyst",
+          "company": "RYZ Labs",
+          "score": 84,
+          "confidence": "alta",
+          "gaps": [
+            "Pide análisis de datos como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide estadística como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide ecommerce como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "011b5064a09eef",
+          "title": "Financial Data Analyst",
+          "company": "RYZ Labs",
+          "score": 83,
+          "confidence": "alta",
+          "gaps": [
+            "Pide análisis de datos como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide ventas como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide operaciones como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "c0c3e566d72fab",
+          "title": "Analista de datos",
+          "company": "NergisTalent",
+          "score": 82,
+          "confidence": "alta",
+          "gaps": [
+            "Pide looker como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide análisis de datos como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide estadística como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "Marketing junior",
+      "eligible": 111,
+      "max": 74,
+      "top20Mean": 60,
+      "atLeast70": 3,
+      "atLeast90": 0,
+      "top5": [
+        {
+          "id": "675de6f53ed49f",
+          "title": "Marketing Strategist",
+          "company": "Hire Hangar",
+          "score": 74,
+          "confidence": "alta",
+          "gaps": [
+            "Pide performance marketing como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide growth marketing como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide branding como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "5e8dc3cc224fe2",
+          "title": "Analista Marketing Digital",
+          "company": "Dia Argentina",
+          "score": 71,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "aff4ed67556f70",
+          "title": "Business Analyst (Marketing)",
+          "company": "Scale Army",
+          "score": 70,
+          "confidence": "alta",
+          "gaps": [
+            "Pide 3+ años de experiencia; tu CV suma alrededor de 1.",
+            "Pide sql como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide inteligencia artificial como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide tableau como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "d3525288d73c02",
+          "title": "Digital Marketing Specialist & Coordinator",
+          "company": "Scale Army",
+          "score": 67,
+          "confidence": "alta",
+          "gaps": [
+            "Pide seo como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide marketing digital como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide email marketing como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "49937708dc33dc",
+          "title": "Sr Marketing Performance Analyst",
+          "company": "Despegar",
+          "score": 63,
+          "confidence": "alta",
+          "gaps": [
+            "Pide estadística como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Pide comunicación como requisito: no aparece en tu CV. Si lo manejás, sumalo.",
+            "Es un puesto Senior; apuntás a Junior."
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "Operaciones senior",
+      "eligible": 154,
+      "max": 93,
+      "top20Mean": 70,
+      "atLeast70": 7,
+      "atLeast90": 1,
+      "top5": [
+        {
+          "id": "621bbfc44380ac",
+          "title": "Coordinador de Operaciones",
+          "company": "TROVA | People & Talent",
+          "score": 93,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "e6915787d28e8c",
+          "title": "Business Operations Manager",
+          "company": "Sterlington, PLLC",
+          "score": 84,
+          "confidence": "alta",
+          "gaps": []
+        },
+        {
+          "id": "630621a93261e5",
+          "title": "Analista de Operaciones",
+          "company": "AVI-SPL Argentina",
+          "score": 84,
+          "confidence": "alta",
+          "gaps": [
+            "Pide comunicación como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "96ce35faa2dd66",
+          "title": "Coordinador de operaciones",
+          "company": "ID Logistics Argentina",
+          "score": 82,
+          "confidence": "alta",
+          "gaps": []
+        },
+        {
+          "id": "88cb8733afb0e2",
+          "title": "Responsable de Operaciones",
+          "company": "Mantis Software IT",
+          "score": 79,
+          "confidence": "alta",
+          "gaps": []
+        }
+      ]
+    }
+  ]
+}

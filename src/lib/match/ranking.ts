@@ -1,7 +1,7 @@
-import { familyFromTitle, findSkills } from "./extract";
+import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { estimateSeniority } from "./profile";
 import { sourceById } from "./sources";
-import { CONTRACT_LABEL, FAMILY_LABEL, SENIORITY_LABEL } from "./labels";
+import { CONTRACT_LABEL, displayTitle, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
 import {
   SENIORITY_ORDER,
@@ -29,6 +29,19 @@ import {
  * Guardados, descartes y frescura ajustan el orden, nunca el porcentaje de compatibilidad.
  * El puntaje es una "compatibilidad estimada", nunca una probabilidad de contratación.
  */
+
+/** Por debajo de este % de coincidencia una búsqueda no se lista como "para vos". */
+export const MIN_SCORE = 25;
+
+/** Desde cuántos días se esconde un aviso de los resultados (salvo que la persona lo haya guardado). */
+export const HIDE_AFTER_DAYS = 120;
+/** Desde cuántos días baja en el orden. */
+export const STALE_AFTER_DAYS = 60;
+
+/** Días desde que se publicó el aviso (o desde que lo vimos por primera vez, si la fuente no lo dice). */
+export function ageDays(o: Pick<Opportunity, "publishedAt" | "firstSeenAt">, now: Date): number {
+  return (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
+}
 
 export type Weights = { habilidades: number; intencion: number; seniority: number; extras: number };
 export const DEFAULT_WEIGHTS: Weights = { habilidades: 0.4, intencion: 0.35, seniority: 0.15, extras: 0.1 };
@@ -95,10 +108,22 @@ for (const group of EQUIV) for (const w of group) EQ.set(w, group[0]);
 
 const canon = (t: string) => EQ.get(t) ?? t.replace(/s$/, "");
 const SEN_WORDS = new Set(["senior", "sr", "sr.", "junior", "jr", "jr.", "ssr", "semi", "mid", "trainee", "ii", "iii", "i"]);
-const GENERIC_ROLE_WORDS = new Set(["analista", "gerente", "director", "asistente", "especialista", "coordinador", "lider", "ejecutivo"]);
 
 export function roleTokens(s: string): Set<string> {
   return new Set(tokens(s).filter((t) => !SEN_WORDS.has(t)).map(canon));
+}
+
+/** Palabras de cargo que no dicen de qué es el puesto ("Analista de calidad" no se parece a "Analista de logística"). */
+const GENERIC_ROLE = new Set(
+  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant"].map(canon),
+);
+
+/** Similitud de cargos: manda lo específico; si sólo comparten palabras genéricas, cuenta poco. */
+function roleSim(a: Set<string>, b: Set<string>): number {
+  const ca = new Set([...a].filter((t) => !GENERIC_ROLE.has(t)));
+  const cb = new Set([...b].filter((t) => !GENERIC_ROLE.has(t)));
+  if (!ca.size || !cb.size) return dice(a, b);
+  return 0.8 * dice(ca, cb) + 0.2 * dice(a, b);
 }
 
 function dice(a: Set<string>, b: Set<string>): number {
@@ -113,8 +138,8 @@ function dice(a: Set<string>, b: Set<string>): number {
 function roleSimilarity(a: Set<string>, b: Set<string>): number {
   const overlap = [...a].filter((t) => b.has(t));
   const containsRole = overlap.length === Math.min(a.size, b.size)
-    && overlap.some((t) => !GENERIC_ROLE_WORDS.has(t));
-  return Math.max(dice(a, b), containsRole ? 0.9 : 0);
+    && overlap.some((t) => !GENERIC_ROLE.has(t));
+  return Math.max(roleSim(a, b), containsRole ? 0.9 : 0);
 }
 
 /* ---------- helpers ---------- */
@@ -208,6 +233,9 @@ export type RankedItem = {
   reviewedAt: string;
   reviewedLabel: string;
   publishedAt: string | null;
+  /** Antigüedad relativa de la fuente cuando no hay fecha exacta (Google Jobs). */
+  postedLabel?: string;
+  logo?: string;
   excerpt: string;
   descriptionComplete: boolean;
   status: "abierta" | "cerrada";
@@ -235,13 +263,16 @@ export type RankInput = {
   weights?: Weights;
   limit?: number;
   now?: Date;
+  /** Coincidencia mínima para listar (por defecto MIN_SCORE). */
+  minScore?: number;
 };
 
 export type RankOutput = {
   eligible: RankedItem[];
   pending: RankedItem[];
   saved: RankedItem[];
-  counts: { open: number; eligible: number; pending: number; afterHardFilters: number; shown: number };
+  /** lowMatch: abiertas que pasan las condiciones pero con coincidencia menor a MIN_SCORE (no se listan). */
+  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number };
 };
 
 type Scored = { item: RankedItem; raw: number };
@@ -252,6 +283,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const now = input.now ?? new Date();
   const limit = input.limit ?? 40;
   const f = input.filters ?? {};
+  const minScore = input.minScore ?? MIN_SCORE;
 
   const pSkills = profileSkillSet(profile);
   const pLangs = new Map(profile.languages.map((l) => [normLang(l.language), l.level]));
@@ -268,15 +300,18 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const savedIds = new Set(interactions.saved);
   const discarded = new Map(interactions.discarded.map((d) => [d.id, d]));
   const blockedCompanies = new Set(interactions.discarded.filter((d) => d.reason === "empresa" && d.company).map((d) => fold(d.company!)));
-  const userPlaces = [prefs.ciudad, ...prefs.otrosLugares].map(fold).filter(Boolean);
+  // La ciudad es lo que va antes de la primera coma ("Córdoba, Argentina" → "córdoba").
+  const userPlaces = [prefs.ciudad, ...prefs.otrosLugares].map((x) => fold(x.split(",")[0])).filter(Boolean);
   const userCountryWords = prefs.autorizacion.flatMap((a) => COUNTRY_WORDS[fold(a)] ?? [fold(a)]);
   const placeMatches = (locs: string[]) => {
     const l = fold(locs.join(" | "));
-    return userPlaces.some((p) => l.includes(p) || (/(buenos aires|caba|capital federal)/.test(p) && /(buenos aires|caba|capital federal)/.test(l)));
+    const segs = placeSegments(locs);
+    return userPlaces.some((p) => segs.some((seg) => samePlace(seg, p)) || (/(buenos aires|caba|capital federal)/.test(p) && /(buenos aires|caba|capital federal)/.test(l)));
   };
 
   let open = 0;
   let afterHard = 0;
+  let lowMatch = 0;
   const elig: Scored[] = [];
   const pend: Scored[] = [];
   const savedOut: Scored[] = [];
@@ -284,6 +319,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
   for (const o of input.opportunities) {
     const isSaved = savedIds.has(o.id);
     if (o.status !== "abierta" && !isSaved) continue;
+    // Un aviso de hace más de 4 meses casi nunca sigue buscando: no se ofrece, salvo que esté guardado.
+    if (!isSaved && ageDays(o, now) > HIDE_AFTER_DAYS) continue;
     if (o.status === "abierta") open++;
     if (discarded.has(o.id)) continue;
     if (blockedCompanies.has(fold(o.company))) continue;
@@ -316,21 +353,28 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     const ex = o.extracted;
     const wpValue = o.workplace.value;
+    // "Presencial (inferido)": sirve para ordenar, pero no para excluir con un indispensable.
+    const wpInferred = isInferred(o.workplace);
     let excludedByHard = false;
     const hardCheck = (key: (typeof prefs.indispensables)[number], known: boolean, ok: boolean, unknownNote: string) => {
       if (!hard.has(key)) return;
       if (!known) pending.push(unknownNote);
       else if (!ok) excludedByHard = true;
     };
-    hardCheck("modalidad", wpValue !== "desconocido", prefs.modalidades.includes(wpValue), "No informa la modalidad (remoto, híbrido o presencial).");
+    hardCheck("modalidad", wpValue !== "desconocido" && !wpInferred, prefs.modalidades.includes(wpValue), "No informa la modalidad (remoto, híbrido o presencial).");
     if (wpValue !== "remoto") {
-      hardCheck("ubicacion", o.locations.length > 0 && wpValue !== "desconocido" && userPlaces.length > 0, placeMatches(o.locations), "No queda claro dónde hay que trabajar.");
+      // Si el aviso está en un lugar que la persona eligió, la ubicación ya se cumple aunque no diga la modalidad.
+      const placeOk = userPlaces.length > 0 && o.locations.length > 0 && placeMatches(o.locations);
+      hardCheck("ubicacion", placeOk || (o.locations.length > 0 && wpValue !== "desconocido" && userPlaces.length > 0), placeOk, "No queda claro dónde hay que trabajar.");
     }
     hardCheck("seniority", !!ex.seniority, !!ex.seniority && (!prefs.seniorities.length || prefs.seniorities.includes(ex.seniority.value)), "No informa el nivel de seniority.");
     hardCheck("contrato", !!ex.employmentType, !!ex.employmentType && (!prefs.contratos.length || prefs.contratos.includes(ex.employmentType.value)), "No informa el tipo de contratación.");
     // Idiomas: sólo juzgamos los que la persona declaró. Si no lo declaró, queda "por confirmar", no "no cumple".
     const reqLangs = ex.languages.filter((l) => l.required && l.language !== "español");
-    const needLevel = (level: string) => (HIGH.test(fold(level)) ? 3 : MID.test(fold(level)) ? 2 : 1);
+    // Aviso escrito en inglés sin nivel declarado: si el puesto es de cara al cliente (atender, vender), hace falta fluidez.
+    const customerFacing = ex.family.value === "atencion_cliente" || ex.family.value === "ventas";
+    const needLevel = (level: string) => (level === ENGLISH_IMPLICIT ? (customerFacing ? 3 : 2) : HIGH.test(fold(level)) ? 3 : MID.test(fold(level)) ? 2 : 1);
+    const levelLabel = (l: { level: string }) => (l.level === ENGLISH_IMPLICIT && customerFacing ? "fluido (el aviso está escrito en inglés y el puesto es de cara al cliente)" : l.level);
     hardCheck(
       "idioma",
       reqLangs.every((l) => pLangs.has(normLang(l.language))),
@@ -371,7 +415,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       const required = req.length ? matchedReq.length / req.length : null;
       const desirable = des.length ? matchedDes.length / des.length : null;
       skillScore = required !== null && desirable !== null ? 0.85 * required + 0.15 * desirable : required ?? desirable;
-      note(profile.skills.length > 0);
+      note(pSkills.size > 0);
     } else if (ment.length) {
       skillScore = Math.min(1, ment.filter((s) => pSkills.has(s)).length / Math.min(4, ment.length));
       note(false);
@@ -432,7 +476,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (prefs.modalidades.length && wpValue !== "desconocido") {
       const ok = !prefs.modalidades.length || prefs.modalidades.includes(wpValue);
       extras.push(ok ? 1 : 0);
-      if (ok && prefs.modalidades.length) reasonsScored.push([0.5, `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
+      if (ok && prefs.modalidades.length) reasonsScored.push([0.5, wpInferred ? `Parece ${WORKPLACE_LABEL[wpValue]}, como preferís (el aviso no lo aclara).` : `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
       note(true);
     } else if (prefs.modalidades.length) note(false);
     if (prefs.contratos.length && ex.employmentType) {
@@ -443,15 +487,20 @@ export function rankOpportunities(input: RankInput): RankOutput {
       extras.push(salaryOk ? 1 : 0.2);
       if (salaryOk) reasonsScored.push([0.55, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
     } else if (prefs.salario?.monto) pending.push(sal ? "Publica salario, pero en otra moneda o período: comparalo vos." : "No informa salario.");
+    // El idioma también pesa en el total: un aviso que exige inglés avanzado no debería liderar
+    // para alguien con nivel intermedio (y menos sin inglés en el CV).
+    let langFactor = 1;
     for (const l of reqLangs) {
       const mine = pLangs.get(normLang(l.language));
       const need = needLevel(l.level);
       if (mine === undefined) {
-        gaps.push(`Pide ${l.language}${l.level ? ` (${l.level})` : ""}: no aparece en tu CV.`);
+        gaps.push(`Pide ${l.language}${l.level ? ` (${levelLabel(l)})` : ""}: no aparece en tu CV.`);
         note(false);
+        langFactor = Math.min(langFactor, 0.7);
       } else if (langRank(mine) && langRank(mine) < need) {
-        gaps.push(`Pide ${l.language} ${l.level}; tu CV dice ${mine}.`);
+        gaps.push(`Pide ${l.language} ${levelLabel(l)}; tu CV dice ${mine}.`);
         extras.push(0.4);
+        langFactor = Math.min(langFactor, 0.85);
         note(true);
       } else { extras.push(1); note(true); }
     }
@@ -465,17 +514,40 @@ export function rankOpportunities(input: RankInput): RankOutput {
       [w.seniority, senScore], [w.extras, extraScore],
     ];
     const available = dimensions.reduce((sum, [weight, value]) => sum + (value !== null ? weight : 0), 0);
-    const raw = available ? dimensions.reduce((sum, [weight, value]) => sum + weight * (value ?? 0), 0) / available : 0;
-    // En un cambio de carrera priorizamos la intención para ordenar, sin castigar dos veces el %.
-    let order = raw * (prefs.carrera === "cambio" && hasIntent ? 0.6 + 0.4 * intent : 1);
+    let raw = (available ? dimensions.reduce((sum, [weight, value]) => sum + weight * (value ?? 0), 0) / available : 0) * langFactor;
 
-    // Feedback explícito: lo que descartó o guardó antes cambia el orden.
+    // Condiciones conocidas que dificultan postularse siguen afectando la afinidad (E0).
+    if (wpValue !== "desconocido" && prefs.modalidades.length && !prefs.modalidades.includes(wpValue)) raw *= 0.85;
+    if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
+      // Presencial en otra ciudad es mudarse o viajar todos los días: pesa más que híbrido.
+      raw *= wpValue === "presencial" ? 0.7 : 0.8;
+      gaps.push(
+        wpInferred
+          ? `Parece presencial en ${o.locations.slice(0, 2).join(" · ")} (no aclara si es remoto), fuera de los lugares que indicaste.`
+          : `Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`,
+      );
+    }
+    // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.
+    const onlyCountry = o.locations.every((l) => /^\s*(argentina|remote|remoto|latam|latin america)\b/i.test(l));
+    if (wpValue === "desconocido" && o.locations.length && !onlyCountry && userPlaces.length && !placeMatches(o.locations)) {
+      raw *= hard.has("ubicacion") ? 0.75 : 0.88;
+      pending.push(`Se publica en ${argentinaFirst(o.locations).slice(0, 2).join(" · ")} y no aclara si es remoto: confirmalo antes de postularte.`);
+    }
+
+    // Preferencias de orden: no alteran cuánto coincide el perfil con este aviso.
+    let order = raw * (prefs.carrera === "cambio" && hasIntent ? 0.6 + 0.4 * intent : 1);
     for (const d of interactions.discarded) {
       if (d.reason === "rol" && d.family === ex.family.value && dice(new Set(d.titleTokens ?? []), titleToks) >= 0.5) order *= 0.75;
       if (d.reason === "seniority" && d.titleTokens && ex.seniority && dice(new Set(d.titleTokens), titleToks) >= 0.3) order *= 0.9;
     }
+    if (ageDays(o, now) > STALE_AFTER_DAYS) order *= 0.85;
+    if (OPEN_CALL.test(` ${titleF} `) || AI_TASKS.test(fold(primary?.descriptionText.slice(0, 3000) ?? ""))) {
+      order *= 0.7;
+      pending.push("Parece una convocatoria abierta o un proyecto por tareas, no una vacante puntual: confirmalo en el aviso.");
+    }
     if (isSaved) order *= 1.03;
 
+    if (wpValue !== "remoto" && userPlaces.length && o.locations.length && placeMatches(o.locations)) reasonsScored.push([0.6, `Es en ${prefs.ciudad.split(",")[0].trim() || "tu ciudad"}, donde buscás.`]);
     if (o.eligibility.status === "elegible") reasonsScored.push([0.45, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
     if (o.eligibility.timezone) pending.push(`Horario pedido: ${o.eligibility.timezone}. Es una condición horaria, no un permiso de contratación.`);
 
@@ -487,6 +559,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
         const s = sourceById(p.sourceId);
         return { name: s?.name ?? p.sourceId, url: p.sourceUrl, applyUrl: p.applyUrl, attribution: p.attribution, required: p.linkRequired, kind: s?.kind ?? "portal" };
       });
+    const logoUrl = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find((u): u is string => !!u?.startsWith("https://"));
     const external = sources.length > 0 && sources.every((s) => s.kind === "usuario");
     const viaAts = sources.some((s) => s.kind === "ats");
     if (!viaAts && !external) pending.push(`Lo vimos en ${sources.map((s) => s.name.replace(/ (API|Public API|Remote Jobs API|\(API pública\))$/, "")).join(" y ")}: confirmá en el aviso que siga abierto.`);
@@ -494,11 +567,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     const item: RankedItem = {
       id: o.id,
-      title: sanitizeDisplay(o.title, 160),
+      title: sanitizeDisplay(displayTitle(o.title), 160),
       company: sanitizeDisplay(o.company, 100),
-      locations: o.locations.map((l) => sanitizeDisplay(l, 80)),
+      locations: displayLocations(o.locations, o.eligibility.status === "elegible" && wpValue === "remoto").map((l) => sanitizeDisplay(l, 80)),
       workplace: wpValue,
-      workplaceLabel: WORKPLACE_LABEL[wpValue],
+      workplaceLabel: wpInferred ? `${WORKPLACE_LABEL[wpValue]} (inferido)` : WORKPLACE_LABEL[wpValue],
       eligibility: o.eligibility,
       family: ex.family.value,
       seniority: ex.seniority?.value ?? null,
@@ -514,6 +587,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
       reviewedAt: o.lastVerifiedAt ?? o.lastSeenAt,
       reviewedLabel: o.lastVerifiedAt ? "Revisado en el sitio del empleador" : "Visto por última vez en la fuente",
       publishedAt: o.publishedAt,
+      ...(!o.publishedAt && primary?.postedLabel ? { postedLabel: sanitizeDisplay(primary.postedLabel, 40) } : {}),
+      ...(logoUrl ? { logo: logoUrl } : {}),
       excerpt: primary ? sanitizeDisplay(primary.descriptionText.replace(/\s+/g, " "), 320) : "",
       descriptionComplete: o.descriptionComplete,
       status: o.status,
@@ -523,20 +598,90 @@ export function rankOpportunities(input: RankInput): RankOutput {
     const scored = { item, raw: order };
     if (isSaved) savedOut.push(scored);
     if (o.status !== "abierta" || excludedByHard || (o.eligibility.status === "no_elegible" && bucket === "eligible")) continue;
+    // Lo que casi no se parece a lo que busca no es "para vos": se cuenta aparte. Si filtra por área, se muestra igual.
+    if (item.score < minScore && !f.families?.length && !external) {
+      lowMatch++;
+      continue;
+    }
     (bucket === "eligible" ? elig : pend).push(scored);
   }
 
   const sort = (a: Scored, b: Scored) => b.raw - a.raw
     || (Date.parse(b.item.publishedAt ?? b.item.reviewedAt) - Date.parse(a.item.publishedAt ?? a.item.reviewedAt));
-  const sortTop = (arr: Scored[]) => arr.sort(sort).slice(0, limit).map((s) => s.item);
+  const sortTop = (arr: Scored[]) => diversify(arr.sort(sort)).slice(0, limit).map((s) => s.item);
   return {
     eligible: sortTop(elig),
     pending: sortTop(pend),
     saved: savedOut.sort(sort).map((s) => s.item),
-    counts: { open, eligible: elig.length, pending: pend.length, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
+    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
   };
 }
 
+
+/** Convocatorias abiertas, pools y proyectos por tarea (entrenamiento de IA, transcripción, lingüística masiva). */
+const OPEN_CALL = /\b(talent (pool|community|network)|general application|open application|candidatura espontanea|join our talent|future opportunities|oportunidades futuras|ai (trainer|training|tutor)|data annotat|annotator|rater|search evaluator|transcri(ber|ptionist|pcion)|freelance (translator|linguist|writer)|linguist|language (expert|specialist) for ai)/;
+
+/** Proyectos para entrenar o evaluar modelos de IA, aunque el título parezca un puesto del área. */
+const AI_TASKS = /\b(train(ing)? (ai|llm|large language) models?|training data for( frontier)? ai|frontier (ai )?models?|leading ai labs?|improve (model )?reasoning|rlhf|improve (the )?(ai|llm) models?|evaluate ai (responses|outputs)|ai training (project|platform)|search quality rat(er|ing)|entrenar modelos de (ia|inteligencia artificial))\b/;
+
+const AR_PLACE = /argentin|buenos aires|caba|capital federal|c[oó]rdoba|rosario|mendoza|tucum[aá]n|la plata|mar del plata|neuqu[eé]n|salta|santa fe/i;
+/** Si se puede trabajar desde Argentina, que la tarjeta lo muestre primero. */
+export const argentinaFirst = (locs: string[]) => [...locs.filter((l) => AR_PLACE.test(l)), ...locs.filter((l) => !AR_PLACE.test(l))];
+
+/** Partes de cada ubicación ("San Miguel de Tucumán, Tucumán" → ["san miguel de tucuman", "tucuman"]). */
+export function placeSegments(locs: string[]): string[] {
+  return locs.flatMap((l) => l.split(/,|\||\s[-–]\s|\(|\)/).map((x) => fold(x))).filter(Boolean);
+}
+
+/**
+ * La parte de una ubicación es el lugar que eligió la persona: igual, "Córdoba Capital" para "Córdoba"
+ * o "San Miguel de Tucumán" para "Tucumán". "Rosario de Lerma" (Salta) no es Rosario.
+ */
+export function samePlace(seg: string, place: string): boolean {
+  if (seg === place) return true;
+  if (seg.startsWith(`${place} `)) return !/^(de|del|de la|de los)\b/.test(seg.slice(place.length + 1));
+  return seg.endsWith(` de ${place}`);
+}
+
+const placeKey = (l: string) =>
+  fold(l)
+    .replace(/\b(argentina|provincia de|province|prov|cdad autonoma de|ciudad autonoma de)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/**
+ * Ubicaciones para mostrar: Argentina primero, sin repetir el mismo lugar escrito distinto
+ * ("Rosario, Santa Fe" y "Rosario, Santa Fe, Argentina") y sin un "Argentina" suelto si hay una ciudad.
+ * Si es remoto y elegible pero las ubicaciones no nombran Argentina, lo dice primero.
+ */
+export function displayLocations(locs: string[], remoteFromAr = false): string[] {
+  const out: string[] = [];
+  const keys: string[] = [];
+  for (const l of argentinaFirst(locs)) {
+    const k = placeKey(l);
+    if (keys.some((x) => x === k || (k && (x.startsWith(`${k} `) || k.startsWith(`${x} `))))) continue;
+    out.push(l.trim());
+    keys.push(k);
+  }
+  const result = out.some((l) => placeKey(l) && AR_PLACE.test(l)) ? out.filter((l) => placeKey(l)) : out;
+  if (!remoteFromAr || result.some((l) => AR_PLACE.test(l))) return result;
+  return ["Remoto desde Argentina", ...result.filter((l) => !/^(remote|remoto|anywhere|worldwide)$/.test(fold(l)))];
+}
+
+/** Variedad: como mucho 2 avisos de la misma empresa en los primeros 10 (el resto baja, no desaparece). */
+function diversify(sorted: Scored[], top = 10, perCompany = 2): Scored[] {
+  const head: Scored[] = [];
+  const rest: Scored[] = [];
+  const count = new Map<string, number>();
+  for (const s of sorted) {
+    const c = fold(s.item.company);
+    if (head.length < top && (count.get(c) ?? 0) < perCompany) {
+      head.push(s);
+      count.set(c, (count.get(c) ?? 0) + 1);
+    } else rest.push(s);
+  }
+  return [...head, ...rest];
+}
 
 function applyFilters(o: Opportunity, primary: StoredPosting | undefined, f: Filters, now: Date): boolean {
   if (f.families?.length && !f.families.includes(o.extracted.family.value)) return false;

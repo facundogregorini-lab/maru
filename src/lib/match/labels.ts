@@ -1,4 +1,5 @@
-import type { EmploymentType, RoleFamily, Seniority, Workplace } from "./types";
+import { fold } from "./text";
+import type { EmploymentType, Field, RoleFamily, Seniority, Workplace } from "./types";
 
 /** Etiquetas visibles (se usan en el navegador y en el servidor). */
 
@@ -39,6 +40,11 @@ export const FAMILY_LABEL: Record<RoleFamily, string> = {
   salud: "Salud",
   educacion: "Educación",
   consultoria: "Consultoría",
+  produccion: "Industria, producción y oficios",
+  gastronomia: "Gastronomía y hotelería",
+  comercio: "Comercio y atención en tienda",
+  seguridad: "Seguridad y vigilancia",
+  entrenamiento_ia: "IA, idiomas y tareas por proyecto",
   otros: "Otras áreas",
 };
 
@@ -47,3 +53,53 @@ export const WORKPLACE_OPTIONS: [Workplace, string][] = [
   ["hibrido", "Híbrido"],
   ["presencial", "Presencial"],
 ];
+
+/** Prefijo de la evidencia cuando la modalidad no la dice el aviso sino que la deducimos. */
+export const INFERRED = "inferido:";
+export const isInferred = (f: Field<unknown>) => !!f.evidence?.startsWith(INFERRED);
+
+/**
+ * Nombres que no identifican a la empresa ("Importante empresa del sector", "Confidencial"):
+ * se muestran como "Empresa confidencial" y no se agrupan entre sí.
+ */
+const GENERIC_COMPANY = [
+  /\bconfiden(cial|tial)\b|^(cliente|empresa) anonim[oa]$/,
+  /^(para )?(una )?(importante|reconocida|prestigiosa|destacada|lider|gran) (empresa|compania|grupo|organizacion|firma|multinacional)\b/,
+  /^empresa (de|del|lider|multinacional|nacional|internacional|consumo)\b/,
+  /^(employer|empresa|company|cliente|n\/a)$/,
+];
+export const isGenericCompany = (name: string) => {
+  const f = fold(name);
+  return !f || GENERIC_COMPANY.some((re) => re.test(f));
+};
+export const displayCompany = (name: string) => (isGenericCompany(name) ? "Empresa confidencial" : name);
+
+/** Consultoras de selección y empresas de servicios eventuales: publican para una empresa cliente. */
+const CONSULTORA =
+  /\b(adecco|manpower(group)?|randstad|bayton|grupo gestion|adn recursos humanos|adn - recursos humanos|consultores de empresas|umbral capital humano|pullmen|servicemen|michael page|page personnel|hays|kelly services|david kennedy|servicios eventuales|seleccion de personal|consultora de (rrhh|recursos humanos))\b/;
+export const isConsultora = (name: string) => CONSULTORA.test(fold(name));
+
+/** Siglas que se dejan en mayúsculas al pasar a minúsculas un título escrito todo en mayúsculas. */
+const ACRONYMS = new Set("CABA GBA AMBA B2B B2C SAP IT RRHH RR.HH. HR QA UX UI BI SQL AWS CNC PYME ERP CRM TI ART SRL SA".split(" "));
+
+/**
+ * Título para mostrar: sin códigos internos ("Ref. 21518:", "(req208687)", "ID89121"), con la primera
+ * letra en mayúscula y sin gritar si vino todo en mayúsculas. Para buscar y agrupar se usa el original.
+ */
+export function displayTitle(raw: string): string {
+  let t = raw
+    .replace(/^\s*(ref\.?|referencia|cod\.?|c[oó]digo)\s*[:#]?\s*\d+\s*[:\-–]?\s*/i, "")
+    .replace(/\s*\(\s*req\s*\d{4,}\s*\)|\s*\breq\s?\d{4,}\b|\s*\bID\s?\d{4,}\b/gi, "")
+    .replace(/\s+/g, " ")
+    .replace(/[\s\-–|.:/]+$/, "")
+    .trim();
+  if (!t) return raw.trim();
+  if (t.length >= 12 && !/[a-zñáéíóú]/.test(t)) {
+    t = t
+      .split(" ")
+      .map((w, i) => (ACRONYMS.has(w.replace(/^[(["']+|[)\]"',:;]+$/g, "")) ? w : i === 0 ? w.charAt(0) + w.slice(1).toLowerCase() : w.toLowerCase()))
+      .join(" ");
+  }
+  // "iOS Developer" queda igual: sólo se sube la primera letra si la segunda no es mayúscula.
+  return /^\p{Ll}(?!\p{Lu})/u.test(t) ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+}

@@ -1,5 +1,7 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
+import { displayTitle, isInferred } from "./match/labels";
 import { loadInventory, resolveId } from "./match/load";
+import { ageDays, displayLocations, HIDE_AFTER_DAYS } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
 /** Buscador simple sobre el inventario real: filtra, ordena por más nuevas y pagina. */
@@ -17,6 +19,9 @@ export type JobResult = {
   salario: string;
   eligible: boolean;
   postedAt: string;
+  /** false si la fuente no da fecha exacta: postedAt es cuando Maru la vio por primera vez. */
+  postedKnown: boolean;
+  logo?: string;
   applyUrl: string;
   attribution: string;
 };
@@ -61,35 +66,41 @@ type Postings = Awaited<ReturnType<typeof loadInventory>>["postings"];
 function toResult(o: Opportunity, postings: Postings): JobResult | null {
   const p = postings.get(o.primaryKey);
   if (!p?.applyUrl) return null;
+  const logo = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find(Boolean);
   return {
     id: o.id,
-    title: o.title,
+    title: displayTitle(o.title),
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
-    where: o.locations.slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
-    modalidad: MODALIDADES[o.workplace.value] ?? "",
+    where: ((l) => l.slice(0, 2).join(" · ") + (l.length > 2 ? ` · +${l.length - 2}` : ""))(displayLocations(o.locations, o.eligibility.status === "elegible" && o.workplace.value === "remoto")),
+    modalidad: MODALIDADES[o.workplace.value] ? `${MODALIDADES[o.workplace.value]}${isInferred(o.workplace) ? " (inferido)" : ""}` : "",
     contrato: o.extracted.employmentType ? CONTRATOS[o.extracted.employmentType.value] : "",
     nivel: o.extracted.seniority ? (NIVELES[o.extracted.seniority.value] ?? "") : "",
     anios: o.extracted.yearsRequired,
     salario: salaryText(o.salary?.value),
     eligible: o.eligibility.status === "elegible",
     postedAt: o.publishedAt ?? o.firstSeenAt,
+    postedKnown: !!o.publishedAt,
+    ...(logo ? { logo } : {}),
     applyUrl: p.applyUrl,
     attribution: p.attribution ?? "",
   };
 }
 
-export async function searchJobs(query: JobQuery): Promise<{ total: number; results: JobResult[] }> {
+export async function searchJobs(query: JobQuery, now = new Date()): Promise<{ total: number; results: JobResult[] }> {
   const { inv, postings } = await loadInventory();
   const words = fold(query.q).split(/\s+/).filter(Boolean);
   const matches = inv.opportunities.filter((o) => {
     if (o.status !== "abierta") return false;
+    // Los de más de 4 meses no se listan; su página sigue andando para quien tenga el link.
+    if (ageDays(o, now) > HIDE_AFTER_DAYS) return false;
     if (query.donde === "ar" && o.eligibility.status !== "elegible") return false;
     if (query.area && o.extracted.family.value !== query.area) return false;
     if (query.nivel && o.extracted.seniority?.value !== query.nivel) return false;
     if (query.modalidad && o.workplace.value !== query.modalidad) return false;
     if (words.length) {
-      const hay = fold(`${o.title} ${o.company}`);
+      // También por lugar: "vendedor córdoba" encuentra vendedores en Córdoba.
+      const hay = fold(`${o.title} ${o.company} ${o.locations.join(" ")}`);
       if (!words.every((w) => hay.includes(w))) return false;
     }
     return true;
