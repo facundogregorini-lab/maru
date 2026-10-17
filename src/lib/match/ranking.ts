@@ -167,6 +167,8 @@ export type Role = { head: Head | null; domain: Set<string>; all: Set<string> };
 
 /** Un cargo separado en tipo de puesto y área, sin seniority, lugares ni ruido del aviso. */
 export function parseRole(s: string): Role {
+  // "Recepcionista con perfil en marketing", "Analista with SQL": lo que sigue a "con" califica, no es el puesto.
+  s = s.replace(/\s(con|with)\s.*$/i, "");
   const words = [...roleTokens(s)].filter((t) => !TITLE_NOISE.has(t) && !/^\W+$/.test(t)).map((t) => t.replace(/[(),:;!?]+/g, "")).filter(Boolean);
   // "Administrativo", "ejecutivo" o "técnico" pueden ser el cargo o un adjetivo ("Administrative Analyst"):
   // si hay otra palabra de cargo, manda la otra.
@@ -606,7 +608,12 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     // Condiciones conocidas que dificultan postularse siguen afectando la afinidad (E0).
     if (wpValue !== "desconocido" && prefs.modalidades.length && !prefs.modalidades.includes(wpValue)) raw *= 0.85;
-    if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
+    // Gran Buenos Aires para quien busca en la ciudad: se viaja, no hay que mudarse.
+    const nearBa = userPlaces.some((p) => BA_CITY.test(p)) && o.locations.some((l) => GBA.test(fold(l)) && !OTHER_PROVINCE.test(fold(l)));
+    if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations) && nearBa) {
+      raw *= 0.95;
+      gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")} (Gran Buenos Aires).`);
+    } else if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
       // Presencial en otra ciudad es mudarse o viajar todos los días: pesa más que híbrido.
       raw *= wpValue === "presencial" ? 0.7 : 0.8;
       gaps.push(
@@ -618,7 +625,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.
     const onlyCountry = o.locations.every((l) => /^\s*(argentina|remote|remoto|latam|latin america)\b/i.test(l));
     if (wpValue === "desconocido" && o.locations.length && !onlyCountry && userPlaces.length && !placeMatches(o.locations)) {
-      raw *= hard.has("ubicacion") ? 0.75 : 0.88;
+      raw *= nearBa ? 0.97 : hard.has("ubicacion") ? 0.75 : 0.88;
       pending.push(`Se publica en ${argentinaFirst(o.locations).slice(0, 2).join(" · ")} y no aclara si es remoto: confirmalo antes de postularte.`);
     }
 
@@ -707,6 +714,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
   };
 }
 
+
+const BA_CITY = /^(buenos aires|caba|capital federal|ciudad autonoma de buenos aires|cdad autonoma de buenos aires)$/;
+/** Partidos y localidades del Gran Buenos Aires (a un viaje de la ciudad). */
+const GBA = /\b(gba|gran buenos aires|greater buenos aires|buenos aires-gba|zona (norte|sur|oeste)|vicente lopez|olivos|martinez|san isidro|beccar|boulogne|villa adelina|tigre|pilar|escobar|garin|tortuguitas|don torcuato|general pacheco|benavidez|munro|florida|villa martelli|san martin|tres de febrero|caseros|moron|ramos mejia|haedo|castelar|ituzaingo|hurlingham|san justo|la matanza|la tablada|avellaneda|lanus|gerli|quilmes|bernal|lomas de zamora|banfield|adrogue|temperley|ezeiza|monte grande|berazategui|florencio varela|merlo|moreno|jose c\.? paz|malvinas argentinas)\b/;
+const OTHER_PROVINCE = /\b(cordoba|mendoza|tucuman|santa fe|salta|jujuy|neuquen|chubut|rio negro|entre rios|corrientes|misiones|chaco|san juan|san luis|la pampa|catamarca|la rioja|santiago del estero|formosa|santa cruz|tierra del fuego|mar del plata|bahia blanca|la plata)\b/;
 
 /** Convocatorias abiertas, pools y proyectos por tarea (entrenamiento de IA, transcripción, lingüística masiva). */
 const OPEN_CALL = /\b(talent (pool|community|network)|general application|open application|candidatura espontanea|join our talent|future opportunities|oportunidades futuras|ai (trainer|training|tutor)|data annotat|annotator|rater|search evaluator|transcri(ber|ptionist|pcion)|freelance (translator|linguist|writer)|linguist|language (expert|specialist) for ai)/;

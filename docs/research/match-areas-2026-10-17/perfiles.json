@@ -1,0 +1,39 @@
+{
+  "$comment": "Perfiles SINTÉTICOS para medir el Match en las áreas que el dueño quiere fuertes (tecnología, marketing, finanzas). No contienen datos de ninguna persona real. Versionados: no editarlos para 'mejorar' resultados; si cambian, crear perfiles-v2.",
+  "version": 1,
+  "creado": "2026-10-17",
+  "perfiles": [
+    {
+      "id": "M1-marketing-digital-ssr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": false,
+      "profile": { "headline": "Analista de marketing digital", "titles": ["Analista de marketing digital", "Community manager"], "skills": ["Google Ads", "Meta Ads", "SEO", "Google Analytics", "email marketing", "contenidos"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 3, "location": "Buenos Aires, Argentina", "summary": "Campañas pagas, contenidos y reportes de performance para marcas de consumo y e-commerce." },
+      "prefs": { "objetivo": "Crecer en marketing digital y performance", "rolesDeseados": ["Analista de marketing digital", "Performance marketing", "Marketing manager"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "M2-trade-marketing-jr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": false,
+      "profile": { "headline": "Asistente de trade marketing", "titles": ["Asistente de trade marketing", "Promotor"], "skills": ["trade marketing", "merchandising", "Excel", "relevamiento de góndola", "comunicación"], "languages": [{ "language": "Español", "level": "nativo" }], "yearsExperience": 1, "location": "Córdoba, Argentina", "summary": "Acciones en punto de venta y reportes de exhibición para una distribuidora de consumo masivo." },
+      "prefs": { "objetivo": "Trabajar en marketing de una marca de consumo", "rolesDeseados": ["Trade marketing", "Asistente de marketing", "Analista de marketing"], "evitar": [], "ciudad": "Córdoba", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["presencial", "hibrido"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "F2-banca-riesgo-ssr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": false,
+      "profile": { "headline": "Analista de riesgo crediticio", "titles": ["Analista de riesgo crediticio", "Analista de créditos"], "skills": ["análisis de crédito", "riesgo", "Excel avanzado", "SQL", "Power BI", "scoring"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 4, "location": "Buenos Aires, Argentina", "summary": "Evaluación de riesgo de cartera de consumo y pymes en un banco; modelos de scoring y reportes al comité de créditos." },
+      "prefs": { "objetivo": "Seguir en riesgo y créditos en banca o fintech", "rolesDeseados": ["Analista de riesgo", "Analista de créditos", "Credit risk analyst"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "T2-dev-jr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": false,
+      "profile": { "headline": "Desarrollador web junior", "titles": ["Desarrollador web junior"], "skills": ["JavaScript", "React", "HTML", "CSS", "Git", "SQL"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 1, "location": "Rosario, Santa Fe, Argentina", "summary": "Primer año como desarrollador frontend en una agencia; proyectos con React y APIs REST." },
+      "prefs": { "objetivo": "Primer trabajo estable como desarrollador", "rolesDeseados": ["Frontend Developer", "Desarrollador web", "Full Stack Developer"], "evitar": [], "ciudad": "Rosario", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["junior", "pasantia"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    }
+  ]
+}

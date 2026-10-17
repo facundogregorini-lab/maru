@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchRecruitee, fetchSmartRecruiters, normalizeRecruitee, normalizeSmartRecruiters, type Board } from "@/lib/match/connectors";
+import { fetchRecruitee, fetchSmartRecruiters, fetchWorkday, normalizeRecruitee, normalizeSmartRecruiters, normalizeWorkday, workdaySite, type Board } from "@/lib/match/connectors";
 import { boardsFrom } from "@/lib/match/directory";
 import { applyBoard, emptyInventory } from "@/lib/match/inventory";
 
@@ -60,5 +60,33 @@ describe("directorio", () => {
       { name: "Cocos", sourceId: "recruitee", slug: "cocos", evidence: "x", addedAt: "", status: "candidata" },
     ] }, {});
     expect(boards.map((b) => b.boardId)).toEqual(expect.arrayContaining(["smartrecruiters:acmesa", "recruitee:cocos"]));
+  });
+});
+
+describe("Workday (búsqueda del sitio de empleo)", () => {
+  const board: Board = { sourceId: "workday", boardId: "workday:acme.wd3.careers", slug: "acme.wd3.Careers", company: "Acme" };
+  const item = { title: "Financial Analyst", externalPath: "/job/Buenos-Aires/Financial-Analyst_R123", locationsText: "Buenos Aires", postedOn: "Posted 2 Days Ago", bulletFields: ["R123"] };
+  const detail = { jobPostingInfo: { title: "Financial Analyst", jobDescription: desc, location: "Buenos Aires, Argentina", startDate: "2026-10-15", timeType: "Full time", jobReqId: "R123", externalUrl: "https://acme.wd3.myworkdayjobs.com/Careers/job/Buenos-Aires/Financial-Analyst_R123", remoteType: "Hybrid", country: { descriptor: "Argentina" } } };
+
+  it("valida el sitio y normaliza el detalle", () => {
+    expect(() => workdaySite("acme/Careers")).toThrow(/inválido/);
+    const p = normalizeWorkday(item, detail, board);
+    expect(p).toMatchObject({ externalId: "R123", company: "Acme", countries: ["AR"], employmentHint: "Full time", publishedAt: "2026-10-15T00:00:00.000Z", applyUrl: detail.jobPostingInfo.externalUrl });
+    expect(p.workplace.value).toBe("hibrido");
+    expect(normalizeWorkday(item, null, board).sourceUrl).toBe("https://acme.wd3.myworkdayjobs.com/Careers/job/Buenos-Aires/Financial-Analyst_R123");
+  });
+
+  it("busca Argentina por POST, de a 20, y lee el detalle", async () => {
+    const calls: { url: string; method?: string; body?: string }[] = [];
+    const fetchImpl = (async (url: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({ url: String(url), method: init?.method, body: init?.body as string | undefined });
+      return String(url).endsWith("/jobs") ? json({ total: 1, jobPostings: [item] }) : json(detail);
+    }) as typeof fetch;
+    const res = await fetchWorkday(board, { fetchImpl, retries: 0 });
+    expect(calls[0]).toMatchObject({ url: "https://acme.wd3.myworkdayjobs.com/wday/cxs/acme/Careers/jobs", method: "POST" });
+    expect(JSON.parse(calls[0].body!)).toMatchObject({ limit: 20, offset: 0, searchText: "Argentina" });
+    expect(calls[1].url).toBe("https://acme.wd3.myworkdayjobs.com/wday/cxs/acme/Careers/job/Buenos-Aires/Financial-Analyst_R123");
+    expect(res).toMatchObject({ complete: true, received: 1 });
+    expect(res.postings[0].descriptionText).toContain("tesorería");
   });
 });

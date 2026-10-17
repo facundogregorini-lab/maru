@@ -38,15 +38,16 @@ export function retryAfterMs(header: string | null, now = Date.now()): number | 
   return Number.isFinite(date) ? Math.max(0, date - now) : null;
 }
 
-/** GET con reintentos limitados (red, 429, 5xx) y respeto de Retry-After. */
-async function fetchWithRetry(url: string, accept: string, opts: RetryOptions): Promise<Response> {
+/** GET (o POST si hay cuerpo) con reintentos limitados (red, 429, 5xx) y respeto de Retry-After. */
+async function fetchWithRetry(url: string, accept: string, opts: RetryOptions, body?: unknown): Promise<Response> {
   const { retries = 3, timeoutMs = 20_000, fetchImpl = fetch, sleep = defaultSleep, maxRetryAfterMs = 120_000 } = opts;
   let attempt = 0;
   for (;;) {
     let res: Response;
     try {
       res = await fetchImpl(url, {
-        headers: { "User-Agent": USER_AGENT, Accept: accept },
+        ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }),
+        headers: { "User-Agent": USER_AGENT, Accept: accept, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
         signal: AbortSignal.timeout(timeoutMs),
       });
     } catch (err) {
@@ -66,6 +67,11 @@ async function fetchWithRetry(url: string, accept: string, opts: RetryOptions): 
 
 export async function fetchJson<T>(url: string, opts: RetryOptions = {}): Promise<T> {
   return (await (await fetchWithRetry(url, "application/json", opts)).json()) as T;
+}
+
+/** POST con cuerpo JSON y los mismos reintentos (búsquedas que no se pueden hacer por GET, como Workday). */
+export async function postJson<T>(url: string, body: unknown, opts: RetryOptions = {}): Promise<T> {
+  return (await (await fetchWithRetry(url, "application/json", opts, body)).json()) as T;
 }
 
 /** Igual que fetchJson pero devuelve texto (feeds RSS/XML). */

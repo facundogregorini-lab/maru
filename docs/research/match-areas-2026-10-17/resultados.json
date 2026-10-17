@@ -1,0 +1,2734 @@
+{
+  "M1-marketing-digital-ssr": {
+    "reserva": false,
+    "counts": {
+      "open": 7080,
+      "eligible": 430,
+      "pending": 170,
+      "lowMatch": 3370,
+      "afterHardFilters": 3970,
+      "shown": 40
+    },
+    "eligible": [
+      {
+        "pos": 1,
+        "id": "5e8dc3cc224fe2",
+        "title": "Analista Marketing Digital",
+        "company": "Dia Argentina",
+        "score": 99,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-06T19:27:18.000Z",
+        "descriptionComplete": true,
+        "url": "https://empleos.supermercadosdia.com.ar/jobs/715584-analista-marketing-digital",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing digital”.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto.",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 2,
+        "id": "d3525288d73c02",
+        "title": "Digital Marketing Specialist & Coordinator",
+        "company": "Scale Army",
+        "score": 90,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-14T16:30:26.652Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/0f8b0c84-bb4d-48b9-a6b4-a741304018f8",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing digital”.",
+          "Tu CV menciona google analytics, análisis de datos y seo, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 3,
+        "id": "b08a9b2056cbf4",
+        "title": "Full-Cycle Marketing Generalist",
+        "company": "Scale Army",
+        "score": 84,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-25T21:35:26.426Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/88af47a8-f537-418d-85a8-fe31b603e176",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona análisis de datos, seo y marketing digital, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 4,
+        "id": "1f66c5e07325f3",
+        "title": "Associate Account Manager, Digital Marketing",
+        "company": "Xometry",
+        "score": 89,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "junior",
+        "workplace": "remoto",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-12T17:54:31.000Z",
+        "descriptionComplete": true,
+        "url": "https://job-boards.greenhouse.io/xometry/jobs/5210569007",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing digital”.",
+          "Tu CV menciona google analytics, análisis de datos y seo, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 5,
+        "id": "675de6f53ed49f",
+        "title": "Marketing Strategist",
+        "company": "Hire Hangar",
+        "score": 75,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "South Africa - Cape Town",
+          "Parugauy - Asuncion"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-05T02:14:40.069Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/hirehangar/118c1813-7fd8-400c-8941-09c23d779f32",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona google analytics, análisis de datos y sem, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 6,
+        "id": "49937708dc33dc",
+        "title": "Sr Marketing Performance Analyst",
+        "company": "Despegar",
+        "score": 75,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-22T21:36:56.364Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/despegar/0520b093-363b-4c48-9c57-390e25532657",
+        "reasons": [
+          "Coincide con lo que buscás: “Performance marketing”.",
+          "Tu CV menciona análisis de datos, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 7,
+        "id": "df24f2ab438e9f",
+        "title": "Senior Email & Lifecycle Marketing Strategist",
+        "company": "Acentecom",
+        "score": 75,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Spain",
+          "Uruguay"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-22T11:07:46.172Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/acentecom/a43f4ac7-c7ba-45d0-a912-e2d0c9539c8f",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona email marketing y ecommerce, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 8,
+        "id": "8aeffd407ee746",
+        "title": "Analista de Marketing y Comunicación",
+        "company": "Diagnóstico Maipú / Labmedicina",
+        "score": 74,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Vicente López, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-08T21:36:26.000Z",
+        "descriptionComplete": true,
+        "url": "https://diagnosticomaipu.na.teamtailor.com/jobs/697704-analista-de-marketing-y-comunicacion",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 9,
+        "id": "7a2d17e5879c42",
+        "title": "Copywriter, Performance Marketing",
+        "company": "Xometry",
+        "score": 74,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-17T15:56:21.000Z",
+        "descriptionComplete": true,
+        "url": "https://job-boards.greenhouse.io/xometry/jobs/5241057007",
+        "reasons": [
+          "Coincide con lo que buscás: “Performance marketing”.",
+          "Tu CV menciona email marketing y contenidos, que el aviso valora.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 10,
+        "id": "414b8e8786a8fa",
+        "title": "Growth Marketing & Digital Channels Specialist",
+        "company": "Rehire",
+        "score": 86,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Colombia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-06-24T21:07:26.180Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/rehire/81564b0a-d2f0-4ba1-adb6-ae5dd11a785e",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing digital”.",
+          "Tu CV menciona sem, meta ads y marketing digital, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 11,
+        "id": "ee41c606670151",
+        "title": "US Influencer Marketing & Copywriting Specialist",
+        "company": "Scale Army",
+        "score": 79,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-21T20:38:57.281Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/00cd0e93-7d2e-4074-8da2-e1420e9920a4",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona contenidos y ecommerce, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 12,
+        "id": "300453501cca24",
+        "title": "Marketing Generalist",
+        "company": "Scale Army",
+        "score": 79,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-22T17:14:29.608Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/7fea17b7-301e-4735-a745-9f61d5d3e05d",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona email marketing y contenidos, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 13,
+        "id": "aff4ed67556f70",
+        "title": "Business Analyst (Marketing)",
+        "company": "Scale Army",
+        "score": 75,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-12T18:06:42.196Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/79b27992-c771-47fd-aeb5-cad17e8337b8",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona análisis de datos, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 14,
+        "id": "6c335f63571215",
+        "title": "Content Marketing Specialist",
+        "company": "Scale Army",
+        "score": 74,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-05T19:56:16.780Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/5c8ade12-a269-423b-bdbb-1ad505722149",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona contenidos, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Horario pedido: EST | 20 hours. Es una condición horaria, no un permiso de contratación."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 15,
+        "id": "eb2d65520b69c5",
+        "title": "Marketing Performance Specialist SEO - Buenos Aires",
+        "company": "Despegar",
+        "score": 72,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-04T16:18:40.612Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/despegar/562e8d9d-bf4b-4884-bead-5cd142befe3b",
+        "reasons": [
+          "Coincide con lo que buscás: “Performance marketing”.",
+          "Tu CV menciona seo, que el aviso pide como requisito.",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 16,
+        "id": "49d02c270a046d",
+        "title": "Analista Senior de Marketing y Comunicación",
+        "company": "Umbral Capital Humano",
+        "score": 71,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-25T14:50:55.000Z",
+        "descriptionComplete": true,
+        "url": "https://umbralcapitalhumano.na.teamtailor.com/jobs/688318-analista-senior-de-marketing-y-comunicacion",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona sem, meta ads y contenidos, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 17,
+        "id": "f2067f5553507c",
+        "title": "Senior Marketing Manager",
+        "company": "Hire Hangar",
+        "score": 71,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "manager",
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "Mexico - Monterrey",
+          "Parugauy - Asuncion"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-05T02:14:10.130Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/hirehangar/380c73d4-1603-4fa0-b572-31a54a565996",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona google analytics, análisis de datos y sem, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de marketing digital se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 18,
+        "id": "66b6b1cd845a45",
+        "title": "Senior Marketing Specialist (PPC & Email)",
+        "company": "Scale Army",
+        "score": 69,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-30T13:52:59.690Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/f76c435c-1275-4dd1-b4f4-2eb4fdcd7e1e",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona email marketing, que el aviso pide como requisito.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 19,
+        "id": "87b26bf93b0ba2",
+        "title": "DTC E-Commerce Marketing Manager",
+        "company": "Scale Army",
+        "score": 69,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "manager",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-08T20:48:08.798Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/ef1439f8-8a71-4b7a-9cc3-4fcc90accde0",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona sem, meta ads y email marketing, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 20,
+        "id": "2471f78f216550",
+        "title": "Product Marketing Associate, Rewards",
+        "company": "Sezzle",
+        "score": 69,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "junior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina, Remote",
+          "Chile, Remote",
+          "Brazil, Remote"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-14T16:38:37.000Z",
+        "descriptionComplete": false,
+        "url": "https://job-boards.greenhouse.io/sezzle/jobs/7994464003",
+        "reasons": [
+          "Coincide con lo que buscás: “Marketing manager”.",
+          "Tu CV menciona email marketing y ecommerce, que el aviso valora.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      }
+    ],
+    "pendingTop5": [
+      {
+        "id": "152823dacc3fee",
+        "title": "Account Manager & Sales — Digital Marketing",
+        "company": "Cute Digital Media",
+        "family": "marketing",
+        "score": 87,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "3f523750530178",
+        "title": "Digital Marketing Lead",
+        "company": "AutoRaptor",
+        "family": "marketing",
+        "score": 73,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "de525cbc85dc85",
+        "title": "Executive & Marketing Assistant",
+        "company": "Gro.Inc",
+        "family": "marketing",
+        "score": 72,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "ec936256a54d66",
+        "title": "Digital Marketing Specialist (Organic & Web)",
+        "company": "Niuro",
+        "family": "marketing",
+        "score": 84,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "2e5b767cb5bc29",
+        "title": "Marketing Specialist (Outreach)",
+        "company": "Zaelot",
+        "family": "marketing",
+        "score": 71,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      }
+    ]
+  },
+  "M2-trade-marketing-jr": {
+    "reserva": false,
+    "counts": {
+      "open": 7080,
+      "eligible": 432,
+      "pending": 23,
+      "lowMatch": 3521,
+      "afterHardFilters": 3976,
+      "shown": 40
+    },
+    "eligible": [
+      {
+        "pos": 1,
+        "id": "e1ee86ce64dc02",
+        "title": "Trade Marketing Analyst",
+        "company": "Essity",
+        "score": 62,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "presencial",
+        "locations": [
+          "Puerto Santa Cruz, Santa Cruz"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-13T05:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=541662f3bade0a9e",
+        "reasons": [
+          "Coincide con lo que buscás: “Trade marketing”.",
+          "Tu experiencia como Asistente de trade marketing se relaciona directamente con este puesto.",
+          "Tu CV menciona excel y comunicación, que el aviso valora."
+        ],
+        "pending": [
+          "Lo vimos en Indeed (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 2,
+        "id": "8aeffd407ee746",
+        "title": "Analista de Marketing y Comunicación",
+        "company": "Diagnóstico Maipú / Labmedicina",
+        "score": 60,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Vicente López, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-08T21:36:26.000Z",
+        "descriptionComplete": true,
+        "url": "https://diagnosticomaipu.na.teamtailor.com/jobs/697704-analista-de-marketing-y-comunicacion",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Es híbrido, como preferís.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 3,
+        "id": "49937708dc33dc",
+        "title": "Sr Marketing Performance Analyst",
+        "company": "Despegar",
+        "score": 56,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-22T21:36:56.364Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/despegar/0520b093-363b-4c48-9c57-390e25532657",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Tu CV menciona excel y comunicación, que el aviso pide como requisitos.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 4,
+        "id": "9eb7ec295c2481",
+        "title": "Administrativa/o de area Marketing",
+        "company": "Chaxxel",
+        "score": 55,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Villa Martelli, Buenos Aires-GBA"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-administrativao-de-area-marketing-en-villa-martelli-D2099591C182BD4E61373E686DCF3405",
+        "reasons": [
+          "Coincide con lo que buscás: “Asistente de marketing”.",
+          "Tu experiencia como Asistente de trade marketing se relaciona directamente con este puesto.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 5,
+        "id": "5e8dc3cc224fe2",
+        "title": "Analista Marketing Digital",
+        "company": "Dia Argentina",
+        "score": 54,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-06T19:27:18.000Z",
+        "descriptionComplete": true,
+        "url": "https://empleos.supermercadosdia.com.ar/jobs/715584-analista-marketing-digital",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Es híbrido, como preferís.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 6,
+        "id": "eb2d65520b69c5",
+        "title": "Marketing Performance Specialist SEO - Buenos Aires",
+        "company": "Despegar",
+        "score": 51,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-04T16:18:40.612Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/despegar/562e8d9d-bf4b-4884-bead-5cd142befe3b",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Es híbrido, como preferís.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 7,
+        "id": "a30bf70c4e2983",
+        "title": "Responsable de Marketing & Comunicación",
+        "company": "Avalian",
+        "score": 50,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "semi_senior",
+        "workplace": "presencial",
+        "locations": [
+          "Rosario, Santa Fe, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T19:59:23",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/responsable-de-marketing-comunicaci%C3%B3n-at-avalian-4480530937",
+        "reasons": [
+          "Coincide con lo que buscás: “Asistente de marketing”.",
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es presencial, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · LinkedIn: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 8,
+        "id": "49d02c270a046d",
+        "title": "Analista Senior de Marketing y Comunicación",
+        "company": "Umbral Capital Humano",
+        "score": 48,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-25T14:50:55.000Z",
+        "descriptionComplete": true,
+        "url": "https://umbralcapitalhumano.na.teamtailor.com/jobs/688318-analista-senior-de-marketing-y-comunicacion",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 9,
+        "id": "623bebff07b9e5",
+        "title": "Marketing Manager - Argentina",
+        "company": "Grupo QuintoAndar",
+        "score": 48,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "manager",
+        "workplace": "hibrido",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-06T13:34:23.000Z",
+        "descriptionComplete": false,
+        "url": "https://job-boards.greenhouse.io/quintoandar/jobs/4423880009",
+        "reasons": [
+          "Coincide con lo que buscás: “Asistente de marketing”.",
+          "Tu experiencia como Asistente de trade marketing se relaciona directamente con este puesto.",
+          "Tu CV menciona comunicación, que el aviso valora."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 10,
+        "id": "53f6aa90024631",
+        "title": "Auxiliar de farmacia",
+        "company": "Instituto Modelo de Cardiología Privado SRL",
+        "score": 47,
+        "confidence": "alta",
+        "family": "salud",
+        "seniority": "junior",
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-30T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-auxiliar-de-farmacia-en-cordoba-A221CE1F2760DCC961373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es en Córdoba, donde buscás.",
+          "Parece presencial, como preferís (el aviso no lo aclara)."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": false,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 11,
+        "id": "d97130338dfd02",
+        "title": "Community Manager Creativo/a",
+        "company": "CORE SOLUTIONS",
+        "score": 47,
+        "confidence": "media",
+        "family": "marketing",
+        "seniority": "junior",
+        "workplace": "desconocido",
+        "locations": [
+          "Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": null,
+        "descriptionComplete": false,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-community-manager-creativoa-part-time-en-cordoba-7C2AFEB33528A04961373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es del área que te interesa (Marketing y comunicación).",
+          "Es en Córdoba, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 12,
+        "id": "e18b3140d60e01",
+        "title": "Program Marketing Manager",
+        "company": "OLIVER - Argentina",
+        "score": 46,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "manager",
+        "workplace": "desconocido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-09T19:17:05.000Z",
+        "descriptionComplete": true,
+        "url": "https://job-boards.greenhouse.io/oliverargentina/jobs/8230727",
+        "reasons": [
+          "Coincide con lo que buscás: “Asistente de marketing”.",
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Se puede trabajar desde Argentina (Ubicación: Buenos Aires, Argentina  | LATAM)."
+        ],
+        "pending": [
+          "Se publica en Buenos Aires, Argentina  y no aclara si es remoto: confirmalo antes de postularte."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 13,
+        "id": "21bd49573d56c9",
+        "title": "Recepcionista con perfil en marketing y comunicación",
+        "company": "Terra Consultora de Recursos Humanos",
+        "score": 44,
+        "confidence": "media",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": null,
+        "descriptionComplete": false,
+        "url": "https://cazvid.com/es/empleo/lider-en-marketing-y-comunicacion-98355687",
+        "reasons": [
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es del área que te interesa (Marketing y comunicación).",
+          "Es en Córdoba, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 14,
+        "id": "cd219a22b846d8",
+        "title": "Supervisor Trade Marketing",
+        "company": "Cerveceria y Malteria Quilmes",
+        "score": 44,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "manager",
+        "workplace": "presencial",
+        "locations": [
+          "San Miguel de Tucumán, Tucumán, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://wd1.myworkdaysite.com/recruiting/abinbev/ARG/job/Ventas-Tucumn/Supervisor-Trade-Marketing_30104917",
+        "reasons": [
+          "Coincide con lo que buscás: “Trade marketing”.",
+          "Tu experiencia como Asistente de trade marketing se relaciona directamente con este puesto.",
+          "Es presencial, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · sitios de empleo de empresas: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 15,
+        "id": "b3f41ed5ac0466",
+        "title": "Administrativa/o Contable - Empresa del Rubro Automotor",
+        "company": "Selectium",
+        "score": 44,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-13T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-administrativao-contable-empresa-del-rubro-automotor-en-cordoba-1C51976B1D4DC92A61373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es en Córdoba, donde buscás.",
+          "Es presencial, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": false,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 16,
+        "id": "896923280031ca",
+        "title": "Pasante de Relaciones Públicas",
+        "company": "Adecco Argentina S.A.",
+        "score": 44,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "pasantia",
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-25T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-pasante-de-relaciones-publicas-en-cordoba-58BADD530472975261373E686DCF3405",
+        "reasons": [
+          "Es del área que te interesa (Marketing y comunicación).",
+          "Es en Córdoba, donde buscás.",
+          "Parece presencial, como preferís (el aviso no lo aclara)."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 17,
+        "id": "70b51d041b3299",
+        "title": "Analista Sr. de Marketing y Comunicación",
+        "company": "Umbral Capital Humano",
+        "score": 42,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": "senior",
+        "workplace": "presencial",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-14T16:17:17",
+        "descriptionComplete": true,
+        "url": "https://umbralcapitalhumano.na.teamtailor.com/jobs/719924-analista-sr-de-marketing-y-comunicacion",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de marketing”.",
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es presencial, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 18,
+        "id": "38720c0b561e03",
+        "title": "Auxiliar Administrativo Comercial",
+        "company": "Glup's SRL",
+        "score": 42,
+        "confidence": "alta",
+        "family": "ventas",
+        "seniority": "junior",
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-12T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-auxiliar-administrativo-comercial-en-cordoba-E7B24E79C446F05561373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel y comunicación, que el aviso pide como requisitos.",
+          "Es en Córdoba, donde buscás.",
+          "Parece presencial, como preferís (el aviso no lo aclara)."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": false,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 19,
+        "id": "646d8821387e1b",
+        "title": "Contador/a Público/a para Gestión Contable – Empresa de Consumo Masivo Alta Gracia - Full time Presencial Alta Gracia",
+        "company": "Yakú Consultora",
+        "score": 41,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "presencial",
+        "locations": [
+          "Alta Gracia, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-30T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-contadora-publicoa-para-gestion-contable-empresa-de-consumo-masivo-alta-gracia-full-time-presencial-alta-gracia-en-alta-gracia-917CF8EBE8F9D7BC61373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es en Córdoba, donde buscás.",
+          "Parece presencial, como preferís (el aviso no lo aclara)."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": false,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 20,
+        "id": "33b6ac364b5efb",
+        "title": "Vendedor online (community Manager) - Horario corrido de lunes a sabado",
+        "company": "LTC",
+        "score": 40,
+        "confidence": "alta",
+        "family": "marketing",
+        "seniority": null,
+        "workplace": "presencial",
+        "locations": [
+          "Córdoba, Córdoba"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-vendedor-online-community-manager-horario-corrido-de-lunes-a-sabado-en-cordoba-E7E3C121A365914661373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona comunicación, que el aviso pide como requisito.",
+          "Es del área que te interesa (Marketing y comunicación).",
+          "Es en Córdoba, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify) y Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      }
+    ],
+    "pendingTop5": [
+      {
+        "id": "152823dacc3fee",
+        "title": "Account Manager & Sales — Digital Marketing",
+        "company": "Cute Digital Media",
+        "family": "marketing",
+        "score": 44,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "de525cbc85dc85",
+        "title": "Executive & Marketing Assistant",
+        "company": "Gro.Inc",
+        "family": "marketing",
+        "score": 38,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "140f65d683c9da",
+        "title": "Storytelling & Marketing Lead Operativo, B2B SaaS",
+        "company": "Hellotext",
+        "family": "marketing",
+        "score": 43,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Horario pedido: overlap horario con América. Es una condición horaria, no un permiso de contratación.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "31fcba00e04e0c",
+        "title": "Chat & Sales Specialist",
+        "company": "Velvet for Women",
+        "family": "ventas",
+        "score": 34,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "2e5b767cb5bc29",
+        "title": "Marketing Specialist (Outreach)",
+        "company": "Zaelot",
+        "family": "marketing",
+        "score": 34,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      }
+    ]
+  },
+  "F2-banca-riesgo-ssr": {
+    "reserva": false,
+    "counts": {
+      "open": 7080,
+      "eligible": 547,
+      "pending": 159,
+      "lowMatch": 3264,
+      "afterHardFilters": 3970,
+      "shown": 40
+    },
+    "eligible": [
+      {
+        "pos": 1,
+        "id": "3cb523e63cf11d",
+        "title": "EY - Analista Junior de Gestión de Riesgos para la Industria Financiera",
+        "company": "EY",
+        "score": 91,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "junior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=0168f3638668d8c7",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de riesgo”.",
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Indeed (vía Apify) y Fantastic.jobs · sitios de empleo de empresas: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 2,
+        "id": "80240222df9f5d",
+        "title": "Analista de Riesgos Crediticios Ssr",
+        "company": "Banco Carrefour",
+        "score": 79,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Martínez, Provincia de Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": null,
+        "descriptionComplete": false,
+        "url": "https://ar.linkedin.com/jobs/view/analista-de-riesgos-crediticios-ssr-at-banco-carrefour-4472065660",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de riesgo”.",
+          "Tu CV menciona sql y power bi, que el aviso pide como requisitos.",
+          "Tu experiencia como Analista de riesgo crediticio se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Lo vimos en Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 3,
+        "id": "e22b690fdd1f50",
+        "title": "Analista Contable",
+        "company": "Allende & Brea",
+        "score": 69,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina",
+          "Greater Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-13T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-contable-at-allende-brea-4478180387",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · LinkedIn y LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 4,
+        "id": "a38df86cd88588",
+        "title": "Analista Jr. de Cobranzas y Cuentas Corrientes",
+        "company": "Swiss Medical",
+        "score": 66,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "junior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Buenos Aires Province, Argentina",
+          "Capital Federal, Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-jr-de-cobranzas-y-cuentas-corrientes-at-swiss-medical-4480170592",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify) y Indeed (vía Apify) y Fantastic.jobs · sitios de empleo de empresas: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 5,
+        "id": "e9d25372bf2523",
+        "title": "Analista de Desarrollo de Modelos de Riesgo Crediticio - Fintech",
+        "company": "Mercado Libre",
+        "score": 63,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "presencial",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-13T18:25:45",
+        "descriptionComplete": true,
+        "url": "https://mercadolibre.eightfold.ai/careers/job/43707026-analista-de-desarrollo-de-modelos-de-riesgo-crediticio-fintech-buenos-aires-argentina",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de riesgo”.",
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de riesgo crediticio se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · sitios de empleo de empresas: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 6,
+        "id": "bb799eb5bde181",
+        "title": "Analista de Costos",
+        "company": "Diagnóstico Maipú / Labmedicina",
+        "score": 60,
+        "confidence": "media",
+        "family": "finanzas",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Vicente López, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-01T15:40:45.000Z",
+        "descriptionComplete": true,
+        "url": "https://diagnosticomaipu.na.teamtailor.com/jobs/693867-analista-de-costos",
+        "reasons": [
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es híbrido, como preferís.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 7,
+        "id": "1f65b00b8d72ac",
+        "title": "Financial Risk Analyst",
+        "company": "Prex",
+        "score": 59,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "desconocido",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/financial-risk-analyst-at-prex-4462474858",
+        "reasons": [
+          "Coincide con lo que buscás: “Credit risk analyst”.",
+          "Tu CV menciona sql y power bi, que el aviso pide como requisitos.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 8,
+        "id": "7d3fa6828b0efc",
+        "title": "Analista Sr Riesgo Crediticio - Personal Pay",
+        "company": "Personal",
+        "score": 57,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "senior",
+        "workplace": "presencial",
+        "locations": [
+          "Greater Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-sr-riesgo-crediticio-personal-pay-at-personal-4462465209",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de riesgo”.",
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de riesgo crediticio se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 9,
+        "id": "5394a18f1bfe01",
+        "title": "Analista de Impuestos",
+        "company": "Freddo",
+        "score": 56,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T23:23:42",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-de-impuestos-at-freddo-4477732514",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · LinkedIn: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 10,
+        "id": "e68684e7edf9e8",
+        "title": "Analista Senior de Planificación Financiera para Créditos",
+        "company": "Mercado Libre",
+        "score": 56,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "senior",
+        "workplace": "presencial",
+        "locations": [
+          "Greater Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-14T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-senior-de-planificaci%C3%B3n-financiera-para-cr%C3%A9ditos-at-mercado-libre-4476697683",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de créditos”.",
+          "Tu experiencia como Analista de créditos se relaciona directamente con este puesto.",
+          "Tu CV menciona sql, que el aviso valora."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 11,
+        "id": "ae1a593850d860",
+        "title": "Analista de Créditos y Riesgo a Clientes",
+        "company": "Maxiconsumo S.A.",
+        "score": 56,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "junior",
+        "workplace": "presencial",
+        "locations": [
+          "Haedo, Provincia de Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": null,
+        "descriptionComplete": false,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-de-creditos-y-riesgo-a-clientes-en-haedo-ACA3B7CC5317879861373E686DCF3405",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de riesgo”.",
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Tu experiencia como Analista de créditos se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Lo vimos en Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 12,
+        "id": "fa89e5f3f6e922",
+        "title": "Analista Contable (Zona Bernal, GBA Sur)",
+        "company": "Smurfit Westrock",
+        "score": 55,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Bernal Este, Buenos Aires, Argentina",
+          "Bernal, Buenos Aires Province, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-contable-zona-bernal-gba-sur-at-smurfit-westrock-4477092863",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · LinkedIn y LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 13,
+        "id": "01172f43db637e",
+        "title": "Analista Administrativo Contable SSR",
+        "company": "SCI comunidad",
+        "score": 54,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Buenos Aires Province, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-14T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-administrativo-contable-ssr-at-sci-comunidad-4476685743",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 14,
+        "id": "be31163119910e",
+        "title": "Semi Senior Financial Analyst",
+        "company": "Pearster",
+        "score": 54,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Capital Federal, Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-14T05:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=b3d75edd6435ce77",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es remoto, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Indeed (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 15,
+        "id": "e9e8ab4e3d31ae",
+        "title": "Analista de Créditos",
+        "company": "COFCO International",
+        "score": 53,
+        "confidence": "media",
+        "family": "finanzas",
+        "seniority": null,
+        "workplace": "presencial",
+        "locations": [
+          "Buenos Aires, Cdad. Autónoma de Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": null,
+        "descriptionComplete": false,
+        "url": "https://ar.linkedin.com/jobs/view/analista-de-cr%C3%A9ditos-at-cofco-international-4476779289",
+        "reasons": [
+          "Coincide con lo que buscás: “Analista de créditos”.",
+          "Tu experiencia como Analista de créditos se relaciona directamente con este puesto.",
+          "Es en Buenos Aires, donde buscás."
+        ],
+        "pending": [
+          "Lo vimos en Google Jobs (SerpApi): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 16,
+        "id": "8ffc5105a5cb79",
+        "title": "Analista de tesorería. Ezeiza Prov. Bs As - Ezeiza Prov. Bs As",
+        "company": "ADN - Recursos Humanos",
+        "score": 53,
+        "confidence": "media",
+        "family": "finanzas",
+        "seniority": null,
+        "workplace": "desconocido",
+        "locations": [
+          "Ezeiza, Buenos Aires-GBA"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-08T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-ref-21488-analista-de-tesoreria-ezeiza-prov-bs-as-ezeiza-prov-bs-as-en-ezeiza-9F8909C7DE1FDB6661373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [
+          "Se publica en Ezeiza, Buenos Aires-GBA y no aclara si es remoto: confirmalo antes de postularte.",
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 17,
+        "id": "becb69385d8c54",
+        "title": "Analyst, Credit Associate",
+        "company": "CHS Inc.",
+        "score": 53,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "junior",
+        "workplace": "presencial",
+        "locations": [
+          "San Isidro, Buenos Aires Province, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analyst-credit-associate-at-chs-inc-4453155036",
+        "reasons": [
+          "Coincide con lo que buscás: “Credit risk analyst”.",
+          "Tu CV menciona excel y power bi, que el aviso pide como requisitos.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 18,
+        "id": "2e02c74da93c16",
+        "title": "Analista SSr de Impuestos",
+        "company": "Nergis Consulting",
+        "score": 53,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Greater Buenos Aires",
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/analista-ssr-de-impuestos-at-nergis-consulting-4480386647",
+        "reasons": [
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es en Buenos Aires, donde buscás.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en LinkedIn (vía Apify) y Fantastic.jobs · LinkedIn: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 19,
+        "id": "ef8a574db94eaf",
+        "title": "Accounts Receivable & Refunds Specialist",
+        "company": "RYZ Labs",
+        "score": 53,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-09T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/accounts-receivable-refunds-specialist-at-ryz-labs-4478001009",
+        "reasons": [
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es remoto, como preferís.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 20,
+        "id": "762e3d61f87f36",
+        "title": "Analista contable",
+        "company": "MAS VIDA",
+        "score": 52,
+        "confidence": "alta",
+        "family": "finanzas",
+        "seniority": "junior",
+        "workplace": "hibrido",
+        "locations": [
+          "Martínez, Buenos Aires-GBA"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-06T00:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.computrabajo.com/ofertas-de-trabajo/oferta-de-trabajo-de-analista-contable-en-martinez-5AAD1FD9BA6BB65061373E686DCF3405",
+        "reasons": [
+          "Tu CV menciona excel, que el aviso pide como requisito.",
+          "Es del área que te interesa (Finanzas y contabilidad).",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Computrabajo (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      }
+    ],
+    "pendingTop5": [
+      {
+        "id": "9ccec22ae484c2",
+        "title": "Associate (CPA/SMMM)",
+        "company": "Manay CPA Inc.",
+        "family": "finanzas",
+        "score": 47,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Jobicy: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "f5a04b30bb38f9",
+        "title": "Consultor/a SAP Business One (Finanzas)",
+        "company": "Lisit",
+        "family": "finanzas",
+        "score": 47,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "100b657e44cba9",
+        "title": "Analista Programador Mainframe COBOL",
+        "company": "BC Tecnología",
+        "family": "software",
+        "score": 44,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "f3069747709da0",
+        "title": "Especialista SAP ISU Billing",
+        "company": "Lisit",
+        "family": "finanzas",
+        "score": 44,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "c62d30cff3da8e",
+        "title": "Finance Systems & Operations Lead",
+        "company": "Force Of Nature",
+        "family": "finanzas",
+        "score": 38,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Horario pedido: overlap with U. Es una condición horaria, no un permiso de contratación.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      }
+    ]
+  },
+  "T2-dev-jr": {
+    "reserva": false,
+    "counts": {
+      "open": 7080,
+      "eligible": 322,
+      "pending": 217,
+      "lowMatch": 3431,
+      "afterHardFilters": 3970,
+      "shown": 40
+    },
+    "eligible": [
+      {
+        "pos": 1,
+        "id": "5c0abfefaedc8b",
+        "title": "Desarrollador Web ERP Odoo",
+        "company": "Axcelere",
+        "score": 71,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T19:02:22.3",
+        "descriptionComplete": true,
+        "url": "https://ar.linkedin.com/jobs/view/desarrollador-web-erp-odoo-at-axcelere-4477320295",
+        "reasons": [
+          "Coincide con lo que buscás: “Desarrollador web”.",
+          "Tu CV menciona javascript, que el aviso pide como requisito.",
+          "Tu experiencia como Desarrollador web junior se relaciona directamente con este puesto."
+        ],
+        "pending": [
+          "Lo vimos en Fantastic.jobs · LinkedIn: confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 2,
+        "id": "b7fc66d6de0761",
+        "title": "AI-First Frontend Software Engineer",
+        "company": "RYZ Labs",
+        "score": 66,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/RyzLabs/34d126be-b8fa-4291-8bc4-924031455850",
+        "reasons": [
+          "Coincide con lo que buscás: “Frontend Developer”.",
+          "Tu CV menciona javascript y react, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 3,
+        "id": "cc40cf7e7b4e96",
+        "title": "Design Engineer, Web (AI-Native) - Hybrid",
+        "company": "Clara",
+        "score": 64,
+        "confidence": "media",
+        "family": "software",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Bogota D.C. / DC / Colombia; Buenos Aires / C / Argentina; Mexico City / CDMX /…"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-07T15:30:05.000Z",
+        "descriptionComplete": false,
+        "url": "https://job-boards.greenhouse.io/clara/jobs/5260138007",
+        "reasons": [
+          "Coincide con lo que buscás: “Desarrollador web”.",
+          "Tu CV menciona javascript y react, que el aviso pide como requisitos.",
+          "Tu experiencia como Desarrollador web junior se relaciona directamente con este puesto."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 4,
+        "id": "68fc98f8107a35",
+        "title": "Full Stack Engineer",
+        "company": "Hire Hangar",
+        "score": 64,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "South Africa - Cape Town",
+          "Parugauy - Asuncion"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-05T01:48:25.048Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/hirehangar/5cab9b8f-c9d0-4e97-9f29-1ce42565b896",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript, que el aviso pide como requisito.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [
+          "Horario pedido: overlap with US PST. Es una condición horaria, no un permiso de contratación."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 5,
+        "id": "d684da8ab5f114",
+        "title": "Full Stack Applications Developer",
+        "company": "Scale Army",
+        "score": 64,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-01T19:29:09.441Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/c408416c-962e-4da9-b584-c84d4819b142",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 6,
+        "id": "303afb105a6204",
+        "title": "Senior Frontend Engineer",
+        "company": "Hire Hangar",
+        "score": 61,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "Dominican Republic - Santo Domingo",
+          "Parugauy - Asuncion"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-05T02:13:19.937Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/hirehangar/7021adb6-ce7f-44f0-a677-e646d17e1308",
+        "reasons": [
+          "Coincide con lo que buscás: “Frontend Developer”.",
+          "Tu CV menciona javascript, react y sql, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 7,
+        "id": "7c930c4fd6bfd4",
+        "title": "Full Stack and Backend NodeJS TypeScript/JavaScript Engineer (Senior) - Latin America, Remote",
+        "company": "Bluelight Consulting",
+        "score": 59,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Mendoza, Argentina",
+          "Mar del Plata, Buenos Aires Province, Argentina",
+          "Buenos Aires Province, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-07T20:49:29.572Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/bluelightconsulting/5ddccea6-a4b8-4ff8-a145-7daf72a9aefe",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript, react y sql, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [
+          "Horario pedido: overlap US business hours. Es una condición horaria, no un permiso de contratación."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 8,
+        "id": "831cc5f38eb8a8",
+        "title": "Full Stack and Backend NodeJS TypeScript/JavaScript Engineer (Senior) - Remote, Latin America",
+        "company": "Bluelight Consulting",
+        "score": 59,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Mendoza, Argentina",
+          "Salta, Argentina",
+          "Mar del Plata, Buenos Aires Province, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-07T20:49:29.392Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/bluelightconsulting/48155a4c-d9f5-4a0e-8637-21a758f149ac",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript, react y sql, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [
+          "Horario pedido: overlap US business hours. Es una condición horaria, no un permiso de contratación."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 9,
+        "id": "f9ee69adf59501",
+        "title": "A.I. Engineering Intern",
+        "company": "Sezzle",
+        "score": 56,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "junior",
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "Latin America",
+          "Brazil, Remote"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-28T13:51:09.000Z",
+        "descriptionComplete": true,
+        "url": "https://job-boards.greenhouse.io/sezzle/jobs/7980309003",
+        "reasons": [
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es remoto, como preferís.",
+          "Se puede trabajar desde Argentina (Ubicación: Latin America | Bogota, Colombia · Bogotá, Bogotá, Colombia)."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 10,
+        "id": "35c58eb3d82a62",
+        "title": "Magento Web Designer",
+        "company": "Scale Army",
+        "score": 55,
+        "confidence": "alta",
+        "family": "diseno",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Egypt",
+          "Ethiopia"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-29T14:04:58.413Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Scale%20Army%20Careers/ed4337b2-2041-4253-bdda-a0c8a126d68c",
+        "reasons": [
+          "Coincide con lo que buscás: “Desarrollador web”.",
+          "Tu experiencia como Desarrollador web junior se relaciona directamente con este puesto.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": false,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 11,
+        "id": "6aff4fad866413",
+        "title": "Senior Full Stack Engineer",
+        "company": "Hire Hangar",
+        "score": 58,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "senior",
+        "workplace": "remoto",
+        "locations": [
+          "Remoto desde Argentina",
+          "Mexico - Monterrey",
+          "Parugauy - Asuncion"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-05T01:48:11.004Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/hirehangar/dc75b9eb-d486-47a8-97c0-2c00c8c85b19",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript y react, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 12,
+        "id": "b0fed78d397b16",
+        "title": "Senior Full Stack Developer (JS)",
+        "company": "EPAM Systems",
+        "score": 55,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "senior",
+        "workplace": "desconocido",
+        "locations": [
+          "Desde casa"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-13T05:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=0a7c7c88a7975859",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript y react, que el aviso pide como requisitos.",
+          "Se puede trabajar desde Argentina (La fuente informa Argentina entre los países del puesto.)."
+        ],
+        "pending": [
+          "Se publica en Desde casa y no aclara si es remoto: confirmalo antes de postularte.",
+          "Lo vimos en Indeed (vía Apify) y Indeed (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 13,
+        "id": "3d4a2260f66e4e",
+        "title": "Software Engineer – Product Quality & Reliability",
+        "company": "RYZ Labs",
+        "score": 54,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Buenos Aires, Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-15T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/RyzLabs/339d15f4-0877-4127-ac42-4593620998a9",
+        "reasons": [
+          "Tu CV menciona react y sql, que el aviso pide como requisitos.",
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 14,
+        "id": "f25e2b0ab9f211",
+        "title": "Product Support Engineer",
+        "company": "RYZ Labs",
+        "score": 54,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": null,
+        "workplace": "remoto",
+        "locations": [
+          "Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-25T20:59:41.863Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/RyzLabs/a5906268-6f3e-4a49-b992-bc3806c59f97",
+        "reasons": [
+          "Tu CV menciona react y sql, que el aviso pide como requisitos.",
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 15,
+        "id": "699d8ed905ad3a",
+        "title": "Desarrollador/a BPM Semi Senior – Business Automation Workflow y Microservicios",
+        "company": "MaxIT Consulting - Max Corporate Group",
+        "score": 51,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T05:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=feef7bbf88206a4e",
+        "reasons": [
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Indeed (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 16,
+        "id": "6db46358d5dd31",
+        "title": "Desarrollador/a BPM / Workflow Semi Senior – Procesos de Negocio",
+        "company": "MaxIT Consulting - Max Corporate Group",
+        "score": 51,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "hibrido",
+        "locations": [
+          "Buenos Aires, Buenos Aires"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-16T05:00:00.000Z",
+        "descriptionComplete": true,
+        "url": "https://ar.indeed.com/viewjob?jk=4063cb10528ba6e8",
+        "reasons": [
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [
+          "Lo vimos en Indeed (vía Apify): confirmá en el aviso que siga abierto."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 17,
+        "id": "1f64616aa953bc",
+        "title": "Junior Software Engineer with Accounting Experience (Peru)",
+        "company": "Sezzle",
+        "score": 51,
+        "confidence": "media",
+        "family": "software",
+        "seniority": "junior",
+        "workplace": "desconocido",
+        "locations": [
+          "Argentina, Remote",
+          "Peru",
+          "Türkiye, Remote"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-21T17:11:41.000Z",
+        "descriptionComplete": false,
+        "url": "https://job-boards.greenhouse.io/sezzle/jobs/8001111003",
+        "reasons": [
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Se puede trabajar desde Argentina (Ubicación: Peru | Bogota, Colombia · Bogotá, Bogotá, Colombia | Latin America [Remote] | Turkey)."
+        ],
+        "pending": [
+          "Se publica en Argentina, Remote · Peru y no aclara si es remoto: confirmalo antes de postularte."
+        ],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "no"
+        }
+      },
+      {
+        "pos": 18,
+        "id": "3617b7d66e4fc3",
+        "title": "Senior / Lead Full Stack Engineer (TypeScript + React)",
+        "company": "Solvd",
+        "score": 51,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "lead",
+        "workplace": "remoto",
+        "locations": [
+          "Argentina",
+          "Poland",
+          "Brazil"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-09-18T08:21:21.417Z",
+        "descriptionComplete": true,
+        "url": "https://jobs.ashbyhq.com/Solvd/83e49175-52a2-4639-963a-f25f47f46514",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript y react, que el aviso pide como requisitos.",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "no",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 19,
+        "id": "c79537bd66c6c2",
+        "title": "Site Reliability Engineer ll (DBA)",
+        "company": "Backblaze External Website",
+        "score": 50,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": "semi_senior",
+        "workplace": "remoto",
+        "locations": [
+          "Remote - Argentina; Remote - Colombia ; Remote - Costa Rica ; Remote - Mexico"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-08-28T00:59:16.000Z",
+        "descriptionComplete": false,
+        "url": "https://job-boards.greenhouse.io/backblaze/jobs/5387051008",
+        "reasons": [
+          "Tu CV menciona sql, que el aviso pide como requisito.",
+          "Es del área que te interesa (Tecnología y desarrollo).",
+          "Es remoto, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "si",
+          "ubicacion": "si"
+        }
+      },
+      {
+        "pos": 20,
+        "id": "da415adeb9723e",
+        "title": "Full Stack Software Engineer – AI Focused",
+        "company": "RYZ Labs",
+        "score": 50,
+        "confidence": "alta",
+        "family": "software",
+        "seniority": null,
+        "workplace": "hibrido",
+        "locations": [
+          "Argentina"
+        ],
+        "eligibility": "elegible",
+        "publishedAt": "2026-10-08T00:00:00",
+        "descriptionComplete": true,
+        "url": "https://jobs.lever.co/RyzLabs/7bb2f392-e9f1-4473-b1f0-08a5b45b0072",
+        "reasons": [
+          "Coincide con lo que buscás: “Full Stack Developer”.",
+          "Tu CV menciona javascript, que el aviso pide como requisito.",
+          "Es híbrido, como preferís."
+        ],
+        "pending": [],
+        "auto": {
+          "familiaDelArea": true,
+          "seniority": "desconocido",
+          "ubicacion": "no"
+        }
+      }
+    ],
+    "pendingTop5": [
+      {
+        "id": "bf05421b423da3",
+        "title": "Desarrollador .NET Web Forms + SQL Server (Part Time, LATAM)",
+        "company": "Qulane",
+        "family": "software",
+        "score": 89,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "b290375ce72149",
+        "title": "Web App Full-Stack Engineer",
+        "company": "Niuro",
+        "family": "software",
+        "score": 65,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board y Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "46dd678540bea6",
+        "title": "Desarrollador Back-end Java / Quarkus / Kafka",
+        "company": "Agilesoft SpA",
+        "family": "software",
+        "score": 55,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "ff86809de392fa",
+        "title": "Full-Stack Developer – React | Next.JS | Golang",
+        "company": "WiTi",
+        "family": "software",
+        "score": 55,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      },
+      {
+        "id": "a1ba3502442e4a",
+        "title": "Full-Stack Developer",
+        "company": "Lead Gen Team LLC",
+        "family": "software",
+        "score": 55,
+        "pending": [
+          "Remoto sin región: no dice si contratan desde Argentina.",
+          "Lo vimos en Get on Board: confirmá en el aviso que siga abierto."
+        ]
+      }
+    ]
+  }
+}

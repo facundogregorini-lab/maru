@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 9;
+export const EXTRACTION_VERSION = 10;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -120,6 +120,13 @@ export const SKILLS: Record<string, string[]> = {
   "manipulación de alimentos": ["manipulación de alimentos", "manipulador de alimentos", "food handling", "food safety"],
   "seguridad e higiene": ["seguridad e higiene", "higiene y seguridad", "hse", "ehs", "health and safety"],
   "mantenimiento preventivo": ["mantenimiento preventivo", "mantenimiento correctivo", "preventive maintenance"],
+  // banca y finanzas
+  "riesgo crediticio": ["riesgo crediticio", "riesgo de crédito", "credit risk", "análisis de crédito", "análisis crediticio", "credit analysis", "scoring", "credit scoring"],
+  "prevención de lavado": ["prevención de lavado", "lavado de activos", "pld", "aml", "anti-money laundering", "kyc", "know your customer"],
+  "mercado de capitales": ["mercado de capitales", "capital markets", "renta fija", "fixed income", "fondos comunes de inversión"],
+  "modelos financieros": ["modelos financieros", "modelado financiero", "financial modeling", "financial modelling", "valuación de empresas", "dcf"],
+  // marketing
+  "trade marketing": ["trade marketing", "punto de venta", "pdv", "shopper marketing"],
 };
 
 const SKILL_PATTERNS: [string, RegExp][] = Object.entries(SKILLS).map(([canon, variants]) => [

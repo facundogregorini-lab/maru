@@ -1,4 +1,4 @@
-import { fetchJson, fetchText, type RetryOptions } from "./http";
+import { fetchJson, fetchText, postJson, type RetryOptions } from "./http";
 import { decodeEntities, fold, htmlToText } from "./text";
 import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
 
@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -674,7 +674,7 @@ type SrPosting = {
   jobAd?: { sections?: Record<string, { title?: string; text?: string } | undefined> };
 };
 const SR_PAGE = 100;
-const SR_MAX_DETAILS = 80;
+const SR_MAX_DETAILS = 40;
 
 export function normalizeSmartRecruiters(j: SrPosting, board: Board): NormalizedPosting {
   const loc = j.location ?? {};
@@ -805,6 +805,99 @@ export async function fetchRecruitee(board: Board, opts?: RetryOptions): Promise
   return { postings: data.offers.map((o) => normalizeRecruitee(o, board)), complete: true, received: data.offers.length };
 }
 
+/* ---------- Workday (búsqueda del sitio de empleo) ---------- */
+
+type WdListItem = { title: string; externalPath: string; locationsText?: string; postedOn?: string; bulletFields?: string[] };
+type WdDetail = {
+  jobPostingInfo?: {
+    id?: string;
+    title?: string;
+    jobDescription?: string;
+    location?: string;
+    additionalLocations?: string[];
+    startDate?: string;
+    timeType?: string;
+    jobReqId?: string;
+    externalUrl?: string;
+    remoteType?: string;
+    country?: { descriptor?: string };
+  };
+  hiringOrganization?: { name?: string };
+};
+const WD_PAGE = 20;
+const WD_MAX_DETAILS = 40;
+const WD_SLUG = /^([a-z0-9-]+)\.(wd\d{1,3})\.([A-Za-z0-9_-]+)$/;
+
+/** "pwc.wd3.Global_Experienced_Careers" → partes del sitio de empleo de Workday. */
+export function workdaySite(slug: string | undefined): { tenant: string; wd: string; site: string } {
+  const m = (slug ?? "").match(WD_SLUG);
+  if (!m) throw new Error(`Sitio de Workday inválido: ${slug}`);
+  return { tenant: m[1], wd: m[2], site: m[3] };
+}
+
+export function normalizeWorkday(item: WdListItem, detail: WdDetail | null, board: Board): NormalizedPosting {
+  const { tenant, wd, site } = workdaySite(board.slug);
+  const info = detail?.jobPostingInfo ?? {};
+  const locs = [info.location || item.locationsText, ...(info.additionalLocations ?? [])].filter((l): l is string => !!l);
+  const remote = (info.remoteType ?? "").toLowerCase();
+  const workplace = /remote|remoto/.test(remote) ? wp("remoto", "fuente", `remoteType: ${info.remoteType}`) : /hybrid|h[ií]brido/.test(remote) ? wp("hibrido", "fuente", `remoteType: ${info.remoteType}`) : /on.?site|presencial/.test(remote) ? wp("presencial", "fuente", `remoteType: ${info.remoteType}`) : wp(workplaceFromText(locs.join(" ")), "fuente");
+  const text = htmlToText(info.jobDescription, DESC_MAX);
+  const url = info.externalUrl || `https://${tenant}.${wd}.myworkdayjobs.com/${site}${item.externalPath}`;
+  const country = countryIso(info.country?.descriptor);
+  return {
+    sourceId: "workday",
+    boardId: board.boardId,
+    externalId: info.jobReqId || item.bulletFields?.[0] || item.externalPath,
+    title: (info.title || item.title).trim(),
+    company: board.company || detail?.hiringOrganization?.name || tenant,
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: [...new Set(locs)].slice(0, 6),
+    countries: country && workplace.value !== "remoto" ? [country] : [],
+    regionText: [],
+    workplace,
+    remoteFlag: null,
+    employmentType: null,
+    salary: null,
+    publishedAt: iso(info.startDate),
+    updatedAt: null,
+    expiresAt: null,
+    ...(info.timeType ? { employmentHint: info.timeType } : {}),
+  };
+}
+
+/**
+ * Workday no tiene una API pública documentada: usamos la misma búsqueda JSON que usa el sitio de empleo
+ * de cada empresa, con uso mínimo (sólo avisos de Argentina, de a 20, en serie, hasta 40 detalles).
+ * La bolsa ES esa búsqueda: si se leyeron todas sus páginas, un aviso que ya no aparece se cierra como en cualquier ATS.
+ */
+export async function fetchWorkday(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const { tenant, wd, site } = workdaySite(board.slug);
+  const base = `https://${tenant}.${wd}.myworkdayjobs.com/wday/cxs/${tenant}/${site}`;
+  const items: WdListItem[] = [];
+  let complete = false;
+  for (let page = 0; page < (opts?.maxPages ?? 5); page++) {
+    const data = await postJson<{ total?: number; jobPostings?: WdListItem[] }>(`${base}/jobs`, { appliedFacets: {}, limit: WD_PAGE, offset: page * WD_PAGE, searchText: "Argentina" }, opts);
+    if (!Array.isArray(data.jobPostings)) throw new Error("Respuesta de Workday sin 'jobPostings'");
+    items.push(...data.jobPostings);
+    if (data.jobPostings.length < WD_PAGE || items.length >= (data.total ?? 0)) {
+      complete = true;
+      break;
+    }
+  }
+  const postings: NormalizedPosting[] = [];
+  for (const [i, it] of items.entries()) {
+    if (!it.externalPath?.startsWith("/")) continue;
+    const detail = i < WD_MAX_DETAILS ? await fetchJson<WdDetail>(`${base}${it.externalPath}`, opts).catch(() => null) : null;
+    postings.push(normalizeWorkday(it, detail, board));
+  }
+  return { postings, complete, received: items.length };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -815,6 +908,7 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   teamtailor: fetchTeamtailor,
   smartrecruiters: fetchSmartRecruiters,
   recruitee: fetchRecruitee,
+  workday: fetchWorkday,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */
