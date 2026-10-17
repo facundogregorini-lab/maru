@@ -76,6 +76,7 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Hecho** (ver abajo) |
 | E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Hecho** (ver abajo) |
 | F | Google Jobs mensual automático (gratis) | **Siguiente**: lo decide el dueño |
+| M | Match preciso: tipo de puesto además del área (no más "Vigilador" para ventas ni "Operario" para analistas) | **Hecho**: [research](research/match-precision-2026-10-17/README.md). Siguiente: habilidades de generalistas en `findSkills` |
 
 **A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
 - Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
