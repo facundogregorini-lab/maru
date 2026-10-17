@@ -184,6 +184,8 @@
   };
 
   let seq = 0;
+  /** Número de lectura del formulario: una respuesta vieja no se aplica sobre una lectura nueva. */
+  let pass = 0;
   /** id → elemento (o elementos, para grupos de radios y casillas). */
   const registry = new Map();
   /** Ids de los campos obligatorios, para marcar los que queden vacíos. */
@@ -219,6 +221,7 @@
   }
 
   async function scanFields() {
+    pass++;
     seq = 0;
     registry.clear();
     required.clear();
@@ -263,8 +266,8 @@
 
       if (tag === "SELECT") {
         const options = [...el.options].filter((o) => !o.disabled && clean(o.text));
-        // Ya elegido por la persona (la primera opción suele ser "Seleccioná…").
-        if (el.multiple || el.selectedIndex > 0) continue;
+        // Ya elegido por la persona. La primera opción suele ser "Seleccioná…", pero a veces es real ("Básico").
+        if (el.multiple || !selectEmpty(el)) continue;
         const texts = options.map((o) => cut(clean(o.text), 150)).slice(0, MAX_OPTIONS);
         fields.push({ el, base: { tipo: "seleccion", etiqueta: labelOf(el), opciones: texts } });
       } else if (tag === "TEXTAREA") {
@@ -296,7 +299,8 @@
             byIds(container && container.getAttribute("aria-labelledby")) ||
             clean(container && container.getAttribute("aria-label")) ||
             groupText(list, own)
-          : labelOf(list[0]);
+          : // Casilla suelta dentro de una pregunta ("¿Qué tecnologías usás?" → "Python"): sumar la pregunta.
+            [textWithout(legend), labelOf(list[0])].filter(Boolean).join(" — ");
         const base = { etiqueta: question };
         if (type === "radio" || isGroup) {
           base.tipo = type === "radio" ? "opcion_unica" : "multiple";
@@ -322,6 +326,8 @@
 
     const top = window === window.top;
     return {
+      pass,
+      origin: location.origin,
       fields: out,
       title: top ? clean(document.title) : "",
       text: top ? cut(clean(document.body ? document.body.innerText : ""), 15000) : "",
@@ -411,6 +417,21 @@
     return clean(el.value) !== "";
   }
 
+  /** Un select está sin elegir si no hay opción o la elegida es un "Seleccioná…" (vacía, deshabilitada u oculta). */
+  function selectEmpty(el) {
+    const o = el.options[el.selectedIndex];
+    return !o || o.value === "" || o.disabled || o.hidden || (el.selectedIndex === 0 && /^\s*(-+|selecci|eleg|choose|select|please|—)/i.test(o.text));
+  }
+
+  function stillEmpty(els) {
+    const el = els[0];
+    if (els.length > 1 || el.type === "radio" || el.type === "checkbox") return !els.some((c) => c.checked);
+    if (el.type === "file") return !(el.files && el.files.length);
+    if (el instanceof HTMLSelectElement) return selectEmpty(el);
+    if (el.getAttribute("role") === "combobox" || isCombo(el)) return comboEmpty(el);
+    return isEmpty(el);
+  }
+
   /** Dónde se ve el resaltado: el campo, o el label/contenedor si el control está oculto. */
   function outlineTarget(els) {
     const el = els[0];
@@ -427,7 +448,9 @@
     if (note) target.title = `Maru: ${note}`;
   }
 
-  async function apply(answers, cv) {
+  async function apply(answers, cv, forPass) {
+    // Si el formulario se volvió a leer después de este pedido, los números de campo ya no son los mismos.
+    if (forPass !== undefined && forPass !== pass) return { completados: 0, revisar: 0, pendientes: 0 };
     const { scrollX, scrollY } = window;
     try {
       return await applyAnswers(answers, cv);
@@ -442,6 +465,8 @@
     for (const a of answers) {
       const els = registry.get(a.id);
       if (!els || !els[0].isConnected) continue;
+      // La persona lo completó mientras Maru pensaba: no se pisa.
+      if (!stillEmpty(els)) continue;
       let ok = false;
       try {
         ok = await fillOne(els, a.valor, a.valor === "cv" ? cv : null);

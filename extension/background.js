@@ -24,6 +24,27 @@ function progress(step) {
   chrome.runtime.sendMessage({ type: "progress", step }).catch(() => {});
 }
 
+/** Sitios de postulación que suelen ir en un iframe dentro de la página de la empresa. */
+const ATS_FRAME = /(^|\.)(greenhouse\.io|lever\.co|ashbyhq\.com|workable\.com|myworkdayjobs\.com|workday\.com|smartrecruiters\.com|teamtailor\.com|bamboohr\.com|recruitee\.com|jobvite\.com|icims\.com|successfactors\.(com|eu)|hiringroom\.com|breezy\.hr|personio\.(de|com)|gupy\.io|pinpointhq\.com|jazzhr\.com|applytojob\.com|bumeran\.com\.ar|zonajobs\.com\.ar|computrabajo\.com)$/;
+
+/** Campos que sólo tiene un formulario de postulación (un widget de newsletter o de chat no los pide). */
+const APPLY_WORDS = /cv|curr[ií]cul|resum[eé]|portfolio|portafolio|linkedin|github|postula|apply|application|experiencia|experience|cover letter|carta|pretensi|salar|disponibilidad|notice/i;
+
+/**
+ * Sólo se completan los frames de la misma página, de un sitio de postulación conocido o que piden
+ * datos de postulación: nunca widgets de terceros (newsletters, chats) que recibirían tus datos.
+ */
+function ownFrame(result, topOrigin) {
+  const origin = result.origin;
+  if (!origin || origin === topOrigin) return true;
+  try {
+    if (ATS_FRAME.test(new URL(origin).hostname)) return true;
+  } catch {
+    return false;
+  }
+  return result.fields.some((f) => f.tipo === "archivo" || APPLY_WORDS.test(`${f.etiqueta} ${f.ayuda || ""}`));
+}
+
 async function fillTab(tab) {
   if (!tab || !tab.id || !/^(https?|file):/.test(tab.url || "")) {
     throw new UserError("Abrí el formulario de postulación en esta pestaña y probá de nuevo.");
@@ -36,7 +57,9 @@ async function fillTab(tab) {
   progress("Leyendo el formulario…");
   await toast(tabId, "Maru está leyendo el formulario…", { sticky: true });
 
-  const scans = await run(tabId, () => window.__maru.scan());
+  const allScans = await run(tabId, () => window.__maru.scan());
+  const topOrigin = ((allScans.find((s) => s.frameId === 0) || {}).result || {}).origin;
+  const scans = allScans.filter((s) => s.frameId === 0 || ownFrame(s.result, topOrigin));
   const fields = [];
   for (const { frameId, result } of scans) {
     for (const f of result.fields) fields.push({ ...f, id: `${frameId}:${f.id}` });
@@ -55,7 +78,7 @@ async function fillTab(tab) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         profile,
-        extras: extras || "",
+        extras: (extras || "").slice(0, 4000),
         hasCv: !!cv,
         page: { url: tab.url.slice(0, 2000), title: top.title.slice(0, 500), text: top.text },
         fields: fields.slice(0, 250),
@@ -78,7 +101,8 @@ async function fillTab(tab) {
   for (const { frameId } of scans) {
     const answers = byFrame.get(frameId) || [];
     const withCv = answers.some((a) => a.valor === "cv") ? cv : null;
-    const [r] = await run(tabId, (a, c) => window.__maru.apply(a, c), [answers, withCv], [frameId]);
+    const pass = scans.find((s) => s.frameId === frameId).result.pass;
+    const [r] = await run(tabId, (a, c, p) => window.__maru.apply(a, c, p), [answers, withCv, pass], [frameId]);
     if (r) for (const k of Object.keys(total)) total[k] += r.result[k];
   }
 
@@ -90,15 +114,21 @@ async function fillTab(tab) {
 
 function summarize({ completados, revisar, pendientes }) {
   if (!completados) return "No encontramos datos de tu CV para estos campos. Completalos vos o sumá datos extra en Maru.";
-  const lines = [`Listo: completamos ${completados} ${completados === 1 ? "campo" : "campos"} (en verde).`];
-  if (revisar) lines.push(`Revisá ${revisar === 1 ? "el marcado" : `los ${revisar} marcados`} en amarillo: Maru los redactó o dedujo.`);
+  const verdes = completados - revisar;
+  const lines = [`Listo: completamos ${completados} ${completados === 1 ? "campo" : "campos"}${verdes && revisar ? ` (${verdes} en verde)` : revisar ? "" : " (en verde)"}.`];
+  if (revisar) lines.push(revisar === 1 ? "Revisá el marcado en amarillo: Maru lo redactó o dedujo." : `Revisá los ${revisar} marcados en amarillo: Maru los redactó o dedujo.`);
   if (pendientes) lines.push(`${pendientes === 1 ? "Queda 1 obligatorio" : `Quedan ${pendientes} obligatorios`} para completar vos.`);
   lines.push("Revisá todo y enviá cuando quieras.");
   return lines.join("\n");
 }
 
+/** Pestañas que se están completando: un segundo pedido mientras corre el primero mezclaría los campos. */
+const running = new Set();
+
 async function fillActiveTab() {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  if (tab && tab.id && running.has(tab.id)) return { error: "Ya estoy completando este formulario: esperá unos segundos." };
+  if (tab && tab.id) running.add(tab.id);
   chrome.action.setBadgeText({ text: "…" });
   try {
     return await fillTab(tab);
@@ -108,6 +138,7 @@ async function fillActiveTab() {
     if (tab && tab.id) await toast(tab.id, message, { error: true });
     return { error: message };
   } finally {
+    if (tab && tab.id) running.delete(tab.id);
     chrome.action.setBadgeText({ text: "" });
   }
 }
