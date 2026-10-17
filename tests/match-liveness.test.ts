@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { checkImportedLiveness, liveStatus } from "@/lib/match/liveness";
+import { blockedSources, checkImportedLiveness, liveStatus } from "@/lib/match/liveness";
 import { normalizeFantastic } from "@/lib/match/providers";
 
 const NOW = "2026-10-20T12:00:00.000Z";
@@ -57,6 +57,21 @@ describe("vigencia de avisos importados", () => {
     const stats = await checkImportedLiveness(inv, NOW, { fetchImpl, resolve, pauseMs: 0, max: 2 });
     expect(stats).toEqual({ checked: 2, closed: 0, open: 0, unknown: 2 });
     expect(n).toBe(2);
+  });
+
+  it("saltea fuentes que casi siempre bloquean al bot y sigue con las demás", async () => {
+    const inv = inventory();
+    // 20 revisiones previas de fantastic_ats sin dato: la fuente bloquea.
+    for (let i = 0; i < 20; i++) inv.postings.push({ ...inv.postings[0], key: `x${i}`, externalId: `x${i}`, lastLiveCheckAt: "2026-10-19T00:00:00.000Z", lastLiveResult: "desconocido" });
+    expect([...blockedSources(inv)]).toEqual(["fantastic_ats"]);
+    let n = 0;
+    const fetchImpl = (async () => {
+      n++;
+      return new Response("ok");
+    }) as typeof fetch;
+    const stats = await checkImportedLiveness(inv, NOW, { fetchImpl, resolve: publicDns, pauseMs: 0 });
+    expect(stats.checked).toBe(0);
+    expect(n).toBe(0);
   });
 
   it("frases en inglés de LinkedIn y ATS", async () => {

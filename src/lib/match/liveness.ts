@@ -72,14 +72,33 @@ export type LivenessOptions = {
   log?: (msg: string) => void;
 };
 
+/**
+ * Fuentes que casi nunca dejan ver el aviso al bot (p. ej. responden 403): no vale la pena gastar
+ * pedidos en ellas. Hace falta una muestra mínima para no descartar una fuente por mala suerte.
+ */
+export function blockedSources(inv: Inventory, minChecks = 20, maxUnknownShare = 0.9): Set<string> {
+  const tally = new Map<string, { n: number; unknown: number }>();
+  for (const p of inv.postings) {
+    if (!p.lastLiveResult) continue;
+    const t = tally.get(p.sourceId) ?? { n: 0, unknown: 0 };
+    t.n++;
+    if (p.lastLiveResult === "desconocido") t.unknown++;
+    tally.set(p.sourceId, t);
+  }
+  return new Set([...tally].filter(([, t]) => t.n >= minChecks && t.unknown / t.n >= maxUnknownShare).map(([id]) => id));
+}
+
 export async function checkImportedLiveness(inv: Inventory, now: string, opts: LivenessOptions = {}) {
   const { max = 150, pauseMs = 700, minDaysBetween = 3, fetchImpl, resolve, log = () => {} } = opts;
   const cutoff = Date.parse(now) - minDaysBetween * 86_400_000;
+  const blocked = blockedSources(inv);
+  if (blocked.size) log(`Fuentes que bloquean la revisión (se saltean): ${[...blocked].join(", ")}`);
   const due = inv.postings
-    .filter((p) => p.status === "abierta" && sourceById(p.sourceId)?.imported && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
+    .filter((p) => p.status === "abierta" && sourceById(p.sourceId)?.imported && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
     .sort((a, b) => (a.lastLiveCheckAt ?? "").localeCompare(b.lastLiveCheckAt ?? "") || a.firstSeenAt.localeCompare(b.firstSeenAt))
     .slice(0, max);
   const stats = { checked: 0, closed: 0, open: 0, unknown: 0 };
+  const bySource: Record<string, { abierta: number; cerrada: number; desconocido: number }> = {};
   for (const p of due) {
     let result: LiveStatus = { status: "desconocido" };
     try {
@@ -89,6 +108,9 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
     }
     stats.checked++;
     p.lastLiveCheckAt = now;
+    p.lastLiveResult = result.status;
+    const s = (bySource[p.sourceId] ??= { abierta: 0, cerrada: 0, desconocido: 0 });
+    s[result.status]++;
     if (result.status === "cerrada") {
       p.status = "cerrada";
       p.closedReason = result.reason;
@@ -99,5 +121,6 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
     else stats.unknown++;
     if (pauseMs) await new Promise((r) => setTimeout(r, pauseMs));
   }
+  for (const [id, s] of Object.entries(bySource)) log(`  ${id}: ${s.abierta} publicados, ${s.cerrada} cerrados, ${s.desconocido} sin dato`);
   return stats;
 }
