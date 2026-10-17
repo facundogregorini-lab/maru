@@ -1,14 +1,35 @@
 # Estado y próximos pasos de Maru
 
+## Foto del CV en PDF y preguntas opcionales (17/10/2026)
+
+**Publicación a comprobar:** Vercel rechazó la preview de PR #83 con `Deployment rate limited — retry in 24 hours`. No afirmar que estos cambios ya están activos hasta confirmar un deployment Ready de main que los incluya. Si también rechaza Production, reintentar el último main cuando se libere la cuota; no cambiar el plan ni crear otro proyecto para eludirla.
+
+- Reporte del dueño: falta la foto en PDF; Word no probado; no recuerda si estaba en la hoja o sólo en el panel. Reproducido un caso concreto: subir foto y descargar antes de aplicar el recorte producía un PDF sin imágenes. Con la foto aplicada, el exportador anterior sí la incluía; no atribuir todos los casos a una pérdida del servidor.
+- El editor ahora muestra «Foto pendiente» y deshabilita PDF/Word hasta tocar «Usar foto» o cancelar el recorte. Después exporta la foto elegida. El PDF espera la decodificación de imágenes embebidas y falla si no puede cargarlas, evitando archivos incompletos. Conserva CSP, JavaScript deshabilitado y bloqueo de recursos externos de PR #81.
+- «¿Por qué esta vacante? (opcional)»: ayuda breve «Para personalizar tu presentación y tus respuestas». Se quitó la exigencia en frontend, análisis y generación; sin motivación, los prompts usan la experiencia sin inventar interés personal.
+- «Para destacar»: se recomienda responder para adaptar el CV a la vacante y se explicita que es opcional. El CV general recibe la ayuda equivalente para el puesto buscado.
+- QC con Computer Use: recorte pendiente bloquea descarga; foto circular y cuadrada presentes en PDFs reales; flujo completo sin motivación ni respuestas opcionales; foto conservada tras recargar. Proveedor de IA simulado, exportador real, sin modificar el perfil del dueño ni consumir créditos.
+- Validación: 372 tests aprobados, 8 omitidos; TypeScript y ESLint sin errores. Registro y reproducción en [QC de foto y postulación](QC-CV-FOTO-2026-10-17.md). Si el problema vuelve con la foto visible en la hoja y el recorte aplicado, revisar ese archivo concreto: ese caso no se reprodujo en esta sesión.
+- CI encontró una prueba de autenticación no determinista que reemplazaba el primer carácter de una firma por «x», incluso cuando ya era «x». Ahora garantiza una firma diferente; la validación del login no se modificó.
+
+## Desplegables de la extensión (17/10/2026, versión 0.3.1)
+
+- Caso reportado: HiringRoom, vacante AI Business Partner de Newsan, pasos 2 y 3. Inspeccionados documento, país y los formularios desplegables de educación, idiomas y experiencia, sin datos personales ni envío de postulación.
+- Causa: React Select antiguo sin `role=combobox` ni roles de opciones; inputs de uno o dos píxeles y algunos readonly. Ahora se reconoce su contenedor visible y se leen sus opciones por clase dentro de ese mismo control. También cubre botones/divs con ARIA y React Select actual sin buscador.
+- Selección con eventos de mouse/puntero y teclado, espera acotada, cierre del menú y verificación del valor. No contar un clic rechazado como éxito ni elegir la primera de varias coincidencias. Preservar selecciones previas, opciones deshabilitadas y cambios de la persona mientras espera. Bloquear el submit sólo durante lectura/aplicación; el envío manual posterior sigue funcionando.
+- Integrada sobre PR #78: conserva exclusión de frames ajenos, una ejecución por pestaña, número de lectura y restricciones de datos sensibles. Versionado del content script para reemplazar una inyección anterior al actualizar.
+- QC en Chrome: 8 campos completados en la fixture compartida (incluidas las dos variantes de HiringRoom), 2 casos deliberadamente pendientes, 3 selecciones previas conservadas y cero envíos; React Select real completa 3 y conserva Uruguay. 358 tests aprobados (16 regresiones nuevas), 7 omitidos; TypeScript y ESLint sin errores. La extensión instalada no se controló de punta a punta: no confundir inspección de HiringRoom con una postulación real. Registro: [QC de extensión](QC-EXTENSION-2026-10-17.md).
+- Para el dueño: actualizar los archivos de la misma carpeta instalada, recargar Maru en `chrome://extensions` y volver a tocar Completar. No desinstalar para actualizar. En HiringRoom abrir primero los bloques del paso 3; si elegir país habilita provincia/localidad, volver a completar para leer las nuevas opciones. No hay consultas extra automáticas ni cambios de permisos.
+
 ## Escritura con Slop Monstruo (17/10/2026)
 
-**Publicación pendiente por cuota de Vercel:** PR #75 (home y CTA) está en Production. La preview de PR #76 fue rechazada con `Deployment rate limited — retry in 24 hours` (`build-rate-limit`). El código de escritura tiene CI de GitHub aprobado. No afirmar que ya está activo para usuarios hasta ver un deployment Ready del commit de main que incluya PR #76.
+**Publicación confirmada:** el 17/10 a las 17:49 ART se verificó `www.marucoach.com` en Production, Ready, deployment `dpl_GzPce2gzoVKuqRfiTnzpnsWw9cxz`, commit `8d50661` (incluye PR #76 y #78). El rechazo anterior por `build-rate-limit` quedó superado.
 
-Próxima acción al liberarse la cuota: redeployar el último `main`, confirmar Ready y aliases de `www.marucoach.com`, y generar una carta y un guion con datos ficticios. Verificar idioma, hechos y longitud, y correr el checker sobre los resultados. No cambiar el plan de Vercel ni las claves para esto.
+Queda la prueba con proveedor real de una carta y un guion ficticios para verificar idioma, hechos, longitud y checker. El código ya está publicado; esa validación no se realizó en esta pasada de desplegables.
 
 - Fuente en español fijada y licenciada, skill instalada y adaptación de servidor para todos los planes. Política común en las 14 rutas de redacción; extracción literal excluida.
 - Checker de prosa y una revisión condicional por pedido, con guardias de cifras, siglas, links, campos permitidos, longitud y esquema. Timeout o error conserva la generación válida; no usa cuotas extra del usuario ni sesiones CLI. La segunda familia de modelos de la skill no está implementada online. Detalles y límites: `docs/ESCRITURA.md`.
-- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste también espera el deploy de PR #76.
+- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste está incluido en el deployment confirmado arriba.
 - Corregidos los laureles “100% gratis” en las landings de herramientas y la FAQ de entrevista que decía un pedido por mes en vez de por semana. Se muestran los límites de los planes.
 - Validación: 340 tests aprobados (14 de escritura), 7 omitidos; TypeScript y ESLint sin errores. El smoke test con cartas y guiones del proveedor real queda pendiente del deploy. No se reescriben documentos ya guardados.
 
@@ -65,6 +86,13 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Hecho** (ver abajo) |
 | E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Hecho** (ver abajo) |
 | F | Google Jobs mensual automático (gratis) | **Siguiente**: lo decide el dueño |
+| M | Match preciso: tipo de puesto además del área (no más "Vigilador" para ventas ni "Operario" para analistas) | **Hecho**: [research](research/match-precision-2026-10-17/README.md). Siguiente: habilidades de generalistas en `findSkills` |
+| L | Logos de empresa | **Hecho (1ª parte)**: el logo de una empresa se reusa en todos sus avisos (`src/lib/match/logos.ts`, en `loadInventory`): elegibles visibles con logo 21% → 41,5% (724 → 1.426 de 3.438). Apify pide y guarda el logo en las próximas importaciones (LinkedIn `companyLogo`; Computrabajo/Indeed con nombres de campo a confirmar en la primera corrida). **2ª parte (hecha):** si la empresa no tiene logo, se busca su sitio en el texto de sus avisos (sólo si el dominio coincide con el nombre: "Caylent" → caylent.com) y se muestra su ícono con el servicio público de Google (`withCompanyLogos`): 96 empresas, cobertura 41,5% → 47,1%. Sin red en las sesiones de Claude no se puede verificar más; un dominio curado en `companies.json` sumaría el resto |
+| S | Salario publicado en el texto del aviso | **Hecho** (`src/lib/match/salary.ts`): si ninguna fuente lo trae estructurado, se lee del texto sólo cuando lo anuncia una palabra de salario (nunca "salario estimado", rondas de inversión, CCT ni 401k). Moneda por símbolo o formato (1.300.000 = pesos; $5,000 = dólares), período y rango plausible. En los elegibles abiertos suma 188 avisos con salario a los 415 que ya tenían (+45%). Se aplica al reconstruir oportunidades en la próxima sync |
+| N | Seniority y años pedidos | **Hecho** (`EXTRACTION_VERSION` 8): años en más formas ("experiencia mínima de dos años", "minimum 8 years", "3+ years", meses), sin edades ni historia de la empresa (tope 15 años), y "sin experiencia / primer empleo / entry level" = junior. Elegibles abiertos con seniority: 2.467 → 2.789 (57,5% → 65%). La sync re-analiza todo con la versión nueva |
+| H | Habilidades de áreas no técnicas | **Hecho** (`EXTRACTION_VERSION` 9): facturación, conciliaciones, tesorería, cobranzas, impuestos (IVA, IIBB, AFIP/ARCA), Tango, Bejerman, onboarding, clima y relaciones laborales, WMS, inventario, comercio exterior, planificación de demanda, última milla, autoelevador, licencia de conducir, atención al público, caja, televentas, merchandising, manipulación de alimentos, seguridad e higiene, mantenimiento. Logística con requisitos: 186 → 216; comercio 48 → 61. El puntaje cambia poco (±3); mejora sobre todo la explicación de brechas ("Pide WMS: no aparece en tu CV") |
+| P | Presentación: tope 99% y fecha | **Hecho**: el % visible nunca es 100 (`MAX_SCORE` = 99, es una estimación) y la tarjeta del Match dice "Vista por primera vez: fecha" cuando la fuente no informa la publicación (25% de los elegibles) |
+| V | Búsquedas para verticales flojas | **Corrida 1 hecha (17/10, 22:02 UTC)**: 15 búsquedas de Google Jobs (plan gratuito, quedan 20 de reserva) → 103 filas, 66 aceptadas (36 descartadas por ofrecer sólo agregadores), +53 avisos nuevos. Por vertical: Educación 7, Construcción e inmobiliario 24, Arte y medios 19, Banca y seguros 8, Salud 8. Sin resultados: maestro mayor de obras Córdoba, oficial de cuentas banco, farmacéutico Córdoba. Quedó afuera v-edu-capac. **Antes**: 16 búsquedas de Google Jobs `v-…` en `SERP_QUERIES` (Educación, Construcción e inmobiliario, Arte y medios, Banca y seguros, Salud). No corren por defecto: `--queries=v-edu-caba,v-cons-arq,…` en el workflow de importación, dentro del plan gratuito y la reserva de 20. Apify está casi en el tope de US$5: para usarlo en estas verticales hace falta aprobación nueva |
 
 **A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
 - Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
@@ -152,9 +180,94 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
 - `/busquedas`: la búsqueda por texto incluye el lugar ("vendedor córdoba").
 - Sin cambiar: la seniority que falta no se infiere. Logística y datos junior siguen con poca oferta, y ahí el problema es de adquisición, no de ranking.
 
+**Auditoría de la extensión (17/10, hecha):**
+- **Completar dos veces:** "Completar" no corre dos veces a la vez en la misma pestaña (candado por pestaña). Además, `apply` descarta las respuestas de una lectura vieja del formulario: antes podía escribir el email en el teléfono.
+- **No pisa lo de la persona:** si completó un campo mientras Maru pensaba, no lo toca. Un select con una primera opción real ("Básico") ya cuenta como elegido.
+- **Iframes de terceros:** no recibe tus datos un iframe de otro sitio salvo que sea un ATS conocido o pida datos de postulación (CV, portfolio, LinkedIn, experiencia…). Un widget de newsletter o de chat queda afuera.
+- **Datos sensibles** (`src/lib/autofill.ts`): también bloquea consentimientos (Ley 25.326), bases y condiciones, declaraciones juradas, novedades por email, origen étnico, edad y estado civil. Los bordes de palabra ahora reconocen tildes.
+- **Números:** "3.000" se completa como 3000.
+- **Popup:**
+  - datos extra con tope de 4.000 caracteres (antes fallaba con un mensaje engañoso);
+  - el CV se elige con el teclado;
+  - `popup.js` estaba pegado tres veces y quedó arreglado.
+- **Textos** (popup, FAQ, privacidad): dicen que el CV y la página se envían a Maru y a su proveedor de IA.
+- **Instalación:** cómo elegir la carpeta en Windows, el interruptor en Edge, no mover la carpeta y cómo actualizar. La versión pasa a 0.3.0.
+- **Pendiente:**
+  - cambiar `<all_urls>` por permisos al momento (antes de publicarla en la Chrome Web Store);
+  - avisar de los campos que no puede leer (Shadow DOM, editores enriquecidos);
+  - sumar `extension/` a eslint.
+
+**Auditoría de Búsquedas, Seguimiento y Chat (17/10, hecha):**
+- **Seguimiento:** una nota ya no se borra cuando la tarjeta cambió en otra pestaña o dispositivo; se guarda sólo si la persona la cambió.
+- **Sincronización:** el primer ingreso en un navegador nuevo ya no borra lo que se armó sin sesión, aunque la cuenta tenga una marca de borrado. Hay un test que reproduce el caso.
+- **Chat:** recomienda avisos por palabras con contenido (sin "para" o "como"), de hasta 120 días y con títulos y empresas limpios.
+- **Búsquedas:**
+  - ordena por la fecha de la fuente, usando el "hace 25 días" de Google Jobs;
+  - se pueden recorrer todas las páginas (antes cortaba en 50);
+  - una página fuera de rango redirige a la última.
+- **Chat en `/busquedas`:** cada uno de los dos chats tiene su id, así que el label enfoca el suyo.
+- **"Adaptar mi CV" desde una tarjeta:** lleva el texto del aviso y el id, y no duplica tarjetas sin link.
+- **Pendiente:**
+  - cupo diario del chat cuando se active el cobro (decisión comercial);
+  - "Salir" deja los datos en el navegador (ofrecer "Salir y borrar");
+  - `/seguimiento?add=` sin confirmación;
+  - página propia para avisos cerrados;
+  - canonical de ids alias;
+  - fechas en el HTML inicial.
+
+**Seguridad (17/10, hecha; hallazgos de las auditorías de Postulación, CV, Carta y cuenta):**
+- **PDF:** Chromium renderiza el CV sin JavaScript y con CSP. Antes un `<script>` que esquivaba el filtro corría en el servidor y abría WebSockets a la red interna. Hay un test con ese caso.
+- **Leer el aviso por link** (`src/lib/job.ts`): usa `safeFetch` (sólo IPs públicas, también después de cada redirección) y lee como mucho 3 MB. Antes leía 127.0.0.1 o 169.254.169.254.
+- **Rate limit:** `/api/export/*` y `/api/auth/request` pasan por el middleware, por IP.
+- **Magic link:**
+  - abrir el link muestra "Vas a entrar como X" y la sesión se crea con el botón (POST del mismo origen); antes un link ajeno te dejaba en la cuenta de otro y tus datos se subían ahí;
+  - el link sirve una sola vez (`takeCounter` en Redis);
+  - el freno por casilla es compartido y junta "ana+1@" con "ana@".
+- **/precios:** "El más elegido" pasa a "El más conveniente". No había datos que respaldaran el primero.
+
+**Cobros encendidos en producción** (`/api/billing/status` → enabled, 17/10). Para el dueño:
+- definir `NEXT_PUBLIC_CONTACT_EMAIL`;
+- los términos hablan de "suscripción mensual" y hay tres planes;
+- falta el botón de arrepentimiento (Res. 424/2020).
+
+**Productos (17/10, hechos los más graves):**
+- **Entrevista:**
+  - "Terminar" ya no deja el micrófono abierto ni hace hablar otra pregunta: `endedRef` en `Call` y `aliveRef` en `useDictation`;
+  - el informe se pide una sola vez;
+  - "Repetir pregunta" no borra lo ya respondido.
+- **Entrevista y Video:** al llegar desde una búsqueda ya no se restaura la sesión anterior encima (`job.fromHandoff`).
+- **Carta y CV:** "Mejorar", "Más corto" y similares ahora actualizan un párrafo con foco (`EditableText`). Antes se descartaban, y en el celular pasaba siempre.
+- **Carta:**
+  - el perfil se lee y se guarda antes de pedir la carta (antes se podía perder una carta ya generada);
+  - el seguimiento usa el título de la búsqueda y no el que redacta la IA.
+- **Postulación:**
+  - al recargar, el aviso pegado se sigue enviando;
+  - "Adaptar mi CV" desde el seguimiento retoma la postulación de esa misma búsqueda en vez de borrarla;
+  - "Postularme a otra vacante" limpia el aviso y la motivación anteriores.
+
+**Pendiente de las auditorías (para otra tanda):**
+- **Postulación:** cupo que se descuenta si la IA falla; errores de red en inglés; el aviso se lee dos veces; caracteres de control en el Word.
+- **CV:**
+  - regenerar borra ediciones;
+  - "Ocultar experiencia" en el editor;
+  - secciones vacías;
+  - ATS con punto final;
+  - foto HEIC;
+  - saltos de línea en PDF y Word.
+- **Carta:** volver sin regenerar; reescribir aplica el tono aunque falle; Word pago como salida del PDF; topes de largo.
+- **Entrevista y Video:** cupo y "retomar plan"; aviso de privacidad del dictado; WebM sin duración; teleprompter sin pausa y chico en el celular; topes de largo en `/turno`; puntajes fuera de rango.
+- **Cuenta:**
+  - cambiar de cuenta borra el CV, la carta, la entrevista y el video sin avisar;
+  - "Borrar mis datos" deja `maru:sync:v1`;
+  - "Salir" no revoca la cookie;
+  - OG por página;
+  - `<h1>` en AppShell.
+
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 
 **Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.
+
+**Verticales (17/10):** reparto del catálogo en la taxonomía de 15 verticales del dueño en [research/verticales-2026-10-17](research/verticales-2026-10-17/README.md). Para recalcularlo: `npm run match:verticals`. Elegibles desde AR: Ventas 19,7%, IT 17,5%, Administración/Legal 15,6%, Logística 8,1%, Ingeniería y Operaciones 7,6%. Las más flojas: Educación 0,7%, Arte y Medios 1,0%, Construcción 1,0%, Finanzas y Banca 1,9%, Salud 2,0%.
 
 ## Próximos pasos (17/10/2026, cierre de la base de avisos)
 

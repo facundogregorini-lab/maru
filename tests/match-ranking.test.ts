@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
 import { estimateSeniority, profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
-import { DEFAULT_WEIGHTS, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
+import { DEFAULT_WEIGHTS, MAX_SCORE, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile, Opportunity } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
@@ -194,9 +194,9 @@ describe("calibración del porcentaje de afinidad", () => {
 
   it("un perfil alineado puede alcanzar 100 sin depender del resto del catálogo", async () => {
     const o = await example();
-    expect(run(o).score).toBe(100);
+    expect(run(o).score).toBe(MAX_SCORE);
     const larger = rankOpportunities({ opportunities: [o, { ...o, id: "otra", title: "Marketing Assistant" }], postings: new Map(), profile: dataProfile, prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] }, interactions: noInteractions, now: NOW });
-    expect(larger.eligible.find((i) => i.id === o.id)?.score).toBe(100);
+    expect(larger.eligible.find((i) => i.id === o.id)?.score).toBe(MAX_SCORE);
   });
 
   it("no castiga un rol contenido en un título más largo ni su traducción", async () => {
@@ -274,7 +274,7 @@ describe("calibración del porcentaje de afinidad", () => {
     o.extracted.family.value = "administracion";
     o.extracted.skillsRequired = ["excel"];
     const p = { ...dataProfile, headline: "Analista administrativa", titles: ["Analista de Administración"], skills: ["Excel"] };
-    expect(run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Administrative Analyst"] } }).score).toBe(100);
+    expect(run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Administrative Analyst"] } }).score).toBe(MAX_SCORE);
   });
 
   it("Buenos Aires ciudad no coincide con otra ciudad de la provincia", async () => {
@@ -286,7 +286,7 @@ describe("calibración del porcentaje de afinidad", () => {
     }
     for (const location of ["CABA", "Capital Federal", "Buenos Aires, Argentina", "Argentina - Buenos Aires", "Ciudad Autónoma de Buenos Aires"]) {
       o.locations = [location];
-      expect(run(o, dataProfile, { prefs }).score).toBe(100);
+      expect(run(o, dataProfile, { prefs }).score).toBe(MAX_SCORE);
     }
   });
 
@@ -319,7 +319,7 @@ describe("calibración del porcentaje de afinidad", () => {
     const o = await example({ title: "AI Consultant for Business Process Automation LATAM" });
     const prefs = { ...basePrefs, objetivo: "Quiero trabajar en inteligencia artificial", rolesDeseados: [] };
     const result = run(o, dataProfile, { prefs, weights: { habilidades: 0, intencion: 1, seniority: 0, extras: 0 } });
-    expect(result.score).toBe(100);
+    expect(result.score).toBe(MAX_SCORE);
   });
 
   it("mencionar IA en el contexto de la empresa no convierte contabilidad en el rol de IA buscado", async () => {

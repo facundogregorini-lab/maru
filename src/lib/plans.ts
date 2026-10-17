@@ -27,7 +27,7 @@ export type Plan = {
 
 export const PLANS: Record<PlanId, Plan> = {
   mensual: { id: "mensual", nombre: "Mensual", price: 10000, priceText: "$10.000", per: "/mes", monthlyText: "$10.000 por mes", note: "Renovación cada mes.", frequency: 1, frequencyType: "months" },
-  trimestral: { id: "trimestral", nombre: "Trimestral", price: 22500, priceText: "$22.500", per: "/3 meses", monthlyText: "$7.500 por mes", badge: "El más elegido", note: "Ahorrás 25% contra el mensual.", frequency: 3, frequencyType: "months" },
+  trimestral: { id: "trimestral", nombre: "Trimestral", price: 22500, priceText: "$22.500", per: "/3 meses", monthlyText: "$7.500 por mes", badge: "El más conveniente", note: "Ahorrás 25% contra el mensual.", frequency: 3, frequencyType: "months" },
   semanal: { id: "semanal", nombre: "Semanal", price: 4500, priceText: "$4.500", per: "/semana", monthlyText: "≈ $19.500 por mes", note: "Para una búsqueda urgente.", frequency: 7, frequencyType: "days" },
 };
 /** Orden de las tarjetas en /precios: el trimestral va al medio, destacado. */

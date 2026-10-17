@@ -2,9 +2,9 @@ import type { NormalizedPosting } from "./types";
 import { htmlToText } from "./text";
 
 export const APIFY_JOBS = {
-  linkedin: { actor: "curious_coder/linkedin-jobs-scraper", name: "LinkedIn", fields: ["id", "title", "companyName", "link", "applyUrl", "location", "descriptionText", "postedAt", "salary", "seniorityLevel", "employmentType"] },
-  indeed: { actor: "curious_coder/indeed-scraper", name: "Indeed", fields: ["id", "title", "companyDetails.name", "viewJobLink", "originalApplyUrl", "formattedLocation", "location.countryCode", "jobDescription", "pubDate", "expirationDate", "expired", "salary", "jobTypes"] },
-  computrabajo: { actor: "shahidirfan/Computrabajo-Jobs-Scraper", name: "Computrabajo", fields: ["id", "title", "company", "url", "applyUrl", "location", "descriptionText", "postedDate", "updatedAt", "salary", "jobType"] },
+  linkedin: { actor: "curious_coder/linkedin-jobs-scraper", name: "LinkedIn", fields: ["id", "title", "companyName", "link", "applyUrl", "location", "descriptionText", "postedAt", "salary", "seniorityLevel", "employmentType", "companyLogo"] },
+  indeed: { actor: "curious_coder/indeed-scraper", name: "Indeed", fields: ["id", "title", "companyDetails.name", "viewJobLink", "originalApplyUrl", "formattedLocation", "location.countryCode", "jobDescription", "pubDate", "expirationDate", "expired", "salary", "jobTypes", "companyDetails.logoUrl", "companyLogoUrl"] },
+  computrabajo: { actor: "shahidirfan/Computrabajo-Jobs-Scraper", name: "Computrabajo", fields: ["id", "title", "company", "url", "applyUrl", "location", "descriptionText", "postedDate", "updatedAt", "salary", "jobType", "companyLogo", "logo"] },
 } as const;
 export type ApifyJobSource = keyof typeof APIFY_JOBS;
 const str = (v: unknown) => typeof v === "string" ? v.trim() : "";
@@ -59,7 +59,10 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
     // No convertimos salario “a convenir”, números sospechosos o 0 en una promesa salarial.
     const salaryText = typeof r.salary === "string" ? str(r.salary) : "";
     const salary = /[1-9]\d/.test(salaryText) ? { value: { min: null, max: null, currency: "", period: "desconocido" as const, text: salaryText }, from: "fuente" as const } : null;
+    // Logo de la empresa si el Actor lo trae (sólo https; nunca fotos de personas).
+    const logo = [r.companyLogo, r.companyLogoUrl, r.logo, r["companyDetails.logoUrl"], obj(r.companyDetails).logoUrl].map((v) => url(v)).find((u) => u.startsWith("https://"));
     postings.push({
+      ...(logo ? { companyLogo: logo } : {}),
       sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, externalId: id, title, company,
       sourceUrl, applyUrl, linkRequired: true, attribution: `Publicado en ${APIFY_JOBS[source].name} · vía Apify`,
       descriptionText: description.slice(0, 12000), descriptionComplete: description.length <= 12000,

@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 7;
+export const EXTRACTION_VERSION = 9;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -89,6 +89,37 @@ export const SKILLS: Record<string, string[]> = {
   erp: ["erp", "netsuite", "oracle"],
   liderazgo: ["leadership", "liderazgo", "people management", "gestión de equipos", "team management", "liderar equipos"],
   "comunicación": ["communication skills", "comunicación"],
+  // administración y finanzas (Argentina)
+  facturación: ["facturación", "facturacion electronica", "invoicing", "billing"],
+  "conciliaciones bancarias": ["conciliaciones bancarias", "conciliación bancaria", "conciliaciones", "bank reconciliation", "bank reconciliations", "reconciliations"],
+  tesorería: ["tesorería", "treasury", "cash management", "flujo de fondos", "cash flow", "flujo de caja"],
+  cobranzas: ["cobranzas", "gestión de cobranzas", "debt collection", "collections management", "créditos y cobranzas"],
+  "impuestos argentinos": ["iva", "ingresos brutos", "impuesto a las ganancias", "afip", "arca", "liquidación de impuestos", "sicore", "siradig"],
+  "tango gestión": ["tango", "tango gestión", "tango gestion"],
+  bejerman: ["bejerman"],
+  // personas
+  onboarding: ["onboarding", "inducción"],
+  "entrevistas por competencias": ["entrevistas por competencias", "realizar entrevistas", "interviewing", "competency-based interviews"],
+  capacitación: ["gestión de capacitación", "diseño de capacitaciones", "programas de capacitación", "learning & development", "learning and development", "training and development", "l&d"],
+  "clima laboral": ["clima laboral", "clima organizacional", "employee engagement", "encuesta de clima"],
+  "relaciones laborales": ["relaciones laborales", "labor relations", "employee relations", "convenios colectivos"],
+  "linkedin recruiter": ["linkedin recruiter"],
+  // logística y comercio exterior
+  wms: ["wms", "warehouse management system", "sistema de gestión de almacenes"],
+  "gestión de inventario": ["gestión de inventario", "gestión de inventarios", "control de stock", "manejo de stock", "inventory management", "inventarios", "inventory control"],
+  "comercio exterior": ["comercio exterior", "foreign trade", "importaciones", "exportaciones", "aduana", "customs", "despacho aduanero"],
+  "planificación de demanda": ["planificación de demanda", "planeamiento de demanda", "demand planning", "s&op", "forecasting de demanda"],
+  "última milla": ["última milla", "last mile", "ruteo", "routing de entregas", "distribución de mercadería"],
+  autoelevador: ["autoelevador", "autoelevadorista", "clarkista", "forklift", "montacargas"],
+  "licencia de conducir": ["licencia de conducir", "carnet de conducir", "registro de conducir", "licencia profesional", "driver's license", "drivers license"],
+  // atención al público, comercio y oficios
+  "atención al público": ["atención al público", "atencion al publico", "trato con el público", "public-facing"],
+  "manejo de caja": ["manejo de caja", "arqueo de caja", "cash handling", "cobro en caja"],
+  "venta telefónica": ["venta telefónica", "televentas", "telemarketing", "inside sales"],
+  "visual merchandising": ["visual merchandising", "merchandising"],
+  "manipulación de alimentos": ["manipulación de alimentos", "manipulador de alimentos", "food handling", "food safety"],
+  "seguridad e higiene": ["seguridad e higiene", "higiene y seguridad", "hse", "ehs", "health and safety"],
+  "mantenimiento preventivo": ["mantenimiento preventivo", "mantenimiento correctivo", "preventive maintenance"],
 };
 
 const SKILL_PATTERNS: [string, RegExp][] = Object.entries(SKILLS).map(([canon, variants]) => [
@@ -187,12 +218,43 @@ export function seniorityFromTitle(title: string): Seniority | null {
   return null;
 }
 
+const NUM_WORD: Record<string, number> = { un: 1, uno: 1, una: 1, one: 1, dos: 2, two: 2, tres: 3, three: 3, cuatro: 4, four: 4, cinco: 5, five: 5, seis: 6, six: 6, siete: 7, seven: 7, ocho: 8, eight: 8, diez: 10, ten: 10 };
+const N = String.raw`(\d{1,2}(?:\.\d+)?|un|uno|una|one|dos|two|tres|three|cuatro|four|cinco|five|seis|six|siete|seven|ocho|eight|diez|ten)`;
+const RANGE_TAIL = String.raw`\s*\+?\s*(?:(?:-|to|a|y)\s*\d{1,2}(?:\.\d+)?\s*)?`;
+const YEARS = String.raw`(?:years?|yrs|anos?)`;
+const EXP = String.raw`(?:experience|experiencia|exp\b)`;
+/** Patrones de años pedidos: "3+ años de experiencia", "5 years of progressive experience", "experiencia mínima de dos años", "3+ years". */
+const YEAR_PATTERNS: [RegExp, number][] = [
+  [new RegExp(String.raw`(?<![\d.])\b${N}${RANGE_TAIL}${YEARS}\s+(?:of\s+|de\s+)?(?:(?:[a-z-]+\s+){0,3}?${EXP}|relevant|professional|in\b|en\b)`), 1],
+  [new RegExp(String.raw`${EXP}\s+(?:(?:minima|comprobable|previa|laboral|progresiva|demostrable)\s+)*(?:de\s+|of\s+|between\s+|entre\s+|:\s*)?(?:al menos\s+|at least\s+|mas de\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1],
+  [new RegExp(String.raw`(?<![\d.])\b(\d{1,2})\s*\+\s*${YEARS}\b`), 1],
+  [new RegExp(String.raw`\b(?:minimum|minimo|at least|al menos)\s+(?:de\s+|of\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1],
+  [new RegExp(String.raw`(?<![\d.])\b${N}\s+meses\s+de\s+${EXP}|${EXP}\s+(?:(?:minima|comprobable|previa)\s+)*(?:de\s+)?${N}\s+meses`), 1 / 12],
+];
+/** "Una empresa con más de 30 años de experiencia" habla de la empresa, no del puesto. */
+const ABOUT_COMPANY = /\b(empresa|compania|company|firma|organizacion|we have|we've|tenemos|contamos con|founded|fundad[ao])\b[^.,;-]{0,15}$/;
+const COMPANY_AFTER = /^\s*(business|the market|el mercado|el rubro|de trayectoria|de historia)\b/;
+
 export function yearsRequired(text: string): number | null {
   const f = fold(text.replace(/[–—−]/g, "-").replace(/(\d),(\d)/g, "$1.$2"));
-  const m = f.match(/(?<![\d.])\b(\d{1,2}(?:\.\d+)?)\s*\+?\s*(?:(?:-|to|a|y)\s*\d{1,2}(?:\.\d+)?\s*)?(?:years|year|anos|ano)\s+(?:of\s+)?(?:de\s+)?(?:experience|experiencia|exp\b|relevant|professional|in|en)/);
-  const n = m ? Number(m[1]) : null;
-  return n !== null && n > 0 && n < 31 ? n : null;
+  let best: { at: number; years: number } | null = null;
+  for (const [re, unit] of YEAR_PATTERNS) {
+    for (const m of f.matchAll(new RegExp(re.source, "g"))) {
+      const raw = m.slice(1).find((g) => g !== undefined);
+      const at = m.index ?? 0;
+      if (!raw || ABOUT_COMPANY.test(f.slice(Math.max(0, at - 50), at)) || COMPANY_AFTER.test(f.slice(at + m[0].length))) continue;
+      const n = (NUM_WORD[raw] ?? Number(raw)) * unit;
+      // Más de 15 años casi siempre es una edad ("de 18 a 24 años") o la historia de la empresa.
+      if (n > 0 && n <= 15 && (!best || at < best.at)) best = { at, years: Math.round(n * 10) / 10 };
+      break;
+    }
+  }
+  return best?.years ?? null;
 }
+
+/** Avisos de primer empleo: "sin experiencia", "no se requiere experiencia", "entry level". */
+const ENTRY_LEVEL = /\b(sin experiencia|no (se )?requiere(s|n)? experiencia|no es necesaria experiencia|no necesitas experiencia|primer empleo|primera experiencia laboral|no (prior )?experience (is )?(required|needed|necessary)|entry[- ]level)\b/;
+export const isEntryLevel = (text: string) => ENTRY_LEVEL.test(fold(text));
 
 function seniorityFromYears(y: number): Seniority {
   if (y <= 1) return "junior";
@@ -299,7 +361,7 @@ export function extract(input: {
       ? { value: famTitle, from: "titulo", evidence: title }
       : { value: familyFromTitle(input.department), from: "fuente", evidence: input.department };
 
-  const years = yearsRequired(sections.required || descriptionText);
+  const years = (sections.required ? yearsRequired(sections.required) : null) ?? yearsRequired(descriptionText);
   const sTitle = seniorityFromTitle(title);
   const sHint = input.seniorityHint ? seniorityFromTitle(input.seniorityHint) : null;
   const seniority: Field<Seniority> | null = sTitle
@@ -308,6 +370,8 @@ export function extract(input: {
       ? { value: sHint, from: "fuente", evidence: input.seniorityHint! }
       : years !== null
       ? { value: seniorityFromYears(years), from: "descripcion", evidence: `${years}+ años de experiencia` }
+      : isEntryLevel(descriptionText)
+      ? { value: "junior", from: "descripcion", evidence: "No pide experiencia previa" }
       : null;
 
   const hinted = input.employmentHint ? employmentFromText(input.employmentHint) : null;

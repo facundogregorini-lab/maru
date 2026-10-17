@@ -8,7 +8,7 @@ import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
-import { upsertTracked } from "@/lib/tracker";
+import { normalizeUrl, upsertTracked } from "@/lib/tracker";
 import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
 import CvSourceField, { useCvInput } from "./CvSourceField";
@@ -87,18 +87,27 @@ export default function Flow() {
     // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda
     // y descartamos la postulación anterior para que un recargo no la traiga de vuelta.
     const handoff = takeHandoff();
-    if (handoff) {
-      remove(SESSION_KEY);
-      originRef.current = handoff;
-      setJobUrl(handoff.jobUrl);
-      setJobText(handoff.jobText);
-      setShowJobText(!!handoff.jobText);
-      return;
-    }
     const s = load<Session>(SESSION_KEY);
+    if (handoff) {
+      originRef.current = handoff;
+      // Si ya armaste la postulación para esta misma búsqueda (por ejemplo, "Adaptar mi CV" desde el
+      // seguimiento), se retoma: no se borra el CV que ya editaste.
+      const same =
+        !!s?.analysis &&
+        ((!!handoff.jobUrl && normalizeUrl(handoff.jobUrl) === normalizeUrl(s.jobUrl)) || (!!handoff.jobText.trim() && handoff.jobText.trim() === s.jobText.trim()));
+      if (!same) {
+        remove(SESSION_KEY);
+        setJobUrl(handoff.jobUrl);
+        setJobText(handoff.jobText);
+        setShowJobText(!!handoff.jobText);
+        return;
+      }
+    }
     if (!s?.analysis || !s.profile) return;
     setJobUrl(s.jobUrl);
     setJobText(s.jobText);
+    // Sin esto, al recargar el texto pegado del aviso no se enviaba al generar.
+    setShowJobText(!!s.jobText.trim());
     setFeedback(s.feedback);
     setAnalysis(s.analysis);
     setProfile(s.profile);
@@ -121,7 +130,7 @@ export default function Flow() {
 
   const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  const missing = [jobInputIssue(jobUrl, jobText), cv.issue, !feedback.trim() ? "Contanos por qué te interesa esta vacante." : null].filter(Boolean);
+  const missing = [jobInputIssue(jobUrl, jobText), cv.issue].filter(Boolean);
   const canAnalyze = missing.length === 0;
   const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
@@ -195,6 +204,14 @@ export default function Flow() {
 
   function restart() {
     remove(SESSION_KEY);
+    // Otra vacante: no arrastrar el aviso ni la motivación de la anterior (se mezclarían en el análisis).
+    setJobUrl("");
+    setJobText("");
+    setShowJobText(false);
+    setFeedback("");
+    setGaps([]);
+    setError("");
+    originRef.current = null;
     setStage("inicio");
     setAnalysis(null);
     setProfile(null);
@@ -238,7 +255,7 @@ export default function Flow() {
               )}
             </StepCard>
 
-            <StepCard n={2} title="¿Por qué esta vacante?" hint="Contalo con tus palabras, como si se lo contaras a alguien de confianza. Escribilo o grabalo.">
+            <StepCard n={2} title="¿Por qué esta vacante? (opcional)" hint="Para personalizar tu presentación y tus respuestas.">
               <ul className="mb-3 grid gap-2 sm:grid-cols-3">
                 {GUIDE.map((g) => (
                   <li key={g} className="rounded-xl bg-sand px-3 py-2 text-xs leading-snug text-muted">
@@ -284,6 +301,7 @@ export default function Flow() {
           strengths={analysis.fortalezas_detectadas}
           gapsList={analysis.brechas}
           preguntas={analysis.preguntas}
+          questionsHint="Te recomendamos responder para adaptar mejor tu CV a esta vacante. Es opcional; con una línea por respuesta alcanza."
           nextLabel="Armar mi postulación"
           gaps={gaps}
           answers={answers}

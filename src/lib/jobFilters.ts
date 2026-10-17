@@ -39,6 +39,9 @@ export const NIVELES: Partial<Record<Seniority, string>> = {
 
 export const MODALIDADES: Partial<Record<Workplace, string>> = { remoto: "Remoto", hibrido: "Híbrido", presencial: "Presencial" };
 
+/** Tope de páginas (20 avisos cada una): alcanza para todo el catálogo visible. */
+export const MAX_PAGES = 500;
+
 export type JobQuery = { q: string; area: RoleFamily | ""; nivel: Seniority | ""; modalidad: Workplace | ""; donde: "ar" | "todo"; pagina: number };
 
 const pick = <T extends string>(v: unknown, allowed: Record<string, unknown>): T | "" => (typeof v === "string" && Object.hasOwn(allowed, v) ? (v as T) : "");
@@ -49,7 +52,7 @@ export function parseJobQuery(sp: Record<string, string | string[] | undefined>)
     const v = sp[k];
     return Array.isArray(v) ? v[0] : v;
   };
-  const pagina = Math.max(1, Math.min(50, Number.parseInt(one("pagina") ?? "1", 10) || 1));
+  const pagina = Math.max(1, Math.min(MAX_PAGES, Number.parseInt(one("pagina") ?? "1", 10) || 1));
   return {
     q: (one("q") ?? "").trim().slice(0, 80),
     area: pick<RoleFamily>(one("area"), AREAS),

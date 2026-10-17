@@ -34,7 +34,10 @@ section { display: flex; flex-direction: column; gap: 10px; }
   text-align: center; cursor: pointer; color: var(--muted);
 }
 .drop:hover { border-color: var(--clay); }
-.drop input { display: none; }
+/* Oculto a la vista pero no al teclado: el label se puede elegir con Tab y Enter. */
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.drop { position: relative; }
+.drop:focus-within { outline: 2px solid var(--clay); outline-offset: 2px; }
 textarea, input[type="url"] {
   width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--paper);
   color: var(--ink); font: inherit; resize: vertical;

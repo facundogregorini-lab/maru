@@ -10,7 +10,7 @@ export type Bucket = "pesado" | "liviano";
 export const LIMITS: Record<Bucket, number> = { pesado: 40, liviano: 200 };
 export const WINDOW_MS = 10 * 60 * 1000;
 
-const LIGHT = ["/api/entrevista/turno", "/api/carta/parrafo", "/api/bullet", "/api/autofill", "/api/video/feedback", "/api/tracking"];
+const LIGHT = ["/api/entrevista/turno", "/api/carta/parrafo", "/api/bullet", "/api/autofill", "/api/video/feedback", "/api/export", "/api/tracking"];
 
 export function bucketFor(path: string): Bucket {
   return LIGHT.some((p) => path.startsWith(p)) ? "liviano" : "pesado";

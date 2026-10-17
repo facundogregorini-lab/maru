@@ -70,10 +70,11 @@ export function matchOption(options: string[], wanted: string): string | null {
  * Campos que decide siempre la persona, diga lo que diga la IA: datos demográficos
  * (EEO: género, etnia, discapacidad…) y aceptaciones legales (arbitraje, términos, privacidad).
  */
+// Bordes de palabra que entienden tildes (\b sin la bandera u no ve el borde antes de "é").
 const DEMOGRAPHIC =
-  /\b(gender|g[eé]nero|sexo?|pronouns?|pronombres?|ethnicity|ethnic|[eé]tnic[oa]|race|racial|raza|hispanic|latin[oa]|latinx|veterans?|veteran[oa]|disabilit(y|ies)|discapacidad|sexual orientation|orientaci[oó]n sexual|religi[oó]n|religion|transgender|lgbtq?)\b/i;
+  /(?<![\p{L}\p{N}])(gender|g[eé]nero|sexo?|pronouns?|pronombres?|ethnicity|ethnic|[eé]tnic[oa]|origen [eé]tnico|pertenencia|race|racial|raza|hispanic|latin[oa]|latinx|veterans?|veteran[oa]|disabilit(y|ies)|discapacidad|sexual orientation|orientaci[oó]n sexual|religi[oó]n|religion|transgender|lgbtq?|edad|age|fecha de nacimiento|date of birth|birth ?date|estado civil|marital status)(?![\p{L}\p{N}])/iu;
 const LEGAL =
-  /(arbitra|consent|consentimiento|privacy|privacidad|terms (and|&) conditions|terms of (use|service)|t[eé]rminos y condiciones|certify|certifico|acknowledge)/i;
+  /(arbitra|consent|consentimiento|privacy|privacidad|terms (and|&) conditions|terms of (use|service)|t[eé]rminos|bases y condiciones|certify|certifico|acknowledge|autorizo|autoriz[aá]s|autorizar el tratamiento|tratamiento de (mis|tus|sus|los) datos|declar[oa] bajo juramento|declaraci[oó]n jurada|ley 25\.?326|i agree|acepto|newsletter|novedades|suscrib|subscribe|marketing (emails?|communications))/iu;
 
 export function isSensitive(f: AutofillField): boolean {
   const text = `${f.etiqueta} ${f.ayuda ?? ""}`;
@@ -117,7 +118,11 @@ function clean(f: AutofillField, valor: string, hasCv: boolean): string | null {
     case "archivo":
       return hasCv && norm(valor) === "cv" ? "cv" : null;
     case "numero": {
-      const n = valor.replace(/[^\d.,-]/g, "").replace(",", ".");
+      let n = valor.replace(/[^\d.,-]/g, "");
+      // "3.000" o "1.500.000,50" son miles con punto (como se escribe en Argentina), no decimales.
+      if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(n)) n = n.replace(/\./g, "").replace(",", ".");
+      else if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(n)) n = n.replace(/,/g, "");
+      else n = n.replace(",", ".");
       return /^-?\d+(\.\d+)?$/.test(n) ? n : null;
     }
     case "fecha":

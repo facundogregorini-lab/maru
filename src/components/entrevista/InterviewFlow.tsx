@@ -60,6 +60,11 @@ export default function InterviewFlow() {
 
   // Retomamos el último informe si se recarga la página.
   useEffect(() => {
+    // Llegó desde una búsqueda ("Entrená la entrevista"): empieza con esa, no con la práctica anterior.
+    if (job.fromHandoff.current) {
+      remove(SESSION_KEY);
+      return;
+    }
     const s = load<Session>(SESSION_KEY);
     if (!s?.plan) return;
     job.restore(s.job);
@@ -101,6 +106,7 @@ export default function InterviewFlow() {
   }
 
   async function evaluate(h: Intercambio[]) {
+    if (stage === "evaluando") return;
     setHistorial(h);
     if (!plan) return;
     if (!h.some((x) => x.respuesta.trim())) {

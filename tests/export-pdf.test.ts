@@ -29,6 +29,16 @@ describe("/api/export/pdf", () => {
     expect(bytes.subarray(0, 4).toString()).toBe("%PDF");
   }, 30_000);
 
+  it.skipIf(!existsSync(LOCAL_CHROME))("no ejecuta scripts que esquiven el filtro", async () => {
+    const { POST } = await loadRoute(LOCAL_CHROME);
+    // Si el script corriera, el CV pasaría a tener decenas de páginas.
+    const evil = `${html}<scr<script></script>ipt>document.body.innerHTML += "<p style='page-break-before:always'>x</p>".repeat(30)</scr<script></script>ipt><img src=x onerror=document.body.append("x")>`;
+    const res = await POST(req({ html: evil, padY: 48 }));
+    expect(res.status).toBe(200);
+    const pdf = Buffer.from(await res.arrayBuffer()).toString("latin1");
+    expect((pdf.match(/\/Type\s*\/Page[^s]/g) ?? []).length).toBe(1);
+  }, 30_000);
+
   it("si Chromium no arranca: error útil, etapa y log con el detalle", async () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => {});
     const { POST } = await loadRoute("/no/existe");

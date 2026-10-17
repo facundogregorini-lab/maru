@@ -23,7 +23,7 @@ export default function ExtensionPage() {
             <a href={ZIP_URL} download className="font-semibold underline underline-offset-4">
               Descargá el archivo
             </a>{" "}
-            y <strong>descomprimilo</strong>: queda una carpeta <code className="rounded bg-sand px-1.5">maru-extension</code>.
+            y <strong>descomprimilo</strong> en un lugar fijo (no en Descargas): si después movés o borrás la carpeta, la extensión deja de andar.
           </Step>
           <Step n={2}>
             <span className="flex flex-wrap items-center gap-2">
@@ -31,15 +31,20 @@ export default function ExtensionPage() {
               <CopyButton text="chrome://extensions" />
             </span>
             <span className="mt-1 block">
-              en una pestaña nueva y activá <strong>Modo de desarrollador</strong> (arriba a la derecha).
+              en una pestaña nueva y activá <strong>Modo de desarrollador</strong> (en Chrome, arriba a la derecha; en Edge, en el panel de la izquierda).
             </span>
           </Step>
           <Step n={3}>
-            Tocá <strong>Cargar descomprimida</strong> y elegí la carpeta <code className="rounded bg-sand px-1.5">maru-extension</code>.
+            Tocá <strong>Cargar descomprimida</strong> y elegí la carpeta <code className="rounded bg-sand px-1.5">maru-extension</code> que tiene adentro el archivo{" "}
+            <code className="rounded bg-sand px-1.5">manifest.json</code>. En Windows puede quedar una carpeta con el mismo nombre dentro de otra: elegí la de adentro.
           </Step>
           <Step n={4}>
             Fijala con el ícono de la pieza de rompecabezas, abrila y <strong>subí tu CV</strong>.
           </Step>
+          <p className="text-sm text-muted sm:col-span-2">
+            <strong>Para actualizarla:</strong> bajá el archivo de nuevo, reemplazá los archivos de la carpeta y tocá el botón de recargar de Maru en{" "}
+            <code className="rounded bg-sand px-1.5">chrome://extensions</code>.
+          </p>
         </ol>
       </Reveal>
 

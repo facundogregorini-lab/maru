@@ -2,7 +2,8 @@
 // Lee los campos del formulario (scan) y los completa con las respuestas de Maru (apply).
 // No envía nada: el botón de enviar lo aprieta la persona.
 (() => {
-  if (window.__maru) return;
+  const VERSION = "0.3.1";
+  if (window.__maru?.version === VERSION) return;
 
   const ATTR = "data-maru-id";
   const MAX_FIELDS = 250;
@@ -30,9 +31,33 @@
     return fn();
   }
 
-  /* ---------- Listas con buscador (role="combobox", como react-select en Greenhouse) ---------- */
+  /* ---------- Listas nativas de la página y React Select (incluido HiringRoom) ---------- */
 
-  const isCombo = (el) => el.tagName === "INPUT" && el.getAttribute("role") === "combobox";
+  const COMBO = "[role='combobox'], [aria-haspopup='listbox']";
+  const REACT_VALUE = "[class*='__value-container']";
+  const isLegacyCombo = (el) => el.matches("input[aria-autocomplete='list']") && !!comboBox(el)?.querySelector(REACT_VALUE);
+  const isCombo = (el) => el.tagName !== "SELECT" && (el.matches(COMBO) || isLegacyCombo(el));
+  const comboInput = (el) => el.tagName === "INPUT" ? el : el.querySelector("input:not([type='hidden'])") || el;
+  const placeholder = (text) => /^(?:[-–—]+$|(?:please\s+)?(?:select|choose|pick)\b|seleccion[aáeé]?\w*\b|elegi\w*\b|escog\w*\b)/i.test(norm(text));
+
+  /** Interacción completa: algunos menús escuchan pointerup/mousedown, no click. */
+  function activate(el) {
+    el.focus({ preventScroll: true });
+    const Pointer = window.PointerEvent || window.MouseEvent;
+    el.dispatchEvent(new Pointer("pointerdown", { bubbles: true, cancelable: true, pointerType: "mouse", pointerId: 1, isPrimary: true, button: 0, buttons: 1 }));
+    el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, button: 0, buttons: 1 }));
+    el.dispatchEvent(new Pointer("pointerup", { bubbles: true, cancelable: true, pointerType: "mouse", pointerId: 1, isPrimary: true, button: 0, buttons: 0 }));
+    el.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true, button: 0, buttons: 0 }));
+    el.click();
+  }
+
+  /** Un botón usado como desplegable puede omitir type=button. Nunca enviar al abrirlo. */
+  async function withoutSubmit(task) {
+    const stop = (event) => { event.preventDefault(); event.stopImmediatePropagation(); };
+    window.addEventListener("submit", stop, true);
+    try { return await task(); }
+    finally { window.removeEventListener("submit", stop, true); }
+  }
   /** Una tecla completa (keydown + keyup), como una persona: Greenhouse, por ejemplo, abre la lista en el keyup. */
   function press(el, k) {
     for (const type of ["keydown", "keyup"]) el.dispatchEvent(new KeyboardEvent(type, { key: k, code: k, bubbles: true, cancelable: true }));
@@ -40,73 +65,94 @@
 
   /** Vacía si no tiene texto y muestra un placeholder ("Seleccioná…") en lugar de un valor elegido. */
   function comboEmpty(el) {
-    if (clean(el.value)) return false;
-    const described = (el.getAttribute("aria-describedby") || "").split(/\s+/).map((id) => id && document.getElementById(id));
+    const input = comboInput(el);
+    if (clean(input.value) || clean(el.getAttribute("aria-valuetext")) || clean(el.getAttribute("data-value"))) return false;
+    if (comboBox(el).querySelector("[class*='single-value'], [class*='singleValue'], [class*='multi-value'], [class*='multiValue']")) return false;
+    if (el.hasAttribute("data-placeholder") || el.querySelector("[data-placeholder]")) return true;
+    const described = (input.getAttribute("aria-describedby") || "").split(/\s+/).map((id) => id && document.getElementById(id));
     if (described.some((n) => n && /placeholder/i.test(`${n.id} ${n.className}`))) return true;
-    return !comboBox(el).querySelector("[class*='single-value'], [class*='singleValue'], [class*='multi-value'], [class*='multiValue']");
+    if (input.tagName === "INPUT") return true;
+    const text = clean(el.textContent);
+    return !text || placeholder(text);
   }
 
   /** El recuadro de la lista: el ancestro más cercano que muestra el valor elegido o el placeholder. */
   function comboBox(el) {
+    if (el.tagName !== "INPUT") return el;
     let node = el.parentElement;
     for (let i = 0; node && i < 4; i++, node = node.parentElement) {
-      if (/control/i.test(node.className) || node.querySelector("[class*='value'], [class*='placeholder']")) return node;
+      if (/control/i.test(node.className)) return node;
     }
     return el.parentElement;
   }
 
   function comboOptions(el) {
-    const ids = `${el.getAttribute("aria-controls") || ""} ${el.getAttribute("aria-owns") || ""}`.split(/\s+/).filter(Boolean);
-    let list = ids.map((id) => document.getElementById(id)).find(Boolean);
+    const ids = [el, comboInput(el)].flatMap((node) => `${node.getAttribute("aria-controls") || ""} ${node.getAttribute("aria-owns") || ""}`.split(/\s+/)).filter(Boolean);
+    let list = ids.map((id) => document.getElementById(id)).find((node) => node && isShown(node));
+    // React Select antiguo (HiringRoom) no publica roles ni aria-controls. Limitamos
+    // la búsqueda a SU contenedor, sin mezclar opciones de otros campos.
+    if (!list && isLegacyCombo(el)) {
+      const menu = comboBox(el)?.parentElement?.querySelector("[class*='__menu-list']");
+      if (menu && isShown(menu)) list = menu;
+    }
     // Sin aria-controls (versiones viejas de react-select): el listbox más cercano, sin pasar a otra lista.
     for (let node = el.parentElement, i = 0; !list && node && i < 6; node = node.parentElement, i++) {
       if ([...node.querySelectorAll("[role='combobox']")].some((c) => c !== el)) break;
-      list = node.querySelector("[role='listbox']");
+      list = [...node.querySelectorAll("[role='listbox']")].find(isShown);
     }
     // Menú en un portal (al final del <body>): si hay una sola lista abierta en la página, es esta.
     if (!list) {
       const open = [...document.querySelectorAll("[role='listbox']")].filter(isShown);
       if (open.length === 1) list = open[0];
     }
-    return list ? [...list.querySelectorAll("[role='option']")].filter((o) => o.getAttribute("aria-disabled") !== "true") : [];
+    return list ? [...list.querySelectorAll("[role='option'], [class*='__option']")].filter((o) => isShown(o) && !o.hasAttribute("disabled") && o.getAttribute("aria-disabled") !== "true" && !o.className.includes("__option--is-disabled")) : [];
   }
 
   /** Abre la lista con ↓ (como haría alguien con el teclado) y devuelve sus opciones. */
   async function openCombo(el) {
-    el.focus({ preventScroll: true });
-    press(el, "ArrowDown");
-    const options = await waitFor(() => {
+    const input = comboInput(el);
+    input.focus({ preventScroll: true });
+    press(input, "ArrowDown");
+    const read = () => {
       const found = comboOptions(el);
       return found.length ? found : null;
-    });
-    return options || [];
+    };
+    const options = await waitFor(read, 120);
+    if (options) return options;
+    // Si ya abrió, puede estar cargando opciones: no lo volvemos a cerrar con otro clic.
+    if (el.getAttribute("aria-expanded") !== "true" && input.getAttribute("aria-expanded") !== "true") activate(el.tagName === "INPUT" && comboBox(el)?.querySelector(REACT_VALUE) ? comboBox(el) : el);
+    return await waitFor(read, 1200) || [];
   }
 
   /** Cierra la lista y espera a que desaparezca, para no leer sus opciones como si fueran de la siguiente. */
   async function closeCombo(el) {
-    press(el, "Escape");
-    el.blur();
+    const input = comboInput(el);
+    press(input, "Escape");
+    input.blur();
+    if (input !== el) { press(el, "Escape"); el.blur(); }
     await waitFor(() => el.getAttribute("aria-expanded") !== "true" && !comboOptions(el).length);
   }
 
   async function fillCombo(el, valor) {
+    if (!comboEmpty(el)) return false;
     const options = await openCombo(el);
+    if (!comboEmpty(el)) { await closeCombo(el); return false; }
     const texts = options.map((o) => clean(o.textContent));
     const i = findOption(texts, valor);
     if (i < 0) {
       await closeCombo(el);
       return false;
     }
-    options[i].click();
-    await sleep(30);
-    if (el.getAttribute("aria-expanded") === "true") await closeCombo(el);
+    activate(options[i]);
+    const accepted = await waitFor(() => !comboEmpty(el), 600);
+    await closeCombo(el);
     // Algunas listas muestran otra cosa que la opción ("+54" para "Argentina +54"): alcanza con que ya no esté vacía.
-    return !comboEmpty(el) || norm(el.value) === norm(texts[i]);
+    return !!accepted;
   }
 
   /* ---------- Lectura ---------- */
 
-  const NOT_TEXT = "select, option, textarea, script, style, button, [aria-hidden='true']";
+  const NOT_TEXT = "select, option, textarea, script, style, button, [role='listbox'], [aria-hidden='true']";
 
   /**
    * Texto visible de un nodo, sin el de los controles que tenga adentro (un <label> que envuelve un <select>
@@ -184,6 +230,8 @@
   };
 
   let seq = 0;
+  /** Número de lectura del formulario: una respuesta vieja no se aplica sobre una lectura nueva. */
+  let pass = 0;
   /** id → elemento (o elementos, para grupos de radios y casillas). */
   const registry = new Map();
   /** Ids de los campos obligatorios, para marcar los que queden vacíos. */
@@ -212,13 +260,14 @@
   async function scan() {
     const { scrollX, scrollY } = window;
     try {
-      return await scanFields();
+      return await withoutSubmit(scanFields);
     } finally {
       window.scrollTo(scrollX, scrollY);
     }
   }
 
   async function scanFields() {
+    pass++;
     seq = 0;
     registry.clear();
     required.clear();
@@ -226,11 +275,13 @@
 
     const fields = [];
     const groups = new Map();
-    const controls = document.querySelectorAll("input, select, textarea");
+    const controls = document.querySelectorAll(`input, select, textarea, ${COMBO}`);
 
     for (const el of controls) {
       if (fields.length >= MAX_FIELDS) break;
-      if (el.disabled || el.readOnly) continue;
+      if (el.disabled || el.getAttribute("aria-disabled") === "true" || (el.readOnly && !isCombo(el))) continue;
+      // Un combobox con buscador interno es un único campo, no dos controles distintos.
+      if (el.parentElement?.closest(COMBO)) continue;
       const tag = el.tagName;
       const type = (el.type || "").toLowerCase();
 
@@ -259,21 +310,20 @@
         fields.push({ el, base });
         continue;
       }
-      if (!isShown(el) || isHoneypot(el)) continue;
+      // Los dummyInput de React Select miden un píxel: importa el recuadro visible.
+      const visibleControl = isCombo(el) ? comboBox(el) : el;
+      if (!isShown(visibleControl) || isHoneypot(visibleControl)) continue;
 
-      if (tag === "SELECT") {
-        const options = [...el.options].filter((o) => !o.disabled && clean(o.text));
-        // Ya elegido por la persona (la primera opción suele ser "Seleccioná…").
-        if (el.multiple || el.selectedIndex > 0) continue;
+      if (isCombo(el)) {
+        if (comboEmpty(el)) fields.push({ el, combo: true, base: { tipo: "seleccion", etiqueta: labelOf(el) } });
+      } else if (tag === "SELECT") {
+        const options = [...el.options].filter((o) => !o.disabled && !o.closest("optgroup[disabled]") && clean(o.text));
+        if (el.multiple || !selectEmpty(el)) continue;
         const texts = options.map((o) => cut(clean(o.text), 150)).slice(0, MAX_OPTIONS);
         fields.push({ el, base: { tipo: "seleccion", etiqueta: labelOf(el), opciones: texts } });
       } else if (tag === "TEXTAREA") {
         if (isEmpty(el)) fields.push({ el, base: { tipo: "texto_largo", etiqueta: labelOf(el) } });
       } else if (type in KIND || type === "") {
-        if (isCombo(el)) {
-          if (comboEmpty(el)) fields.push({ el, combo: true, base: { tipo: "seleccion", etiqueta: labelOf(el) } });
-          continue;
-        }
         // Autocompletar sin role=combobox (por ejemplo, buscadores de ciudades): todavía no.
         if (el.getAttribute("aria-autocomplete") === "list") continue;
         if (isEmpty(el)) fields.push({ el, base: { tipo: KIND[type] || "texto", etiqueta: labelOf(el) } });
@@ -296,7 +346,8 @@
             byIds(container && container.getAttribute("aria-labelledby")) ||
             clean(container && container.getAttribute("aria-label")) ||
             groupText(list, own)
-          : labelOf(list[0]);
+          : // Casilla suelta dentro de una pregunta ("¿Qué tecnologías usás?" → "Python"): sumar la pregunta.
+            [textWithout(legend), labelOf(list[0])].filter(Boolean).join(" — ");
         const base = { etiqueta: question };
         if (type === "radio" || isGroup) {
           base.tipo = type === "radio" ? "opcion_unica" : "multiple";
@@ -322,6 +373,8 @@
 
     const top = window === window.top;
     return {
+      pass,
+      origin: location.origin,
       fields: out,
       title: top ? clean(document.title) : "",
       text: top ? cut(clean(document.body ? document.body.innerText : ""), 15000) : "",
@@ -356,9 +409,11 @@
 
   function findOption(texts, wanted) {
     const w = norm(wanted);
-    let i = texts.findIndex((t) => norm(t) === w);
-    if (i < 0) i = texts.findIndex((t) => norm(t).startsWith(w));
-    return i;
+    if (!w) return -1;
+    const exact = texts.map((t, i) => norm(t) === w ? i : -1).filter((i) => i >= 0);
+    if (exact.length) return exact.length === 1 ? exact[0] : -1;
+    const starts = texts.map((t, i) => w.length >= 3 && norm(t).startsWith(w) ? i : -1).filter((i) => i >= 0);
+    return starts.length === 1 ? starts[0] : -1;
   }
 
   function attachFile(el, cv) {
@@ -395,14 +450,15 @@
       return ok;
     }
     if (el instanceof HTMLSelectElement) {
-      const options = [...el.options];
+      if (el.multiple || !selectEmpty(el)) return false;
+      const options = [...el.options].filter((o) => !o.disabled && !o.closest("optgroup[disabled]"));
       const i = findOption(
         options.map((o) => clean(o.text)),
         valor,
       );
       if (i < 0) return false;
       setValue(el, options[i].value);
-      return el.selectedIndex === i;
+      return el.value === options[i].value;
     }
     const max = el.maxLength > 0 ? el.maxLength : Infinity;
     // Un campo type="url" no acepta "linkedin.com/in/…" sin el https:// al enviar.
@@ -411,10 +467,26 @@
     return clean(el.value) !== "";
   }
 
+  /** Un select está sin elegir si no hay opción o la elegida es un "Seleccioná…" (vacía, deshabilitada u oculta). */
+  function selectEmpty(el) {
+    const o = el.options[el.selectedIndex];
+    return !o || !clean(o.value) || o.disabled || o.hidden || placeholder(o.text);
+  }
+
+  function stillEmpty(els) {
+    const el = els[0];
+    if (els.length > 1 || el.type === "radio" || el.type === "checkbox") return !els.some((c) => c.checked);
+    if (el.type === "file") return !(el.files && el.files.length);
+    if (el instanceof HTMLSelectElement) return selectEmpty(el);
+    if (el.getAttribute("role") === "combobox" || isCombo(el)) return comboEmpty(el);
+    return isEmpty(el);
+  }
+
   /** Dónde se ve el resaltado: el campo, o el label/contenedor si el control está oculto. */
   function outlineTarget(els) {
     const el = els[0];
     if (els.length > 1) return el.closest("fieldset, [role='radiogroup'], [role='group']") || el.parentElement;
+    if (isCombo(el)) return comboBox(el);
     if (isShown(el)) return el;
     return (el.labels && el.labels[0]) || el.parentElement;
   }
@@ -427,10 +499,12 @@
     if (note) target.title = `Maru: ${note}`;
   }
 
-  async function apply(answers, cv) {
+  async function apply(answers, cv, forPass) {
+    // Si el formulario se volvió a leer después de este pedido, los números de campo ya no son los mismos.
+    if (forPass !== undefined && forPass !== pass) return { completados: 0, revisar: 0, pendientes: 0 };
     const { scrollX, scrollY } = window;
     try {
-      return await applyAnswers(answers, cv);
+      return await withoutSubmit(() => applyAnswers(answers, cv));
     } finally {
       window.scrollTo(scrollX, scrollY);
     }
@@ -442,6 +516,8 @@
     for (const a of answers) {
       const els = registry.get(a.id);
       if (!els || !els[0].isConnected) continue;
+      // La persona lo completó mientras Maru pensaba: no se pisa.
+      if (!stillEmpty(els)) continue;
       let ok = false;
       try {
         ok = await fillOne(els, a.valor, a.valor === "cv" ? cv : null);
@@ -457,7 +533,7 @@
     // Obligatorios que quedaron vacíos: los marca para que la persona los complete.
     for (const id of required) {
       const els = registry.get(id);
-      if (done.has(id) || !els[0].isConnected) continue;
+      if (done.has(id) || !els[0].isConnected || !stillEmpty(els)) continue;
       stats.pendientes++;
       mark(els, AMBER, "completalo vos");
     }
@@ -497,5 +573,5 @@
     if (!sticky) toastTimer = setTimeout(() => toastHost.remove(), 12000);
   }
 
-  window.__maru = { scan, apply, toast };
+  window.__maru = { version: VERSION, scan, apply, toast };
 })();

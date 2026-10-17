@@ -11,6 +11,7 @@
     "match:sync": "npx --yes tsx@4 scripts/match-sync.ts",
     "match:add-company": "npx --yes tsx@4 scripts/match-add-company.ts",
     "match:report": "npx --yes tsx@4 scripts/match-report.ts",
+    "match:verticals": "npx --yes tsx@4 scripts/match-verticals.ts",
     "match:apify": "npx --yes tsx@4 scripts/apify-jobs.ts"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "@eslint/eslintrc": "^3",
     "@fontsource/titillium-web": "^5.3.0",
     "@tailwindcss/postcss": "^4",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
@@ -42,6 +44,8 @@
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "jsdom": "^30.1.3",
+    "postcss": "^8.5.30",
     "react-select": "^5.10.2",
     "tailwindcss": "^4",
     "typescript": "^5",

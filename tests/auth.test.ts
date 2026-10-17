@@ -24,7 +24,8 @@ describe("tokens firmados", () => {
     const [body, sig] = t.split(".");
     const forged = Buffer.from(JSON.stringify({ ...JSON.parse(Buffer.from(body, "base64url").toString()), email: "otro@mail.com" })).toString("base64url");
     expect(verifyLoginToken(`${forged}.${sig}`)).toBeNull();
-    expect(verifyLoginToken(`${body}.x${sig.slice(1)}`)).toBeNull();
+    const changedSignature = `${sig[0] === "x" ? "y" : "x"}${sig.slice(1)}`;
+    expect(verifyLoginToken(`${body}.${changedSignature}`)).toBeNull();
     // Un link de login no sirve como sesión ni al revés.
     expect(verifySessionToken(t)).toBeNull();
     expect(verifyLoginToken(createSessionToken("ana@mail.com"))).toBeNull();
@@ -45,11 +46,19 @@ describe("tokens firmados", () => {
   });
 });
 
+/** El botón "Entrar" de la página del link: un POST de formulario desde el propio sitio. */
+const confirm = (token: string, next = "/", origin = "http://maru.test") => {
+  const body = new FormData();
+  body.set("token", token);
+  body.set("next", next);
+  return new Request("http://maru.test/api/auth/verify", { method: "POST", body, headers: { origin } });
+};
+
 describe("flujo de magic link", () => {
   it("pedir link → abrirlo → cookie de sesión → /me devuelve el email", async () => {
     const info = vi.spyOn(console, "info").mockImplementation(() => {});
     const { POST: request } = await import("@/app/api/auth/request/route");
-    const { GET: verify } = await import("@/app/api/auth/verify/route");
+    const { GET: open, POST: verify } = await import("@/app/api/auth/verify/route");
     const { GET: me } = await import("@/app/api/auth/me/route");
 
     const res = await request(new Request("http://maru.test/api/auth/request", { method: "POST", body: JSON.stringify({ email: "Ana@Mail.com" }) }));
@@ -57,7 +66,14 @@ describe("flujo de magic link", () => {
     const link = String(info.mock.calls.flat().join(" ")).match(/http:\/\/maru\.test\/api\/auth\/verify\?token=\S+/)?.[0];
     expect(link).toBeTruthy();
 
-    const back = await verify(new Request(link!));
+    // Abrir el link no crea la sesión: muestra la cuenta y un botón.
+    const page = await open(new Request(link!));
+    expect(page.status).toBe(200);
+    expect(page.headers.get("set-cookie")).toBeNull();
+    expect(await page.text()).toContain("ana@mail.com");
+
+    const token = new URL(link!).searchParams.get("token")!;
+    const back = await verify(confirm(token));
     expect(back.status).toBe(303);
     expect(back.headers.get("location")).toBe("http://maru.test/?ingreso=ok");
     const cookie = back.headers.get("set-cookie")!;
@@ -74,6 +90,16 @@ describe("flujo de magic link", () => {
     const back = await verify(new Request("http://maru.test/api/auth/verify?token=nope"));
     expect(back.headers.get("location")).toBe("http://maru.test/?ingreso=vencido");
     expect(back.headers.get("set-cookie")).toBeNull();
+  });
+
+  it("el link sirve una vez y el botón no se puede apretar desde otro sitio", async () => {
+    const { POST: verify } = await import("@/app/api/auth/verify/route");
+    const token = createLoginToken("una@vez.com");
+    expect((await verify(confirm(token, "/", "https://otro-sitio.com"))).status).toBe(403);
+    expect((await verify(confirm(token))).headers.get("set-cookie")).toMatch(new RegExp(`^${SESSION_COOKIE}=`));
+    const again = await verify(confirm(token));
+    expect(again.headers.get("location")).toBe("http://maru.test/?ingreso=vencido");
+    expect(again.headers.get("set-cookie")).toBeNull();
   });
 
   it("email inválido: 400", async () => {
@@ -123,8 +149,8 @@ describe("redirección después del link", () => {
     expect(safeNext(undefined)).toBe("/");
 
     const { createLoginToken } = await import("@/lib/auth");
-    const { GET: verify } = await import("@/app/api/auth/verify/route");
-    const back = await verify(new Request(`http://maru.test/api/auth/verify?token=${createLoginToken("a@b.co")}&next=%2Fentrevista`));
+    const { POST: verify } = await import("@/app/api/auth/verify/route");
+    const back = await verify(confirm(createLoginToken("a@b.co"), "/entrevista"));
     expect(back.headers.get("location")).toBe("http://maru.test/entrevista?ingreso=ok");
   });
 });

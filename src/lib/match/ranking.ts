@@ -32,6 +32,8 @@ import {
 
 /** Por debajo de este % de coincidencia una búsqueda no se lista como "para vos". */
 export const MIN_SCORE = 25;
+/** Tope del porcentaje que se muestra. */
+export const MAX_SCORE = 99;
 
 /** Desde cuántos días se esconde un aviso de los resultados (salvo que la persona lo haya guardado). */
 export const HIDE_AFTER_DAYS = 120;
@@ -123,14 +125,6 @@ const GENERIC_ROLE = new Set(
   ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant", "director", "head", "founder", "cofounder", "fundador", "fundadora", "owner"].map(canon),
 );
 
-/** Similitud de cargos: manda lo específico; si sólo comparten palabras genéricas, cuenta poco. */
-function roleSim(a: Set<string>, b: Set<string>): number {
-  const ca = new Set([...a].filter((t) => !GENERIC_ROLE.has(t)));
-  const cb = new Set([...b].filter((t) => !GENERIC_ROLE.has(t)));
-  if (!ca.size || !cb.size) return 0.2 * dice(a, b);
-  return 0.8 * dice(ca, cb) + 0.2 * dice(a, b);
-}
-
 function dice(a: Set<string>, b: Set<string>): number {
   if (!a.size || !b.size) return 0;
   let inter = 0;
@@ -144,13 +138,67 @@ function goalCoverage(goal: Set<string>, evidence: Set<string>): number {
   return [...goal].filter((t) => evidence.has(t)).length / goal.size;
 }
 
-/** Un título con región o especialidad adicional conserva el rol que contiene.
- * Compartir sólo "analista"/"manager" nunca activa ese reconocimiento. */
-function roleSimilarity(a: Set<string>, b: Set<string>): number {
-  const overlap = [...a].filter((t) => b.has(t));
-  const containsRole = overlap.length === Math.min(a.size, b.size)
-    && overlap.some((t) => !GENERIC_ROLE.has(t));
-  return Math.max(roleSim(a, b), containsRole ? 0.9 : 0);
+/** Lugares, modalidad y ruido de aviso: no dicen qué es el puesto ("Coordinador de Logística zona Tucumán"). */
+const TITLE_NOISE = new Set(
+  ("zona zone urgente importante empresa busca buscamos busqueda solicita incorporar incorporamos se as os " +
+    "remoto remote hibrido hybrid presencial onsite latam argentina buenos aires caba gba capital federal provincia " +
+    "cordoba rosario mendoza tucuman salta neuquen santa fe plata mar parana corrientes chaco tandil " +
+    "perm eventual temporario efectivo part full-time part-time u").split(" "),
+);
+
+/**
+ * Tipo de puesto según su primera palabra de cargo: "Analista de logística" y "Chofer de logística"
+ * comparten el área, no el trabajo.
+ */
+type Head = "analisis" | "tecnico" | "gestion" | "apoyo" | "operativo";
+const HEADS: Record<Head, string[]> = {
+  analisis: ["analista", "especialista", "consultor", "associate", "oficial", "officer", "auditor", "planificador", "planner"],
+  tecnico: ["desarrollador", "tecnico", "technician", "arquitecto", "architect", "scientist", "cientifico"],
+  gestion: ["gerente", "director", "lider", "coordinador", "coordinadora", "supervisor", "supervisora", "responsable", "encargado", "encargada", "jefa"],
+  apoyo: ["asistente", "auxiliar", "administrativo", "representante", "representative", "operador", "operadora", "agente", "agent", "ejecutivo", "ejecutiva", "recepcionista", "secretario", "secretaria"],
+  operativo: ["chofer", "choferes", "conductor", "driver", "operario", "operaria", "repartidor", "cadete", "peon", "mozo", "moza", "camarero", "camarera", "cajero", "cajera", "repositor", "repositora", "vigilador", "vigiladora", "guardia", "ayudante", "estibador", "clarkista", "autoelevadorista", "maquinista", "soldador", "tornero", "cocinero", "cocinera", "bachero", "picker", "mensajero", "promotor", "promotora", "mucama", "limpieza"],
+};
+const HEAD_OF = new Map<string, Head>();
+for (const [h, words] of Object.entries(HEADS) as [Head, string[]][]) for (const w of words) HEAD_OF.set(canon(w), h);
+
+const ADJECTIVE_HEADS = new Set(["administrativo", "ejecutivo", "ejecutiva", "tecnico"].map(canon));
+
+export type Role = { head: Head | null; domain: Set<string>; all: Set<string> };
+
+/** Un cargo separado en tipo de puesto y área, sin seniority, lugares ni ruido del aviso. */
+export function parseRole(s: string): Role {
+  const words = [...roleTokens(s)].filter((t) => !TITLE_NOISE.has(t) && !/^\W+$/.test(t)).map((t) => t.replace(/[(),:;!?]+/g, "")).filter(Boolean);
+  // "Administrativo", "ejecutivo" o "técnico" pueden ser el cargo o un adjetivo ("Administrative Analyst"):
+  // si hay otra palabra de cargo, manda la otra.
+  const firm = words.findIndex((w) => HEAD_OF.has(w) && !ADJECTIVE_HEADS.has(w));
+  const i = firm !== -1 ? firm : words.findIndex((w) => HEAD_OF.has(w));
+  const head = i === -1 ? null : HEAD_OF.get(words[i])!;
+  // Otra palabra de cargo puede decir de qué es ("Asistente administrativo"); las de jerarquía ("Data Analyst Lead"), no.
+  const domain = new Set(words.filter((w, j) => j !== i && HEAD_OF.get(w) !== "gestion" && !GENERIC_ROLE.has(w)));
+  return { head, domain, all: new Set(words) };
+}
+
+function headFit(a: Head | null, b: Head | null): number {
+  // Un puesto operativo (chofer, operario, vigilador) no es lo mismo que uno administrativo del mismo rubro.
+  if ((a === "operativo") !== (b === "operativo")) return 0.45;
+  if (!a || !b || a === b) return a === b ? 1 : 0.9;
+  if (a === "gestion" || b === "gestion") return 0.85;
+  return 0.75;
+}
+
+/**
+ * Similitud de cargos, de lo que la persona hizo o busca (a) con el aviso (b). Manda el área:
+ * cuánto de lo que buscás está en el título (un título con región o especialidad adicional
+ * conserva el rol que contiene) y cuánto del título es eso. El tipo de puesto la ajusta.
+ * Compartir sólo "analista"/"manager" cuenta poco.
+ */
+export function roleSimilarity(a: Role, b: Role): number {
+  if (!a.domain.size || !b.domain.size) return 0.2 * dice(a.all, b.all) * headFit(a.head, b.head);
+  let inter = 0;
+  for (const x of a.domain) if (b.domain.has(x)) inter++;
+  const cover = inter / a.domain.size;
+  const domain = Math.max(0.65 * cover + 0.35 * (inter / b.domain.size), cover === 1 ? 0.9 : 0);
+  return domain * headFit(a.head, b.head);
 }
 
 /* ---------- helpers ---------- */
@@ -245,6 +293,8 @@ export type RankedItem = {
   reviewedAt: string;
   reviewedLabel: string;
   publishedAt: string | null;
+  /** Cuándo la vimos por primera vez: se muestra si la fuente no informa la fecha de publicación. */
+  firstSeenAt: string;
   /** Antigüedad relativa de la fuente cuando no hay fecha exacta (Google Jobs). */
   postedLabel?: string;
   logo?: string;
@@ -300,11 +350,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const pSkills = profileSkillSet(profile);
   const pLangs = new Map(profile.languages.map((l) => [normLang(l.language), l.level]));
   const desired = [...prefs.rolesDeseados, prefs.objetivo].filter((s) => s.trim());
-  const desiredTokens = prefs.rolesDeseados.map((r) => ({ label: r, toks: roleTokens(r) })).filter((r) => r.toks.size);
+  const desiredTokens = prefs.rolesDeseados.map((r) => ({ label: r, toks: roleTokens(r), role: parseRole(r) })).filter((r) => r.toks.size);
   const objetivoTokens = new Set([...roleTokens(prefs.objetivo)].filter((t) => !GOAL_FILLER.has(t)));
   const desiredFamilies = new Set<RoleFamily>(desired.map(familyFromTitle).filter((x) => x !== "otros"));
   const professionalTitles = [...new Set([...profile.titles.slice(0, 3), profile.headline].filter((t) => t.trim()))];
-  const pastTitles = professionalTitles.map((t) => ({ label: t, toks: roleTokens(t) }));
+  const pastTitles = professionalTitles.map((t) => ({ label: t, toks: roleTokens(t), role: parseRole(t) }));
   const pastFamilies = new Set<RoleFamily>(professionalTitles.map(familyFromTitle).filter((x) => x !== "otros"));
   const avoid = prefs.evitar.map((e) => fold(e)).filter((e) => e.length > 2);
   const targetSen = prefs.seniorities.length ? prefs.seniorities : [estimateSeniority(profile)].filter(Boolean) as Seniority[];
@@ -440,9 +490,12 @@ export function rankOpportunities(input: RankInput): RankOutput {
       skillScore = Math.min(1, ment.filter((s) => pSkills.has(s)).length / Math.min(4, ment.length));
       note(false);
     } else note(false);
-    const titleSim = Math.max(0, ...pastTitles.map((t) => roleSimilarity(t.toks, roleTokens(o.title))));
+    const titleRole = parseRole(o.title);
+    const titleSim = Math.max(0, ...pastTitles.map((t) => roleSimilarity(t.role, titleRole)));
     const famPast = pastFamilies.has(ex.family.value);
-    const expScore = Math.min(1, titleSim + (famPast ? 0.25 : 0));
+    // Ser del mismo rubro suma, pero no convierte un puesto operativo en uno administrativo (ni al revés).
+    const kindPast = Math.max(0, ...pastTitles.map((t) => headFit(t.role.head, titleRole.head)));
+    const expScore = Math.min(1, titleSim + (famPast ? 0.25 * kindPast : 0));
     const mix = prefs.carrera === "cambio" ? [0.8, 0.2] : prefs.carrera === "continuidad" ? [0.55, 0.45] : [0.65, 0.35];
     const hasExperience = pastTitles.some((t) => t.toks.size);
     note(hasExperience);
@@ -459,7 +512,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (matchedReq.length) reasonsScored.push([0.9, `Tu CV menciona ${list(matchedReq.slice(0, 3))}, que el aviso pide como requisito${matchedReq.length > 1 ? "s" : ""}.`]);
     else if (matchedDes.length) reasonsScored.push([0.6, `Tu CV menciona ${list(matchedDes.slice(0, 3))}, que el aviso valora.`]);
     if (titleSim >= 0.5 && pastTitles[0]) {
-      const best = pastTitles.reduce((a, b) => (roleSimilarity(b.toks, roleTokens(o.title)) > roleSimilarity(a.toks, roleTokens(o.title)) ? b : a));
+      const best = pastTitles.reduce((a, b) => (roleSimilarity(b.role, titleRole) > roleSimilarity(a.role, titleRole) ? b : a));
       reasonsScored.push([0.7 + titleSim * 0.2, `Tu experiencia como ${best.label} se relaciona directamente con este puesto.`]);
     }
     for (const s of req.filter((s) => !pSkills.has(s)).slice(0, 3)) {
@@ -468,7 +521,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     // Intención profesional (35%)
     const titleToks = roleTokens(o.title);
-    const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSimilarity(d.toks, titleToks)));
+    const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSimilarity(d.role, titleRole)));
     const skillTokens = (skills: string[]) => new Set(skills.flatMap((s) => [...roleTokens(s)]));
     const objSim = Math.max(
       goalCoverage(objetivoTokens, new Set([...titleToks, ...skillTokens(findSkills(o.title))])),
@@ -480,10 +533,12 @@ export function rankOpportunities(input: RankInput): RankOutput {
     const hasIntent = desiredTokens.length > 0 || objetivoTokens.size > 0;
     let intent = 0;
     if (hasIntent) {
-      intent = Math.min(1, Math.max(desiredSim, objSim) + (famDesired ? 0.3 : 0));
+      const kind = desiredTokens.length ? Math.max(...desiredTokens.map((d) => headFit(d.role.head, titleRole.head))) : 1;
+      const base = Math.max(desiredSim, objSim * kind);
+      intent = famDesired ? Math.min(1, Math.max(0.5 * kind, base + 0.15 * kind)) : base;
     }
     if (desiredSim >= 0.5) {
-      const best = desiredTokens.reduce((a, b) => (roleSimilarity(b.toks, titleToks) > roleSimilarity(a.toks, titleToks) ? b : a));
+      const best = desiredTokens.reduce((a, b) => (roleSimilarity(b.role, titleRole) > roleSimilarity(a.role, titleRole) ? b : a));
       reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
     } else if (objSim >= 0.5) reasonsScored.push([0.9, `El aviso se relaciona con tu objetivo: “${sanitizeDisplay(prefs.objetivo, 160)}”.`]);
     else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
@@ -609,7 +664,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
       family: ex.family.value,
       seniority: ex.seniority?.value ?? null,
       employmentType: ex.employmentType?.value ?? null,
-      score: Math.round(Math.max(0, Math.min(1, raw)) * 100),
+      // Nunca 100%: es una estimación con los datos disponibles, no una certeza.
+      score: Math.min(MAX_SCORE, Math.round(Math.max(0, Math.min(1, raw)) * 100)),
       confidence: conf >= 0.75 ? "alta" : conf >= 0.5 ? "media" : "baja",
       depth: "reglas",
       reasons: reasonsScored.sort((a, b) => b[0] - a[0]).map((r) => r[1]).filter((r, i, arr) => arr.indexOf(r) === i).slice(0, 3),
@@ -620,6 +676,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       reviewedAt: o.lastVerifiedAt ?? o.lastSeenAt,
       reviewedLabel: o.lastVerifiedAt ? "Revisado en el sitio del empleador" : "Visto por última vez en la fuente",
       publishedAt: o.publishedAt,
+      firstSeenAt: o.firstSeenAt,
       ...(!o.publishedAt && primary?.postedLabel ? { postedLabel: sanitizeDisplay(primary.postedLabel, 40) } : {}),
       ...(logoUrl ? { logo: logoUrl } : {}),
       excerpt: primary ? sanitizeDisplay(primary.descriptionText.replace(/\s+/g, " "), 320) : "",

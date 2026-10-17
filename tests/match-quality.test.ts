@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { familyFromTitle, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
+import { extract, familyFromTitle, findSkills, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
 
 describe("calidad de los avisos locales", () => {
   it.each([
@@ -56,5 +56,42 @@ describe("inglés implícito (aviso escrito en inglés)", async () => {
   it("respeta el nivel cuando el aviso lo declara", () => {
     const langs = extract({ title: "Support", descriptionText: `${en} Intermediate English is required.` }).languages;
     expect(langs).toEqual([{ language: "inglés", level: "intermediate", required: true }]);
+  });
+});
+
+describe("años pedidos y primer empleo", () => {
+  it("lee los años en sus formas habituales", () => {
+    expect(yearsRequired("Experiencia mínima de dos años en roles SEO")).toBe(2);
+    expect(yearsRequired("must haves minimum 8 years of enterprise sales")).toBe(8);
+    expect(yearsRequired("5 years of progressive experience in executive search")).toBe(5);
+    expect(yearsRequired("3+ years designing and shipping websites")).toBe(3);
+    expect(yearsRequired("Licenciatura en Administración de Empresas - mínimo 4 años de experiencia en contabilidad")).toBe(4);
+    expect(yearsRequired("Experiencia mínima de 6 meses en atención al público")).toBe(0.5);
+  });
+
+  it("no confunde edades ni la historia de la empresa", () => {
+    expect(yearsRequired("Aceptamos primer empleo de 18 a 24 años")).toBeNull();
+    expect(yearsRequired("Somos una empresa con más de 30 años de experiencia en el rubro")).toBeNull();
+    expect(yearsRequired("con más de 20 años de trayectoria en el mercado")).toBeNull();
+  });
+
+  it("un aviso sin experiencia previa es junior", () => {
+    const e = extract({ title: "Vendedor/a de salón", descriptionText: "Buscamos personas para atención al público. No se requiere experiencia, te capacitamos." });
+    expect(e.seniority).toMatchObject({ value: "junior", from: "descripcion" });
+  });
+});
+
+describe("habilidades de áreas no técnicas", () => {
+  it("reconoce herramientas y tareas de administración, RR. HH., logística y comercio", () => {
+    const s = findSkills("Experiencia en facturación, conciliaciones bancarias y Tango Gestión. Manejo de WMS y control de stock. Licencia de conducir profesional. Liquidación de IVA e Ingresos Brutos. Clima laboral y onboarding.");
+    for (const k of ["facturación", "conciliaciones bancarias", "tango gestión", "wms", "gestión de inventario", "licencia de conducir", "impuestos argentinos", "clima laboral", "onboarding"]) expect(s).toContain(k);
+  });
+
+  it("no toma beneficios ni etapas del proceso como habilidades", () => {
+    const s = findSkills("Te brindamos capacitación constante. El proceso incluye 2 entrevistas. Ganancias por comisiones. Stock options.");
+    expect(s).not.toContain("capacitación");
+    expect(s).not.toContain("entrevistas por competencias");
+    expect(s).not.toContain("impuestos argentinos");
+    expect(s).not.toContain("gestión de inventario");
   });
 });

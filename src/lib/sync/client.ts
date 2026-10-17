@@ -49,9 +49,13 @@ function acknowledge(m: Meta, doc: SyncDoc, remote: StoredDoc | null): void {
   m.last[doc] = remote?.updatedAt ?? 0;
   m.base[doc] = remote?.data ?? null;
 }
-/** Un borrado remoto con versión prevalece sobre una copia vieja con cambios pendientes. */
-function reconcile(doc: SyncDoc, local: unknown, remote: StoredDoc | null, base: unknown): unknown {
-  if (remote?.data === null || local === null) return null;
+/**
+ * Un borrado remoto con versión prevalece sobre una copia vieja con cambios pendientes.
+ * Lo que se armó en este navegador antes de ingresar por primera vez no es una copia vieja: se conserva.
+ */
+function reconcile(doc: SyncDoc, local: unknown, remote: StoredDoc | null, base: unknown, firstTime = false): unknown {
+  if (local === null) return null;
+  if (remote?.data === null) return firstTime ? local : null;
   return mergeDoc(doc, local, remote?.data ?? null, base);
 }
 async function push(doc: SyncDoc): Promise<void> {
@@ -138,7 +142,7 @@ async function pull(): Promise<void> {
         const dirty = firstTime ? local != null : !!m.dirty[doc];
         if (dirty) {
           const changedRemote = (remote?.updatedAt ?? 0) !== (m.last[doc] ?? 0);
-          if (changedRemote) applyLocal(doc, reconcile(doc, local, remote, m.base[doc]));
+          if (changedRemote) applyLocal(doc, reconcile(doc, local, remote, m.base[doc], firstTime));
           acknowledge(m, doc, remote);
           m.dirty[doc] = !same(load(SYNC_DOCS[doc]), remote?.data ?? null);
         } else {

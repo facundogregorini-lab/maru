@@ -26,10 +26,18 @@ export default function EditableText({
   const ref = useRef<HTMLElement>(null);
   const initialValue = useRef(value);
   const focusValue = useRef(value);
+  /** Lo último que publicó este campo mientras se escribía. */
+  const emitted = useRef(value);
 
   useEffect(() => {
     const el = ref.current;
-    if (el && document.activeElement !== el && el.innerText !== value) el.innerText = value;
+    if (!el || el.innerText === value) return;
+    // Con foco no se toca (movería el cursor), salvo que el cambio venga de afuera: por ejemplo,
+    // "Mejorar" de la IA mientras el párrafo está seleccionado (en el celular, siempre).
+    if (document.activeElement !== el || value !== emitted.current) {
+      el.innerText = value;
+      emitted.current = value;
+    }
   }, [value]);
 
   return (
@@ -48,6 +56,7 @@ export default function EditableText({
       onInput={(e: React.FormEvent<HTMLElement>) => {
         // No recortar mientras escribe: el espacio final todavía puede ser parte de una palabra.
         const v = e.currentTarget.innerText.replace(/ /g, " ");
+        emitted.current = v;
         if (v !== value) onChange(v);
       }}
       onBlur={(e: React.FocusEvent<HTMLElement>) => {

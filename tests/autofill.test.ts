@@ -124,6 +124,34 @@ describe("normalizeAnswers", () => {
     expect(normalizeAnswers(sensitive, answers, true).map((x) => x.id)).toEqual(["ok1"]);
   });
 
+  it("tampoco consentimientos, declaraciones ni datos étnicos comunes en Argentina", () => {
+    const labels = [
+      "Autorizo el tratamiento de mis datos personales (Ley 25.326)",
+      "Acepto las bases y condiciones",
+      "Declaro bajo juramento que los datos son verdaderos",
+      "Acepto los Términos de uso",
+      "Quiero recibir novedades por email",
+      "¿Cuál es tu origen étnico?",
+      "Edad",
+    ];
+    const fs: AutofillField[] = labels.map((etiqueta, i) => ({ id: `x${i}`, tipo: "casilla", etiqueta }));
+    expect(normalizeAnswers(fs, fs.map((f) => a(f.id, "sí")), true)).toEqual([]);
+    // Pero sí lo que se responde con el perfil o los datos extra.
+    const ok: AutofillField[] = [
+      { id: "w", tipo: "opcion_unica", etiqueta: "¿Tenés autorización para trabajar en Argentina?", opciones: ["Sí", "No"] },
+      { id: "l", tipo: "seleccion", etiqueta: "Language level", opciones: ["Basic", "Advanced"] },
+    ];
+    expect(normalizeAnswers(ok, [a("w", "Sí"), a("l", "Advanced")], true).map((x) => x.id)).toEqual(["w", "l"]);
+  });
+
+  it("los números con punto de miles se leen bien", () => {
+    const n: AutofillField[] = [{ id: "n", tipo: "numero", etiqueta: "Pretensión" }];
+    expect(normalizeAnswers(n, [a("n", "USD 3.000")], true)[0].valor).toBe("3000");
+    expect(normalizeAnswers(n, [a("n", "1.500.000")], true)[0].valor).toBe("1500000");
+    expect(normalizeAnswers(n, [a("n", "2,5")], true)[0].valor).toBe("2.5");
+    expect(normalizeAnswers(n, [a("n", "3,000")], true)[0].valor).toBe("3000");
+  });
+
   it("no adjunta el CV si la persona no subió un archivo", () => {
     expect(normalizeAnswers(fields, [a("0:f6", "cv")], false)).toEqual([]);
   });

@@ -32,6 +32,8 @@ export const config = {
     "/api/entrevista/:path*",
     "/api/video/:path*",
     "/api/autofill",
+    "/api/export/:path*",
+    "/api/auth/request",
     "/api/tracking/:path*",
   ],
 };
