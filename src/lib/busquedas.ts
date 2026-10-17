@@ -1,6 +1,7 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
 import { displayTitle, isInferred } from "./match/labels";
 import { loadInventory, resolveId } from "./match/load";
+import { relativeAgeDays } from "./match/providers";
 import { ageDays, displayLocations, HIDE_AFTER_DAYS } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
@@ -79,12 +80,24 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     anios: o.extracted.yearsRequired,
     salario: salaryText(o.salary?.value),
     eligible: o.eligibility.status === "elegible",
-    postedAt: o.publishedAt ?? o.firstSeenAt,
-    postedKnown: !!o.publishedAt,
+    postedAt: postedDate(o, postings).iso,
+    postedKnown: postedDate(o, postings).known,
     ...(logo ? { logo } : {}),
     applyUrl: p.applyUrl,
     attribution: p.attribution ?? "",
   };
+}
+
+/**
+ * Cuándo se publicó: la fecha de la fuente, o la que da a entender su "hace 25 días" (Google Jobs),
+ * o, si no hay nada, cuándo la vimos por primera vez (known: false).
+ */
+function postedDate(o: Opportunity, postings: Postings): { iso: string; known: boolean } {
+  if (o.publishedAt) return { iso: o.publishedAt, known: true };
+  const label = postings.get(o.primaryKey)?.postedLabel;
+  const days = label ? relativeAgeDays(label) : null;
+  if (days !== null) return { iso: new Date(Date.parse(o.firstSeenAt) - days * 86_400_000).toISOString(), known: true };
+  return { iso: o.firstSeenAt, known: false };
 }
 
 export async function searchJobs(query: JobQuery, now = new Date()): Promise<{ total: number; results: JobResult[] }> {
@@ -93,7 +106,7 @@ export async function searchJobs(query: JobQuery, now = new Date()): Promise<{ t
   const matches = inv.opportunities.filter((o) => {
     if (o.status !== "abierta") return false;
     // Los de más de 4 meses no se listan; su página sigue andando para quien tenga el link.
-    if (ageDays(o, now) > HIDE_AFTER_DAYS) return false;
+    if (ageDays({ publishedAt: postedDate(o, postings).iso, firstSeenAt: o.firstSeenAt }, now) > HIDE_AFTER_DAYS) return false;
     if (query.donde === "ar" && o.eligibility.status !== "elegible") return false;
     if (query.area && o.extracted.family.value !== query.area) return false;
     if (query.nivel && o.extracted.seniority?.value !== query.nivel) return false;
@@ -105,8 +118,8 @@ export async function searchJobs(query: JobQuery, now = new Date()): Promise<{ t
     }
     return true;
   });
-  const date = (o: Opportunity) => o.publishedAt ?? o.firstSeenAt;
-  matches.sort((a, b) => date(b).localeCompare(date(a)));
+  const dates = new Map(matches.map((o) => [o.id, postedDate(o, postings).iso]));
+  matches.sort((a, b) => dates.get(b.id)!.localeCompare(dates.get(a.id)!));
   const page = matches.slice((query.pagina - 1) * PAGE_SIZE, query.pagina * PAGE_SIZE);
   return { total: matches.length, results: page.flatMap((o) => toResult(o, postings) ?? []) };
 }

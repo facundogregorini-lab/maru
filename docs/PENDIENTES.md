@@ -168,7 +168,25 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
   - avisar de los campos que no puede leer (Shadow DOM, editores enriquecidos);
   - sumar `extension/` a eslint.
 
-**Auditorías de los demás productos:** se cortaron por el límite de uso de la sesión antes de reportar. Falta repetirlas para Postulación, CV, Carta, Entrevista y Video, Búsquedas y Seguimiento, y cuenta y cobros.
+**Auditoría de Búsquedas, Seguimiento y Chat (17/10, hecha):**
+- **Seguimiento:** una nota ya no se borra cuando la tarjeta cambió en otra pestaña o dispositivo; se guarda sólo si la persona la cambió.
+- **Sincronización:** el primer ingreso en un navegador nuevo ya no borra lo que se armó sin sesión, aunque la cuenta tenga una marca de borrado. Hay un test que reproduce el caso.
+- **Chat:** recomienda avisos por palabras con contenido (sin "para" o "como"), de hasta 120 días y con títulos y empresas limpios.
+- **Búsquedas:**
+  - ordena por la fecha de la fuente, usando el "hace 25 días" de Google Jobs;
+  - se pueden recorrer todas las páginas (antes cortaba en 50);
+  - una página fuera de rango redirige a la última.
+- **Chat en `/busquedas`:** cada uno de los dos chats tiene su id, así que el label enfoca el suyo.
+- **"Adaptar mi CV" desde una tarjeta:** lleva el texto del aviso y el id, y no duplica tarjetas sin link.
+- **Pendiente:**
+  - cupo diario del chat cuando se active el cobro (decisión comercial);
+  - "Salir" deja los datos en el navegador (ofrecer "Salir y borrar");
+  - `/seguimiento?add=` sin confirmación;
+  - página propia para avisos cerrados;
+  - canonical de ids alias;
+  - fechas en el HTML inicial.
+
+**Auditorías pendientes de corregir:** Postulación, CV, Carta (ya reportadas), Entrevista y Video, cuenta y cobros.
 
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 

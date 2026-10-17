@@ -202,6 +202,25 @@ describe("sincronización entre dispositivos", () => {
 });
 
 
+describe("primer ingreso después de un borrado", () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+  it("lo que se armó sin sesión en un navegador nuevo no se borra por un borrado viejo de la cuenta", async () => {
+    const pc = await device("ana@example.com");
+    await pc.run(() => pc.sync.setSyncAccount("ana@example.com"));
+    await pc.run(() => pc.tracker.upsertTracked({ title: "Vieja", company: "Acme" }));
+    const { forgetEverything } = await import("@/lib/match/clientStore");
+    await pc.run(() => forgetEverything());
+
+    const nuevo = await device("ana@example.com");
+    await nuevo.run(() => nuevo.tracker.upsertTracked({ title: "Nueva", company: "Globant" }));
+    await nuevo.run(() => nuevo.sync.setSyncAccount("ana@example.com"));
+    expect(nuevo.read("maru:tracker:v1").map((c: TrackItem) => c.title)).toEqual(["Nueva"]);
+    const { docs } = await (await GET(req("GET", "ana@example.com"))).json();
+    expect(docs.tracker.data.map((c: TrackItem) => c.title)).toEqual(["Nueva"]);
+  });
+});
+
 describe("regresiones de concurrencia", () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
