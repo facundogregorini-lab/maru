@@ -97,8 +97,7 @@ export function unreadable(): UserFacingError {
 }
 
 export function feedbackBlock(feedback: string | undefined): Block {
-  if (!feedback?.trim()) throw new UserFacingError("Contanos por qué te interesa la vacante.", "FEEDBACK_MISSING");
-  return { type: "text", text: `<feedback_de_la_persona>\n${feedback.trim()}\n</feedback_de_la_persona>` };
+  return { type: "text", text: `<feedback_de_la_persona>\n${feedback?.trim() || "(sin completar)"}\n</feedback_de_la_persona>` };
 }
 
 /** Llamada con salida estructurada validada por Zod. */

@@ -95,6 +95,7 @@ export default function CvEditor({
   const gate = useLoginGate();
 
   function exportAs(kind: "pdf" | "docx") {
+    if (cropFile) return;
     gate.run("descargar tu CV", () => doExport(kind));
   }
 
@@ -144,7 +145,7 @@ export default function CvEditor({
             <button
               type="button"
               onClick={() => exportAs("docx")}
-              disabled={!!busy}
+              disabled={!!busy || !!cropFile}
               className="shrink-0 rounded-full bg-brand px-4 py-2 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:opacity-70"
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word"}
@@ -166,10 +167,11 @@ export default function CvEditor({
 
         <aside className="space-y-4">
           <div className="flex flex-col gap-2 rounded-3xl bg-paper p-5 lg:sticky lg:top-4">
+            {cropFile && <p role="status" className="text-sm leading-relaxed text-brand-dark">Foto pendiente: tocá “Usar foto” para incluirla en la descarga, o cancelá el recorte.</p>}
             <button
               type="button"
               onClick={() => exportAs("pdf")}
-              disabled={!!busy}
+              disabled={!!busy || !!cropFile}
               className="rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:opacity-70"
             >
               {busy === "pdf" ? "Generando PDF…" : "Descargar PDF"}
@@ -177,7 +179,7 @@ export default function CvEditor({
             <button
               type="button"
               onClick={() => exportAs("docx")}
-              disabled={!!busy}
+              disabled={!!busy || !!cropFile}
               className="rounded-full border border-brand px-4 py-2.5 text-sm font-medium text-brand-dark transition hover:bg-brand-soft disabled:opacity-70"
             >
               {busy === "docx" ? "Generando Word…" : "Descargar Word (.docx)"}

@@ -16,6 +16,7 @@ vi.mock("@/lib/claude", async (importOriginal) => {
 
 const { POST: profilePOST } = await import("@/app/api/profile/route");
 const { POST: analyzePOST } = await import("@/app/api/analyze/route");
+const { POST: generatePOST } = await import("@/app/api/generate/route");
 
 const pdfBase64 = readFileSync(new URL("./fixtures/cv.pdf", import.meta.url)).toString("base64");
 const onlyPdf = { source: { kind: "cv", fileBase64: pdfBase64, mimeType: PDF_MIME } };
@@ -96,11 +97,30 @@ describe("/api/profile", () => {
 });
 
 describe("/api/analyze", () => {
+  it.each([{}, { feedback: "" }, { feedback: "   " }])("acepta motivación opcional sin atribuir motivos: %j", async (feedback) => {
+    askStructured.mockResolvedValue({ puesto: "Head of Growth" });
+    const res = await analyzePOST(req({ jobUrl: "", ...onlyPdf, ...feedback }));
+    expect(res.status).toBe(200);
+    expect(askStructured.mock.calls[0][0].content[0].text).toContain("(sin completar)");
+    expect(askStructured.mock.calls[0][0].system).toContain("sin atribuirle motivos personales");
+  });
   it("solo PDF, sin texto pegado: no rechaza el CV", async () => {
     askStructured.mockResolvedValue({ puesto: "Head of Growth" });
     const res = await analyzePOST(req({ jobUrl: "", feedback: "Me encanta que…", ...onlyPdf }));
     expect(res.status).toBe(200);
     const content = askStructured.mock.calls[0][0].content;
     expect(content.some((b: { type: string }) => b.type === "document")).toBe(true);
+  });
+});
+
+describe("/api/generate", () => {
+  it("genera sin motivación ni respuestas opcionales", async () => {
+    askStructured.mockResolvedValue({ titular: "Growth Lead" });
+    const res = await generatePOST(req({ jobUrl: "", profile, analysis: { preguntas: [{ id: "q1", pregunta: "¿Qué destacarías?" }] }, answers: {} }));
+    expect(res.status).toBe(200);
+    const { content, system } = askStructured.mock.calls[0][0];
+    expect(content[1].text).toContain("(sin completar)");
+    expect(content[2].text).toContain("(sin responder)");
+    expect(system).toContain("sin inventar entusiasmo");
   });
 });

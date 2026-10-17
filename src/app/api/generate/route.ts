@@ -6,7 +6,7 @@ import { GenerationSchema, type Analysis, type JobInput, type Profile } from "@/
 export const maxDuration = 300;
 
 type Body = JobInput & {
-  feedback: string;
+  feedback?: string;
   profile: Profile;
   analysis: Analysis;
   answers: Record<string, string>;

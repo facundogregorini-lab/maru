@@ -24,6 +24,7 @@ export default function Questions({
   gapAnswers,
   setGapAnswers,
   preguntas,
+  questionsHint = "Te recomendamos responder para adaptar mejor tu CV al puesto que buscás. Es opcional; con una línea por respuesta alcanza.",
   answers,
   setAnswers,
   onBack,
@@ -43,6 +44,7 @@ export default function Questions({
   gapAnswers: Answers;
   setGapAnswers: SetAnswers;
   preguntas: Question[];
+  questionsHint?: string;
   answers: Answers;
   setAnswers: SetAnswers;
   onBack: () => void;
@@ -111,7 +113,7 @@ export default function Questions({
 
       <section>
         <h2 className="font-display text-2xl tracking-tight">Para destacar</h2>
-        <p className="mt-1 text-sm text-muted">Con una línea alcanza (o contalo en un audio). Si no sabés, dejala vacía.</p>
+        <p className="mt-1 max-w-3xl text-sm text-muted">{questionsHint}</p>
         <div className="mt-5 space-y-4">
           {preguntas.map((q, idx) => (
             <div key={q.id} className="rounded-3xl border border-line bg-paper/70 p-5 sm:p-6">

@@ -6,7 +6,7 @@ import { AnalysisSchema, type CvSource, type JobInput } from "@/lib/schemas";
 
 export const maxDuration = 300;
 
-type Body = JobInput & { feedback: string; source?: CvSource };
+type Body = JobInput & { feedback?: string; source?: CvSource };
 
 export async function POST(req: Request) {
   const auth = await planGuard(req);

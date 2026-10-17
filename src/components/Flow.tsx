@@ -130,7 +130,7 @@ export default function Flow() {
 
   const setDoc = (fn: (d: CvDoc) => CvDoc) => setDocState((d) => (d ? fn(d) : d));
 
-  const missing = [jobInputIssue(jobUrl, jobText), cv.issue, !feedback.trim() ? "Contanos por qué te interesa esta vacante." : null].filter(Boolean);
+  const missing = [jobInputIssue(jobUrl, jobText), cv.issue].filter(Boolean);
   const canAnalyze = missing.length === 0;
   const job = () => ({ jobUrl: jobUrl.trim(), jobText: showJobText ? jobText : undefined });
 
@@ -255,7 +255,7 @@ export default function Flow() {
               )}
             </StepCard>
 
-            <StepCard n={2} title="¿Por qué esta vacante?" hint="Contalo con tus palabras, como si se lo contaras a alguien de confianza. Escribilo o grabalo.">
+            <StepCard n={2} title="¿Por qué esta vacante? (opcional)" hint="Para personalizar tu presentación y tus respuestas.">
               <ul className="mb-3 grid gap-2 sm:grid-cols-3">
                 {GUIDE.map((g) => (
                   <li key={g} className="rounded-xl bg-sand px-3 py-2 text-xs leading-snug text-muted">
@@ -301,6 +301,7 @@ export default function Flow() {
           strengths={analysis.fortalezas_detectadas}
           gapsList={analysis.brechas}
           preguntas={analysis.preguntas}
+          questionsHint="Te recomendamos responder para adaptar mejor tu CV a esta vacante. Es opcional; con una línea por respuesta alcanza."
           nextLabel="Armar mi postulación"
           gaps={gaps}
           answers={answers}
