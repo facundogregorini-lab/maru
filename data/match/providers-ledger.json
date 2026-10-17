@@ -2260,6 +2260,66 @@
       "rows": 9,
       "consumed": 1,
       "quota": {}
+    },
+    {
+      "at": "2026-10-17T13:58:03.748Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo tucuman",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "60lFbtLMuOXstK8X6",
+        "datasetId": "fDk0Ti8BL5Lgs0zv0"
+      },
+      "rows": 29,
+      "consumed": 0.0503,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 4.398,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-17T13:58:03.748Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "vendedor mendoza",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "QTiGACrVEb0BKTbI3",
+        "datasetId": "f8o1sjCxQc5PmRa7U"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 4.569,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-17T13:58:03.748Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo salta",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "Wc8TyCVtTsXiCe9H7",
+        "datasetId": "fldeywM6WakC3BC0k"
+      },
+      "rows": 32,
+      "consumed": 0.0554,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 4.624,
+        "budgetUsd": 5
+      }
     }
   ]
 }
