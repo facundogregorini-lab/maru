@@ -305,6 +305,41 @@ describe("calibración del porcentaje de afinidad", () => {
     const result = run(o, { ...dataProfile, yearsExperience: null }, { prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"], seniorities: ["senior"] } });
     expect(result.pending.join(" ")).toMatch(/4\+ años de experiencia: confirmá/);
   });
+
+  it("reconoce un objetivo de inteligencia artificial sin exigir que agregue roles en inglés", async () => {
+    const o = await example({ title: "Senior AI Solutions Consultant" });
+    o.extracted.family.value = "consultoria";
+    o.extracted.skillsRequired = ["inteligencia artificial"];
+    const p = { ...dataProfile, headline: "Consultoría de automatización", titles: ["Consultor en IA"], skills: ["IA", "n8n"] };
+    const prefs = { ...basePrefs, objetivo: "inteligencia artificial", rolesDeseados: [] };
+    expect(run(o, p, { prefs }).score).toBeGreaterThanOrEqual(90);
+  });
+
+  it("el texto libre del objetivo no se diluye por el resto de herramientas del aviso", async () => {
+    const o = await example({ title: "AI Consultant for Business Process Automation LATAM" });
+    const prefs = { ...basePrefs, objetivo: "Quiero trabajar en inteligencia artificial", rolesDeseados: [] };
+    const result = run(o, dataProfile, { prefs, weights: { habilidades: 0, intencion: 1, seniority: 0, extras: 0 } });
+    expect(result.score).toBe(100);
+  });
+
+  it("mencionar IA en el contexto de la empresa no convierte contabilidad en el rol de IA buscado", async () => {
+    const o = await example({ title: "Accounting Analyst" });
+    o.extracted.family.value = "finanzas";
+    o.extracted.skillsRequired = ["contabilidad"];
+    o.extracted.skillsMentioned = ["inteligencia artificial"];
+    const p = { ...dataProfile, titles: ["Consultor de IA"], headline: "Consultor de IA", skills: ["LLMs"] };
+    expect(run(o, p, { minScore: 0, prefs: { ...basePrefs, objetivo: "inteligencia artificial", rolesDeseados: [] } }).score).toBeLessThan(50);
+  });
+
+  it("Founder/Director no cuenta como experiencia directa en Head of Art", async () => {
+    const o = await example({ title: "Head of Art" });
+    o.extracted.family.value = "diseno";
+    o.extracted.skillsRequired = ["figma"];
+    const p = { ...dataProfile, titles: ["Founder & Director"], headline: "Founder & Director", skills: ["Excel"] };
+    const result = run(o, p, { minScore: 0, prefs: { ...basePrefs, objetivo: "inteligencia artificial", rolesDeseados: [] } });
+    expect(result.reasons.join(" ")).not.toMatch(/se relaciona directamente/);
+    expect(result.score).toBeLessThan(45);
+  });
 });
 
 describe("perfil para el match", () => {

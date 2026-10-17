@@ -2,6 +2,7 @@
 
 ## QC y porcentaje de Match (17/10/2026, PR #71)
 
+- **Seguimiento de objetivos en texto libre:** se detectó que “inteligencia artificial” no reconocía AI y que un objetivo corto se diluía contra toda la lista de requisitos. Corregido con equivalencias de frases y cobertura del objetivo por evidencia: título > requisito > deseable > mención de contexto. Director/Head/Founder son genéricos y ya no justifican experiencia directa en otra especialidad. Cuatro regresiones adicionales; no se modificaron preferencias reales de la cuenta.
 - Calibración pedida por el dueño: quitar la doble penalización de intención y los topes 95/98; datos ausentes afectan confianza, sin asignarles 50%. Roles contenidos en títulos largos, equivalencias locales y deseables con peso limitado. La antigüedad de una persona no implica Lead.
 - Afinidad separada del orden: guardados, descartes y frescura mantienen el ranking sin alterar el porcentaje. Se preservan las mejoras hasta PR #70, incluidos ubicación, elegibilidad, variedad de empresas, idioma y ocultamiento a 120 días. Las búsquedas agregadas por la persona no desaparecen por el umbral de coincidencia mínima.
 - Regresión reproducible con cinco perfiles ficticios sobre el mismo catálogo: [decisiones, muestra y resultados](QC-MATCH-2026-10-17.md). Máximos administración 82→100, ventas 95→100, datos 91→92, marketing junior 74→85, operaciones 93→88 (baja al corregir ciudad/provincia). Son pruebas de coherencia, no validación de contrataciones.
