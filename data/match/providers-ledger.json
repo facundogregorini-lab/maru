@@ -2320,6 +2320,832 @@
         "spentUsd": 4.624,
         "budgetUsd": 5
       }
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 172,
+        "total_searches_left": 172,
+        "searches_per_month": 250,
+        "this_month_usage": 78,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Neuquén",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Neuquén",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Neuquén",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Mar del Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Mar del Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 8,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Mar del Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 8,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Santa Fe",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Santa Fe",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Bahía Blanca",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Bahía Blanca",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Bahía Blanca",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Salta",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Salta",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Salta",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 7,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos La Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística La Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable La Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos San Juan",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística San Juan",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable San Juan",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Paraná",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 9,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Paraná",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 9,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Paraná",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 5,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Corrientes",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 9,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Corrientes",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Corrientes",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 6,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Resistencia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 6,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Resistencia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Resistencia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos San Luis",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 8,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística San Luis",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 2,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable San Luis",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Santiago del Estero",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 2,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Santiago del Estero",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 2,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Santiago del Estero",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Comodoro Rivadavia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Comodoro Rivadavia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Comodoro Rivadavia",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Bariloche",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 7,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Bariloche",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 3,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Bariloche",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Río Cuarto",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 7,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Río Cuarto",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Río Cuarto",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 1,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Tandil",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 5,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Tandil",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 6,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:31:40.282Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "contable Tandil",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
     }
   ]
 }
