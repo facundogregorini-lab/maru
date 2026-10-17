@@ -4,7 +4,7 @@ Etiqueta de Google cargada **directamente en el código** (sin Google Tag Manage
 
 ## Estado
 
-- Código listo en la rama `claude/conversiones-google-ads`.
+- Código en `main` desde la PR #77 (17/10/2026).
 - `/privacidad` explica la etiqueta de Google Ads, sus cookies de medición y qué no se envía.
 - Variables de abajo cargadas en Vercel (Production) el 17/10/2026. Se activa con el primer deploy de producción que incluya este código (las `NEXT_PUBLIC_*` se fijan al compilar). Sin `NEXT_PUBLIC_GOOGLE_ADS_ID` no se carga nada.
 

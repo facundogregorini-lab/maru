@@ -60,13 +60,14 @@ Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falt
 
 ## Conversiones de Google Ads (17/10/2026)
 
-Rama `claude/conversiones-google-ads`. Detalle completo en `docs/TRACKING.md`.
+Mergeado a `main` en la PR #77. Detalle completo en `docs/TRACKING.md`.
 
-- **Hecho en código:** etiqueta de Google directa (sin GTM), capa central `src/lib/tracking`, deduplicación por cuenta en Redis, los cuatro eventos (activación, límite con planes visibles, inicio de checkout, compra verificada) y el modal de planes al chocar con el cupo gratis (`PaywallHost`). Apagado mientras no estén las variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Vercel.
+- **Hecho en código:** etiqueta de Google directa (sin GTM), capa central `src/lib/tracking`, deduplicación por cuenta en Redis, los cuatro eventos (activación, límite con planes visibles, inicio de checkout, compra verificada) y el modal de planes al chocar con el cupo gratis (`PaywallHost`).
 - **Hecho en Google Ads:** 4 acciones "Maru | …" (todas secundarias), objetivo personalizado "Maru | Optimización límite gratuito" (sólo "Límite alcanzado") asignado como único objetivo a las 3 campañas MARU_AR_SEARCH_*.
 - **Hecho:** `/privacidad` actualizada con la etiqueta de Google Ads. Puja de las 3 campañas de Maru: Maximizar conversiones (objetivo personalizado).
 - **Hecho:** variables `NEXT_PUBLIC_GOOGLE_ADS_*` cargadas en Vercel (Production, tipo Config).
-- **Falta:** mergear esta rama a `main` (dispara el deploy de producción) y la verificación en producción (lista en `docs/TRACKING.md`).
+- **Hecho:** merge a `main` (PR #77), que dispara el deploy de producción con la etiqueta activa.
+- **Falta:** la verificación en producción (lista en `docs/TRACKING.md`).
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
