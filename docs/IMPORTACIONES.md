@@ -60,9 +60,26 @@ Después de importar se corrió `match-sync` a mano: re-analizó todo con `EXTRA
 - **Apify:** registro conservador US$4,62 de US$5. Gasto real ≈ US$3 (la cuenta muestra el uso exacto). La última tanda fue Computrabajo para Tucumán, Mendoza y Salta (161 filas). No quedan corridas grandes posibles sin pasar el tope.
 - **Teamtailor:** fuente gratuita diaria con 13 empleadores (RSS público).
 
+## Cierre de la base (17/10/2026, tarde)
+
+| Fuente | Consumo total | Saldo | Publicaciones abiertas |
+| --- | --- | --- | ---: |
+| Fantastic | 448/450 créditos | Trial agotado | 413 (ATS 163 + LinkedIn 250) |
+| Google Jobs (SerpApi) | 216/250 búsquedas del mes | 34 (20 de reserva para el panel) | 961 |
+| Apify | **US$4,56 reales** (cuenta) de US$5 | No se usa más: el uso de la cuenta puede informarse con atraso | Computrabajo 900 · LinkedIn 517 · Indeed 213 |
+
+Catálogo después de la sync: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 empleadores con elegibles** (E0: 909 grupos y 90 empleadores). Medición en [research/e1-final-2026-10-17](research/e1-final-2026-10-17/README.md).
+
+Desde #60, si Google Jobs no responde una búsqueda en 55 s, la búsqueda se saltea y la corrida sigue. Si fallan dos seguidas, frena. Las búsquedas "zona norte/oeste/sur" de la tanda 4 traen pocas filas y suelen tardar: no vale la pena repetirlas.
+
 ## Próximas corridas recomendadas
 
-1. **Fantastic, segundo corte (antes del 22/10):** `provider=fantastic mode=status` y después `mode=run args=--cohorts=G1,G2 --feeds=ats,jb --limit=40 --max-jobs=170 --time-frame=7d`. Prioriza generalistas; T1 ya está cubierto por los ATS gratuitos. Comparar repetidos contra el primer corte (ledger + `firstSeenAt`).
-2. **Google Jobs, una vez por mes:** `provider=serpapi mode=run args=--max-searches=24 --reserve=20`. Conviene sumar búsquedas de ciudades sin oferta (Salta, Neuquén, Santa Fe, Mar del Plata, Bahía Blanca) en `SERP_QUERIES` de `src/lib/match/providers.ts`. Las de reserva del E0 se pueden usar una vez cerrada la comprobación.
-3. **Apify:** queda ~US$2,2 real del tope. El ledger estima de más, así que para gastarlo hay que subir `--budget-usd` hasta 5 + lo ya registrado de más, o ajustar `APIFY_PRICE_PER_ROW`. Indeed es lo más barato (~US$0,01 por 100 filas). Computrabajo es lo mejor para el interior. Sin aprobación nueva, no superar US$5 reales en total; el límite mensual de la cuenta Apify también está en US$5.
+1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
+2. **Google Jobs, una vez por mes** (cuando se renueva el plan gratuito): `provider=serpapi mode=run args=--max-searches=80 --reserve=20 --queries=…`. Conviene elegir las tandas que más rindieron:
+   - tanda 2 (`*2-*`, atención/ventas/administrativo en el interior);
+   - tanda 5 (`*5-*`, oficios);
+   - las de ciudades de la tanda 4.
+
+   Los avisos de Google Jobs vencen a los 21 días sin volver a verse: sin la corrida mensual, el catálogo vuelve a achicarse.
+3. **Apify:** el tope aprobado (US$5 reales) está casi usado. Para seguir hace falta una aprobación nueva del dueño. Después se corre con `--budget-source=account`. Si se aprueba, Computrabajo es lo que más rinde para el interior.
 4. **Directorio gratuito:** revisar `data/match/providers-discoveries.json` después de cada corrida de Fantastic. Los empleadores con `supported` se suman a `companies.json` y quedan en la sync diaria para siempre. Los que usan Workday, Teamtailor, SuccessFactors o Workable (la mayoría) necesitan conectores nuevos: ver PENDIENTES.

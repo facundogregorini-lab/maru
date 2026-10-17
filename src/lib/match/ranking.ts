@@ -483,7 +483,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
     // igual tienen que pesar, y los avisos viejos o que no son vacantes puntuales no deben liderar.
     if (wpValue !== "desconocido" && prefs.modalidades.length && !prefs.modalidades.includes(wpValue)) raw *= 0.85;
     if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
-      raw *= 0.8;
+      // Presencial en otra ciudad es mudarse o viajar todos los días: pesa más que híbrido.
+      raw *= wpValue === "presencial" ? 0.7 : 0.8;
       gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`);
     }
     // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.

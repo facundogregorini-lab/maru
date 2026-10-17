@@ -193,16 +193,6 @@
       "status": "candidata"
     },
     {
-      "name": "Remote People",
-      "sourceId": "greenhouse",
-      "slug": "remotepeople",
-      "region": "eu",
-      "sector": "staffing / ventas",
-      "evidence": "https://job-boards.eu.greenhouse.io/remotepeople",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
       "name": "Sezzle",
       "sourceId": "greenhouse",
       "slug": "sezzle",
@@ -229,16 +219,6 @@
       "region": "us",
       "sector": "fintech / ventas",
       "evidence": "https://job-boards.greenhouse.io/figment/jobs/5595302004",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
-      "name": "Remote",
-      "sourceId": "greenhouse",
-      "slug": "remotecom",
-      "region": "us",
-      "sector": "RR. HH. / servicios",
-      "evidence": "https://job-boards.greenhouse.io/remotecom",
       "addedAt": "2026-10-15",
       "status": "candidata"
     },
@@ -475,16 +455,6 @@
     {
       "name": "Welo Global",
       "sourceId": "lever",
-      "slug": "welocalize",
-      "region": "us",
-      "sector": "servicios lingüísticos",
-      "evidence": "https://jobs.lever.co/welocalize/?location=Argentina",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
-      "name": "Welo Global",
-      "sourceId": "lever",
       "slug": "weloglobal",
       "region": "us",
       "sector": "servicios lingüísticos",
@@ -669,16 +639,6 @@
       "region": "us",
       "sector": "consultoría / IA",
       "evidence": "https://jobs.ashbyhq.com/WON.ai/1aeb2b9c-cfc9-40ef-9c37-b2c7e864e2ec",
-      "addedAt": "2026-10-15",
-      "status": "candidata"
-    },
-    {
-      "name": "GovWorx",
-      "sourceId": "ashby",
-      "slug": "govworx",
-      "region": "us",
-      "sector": "tecnología / sector público",
-      "evidence": "https://jobs.ashbyhq.com/govworx/0044505a-1276-4a77-92e7-747b884b1af6",
       "addedAt": "2026-10-15",
       "status": "candidata"
     },
