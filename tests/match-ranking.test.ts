@@ -289,6 +289,22 @@ describe("calibración del porcentaje de afinidad", () => {
       expect(run(o, dataProfile, { prefs }).score).toBe(100);
     }
   });
+
+  it("un idioma sin nivel queda por confirmar, sin aprobarlo ni excluir por un dato desconocido", async () => {
+    const o = await example();
+    const p = { ...dataProfile, languages: [{ language: "English", level: "" }] };
+    const result = run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"], indispensables: ["idioma"] } });
+    expect(result).toBeDefined();
+    expect(result.score).toBeLessThan(80);
+    expect(result.pending.join(" ")).toMatch(/confirmá tu nivel/);
+    expect(result.gaps.join(" ")).toMatch(/no indica el nivel/);
+  });
+
+  it("no asume que los años de experiencia desconocidos cumplen el requisito", async () => {
+    const o = await example();
+    const result = run(o, { ...dataProfile, yearsExperience: null }, { prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"], seniorities: ["senior"] } });
+    expect(result.pending.join(" ")).toMatch(/4\+ años de experiencia: confirmá/);
+  });
 });
 
 describe("perfil para el match", () => {

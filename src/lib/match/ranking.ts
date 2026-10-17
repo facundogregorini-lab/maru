@@ -385,7 +385,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     const levelLabel = (l: { level: string }) => (l.level === ENGLISH_IMPLICIT && customerFacing ? "fluido (el aviso está escrito en inglés y el puesto es de cara al cliente)" : l.level);
     hardCheck(
       "idioma",
-      reqLangs.every((l) => pLangs.has(normLang(l.language))),
+      reqLangs.every((l) => langRank(pLangs.get(normLang(l.language)) ?? "") > 0),
       reqLangs.every((l) => langRank(pLangs.get(normLang(l.language)) ?? "") >= needLevel(l.level)),
       `Pide ${reqLangs.map((l) => l.language).join(" y ")}: confirmá tu nivel.`,
     );
@@ -436,6 +436,10 @@ export function rankOpportunities(input: RankInput): RankOutput {
     note(hasExperience);
     const fitWeight = (skillScore !== null ? mix[0] : 0) + (hasExperience ? mix[1] : 0);
     let candidateFit = fitWeight ? ((skillScore ?? 0) * mix[0] + (hasExperience ? expScore * mix[1] : 0)) / fitWeight : 0;
+    if (ex.yearsRequired !== null) {
+      note(profile.yearsExperience !== null);
+      if (profile.yearsExperience === null) pending.push(`Pide ${ex.yearsRequired}+ años de experiencia: confirmá cuántos tenés.`);
+    }
     if (ex.yearsRequired !== null && profile.yearsExperience !== null && profile.yearsExperience + 1 < ex.yearsRequired) {
       candidateFit *= 0.8;
       gaps.push(`Pide ${ex.yearsRequired}+ años de experiencia; tu CV suma alrededor de ${Math.floor(profile.yearsExperience)}.`);
@@ -495,14 +499,17 @@ export function rankOpportunities(input: RankInput): RankOutput {
       extras.push(salaryOk ? 1 : 0.2);
       if (salaryOk) reasonsScored.push([0.55, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
     } else if (prefs.salario?.monto) pending.push(sal ? "Publica salario, pero en otra moneda o período: comparalo vos." : "No informa salario.");
+    if (prefs.salario?.monto) note(salaryOk !== null);
     // El idioma también pesa en el total: un aviso que exige inglés avanzado no debería liderar
     // para alguien con nivel intermedio (y menos sin inglés en el CV).
     let langFactor = 1;
     for (const l of reqLangs) {
       const mine = pLangs.get(normLang(l.language));
       const need = needLevel(l.level);
-      if (mine === undefined) {
-        gaps.push(`Pide ${l.language}${l.level ? ` (${levelLabel(l)})` : ""}: no aparece en tu CV.`);
+      if (mine === undefined || !langRank(mine)) {
+        gaps.push(mine === undefined
+          ? `Pide ${l.language}${l.level ? ` (${levelLabel(l)})` : ""}: no aparece en tu CV.`
+          : `Pide ${l.language}${l.level ? ` (${levelLabel(l)})` : ""}: tu CV no indica el nivel, confirmalo.`);
         note(false);
         langFactor = Math.min(langFactor, 0.7);
       } else if (langRank(mine) && langRank(mine) < need) {
