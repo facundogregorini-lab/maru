@@ -101,6 +101,19 @@ export function roleTokens(s: string): Set<string> {
   return new Set(tokens(s).filter((t) => !SEN_WORDS.has(t)).map(canon));
 }
 
+/** Palabras de cargo que no dicen de qué es el puesto ("Analista de calidad" no se parece a "Analista de logística"). */
+const GENERIC_ROLE = new Set(
+  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant"].map(canon),
+);
+
+/** Similitud de cargos: manda lo específico; si sólo comparten palabras genéricas, cuenta poco. */
+function roleSim(a: Set<string>, b: Set<string>): number {
+  const ca = new Set([...a].filter((t) => !GENERIC_ROLE.has(t)));
+  const cb = new Set([...b].filter((t) => !GENERIC_ROLE.has(t)));
+  if (!ca.size || !cb.size) return dice(a, b);
+  return 0.8 * dice(ca, cb) + 0.2 * dice(a, b);
+}
+
 function dice(a: Set<string>, b: Set<string>): number {
   if (!a.size || !b.size) return 0;
   let inter = 0;
@@ -317,7 +330,9 @@ export function rankOpportunities(input: RankInput): RankOutput {
     };
     hardCheck("modalidad", wpValue !== "desconocido", prefs.modalidades.includes(wpValue), "No informa la modalidad (remoto, híbrido o presencial).");
     if (wpValue !== "remoto") {
-      hardCheck("ubicacion", o.locations.length > 0 && wpValue !== "desconocido" && userPlaces.length > 0, placeMatches(o.locations), "No queda claro dónde hay que trabajar.");
+      // Si el aviso está en un lugar que la persona eligió, la ubicación ya se cumple aunque no diga la modalidad.
+      const placeOk = userPlaces.length > 0 && o.locations.length > 0 && placeMatches(o.locations);
+      hardCheck("ubicacion", placeOk || (o.locations.length > 0 && wpValue !== "desconocido" && userPlaces.length > 0), placeOk, "No queda claro dónde hay que trabajar.");
     }
     hardCheck("seniority", !!ex.seniority, !!ex.seniority && (!prefs.seniorities.length || prefs.seniorities.includes(ex.seniority.value)), "No informa el nivel de seniority.");
     hardCheck("contrato", !!ex.employmentType, !!ex.employmentType && (!prefs.contratos.length || prefs.contratos.includes(ex.employmentType.value)), "No informa el tipo de contratación.");
@@ -366,7 +381,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       skillScore = Math.min(1, ment.filter((s) => pSkills.has(s)).length / Math.min(4, ment.length));
       note(false);
     } else note(false);
-    const titleSim = Math.max(0, ...pastTitles.map((t) => dice(t.toks, roleTokens(o.title))));
+    const titleSim = Math.max(0, ...pastTitles.map((t) => roleSim(t.toks, roleTokens(o.title))));
     const famPast = pastFamilies.has(ex.family.value);
     const expScore = Math.min(1, titleSim + (famPast ? 0.25 : 0));
     const mix = prefs.carrera === "cambio" ? [0.8, 0.2] : prefs.carrera === "continuidad" ? [0.55, 0.45] : [0.65, 0.35];
@@ -378,7 +393,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (matchedReq.length) reasonsScored.push([0.9, `Tu CV menciona ${list(matchedReq.slice(0, 3))}, que el aviso pide como requisito${matchedReq.length > 1 ? "s" : ""}.`]);
     else if (matchedDes.length) reasonsScored.push([0.6, `Tu CV menciona ${list(matchedDes.slice(0, 3))}, que el aviso valora.`]);
     if (titleSim >= 0.5 && pastTitles[0]) {
-      const best = pastTitles.reduce((a, b) => (dice(b.toks, roleTokens(o.title)) > dice(a.toks, roleTokens(o.title)) ? b : a));
+      const best = pastTitles.reduce((a, b) => (roleSim(b.toks, roleTokens(o.title)) > roleSim(a.toks, roleTokens(o.title)) ? b : a));
       reasonsScored.push([0.7 + titleSim * 0.2, `Tu experiencia como ${best.label} se relaciona directamente con este puesto.`]);
     }
     for (const s of req.filter((s) => !pSkills.has(s)).slice(0, 3)) {
@@ -387,7 +402,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     // Intención profesional (35%)
     const titleToks = roleTokens(o.title);
-    const desiredSim = Math.max(0, ...desiredTokens.map((d) => dice(d.toks, titleToks)));
+    const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSim(d.toks, titleToks)));
     const objSim = objetivoTokens.size ? dice(objetivoTokens, new Set([...titleToks, ...[...req, ...ment].map(canon)])) : 0;
     const famDesired = desiredFamilies.has(ex.family.value);
     let intent: number;
@@ -396,7 +411,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       if (prefs.carrera === "continuidad" && !desiredTokens.length) intent = Math.max(intent, titleSim);
     } else intent = prefs.carrera === "cambio" ? 0.3 : titleSim;
     if (desiredSim >= 0.5) {
-      const best = desiredTokens.reduce((a, b) => (dice(b.toks, titleToks) > dice(a.toks, titleToks) ? b : a));
+      const best = desiredTokens.reduce((a, b) => (roleSim(b.toks, titleToks) > roleSim(a.toks, titleToks) ? b : a));
       reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
     } else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
     if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore >= 0.4) {
