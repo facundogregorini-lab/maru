@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { companyKey, groupOpportunities } from "@/lib/match/group";
+import { baseTitle, companyKey, groupOpportunities } from "@/lib/match/group";
+import { displayCompany, isConsultora, isGenericCompany } from "@/lib/match/labels";
 import type { Opportunity } from "@/lib/match/types";
 
 const opp = (id: string, o: Partial<Opportunity> & { elig?: Opportunity["eligibility"]["status"] } = {}): Opportunity =>
@@ -48,5 +49,35 @@ describe("groupOpportunities", () => {
     const { opportunities, alias } = groupOpportunities([opp("x1"), opp("x2", { status: "cerrada" })]);
     expect(opportunities.map((o) => o.id).sort()).toEqual(["x1", "x2"]);
     expect(alias.size).toBe(0);
+  });
+});
+
+describe("títulos con sufijo de lugar y empresas genéricas", () => {
+  it("saca del título el lugar pegado al final, pero no la modalidad ni otras aclaraciones", () => {
+    expect(baseTitle("Vendedores - Mendoza", ["Mendoza, Capital, Mendoza"])).toBe("Vendedores");
+    expect(baseTitle("Administrativo (Rosario)", ["Rosario, Santa Fe"])).toBe("Administrativo");
+    expect(baseTitle("Analista Sr. – Zona Norte")).toBe("Analista Sr.");
+    expect(baseTitle("Desarrollador .NET (Híbrido)")).toBe("Desarrollador .NET (Híbrido)");
+    expect(baseTitle("AI Trainers Network - Polish")).toBe("AI Trainers Network - Polish");
+    expect(baseTitle("Mendoza")).toBe("Mendoza");
+  });
+
+  it("junta el mismo puesto publicado por ciudad y no junta empresas confidenciales entre sí", () => {
+    const { opportunities } = groupOpportunities([
+      opp("v1", { title: "Vendedor - Rosario", locations: ["Rosario, Santa Fe"], elig: "elegible" }),
+      opp("v2", { title: "Vendedor - Córdoba", locations: ["Córdoba, Córdoba"], elig: "elegible" }),
+      opp("c1", { title: "Cajero", company: "Importante empresa del sector", elig: "elegible" }),
+      opp("c2", { title: "Cajero", company: "Importante empresa del sector", elig: "elegible" }),
+    ]);
+    expect(opportunities).toHaveLength(3);
+    expect(opportunities.find((o) => o.title.startsWith("Vendedor"))!.locations).toHaveLength(2);
+  });
+
+  it("reconoce nombres genéricos y consultoras sin confundir empresas reales", () => {
+    for (const n of ["Importante empresa del sector salud", "Confidencial", "Estudio Contable (Confidencial)", "Empresa de Construcción", "Cliente Anónimo"]) expect(isGenericCompany(n)).toBe(true);
+    for (const n of ["La Anónima", "Mercado Libre", "Grupo Gestión", "SBAICSE Sociedad Anónima"]) expect(isGenericCompany(n)).toBe(false);
+    expect(displayCompany("Confidential")).toBe("Empresa confidencial");
+    for (const n of ["ADN - Recursos Humanos", "ManpowerGroup", "Adecco Argentina S.A.", "Grupo Gestión", "Randstad AR", "EXTRAMEN Empresa de Servicios Eventuales SRL"]) expect(isConsultora(n)).toBe(true);
+    for (const n of ["Despegar", "EY", "Naranja X"]) expect(isConsultora(n)).toBe(false);
   });
 });

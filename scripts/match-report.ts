@@ -14,6 +14,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { groupOpportunities } from "../src/lib/match/group";
 import { opportunitiesOf } from "../src/lib/match/inventory";
+import { isConsultora, isGenericCompany, isInferred } from "../src/lib/match/labels";
+import { ageDays, HIDE_AFTER_DAYS, STALE_AFTER_DAYS } from "../src/lib/match/ranking";
 import type { Inventory, RoleFamily, StoredPosting } from "../src/lib/match/types";
 
 const arg = (name: string) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
@@ -122,6 +124,23 @@ for (const [s, r] of Object.entries(bySource)) {
 const openOpps = opps.filter((o) => o.status === "abierta");
 const grouped = groupOpportunities(openOpps).opportunities.filter((o) => o.status === "abierta");
 
+// Calidad de lo que ve la persona: grupos visibles que se pueden tomar desde Argentina.
+const now = new Date(inv.generatedAt ?? Date.now());
+const eligibleGroups = grouped.filter((o) => o.eligibility.status === "elegible");
+const share = (f: (o: (typeof grouped)[number]) => boolean) => pct(eligibleGroups.filter(f).length / (eligibleGroups.length || 1));
+const quality = {
+  gruposElegibles: eligibleGroups.length,
+  gruposPorConfirmar: grouped.filter((o) => o.eligibility.status === "por_confirmar").length,
+  otrosPct: share((o) => o.extracted.family.value === "otros"),
+  sinModalidadPct: share((o) => o.workplace.value === "desconocido"),
+  modalidadInferidaPct: share((o) => isInferred(o.workplace)),
+  sinSeniorityPct: share((o) => !o.extracted.seniority),
+  masDe60DiasPct: share((o) => ageDays(o, now) > STALE_AFTER_DAYS),
+  ocultasMasDe120DiasPct: share((o) => ageDays(o, now) > HIDE_AFTER_DAYS),
+  empresaConfidencialPct: share((o) => isGenericCompany(o.company)),
+  consultoraPct: share((o) => isConsultora(o.company)),
+};
+
 const report = {
   generatedAt: inv.generatedAt,
   apifyRealUsd,
@@ -133,6 +152,7 @@ const report = {
     duplicacionEntreFuentesPct: pct(1 - openOpps.length / inv.postings.filter((p) => p.status === "abierta").length),
     mismoPuestoVariasCiudadesPct: pct(1 - grouped.length / openOpps.length),
   },
+  quality,
   bySource,
 };
 function pct(x: number) {
@@ -145,6 +165,9 @@ if (out) writeFileSync(out, JSON.stringify(report, null, 2) + "\n");
 // Resumen legible.
 console.log(`Catálogo: ${report.catalog.publicacionesAbiertas} publicaciones abiertas → ${report.catalog.oportunidadesCanonicasAbiertas} oportunidades → ${report.catalog.gruposVisiblesAbiertos} grupos visibles.`);
 console.log(`Duplicación entre fuentes: ${report.catalog.duplicacionEntreFuentesPct}% · mismo puesto en varias ciudades: ${report.catalog.mismoPuestoVariasCiudadesPct}%`);
+console.log(
+  `Calidad (${quality.gruposElegibles} grupos elegibles, ${quality.gruposPorConfirmar} por confirmar): "Otros" ${quality.otrosPct}% · sin modalidad ${quality.sinModalidadPct}% (inferida ${quality.modalidadInferidaPct}%) · sin seniority ${quality.sinSeniorityPct}% · >${STALE_AFTER_DAYS} días ${quality.masDe60DiasPct}% (ocultas >${HIDE_AFTER_DAYS}: ${quality.ocultasMasDe120DiasPct}%) · empresa confidencial ${quality.empresaConfidencialPct}% · consultora ${quality.consultoraPct}%`,
+);
 for (const [s, r] of Object.entries(bySource).sort((a, b) => b[1].open - a[1].open)) {
   const usd = r.usd === null ? "gratis" : `US$${r.usd.toFixed(2)}`;
   console.log(

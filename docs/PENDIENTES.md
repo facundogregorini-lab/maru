@@ -18,8 +18,8 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
 | C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Hecho** (ver abajo) |
 | D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Hecho** (ver abajo) |
-| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Siguiente** (instrucciones abajo) |
-| F | Google Jobs mensual automático (gratis) | Pendiente: lo decide el dueño |
+| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Hecho** (ver abajo) |
+| F | Google Jobs mensual automático (gratis) | **Siguiente**: lo decide el dueño |
 
 **A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
 - Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
@@ -69,11 +69,20 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
   - por fuente, son 652 de Google Jobs, 530 de Computrabajo, 249 de LinkedIn y 79 de Indeed.
 - Los importados se re-analizan solos en la próxima sync (`refreshImported`), porque la modalidad entra en el hash.
 
-**E. Métricas y presentación.**
-- Sumar a `scripts/match-report.ts` el % de elegibles en "Otros", sin modalidad, sin seniority, con más de 60 días y "por confirmar".
-- Mostrar "Empresa confidencial" para nombres genéricos ("Importante empresa del sector", "Confidencial"; hay 149 elegibles) y no agruparlos entre sí.
-- Agregar la etiqueta "consultora" para Adecco, Manpower, ADN, Grupo Gestión, etc.
-- Al agrupar en `group.ts`, quitar del título los sufijos de ciudad o modalidad (" - Buenos Aires", "(Remoto)"). Hay unos 250 casi-duplicados.
+**E (hecho, 17/10):**
+- **Métricas:** `npm run match:report` imprime una línea "Calidad" y guarda `quality` en el JSON.
+  - Mide sobre los grupos elegibles: % en "Otros", sin modalidad (y cuántas inferidas), sin seniority, con más de 60 días, ocultas por más de 120, empresa confidencial y consultora.
+  - También cuenta los grupos "por confirmar".
+  - Con el inventario commiteado da: "Otros" 5,6%, sin modalidad 41,4% (sin re-analizar todavía con D), sin seniority 45,1%, más de 60 días 12,3%, ocultas 7,4%, confidencial 4,9% y consultora 12,8%.
+- **Empresa confidencial:** `isGenericCompany` y `displayCompany` en `labels.ts`.
+  - Muestra "Empresa confidencial" para "Importante empresa del sector…", "Confidencial" y similares.
+  - No marca empresas reales como "La Anónima" o "Sociedad Anónima".
+  - Esos avisos no se agrupan entre sí.
+- **Consultora:** `isConsultora` cubre Adecco, Manpower, Randstad, Bayton, Grupo Gestión, ADN, Consultores de Empresas, Michael Page, servicios eventuales, etc.
+  - Se ve como la etiqueta "Consultora" (`src/components/busquedas/CompanyName.tsx`) en las tarjetas de búsquedas, en el detalle y en el Match.
+- **Sufijos de lugar:** `baseTitle` en `group.ts` saca del título el lugar pegado al final, como " - Rosario", "(Argentina)" o " – Zona Norte". Toma los lugares de una lista o de las ubicaciones del aviso.
+  - La modalidad no se recorta, porque "(Remoto)" y "(Híbrido)" son búsquedas distintas.
+  - Los grupos visibles pasan de 9.752 a 9.527 (225 casi-duplicados menos). Los ids viejos siguen andando como alias.
 
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 
