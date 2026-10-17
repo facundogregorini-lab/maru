@@ -118,7 +118,8 @@ function findIndex(items: TrackItem[], input: TrackInput): number {
   const url = normalizeUrl(input.jobUrl ?? "");
   const key = `${fold(input.title)}|${fold(input.company)}`;
   return items.findIndex(
-    (it) => it.id === id || (url && normalizeUrl(it.jobUrl) === url) || (!url && !it.jobUrl && `${fold(it.title)}|${fold(it.company)}` === key),
+    // Una tarjeta sin link (agregada a mano) es la misma si coincide puesto y empresa, aunque ahora llegue con link.
+    (it) => it.id === id || (url && normalizeUrl(it.jobUrl) === url) || (!it.jobUrl && `${fold(it.title)}|${fold(it.company)}` === key),
   );
 }
 

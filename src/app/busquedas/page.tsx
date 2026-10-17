@@ -1,12 +1,13 @@
 import MaruChat from "@/components/chat/MaruChat";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import AppShell from "@/components/app/AppShell";
 import JobCard from "@/components/busquedas/JobCard";
 import { JobFilterChips, JobSearchPill } from "@/components/busquedas/JobSearchBar";
 import { MaruHead } from "@/components/maru/PixelMaru";
 import { PAGE_SIZE, searchJobs } from "@/lib/busquedas";
-import { AREAS, parseJobQuery, type JobQuery } from "@/lib/jobFilters";
+import { AREAS, MAX_PAGES, parseJobQuery, type JobQuery } from "@/lib/jobFilters";
 import { POPULAR } from "@/lib/popular";
 
 export const metadata: Metadata = {
@@ -27,7 +28,9 @@ function hrefFor(query: JobQuery, pagina: number) {
 export default async function BusquedasPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const query = parseJobQuery(await searchParams);
   const { total, results } = await searchJobs(query);
-  const pages = Math.min(50, Math.ceil(total / PAGE_SIZE));
+  const pages = Math.min(MAX_PAGES, Math.ceil(total / PAGE_SIZE));
+  // Una página que ya no existe (quedaron menos resultados): a la última que sí.
+  if (pages > 0 && query.pagina > pages) redirect(hrefFor(query, pages));
   const label = query.q || (query.area ? AREAS[query.area] : "");
 
   return (

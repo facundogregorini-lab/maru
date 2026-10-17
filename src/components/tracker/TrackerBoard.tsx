@@ -156,9 +156,33 @@ function Card({ it }: { it: TrackItem }) {
   const router = useRouter();
   const [notesOpen, setNotesOpen] = useState(!!it.notes);
   const [notes, setNotesDraft] = useState(it.notes);
+  // La nota puede cambiar en otra pestaña o dispositivo: mientras no se está escribiendo, se muestra la última.
+  const [editing, setEditing] = useState(false);
+  const [base, setBase] = useState(it.notes);
+  useEffect(() => {
+    if (editing) return;
+    setNotesDraft(it.notes);
+    setBase(it.notes);
+    if (it.notes) setNotesOpen(true);
+  }, [it.notes, editing]);
 
-  function go(to: HandoffTarget) {
-    handoffJob(to, { jobUrl: it.jobUrl, jobText: it.jobText ?? "", title: it.title, company: it.company });
+  async function go(to: HandoffTarget) {
+    let jobText = it.jobText ?? "";
+    let jobUrl = it.jobUrl;
+    // Guardada desde Búsquedas: el texto del aviso está en el inventario (así la herramienta no tiene que leer el link).
+    if (!jobText && /^[a-f0-9]{6,40}$/.test(it.id)) {
+      try {
+        const res = await fetch(`/api/match/oportunidad?id=${encodeURIComponent(it.id)}`);
+        if (res.ok) {
+          const d = (await res.json()) as { url?: string; text?: string };
+          jobText = d.text ?? "";
+          jobUrl = jobUrl || (d.url ?? "");
+        }
+      } catch {
+        // sin el texto, la herramienta lee el link
+      }
+    }
+    handoffJob(to, { id: it.id, jobUrl, jobText, title: it.title, company: it.company });
     router.push(`/${to}#empezar`);
   }
 
@@ -214,7 +238,15 @@ function Card({ it }: { it: TrackItem }) {
         <textarea
           value={notes}
           onChange={(e) => setNotesDraft(e.target.value)}
-          onBlur={() => notes !== it.notes && setNotes(it.id, notes.trim())}
+          onFocus={() => {
+            setEditing(true);
+            setBase(it.notes);
+          }}
+          onBlur={() => {
+            setEditing(false);
+            // Sólo se guarda si la persona cambió algo: un borrador viejo no pisa una nota más nueva.
+            if (notes !== base) setNotes(it.id, notes.trim());
+          }}
           rows={2}
           placeholder="Con quién hablaste, fechas, próximos pasos…"
           aria-label="Notas"

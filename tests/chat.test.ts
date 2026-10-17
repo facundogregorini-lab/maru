@@ -26,4 +26,10 @@ describe("chat con Maru", () => {
     await POST(req({ message: "Ayudame con mi CV" }));
     expect(JSON.parse(ask.mock.calls[0][0].content[0].text).perfil_consentido).toBeNull();
   });
+  it("no ofrece avisos de hace años ni elige por palabras como 'para' o 'como'", async () => {
+    ask.mockResolvedValueOnce({ answer: "Mirá estas.", opportunityIds: [] });
+    await POST(req({ message: "¿como preparo una entrevista para React?" }));
+    const sent = JSON.parse(ask.mock.calls[0][0].content[0].text).oportunidades_proporcionadas;
+    expect(sent.map((o: { id: string }) => o.id)).toEqual(["abcdef1234"]);
+  });
 });
