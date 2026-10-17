@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 8;
+export const EXTRACTION_VERSION = 9;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -89,6 +89,37 @@ export const SKILLS: Record<string, string[]> = {
   erp: ["erp", "netsuite", "oracle"],
   liderazgo: ["leadership", "liderazgo", "people management", "gestión de equipos", "team management", "liderar equipos"],
   "comunicación": ["communication skills", "comunicación"],
+  // administración y finanzas (Argentina)
+  facturación: ["facturación", "facturacion electronica", "invoicing", "billing"],
+  "conciliaciones bancarias": ["conciliaciones bancarias", "conciliación bancaria", "conciliaciones", "bank reconciliation", "bank reconciliations", "reconciliations"],
+  tesorería: ["tesorería", "treasury", "cash management", "flujo de fondos", "cash flow", "flujo de caja"],
+  cobranzas: ["cobranzas", "gestión de cobranzas", "debt collection", "collections management", "créditos y cobranzas"],
+  "impuestos argentinos": ["iva", "ingresos brutos", "impuesto a las ganancias", "afip", "arca", "liquidación de impuestos", "sicore", "siradig"],
+  "tango gestión": ["tango", "tango gestión", "tango gestion"],
+  bejerman: ["bejerman"],
+  // personas
+  onboarding: ["onboarding", "inducción"],
+  "entrevistas por competencias": ["entrevistas por competencias", "realizar entrevistas", "interviewing", "competency-based interviews"],
+  capacitación: ["gestión de capacitación", "diseño de capacitaciones", "programas de capacitación", "learning & development", "learning and development", "training and development", "l&d"],
+  "clima laboral": ["clima laboral", "clima organizacional", "employee engagement", "encuesta de clima"],
+  "relaciones laborales": ["relaciones laborales", "labor relations", "employee relations", "convenios colectivos"],
+  "linkedin recruiter": ["linkedin recruiter"],
+  // logística y comercio exterior
+  wms: ["wms", "warehouse management system", "sistema de gestión de almacenes"],
+  "gestión de inventario": ["gestión de inventario", "gestión de inventarios", "control de stock", "manejo de stock", "inventory management", "inventarios", "inventory control"],
+  "comercio exterior": ["comercio exterior", "foreign trade", "importaciones", "exportaciones", "aduana", "customs", "despacho aduanero"],
+  "planificación de demanda": ["planificación de demanda", "planeamiento de demanda", "demand planning", "s&op", "forecasting de demanda"],
+  "última milla": ["última milla", "last mile", "ruteo", "routing de entregas", "distribución de mercadería"],
+  autoelevador: ["autoelevador", "autoelevadorista", "clarkista", "forklift", "montacargas"],
+  "licencia de conducir": ["licencia de conducir", "carnet de conducir", "registro de conducir", "licencia profesional", "driver's license", "drivers license"],
+  // atención al público, comercio y oficios
+  "atención al público": ["atención al público", "atencion al publico", "trato con el público", "public-facing"],
+  "manejo de caja": ["manejo de caja", "arqueo de caja", "cash handling", "cobro en caja"],
+  "venta telefónica": ["venta telefónica", "televentas", "telemarketing", "inside sales"],
+  "visual merchandising": ["visual merchandising", "merchandising"],
+  "manipulación de alimentos": ["manipulación de alimentos", "manipulador de alimentos", "food handling", "food safety"],
+  "seguridad e higiene": ["seguridad e higiene", "higiene y seguridad", "hse", "ehs", "health and safety"],
+  "mantenimiento preventivo": ["mantenimiento preventivo", "mantenimiento correctivo", "preventive maintenance"],
 };
 
 const SKILL_PATTERNS: [string, RegExp][] = Object.entries(SKILLS).map(([canon, variants]) => [
