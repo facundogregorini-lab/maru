@@ -1,4 +1,4 @@
-import type { EmploymentType, RoleFamily, Seniority, Workplace } from "./types";
+import type { EmploymentType, Field, RoleFamily, Seniority, Workplace } from "./types";
 
 /** Etiquetas visibles (se usan en el navegador y en el servidor). */
 
@@ -52,3 +52,7 @@ export const WORKPLACE_OPTIONS: [Workplace, string][] = [
   ["hibrido", "Híbrido"],
   ["presencial", "Presencial"],
 ];
+
+/** Prefijo de la evidencia cuando la modalidad no la dice el aviso sino que la deducimos. */
+export const INFERRED = "inferido:";
+export const isInferred = (f: Field<unknown>) => !!f.evidence?.startsWith(INFERRED);

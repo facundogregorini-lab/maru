@@ -17,8 +17,8 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
 | B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
 | C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Hecho** (ver abajo) |
-| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Siguiente** (instrucciones abajo) |
-| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | Pendiente |
+| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | **Hecho** (ver abajo) |
+| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | **Siguiente** (instrucciones abajo) |
 | F | Google Jobs mensual automático (gratis) | Pendiente: lo decide el dueño |
 
 **A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
@@ -55,7 +55,19 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
   - Si el dueño prefiere mostrar esas búsquedas "siempre abiertas", alcanza con subir `HIDE_AFTER_DAYS`.
 - Queda abierto: Computrabajo sigue salteada por `blockedSources`. Desde la nube de Claude no hay red para investigar por qué.
 
-**D. Modalidad inferida.** En `inventory.ts` (`withWorkplace`), o en un paso después, para las fuentes `apify-computrabajo`, `apify-indeed`, `serpapi` y `apify-linkedin`: si el aviso tiene una ciudad concreta y el texto no menciona remoto, híbrido ni teletrabajo, marcar `presencial` con `from: "descripcion"` y evidencia "inferido: ciudad sin mención de remoto". Mostrarlo como "Presencial (inferido)" en la tarjeta. Hoy hay 1.552 elegibles sin modalidad: Google Jobs 568, Computrabajo 537, LinkedIn 282.
+**D (hecho, 17/10):**
+- `withWorkplace` (`src/lib/match/inventory.ts`) marca `presencial` con evidencia "inferido: <ciudad> sin mención de remoto". Lo hace en `serpapi`, `apify-computrabajo`, `apify-indeed` y `apify-linkedin`, cuando el aviso:
+  - tiene una ciudad concreta, es decir, no sólo "Argentina", "Remoto" o "Desde casa";
+  - y ni el título, ni la ubicación, ni el texto mencionan remoto, híbrido, home office, teletrabajo, mixto o virtual.
+- `isInferred()` vive en `labels.ts` y se puede usar en el navegador.
+- Cómo se usa lo inferido:
+  - Se muestra como "Presencial (inferido)" en `/busquedas` y en el Match.
+  - En el Match cuenta para ordenar, pero no para excluir con el indispensable de modalidad: queda como "no informa la modalidad".
+  - Al agrupar, una modalidad que declara el aviso le gana a una inferida.
+- Medición, simulando la sync con las reglas nuevas sobre el inventario commiteado:
+  - en elegibles, "sin modalidad" baja de 1.552 a 199 y 1.415 pasan a inferidas;
+  - por fuente, son 652 de Google Jobs, 530 de Computrabajo, 249 de LinkedIn y 79 de Indeed.
+- Los importados se re-analizan solos en la próxima sync (`refreshImported`), porque la modalidad entra en el hash.
 
 **E. Métricas y presentación.**
 - Sumar a `scripts/match-report.ts` el % de elegibles en "Otros", sin modalidad, sin seniority, con más de 60 días y "por confirmar".

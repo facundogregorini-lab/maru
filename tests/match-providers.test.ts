@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { apifyNextCap } from "@/lib/match/apify";
 import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported } from "@/lib/match/inventory";
 import { workplaceFromDescription } from "@/lib/match/connectors";
+import { isInferred } from "@/lib/match/labels";
 import { FANTASTIC_COHORTS, normalizeFantastic, normalizeSerp, pickApplyLink, relativeAgeDays, runFantastic, runSerp, SERP_QUERIES } from "@/lib/match/providers";
 
 const NOW = "2026-10-17T12:00:00.000Z";
@@ -235,6 +236,23 @@ describe("inventario con importaciones parciales", () => {
     expect(refreshImported(inv)).toBe(1);
     expect(inv.postings[0].workplace).toMatchObject({ value: "presencial", from: "descripcion" });
     expect(refreshImported(inv)).toBe(0);
+  });
+
+  it("en portales locales, ciudad sin mención de remoto es presencial inferido (y se marca así)", () => {
+    const serp = (patch: Record<string, unknown>) => {
+      const inv = emptyInventory("fixture");
+      applyBoard(inv, "serpapi:ar", "serpapi", { postings: normalizeSerp([{ ...serpRow, ...patch }], "q", T).postings, complete: false }, NOW);
+      return inv.postings[0].workplace;
+    };
+    const w = serp({});
+    expect(w).toMatchObject({ value: "presencial", from: "descripcion" });
+    expect(isInferred(w)).toBe(true);
+    expect(w.evidence).toMatch(/Córdoba/);
+    // Si el texto habla de remoto o híbrido, o no hay una ciudad, no se adivina.
+    expect(serp({ description: `${description} Posibilidad de home office.` }).value).toBe("desconocido");
+    expect(serp({ location: "Argentina" }).value).toBe("desconocido");
+    // Lo que el aviso declara no se marca como inferido.
+    expect(isInferred(serp({ description: `${description} Modalidad: presencial.` }))).toBe(false);
   });
 
   it("el aviso importado es elegible si la fuente informa Argentina", () => {

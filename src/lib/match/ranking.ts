@@ -1,7 +1,7 @@
 import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { estimateSeniority } from "./profile";
 import { sourceById } from "./sources";
-import { CONTRACT_LABEL, FAMILY_LABEL, SENIORITY_LABEL } from "./labels";
+import { CONTRACT_LABEL, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
 import {
   SENIORITY_ORDER,
@@ -334,13 +334,15 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     const ex = o.extracted;
     const wpValue = o.workplace.value;
+    // "Presencial (inferido)": sirve para ordenar, pero no para excluir con un indispensable.
+    const wpInferred = isInferred(o.workplace);
     let excludedByHard = false;
     const hardCheck = (key: (typeof prefs.indispensables)[number], known: boolean, ok: boolean, unknownNote: string) => {
       if (!hard.has(key)) return;
       if (!known) pending.push(unknownNote);
       else if (!ok) excludedByHard = true;
     };
-    hardCheck("modalidad", wpValue !== "desconocido", prefs.modalidades.includes(wpValue), "No informa la modalidad (remoto, híbrido o presencial).");
+    hardCheck("modalidad", wpValue !== "desconocido" && !wpInferred, prefs.modalidades.includes(wpValue), "No informa la modalidad (remoto, híbrido o presencial).");
     if (wpValue !== "remoto") {
       // Si el aviso está en un lugar que la persona eligió, la ubicación ya se cumple aunque no diga la modalidad.
       const placeOk = userPlaces.length > 0 && o.locations.length > 0 && placeMatches(o.locations);
@@ -448,7 +450,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (wpValue !== "desconocido") {
       const ok = !prefs.modalidades.length || prefs.modalidades.includes(wpValue);
       extras.push(ok ? 1 : 0);
-      if (ok && prefs.modalidades.length) reasonsScored.push([0.5, `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
+      if (ok && prefs.modalidades.length) reasonsScored.push([0.5, wpInferred ? `Parece ${WORKPLACE_LABEL[wpValue]}, como preferís (el aviso no lo aclara).` : `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
       note(true);
     } else note(false);
     if (ex.employmentType) {
@@ -497,7 +499,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
       // Presencial en otra ciudad es mudarse o viajar todos los días: pesa más que híbrido.
       raw *= wpValue === "presencial" ? 0.7 : 0.8;
-      gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`);
+      gaps.push(
+        wpInferred
+          ? `Parece presencial en ${o.locations.slice(0, 2).join(" · ")} (no aclara si es remoto), fuera de los lugares que indicaste.`
+          : `Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")}, fuera de los lugares que indicaste.`,
+      );
     }
     // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.
     const onlyCountry = o.locations.every((l) => /^\s*(argentina|remote|remoto|latam|latin america)\b/i.test(l));
@@ -536,7 +542,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       company: sanitizeDisplay(o.company, 100),
       locations: argentinaFirst(o.locations).map((l) => sanitizeDisplay(l, 80)),
       workplace: wpValue,
-      workplaceLabel: WORKPLACE_LABEL[wpValue],
+      workplaceLabel: wpInferred ? `${WORKPLACE_LABEL[wpValue]} (inferido)` : WORKPLACE_LABEL[wpValue],
       eligibility: o.eligibility,
       family: ex.family.value,
       seniority: ex.seniority?.value ?? null,
