@@ -40,9 +40,12 @@ export default async function JobPage({ params }: Props) {
             <span className="border-b-2 border-ink pb-2 text-[15px] font-semibold">Resumen</span>
             <div className="flex flex-wrap items-center gap-2">
               <SaveJob job={track} className="press inline-flex items-center rounded-full bg-[#f2f4f5] px-4 py-2 text-sm font-semibold hover:bg-black/[0.08]" />
-              <ApplyLink job={track} className="press inline-flex items-center gap-1.5 rounded-full bg-neon px-5 py-2 text-sm font-extrabold uppercase">
-                Postularme ↗
+              <ApplyLink job={track} className="inline-flex min-h-11 items-center px-2 text-sm text-ink/70 underline underline-offset-4">
+                Ver aviso original ↗
               </ApplyLink>
+              <PrepareJob id={j.id} to="postulacion" className="press min-h-11 rounded-full bg-neon px-5 py-2.5 text-sm font-bold disabled:opacity-60">
+                Postulación personalizada
+              </PrepareJob>
             </div>
           </div>
 
@@ -110,12 +113,12 @@ export default async function JobPage({ params }: Props) {
             <p className="mt-2 text-xs text-ink/70">Maru reescribe tu CV con las palabras clave del aviso y te arma una respuesta para cada campo.</p>
             <div className="mt-3">
               <PrepareJob id={j.id} to="postulacion" className={btn}>
-                Adaptar mi CV
+                Postulación personalizada
               </PrepareJob>
             </div>
           </Boost>
           <Boost title="Escribí tu carta">
-            <p className="text-xs text-ink/70">Una carta a medida de esta búsqueda, con tus logros. Las postulaciones con carta a medida recibieron 53% más llamados (ResumeGo).</p>
+            <p className="text-xs text-ink/70">Una carta para esta búsqueda, con ejemplos de tu experiencia y tu motivo para postularte.</p>
             <div className="mt-3">
               <PrepareJob id={j.id} to="carta" className={btn}>
                 Escribir mi carta
@@ -150,12 +153,12 @@ export default async function JobPage({ params }: Props) {
       {/* Celular: lo importante siempre a mano, sin bajar hasta el final del aviso. */}
       <div data-bottom-bar className="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-black/[0.06] bg-white/95 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur lg:hidden">
         <div className="flex-1">
-          <PrepareJob id={j.id} to="postulacion" className="press block w-full rounded-full bg-ink py-3 text-center text-sm font-semibold text-white disabled:opacity-60">
-            Adaptar mi CV
+          <PrepareJob id={j.id} to="postulacion" className="press block min-h-12 w-full rounded-full bg-neon px-3 py-3 text-center text-sm font-bold disabled:opacity-60">
+            Postulación personalizada
           </PrepareJob>
         </div>
-        <ApplyLink job={track} className="press flex flex-1 items-center justify-center rounded-full bg-neon py-3 text-sm font-extrabold uppercase">
-          Postularme ↗
+        <ApplyLink job={track} className="flex max-w-28 items-center justify-center px-2 text-center text-xs text-ink/70 underline underline-offset-4">
+          Ver aviso original ↗
         </ApplyLink>
       </div>
     </AppShell>
@@ -193,7 +196,7 @@ function Boost({ title, children }: { title: string; children: React.ReactNode }
     <section className="rounded-2xl bg-white p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h3 className="text-[15px] font-semibold">{title}</h3>
-        <span className="rounded bg-brand-soft px-1.5 py-0.5 text-[10px] font-bold uppercase text-brand-dark">Gratis</span>
+
       </div>
       {children}
     </section>

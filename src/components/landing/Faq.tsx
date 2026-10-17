@@ -3,8 +3,12 @@ import Reveal from "@/components/magic/Reveal";
 /** Preguntas frecuentes: respuestas cortas y verdaderas sobre cómo funciona Maru hoy. */
 const FAQ = [
   {
+    q: "¿Qué puedo usar gratis?",
+    a: "Podés explorar búsquedas, ver tus matches y llevar el seguimiento gratis. El plan gratuito también incluye pedidos de CV y carta por día, y prácticas de entrevista y video por semana. En Planes podés ver los límites y las funciones de cada opción.",
+  },
+  {
     q: "¿Maru inventa experiencia?",
-    a: "No. Cargos, empresas, fechas y estudios se copian de tu CV tal cual. Maru reescribe, ordena y prioriza lo que ya hiciste; si falta un dato, te lo pregunta o lo deja marcado para que lo completes.",
+    a: "Maru trabaja con la información que le das. Cargos, empresas, fechas y estudios se copian de tu perfil. La redacción puede tener errores: revisá los datos y los textos antes de enviar. Si falta información, te pide que la confirmes.",
   },
   {
     q: "¿Dónde quedan mis datos?",
@@ -24,11 +28,11 @@ const FAQ = [
   },
   {
     q: "¿De dónde salen las búsquedas?",
-    a: "De portales de empleo y páginas de empleo de empresas, públicas. Maru las actualiza todos los días y te dice cuáles podés tomar desde Argentina.",
+    a: "De portales de empleo y páginas públicas de empresas. La frecuencia de actualización depende de la fuente. Podés ver la fecha y el enlace original de cada aviso para confirmar que siga abierto.",
   },
   {
     q: "¿Necesito una cuenta?",
-    a: "Para sincronizar, descargar y usar las herramientas del plan necesitás ingresar con tu email: te mandamos un link, sin contraseña. Con la cuenta, tu perfil, tus búsquedas y tu seguimiento te siguen a cualquier dispositivo.",
+    a: "Podés explorar búsquedas sin cuenta. Para sincronizar tus datos, descargar documentos y usar las herramientas del plan necesitás ingresar. Podés hacerlo con Google o con un enlace por email, cuando está habilitado.",
   },
 ];
 

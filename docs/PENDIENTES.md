@@ -1,5 +1,16 @@
 # Estado y próximos pasos de Maru
 
+## Home y recorrido hacia las herramientas (17/10/2026)
+
+- Quitados el selector Web/Extensión y la franja repetida de descarga. La extensión queda en Herramientas; se agregó también la entrevista al menú.
+- Home revisado por bloques: presentación y dos entradas claras (Match y catálogo), cifras con alcance geográfico, buscador sin CV, muestra estática de avisos, recorrido y ocho herramientas, preguntas frecuentes y cierre. Se quitaron laureles, estadísticas ajenas presentadas como resultados y carruseles que repetían información. Los ejemplos siguen rotulados.
+- Las cifras ahora excluyen avisos de más de 120 días y sin enlace, como el catálogo visible; se agregó regresión. Las modalidades inferidas se identifican.
+- CTA principal de Match, tarjetas del catálogo y detalle: **Postulación personalizada**, verde, con el aviso precargado. La fuente queda como enlace secundario **Ver aviso original**. Abrir una fuente ya no marca una postulación como enviada: ese estado lo confirma la persona en Seguimiento.
+- Se explicitan límites del plan gratis y condiciones del feedback de cámara; las FAQ reflejan sincronización, Google y frecuencia por fuente. No se cambiaron planes, cuotas ni pagos.
+- Revisión editorial con Slop Monstruo en español: copia visible del home 5/5, sin tomar ese puntaje como validación factual. La revisión adicional con la CLI de Claude no estuvo disponible: su sesión OAuth local venció; no se aceptó ninguna salida como texto editado.
+- QC: menú de herramientas y Escape, lectura móvil, FAQ del plan gratuito y ausencia de desborde horizontal. Evidencias y validación final en `docs/QC-HOME-2026-10-17.md`.
+
+
 ## QC y porcentaje de Match (17/10/2026, PR #71)
 
 - **Seguimiento de objetivos en texto libre:** se detectó que “inteligencia artificial” no reconocía AI y que un objetivo corto se diluía contra toda la lista de requisitos. Corregido con equivalencias de frases y cobertura del objetivo por evidencia: título > requisito > deseable > mención de contexto. Director/Head/Founder son genéricos y ya no justifican experiencia directa en otra especialidad. Cuatro regresiones adicionales; no se modificaron preferencias reales de la cuenta.

@@ -16,19 +16,6 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
         Saltar al contenido
       </a>
 
-      <Link
-        href="/extension"
-        className="group flex items-center justify-center gap-2 bg-brand-soft px-4 py-2 text-center text-[13px] text-ink print:hidden"
-      >
-        <span aria-hidden>🧩</span>
-        <span>
-          Nuevo: la extensión de Maru completa tus postulaciones con un clic. <span className="font-semibold underline underline-offset-2">Descargala</span>
-        </span>
-        <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
-          →
-        </span>
-      </Link>
-
       <header className="sticky top-0 z-40 bg-white print:hidden">
         <div className="mx-auto flex h-[64px] max-w-[1440px] items-center justify-between gap-3 px-4 sm:h-[76px] sm:px-8 lg:px-20">
           <div className="flex items-center gap-1">
@@ -75,7 +62,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
               links={[
                 { href: "/busquedas", label: "Todas las búsquedas" },
                 { href: "/entrevista", label: "Entrevista con IA" },
-                { href: "/#evidencia", label: "La evidencia" },
+                { href: "/#como-funciona", label: "Cómo funciona" },
                 { href: "/#faq", label: "Preguntas frecuentes" },
                 { href: "/precios", label: "Planes y precios" },
                 { href: "/terminos", label: "Términos y condiciones" },
@@ -85,7 +72,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
             <div>
               <h3 className="text-sm font-semibold">Información</h3>
               <p className="mt-3 max-w-xs leading-relaxed text-ink/70">
-                Tu coach de carrera con IA. Nunca inventa experiencia: reordena, reescribe y prioriza lo que ya hiciste. Revisá todo antes de enviar.
+                Tu coach de carrera con IA. Prepará tus postulaciones con tu experiencia real. Revisá los textos y confirmá los datos antes de enviar.
               </p>
             </div>
           </div>

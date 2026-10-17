@@ -6,10 +6,10 @@ import { STATUSES, TRACKER_EVENT, findTracked, upsertTracked, type TrackInput, t
 
 type Job = Pick<TrackInput, "id" | "title" | "company" | "jobUrl">;
 
-/** "Postularme ↗": abre el aviso y deja la búsqueda como postulada en el seguimiento. */
+/** Abrir la fuente guarda el aviso; el envío lo confirma la persona en su seguimiento. */
 export function ApplyLink({ job, className, children }: { job: Job; className: string; children: React.ReactNode }) {
   return (
-    <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" onClick={() => upsertTracked({ ...job, status: "postulada" })} className={className}>
+    <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" onClick={() => upsertTracked(job)} className={className}>
       {children}
     </a>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import TimeAgo from "@/components/landing/TimeAgo";
 import type { JobResult } from "@/lib/busquedas";
 import CompanyTile from "./CompanyTile";
+import PrepareJob from "./PrepareJob";
 import { ApplyLink } from "./TrackJob";
 import { displayCompany } from "@/lib/match/labels";
 import CompanyName from "./CompanyName";
@@ -84,15 +85,18 @@ export default function JobCard({ j }: { j: JobResult }) {
         <hr className="my-3 border-black/[0.07]" />
         <JobMeta j={j} />
         <hr className="my-3 border-black/[0.07]" />
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="truncate text-[11px] text-ink/50">{j.attribution}</span>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
             <Link href={`/busquedas/${j.id}`} className="hidden rounded-full px-3 py-2 text-[13px] font-semibold hover:bg-black/[0.05] sm:inline-flex">
               Ver detalle
             </Link>
-            <ApplyLink job={{ id: j.id, title: j.title, company: j.company, jobUrl: j.applyUrl }} className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase sm:text-sm">
-              Postularme
+            <ApplyLink job={{ id: j.id, title: j.title, company: j.company, jobUrl: j.applyUrl }} className="inline-flex min-h-11 items-center px-2 text-sm text-ink/70 underline underline-offset-4 hover:text-ink">
+              Ver aviso original ↗
             </ApplyLink>
+            <PrepareJob id={j.id} to="postulacion" className="press min-h-11 w-full rounded-full bg-neon px-5 py-2.5 text-sm font-bold text-ink hover:bg-neon/80 disabled:opacity-60 sm:w-auto">
+              Postulación personalizada
+            </PrepareJob>
           </div>
         </div>
       </div>

@@ -5,16 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { NAV, TOOLS } from "./nav";
 
-/**
- * Navegación de escritorio como la de jobright: una píldora con el selector negro
- * (Web / Extensión, el "Job seekers / Employers" de ellos) y al lado los links chicos.
- */
+/** La extensión es una herramienta más; no cambia el modo de uso del sitio. */
 export function NavPills() {
   const path = usePathname();
-  const ext = path.startsWith("/extension");
   const menu = useRef<HTMLDetailsElement>(null);
 
-  // El menú se cierra al navegar o al hacer clic afuera.
+  // El menú se cierra al navegar, al hacer clic afuera o con Escape.
   useEffect(() => {
     if (menu.current) menu.current.open = false;
   }, [path]);
@@ -22,23 +18,22 @@ export function NavPills() {
     const close = (e: PointerEvent) => {
       if (menu.current?.open && !menu.current.contains(e.target as Node)) menu.current.open = false;
     };
+    const escape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && menu.current?.open) {
+        menu.current.open = false;
+        menu.current.querySelector("summary")?.focus();
+      }
+    };
     document.addEventListener("pointerdown", close);
-    return () => document.removeEventListener("pointerdown", close);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", close);
+      document.removeEventListener("keydown", escape);
+    };
   }, []);
 
-  const seg = (on: boolean) =>
-    `flex h-8 w-[120px] items-center justify-center rounded-full text-sm font-semibold transition-colors ${on ? "bg-white text-ink ring-2 ring-inset ring-ink" : "text-white hover:text-neon"}`;
-
   return (
-    <nav aria-label="Secciones" className="hidden items-center gap-6 rounded-full bg-white py-0.5 pl-0.5 pr-6 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] lg:flex">
-      <div className="flex rounded-full bg-ink">
-        <Link href="/" aria-current={!ext && path === "/" ? "page" : undefined} className={seg(!ext)}>
-          Web
-        </Link>
-        <Link href="/extension" aria-current={ext ? "page" : undefined} className={seg(ext)}>
-          Extensión
-        </Link>
-      </div>
+    <nav aria-label="Secciones" className="hidden items-center gap-6 rounded-full bg-white px-6 py-3 ring-1 ring-line lg:flex">
       <details ref={menu} className="group relative">
         <summary className="flex cursor-pointer list-none items-center gap-1 text-[13px] hover:text-brand [&::-webkit-details-marker]:hidden">
           Herramientas
