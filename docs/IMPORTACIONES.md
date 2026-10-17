@@ -53,6 +53,13 @@ Primera corrida real hecha con los secrets rotados. Se confirmaron los supuestos
 
 Después de importar se corrió `match-sync` a mano: re-analizó todo con `EXTRACTION_VERSION` 3 y la modalidad desde el texto, y sumó 360 avisos de 6 empleadores descubiertos en Fantastic. Catálogo: **11.544 oportunidades abiertas, 2.722 elegibles desde Argentina** (E0: 909 grupos). Medición por perfil en [research/e1-importacion-2026-10-16](research/e1-importacion-2026-10-16/README.md).
 
+## Estado al 17/10/2026
+
+- **Fantastic:** trial agotado (448/450). Segundo corte con G3/G4 y `offset` (`--offset=N` pide la página siguiente de la misma consulta, sin pagar repetidos). No hay más corridas posibles sin plan pago, y el pago está descartado.
+- **Google Jobs:** 28 de 250 búsquedas usadas este mes (12 generalistas + 16 del interior).
+- **Apify:** ≈ US$2,8 reales gastados de US$5.
+- **Teamtailor:** fuente gratuita diaria con 13 empleadores (RSS público).
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic, segundo corte (antes del 22/10):** `provider=fantastic mode=status` y después `mode=run args=--cohorts=G1,G2 --feeds=ats,jb --limit=40 --max-jobs=170 --time-frame=7d`. Prioriza generalistas; T1 ya está cubierto por los ATS gratuitos. Comparar repetidos contra el primer corte (ledger + `firstSeenAt`).
