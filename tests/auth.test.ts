@@ -24,7 +24,8 @@ describe("tokens firmados", () => {
     const [body, sig] = t.split(".");
     const forged = Buffer.from(JSON.stringify({ ...JSON.parse(Buffer.from(body, "base64url").toString()), email: "otro@mail.com" })).toString("base64url");
     expect(verifyLoginToken(`${forged}.${sig}`)).toBeNull();
-    expect(verifyLoginToken(`${body}.x${sig.slice(1)}`)).toBeNull();
+    const changedSignature = `${sig[0] === "x" ? "y" : "x"}${sig.slice(1)}`;
+    expect(verifyLoginToken(`${body}.${changedSignature}`)).toBeNull();
     // Un link de login no sirve como sesión ni al revés.
     expect(verifySessionToken(t)).toBeNull();
     expect(verifyLoginToken(createSessionToken("ana@mail.com"))).toBeNull();
