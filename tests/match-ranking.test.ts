@@ -29,6 +29,24 @@ async function rank(profile: MatchProfile, prefs: MatchPrefs, extra: Partial<Ran
   };
 }
 
+describe("antigüedad de los avisos", () => {
+  const days = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
+
+  it("baja los de más de 60 días y esconde los de más de 120, salvo los guardados", async () => {
+    const { out: fresh } = await rank(dataProfile, basePrefs);
+    const target = fresh.eligible[0];
+    const { out: old } = await rank(dataProfile, basePrefs, { now: days(75) });
+    const aged = old.eligible.find((r) => r.id === target.id);
+    expect(aged).toBeDefined();
+    expect(aged!.score).toBeLessThan(target.score);
+
+    const { out: gone } = await rank(dataProfile, basePrefs, { now: days(140) });
+    expect([...gone.eligible, ...gone.pending]).toHaveLength(0);
+    const { out: kept } = await rank(dataProfile, basePrefs, { now: days(140), interactions: { saved: [target.id], discarded: [] } });
+    expect(kept.saved.map((r) => r.id)).toContain(target.id);
+  });
+});
+
 describe("ranking explicable", () => {
   it("la autorización de trabajo es texto libre: caracteres especiales no rompen el ranking", async () => {
     for (const a of ["C++", "Italia (ciudadanía", "(a+)+$", "[eu"]) {

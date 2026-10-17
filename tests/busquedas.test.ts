@@ -2,13 +2,14 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { searchJobs } from "@/lib/busquedas";
+import { getJob, searchJobs } from "@/lib/busquedas";
 import { parseJobQuery } from "@/lib/jobFilters";
 import { fetchGreenhouse, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
 import { resetInventoryCache } from "@/lib/match/load";
 import { BOARDS, fakeFetch, fixture, noSleep } from "./match-helpers";
 
+const NOW = new Date("2026-10-17T12:00:00Z");
 const opts = (routes: Record<string, unknown>) => ({ fetchImpl: fakeFetch(routes).impl, sleep: noSleep, retries: 0 });
 
 beforeAll(async () => {
@@ -39,8 +40,8 @@ describe("parseJobQuery", () => {
 
 describe("searchJobs", () => {
   it("por defecto muestra sólo lo que se puede tomar desde Argentina, con su link para postularse", async () => {
-    const all = await searchJobs(parseJobQuery({ donde: "todo" }));
-    const ar = await searchJobs(parseJobQuery({}));
+    const all = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
+    const ar = await searchJobs(parseJobQuery({}), NOW);
     expect(all.total).toBeGreaterThan(0);
     expect(ar.total).toBeLessThanOrEqual(all.total);
     expect(ar.results.every((r) => r.eligible)).toBe(true);
@@ -48,10 +49,17 @@ describe("searchJobs", () => {
   });
 
   it("busca por palabra sin importar mayúsculas ni tildes", async () => {
-    const { results } = await searchJobs(parseJobQuery({ donde: "todo" }));
+    const { results } = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
     const word = results[0].title.split(/\s+/)[0];
-    const found = await searchJobs(parseJobQuery({ donde: "todo", q: word.toUpperCase() }));
+    const found = await searchJobs(parseJobQuery({ donde: "todo", q: word.toUpperCase() }), NOW);
     expect(found.results.map((r) => r.id)).toContain(results[0].id);
-    expect((await searchJobs(parseJobQuery({ donde: "todo", q: "zzzz-no-existe" }))).total).toBe(0);
+    expect((await searchJobs(parseJobQuery({ donde: "todo", q: "zzzz-no-existe" }), NOW)).total).toBe(0);
+  });
+
+  it("no lista avisos de más de 120 días, pero su página sigue andando", async () => {
+    const { results } = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
+    const later = new Date(NOW.getTime() + 130 * 86_400_000);
+    expect((await searchJobs(parseJobQuery({ donde: "todo" }), later)).total).toBe(0);
+    expect(await getJob(results[0].id)).not.toBeNull();
   });
 });
