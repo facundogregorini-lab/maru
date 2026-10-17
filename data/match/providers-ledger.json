@@ -1322,6 +1322,113 @@
       "rows": 10,
       "consumed": 1,
       "quota": {}
+    },
+    {
+      "at": "2026-10-17T05:23:51.277Z",
+      "provider": "fantastic",
+      "call": "active-ats-count",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina"
+      },
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "jobs-this-request": 0,
+        "jobs-remaining": 177,
+        "jobs-limit": 500,
+        "requests-remaining": 27,
+        "requests-limit": 50,
+        "count": 945
+      }
+    },
+    {
+      "at": "2026-10-17T05:23:51.277Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "analista OR asistente OR auxiliar OR coordinador OR coordinadora OR supervisor OR encargado OR responsable OR \"jefe de\"",
+        "limit": "45",
+        "description_format": "text"
+      },
+      "rows": 45,
+      "consumed": 45,
+      "quota": {
+        "jobs-this-request": 45,
+        "jobs-remaining": 132,
+        "jobs-limit": 500,
+        "requests-remaining": 27,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-17T05:23:51.277Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "analista OR asistente OR auxiliar OR coordinador OR coordinadora OR supervisor OR encargado OR responsable OR \"jefe de\"",
+        "limit": "45",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 45,
+      "consumed": 45,
+      "quota": {
+        "jobs-this-request": 45,
+        "jobs-remaining": 132,
+        "jobs-limit": 500,
+        "requests-remaining": 27,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-17T05:23:51.277Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "recepcionista OR cajero OR \"call center\" OR \"customer service\" OR enfermero OR enfermera OR docente OR farmacéutico OR repositor OR \"promotor\"",
+        "limit": "45",
+        "description_format": "text"
+      },
+      "rows": 8,
+      "consumed": 8,
+      "quota": {
+        "jobs-this-request": 8,
+        "jobs-remaining": 169,
+        "jobs-limit": 500,
+        "requests-remaining": 27,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-17T05:23:51.277Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "recepcionista OR cajero OR \"call center\" OR \"customer service\" OR enfermero OR enfermera OR docente OR farmacéutico OR repositor OR \"promotor\"",
+        "limit": "45",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 27,
+      "consumed": 27,
+      "quota": {
+        "jobs-this-request": 27,
+        "jobs-remaining": 150,
+        "jobs-limit": 500,
+        "requests-remaining": 27,
+        "requests-limit": 50
+      }
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-16T22:44:34.896Z",
+  "updatedAt": "2026-10-17T05:23:51.277Z",
   "employers": [
     {
       "company": "Agent",
@@ -123,11 +123,46 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
+      "company": "Mercado Libre",
+      "ats": "eightfold",
+      "host": "mercadolibre.eightfold.ai",
+      "seen": 3,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Accenture",
+      "ats": "workday",
+      "host": "accenture.wd103.myworkdayjobs.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Arauco",
+      "ats": "successfactors",
+      "host": "jobs.arauco.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
       "company": "BCD",
       "ats": "successfactors",
       "host": "jobs.bcdtravel.com",
       "seen": 2,
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
+    },
+    {
+      "company": "Bidcom",
+      "ats": "teamtailor",
+      "host": "bidcom.na.teamtailor.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "BYMA",
+      "ats": "teamtailor",
+      "host": "empleos.byma.com.ar",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Chevron",
@@ -144,11 +179,39 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Mercado Libre",
-      "ats": "eightfold",
-      "host": "mercadolibre.eightfold.ai",
+      "company": "Louis Dreyfus Company",
+      "ats": "smartrecruiters",
+      "host": "jobs.smartrecruiters.com",
       "seen": 2,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Natura (Natura Life Science)",
+      "ats": "workday",
+      "host": "natura.wd501.myworkdayjobs.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "PECOM",
+      "ats": "teamtailor",
+      "host": "pecom.na.teamtailor.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Swiss Medical Group",
+      "ats": "successfactors",
+      "host": "swissmedical.jobs2web.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Western Union",
+      "ats": "workday",
+      "host": "westernunion.wd5.myworkdayjobs.com",
+      "seen": 2,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Abbott Laboratories",
@@ -158,11 +221,11 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Accenture",
-      "ats": "workday",
-      "host": "accenture.wd103.myworkdayjobs.com",
+      "company": "AccorHotel",
+      "ats": "smartrecruiters",
+      "host": "jobs.smartrecruiters.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Agentify",
@@ -186,25 +249,11 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Arauco",
+      "company": "Arca Continental, S.A.B. de C.V.  P",
       "ats": "successfactors",
-      "host": "jobs.arauco.com",
+      "host": "careers.arcacontal.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
-    },
-    {
-      "company": "Bidcom",
-      "ats": "teamtailor",
-      "host": "bidcom.na.teamtailor.com",
-      "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
-    },
-    {
-      "company": "BYMA",
-      "ats": "teamtailor",
-      "host": "empleos.byma.com.ar",
-      "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "CDA Informatica",
@@ -214,11 +263,32 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
+      "company": "Cencosud",
+      "ats": "csod",
+      "host": "cencosud.csod.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Cerveceria y Malteria Quilmes",
+      "ats": "workday",
+      "host": "wd1.myworkdaysite.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
       "company": "Claro",
       "ats": "successfactors",
       "host": "claroempleos-aup.com",
       "seen": 1,
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
+    },
+    {
+      "company": "Codekeeper",
+      "ats": "jazzhr",
+      "host": "codekeeper.applytojob.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "COFCO International",
@@ -256,11 +326,67 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
+      "company": "Diagnóstico Maipú / Labmedicina",
+      "ats": "teamtailor",
+      "host": "diagnosticomaipu.na.teamtailor.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "DRiV",
+      "ats": "successfactors",
+      "host": "jobs.driv.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Ecolab Inc.",
+      "ats": "phenompeople",
+      "host": "jobs.ecolab.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Eresagro",
+      "ats": "zoho",
+      "host": "eresagro.zohorecruit.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "EY",
+      "ats": "successfactors",
+      "host": "careers.ey.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
       "company": "Felix Technologies, Inc.",
       "ats": "gem",
       "host": "jobs.gem.com",
       "seen": 1,
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
+    },
+    {
+      "company": "Fiserv",
+      "ats": "workday",
+      "host": "fiserv.wd5.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Flowserve Corporation",
+      "ats": "workday",
+      "host": "flowserve.wd1.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Fluor",
+      "ats": "eightfold",
+      "host": "careers.fluor.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Flux IT SA",
@@ -291,11 +417,25 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
+      "company": "Helmerich & Payne",
+      "ats": "workday",
+      "host": "hpinc.wd5.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
       "company": "Huzzle",
       "ats": "workable",
       "host": "jobs.workable.com",
       "seen": 1,
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
+    },
+    {
+      "company": "IFF",
+      "ats": "workday",
+      "host": "iff.wd5.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "IQVIA",
@@ -319,11 +459,25 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Louis Dreyfus Company",
+      "company": "Lesaffre",
       "ats": "smartrecruiters",
       "host": "jobs.smartrecruiters.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "mAbxience",
+      "ats": "manatal",
+      "host": "careers-page.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Marsh McLennan",
+      "ats": "workday",
+      "host": "mmc.wd1.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Meeru AI Inc",
@@ -340,18 +494,25 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Natura (Natura Life Science)",
-      "ats": "workday",
-      "host": "natura.wd501.myworkdayjobs.com",
+      "company": "New Frontier Immigration Law",
+      "ats": "bamboohr",
+      "host": "newfrontierlaw.bamboohr.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
-      "company": "PECOM",
-      "ats": "teamtailor",
-      "host": "pecom.na.teamtailor.com",
+      "company": "Oficina de Empleo Escobar",
+      "ats": "zoho",
+      "host": "escobar.zohorecruit.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Pavago",
+      "ats": "workable",
+      "host": "jobs.workable.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "PepsiCo",
@@ -424,11 +585,11 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Swiss Medical Group",
-      "ats": "successfactors",
-      "host": "swissmedical.jobs2web.com",
+      "company": "Suessa",
+      "ats": "teamtailor",
+      "host": "suessa.teamtailor.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Talan",
@@ -445,6 +606,20 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
+      "company": "Teladoc Health",
+      "ats": "workday",
+      "host": "teladoc.wd503.myworkdayjobs.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "The Church of Jesus Christ of Latter-day Saints",
+      "ats": "oraclecloud",
+      "host": "epej.fa.us2.oraclecloud.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
       "company": "TuxCare",
       "ats": "workable",
       "host": "jobs.workable.com",
@@ -452,11 +627,18 @@
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
     },
     {
-      "company": "Western Union",
-      "ats": "workday",
-      "host": "westernunion.wd5.myworkdayjobs.com",
+      "company": "Umbral Capital Humano",
+      "ats": "teamtailor",
+      "host": "umbralcapitalhumano.na.teamtailor.com",
       "seen": 1,
-      "lastSeenAt": "2026-10-16T22:44:34.896Z"
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
+    },
+    {
+      "company": "Walmart Inc.",
+      "ats": "smartrecruiters",
+      "host": "jobs.smartrecruiters.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Workana",
@@ -471,6 +653,13 @@
       "host": "worksterjobs.teamtailor.com",
       "seen": 1,
       "lastSeenAt": "2026-10-16T22:44:34.896Z"
+    },
+    {
+      "company": "YPF",
+      "ats": "successfactors",
+      "host": "oportunidades.ypf.com",
+      "seen": 1,
+      "lastSeenAt": "2026-10-17T05:23:51.277Z"
     },
     {
       "company": "Zipdev",
