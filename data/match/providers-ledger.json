@@ -1429,6 +1429,71 @@
         "requests-remaining": 27,
         "requests-limit": 50
       }
+    },
+    {
+      "at": "2026-10-17T05:28:33.514Z",
+      "provider": "fantastic",
+      "call": "active-ats-count",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina"
+      },
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "jobs-this-request": 0,
+        "jobs-remaining": 52,
+        "jobs-limit": 500,
+        "requests-remaining": 22,
+        "requests-limit": 50,
+        "count": 947
+      }
+    },
+    {
+      "at": "2026-10-17T05:28:33.514Z",
+      "provider": "fantastic",
+      "call": "active-ats",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "analista OR asistente OR auxiliar OR coordinador OR coordinadora OR supervisor OR encargado OR responsable OR \"jefe de\"",
+        "limit": "26",
+        "offset": "45",
+        "description_format": "text"
+      },
+      "rows": 24,
+      "consumed": 24,
+      "quota": {
+        "jobs-this-request": 24,
+        "jobs-remaining": 28,
+        "jobs-limit": 500,
+        "requests-remaining": 22,
+        "requests-limit": 50
+      }
+    },
+    {
+      "at": "2026-10-17T05:28:33.514Z",
+      "provider": "fantastic",
+      "call": "active-jb",
+      "params": {
+        "time_frame": "7d",
+        "location": "Argentina",
+        "title": "analista OR asistente OR auxiliar OR coordinador OR coordinadora OR supervisor OR encargado OR responsable OR \"jefe de\"",
+        "limit": "26",
+        "offset": "45",
+        "description_format": "text",
+        "source": "linkedin",
+        "exclude_recruiter_fields": "true"
+      },
+      "rows": 26,
+      "consumed": 26,
+      "quota": {
+        "jobs-this-request": 26,
+        "jobs-remaining": 26,
+        "jobs-limit": 500,
+        "requests-remaining": 22,
+        "requests-limit": 50
+      }
     }
   ]
 }
