@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 6;
+export const EXTRACTION_VERSION = 7;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 

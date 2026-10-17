@@ -15,7 +15,7 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | # | Paso | Estado |
 | --- | --- | --- |
 | A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
-| B | Elegibilidad: el país antes que la ciudad (Córdoba, España) y "por confirmar" viejos | Pendiente |
+| B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
 | C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | Pendiente |
 | D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | Pendiente |
 | E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | Pendiente |
@@ -25,6 +25,19 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 - Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
 - Lo que queda en "Otros" son títulos sin área clara ("Manager", "Specialist", "Principal").
 - Se revisaron a mano los 319 títulos que cambiaron de área y se corrigieron los errores (inmobiliario, personas, ingenieros de procesos).
+
+**B (hecho):** `EXTRACTION_VERSION` 7. Sobre las 13.372 publicaciones abiertas, la elegibilidad queda así:
+
+| Estado | Antes | Después |
+| --- | ---: | ---: |
+| Elegibles | 4.202 | 4.290 |
+| Por confirmar | 1.027 | 619 |
+| No elegibles | 8.143 | 8.463 |
+
+- Pasan a elegibles 90 publicaciones del interior que no decían "Argentina" (Resistencia, San Luis, Corrientes, Comodoro Rivadavia, Santiago del Estero…).
+- Pasan a no elegibles 327 de ciudades o países del exterior que no se reconocían (Auckland, Atenas, Budapest, Dubái…).
+- Una ciudad de nombre repetido (Córdoba, Rosario, San Juan…) ya no cuenta como Argentina si la fuente informa otro país donde existe o el título lo nombra.
+- Los 619 "por confirmar" que quedan son casi todos "remoto sin región" (679 antes). Su antigüedad se trata en el paso C.
 
 ## Próximos pasos (17/10/2026, cierre de la base de avisos)
 
