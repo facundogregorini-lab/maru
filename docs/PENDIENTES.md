@@ -142,6 +142,25 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
 - `/busquedas`: la búsqueda por texto incluye el lugar ("vendedor córdoba").
 - Sin cambiar: la seniority que falta no se infiere. Logística y datos junior siguen con poca oferta, y ahí el problema es de adquisición, no de ranking.
 
+**Auditoría de la extensión (17/10, hecha):**
+- **Completar dos veces:** "Completar" no corre dos veces a la vez en la misma pestaña (candado por pestaña). Además, `apply` descarta las respuestas de una lectura vieja del formulario: antes podía escribir el email en el teléfono.
+- **No pisa lo de la persona:** si completó un campo mientras Maru pensaba, no lo toca. Un select con una primera opción real ("Básico") ya cuenta como elegido.
+- **Iframes de terceros:** no recibe tus datos un iframe de otro sitio salvo que sea un ATS conocido o pida datos de postulación (CV, portfolio, LinkedIn, experiencia…). Un widget de newsletter o de chat queda afuera.
+- **Datos sensibles** (`src/lib/autofill.ts`): también bloquea consentimientos (Ley 25.326), bases y condiciones, declaraciones juradas, novedades por email, origen étnico, edad y estado civil. Los bordes de palabra ahora reconocen tildes.
+- **Números:** "3.000" se completa como 3000.
+- **Popup:**
+  - datos extra con tope de 4.000 caracteres (antes fallaba con un mensaje engañoso);
+  - el CV se elige con el teclado;
+  - `popup.js` estaba pegado tres veces y quedó arreglado.
+- **Textos** (popup, FAQ, privacidad): dicen que el CV y la página se envían a Maru y a su proveedor de IA.
+- **Instalación:** cómo elegir la carpeta en Windows, el interruptor en Edge, no mover la carpeta y cómo actualizar. La versión pasa a 0.3.0.
+- **Pendiente:**
+  - cambiar `<all_urls>` por permisos al momento (antes de publicarla en la Chrome Web Store);
+  - avisar de los campos que no puede leer (Shadow DOM, editores enriquecidos);
+  - sumar `extension/` a eslint.
+
+**Auditorías de los demás productos:** se cortaron por el límite de uso de la sesión antes de reportar. Falta repetirlas para Postulación, CV, Carta, Entrevista y Video, Búsquedas y Seguimiento, y cuenta y cobros.
+
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 
 **Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.

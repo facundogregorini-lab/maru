@@ -17,7 +17,7 @@
     <!-- Sin perfil: cargar el CV una vez -->
     <section id="setup" hidden>
       <h1>Cargá tu CV una vez</h1>
-      <p class="muted">Maru lo lee y después completa los formularios por vos. Queda guardado sólo en este navegador.</p>
+      <p class="muted">Maru lo lee y después completa los formularios por vos. Se guarda en este navegador. Para leerlo y para completar, se envía a Maru y a su proveedor de IA.</p>
       <label class="drop">
         <input id="file" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
         <span id="file-name">Elegí tu CV o el PDF de tu LinkedIn (PDF o Word)</span>
@@ -54,7 +54,7 @@
       </div>
       <label class="extras">
         <strong>Datos que suelen pedir y no están en tu CV</strong>
-        <textarea id="extras" rows="5" placeholder="Pretensión salarial: USD 3.000 netos por mes&#10;Disponibilidad: inmediata&#10;Permiso de trabajo: ciudadana argentina; necesito sponsorship para EE. UU.&#10;Modalidad: remoto o híbrido en CABA&#10;Cómo me enteré: LinkedIn"></textarea>
+        <textarea id="extras" rows="5" maxlength="4000" placeholder="Pretensión salarial: USD 3.000 netos por mes&#10;Disponibilidad: inmediata&#10;Permiso de trabajo: ciudadana argentina; necesito sponsorship para EE. UU.&#10;Modalidad: remoto o híbrido en CABA&#10;Cómo me enteré: LinkedIn"></textarea>
         <span id="saved" class="muted small"></span>
       </label>
     </section>

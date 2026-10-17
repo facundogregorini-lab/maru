@@ -50,7 +50,8 @@ export default function PrivacidadPage() {
       <h2>Extensión de Chrome</h2>
       <ul>
         <li>Guarda tu perfil y tu CV en el almacenamiento de la extensión, en tu computadora.</li>
-        <li>Cuando tocás «Completar», envía a Maru los campos del formulario de esa página y tu perfil para decidir qué va en cada uno. No completa datos demográficos ni aceptaciones legales y nunca envía la postulación: eso lo hacés vos.</li>
+        <li>Cuando cargás tu CV, el archivo se envía a Maru y a su proveedor de IA para leerlo.</li>
+        <li>Cuando tocás «Completar», envía a Maru y a su proveedor de IA tu perfil, tus datos extra, la dirección y el texto visible de la página y sus campos (también los de formularios de postulación que vienen dentro de la página) para decidir qué va en cada uno. No completa datos demográficos, consentimientos ni aceptaciones legales y nunca envía la postulación: eso lo hacés vos.</li>
       </ul>
 
       <h2>Dictado por voz</h2>
