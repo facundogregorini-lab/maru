@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const historial = clampHistorial(b.historial);
     if (!b.plan?.preguntas || !historial.length) throw new UserFacingError("Falta la entrevista.", "BAD_REQUEST");
     const turno = await askStructured({
+      editorialPaths: ["reaccion", "repregunta"],
       system: ENTREVISTA_TURNO_SYSTEM,
       schema: TurnoSchema,
       effort: "low",

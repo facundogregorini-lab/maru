@@ -14,7 +14,9 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as Body;
     const content = [feedbackBlock(body.feedback), ...(await cvBlocks(normalizeCvSource(body))), await jobBlock(body)];
-    const analysis = await askStructured({ system: ANALYZE_SYSTEM, content, schema: AnalysisSchema, effort: "medium" });
+    const analysis = await askStructured({
+      editorialPaths: ["resumen_vacante", "fortalezas_detectadas.*", "brechas.*", "preguntas.*.pregunta", "preguntas.*.por_que", "razon_template"],
+      system: ANALYZE_SYSTEM, content, schema: AnalysisSchema, effort: "medium" });
     return Response.json({ analysis });
   } catch (err) {
     return errorResponse(err);

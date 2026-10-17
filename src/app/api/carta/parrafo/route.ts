@@ -28,6 +28,7 @@ export async function POST(req: Request) {
     const b = (await req.json()) as Body;
     if (!b.parrafo?.trim()) return Response.json({ error: "El párrafo está vacío.", code: "EMPTY" }, { status: 400 });
     const { texto } = await askStructured({
+      editorialPaths: ["texto"],
       system: PARRAFO_SYSTEM,
       schema: BulletSchema,
       effort: "low",

@@ -36,7 +36,9 @@ export async function POST(req: Request) {
     ];
     const limit = await planGuard(req, "cv");
     if (limit) return limit;
-    const generation = await askStructured({ system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "high" });
+    const generation = await askStructured({
+      editorialPaths: ["titular", "resumen", "logros_clave.*", "experiencias.*.logros.*", "cambios_clave.*", "consejos.*"],
+      system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "high" });
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);

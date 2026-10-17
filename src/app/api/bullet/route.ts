@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     const b = (await req.json()) as Body;
     if (!b.bullet?.trim()) return Response.json({ error: "El logro está vacío.", code: "EMPTY" }, { status: 400 });
     const { texto } = await askStructured({
+      editorialPaths: ["texto"],
       system: BULLET_SYSTEM,
       schema: BulletSchema,
       effort: "low",

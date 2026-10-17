@@ -35,7 +35,9 @@ export async function POST(req: Request) {
     ];
     const limit = await planGuard(req, "cv");
     if (limit) return limit;
-    const generation = await askStructured({ system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" });
+    const generation = await askStructured({
+      editorialPaths: ["titular", "resumen", "logros_clave.*", "experiencias.*.logros.*", "cambios_clave.*", "recomendaciones_formulario.*.respuesta_sugerida", "recomendaciones_formulario.*.por_que", "recomendaciones_formulario.*.tip"],
+      system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" });
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);

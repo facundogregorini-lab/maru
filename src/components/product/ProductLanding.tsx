@@ -1,6 +1,5 @@
 import Link from "next/link";
 import AutofillDemo from "@/components/landing/AutofillDemo";
-import Laurels from "@/components/landing/Laurels";
 import { ChatMock, CvMock, MatchMock, TrackerMock, VideoMock } from "@/components/landing/Mocks";
 import { PRODUCTS, type ProductId, type Stat, type VisualId } from "@/lib/products";
 import { AtsMock, FormMock, JobStackMock, LetterMock, PrefsMock, ReportMock } from "./Visuals";
@@ -113,13 +112,7 @@ export function ProductHero({ id, stats, ctaHref = "#empezar" }: { id: ProductId
       <section className="full-bleed -mt-8 bg-[radial-gradient(ellipse_at_78%_35%,rgba(181,255,228,0.45),transparent_55%),linear-gradient(180deg,#fafbfb,#fff)] px-5 pb-16 pt-10 sm:pt-14">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] lg:gap-16">
           <div className="animate-rise text-center lg:text-left">
-            <Laurels
-              items={[
-                { top: "Sin tarjeta", main: "100% gratis" },
-                { top: "Con la IA de", main: "Claude" },
-                { top: "Nunca inventa", main: "tu experiencia" },
-              ]}
-            />
+            <p className="text-sm font-semibold text-brand-dark">Con tu experiencia real · Vos revisás el resultado</p>
             <h1 className="mt-6 uppercase">
               {p.strongFirst ? (
                 <>
@@ -141,6 +134,7 @@ export function ProductHero({ id, stats, ctaHref = "#empezar" }: { id: ProductId
             >
               {p.cta}
             </a>
+            <p className="mt-3 text-sm text-ink/65">Empezá con el plan gratis. <Link href="/precios" className="underline underline-offset-4">Ver funciones y límites</Link></p>
           </div>
           <div className="animate-rise min-w-0 [animation-delay:150ms]">
             <Visual id={p.hero} />
@@ -287,8 +281,8 @@ export function ProductMore({ id, ctaHref = "#empezar" }: { id: ProductId; ctaHr
       <Block tone="gradient">
         <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
           <p className="text-[2rem] font-light leading-tight sm:text-[44px]">
-            <strong className="font-bold">Dejá que Maru te lleve</strong>
-            <br />a tu próximo trabajo
+            <strong className="font-bold">Prepará con Maru</strong>
+            <br />tu próxima postulación
           </p>
           <BlackCta href={ctaHref}>{p.cta}</BlackCta>
         </div>

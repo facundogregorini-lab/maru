@@ -1,5 +1,12 @@
 # Estado y próximos pasos de Maru
 
+## Escritura con Slop Monstruo (17/10/2026)
+
+- Fuente en español fijada y licenciada, skill instalada y adaptación de servidor para todos los planes. Política común en las 14 rutas de redacción; extracción literal excluida.
+- Checker de prosa y una revisión condicional por pedido, con guardias de cifras, siglas, links, campos permitidos, longitud y esquema. Timeout o error conserva la generación válida; no usa cuotas extra del usuario ni sesiones CLI. La segunda familia de modelos de la skill no está implementada online. Detalles y límites: `docs/ESCRITURA.md`.
+- Corregidos los laureles “100% gratis” en las landings de herramientas y la FAQ de entrevista que decía un pedido por mes en vez de por semana. Se muestran los límites de los planes.
+- Validación y muestras ficticias: tests de escritura y QC de cartas y guiones; no se reescriben documentos ya guardados.
+
 ## Home y recorrido hacia las herramientas (17/10/2026)
 
 - Quitados el selector Web/Extensión y la franja repetida de descarga. La extensión queda en Herramientas; se agregó también la entrevista al menú.

@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     if (!b.plan?.preguntas) throw new UserFacingError("Falta la entrevista.", "BAD_REQUEST");
     if (!historial.length) throw new UserFacingError("Respondé al menos una pregunta para recibir tu informe.", "NO_ANSWERS");
     const informe = await askStructured({
+      editorialPaths: ["veredicto", "resumen", "fortalezas.*", "a_mejorar.*", "respuestas.*.funciono", "respuestas.*.mejorar", "respuestas.*.respuesta_sugerida", "proximos_pasos.*"],
       system: ENTREVISTA_INFORME_SYSTEM,
       schema: InformeSchema,
       effort: "medium",
