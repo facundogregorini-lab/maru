@@ -1,6 +1,7 @@
 import { workplaceFromDescription } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
+import { salaryFromText } from "./salary";
 import { INFERRED, isInferred } from "./labels";
 import { sourceById } from "./sources";
 import { sha } from "./hash";
@@ -345,7 +346,8 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
       workplace: group.map((p) => p.workplace).find((w) => w.value !== "desconocido" && !isInferred(w)) ?? group.map((p) => p.workplace).find((w) => w.value !== "desconocido") ?? primary.workplace,
       eligibility: combineEligibility(group.map((p) => p.eligibility)),
       extracted: primary.extracted,
-      salary: salaryPost?.salary ?? null,
+      // Si ninguna fuente lo trae estructurado, el que el aviso publica en su texto.
+      salary: salaryPost?.salary ?? salaryFromText(primary.descriptionText),
       primaryKey: primary.key,
       descriptionComplete: group.some((p) => p.descriptionComplete),
       publishedAt: group.map((p) => p.publishedAt).filter(Boolean).sort()[0] ?? null,
