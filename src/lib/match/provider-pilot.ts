@@ -24,7 +24,7 @@ export class ProviderError extends Error {
 export async function request(url: URL, headers?: HeadersInit, maxBytes = 4_000_000) {
   let response: Response;
   try { response = await fetch(url, { headers, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(55_000) }); }
-  catch { throw new ProviderError("El proveedor no respondió a tiempo. No se reintentó la consulta."); }
+  catch { throw new ProviderError("El proveedor no respondió a tiempo. No se reintentó la consulta.", "TIMEOUT"); }
   if (!response.ok) throw new ProviderError(`El proveedor respondió HTTP ${response.status}. Revisá la clave, el plan y la cuota en su panel.`);
   if (Number(response.headers.get("content-length")) > maxBytes) throw new ProviderError("La respuesta excede el límite de la prueba.");
   const reader = response.body?.getReader();

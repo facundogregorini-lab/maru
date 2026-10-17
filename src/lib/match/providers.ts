@@ -226,6 +226,57 @@ export const SERP_QUERIES: SerpQuery[] = [
   { id: "rep4-lp", q: "repositor La Plata" },
   { id: "tel4-lp", q: "telemarketer La Plata" },
   { id: "cob4-lp", q: "cobranzas La Plata" },
+  // Tanda 5 (17/10): oficios y servicios × grandes ciudades.
+  { id: "ope5-caba", q: "operario de producción Buenos Aires" },
+  { id: "cho5-caba", q: "chofer Buenos Aires" },
+  { id: "enf5-caba", q: "enfermero Buenos Aires" },
+  { id: "moz5-caba", q: "mozo Buenos Aires" },
+  { id: "coc5-caba", q: "cocinero Buenos Aires" },
+  { id: "vig5-caba", q: "vigilador Buenos Aires" },
+  { id: "aux5-caba", q: "auxiliar contable Buenos Aires" },
+  { id: "man5-caba", q: "técnico de mantenimiento Buenos Aires" },
+  { id: "ele5-caba", q: "electricista Buenos Aires" },
+  { id: "doc5-caba", q: "docente Buenos Aires" },
+  { id: "ope5-cba", q: "operario de producción Córdoba" },
+  { id: "cho5-cba", q: "chofer Córdoba" },
+  { id: "enf5-cba", q: "enfermero Córdoba" },
+  { id: "moz5-cba", q: "mozo Córdoba" },
+  { id: "coc5-cba", q: "cocinero Córdoba" },
+  { id: "vig5-cba", q: "vigilador Córdoba" },
+  { id: "aux5-cba", q: "auxiliar contable Córdoba" },
+  { id: "man5-cba", q: "técnico de mantenimiento Córdoba" },
+  { id: "ele5-cba", q: "electricista Córdoba" },
+  { id: "doc5-cba", q: "docente Córdoba" },
+  { id: "ope5-ros", q: "operario de producción Rosario" },
+  { id: "cho5-ros", q: "chofer Rosario" },
+  { id: "enf5-ros", q: "enfermero Rosario" },
+  { id: "moz5-ros", q: "mozo Rosario" },
+  { id: "coc5-ros", q: "cocinero Rosario" },
+  { id: "vig5-ros", q: "vigilador Rosario" },
+  { id: "aux5-ros", q: "auxiliar contable Rosario" },
+  { id: "man5-ros", q: "técnico de mantenimiento Rosario" },
+  { id: "ele5-ros", q: "electricista Rosario" },
+  { id: "doc5-ros", q: "docente Rosario" },
+  { id: "ope5-mza", q: "operario de producción Mendoza" },
+  { id: "cho5-mza", q: "chofer Mendoza" },
+  { id: "enf5-mza", q: "enfermero Mendoza" },
+  { id: "moz5-mza", q: "mozo Mendoza" },
+  { id: "coc5-mza", q: "cocinero Mendoza" },
+  { id: "vig5-mza", q: "vigilador Mendoza" },
+  { id: "aux5-mza", q: "auxiliar contable Mendoza" },
+  { id: "man5-mza", q: "técnico de mantenimiento Mendoza" },
+  { id: "ele5-mza", q: "electricista Mendoza" },
+  { id: "doc5-mza", q: "docente Mendoza" },
+  { id: "ope5-tuc", q: "operario de producción Tucumán" },
+  { id: "cho5-tuc", q: "chofer Tucumán" },
+  { id: "enf5-tuc", q: "enfermero Tucumán" },
+  { id: "moz5-tuc", q: "mozo Tucumán" },
+  { id: "coc5-tuc", q: "cocinero Tucumán" },
+  { id: "vig5-tuc", q: "vigilador Tucumán" },
+  { id: "aux5-tuc", q: "auxiliar contable Tucumán" },
+  { id: "man5-tuc", q: "técnico de mantenimiento Tucumán" },
+  { id: "ele5-tuc", q: "electricista Tucumán" },
+  { id: "doc5-tuc", q: "docente Tucumán" },
 ];
 
 export type Rejections = Record<string, number>;
@@ -600,6 +651,7 @@ export async function runSerp(key: string, plan: SerpPlan, log: Log = () => {}, 
   const allowed = Math.max(0, Math.min(plan.maxSearches, left - plan.reserve, plan.queries.length));
   log(`SerpApi ${account.plan_name ?? ""}: ${left} búsquedas incluidas; usamos ${allowed} (reserva ${plan.reserve}).`);
   if (!allowed) out.stopped = "No quedan búsquedas incluidas por encima de la reserva.";
+  let timeouts = 0;
   for (const query of plan.queries.slice(0, allowed)) {
     const params = { engine: "google_jobs", q: query.q, location: "Argentina", gl: "ar", hl: "es" };
     const url = new URL("https://serpapi.com/search.json");
@@ -615,8 +667,15 @@ export async function runSerp(key: string, plan: SerpPlan, log: Log = () => {}, 
       out.batches.push(batch);
       out.ledger.push({ at: nowIso, provider: "serpapi", call: "google_jobs", params, rows: rows.length, consumed: 1, quota: {} });
       log(`"${query.q}": ${rows.length} filas, ${batch.postings.length} aceptadas.`);
+      timeouts = 0;
     } catch (e) {
       out.ledger.push({ at: nowIso, provider: "serpapi", call: "google_jobs", params, rows: 0, consumed: null, quota: {}, error: (e as Error).message });
+      // Google Jobs a veces tarda más de la cuenta: se saltea esa búsqueda (ya contada en el tope) y se
+      // sigue. Dos seguidas sin respuesta, o cualquier otro error, frenan la corrida.
+      if (e instanceof ProviderError && e.code === "TIMEOUT" && ++timeouts < 2) {
+        log(`"${query.q}": sin respuesta a tiempo; se saltea.`);
+        continue;
+      }
       out.stopped = `"${query.q}": ${(e as Error).message}`;
       return out;
     }

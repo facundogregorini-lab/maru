@@ -167,6 +167,24 @@ describe("saldo: nunca más de lo incluido", () => {
     expect(JSON.stringify(out.ledger)).not.toContain("secret-serp");
   });
 
+  it("SerpApi saltea una búsqueda sin respuesta y frena con dos seguidas", async () => {
+    const timeout = async () => { throw new Error("aborted"); };
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(json({ plan_name: "Free", plan_searches_left: 30 }))
+      .mockImplementationOnce(timeout)
+      .mockImplementationOnce(async () => json({ jobs_results: [serpRow] }))
+      .mockImplementationOnce(timeout)
+      .mockImplementationOnce(timeout)
+      .mockImplementation(async () => json({ jobs_results: [serpRow] }));
+    vi.stubGlobal("fetch", fetcher);
+    const out = await runSerp("k", { queries: SERP_QUERIES, maxSearches: 8, reserve: 20 }, undefined, NOW);
+    expect(fetcher).toHaveBeenCalledTimes(5);
+    expect(out.batches).toHaveLength(1);
+    expect(out.ledger.filter((l) => l.error)).toHaveLength(3);
+    expect(out.stopped).toContain("no respondió a tiempo");
+  });
+
   it("Apify frena antes de pasarse del presupuesto acumulado", () => {
     expect(apifyNextCap("linkedin", 100, 0, 5)).toBeCloseTo(0.22);
     expect(apifyNextCap("linkedin", 100, 4.9, 5)).toBe(0);
