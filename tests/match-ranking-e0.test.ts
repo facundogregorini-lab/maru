@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { familyFromTitle } from "@/lib/match/extract";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
 import { normalizeFantastic } from "@/lib/match/providers";
-import { argentinaFirst, rankOpportunities } from "@/lib/match/ranking";
+import { argentinaFirst, parseRole, rankOpportunities, roleSimilarity } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
 import { basePrefs, noInteractions } from "./match-helpers";
 
@@ -55,5 +55,24 @@ describe("ranking: ajustes de E0", () => {
     expect(familyFromTitle("Revenue Operations Analyst")).toBe("ventas");
     expect(familyFromTitle("IT Operations Analyst")).toBe("software");
     expect(familyFromTitle("Analista de operaciones logísticas")).toBe("logistica");
+  });
+});
+
+describe("ranking: tipo de puesto además del área", () => {
+  const sim = (a: string, b: string) => roleSimilarity(parseRole(a), parseRole(b));
+  it("compara por área y tipo de puesto, sin lugares ni ruido del aviso", () => {
+    expect(sim("Analista de logística", "Analista de Logística SSR")).toBeGreaterThanOrEqual(0.9);
+    expect(sim("Analista de logística", "Coordinador/a de Logística zona Tucumán")).toBeGreaterThan(0.75);
+    expect(sim("Analista de logística", "Chofer de logística")).toBeLessThan(0.5);
+    expect(sim("Analista de logística", "Analista de calidad")).toBeLessThan(0.1);
+    expect(sim("Vendedor", "Vigilador en local comercial")).toBeLessThan(0.5);
+    expect(sim("Asistente administrativo", "Auxiliar Administrativo Comercial")).toBeGreaterThan(0.75);
+  });
+
+  it("un puesto operativo del mismo rubro no lidera para un perfil administrativo", () => {
+    const out = rank([row("op", "Operario contable de depósito", "Depósito SA"), row("ok", "Analista contable", "Contable SA")]);
+    expect(out.eligible[0].company).toBe("Contable SA");
+    const op = out.eligible.find((i) => i.company === "Depósito SA");
+    if (op) expect(op.score).toBeLessThan(out.eligible[0].score - 15);
   });
 });
