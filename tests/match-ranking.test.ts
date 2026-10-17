@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { profileToMatch, yearsOfExperience } from "@/lib/match/profile";
+import { profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
 import { DEFAULT_WEIGHTS, rankOpportunities, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
@@ -152,5 +152,19 @@ describe("perfil para el match", () => {
     expect(m.skills).toEqual(expect.arrayContaining(["SEO", "sem", "sql"]));
     expect(JSON.stringify(m)).not.toContain("ana@mail.com");
     expect(Object.keys(m)).not.toContain("nombre");
+  });
+});
+
+describe("aptitudes largas del CV", () => {
+  it("parte un párrafo de aptitudes en habilidades sueltas, sin cortar paréntesis", () => {
+    const raw = "Inteligencia Artificial y Automatización: Implementación de LLMs (OpenAI, Anthropic/Claude), diseño de flujos automatizados en n8n, ingeniería de prompts, desarrollo de agentes de IA y optimización de procesos operativos.";
+    expect(splitSkill(raw)).toEqual([
+      "Implementación de LLMs (OpenAI, Anthropic/Claude)",
+      "diseño de flujos automatizados en n8n",
+      "ingeniería de prompts",
+      "desarrollo de agentes de IA y optimización de procesos operativos",
+    ]);
+    expect(splitSkill("Google Ads")).toEqual(["Google Ads"]);
+    expect(splitSkill("  ")).toEqual([]);
   });
 });

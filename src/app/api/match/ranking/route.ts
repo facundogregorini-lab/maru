@@ -1,4 +1,4 @@
-import { RankingRequestSchema, type ExternalJob } from "@/lib/match/api-schemas";
+import { RankingRequestSchema, invalidFields, type ExternalJob } from "@/lib/match/api-schemas";
 import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
@@ -21,7 +21,10 @@ export async function POST(req: Request) {
     return Response.json({ error: "Pedido inválido.", code: "BAD_REQUEST" }, { status: 400 });
   }
   const parsed = RankingRequestSchema.safeParse(body);
-  if (!parsed.success) return Response.json({ error: "Revisá tus datos: hay campos inválidos.", code: "BAD_REQUEST" }, { status: 400 });
+  if (!parsed.success) {
+    const fields = invalidFields(parsed.error);
+    return Response.json({ error: `Revisá tus datos: hay campos inválidos (${fields.join(", ")}).`, code: "BAD_REQUEST", fields }, { status: 400 });
+  }
   const { profile, prefs, interactions, filters, external = [], limit } = parsed.data;
 
   try {
