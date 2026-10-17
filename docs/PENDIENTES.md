@@ -8,6 +8,7 @@ Próxima acción al liberarse la cuota: redeployar el último `main`, confirmar 
 
 - Fuente en español fijada y licenciada, skill instalada y adaptación de servidor para todos los planes. Política común en las 14 rutas de redacción; extracción literal excluida.
 - Checker de prosa y una revisión condicional por pedido, con guardias de cifras, siglas, links, campos permitidos, longitud y esquema. Timeout o error conserva la generación válida; no usa cuotas extra del usuario ni sesiones CLI. La segunda familia de modelos de la skill no está implementada online. Detalles y límites: `docs/ESCRITURA.md`.
+- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste también espera el deploy de PR #76.
 - Corregidos los laureles “100% gratis” en las landings de herramientas y la FAQ de entrevista que decía un pedido por mes en vez de por semana. Se muestran los límites de los planes.
 - Validación: 340 tests aprobados (14 de escritura), 7 omitidos; TypeScript y ESLint sin errores. El smoke test con cartas y guiones del proveedor real queda pendiente del deploy. No se reescriben documentos ya guardados.
 

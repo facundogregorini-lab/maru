@@ -267,7 +267,7 @@ function JobCard({
       handoffToPostulacion({ id: item.id, jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText, title: item.title, company: item.company });
       trackItem(item, { jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText });
       track("match_preparar_postulacion", { posicion: position, fuente: main?.kind ?? "" });
-      router.push("/postulacion");
+      router.push("/postulacion#empezar");
     } catch (e) {
       setErr((e as Error).message);
       setPreparing(false);
