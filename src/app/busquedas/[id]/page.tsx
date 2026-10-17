@@ -8,12 +8,14 @@ import PrepareJob from "@/components/busquedas/PrepareJob";
 import { ApplyLink, SaveJob } from "@/components/busquedas/TrackJob";
 import { MaruHead } from "@/components/maru/PixelMaru";
 import { getJob } from "@/lib/busquedas";
+import CompanyName from "@/components/busquedas/CompanyName";
+import { displayCompany } from "@/lib/match/labels";
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const j = await getJob((await params).id);
-  return j ? { title: `${j.title} · ${j.company} · Maru`, description: `Búsqueda de ${j.title} en ${j.company}. Mirá los requisitos y preparate con Maru.` } : { title: "Búsqueda · Maru" };
+  return j ? { title: `${j.title} · ${displayCompany(j.company)} · Maru`, description: `Búsqueda de ${j.title} en ${displayCompany(j.company)}. Mirá los requisitos y preparate con Maru.` } : { title: "Búsqueda · Maru" };
 }
 
 const btn = "press block w-full rounded-lg bg-neon py-2.5 text-center text-sm font-semibold text-ink disabled:opacity-60";
@@ -45,10 +47,10 @@ export default async function JobPage({ params }: Props) {
           </div>
 
           <div className="mt-5 flex gap-4">
-            <CompanyTile name={j.company} logo={j.logo} size={56} />
+            <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={56} />
             <div className="min-w-0">
               <p className="text-sm">
-                <span className="font-semibold">{j.company}</span>
+                <CompanyName name={j.company} className="font-semibold" />
                 {j.area && <span className="text-ink/50"> / {j.area}</span>}
               </p>
               <h1 className="text-xl font-bold leading-snug sm:text-2xl">{j.title}</h1>

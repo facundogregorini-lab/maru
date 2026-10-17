@@ -1,3 +1,4 @@
+import { isGenericCompany } from "./labels";
 import type { Opportunity } from "./types";
 
 /**
@@ -23,6 +24,28 @@ export function companyKey(name: string): string {
   return toks.join(" ");
 }
 
+/**
+ * Lugares que se suelen pegar al final del título ("Vendedor - Rosario", "Analista (Argentina)").
+ * La modalidad no se recorta: "(Remoto)" y "(Híbrido)" de la misma empresa son búsquedas distintas.
+ */
+const PLACE = /^(zona |base |sede |en )?(caba|gba|amba|capital federal|buenos aires|argentina|latam|zona (norte|sur|oeste)|(amba|gba) (norte|sur|oeste)|cordoba|rosario|mendoza|tucuman|salta|neuquen|la plata|mar del plata)$/;
+const SUFFIX = /\s*(?:\(([^()]*)\)|\s[-–|]\s+([^-–|]+))\s*$/;
+
+/** Título sin sufijos de lugar, para juntar el mismo puesto publicado por ciudad. */
+export function baseTitle(title: string, locations: string[] = []): string {
+  const locs = fold(locations.join(" | "));
+  let t = title;
+  for (let i = 0; i < 2; i++) {
+    const m = t.match(SUFFIX);
+    if (!m || m.index === undefined || m.index === 0) break;
+    const raw = fold(m[1] ?? m[2] ?? "");
+    const x = raw.replace(/^(zona|base|sede|en) /, "");
+    if (!x || !(PLACE.test(raw) || (x.length >= 4 && locs.includes(x)))) break;
+    t = t.slice(0, m.index);
+  }
+  return t;
+}
+
 const ELIG_RANK ={ elegible: 0, por_confirmar: 1, no_elegible: 2 } as const;
 const date = (o: Opportunity) => o.publishedAt ?? o.firstSeenAt;
 
@@ -40,7 +63,9 @@ const union = (lists: string[][]) => [...new Set(lists.flat())];
 export function groupOpportunities(opps: Opportunity[]): { opportunities: Opportunity[]; alias: Map<string, string> } {
   const groups = new Map<string, Opportunity[]>();
   for (const o of opps) {
-    const key = `${fold(o.title)}|${companyKey(o.company)}`;
+    // "Importante empresa del sector" no es una empresa: no se junta con otras que se llaman igual.
+    const company = isGenericCompany(o.company) ? `#${o.id}` : companyKey(o.company);
+    const key = `${fold(baseTitle(o.title, o.locations))}|${company}`;
     const g = groups.get(key);
     if (g) g.push(o);
     else groups.set(key, [o]);

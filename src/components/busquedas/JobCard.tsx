@@ -3,6 +3,8 @@ import TimeAgo from "@/components/landing/TimeAgo";
 import type { JobResult } from "@/lib/busquedas";
 import CompanyTile from "./CompanyTile";
 import { ApplyLink } from "./TrackJob";
+import { displayCompany } from "@/lib/match/labels";
+import CompanyName from "./CompanyName";
 
 /** Íconos de línea de las tarjetas (ubicación, modalidad, contrato, seniority, salario, experiencia). */
 export const META_ICONS = {
@@ -58,10 +60,10 @@ export default function JobCard({ j }: { j: JobResult }) {
       <div className="min-w-0 flex-1 p-4">
         <div className="flex gap-4">
           <span className="hidden sm:block">
-            <CompanyTile name={j.company} logo={j.logo} size={72} />
+            <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={72} />
           </span>
           <span className="sm:hidden">
-            <CompanyTile name={j.company} logo={j.logo} size={44} />
+            <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={44} />
           </span>
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5">
@@ -74,7 +76,7 @@ export default function JobCard({ j }: { j: JobResult }) {
               </Link>
             </h2>
             <p className="truncate text-[15px]">
-              {j.company}
+              <CompanyName name={j.company} />
               {j.area && <span className="text-ink/50"> / {j.area}</span>}
             </p>
           </div>

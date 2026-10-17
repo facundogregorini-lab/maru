@@ -12,6 +12,8 @@ import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily,
 import CompanyTile from "../busquedas/CompanyTile";
 import { ErrorBanner, inputClass, post } from "../ui";
 import { MultiChips } from "./fields";
+import CompanyName from "@/components/busquedas/CompanyName";
+import { displayCompany } from "@/lib/match/labels";
 
 type RankingResponse = RankOutput & { inventory: { generatedAt: string | null; open: number } };
 type Tab = "elegibles" | "pendientes" | "guardadas";
@@ -266,7 +268,7 @@ function JobCard({
     <article className="flex overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04]">
       <div className="min-w-0 flex-1 p-4 sm:p-5">
         <div className="flex gap-4">
-          <CompanyTile name={item.company} logo={item.logo} size={56} />
+          <CompanyTile name={displayCompany(item.company)} logo={item.logo} size={56} />
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
@@ -276,7 +278,7 @@ function JobCard({
             </p>
             <h3 className="mt-1.5 text-lg font-semibold leading-snug sm:text-xl">{item.title}</h3>
             <p className="text-[15px]">
-              {item.company}
+              <CompanyName name={item.company} />
               <span className="text-ink/50">
                 {" / "}
                 {[item.locations.slice(0, 2).join(" · ") || null, item.workplace !== "desconocido" ? item.workplaceLabel : "Modalidad no informada"].filter(Boolean).join(" · ")}
