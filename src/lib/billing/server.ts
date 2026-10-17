@@ -66,26 +66,45 @@ export async function refreshSubscription(email: string): Promise<Subscription |
   // autorizando otra en el checkout, y entonces la guardada queda "pending" para siempre.
   const ids = new Set([current.id]);
   const errors: unknown[] = [];
+  const skipped: string[] = [];
+  const log = (err: unknown) => console.error("[billing refresh]", err instanceof Error ? err.message : "error");
+  // Búsquedas auxiliares: si fallan se registran, pero no tapan el resultado.
   try {
-    const found = await mp<{ results?: Preapproval[] }>(`/preapproval/search?q=${encodeURIComponent(current.reference)}&limit=20`);
+    const found = await mp<{ results?: Preapproval[] }>(`/preapproval/search?q=${encodeURIComponent(current.reference)}`);
     for (const sub of found.results ?? []) if (sub.id && sub.external_reference === current.reference) ids.add(sub.id);
-  } catch (err) { errors.push(err); }
+  } catch (err) { log(err); }
   for (const id of ids) {
     try {
       await processNotification("subscription_preapproval", id);
       // Recupera la confirmación si el webhook se demoró o no llegó. El pago se verifica por la misma vía.
-      const invoices = await mp<{ results?: Invoice[] }>(`/authorized_payments/search?preapproval_id=${encodeURIComponent(id)}&limit=50`);
+      const invoices = await mp<{ results?: Invoice[] }>(`/authorized_payments/search?preapproval_id=${encodeURIComponent(id)}`);
       const latest = (invoices.results ?? []).filter((invoice) => invoice.payment?.id).sort((a,b) => Number(b.id) - Number(a.id)).slice(0,3);
       for (const invoice of latest) {
-        try { await processNotification("subscription_authorized_payment", String(invoice.id)); }
+        try { const why = await processNotification("subscription_authorized_payment", String(invoice.id)); if (why) skipped.push(why); }
         catch (err) { errors.push(err); }
       }
     } catch (err) { errors.push(err); }
   }
-  const next = await readSubscription(email);
-  for (const err of errors) console.error("[billing refresh]", err instanceof Error ? err.message : "error");
-  // Un paso fallido no tapa lo que sí se pudo conciliar.
-  if (errors.length && !hasPaidAccess(next)) throw errors[0];
+  // Último recurso: los pagos de la suscripción llevan su referencia. Pasan por la misma validación.
+  let next = await readSubscription(email);
+  if (next && !hasPaidAccess(next)) {
+    try {
+      const found = await mp<{ results?: Payment[] }>(`/v1/payments/search?external_reference=${encodeURIComponent(current.reference)}&sort=date_created&criteria=desc`);
+      for (const payment of (found.results ?? []).filter((p) => p.status === "approved").slice(0, 3)) {
+        await setJson(`maru:billing:payment:${payment.id}`, { subId: next.id });
+        const why = await processNotification("payment", String(payment.id));
+        if (why) skipped.push(why);
+      }
+    } catch (err) { log(err); }
+    next = await readSubscription(email);
+  }
+  errors.forEach(log);
+  skipped.forEach((why) => console.error("[billing refresh]", why));
+  // Un paso fallido no tapa lo que sí se pudo conciliar; sin pago todavía, se sigue esperando sin error.
+  if (!hasPaidAccess(next)) {
+    if (errors.length) throw errors[0];
+    if (skipped.length) throw new Error(skipped[0]);
+  }
   return next;
 }
 export async function cancel(email: string): Promise<void> {
@@ -95,8 +114,9 @@ export async function cancel(email: string): Promise<void> {
   if (result.status !== "cancelled") throw new Error("No pudimos confirmar la cancelación.");
   await change(email, (s) => ({ ...s, status: "cancelled", checkoutUrl: undefined }));
 }
-/** Reconsulta recursos con credenciales propias. Repetir una notificación no suma meses. */
-export async function processNotification(type: string, id: string): Promise<void> {
+/** Reconsulta recursos con credenciales propias. Repetir una notificación no suma meses.
+ * Devuelve el motivo si vio un pago aprobado que no acreditó (sin datos personales). */
+export async function processNotification(type: string, id: string): Promise<string | undefined> {
   let invoice: Invoice | undefined;
   let sub: Preapproval;
   let payment: Payment | undefined;
@@ -120,13 +140,17 @@ export async function processNotification(type: string, id: string): Promise<voi
   if (current.id && current.id !== sub.id && sub.status !== "authorized") return;
   if (invoice?.payment?.id) payment = await mp<Payment>(`/v1/payments/${invoice.payment.id}`);
   if (payment) await setJson(`maru:billing:payment:${payment.id}`, { subId: sub.id });
+  let skipped: string | undefined;
   await change(binding.email, (s) => {
     if (s.reference !== sub.external_reference) return s;
     const next = { ...s, id: sub.id, status: sub.status };
     if (!payment) return next; // Autorizar el débito no equivale a cobrarlo.
     const at = Date.parse(payment.date_approved);
     const plan = PLANS[subscriptionPlan(s)];
-    if (payment.transaction_amount !== plan.price || payment.currency_id !== "ARS" || !Number.isFinite(at) || at > Date.now() + 60_000) return next;
+    if (payment.transaction_amount !== plan.price || payment.currency_id !== "ARS" || !Number.isFinite(at) || at > Date.now() + 60_000) {
+      if (payment.status === "approved") skipped = `Pago aprobado sin acreditar: ${payment.transaction_amount} ${payment.currency_id} (plan ${plan.id}: ${plan.price} ARS), fecha ${Number.isFinite(at) ? "ok" : "inválida"}.`;
+      return next;
+    }
     if (payment.status === "approved" && !payment.transaction_amount_refunded) {
       if (at < (s.paymentAt ?? 0)) return next;
       return { ...next, paymentId: payment.id, paymentAt: at, paidThrough: periodEnd(at, plan.frequency, plan.frequencyType) };
@@ -134,6 +158,7 @@ export async function processNotification(type: string, id: string): Promise<voi
     if (s.paymentId === payment.id) return { ...next, paidThrough: 0 };
     return next;
   });
+  return skipped;
 }
 /** Fin del período pago: días exactos o el mismo día del mes siguiente (el último, si ese mes es más corto). */
 export function periodEnd(at: number, frequency: number, type: "days" | "months"): number {
