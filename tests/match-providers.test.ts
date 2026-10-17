@@ -200,6 +200,13 @@ describe("inventario con importaciones parciales", () => {
     expect(workplaceFromDescription("You'll be 3 days per week on-site in Buenos Aires.")?.value).toBe("hibrido");
     expect(workplaceFromDescription("Jornada full-time presencial de lunes a viernes.")?.value).toBe("presencial");
     expect(workplaceFromDescription("Trabajo de 5 días presenciales en planta.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("El trabajo será de forma presencial en Pilar.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("Modalidad part time presencial, lunes a viernes.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("Go and Elixir are a plus. #LI-JB1 #LI-Remote")?.value).toBe("remoto");
+    expect(workplaceFromDescription("What we offer: remote full-time position with flexible hours.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("This role is categorized as hybrid.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Our Palermo office with a mandatory in-office presence four days per week.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Lugar de trabajo: Saavedra, CABA.")).toBeNull();
     expect(workplaceFromDescription("This role is a full-time remote position.")?.value).toBe("remoto");
     expect(workplaceFromDescription("Monitoreo remoto de cámaras y control de accesos.")).toBeNull();
     const inv = emptyInventory("fixture");
