@@ -345,10 +345,15 @@ function JobCard({
             <dt className="text-muted">Salario:</dt>
             <dd>{item.salary ?? "No informado"}</dd>
           </div>
-          {(item.publishedAt || item.postedLabel) && (
+          {item.publishedAt || item.postedLabel ? (
             <div className="flex gap-2">
               <dt className="text-muted">Publicada:</dt>
               <dd>{item.publishedAt ? fmtDate(item.publishedAt) : `${item.postedLabel} (según Google, al verla)`}</dd>
+            </div>
+          ) : (
+            <div className="flex gap-2" title="La fuente no informa cuándo se publicó.">
+              <dt className="text-muted">Vista por primera vez:</dt>
+              <dd>{fmtDate(item.firstSeenAt)}</dd>
             </div>
           )}
           <div className="flex gap-2">

@@ -32,6 +32,8 @@ import {
 
 /** Por debajo de este % de coincidencia una búsqueda no se lista como "para vos". */
 export const MIN_SCORE = 25;
+/** Tope del porcentaje que se muestra. */
+export const MAX_SCORE = 99;
 
 /** Desde cuántos días se esconde un aviso de los resultados (salvo que la persona lo haya guardado). */
 export const HIDE_AFTER_DAYS = 120;
@@ -291,6 +293,8 @@ export type RankedItem = {
   reviewedAt: string;
   reviewedLabel: string;
   publishedAt: string | null;
+  /** Cuándo la vimos por primera vez: se muestra si la fuente no informa la fecha de publicación. */
+  firstSeenAt: string;
   /** Antigüedad relativa de la fuente cuando no hay fecha exacta (Google Jobs). */
   postedLabel?: string;
   logo?: string;
@@ -660,7 +664,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
       family: ex.family.value,
       seniority: ex.seniority?.value ?? null,
       employmentType: ex.employmentType?.value ?? null,
-      score: Math.round(Math.max(0, Math.min(1, raw)) * 100),
+      // Nunca 100%: es una estimación con los datos disponibles, no una certeza.
+      score: Math.min(MAX_SCORE, Math.round(Math.max(0, Math.min(1, raw)) * 100)),
       confidence: conf >= 0.75 ? "alta" : conf >= 0.5 ? "media" : "baja",
       depth: "reglas",
       reasons: reasonsScored.sort((a, b) => b[0] - a[0]).map((r) => r[1]).filter((r, i, arr) => arr.indexOf(r) === i).slice(0, 3),
@@ -671,6 +676,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       reviewedAt: o.lastVerifiedAt ?? o.lastSeenAt,
       reviewedLabel: o.lastVerifiedAt ? "Revisado en el sitio del empleador" : "Visto por última vez en la fuente",
       publishedAt: o.publishedAt,
+      firstSeenAt: o.firstSeenAt,
       ...(!o.publishedAt && primary?.postedLabel ? { postedLabel: sanitizeDisplay(primary.postedLabel, 40) } : {}),
       ...(logoUrl ? { logo: logoUrl } : {}),
       excerpt: primary ? sanitizeDisplay(primary.descriptionText.replace(/\s+/g, " "), 320) : "",
