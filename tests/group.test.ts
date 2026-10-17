@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { baseTitle, companyKey, groupOpportunities } from "@/lib/match/group";
-import { displayCompany, isConsultora, isGenericCompany } from "@/lib/match/labels";
+import { displayCompany, displayTitle, isConsultora, isGenericCompany } from "@/lib/match/labels";
 import type { Opportunity } from "@/lib/match/types";
 
 const opp = (id: string, o: Partial<Opportunity> & { elig?: Opportunity["eligibility"]["status"] } = {}): Opportunity =>
@@ -80,4 +80,18 @@ describe("títulos con sufijo de lugar y empresas genéricas", () => {
     for (const n of ["ADN - Recursos Humanos", "ManpowerGroup", "Adecco Argentina S.A.", "Grupo Gestión", "Randstad AR", "EXTRAMEN Empresa de Servicios Eventuales SRL"]) expect(isConsultora(n)).toBe(true);
     for (const n of ["Despegar", "EY", "Naranja X"]) expect(isConsultora(n)).toBe(false);
   });
+});
+
+describe("título para mostrar", () => {
+  it.each([
+    ["REF 21439 Administrativo Hard de Recursos Humanos - Ezeiza", "Administrativo Hard de Recursos Humanos - Ezeiza"],
+    ["Ref.21562:Atención al Cliente", "Atención al Cliente"],
+    ["Operario logística (req208687) Eventual", "Operario logística Eventual"],
+    ["Backend Developer ID89121", "Backend Developer"],
+    ["VENDEDOR DE OBRA - CABA Y GBA", "Vendedor de obra - CABA y GBA"],
+    ["ANALISTA DE SOPORTE & AUTOMATIZACIÓN (B2B)", "Analista de soporte & automatización (B2B)"],
+    ["vendedor mostrador", "Vendedor mostrador"],
+    ["iOS Developer", "iOS Developer"],
+    ["Senior Data Analyst", "Senior Data Analyst"],
+  ])("%s → %s", (raw, shown) => expect(displayTitle(raw)).toBe(shown));
 });
