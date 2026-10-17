@@ -39,6 +39,11 @@ export const FAMILY_LABEL: Record<RoleFamily, string> = {
   salud: "Salud",
   educacion: "Educación",
   consultoria: "Consultoría",
+  produccion: "Industria, producción y oficios",
+  gastronomia: "Gastronomía y hotelería",
+  comercio: "Comercio y atención en tienda",
+  seguridad: "Seguridad y vigilancia",
+  entrenamiento_ia: "IA, idiomas y tareas por proyecto",
   otros: "Otras áreas",
 };
 

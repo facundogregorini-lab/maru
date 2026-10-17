@@ -11,6 +11,23 @@ describe("calidad de los avisos locales", () => {
     ["Analista IT Networking", "software"], ["Analista de Redes y Telecomunicaciones", "software"],
     ["ADMINISTRADOR DE DOCUMENTOS", "administracion"], ["Analista Técnico Ssr", "otros"],
   ])("clasifica %s por el título explícito", (title, family) => expect(familyFromTitle(title)).toBe(family));
+  it.each([
+    ["Senior Full-Stack .Net", "software"], ["Technical Lead - Java", "software"], ["Senior Database Administrator", "software"],
+    ["Account Manager", "ventas"], ["Preventista Zona Rosario", "ventas"], ["Promovendedor/a (Mar del Plata)", "ventas"],
+    ["Operario/a de producción", "produccion"], ["Técnico de Mantenimiento Industrial", "produccion"], ["Oficial Electricista", "produccion"],
+    ["Mechanical Engineer", "produccion"], ["Ingeniero de Procesos de Operaciones", "operaciones"],
+    ["Ayudante de cocina", "gastronomia"], ["Mozo/a de salón", "gastronomia"], ["Mucama Hotel 5 Estrellas", "gastronomia"],
+    ["Cajero/a", "comercio"], ["Repositor Externo Full Time", "comercio"], ["Vendedor de salón", "comercio"],
+    ["Vigilador General CABA", "seguridad"], ["Chofer de reparto", "logistica"], ["Enfermero/a - Chofer", "salud"],
+    ["AI Trainers Network - Spanish", "entrenamiento_ia"], ["Driver / Data Collector in Cordoba, Spain", "entrenamiento_ia"],
+    ["Analista de Liquidación de Sueldos", "rrhh"], ["Jefe de Personas & Cultura", "rrhh"],
+    ["Representante de Envíos | Búsqueda para personas con discapacidad", "otros"],
+    ["Analista de Financiamiento Inmobiliario", "finanzas"], ["Asesor Inmobiliario", "ventas"],
+    ["Docente Desarrollo Full-Stack", "educacion"], ["Video Editor", "marketing"], ["Client Service Representative", "atencion_cliente"],
+  ])("clasifica oficios y títulos que antes caían en Otros: %s", (title, family) => expect(familyFromTitle(title)).toBe(family));
+  it.each([
+    ["Ayudante de cocina", "junior"], ["Encargado/a de turno", "manager"], ["Practicante de Bienestar", "pasantia"],
+  ])("deduce el seniority de %s", (title, seniority) => expect(seniorityFromTitle(title)).toBe(seniority));
   it("respeta el seniority semi senior explícito antes de buscar senior", () => {
     expect(seniorityFromTitle("Data Scientist Semi Senior")).toBe("semi_senior");
     expect(seniorityFromTitle("Data Scientist Senior")).toBe("senior");

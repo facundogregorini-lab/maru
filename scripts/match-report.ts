@@ -53,7 +53,12 @@ const VERTICAL: Record<RoleFamily, string> = {
   educacion: "Educación",
   legal: "Legal",
   consultoria: "Consultoría",
-  otros: "Otros (oficios y sin clasificar)",
+  produccion: "Industria, producción y oficios",
+  gastronomia: "Gastronomía y hotelería",
+  comercio: "Comercio y retail",
+  seguridad: "Seguridad",
+  entrenamiento_ia: "IA, idiomas y tareas por proyecto",
+  otros: "Otros (sin clasificar)",
 };
 
 const inc = (o: Record<string, number>, k: string, n = 1) => (o[k] = (o[k] ?? 0) + n);
@@ -102,7 +107,7 @@ for (const p of inv.postings) {
   r.open++;
   const o = oppOf.get(p.key)!;
   if (o.eligibility.status === "elegible") r.eligible++;
-  inc(r.verticals, VERTICAL[p.extracted.family.value] ?? "Otros (oficios y sin clasificar)");
+  inc(r.verticals, VERTICAL[p.extracted.family.value] ?? "Otros (sin clasificar)");
   const others = o.postingKeys.map((k) => byKey.get(k)!).filter((q) => q && q.key !== p.key && q.status === "abierta" && q.sourceId !== p.sourceId);
   if (others.length) r.dupAny++;
   if (others.some(FREE)) r.dupFree++;
