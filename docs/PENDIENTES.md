@@ -15,8 +15,8 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 | # | Paso | Estado |
 | --- | --- | --- |
 | A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
-| B | Elegibilidad: el país antes que la ciudad (Córdoba, España) y "por confirmar" viejos | Pendiente |
-| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | Pendiente |
+| B | Elegibilidad: el país antes que la ciudad (Córdoba, España), provincias del interior y ciudades del exterior | **Hecho** (ver abajo) |
+| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | **Siguiente** (instrucciones abajo) |
 | D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | Pendiente |
 | E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | Pendiente |
 | F | Google Jobs mensual automático (gratis) | Pendiente: lo decide el dueño |
@@ -25,6 +25,47 @@ Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se ano
 - Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
 - Lo que queda en "Otros" son títulos sin área clara ("Manager", "Specialist", "Principal").
 - Se revisaron a mano los 319 títulos que cambiaron de área y se corrigieron los errores (inmobiliario, personas, ingenieros de procesos).
+
+**B (hecho):** `EXTRACTION_VERSION` 7. Sobre las 13.372 publicaciones abiertas, la elegibilidad queda así:
+
+| Estado | Antes | Después |
+| --- | ---: | ---: |
+| Elegibles | 4.202 | 4.290 |
+| Por confirmar | 1.027 | 619 |
+| No elegibles | 8.143 | 8.463 |
+
+- Pasan a elegibles 90 publicaciones del interior que no decían "Argentina" (Resistencia, San Luis, Corrientes, Comodoro Rivadavia, Santiago del Estero…).
+- Pasan a no elegibles 327 de ciudades o países del exterior que no se reconocían (Auckland, Atenas, Budapest, Dubái…).
+- Una ciudad de nombre repetido (Córdoba, Rosario, San Juan…) ya no cuenta como Argentina si la fuente informa otro país donde existe o el título lo nombra.
+- Los 619 "por confirmar" que quedan son casi todos "remoto sin región" (679 antes). Su antigüedad se trata en el paso C.
+
+### Cómo seguir (para la próxima sesión)
+
+**C. Frescura.** Quedó empezado sin commitear. No se probó, así que hay que rehacerlo así:
+1. En `src/lib/match/ranking.ts`, exportar `HIDE_AFTER_DAYS = 120` y `ageDays(o, now)` (usa `publishedAt ?? firstSeenAt`).
+   - En `rankOpportunities`, saltear las oportunidades con más de 120 días, salvo las guardadas.
+   - Reemplazar el castigo actual (>180 ×0,85, >90 ×0,93) por >60 ×0,85.
+2. En `src/lib/busquedas.ts` (`searchJobs`), filtrar también las de más de 120 días. La página de detalle (`getJob`) sigue mostrándolas.
+3. **Ojo con los tests:** los fixtures tienen fechas viejas y `now` toma la fecha real. Pasar `now` fijo en los tests o fechas relativas. Correr `npx vitest run` antes de pushear.
+4. Liveness (`src/lib/match/liveness.ts`):
+   - turnar los pedidos entre fuentes (round-robin por `sourceId`) en vez de ordenar sólo por fecha;
+   - agregar un tope de tiempo (`budgetMs`, ~8 min);
+   - en `.github/workflows/match-sync.yml`, subir `--max` a 400 y `timeout-minutes` a 40.
+
+   Hoy 2.854 importados nunca se revisaron. Computrabajo responde "desconocido" (posible bloqueo al bot) y queda salteada por `blockedSources`. Desde la nube de Claude no hay red hacia Computrabajo para investigarlo.
+5. Medir con el diagnóstico de abajo cuántas elegibles se ocultan. Base del 17/10: 574 elegibles con más de 60 días, todas de Lever, Greenhouse, Ashby y Teamtailor.
+
+**D. Modalidad inferida.** En `inventory.ts` (`withWorkplace`), o en un paso después, para las fuentes `apify-computrabajo`, `apify-indeed`, `serpapi` y `apify-linkedin`: si el aviso tiene una ciudad concreta y el texto no menciona remoto, híbrido ni teletrabajo, marcar `presencial` con `from: "descripcion"` y evidencia "inferido: ciudad sin mención de remoto". Mostrarlo como "Presencial (inferido)" en la tarjeta. Hoy hay 1.552 elegibles sin modalidad: Google Jobs 568, Computrabajo 537, LinkedIn 282.
+
+**E. Métricas y presentación.**
+- Sumar a `scripts/match-report.ts` el % de elegibles en "Otros", sin modalidad, sin seniority, con más de 60 días y "por confirmar".
+- Mostrar "Empresa confidencial" para nombres genéricos ("Importante empresa del sector", "Confidencial"; hay 149 elegibles) y no agruparlos entre sí.
+- Agregar la etiqueta "consultora" para Adecco, Manpower, ADN, Grupo Gestión, etc.
+- Al agrupar en `group.ts`, quitar del título los sufijos de ciudad o modalidad (" - Buenos Aires", "(Remoto)"). Hay unos 250 casi-duplicados.
+
+**F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
+
+**Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.
 
 ## Próximos pasos (17/10/2026, cierre de la base de avisos)
 
