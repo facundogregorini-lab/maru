@@ -1,4 +1,4 @@
-import { familyFromTitle, findSkills } from "./extract";
+import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { estimateSeniority } from "./profile";
 import { sourceById } from "./sources";
 import { CONTRACT_LABEL, FAMILY_LABEL, SENIORITY_LABEL } from "./labels";
@@ -338,7 +338,10 @@ export function rankOpportunities(input: RankInput): RankOutput {
     hardCheck("contrato", !!ex.employmentType, !!ex.employmentType && (!prefs.contratos.length || prefs.contratos.includes(ex.employmentType.value)), "No informa el tipo de contratación.");
     // Idiomas: sólo juzgamos los que la persona declaró. Si no lo declaró, queda "por confirmar", no "no cumple".
     const reqLangs = ex.languages.filter((l) => l.required && l.language !== "español");
-    const needLevel = (level: string) => (HIGH.test(fold(level)) ? 3 : MID.test(fold(level)) ? 2 : 1);
+    // Aviso escrito en inglés sin nivel declarado: si el puesto es de cara al cliente (atender, vender), hace falta fluidez.
+    const customerFacing = ex.family.value === "atencion_cliente" || ex.family.value === "ventas";
+    const needLevel = (level: string) => (level === ENGLISH_IMPLICIT ? (customerFacing ? 3 : 2) : HIGH.test(fold(level)) ? 3 : MID.test(fold(level)) ? 2 : 1);
+    const levelLabel = (l: { level: string }) => (l.level === ENGLISH_IMPLICIT && customerFacing ? "fluido (el aviso está escrito en inglés y el puesto es de cara al cliente)" : l.level);
     hardCheck(
       "idioma",
       reqLangs.every((l) => pLangs.has(normLang(l.language))),
@@ -444,15 +447,20 @@ export function rankOpportunities(input: RankInput): RankOutput {
       extras.push(salaryOk ? 1 : 0.2);
       if (salaryOk) reasonsScored.push([0.55, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
     } else if (prefs.salario?.monto) pending.push(sal ? "Publica salario, pero en otra moneda o período: comparalo vos." : "No informa salario.");
+    // El idioma también pesa en el total: un aviso que exige inglés avanzado no debería liderar
+    // para alguien con nivel intermedio (y menos sin inglés en el CV).
+    let langFactor = 1;
     for (const l of reqLangs) {
       const mine = pLangs.get(normLang(l.language));
       const need = needLevel(l.level);
       if (mine === undefined) {
-        gaps.push(`Pide ${l.language}${l.level ? ` (${l.level})` : ""}: no aparece en tu CV.`);
+        gaps.push(`Pide ${l.language}${l.level ? ` (${levelLabel(l)})` : ""}: no aparece en tu CV.`);
         extras.push(0.3);
+        langFactor = Math.min(langFactor, 0.7);
       } else if (langRank(mine) && langRank(mine) < need) {
-        gaps.push(`Pide ${l.language} ${l.level}; tu CV dice ${mine}.`);
+        gaps.push(`Pide ${l.language} ${levelLabel(l)}; tu CV dice ${mine}.`);
         extras.push(0.4);
+        langFactor = Math.min(langFactor, 0.85);
       } else extras.push(1);
     }
     if (o.publishedAt) extras.push((now.getTime() - new Date(o.publishedAt).getTime()) / 86_400_000 <= 14 ? 1 : 0.6);
@@ -461,7 +469,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     note(o.descriptionComplete);
     note(o.eligibility.status === "elegible");
 
-    let raw = w.habilidades * candidateFit + w.intencion * intent + w.seniority * senScore + w.extras * extraScore;
+    let raw = (w.habilidades * candidateFit + w.intencion * intent + w.seniority * senScore + w.extras * extraScore) * langFactor;
     // Si la persona dijo qué quiere hacer, un puesto que no se parece a eso no debería liderar
     // aunque encaje con su experiencia (clave en cambios de carrera).
     if (desiredTokens.length || objetivoTokens.size) raw *= 1 - INTENT_GATE * (1 - intent);
