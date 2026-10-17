@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchRecruitee, fetchSmartRecruiters, fetchWorkday, normalizeRecruitee, normalizeSmartRecruiters, normalizeWorkday, workdaySite, type Board } from "@/lib/match/connectors";
+import { eightfoldDomain, fetchEightfold, fetchRecruitee, fetchSmartRecruiters, fetchSuccessFactors, fetchWorkday, normalizeEightfold, normalizeRecruitee, normalizeSmartRecruiters, normalizeSuccessFactors, normalizeWorkday, parseSuccessFactorsSearch, successFactorsSite, workdaySite, type Board } from "@/lib/match/connectors";
 import { boardsFrom } from "@/lib/match/directory";
 import { applyBoard, emptyInventory } from "@/lib/match/inventory";
 
@@ -88,5 +88,74 @@ describe("Workday (búsqueda del sitio de empleo)", () => {
     expect(calls[1].url).toBe("https://acme.wd3.myworkdayjobs.com/wday/cxs/acme/Careers/job/Buenos-Aires/Financial-Analyst_R123");
     expect(res).toMatchObject({ complete: true, received: 1 });
     expect(res.postings[0].descriptionText).toContain("tesorería");
+  });
+});
+
+describe("Eightfold (API del sitio de empleo)", () => {
+  const board: Board = { sourceId: "eightfold", boardId: "eightfold:mercadolibre.eightfold.ai", slug: "mercadolibre.eightfold.ai", company: "Mercado Libre" };
+  const pos = { id: 44853699, name: "Analista de Marketing Performance", locations: ["Buenos Aires, Argentina"], department: "Marketing", t_create: 1792000000, canonicalPositionUrl: "https://mercadolibre.eightfold.ai/careers/job/44853699", work_location_option: "hybrid" };
+
+  it("deriva el dominio de la empresa y normaliza el aviso", () => {
+    expect(eightfoldDomain("mercadolibre.eightfold.ai")).toBe("mercadolibre.com");
+    expect(eightfoldDomain("careers.haleon.com")).toBe("haleon.com");
+    const p = normalizeEightfold({ ...pos, job_description: desc }, board);
+    expect(p).toMatchObject({ externalId: "44853699", company: "Mercado Libre", countries: ["AR"], department: "Marketing", applyUrl: pos.canonicalPositionUrl });
+    expect(p.workplace.value).toBe("hibrido");
+  });
+
+  it("pide Argentina por página y el detalle si falta la descripción", async () => {
+    const calls: string[] = [];
+    const fetchImpl = (async (url: RequestInfo | URL) => {
+      calls.push(String(url));
+      return String(url).includes("/jobs?") ? json({ count: 1, positions: [pos] }) : json({ ...pos, job_description: desc });
+    }) as typeof fetch;
+    const res = await fetchEightfold(board, { fetchImpl, retries: 0 });
+    expect(calls).toEqual(["https://mercadolibre.eightfold.ai/api/apply/v2/jobs?domain=mercadolibre.com&location=Argentina&start=0&num=20", "https://mercadolibre.eightfold.ai/api/apply/v2/jobs/44853699?domain=mercadolibre.com"]);
+    expect(res).toMatchObject({ complete: true, received: 1 });
+    expect(res.postings[0].descriptionText).toContain("tesorería");
+  });
+});
+
+describe("SuccessFactors (página de búsqueda)", () => {
+  const board: Board = { sourceId: "successfactors", boardId: "successfactors:careers.ey.com~ey", slug: "careers.ey.com~ey", company: "EY" };
+  const row = (id: number, title: string) => `<tr class="data-row"><td class="colTitle"><span class="jobTitle hidden-phone"><a href="/ey/job/Buenos-Aires-${id}/${id}/" class="jobTitle-link">${title}</a></span></td><td class="colLocation"><span class="jobLocation">Buenos Aires, AR</span></td></tr>`;
+  const search = (rows: string[], total: number) => `<html><body><span class="paginationLabel">Resultados <b>1 – ${rows.length}</b> de <b>${total}</b></span><table id="searchresults"><tbody>${rows.join("")}</tbody></table></body></html>`;
+  const detail = `<html><head><meta itemprop="datePosted" content="2026-10-15"></head><body><span class="jobdescription">${desc}</span></body></html>`;
+
+  it("valida el sitio y lee filas, ubicación y total", () => {
+    expect(successFactorsSite("careers.ey.com~ey")).toEqual({ host: "careers.ey.com", prefix: "/ey" });
+    expect(() => successFactorsSite("careers.ey.com/../x")).toThrow(/inválido/);
+    const parsed = parseSuccessFactorsSearch(search([row(1440520500, "Analista de Costos &amp; Presupuesto")], 1));
+    expect(parsed).toEqual({ total: 1, rows: [{ title: "Analista de Costos & Presupuesto", path: "/ey/job/Buenos-Aires-1440520500/1440520500/", location: "Buenos Aires, AR" }] });
+  });
+
+  it("busca Argentina, lee el detalle y normaliza", async () => {
+    const calls: string[] = [];
+    const fetchImpl = (async (url: RequestInfo | URL) => {
+      calls.push(String(url));
+      return new Response(String(url).includes("/search/") ? search([row(1448547733, "Analista Junior de Riesgos")], 1) : detail);
+    }) as typeof fetch;
+    const res = await fetchSuccessFactors(board, { fetchImpl, retries: 0 });
+    expect(calls[0]).toBe("https://careers.ey.com/ey/search/?q=&locationsearch=Argentina&startrow=0");
+    expect(res).toMatchObject({ complete: true, received: 1 });
+    expect(res.postings[0]).toMatchObject({ externalId: "1448547733", countries: ["AR"], sourceUrl: "https://careers.ey.com/ey/job/Buenos-Aires-1448547733/1448547733/", publishedAt: "2026-10-15T00:00:00.000Z" });
+    expect(res.postings[0].descriptionText).toContain("conciliaciones");
+  });
+
+  it("si la página no tiene el formato esperado, falla en vez de vaciar la bolsa", async () => {
+    const fetchImpl = (async () => new Response("<html><body><div id='app'></div></body></html>")) as unknown as typeof fetch;
+    await expect(fetchSuccessFactors(board, { fetchImpl, retries: 0 })).rejects.toThrow(/formato/);
+    const empty = (async () => new Response("<html><body>No results found</body></html>")) as unknown as typeof fetch;
+    await expect(fetchSuccessFactors(board, { fetchImpl: empty, retries: 0 })).resolves.toMatchObject({ received: 0 });
+  });
+});
+
+describe("SuccessFactors: descripción con etiquetas anidadas", () => {
+  it("no corta en el primer cierre interno", () => {
+    const board: Board = { sourceId: "successfactors", boardId: "successfactors:oportunidades.ypf.com", slug: "oportunidades.ypf.com", company: "YPF" };
+    const html = `<span class="jobdescription"><p><span>Primera parte.</span></p><p>${"Segunda parte con tareas de costos y presupuesto. ".repeat(6)}</p></span><div class="applylink">Postularme</div><footer>pie</footer>`;
+    const p = normalizeSuccessFactors({ title: "Analista de Costos", path: "/job/Federal-ANALISTA-COSTOS/1440520500/", location: "Buenos Aires, AR" }, html, board);
+    expect(p.descriptionText).toContain("Segunda parte");
+    expect(p.descriptionText).not.toContain("Postularme");
   });
 });

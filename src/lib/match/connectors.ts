@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -898,6 +898,182 @@ export async function fetchWorkday(board: Board, opts?: RetryOptions & { maxPage
   return { postings, complete, received: items.length };
 }
 
+/* ---------- Eightfold (API del sitio de empleo) ---------- */
+
+type EfPosition = {
+  id: number | string;
+  name: string;
+  location?: string;
+  locations?: string[];
+  department?: string;
+  t_create?: number;
+  canonicalPositionUrl?: string;
+  work_location_option?: string;
+  job_description?: string;
+};
+const EF_PAGE = 20;
+const EF_MAX_DETAILS = 40;
+
+/** "mercadolibre.eightfold.ai" → dominio de la empresa que pide la API ("mercadolibre.com"). */
+export function eightfoldDomain(host: string): string {
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host)) throw new Error(`Sitio de Eightfold inválido: ${host}`);
+  const sub = host.match(/^([a-z0-9-]+)\.eightfold\.ai$/i);
+  return sub ? `${sub[1]}.com` : host.split(".").slice(-2).join(".");
+}
+
+export function normalizeEightfold(j: EfPosition, board: Board): NormalizedPosting {
+  const host = board.slug ?? "";
+  const locs = [...new Set([...(j.locations ?? []), j.location].filter((l): l is string => !!l))];
+  const opt = (j.work_location_option ?? "").toLowerCase();
+  const workplace = opt.includes("remote") ? wp("remoto", "fuente", `work_location_option: ${opt}`) : opt.includes("hybrid") ? wp("hibrido", "fuente", `work_location_option: ${opt}`) : opt.includes("onsite") || opt.includes("on-site") ? wp("presencial", "fuente", `work_location_option: ${opt}`) : wp(workplaceFromText(locs.join(" ")), "fuente");
+  const text = htmlToText(j.job_description, DESC_MAX);
+  const url = j.canonicalPositionUrl || `https://${host}/careers/job/${j.id}`;
+  const countries = [...new Set(locs.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c))];
+  return {
+    sourceId: "eightfold",
+    boardId: board.boardId,
+    externalId: String(j.id),
+    title: j.name.trim(),
+    company: board.company || host,
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: locs.slice(0, 6),
+    countries: workplace.value === "remoto" ? [] : countries,
+    regionText: [],
+    workplace,
+    remoteFlag: null,
+    employmentType: null,
+    department: j.department || undefined,
+    salary: null,
+    publishedAt: typeof j.t_create === "number" ? new Date(j.t_create * 1000).toISOString() : null,
+    updatedAt: null,
+    expiresAt: null,
+  };
+}
+
+/** Eightfold arma cada sitio de empleo con una API JSON sin autenticación: pedimos sólo Argentina, de a 20, en serie. */
+export async function fetchEightfold(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const host = decodeURIComponent(assertSlug(board.slug));
+  const domain = eightfoldDomain(host);
+  const base = `https://${host}/api/apply/v2/jobs`;
+  const list: EfPosition[] = [];
+  let complete = false;
+  for (let page = 0; page < (opts?.maxPages ?? 15); page++) {
+    const data = await fetchJson<{ positions?: EfPosition[]; count?: number }>(`${base}?domain=${encodeURIComponent(domain)}&location=Argentina&start=${page * EF_PAGE}&num=${EF_PAGE}`, opts);
+    if (!Array.isArray(data.positions)) throw new Error("Respuesta de Eightfold sin 'positions'");
+    list.push(...data.positions);
+    if (data.positions.length < EF_PAGE || list.length >= (data.count ?? 0)) {
+      complete = true;
+      break;
+    }
+  }
+  const postings: NormalizedPosting[] = [];
+  for (const [i, j] of list.entries()) {
+    const full = i < EF_MAX_DETAILS && !j.job_description ? await fetchJson<EfPosition>(`${base}/${encodeURIComponent(String(j.id))}?domain=${encodeURIComponent(domain)}`, opts).catch(() => j) : j;
+    postings.push(normalizeEightfold({ ...j, ...full }, board));
+  }
+  return { postings, complete, received: list.length };
+}
+
+/* ---------- SuccessFactors (sitio de empleo público, "Recruiting Marketing") ---------- */
+
+const SF_PAGE = 25;
+const SF_MAX_DETAILS = 40;
+
+/** "careers.ey.com~ey" → host y prefijo del sitio (algunas empresas lo publican bajo una carpeta). */
+export function successFactorsSite(slug: string | undefined): { host: string; prefix: string } {
+  const [host, prefix] = (slug ?? "").split("~");
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host) || (prefix !== undefined && !/^[A-Za-z0-9_-]+$/.test(prefix))) throw new Error(`Sitio de SuccessFactors inválido: ${slug}`);
+  return { host, prefix: prefix ? `/${prefix}` : "" };
+}
+
+const sfText = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+
+/** Filas de la página de búsqueda (marcado estándar de los sitios de SuccessFactors: tr.data-row, a.jobTitle-link, span.jobLocation). */
+export function parseSuccessFactorsSearch(html: string): { rows: { title: string; path: string; location: string }[]; total: number | null } {
+  const rows: { title: string; path: string; location: string }[] = [];
+  for (const tr of html.match(/<tr[^>]*class="[^"]*data-row[^"]*"[\s\S]*?<\/tr>/gi) ?? []) {
+    const a = tr.match(/<a[^>]*href="([^"]+)"[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*>([\s\S]*?)<\/a>|<a[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+    if (!a) continue;
+    const path = decodeEntities(a[1] ?? a[3]);
+    const title = sfText(a[2] ?? a[4]);
+    const loc = tr.match(/<span[^>]*class="[^"]*jobLocation[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+    if (title && path.startsWith("/")) rows.push({ title, path, location: loc ? sfText(loc[1]) : "" });
+  }
+  const total = html.match(/paginationLabel[\s\S]*?<b>[^<]*<\/b>[\s\S]*?<b>\s*([\d.,]+)\s*<\/b>/i);
+  return { rows: [...new Map(rows.map((r) => [r.path, r])).values()], total: total ? Number(total[1].replace(/[.,]/g, "")) : null };
+}
+
+export function normalizeSuccessFactors(row: { title: string; path: string; location: string }, detailHtml: string | null, board: Board): NormalizedPosting {
+  const { host } = successFactorsSite(board.slug);
+  const url = `https://${host}${row.path}`;
+  // La descripción suele tener etiquetas anidadas: tomamos desde su apertura hasta el bloque de postulación o el pie.
+  const open = detailHtml?.match(/<(?:span|div)[^>]*(?:itemprop="description"|class="[^"]*jobdescription[^"]*")[^>]*>/i);
+  const rest = open && detailHtml ? detailHtml.slice((open.index ?? 0) + open[0].length, (open.index ?? 0) + open[0].length + 40_000) : "";
+  const desc = rest.split(/<div[^>]*class="[^"]*(?:applylink|apply-button|social|share|jobfooter|job-footer)|<\/article>|<footer\b/i)[0];
+  const text = htmlToText(desc, DESC_MAX);
+  const posted = detailHtml?.match(/itemprop="datePosted"[^>]*content="([^"]+)"/i)?.[1];
+  const location = row.location;
+  const country = countryIso(location.split(",").pop()) ?? (/\b(AR|Argentina)\b/.test(location) ? "AR" : null);
+  const workplace = wp(workplaceFromText(`${row.title} ${location}`), "fuente");
+  const id = row.path.match(/\/(\d{6,})\/?$/)?.[1] ?? row.path;
+  return {
+    sourceId: "successfactors",
+    boardId: board.boardId,
+    externalId: id,
+    title: row.title,
+    company: board.company || host,
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: location ? [location] : [],
+    countries: country && workplace.value !== "remoto" ? [country] : [],
+    regionText: [],
+    workplace,
+    remoteFlag: null,
+    employmentType: null,
+    salary: null,
+    publishedAt: iso(posted),
+    updatedAt: null,
+    expiresAt: null,
+  };
+}
+
+/**
+ * Los sitios de empleo de SuccessFactors no tienen API pública: leemos la misma página de búsqueda que ve
+ * cualquier persona, filtrada por Argentina, de a 25 y en serie, y el detalle de hasta 40 avisos.
+ * Si la página no tiene el marcado esperado, falla (no se toma como "sin avisos", para no cerrar nada por error).
+ */
+export async function fetchSuccessFactors(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const { host, prefix } = successFactorsSite(board.slug);
+  const rows: { title: string; path: string; location: string }[] = [];
+  let complete = false;
+  for (let page = 0; page < (opts?.maxPages ?? 8); page++) {
+    const html = await fetchText(`https://${host}${prefix}/search/?q=&locationsearch=Argentina&startrow=${page * SF_PAGE}`, opts);
+    const { rows: got, total } = parseSuccessFactorsSearch(html);
+    // Sin filas y sin el aviso explícito de "sin resultados": el formato cambió y no lo tomamos como bolsa vacía.
+    if (!got.length && page === 0 && !/no ?results|no se encontraron|nenhum resultado|sin resultados/i.test(html)) throw new Error("La página de búsqueda de SuccessFactors no tiene el formato esperado");
+    rows.push(...got);
+    if (got.length < SF_PAGE || (total !== null && rows.length >= total)) {
+      complete = true;
+      break;
+    }
+  }
+  const postings: NormalizedPosting[] = [];
+  for (const [i, row] of rows.entries()) {
+    const detail = i < SF_MAX_DETAILS ? await fetchText(`https://${host}${row.path}`, opts).catch(() => null) : null;
+    postings.push(normalizeSuccessFactors(row, detail, board));
+  }
+  return { postings, complete, received: rows.length };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -909,6 +1085,8 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   smartrecruiters: fetchSmartRecruiters,
   recruitee: fetchRecruitee,
   workday: fetchWorkday,
+  eightfold: fetchEightfold,
+  successfactors: fetchSuccessFactors,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */

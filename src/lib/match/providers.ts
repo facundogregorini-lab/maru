@@ -45,8 +45,8 @@ export const FANTASTIC_COHORTS: Cohort[] = [
  */
 export type SerpQuery = { id: string; q: string };
 
-/** `--queries=mensual`: la tanda automática de cada mes (marketing y finanzas). */
-export const MONTHLY_QUERY_PREFIXES = ["mk-", "fz-"];
+/** `--queries=mensual`: la tanda automática (marketing, finanzas y tecnología junior). */
+export const MONTHLY_QUERY_PREFIXES = ["mk-", "fz-", "tj-"];
 export const SERP_QUERIES: SerpQuery[] = [
   { id: "adm-cba", q: "administrativo contable Córdoba" },
   { id: "fin-ros", q: "analista de finanzas Rosario" },
@@ -139,6 +139,13 @@ export const SERP_QUERIES: SerpQuery[] = [
   { id: "fz-ros", q: "analista contable Rosario" },
   { id: "fz-mza", q: "analista financiero Mendoza" },
   { id: "fz-tuc", q: "analista contable Tucumán" },
+  // Tecnología junior: casi no hay avisos junior elegibles (17 de 529).
+  { id: "tj-dev-caba", q: "desarrollador junior Buenos Aires" },
+  { id: "tj-trainee", q: "programador trainee Argentina" },
+  { id: "tj-qa", q: "QA tester junior Argentina" },
+  { id: "tj-datos", q: "analista de datos junior Buenos Aires" },
+  { id: "tj-soporte", q: "soporte técnico IT junior Córdoba" },
+  { id: "tj-pasantia", q: "pasantía sistemas Buenos Aires" },
   { id: "adm2-mza", q: "administrativo Mendoza" },
   { id: "atc2-cba", q: "atención al cliente Córdoba" },
   { id: "ven2-cba", q: "vendedor Córdoba" },

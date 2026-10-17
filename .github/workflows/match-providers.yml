@@ -1,7 +1,7 @@
 # Importa avisos de proveedores con cuota (Fantastic.jobs trial, SerpApi gratuito, Apify con tope)
 # al inventario de "Encontrá tu trabajo perfecto". Se lanza a mano (Actions → match-providers; por defecto
-# en modo "plan", sin red) y dos veces por mes, solo, con Google Jobs gratis para marketing y finanzas
-# (días 2 y 17, 10:07 UTC: 30 búsquedas del plan gratuito por corrida, reserva 20; los avisos de Google
+# en modo "plan", sin red) y dos veces por mes, solo, con Google Jobs gratis para marketing, finanzas y
+# tecnología junior (días 2 y 17, 10:07 UTC: 36 búsquedas del plan gratuito por corrida, reserva 20; los avisos de Google
 # Jobs vencen a los 21 días sin volver a verse). Ver docs/IMPORTACIONES.md.
 # Claves: secrets FANTASTIC_JOBS, SERP_API y APIFY_TOKEN del repo; nunca como inputs ni en el log.
 name: match-providers
@@ -59,10 +59,10 @@ jobs:
           FANTASTIC_JOBS: ${{ secrets.FANTASTIC_JOBS }}
           SERP_API: ${{ secrets.SERP_API }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          # La corrida mensual programada no trae inputs: Google Jobs gratis, tanda "mensual" (marketing y finanzas).
+          # La corrida programada no trae inputs: Google Jobs gratis, tanda "mensual" (marketing, finanzas y tecnología junior).
           PROVIDER: ${{ github.event.inputs.provider || 'serpapi' }}
           MODE: ${{ github.event.inputs.mode || 'run' }}
-          ARGS: ${{ github.event_name == 'schedule' && '--queries=mensual --max-searches=30 --reserve=20' || github.event.inputs.args }}
+          ARGS: ${{ github.event_name == 'schedule' && '--queries=mensual --max-searches=36 --reserve=20' || github.event.inputs.args }}
         run: |
           case "$PROVIDER" in fantastic|serpapi|apify) ;; *) echo "provider inválido"; exit 1;; esac
           case "$MODE" in plan|status|run) ;; *) echo "mode inválido"; exit 1;; esac
