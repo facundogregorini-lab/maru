@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Foto del CV en PDF y preguntas opcionales (17/10/2026)
+
+- Reporte del dueño: falta la foto en PDF; Word no probado; no recuerda si estaba en la hoja o sólo en el panel. Reproducido un caso concreto: subir foto y descargar antes de aplicar el recorte producía un PDF sin imágenes. Con la foto aplicada, el exportador anterior sí la incluía; no atribuir todos los casos a una pérdida del servidor.
+- El editor ahora muestra «Foto pendiente» y deshabilita PDF/Word hasta tocar «Usar foto» o cancelar el recorte. Después exporta la foto elegida. El PDF espera la decodificación de imágenes embebidas y falla si no puede cargarlas, evitando archivos incompletos. Conserva CSP, JavaScript deshabilitado y bloqueo de recursos externos de PR #81.
+- «¿Por qué esta vacante? (opcional)»: ayuda breve «Para personalizar tu presentación y tus respuestas». Se quitó la exigencia en frontend, análisis y generación; sin motivación, los prompts usan la experiencia sin inventar interés personal.
+- «Para destacar»: se recomienda responder para adaptar el CV a la vacante y se explicita que es opcional. El CV general recibe la ayuda equivalente para el puesto buscado.
+- QC con Computer Use: recorte pendiente bloquea descarga; foto circular y cuadrada presentes en PDFs reales; flujo completo sin motivación ni respuestas opcionales; foto conservada tras recargar. Proveedor de IA simulado, exportador real, sin modificar el perfil del dueño ni consumir créditos.
+- Validación: 372 tests aprobados, 8 omitidos; TypeScript y ESLint sin errores. Registro y reproducción en [QC de foto y postulación](QC-CV-FOTO-2026-10-17.md). Si el problema vuelve con la foto visible en la hoja y el recorte aplicado, revisar ese archivo concreto: ese caso no se reprodujo en esta sesión.
+
 ## Desplegables de la extensión (17/10/2026, versión 0.3.1)
 
 - Caso reportado: HiringRoom, vacante AI Business Partner de Newsan, pasos 2 y 3. Inspeccionados documento, país y los formularios desplegables de educación, idiomas y experiencia, sin datos personales ni envío de postulación.

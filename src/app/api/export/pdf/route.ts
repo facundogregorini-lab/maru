@@ -94,7 +94,13 @@ html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust
       await p.setRequestInterception(true);
       p.on("request", (r) => (r.url().startsWith("data:") ? r.continue() : r.abort()));
       await p.setContent(doc, { waitUntil: "load", timeout: 20_000 });
-      await p.evaluate(() => document.fonts.ready.then(() => document.fonts.size));
+      await p.evaluate(async () => {
+        await document.fonts.ready;
+        // El evento load no garantiza que la foto ya esté decodificada para imprimir.
+        // Si una imagen falla, no entregar silenciosamente un CV sin ella.
+        const embedded = Array.from(document.images).filter((image) => /^data:image\//i.test(image.src));
+        await Promise.all(embedded.map((image) => image.decode()));
+      });
       return p;
     });
     const pdf = await step("pdf", () => page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true, timeout: 30_000 }));
