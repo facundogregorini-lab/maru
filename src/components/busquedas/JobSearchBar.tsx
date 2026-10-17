@@ -6,7 +6,7 @@ export default function JobSearchBar({ value }: { value?: Partial<JobQuery> }) {
   const field = "h-12 w-full rounded-xl bg-brand-soft px-3 text-base text-ink outline-none placeholder:text-ink/80 focus:ring-2 focus:ring-ink";
   const select = `${field} cursor-pointer appearance-none pr-8`;
   return (
-    <form action="/busquedas" method="get" role="search" aria-label="Buscar búsquedas" className="grid grid-cols-2 gap-2 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_80px]">
+    <form action="/busquedas" method="get" role="search" aria-label="Buscar empleos" className="grid grid-cols-2 gap-2 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_80px]">
       <label className="col-span-2 lg:col-span-1">
         <span className="sr-only">Puesto o palabra clave</span>
         <input name="q" defaultValue={value?.q} placeholder="Puesto o empresa" className={field} />

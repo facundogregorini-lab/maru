@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { getJob, searchJobs } from "@/lib/busquedas";
+import { landingData } from "@/lib/landing";
 import { parseJobQuery } from "@/lib/jobFilters";
 import { fetchGreenhouse, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
@@ -69,5 +70,18 @@ describe("searchJobs", () => {
     const later = new Date(NOW.getTime() + 130 * 86_400_000);
     expect((await searchJobs(parseJobQuery({ donde: "todo" }), later)).total).toBe(0);
     expect(await getJob(results[0].id)).not.toBeNull();
+  });
+});
+
+
+describe("cifras del home", () => {
+  it("cuenta sólo los avisos que el buscador puede mostrar y no promociona avisos antiguos", async () => {
+    const data = await landingData(NOW);
+    const all = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
+    const ar = await searchJobs(parseJobQuery({}), NOW);
+    expect(data.total).toBe(all.total);
+    expect(data.eligible).toBe(ar.total);
+    const later = new Date(NOW.getTime() + 130 * 86_400_000);
+    expect(await landingData(later)).toMatchObject({ total: 0, eligible: 0, latest: [] });
   });
 });

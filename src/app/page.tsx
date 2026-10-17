@@ -1,235 +1,152 @@
 import Link from "next/link";
 import CompanyTile from "@/components/busquedas/CompanyTile";
 import JobSearchBar from "@/components/busquedas/JobSearchBar";
-import AutofillDemo from "@/components/landing/AutofillDemo";
 import CtaScene from "@/components/landing/CtaScene";
-import { ResultsList } from "@/components/landing/Evidence";
-import EvidenceWall from "@/components/landing/EvidenceWall";
 import Faq from "@/components/landing/Faq";
 import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
-import Laurels from "@/components/landing/Laurels";
-import { ChatMock, CvMock, MatchMock, MockPanel, TrackerMock, VideoMock } from "@/components/landing/Mocks";
+import { ChatMock, CvMock, MatchMock, VideoMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
-import Reveal from "@/components/magic/Reveal";
-import ScrollFade from "@/components/magic/ScrollFade";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
 import { landingData } from "@/lib/landing";
 import { POPULAR } from "@/lib/popular";
 import { displayCompany } from "@/lib/match/labels";
 
-// Los números y la cinta salen del inventario real; se regeneran cada hora.
+// Las cifras se regeneran cada hora y cuentan el mismo catálogo visible en Búsquedas.
 export const revalidate = 3600;
-
-/** Dónde se instala la extensión. Mientras no esté en la Chrome Web Store, lleva a la página de descarga. */
-const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
-
 const fmt = (n: number) => n.toLocaleString("es-AR");
+const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
 
 export default async function Home() {
   const data = await landingData();
-
   return (
     <SiteShell>
-      {/* ---------- Hero: bloque menta de lado a lado, que termina en globo de diálogo ---------- */}
-      <section className="full-bleed relative -mt-8 overflow-hidden rounded-br-[64px] bg-sand px-5 pb-14 pt-10 sm:rounded-br-[120px] sm:pt-16 lg:pb-20">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-[640px_1fr] lg:gap-12 [&>*]:min-w-0">
-          <div className="order-2 lg:order-1">
-            <HeroVideo />
-          </div>
-          <div className="order-1 text-center lg:order-2 lg:text-left">
-            {/* El gancho de jobright ("No More Solo Job Hunting / Do it with AI"), en español y con Maru. */}
-            <h1 className="font-display">
-              <span className="line-mask text-[2rem] font-light uppercase leading-[1] sm:text-[38px] lg:normal-case lg:leading-[1.2]">
-                <span style={{ "--i": 0 } as React.CSSProperties}>
-                  Basta de buscar <br className="lg:hidden" />
-                  trabajo solo
-                </span>
-              </span>
-              <span className="line-mask mt-1 text-[3.25rem] font-bold leading-[1.05] sm:text-[4.4rem] lg:mt-0 xl:text-[80px]">
-                <span style={{ "--i": 1 } as React.CSSProperties}>Hacelo con Maru AI</span>
-              </span>
+      <section aria-labelledby="inicio-t" className="full-bleed -mt-8 rounded-br-[64px] bg-sand px-5 py-10 sm:py-14 lg:rounded-br-[100px]">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-8 lg:grid-cols-2 lg:gap-12 [&>*]:min-w-0">
+          <div>
+            <p className="text-sm font-semibold text-brand-dark">Tu coach de carrera con IA</p>
+            <h1 id="inicio-t" className="mt-3 font-display text-[2.8rem] font-bold leading-[1.05] sm:text-6xl xl:text-[72px]">
+              Buscá trabajo<br />con Maru.
             </h1>
-            <p className="animate-rise mx-auto mt-3 max-w-[512px] text-[15px] leading-snug sm:text-base lg:mx-0 [animation-delay:400ms]">
-              Conseguí ofertas a tu medida, autocompletá postulaciones, armá un CV personalizado y entrená tu entrevista, ¡en minutos!
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-ink/80 sm:text-lg">
+              Encontrá avisos para tu perfil y prepará cada postulación con tu experiencia real: desde el CV hasta la entrevista.
             </p>
-            {/* Escritorio: un solo botón grande, como "TRY FOR FREE". Celular: dos botones, como jobright. */}
-            <div className="animate-rise mt-5 flex flex-wrap justify-center gap-3 lg:mt-14 lg:justify-start [animation-delay:500ms]">
-              <Link href="/match" className="press hidden h-14 w-[280px] items-center justify-center rounded-full bg-ink font-display text-2xl font-bold uppercase text-white hover:bg-black lg:inline-flex">
-                Empezar gratis
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link href="/match" className="press inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 font-semibold text-white hover:bg-black">
+                Encontrar mis matches
               </Link>
-              <Link href="/match" className="press inline-flex h-11 items-center rounded-full bg-ink px-7 font-semibold text-white lg:hidden">
-                Empezar gratis
-              </Link>
-              <Link href={EXTENSION_URL} className="press inline-flex h-11 items-center rounded-full border-2 border-ink bg-white px-6 font-semibold lg:hidden">
-                Bajar la extensión
+              <Link href="/busquedas" className="press inline-flex min-h-12 items-center justify-center rounded-full border border-ink/20 bg-white px-6 font-semibold hover:border-ink">
+                Explorar búsquedas
               </Link>
             </div>
+            <p className="mt-4 text-sm text-ink/70">Empezá gratis, sin tarjeta. <Link href="/precios" className="font-medium underline underline-offset-4">Ver planes y límites</Link></p>
           </div>
-        </div>
-
-        {/* Resultados reales, no promesas */}
-        <Reveal className="relative mx-auto mt-14 grid max-w-[1200px] gap-10 lg:mt-12 lg:grid-cols-[1fr_512px] lg:gap-12">
-          <div data-reveal className="flex flex-col justify-between gap-8">
-            <Laurels
-              items={[
-                { top: "Búsquedas reales", main: `${fmt(data.total)}+` },
-                { top: "Funciona en", main: "Greenhouse · Lever" },
-                { top: "Sin tarjeta", main: "100% gratis" },
-              ]}
-            />
-            <div className="relative flex items-center">
-              <h2 className="font-display text-[2.4rem] font-bold uppercase leading-[1] sm:text-5xl">
-                Resultados reales,
-                <br />
-                no promesas
-              </h2>
-              {/* Conector punteado hacia las métricas (sólo escritorio). */}
-              <span aria-hidden className="ml-auto hidden h-[220px] items-center lg:flex">
-                <span className="h-2 w-2 rounded-full bg-ink" />
-                <span className="w-8 border-t-2 border-dotted border-ink" />
-                <span className="h-full w-6 rounded-l-2xl border-2 border-r-0 border-dotted border-ink" />
-              </span>
-            </div>
-          </div>
-          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
-            <ResultsList />
-          </div>
-        </Reveal>
-      </section>
-      {/* La colita del globo. */}
-      <div aria-hidden className="full-bleed relative h-0">
-        <svg viewBox="0 0 160 72" className="absolute left-[18%] top-[-1px] h-12 w-28 sm:h-[72px] sm:w-40">
-          <path d="M0 0H160L0 72Z" fill="var(--color-sand)" />
-        </svg>
-      </div>
-
-      {/* ---------- Búsquedas reales ---------- */}
-      <section aria-labelledby="hub-t" className="mt-24 sm:mt-28">
-        <Reveal>
-          <h2 id="hub-t" data-reveal className="font-display text-[2rem] font-light uppercase leading-[1.05] sm:text-5xl">
-            Accedé a <strong className="font-bold">búsquedas reales!</strong>
-          </h2>
-          <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8 sm:mt-10">
-            <div className="relative">
-              <div className="absolute bottom-0 left-0">
-                <MaruSprite size={64} frame="walkA" className="sm:hidden" />
-                <MaruSprite size={86} frame="walkA" className="hidden sm:block" />
+          <div>
+            <div className="overflow-hidden rounded-2xl border-2 border-ink bg-white">
+              <div aria-hidden className="flex gap-1.5 border-b-2 border-ink px-4 py-2.5">
+                {[0, 1, 2].map((i) => <span key={i} className="h-2 w-2 rounded-full bg-ink" />)}
               </div>
-              <HubRow label="Búsquedas abiertas hoy" value={`${fmt(data.total)}+`} />
+              <HeroVideoPlayer />
             </div>
-            <div className="ml-[84px] h-0.5 bg-ink sm:ml-[120px]" />
-            <HubRow label="Que podés tomar desde Argentina" value={fmt(data.eligible)} />
-          </div>
-        </Reveal>
-      </section>
-
-      {data.latest.length > 0 && (
-        <div className="full-bleed relative mt-14 overflow-hidden bg-ink py-6 text-white" aria-label="Búsquedas que acaban de entrar">
-          <div className="marquee gap-12">
-            {[...data.latest, ...data.latest].map((j, i) => (
-              <Link
-                key={`${j.id}-${i}`}
-                href={`/busquedas/${j.id}`}
-                tabIndex={i >= data.latest.length ? -1 : undefined}
-                aria-hidden={i >= data.latest.length || undefined}
-                className="flex shrink-0 items-center gap-3 rounded-xl transition-opacity hover:opacity-80"
-              >
-                <CompanyTile name={displayCompany(j.company)} />
-                <span className="min-w-0">
-                  <span className="block text-[13px] text-white/90">
-                    <span className="font-semibold">{displayCompany(j.company)}</span> · <TimeAgo iso={j.firstSeenAt} />
-                  </span>
-                  <span className="block max-w-[340px] truncate text-lg font-medium">{j.title}</span>
-                </span>
-              </Link>
-            ))}
+            <p className="mt-3 text-center text-xs text-ink/65">Demo ilustrativa. Las cifras actuales del catálogo están debajo.</p>
           </div>
         </div>
-      )}
+        <dl className="mx-auto mt-10 grid max-w-[1200px] gap-6 border-t border-ink/15 pt-7 sm:grid-cols-3 sm:gap-8">
+          <div>
+            <dt className="text-sm text-ink/70">Avisos para buscar desde Argentina</dt>
+            <dd className="mt-1 font-display text-3xl font-bold tabular-nums">{fmt(data.eligible)}</dd>
+            <p className="mt-1 text-xs text-ink/65">Según el alcance geográfico de cada publicación.</p>
+          </div>
+          <div>
+            <dt className="text-sm text-ink/70">Avisos abiertos en el catálogo</dt>
+            <dd className="mt-1 font-display text-3xl font-bold tabular-nums">{fmt(data.total)}</dd>
+            <p className="mt-1 text-xs text-ink/65">Incluye búsquedas con restricciones de país.</p>
+          </div>
+          <div>
+            <dt className="text-sm text-ink/70">En cada postulación</dt>
+            <dd className="mt-1 font-display text-2xl font-semibold">Vos revisás y enviás</dd>
+            <p className="mt-1 text-xs text-ink/65">Maru prepara los materiales. Vos decidís qué compartir.</p>
+          </div>
+        </dl>
+      </section>
 
-      {/* ---------- Lo que hace Maru ---------- */}
-      <section id="herramientas" aria-labelledby="tools-t" className="mt-24 scroll-mt-24 sm:mt-40">
-        <Reveal>
-          <h2 id="tools-t" data-reveal className="font-display text-[2.6rem] font-bold uppercase leading-[1] sm:text-[80px]">
-            <span className="flex items-end gap-3">
-              Tu coach
-              <MaruSprite size={56} frame="wave" className="mb-2 hidden sm:block" />
-              <MaruSprite size={36} frame="wave" className="mb-1 sm:hidden" />
-            </span>
-            de carrera con IA
-          </h2>
-        </Reveal>
+      <section aria-labelledby="hub-t" className="mt-14 sm:mt-20">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 id="hub-t" className="font-display text-3xl font-bold sm:text-4xl">Explorá las búsquedas</h2>
+            <p className="mt-2 text-ink/70">Podés empezar por un puesto o una empresa, sin subir tu CV.</p>
+          </div>
+          <Link href="/busquedas" className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Ver todas las búsquedas →</Link>
+        </div>
+        <div className="mt-6"><JobSearchBar /></div>
+        {data.latest.length > 0 && (
+          <div className="mt-7">
+            <h3 className="text-sm font-semibold text-ink/70">Incorporadas al catálogo recientemente</h3>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {data.latest.slice(0, 6).map((j) => (
+                <li key={j.id}>
+                  <Link href={`/busquedas/${j.id}`} className="flex h-full min-h-32 gap-3 rounded-2xl border border-line p-4 transition-colors hover:border-ink/40 hover:bg-sand/40">
+                    <CompanyTile name={displayCompany(j.company)} />
+                    <div className="min-w-0">
+                      <p className="font-semibold leading-snug">{j.title}</p>
+                      <p className="mt-1 text-sm text-ink/70">{displayCompany(j.company)}</p>
+                      <p className="mt-2 text-xs text-muted">{j.workplace || "Modalidad por confirmar"} · En Maru <TimeAgo iso={j.firstSeenAt} /></p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
 
-        <div className="mt-14 space-y-24 sm:mt-24 lg:space-y-[200px]">
-          <Feature
-            title="Búsquedas a tu medida"
-            body="Cruzamos tu CV con miles de búsquedas abiertas y te mostramos primero las que encajan con vos, con el porqué de cada una y lo que falta confirmar."
-            cta="Ver mis matches"
-            href="/match"
-            visual={<MatchMock />}
-          />
-          <Feature
-            title="Autocompletá en 1 clic"
-            body="Con la extensión para Chrome, Maru completa los formularios de postulación por vos: datos, respuestas y tu CV adjunto. Funciona en Greenhouse, Lever y otros formularios web."
-            cta="Bajar la extensión"
-            href={EXTENSION_URL}
-            visual={
-              <MockPanel>
-                <AutofillDemo />
-              </MockPanel>
-            }
-          />
-          <Feature
-            title="Un CV a medida de cada búsqueda"
-            body="Traé el link de la vacante: Maru reescribe tu CV con las palabras que busca el ATS y los logros que importan para ese rol, más una respuesta para cada campo del formulario."
-            cta="Mejorar mi CV"
-            href="/postulacion"
-            visual={<CvMock />}
-          />
-          <Feature
-            title="Entrená tu entrevista"
-            body="Una entrevista simulada por voz, como en una videollamada. Maru repregunta si tu respuesta queda corta y al final te da un informe con puntaje."
-            cta="Practicar ahora"
-            href="/entrevista"
-            visual={<ChatMock />}
-          />
-          <Feature
-            title="Un video que te presente"
-            body="Maru te escribe el guion, lo leés en un teleprompter mientras grabás y recibís feedback de cada toma: ritmo, mirada y luz."
-            cta="Grabar mi video"
-            href="/video"
-            visual={<VideoMock />}
-          />
-          <Feature
-            title="Seguí cada postulación"
-            body="Todo lo que preparás con Maru queda en un tablero: guardadas, postuladas, entrevistas y ofertas, con el CV, la carta y la práctica de cada una. Vive en tu navegador."
-            cta="Ver mi seguimiento"
-            href="/seguimiento"
-            visual={<TrackerMock />}
-          />
+      <section id="como-funciona" aria-labelledby="pasos-t" className="mt-16 scroll-mt-24 rounded-3xl bg-ink p-6 text-white sm:mt-20 sm:p-9">
+        <h2 id="pasos-t" className="font-display text-3xl font-bold sm:text-4xl">De tu experiencia a la próxima postulación</h2>
+        <ol className="mt-7 grid gap-7 md:grid-cols-3">
+          {[
+            ["Cargá tu experiencia", "Subí tu CV o pegá tu trayectoria. Maru arma un perfil que podés corregir y reutilizar."],
+            ["Elegí una búsqueda", "Compará los matches o traé un aviso que encontraste por tu cuenta. Vas a ver qué encaja y qué falta confirmar."],
+            ["Prepará y revisá", "Adaptá los materiales al puesto y practicá antes de enviar. Confirmá los datos y las respuestas que te representan."],
+          ].map(([title, body], i) => <li key={title}>
+            <span aria-hidden className="grid h-8 w-8 place-items-center rounded-full bg-neon text-sm font-bold text-ink">{i + 1}</span>
+            <h3 className="mt-3 text-lg font-semibold">{title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-white/75">{body}</p>
+          </li>)}
+        </ol>
+      </section>
+
+      <section id="herramientas" aria-labelledby="tools-t" className="mt-16 scroll-mt-24 sm:mt-20">
+        <div className="flex items-center gap-3">
+          <h2 id="tools-t" className="font-display text-3xl font-bold sm:text-4xl">Elegí qué necesitás preparar</h2>
+          <MaruSprite size={44} frame="wave" className="hidden shrink-0 sm:block" />
+        </div>
+        <p className="mt-3 max-w-2xl text-ink/70">Usá cada herramienta por separado o seguí el recorrido completo con una búsqueda.</p>
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match" visual={<MatchMock bare />} />
+          <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV, la carta y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion" visual={<CvMock bare />} />
+          <Feature title="Practicá tu entrevista" body="Respondé por voz o por escrito. Maru hace repreguntas y al final te muestra qué funcionó y qué podés mejorar." cta="Practicar una entrevista" href="/entrevista" visual={<ChatMock bare />} />
+          <Feature title="Grabá tu presentación" body="Armá un guion con tu experiencia y leelo en el teleprompter mientras grabás. El feedback de cámara está incluido en los planes pagos." cta="Preparar mi video" href="/video" visual={<VideoMock bare />} />
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { title: "Tu CV general", body: "Ordená tu trayectoria para el tipo de rol que buscás, aunque todavía no tengas un aviso.", href: "/cv", cta: "Armar mi CV" },
+            { title: "Carta de presentación", body: "Contá por qué te interesa la empresa con ejemplos de tu experiencia y el tono que elijas.", href: "/carta", cta: "Escribir mi carta" },
+            { title: "Seguimiento", body: "Guardá búsquedas y registrá cada avance. Al ingresar, el tablero también se sincroniza con tu cuenta.", href: "/seguimiento", cta: "Ver mi tablero" },
+            { title: "Extensión para Chrome", body: "Completá campos en Greenhouse, Lever y formularios compatibles. Revisá las respuestas antes de enviar.", href: EXTENSION_URL, cta: "Ver la extensión" },
+          ].map((tool) => <article key={tool.href} className="flex flex-col rounded-2xl bg-sand p-5">
+            <h3 className="font-display text-xl font-semibold">{tool.title}</h3>
+            <p className="mb-5 mt-2 text-sm leading-relaxed text-ink/75">{tool.body}</p>
+            <Link href={tool.href} className="mt-auto inline-flex min-h-11 items-center font-semibold underline underline-offset-4">{tool.cta} →</Link>
+          </article>)}
         </div>
       </section>
 
-      <EvidenceWall />
-
-      {/* ---------- Cierre: preguntas, el globo con Maru y el buscador, todo en menta hasta el footer ---------- */}
       <Faq>
-        <div className="mt-24 sm:mt-28">
-          <CtaScene />
-        </div>
-        <div className="mx-auto max-w-[1200px] pb-20 pt-16 sm:pt-20">
-          <h2 className="text-center font-display text-2xl font-bold uppercase sm:text-[32px]">Encontrá tu trabajo ideal en un clic!</h2>
-          <div className="mt-8">
-            <JobSearchBar />
-          </div>
-          <h3 className="mt-12 text-center font-display text-xl font-semibold sm:text-2xl">Búsquedas populares</h3>
+        <div className="mt-12 sm:mt-16"><CtaScene /></div>
+        <div className="mx-auto max-w-[1200px] pb-16 pt-12">
+          <h2 className="text-center font-display text-2xl font-semibold">Explorá por área o experiencia</h2>
           <div className="mx-auto mt-5 flex max-w-3xl flex-wrap justify-center gap-2.5">
-            {POPULAR.map((p) => (
-              <Link key={p.href} href={p.href} className="press rounded-full bg-ink px-4 py-2 text-[13px] font-medium text-white hover:bg-black">
-                {p.label}
-              </Link>
-            ))}
+            {POPULAR.map((p) => <Link key={p.href} href={p.href} className="press inline-flex min-h-11 items-center rounded-full border border-ink/20 bg-white px-4 py-2 text-sm font-medium hover:border-ink">{p.label}</Link>)}
           </div>
         </div>
       </Faq>
@@ -237,53 +154,11 @@ export default async function Home() {
   );
 }
 
-function HubRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="ml-[84px] grid py-3 sm:ml-[120px] lg:grid-cols-[1fr_512px]">
-      <span />
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-        <p className="text-sm sm:font-display sm:text-2xl sm:font-normal">{label}</p>
-        <p className="font-display text-2xl font-bold tabular-nums leading-tight sm:text-[64px]">{value}</p>
-      </div>
-    </div>
-  );
-}
-
 function Feature({ title, body, cta, href, visual }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode }) {
-  // Como en jobright: siempre texto a la izquierda y la maqueta a la derecha; en celular, centrado
-  // y con el botón debajo de la maqueta.
-  return (
-    <Reveal className="grid items-center gap-6 lg:grid-cols-[384px_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-0">
-      <ScrollFade className="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left">
-        <div data-reveal>
-          <h3 className="font-display text-[2rem] font-semibold leading-[1] sm:text-5xl">{title}</h3>
-          <p className="mx-auto mt-3 max-w-md text-[15px] leading-snug text-ink/80 sm:text-base lg:mx-0">{body}</p>
-        </div>
-      </ScrollFade>
-      <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
-        {visual}
-      </div>
-      <div className="text-center lg:col-start-1 lg:row-start-2 lg:self-start lg:pt-9 lg:text-left">
-        <Link href={href} className="press inline-flex h-12 min-w-[200px] items-center justify-center rounded-full bg-ink px-8 text-lg font-medium text-white hover:bg-black sm:min-w-[256px] sm:text-xl">
-          {cta}
-        </Link>
-      </div>
-    </Reveal>
-  );
-}
-
-/** Hero: el video de Maru en una "ventana", como el video del hero de jobright (se regenera con scripts/render-intro-video.mjs). */
-function HeroVideo() {
-  return (
-    <div className="animate-rise relative [animation-delay:200ms]">
-      <div className="overflow-hidden rounded-2xl border-2 border-ink bg-white">
-        <div className="flex items-center gap-1.5 border-b-2 border-ink bg-white px-4 py-2.5" aria-hidden>
-          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
-          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
-          <span className="h-2.5 w-2.5 rounded-full bg-ink" />
-        </div>
-        <HeroVideoPlayer />
-      </div>
-    </div>
-  );
+  return <article className="flex min-w-0 flex-col overflow-hidden rounded-3xl border border-line bg-white p-5 sm:p-7">
+    <h3 className="font-display text-2xl font-semibold sm:text-3xl">{title}</h3>
+    <p className="mt-3 text-sm leading-relaxed text-ink/75 sm:text-base">{body}</p>
+    <div className="my-5 grid flex-1 items-center rounded-2xl bg-sand px-3 py-4 sm:px-5">{visual}</div>
+    <Link href={href} className="press inline-flex min-h-12 items-center justify-center self-start rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-black">{cta}</Link>
+  </article>;
 }

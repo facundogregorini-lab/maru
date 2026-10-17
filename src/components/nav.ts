@@ -18,6 +18,7 @@ export const TOOLS = [
   { href: "/postulacion", label: "Postulación a medida", hint: "CV, respuestas y carta para un aviso" },
   { href: "/cv", label: "CV con IA", hint: "Armá o mejorá tu CV" },
   { href: "/carta", label: "Carta de presentación", hint: "A medida de cada búsqueda" },
+  { href: "/entrevista", label: "Práctica de entrevista", hint: "Preguntas y repreguntas para tu rol" },
   { href: "/video", label: "Video de presentación", hint: "Guion, teleprompter y feedback" },
   { href: "/seguimiento", label: "Seguimiento", hint: "Tus postulaciones en un tablero" },
   { href: "/extension", label: "Extensión para Chrome", hint: "Autocompletá postulaciones" },

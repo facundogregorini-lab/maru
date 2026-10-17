@@ -9,8 +9,8 @@ export default function CtaScene() {
   return (
     <div className="relative mx-auto max-w-[1200px] pt-6">
       <h2 className="relative z-10 mx-auto w-fit rounded-[40px] bg-ink px-7 py-4 font-display text-[1.9rem] font-light leading-[1.1] text-white sm:absolute sm:left-[48%] sm:top-0 sm:mx-0 sm:px-8 sm:text-[40px]">
-        Dejá que <strong className="font-bold">Maru</strong> te lleve
-        <br />a tu próximo trabajo
+        Prepará con <strong className="font-bold">Maru</strong>
+        <br />tu próxima postulación
       </h2>
 
       <div className="relative mt-6 sm:mt-14">
@@ -51,7 +51,7 @@ export default function CtaScene() {
             href="/match"
             className="press inline-flex h-12 items-center whitespace-nowrap rounded-full border-2 border-ink bg-neon px-7 font-display text-xl font-bold uppercase text-ink hover:shadow-[0_8px_24px_-8px_rgba(0,240,160,0.9)] sm:h-16 sm:px-10 sm:text-[32px]"
           >
-            Empezar gratis
+            Ver mis matches
           </Link>
         </div>
       </div>

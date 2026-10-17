@@ -389,7 +389,7 @@ function JobCard({
               aria-label="Descartar"
               title="Descartar"
               aria-expanded={discarding}
-              className="grid h-9 w-9 place-items-center rounded-full bg-[#f5f6f7] hover:bg-black/[0.08]"
+              className="grid h-11 w-11 place-items-center rounded-full bg-[#f5f6f7] hover:bg-black/[0.08]"
             >
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
                 <circle cx="12" cy="12" r="8" />
@@ -403,14 +403,14 @@ function JobCard({
             aria-pressed={saved}
             aria-label={saved ? "Guardada" : "Guardar"}
             title={saved ? "Guardada" : "Guardar"}
-            className={`grid h-9 w-9 place-items-center rounded-full ${saved ? "bg-neon/20 text-brand-dark" : "bg-[#f5f6f7] hover:bg-black/[0.08]"}`}
+            className={`grid h-11 w-11 place-items-center rounded-full ${saved ? "bg-neon/20 text-brand-dark" : "bg-[#f5f6f7] hover:bg-black/[0.08]"}`}
           >
             <svg viewBox="0 0 24 24" width="18" height="18" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden>
               <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
             </svg>
           </button>
-          <button type="button" onClick={prepare} disabled={preparing} className="press rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white hover:bg-black disabled:bg-muted/40">
-            {preparing ? "Abriendo…" : "Preparar mi postulación"}
+          <button type="button" onClick={prepare} disabled={preparing} className="press order-last min-h-11 w-full rounded-full bg-neon px-5 py-2.5 text-sm font-bold text-ink hover:bg-neon/80 disabled:opacity-60 sm:w-auto">
+            {preparing ? "Abriendo…" : "Postulación personalizada"}
           </button>
           {main && main.kind !== "usuario" && (
             <a
@@ -419,16 +419,16 @@ function JobCard({
               rel="noopener noreferrer nofollow"
               onClick={() => {
                 track("match_ver_busqueda", { fuente: (required[0] ?? main).kind });
-                trackItem(item, { status: "postulada" });
+                trackItem(item);
               }}
-              className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase"
+              className="inline-flex min-h-11 items-center px-2 text-sm text-ink/70 underline underline-offset-4 hover:text-ink"
             >
-              Postularme
+              Ver aviso original ↗
             </a>
           )}
           {external?.url && (
-            <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="press rounded-full bg-neon px-4 py-2 text-[13px] font-bold uppercase">
-              Ver búsqueda
+            <a href={external.url} target="_blank" rel="noopener noreferrer nofollow" className="inline-flex min-h-11 items-center px-2 text-sm text-ink/70 underline underline-offset-4 hover:text-ink">
+              Ver aviso original ↗
             </a>
           )}
         </div>
