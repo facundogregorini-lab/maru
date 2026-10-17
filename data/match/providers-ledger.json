@@ -3473,6 +3473,68 @@
       "consumed": null,
       "quota": {},
       "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
+    },
+    {
+      "at": "2026-10-17T14:46:47.672Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 112,
+        "total_searches_left": 112,
+        "searches_per_month": 250,
+        "this_month_usage": 138,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-10-17T14:46:47.672Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "cajero zona norte Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:46:47.672Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recepcionista zona norte Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 2,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:46:47.672Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "repositor zona norte Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": null,
+      "quota": {},
+      "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
     }
   ]
 }
