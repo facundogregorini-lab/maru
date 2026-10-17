@@ -54,7 +54,9 @@ export async function POST(req: Request) {
     ];
     const limit = await planGuard(req, "carta");
     if (limit) return limit;
-    const carta = await askStructured({ system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
+    const carta = await askStructured({
+      editorialPaths: ["saludo", "parrafos.*", "cierre", "asunto_email", "mensaje_corto", "requisitos_cubiertos.*.como", "consejos.*"],
+      system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
     return Response.json({ carta });
   } catch (err) {
     return errorResponse(err);

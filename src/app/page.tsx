@@ -123,7 +123,7 @@ export default async function Home() {
         <p className="mt-3 max-w-2xl text-ink/70">Usá cada herramienta por separado o seguí el recorrido completo con una búsqueda.</p>
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match" visual={<MatchMock bare />} />
-          <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV, la carta y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion" visual={<CvMock bare />} />
+          <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion" visual={<CvMock bare />} />
           <Feature title="Practicá tu entrevista" body="Respondé por voz o por escrito. Maru hace repreguntas y al final te muestra qué funcionó y qué podés mejorar." cta="Practicar una entrevista" href="/entrevista" visual={<ChatMock bare />} />
           <Feature title="Grabá tu presentación" body="Armá un guion con tu experiencia y leelo en el teleprompter mientras grabás. El feedback de cámara está incluido en los planes pagos." cta="Preparar mi video" href="/video" visual={<VideoMock bare />} />
         </div>

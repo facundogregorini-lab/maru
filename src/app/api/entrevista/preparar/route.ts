@@ -25,7 +25,9 @@ export async function POST(req: Request) {
     ];
     const limit = await planGuard(req, "entrevista");
     if (limit) return limit;
-    const plan = await askStructured({ system: ENTREVISTA_PLAN_SYSTEM, content, schema: EntrevistaPlanSchema, effort: "medium" });
+    const plan = await askStructured({
+      editorialPaths: ["apertura", "preguntas.*.pregunta", "preguntas.*.que_evalua", "cierre"],
+      system: ENTREVISTA_PLAN_SYSTEM, content, schema: EntrevistaPlanSchema, effort: "medium" });
     return Response.json({ plan: { ...plan, preguntas: plan.preguntas.slice(0, o.preguntas) } });
   } catch (err) {
     return errorResponse(err);

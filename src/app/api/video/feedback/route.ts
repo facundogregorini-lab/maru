@@ -41,7 +41,9 @@ export async function POST(req: Request) {
         ].join("\n\n"),
       },
     ];
-    const feedback = await askStructured({ system: VIDEO_FEEDBACK_SYSTEM, content, schema: VideoFeedbackSchema, effort: "low" });
+    const feedback = await askStructured({
+      editorialPaths: ["resumen", "fortalezas.*", "mejoras.*.detalle", "mejoras.*.como", "imagen.encuadre", "imagen.luz", "imagen.fondo", "imagen.mirada", "ritmo", "guion"],
+      system: VIDEO_FEEDBACK_SYSTEM, content, schema: VideoFeedbackSchema, effort: "low" });
     return Response.json({ feedback, exclusivo: !conImagen });
   } catch (err) {
     return errorResponse(err);

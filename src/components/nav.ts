@@ -15,7 +15,7 @@ export const NAV = [
 /** Menú "Herramientas ▾" del header (el "Features ▾" de jobright). */
 export const TOOLS = [
   { href: "/match", label: "Match con IA", hint: "Las búsquedas que encajan con tu CV" },
-  { href: "/postulacion", label: "Postulación a medida", hint: "CV, respuestas y carta para un aviso" },
+  { href: "/postulacion", label: "Postulación a medida", hint: "CV y respuestas para un aviso" },
   { href: "/cv", label: "CV con IA", hint: "Armá o mejorá tu CV" },
   { href: "/carta", label: "Carta de presentación", hint: "A medida de cada búsqueda" },
   { href: "/entrevista", label: "Práctica de entrevista", hint: "Preguntas y repreguntas para tu rol" },

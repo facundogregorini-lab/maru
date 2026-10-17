@@ -407,7 +407,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué tipos de entrevista hay?", "Primera entrevista con RR. HH., con quien sería tu líder y técnica o de caso, con dificultad amable, estándar o exigente."],
       ["¿En qué idioma?", "Elegís el idioma antes de empezar."],
       ["¿Qué tiene el informe?", "Un puntaje, un veredicto, fortalezas, qué mejorar y una respuesta más fuerte con el método STAR para cada pregunta."],
-      ["¿Es gratis?", BILLING_ENABLED ? "Tenés una práctica gratis por mes al ingresar y más capacidad con el plan mensual." : "Sí, y no necesitás cuenta para practicar."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés una práctica gratis por semana al ingresar. Los planes pagos incluyen más prácticas y respuestas sugeridas." : "Sí, y no necesitás cuenta para practicar."],
     ],
   },
 

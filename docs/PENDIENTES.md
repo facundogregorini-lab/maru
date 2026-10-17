@@ -1,5 +1,17 @@
 # Estado y próximos pasos de Maru
 
+## Escritura con Slop Monstruo (17/10/2026)
+
+**Publicación pendiente por cuota de Vercel:** PR #75 (home y CTA) está en Production. La preview de PR #76 fue rechazada con `Deployment rate limited — retry in 24 hours` (`build-rate-limit`). El código de escritura tiene CI de GitHub aprobado. No afirmar que ya está activo para usuarios hasta ver un deployment Ready del commit de main que incluya PR #76.
+
+Próxima acción al liberarse la cuota: redeployar el último `main`, confirmar Ready y aliases de `www.marucoach.com`, y generar una carta y un guion con datos ficticios. Verificar idioma, hechos y longitud, y correr el checker sobre los resultados. No cambiar el plan de Vercel ni las claves para esto.
+
+- Fuente en español fijada y licenciada, skill instalada y adaptación de servidor para todos los planes. Política común en las 14 rutas de redacción; extracción literal excluida.
+- Checker de prosa y una revisión condicional por pedido, con guardias de cifras, siglas, links, campos permitidos, longitud y esquema. Timeout o error conserva la generación válida; no usa cuotas extra del usuario ni sesiones CLI. La segunda familia de modelos de la skill no está implementada online. Detalles y límites: `docs/ESCRITURA.md`.
+- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste también espera el deploy de PR #76.
+- Corregidos los laureles “100% gratis” en las landings de herramientas y la FAQ de entrevista que decía un pedido por mes en vez de por semana. Se muestran los límites de los planes.
+- Validación: 340 tests aprobados (14 de escritura), 7 omitidos; TypeScript y ESLint sin errores. El smoke test con cartas y guiones del proveedor real queda pendiente del deploy. No se reescriben documentos ya guardados.
+
 ## Home y recorrido hacia las herramientas (17/10/2026)
 
 - Quitados el selector Web/Extensión y la franja repetida de descarga. La extensión queda en Herramientas; se agregó también la entrevista al menú.

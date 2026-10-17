@@ -1,0 +1,251 @@
+{
+  "source": "https://github.com/axellaban/Slop-monstruo",
+  "revision": "d27c4f9e47da050cfc64942925de4b74e89b5bc8",
+  "vocabulary": [
+    [
+      "sumer[gj]\\w*",
+      "sumergirse"
+    ],
+    [
+      "profundicemos|vamos a profundizar",
+      "profundicemos"
+    ],
+    [
+      "potenci(?:ar|an|ando|ado|ada|ados|adas|amos|ate|alo|ala|e|en|o)",
+      "potenciar"
+    ],
+    [
+      "aprovech\\w* al maximo",
+      "aprovechar al máximo"
+    ],
+    [
+      "sin fisuras|sin friccion(?:es)?|sin esfuerzo|sin complicaciones",
+      "sin fisuras / sin esfuerzo"
+    ],
+    [
+      "robust[oa]s?",
+      "robusto"
+    ],
+    [
+      "desbloque\\w*",
+      "desbloquear"
+    ],
+    [
+      "desat(?:ar|a|an|ate|en|o|ando)|liber\\w* (?:todo )?(?:el|tu|su) (?:poder|potencial)",
+      "desatar / liberar el poder"
+    ],
+    [
+      "empoder\\w*",
+      "empoderar"
+    ],
+    [
+      "agiliz\\w*",
+      "agilizar"
+    ],
+    [
+      "de vanguardia|de ultima generacion|de punta",
+      "de vanguardia / de última generación"
+    ],
+    [
+      "revolucion(?:ar|a|an|ara|o|ario|aria|arios|arias)",
+      "revolucionar / revolucionario"
+    ],
+    [
+      "transformador(?:a|es|as)?|transformacion(?:es)?",
+      "transformador / transformación"
+    ],
+    [
+      "innovador(?:a|es|as)?|innovacion(?:es)?",
+      "innovador / innovación"
+    ],
+    [
+      "holistic[oa]s?",
+      "holístico"
+    ],
+    [
+      "sinergias?",
+      "sinergia"
+    ],
+    [
+      "paradigmas?",
+      "paradigma"
+    ],
+    [
+      "meticulos[oa]s?|meticulosamente",
+      "meticuloso"
+    ],
+    [
+      "tapiz",
+      "tapiz"
+    ],
+    [
+      "(?:es|son) un (?:claro |verdadero )?testimonio de",
+      "es un testimonio de"
+    ],
+    [
+      "un faro de",
+      "un faro de"
+    ],
+    [
+      "sin precedentes|sin igual|inigualables?|incomparables?|sin parangon",
+      "sin precedentes / inigualable"
+    ],
+    [
+      "supercarg\\w*|turbocarg\\w*|al (?:siguiente|proximo|otro) nivel|a otro nivel",
+      "llevar al siguiente nivel"
+    ],
+    [
+      "cambia(?:r|ra|n)? las reglas del juego|game ?changer",
+      "cambia las reglas del juego"
+    ],
+    [
+      "esto lo cambia todo",
+      "esto lo cambia todo"
+    ],
+    [
+      "brutal(?:es|mente)?",
+      "brutal"
+    ],
+    [
+      "vertiginos[oa]s?",
+      "vertiginoso"
+    ],
+    [
+      "ecosistemas?",
+      "ecosistema"
+    ],
+    [
+      "solucion(?:es)? integral(?:es)?",
+      "solución integral"
+    ],
+    [
+      "crucial(?:es)?",
+      "crucial"
+    ],
+    [
+      "foment\\w*",
+      "fomentar"
+    ],
+    [
+      "intuitiv[oa]s?|intuitivamente",
+      "intuitivo"
+    ],
+    [
+      "de clase mundial|de primer nivel|de primera clase|lider(?:es)? (?:en el sector|de la industria)",
+      "de clase mundial"
+    ],
+    [
+      "impresionantes?",
+      "impresionante"
+    ]
+  ],
+  "phrases": [
+    [
+      "\\bno\\s+(?:es\\s+|son\\s+|se trata\\s+)?(?:solo|solamente|simplemente|unicamente|meramente|nada mas)\\b[^.!?]{0,80}\\bsino\\b",
+      "la construcción «no solo X, sino Y»"
+    ],
+    [
+      "\\bno\\s+(?:es\\s+|son\\s+|se trata\\s+)?(?:solo|solamente|simplemente|unicamente|meramente|nada mas)\\b[^!?]{0,80}?[,.;]\\s*(?:es|son|tambien|ahora|te|lo|le|les|me|nos|esto|eso)\\b",
+      "la construcción «no es solo X, es Y»"
+    ],
+    [
+      "\\bya sea que\\b[^.!?]{0,60}\\bo\\b|\\bya seas\\b[^.!?]{0,60}\\bo\\b|\\btanto si\\b[^.!?]{0,60}\\bcomo si\\b|\\bsi sos\\b[^.!?,]{0,40}\\bo (?:si )?(?:sos )?(?:un|una)\\b",
+      "la apertura «ya seas X o Y»"
+    ],
+    [
+      "\\bmas que (?:un|una) simple\\b|\\bmucho mas que (?:un|una)\\b|\\bmas que solo\\b",
+      "«más que un simple…»"
+    ],
+    [
+      "\\b(?:ahi|aqui|aca) es donde (?:entra|entran|aparece)\\b",
+      "«ahí es donde entra X»"
+    ],
+    [
+      "\\b(?:decile|deci|di|dile|diles|decirle) adios a\\b",
+      "«decile adiós a»"
+    ],
+    [
+      "(?:^|[.!?]\\s+|[¿¡])imagin(?:a|ate|emos)\\s+(?:un|una|que|el|la)\\b",
+      "la apertura «imaginá un…»"
+    ],
+    [
+      "\\ben conclusion\\b|\\ben resumen\\b|\\bpara resumir\\b|\\bpara concluir\\b",
+      "cierre de ensayo"
+    ],
+    [
+      "\\bcuando se trata de\\b",
+      "relleno «cuando se trata de»"
+    ],
+    [
+      "\\bal final del dia\\b|\\ba fin de cuentas\\b",
+      "«al final del día»"
+    ],
+    [
+      "\\bla clave (?:es|esta)\\b|\\bla verdad es que\\b|\\blo cierto es que\\b",
+      "arranque de carraspeo"
+    ],
+    [
+      "\\b(?:puede|podria|pueden|podrian) ayudarte a\\b|\\bte (?:puede|podria|pueden) ayudar a\\b",
+      "beneficio con cobertura («puede ayudarte a…»)"
+    ],
+    [
+      "\\b(?:podria|puede|podrian|pueden) potencialmente\\b|\\bquizas posiblemente\\b|\\btal vez posiblemente\\b",
+      "cautelas apiladas"
+    ],
+    [
+      "\\bmuy unic[oa]s?\\b|\\bsuper unic[oa]s?\\b",
+      "intensificador de relleno"
+    ],
+    [
+      "\\baca va la cosa\\b|\\bla cosa es asi\\b|\\bdesglosemos\\w*|\\bvamos a desglosar\\w*|\\blo mejor de todo\\b",
+      "arranque de carraspeo"
+    ],
+    [
+      "\\blist[oa]s? para empezar\\b|\\bempecemos\\b|\\bmanos a la obra\\b",
+      "CTA de manual"
+    ],
+    [
+      "(?:¿|\\b)(?:el|la|lo)\\s+(?:resultado|respuesta|trampa|truco|clave|mejor|peor|secreto)\\?",
+      "pregunta que se responde sola"
+    ],
+    [
+      "\\bsin \\w+(?: \\w+)?, sin \\w+(?: \\w+)?,? (?:solo|solamente|simplemente)\\b",
+      "la construcción «sin X, sin Y, solo Z»"
+    ]
+  ],
+  "exact": [
+    "en el mundo de",
+    "en la era de",
+    "en el panorama",
+    "panorama actual",
+    "en el mundo actual",
+    "en el mundo de hoy",
+    "en un mundo cada vez mas",
+    "en constante evolucion",
+    "en constante cambio",
+    "ritmo acelerado",
+    "no busques mas",
+    "embarcate",
+    "embarcarse",
+    "embarquemos",
+    "abrochate el cinturon",
+    "ingrediente secreto",
+    "salsa secreta",
+    "este viaje",
+    "tu viaje",
+    "nuestro viaje",
+    "navegar por el",
+    "el poder de la ia",
+    "es importante destacar",
+    "es importante tener en cuenta",
+    "cabe destacar",
+    "cabe mencionar",
+    "vale la pena mencionar",
+    "vale la pena destacar",
+    "dicho esto",
+    "sin lugar a dudas",
+    "sin duda alguna",
+    "la inteligencia artificial llego para",
+    "secreto que nadie te cuenta"
+  ]
+}

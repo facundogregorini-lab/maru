@@ -14,6 +14,10 @@ export async function POST(req: Request) {
     }
     const body = parsed.data;
     const { campos } = await askStructured({
+      editorialPaths: (draft) => draft.campos.flatMap((campo, i) => [
+        `campos.${i}.nota`,
+        ...(campo.revisar && body.fields.find((field) => field.id === campo.id)?.tipo === "texto_largo" ? [`campos.${i}.valor`] : []),
+      ]),
       system: AUTOFILL_SYSTEM,
       content: autofillBlocks(body),
       schema: AutofillAnswerSchema,

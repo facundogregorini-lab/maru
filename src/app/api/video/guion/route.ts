@@ -24,7 +24,9 @@ export async function POST(req: Request) {
     ];
     const limit = await planGuard(req, "video");
     if (limit) return limit;
-    const guion = await askStructured({ system: VIDEO_GUION_SYSTEM, content, schema: VideoGuionSchema, effort: "medium" });
+    const guion = await askStructured({
+      editorialPaths: ["bloques.*.texto", "bloques.*.tip", "consejos.*", "mensaje_envio"],
+      system: VIDEO_GUION_SYSTEM, content, schema: VideoGuionSchema, effort: "medium" });
     return Response.json({ guion });
   } catch (err) {
     return errorResponse(err);

@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const source = normalizeCvSource(await req.json());
     const content = await cvBlocks(source);
     content.push({ type: "text", text: "Extraé el perfil completo de este documento." });
-    const profile = await askStructured({ system: PROFILE_SYSTEM, content, schema: ProfileSchema, effort: "low" });
+    const profile = await askStructured({ verbatim: true, system: PROFILE_SYSTEM, content, schema: ProfileSchema, effort: "low" });
     // Sin experiencia ni estudios: el PDF no tenía contenido legible (imagen, escaneo, archivo equivocado).
     if (!profile.experiencia.length && !profile.educacion.length) {
       if (source?.kind !== "texto") throw unreadable();
