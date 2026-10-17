@@ -955,6 +955,56 @@
       "evidence": "https://talentocumbre.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
       "addedAt": "2026-10-17",
       "status": "candidata"
+    },
+    {
+      "name": "CPA FERRERE",
+      "sourceId": "teamtailor",
+      "slug": "talento.cpaferrere.com",
+      "region": "us",
+      "sector": "consultoría / auditoría",
+      "evidence": "https://talento.cpaferrere.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Diagnóstico Maipú / Labmedicina",
+      "sourceId": "teamtailor",
+      "slug": "diagnosticomaipu.na.teamtailor.com",
+      "region": "us",
+      "sector": "salud",
+      "evidence": "https://diagnosticomaipu.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "IOL Inversiones",
+      "sourceId": "teamtailor",
+      "slug": "empleos.invertironline.com.ar",
+      "region": "us",
+      "sector": "finanzas / inversiones",
+      "evidence": "https://empleos.invertironline.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Spyrosoft",
+      "sourceId": "teamtailor",
+      "slug": "careers.spyro-soft.com",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://careers.spyro-soft.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Umbral Capital Humano",
+      "sourceId": "teamtailor",
+      "slug": "umbralcapitalhumano.na.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://umbralcapitalhumano.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
     }
   ]
 }
