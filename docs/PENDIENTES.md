@@ -66,8 +66,8 @@ Mergeado a `main` en la PR #77. Detalle completo en `docs/TRACKING.md`.
 - **Hecho en Google Ads:** 4 acciones "Maru | …" (todas secundarias), objetivo personalizado "Maru | Optimización límite gratuito" (sólo "Límite alcanzado") asignado como único objetivo a las 3 campañas MARU_AR_SEARCH_*.
 - **Hecho:** `/privacidad` actualizada con la etiqueta de Google Ads. Puja de las 3 campañas de Maru: Maximizar conversiones (objetivo personalizado).
 - **Hecho:** variables `NEXT_PUBLIC_GOOGLE_ADS_*` cargadas en Vercel (Production, tipo Config).
-- **Hecho:** merge a `main` (PR #77), que dispara el deploy de producción con la etiqueta activa.
-- **Falta:** la verificación en producción (lista en `docs/TRACKING.md`).
+- **Hecho:** merge a `main` (PR #77, commit `6d4fd34`).
+- **Falta:** el deploy de producción. Vercel lo rechazó el 17/10 a las 22:27 UTC por la cuota diaria del plan gratis (`api-deployments-free-per-day`); producción sigue en el `main` de la PR #91, sin la etiqueta. Al liberarse la cuota, redeployar el último `main` y confirmar un deployment Ready que incluya `6d4fd34` (ver la nota de publicación al principio). Después, la verificación en producción (lista en `docs/TRACKING.md`).
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
