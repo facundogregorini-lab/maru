@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Directory } from "./directory";
 import { groupOpportunities } from "./group";
 import { emptyInventory, opportunitiesOf } from "./inventory";
+import { shareCompanyLogos } from "./logos";
 import type { Inventory, StoredPosting } from "./types";
 
 /**
@@ -28,7 +29,8 @@ export async function loadInventory(file = process.env.MATCH_INVENTORY_PATH ?? p
     return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
   }
   if (cache && cache.mtime === mtime) return cache;
-  const raw = { ...emptyInventory("real"), ...(JSON.parse(await readFile(file, "utf8")) as Inventory) };
+  const read = { ...emptyInventory("real"), ...(JSON.parse(await readFile(file, "utf8")) as Inventory) };
+  const raw = { ...read, postings: shareCompanyLogos(read.postings) };
   const { opportunities, alias } = groupOpportunities(opportunitiesOf(raw));
   const inv = { ...raw, opportunities };
   cache = { inv, postings: new Map(inv.postings.map((p) => [p.key, p])), alias, mtime };

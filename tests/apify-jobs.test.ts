@@ -26,6 +26,11 @@ describe("piloto de avisos Apify", () => {
     expect(JSON.stringify(p)).not.toContain("Persona");
     expect(p).not.toHaveProperty("ageMin");
   });
+  it("guarda el logo de la empresa sólo si es https", () => {
+    const row = { id: "9", title: "Analista", company: "Empresa", url: "https://ar.computrabajo.com/oferta/9", location: "Córdoba", descriptionText: description };
+    expect(normalizeApifyJobs("computrabajo", [{ ...row, companyLogo: "https://img.example.com/logo.png" }], now).postings[0].companyLogo).toBe("https://img.example.com/logo.png");
+    expect(normalizeApifyJobs("computrabajo", [{ ...row, logo: "http://img.example.com/logo.png" }], now).postings[0]).not.toHaveProperty("companyLogo");
+  });
   it("usa los límites de cada Actor y restringe el piloto", () => {
     expect(apifyJobInput("linkedin", "analista", 50)).toMatchObject({ limitPerSource: 50, scrapeCompany: false, location: "Argentina" });
     expect(apifyJobInput("indeed", "analista", 50)).toMatchObject({ count: 50, country: "ar" });
