@@ -1,6 +1,5 @@
-import * as cheerio from "cheerio";
 import { fetchJson, fetchText, type RetryOptions } from "./http";
-import { fold, htmlToText } from "./text";
+import { decodeEntities, fold, htmlToText } from "./text";
 import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
 
 /**
@@ -576,33 +575,37 @@ const TT_PAGE = 100;
  * Teamtailor publica cada sitio de empleo como RSS: https://<sitio>/jobs.rss (offset/per_page, 100 por página).
  * Su documentación aclara que los datos del feed son públicos. Las etiquetas propias usan el prefijo tt:.
  */
+/** Lector mínimo de XML para RSS (sin dependencias: los workflows corren sin npm install). */
+const unCdata = (s: string) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1");
+function xmlTag(xml: string, name: string): string {
+  const m = xml.match(new RegExp(`<(?:tt:)?${name}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:tt:)?${name}>`, "i"));
+  return m ? decodeEntities(unCdata(m[1])).trim() : "";
+}
+function xmlTags(xml: string, name: string): string[] {
+  return [...xml.matchAll(new RegExp(`<(?:tt:)?${name}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:tt:)?${name}>`, "gi"))].map((m) => m[1]);
+}
+
 export function normalizeTeamtailor(xml: string, board: Board): { postings: NormalizedPosting[]; items: number } {
-  const $ = cheerio.load(xml, { xml: true });
-  const channelTitle = $("channel > title").first().text().trim();
+  const channel = xml.replace(/<item\b[\s\S]*?<\/item>/gi, "");
+  const channelTitle = xmlTag(channel, "title");
   const company = board.company || channelTitle.replace(/\s*[-–|].*$/, "") || board.slug || "";
   const postings: NormalizedPosting[] = [];
-  const items = $("item");
-  items.each((_, el) => {
-    const it = $(el);
-    const pick = (name: string) => it.children().filter((_, c) => (c as { name?: string }).name?.toLowerCase().replace(/^tt:/, "") === name.toLowerCase()).first();
-    const title = pick("title").text().trim();
-    const link = pick("link").text().trim() || pick("guid").text().trim();
-    if (!title || !/^https?:\/\//.test(link)) return;
-    const externalId = pick("guid").text().trim() || link;
-    // Puede venir suelto o dentro de <tt:locations>: buscamos en todo el ítem.
-    const locations = it
-      .find("*")
-      .filter((_, c) => /^(tt:)?location$/i.test((c as { name?: string }).name ?? ""))
-      .map((_, c) => {
-        const loc = $(c);
-        const parts = ["city", "region", "country"].map((n) => loc.children().filter((_, x) => (x as { name?: string }).name?.toLowerCase().replace(/^tt:/, "") === n).first().text().trim());
-        return parts.some(Boolean) ? parts.filter(Boolean).join(", ") : loc.text().replace(/\s+/g, " ").trim();
+  const items = xmlTags(xml, "item");
+  for (const it of items) {
+    const title = xmlTag(it, "title");
+    const link = xmlTag(it, "link") || xmlTag(it, "guid");
+    if (!title || !/^https?:\/\//.test(link)) continue;
+    const externalId = xmlTag(it, "guid") || link;
+    // <tt:location> puede venir suelto o dentro de <tt:locations>.
+    const locations = xmlTags(it, "location")
+      .map((loc) => {
+        const parts = ["city", "region", "country"].map((n) => xmlTag(loc, n));
+        return parts.some(Boolean) ? parts.filter(Boolean).join(", ") : decodeEntities(unCdata(loc)).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
       })
-      .get()
-      .filter(Boolean) as string[];
-    const remote = pick("remoteStatus").text().trim().toLowerCase();
+      .filter(Boolean);
+    const remote = xmlTag(it, "remoteStatus").toLowerCase();
     const workplace = TT_REMOTE[remote] ? wp(TT_REMOTE[remote], "fuente", `remoteStatus: ${remote}`) : wp(workplaceFromText(locations.join(" ")), "fuente");
-    const text = htmlToText(pick("description").text(), DESC_MAX);
+    const text = htmlToText(xmlTag(it, "description"), DESC_MAX);
     const countries = [...new Set(locations.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c))];
     postings.push({
       sourceId: "teamtailor",
@@ -622,13 +625,13 @@ export function normalizeTeamtailor(xml: string, board: Board): { postings: Norm
       workplace,
       remoteFlag: TT_REMOTE[remote] ? TT_REMOTE[remote] === "remoto" : null,
       employmentType: null,
-      department: pick("department").text().trim() || undefined,
+      department: xmlTag(it, "department") || undefined,
       salary: null,
-      publishedAt: iso(pick("pubDate").text().trim()),
+      publishedAt: iso(xmlTag(it, "pubDate")),
       updatedAt: null,
       expiresAt: null,
     });
-  });
+  }
   return { postings, items: items.length };
 }
 
