@@ -34,6 +34,10 @@ jobs:
     timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
+        with:
+          # El último commit de la rama al empezar (no el de cuando se encoló): otra corrida
+          # del mismo grupo de concurrencia puede haber guardado el inventario mientras esperaba.
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
