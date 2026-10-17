@@ -155,13 +155,14 @@ function roleSimilarity(a: Set<string>, b: Set<string>): number {
 
 /* ---------- helpers ---------- */
 
+const findProfileSkills = (s: string) => findSkills(s.replace(/\bia\b/gi, "inteligencia artificial"));
 const SKILL_ALIAS = (s: string) => {
-  const found = findSkills(s);
+  const found = findProfileSkills(s);
   return found.length ? found : [fold(s)];
 };
 
 function profileSkillSet(m: MatchProfile): Set<string> {
-  return new Set([...m.skills.flatMap(SKILL_ALIAS), ...findSkills([m.headline, ...m.titles, m.summary].join("\n"))]);
+  return new Set([...m.skills.flatMap(SKILL_ALIAS), ...findProfileSkills([m.headline, ...m.titles, m.summary].join("\n"))]);
 }
 
 const LANG_EN: Record<string, string> = { ingles: "inglés", english: "inglés", portugues: "portugués", portuguese: "portugués", espanol: "español", spanish: "español", italiano: "italiano", italian: "italiano", frances: "francés", french: "francés", aleman: "alemán", german: "alemán" };

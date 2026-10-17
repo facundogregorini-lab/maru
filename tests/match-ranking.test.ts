@@ -310,7 +310,7 @@ describe("calibración del porcentaje de afinidad", () => {
     const o = await example({ title: "Senior AI Solutions Consultant" });
     o.extracted.family.value = "consultoria";
     o.extracted.skillsRequired = ["inteligencia artificial"];
-    const p = { ...dataProfile, headline: "Consultoría de automatización", titles: ["Consultor en IA"], skills: ["LLMs", "n8n"] };
+    const p = { ...dataProfile, headline: "Consultoría de automatización", titles: ["Consultor en IA"], skills: ["IA", "n8n"] };
     const prefs = { ...basePrefs, objetivo: "inteligencia artificial", rolesDeseados: [] };
     expect(run(o, p, { prefs }).score).toBeGreaterThanOrEqual(90);
   });
