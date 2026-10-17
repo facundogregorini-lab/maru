@@ -875,6 +875,86 @@
       "evidence": "https://job-boards.greenhouse.io/telnyx54 (visto en el feed ATS de Fantastic para Argentina, 16/10)",
       "addedAt": "2026-10-16",
       "status": "candidata"
+    },
+    {
+      "name": "David Kennedy Recruitment",
+      "sourceId": "teamtailor",
+      "slug": "davidkennedyrecruitment.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://davidkennedyrecruitment.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Bidcom",
+      "sourceId": "teamtailor",
+      "slug": "bidcom.na.teamtailor.com",
+      "region": "us",
+      "sector": "retail / e-commerce",
+      "evidence": "https://bidcom.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "BYMA",
+      "sourceId": "teamtailor",
+      "slug": "empleos.byma.com.ar",
+      "region": "us",
+      "sector": "mercado de capitales",
+      "evidence": "https://empleos.byma.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "CDA Informatica",
+      "sourceId": "teamtailor",
+      "slug": "cdainformatica.na.teamtailor.com",
+      "region": "us",
+      "sector": "tecnología",
+      "evidence": "https://cdainformatica.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Dia Argentina",
+      "sourceId": "teamtailor",
+      "slug": "empleos.supermercadosdia.com.ar",
+      "region": "us",
+      "sector": "supermercados",
+      "evidence": "https://empleos.supermercadosdia.com.ar/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Naranja X",
+      "sourceId": "teamtailor",
+      "slug": "naranjax.na.teamtailor.com",
+      "region": "us",
+      "sector": "fintech",
+      "evidence": "https://naranjax.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "PECOM",
+      "sourceId": "teamtailor",
+      "slug": "pecom.na.teamtailor.com",
+      "region": "us",
+      "sector": "energía / industria",
+      "evidence": "https://pecom.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Talento Cumbre",
+      "sourceId": "teamtailor",
+      "slug": "talentocumbre.na.teamtailor.com",
+      "region": "us",
+      "sector": "consultora de RR. HH.",
+      "evidence": "https://talentocumbre.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 16/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
     }
   ]
 }

@@ -1,4 +1,5 @@
-import { fetchJson, type RetryOptions } from "./http";
+import * as cheerio from "cheerio";
+import { fetchJson, fetchText, type RetryOptions } from "./http";
 import { fold, htmlToText } from "./text";
 import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
 
@@ -10,7 +11,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -566,6 +567,88 @@ export async function fetchGetonbrd(board: Board, opts?: RetryOptions & { perPag
 
 /* ---------- registro ---------- */
 
+/* ---------- Teamtailor (feed RSS público del sitio de empleo) ---------- */
+
+const TT_REMOTE: Record<string, Workplace> = { fully: "remoto", temporary: "remoto", hybrid: "hibrido", none: "presencial", onsite: "presencial" };
+const TT_PAGE = 100;
+
+/**
+ * Teamtailor publica cada sitio de empleo como RSS: https://<sitio>/jobs.rss (offset/per_page, 100 por página).
+ * Su documentación aclara que los datos del feed son públicos. Las etiquetas propias usan el prefijo tt:.
+ */
+export function normalizeTeamtailor(xml: string, board: Board): { postings: NormalizedPosting[]; items: number } {
+  const $ = cheerio.load(xml, { xml: true });
+  const channelTitle = $("channel > title").first().text().trim();
+  const company = board.company || channelTitle.replace(/\s*[-–|].*$/, "") || board.slug || "";
+  const postings: NormalizedPosting[] = [];
+  const items = $("item");
+  items.each((_, el) => {
+    const it = $(el);
+    const pick = (name: string) => it.children().filter((_, c) => (c as { name?: string }).name?.toLowerCase().replace(/^tt:/, "") === name.toLowerCase()).first();
+    const title = pick("title").text().trim();
+    const link = pick("link").text().trim() || pick("guid").text().trim();
+    if (!title || !/^https?:\/\//.test(link)) return;
+    const externalId = pick("guid").text().trim() || link;
+    // Puede venir suelto o dentro de <tt:locations>: buscamos en todo el ítem.
+    const locations = it
+      .find("*")
+      .filter((_, c) => /^(tt:)?location$/i.test((c as { name?: string }).name ?? ""))
+      .map((_, c) => {
+        const loc = $(c);
+        const parts = ["city", "region", "country"].map((n) => loc.children().filter((_, x) => (x as { name?: string }).name?.toLowerCase().replace(/^tt:/, "") === n).first().text().trim());
+        return parts.some(Boolean) ? parts.filter(Boolean).join(", ") : loc.text().replace(/\s+/g, " ").trim();
+      })
+      .get()
+      .filter(Boolean) as string[];
+    const remote = pick("remoteStatus").text().trim().toLowerCase();
+    const workplace = TT_REMOTE[remote] ? wp(TT_REMOTE[remote], "fuente", `remoteStatus: ${remote}`) : wp(workplaceFromText(locations.join(" ")), "fuente");
+    const text = htmlToText(pick("description").text(), DESC_MAX);
+    const countries = [...new Set(locations.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c))];
+    postings.push({
+      sourceId: "teamtailor",
+      boardId: board.boardId,
+      externalId: externalId.slice(0, 300),
+      title,
+      company,
+      companySlug: board.slug,
+      sourceUrl: link,
+      applyUrl: link,
+      linkRequired: false,
+      descriptionText: text,
+      descriptionComplete: text.length > 200 && !text.endsWith("…"),
+      locations: [...new Set(locations)].slice(0, 6),
+      countries,
+      regionText: [],
+      workplace,
+      remoteFlag: TT_REMOTE[remote] ? TT_REMOTE[remote] === "remoto" : null,
+      employmentType: null,
+      department: pick("department").text().trim() || undefined,
+      salary: null,
+      publishedAt: iso(pick("pubDate").text().trim()),
+      updatedAt: null,
+      expiresAt: null,
+    });
+  });
+  return { postings, items: items.length };
+}
+
+export async function fetchTeamtailor(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const host = assertSlug(board.slug);
+  if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(decodeURIComponent(host))) throw new Error(`Sitio de Teamtailor inválido: ${board.slug}`);
+  const maxPages = opts?.maxPages ?? 10;
+  const postings: NormalizedPosting[] = [];
+  let received = 0;
+  for (let page = 0; page < maxPages; page++) {
+    const xml = await fetchText(`https://${decodeURIComponent(host)}/jobs.rss?per_page=${TT_PAGE}&offset=${page * TT_PAGE}`, opts);
+    const { postings: got, items } = normalizeTeamtailor(xml, board);
+    postings.push(...got);
+    received += items;
+    // Página incompleta = última: recibimos el listado entero.
+    if (items < TT_PAGE) return { postings, complete: true, received };
+  }
+  return { postings, complete: false, received };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -573,6 +656,7 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   remotive: fetchRemotive,
   jobicy: fetchJobicy,
   getonbrd: fetchGetonbrd,
+  teamtailor: fetchTeamtailor,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */
