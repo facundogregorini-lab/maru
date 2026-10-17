@@ -56,8 +56,8 @@ Después de importar se corrió `match-sync` a mano: re-analizó todo con `EXTRA
 ## Estado al 17/10/2026
 
 - **Fantastic:** trial agotado (448/450). Segundo corte con G3/G4 y `offset` (`--offset=N` pide la página siguiente de la misma consulta, sin pagar repetidos). No hay más corridas posibles sin plan pago, y el pago está descartado.
-- **Google Jobs:** 28 de 250 búsquedas usadas este mes (12 generalistas + 16 del interior).
-- **Apify:** ≈ US$2,8 reales gastados de US$5.
+- **Google Jobs:** 128 de 250 búsquedas usadas este mes: 12 generalistas, 16 del interior y 50 más del interior (atención, ventas y administrativo en 20 ciudades, +245 avisos). Otras 50 se perdieron por un conflicto al guardar, ya corregido en #51. Se renueva cada mes.
+- **Apify:** registro conservador US$4,62 de US$5. Gasto real ≈ US$3 (la cuenta muestra el uso exacto). La última tanda fue Computrabajo para Tucumán, Mendoza y Salta (161 filas). No quedan corridas grandes posibles sin pasar el tope.
 - **Teamtailor:** fuente gratuita diaria con 13 empleadores (RSS público).
 
 ## Próximas corridas recomendadas
