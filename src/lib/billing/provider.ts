@@ -13,7 +13,8 @@ export async function mp<T>(path: string, init: RequestInit = {}): Promise<T> {
     cache: "no-store",
     signal: AbortSignal.timeout(8000),
   });
-  if (!res.ok) throw new Error(`Mercado Pago respondió ${res.status}.`);
+  // Sólo la ruta, sin query ni IDs: alcanza para saber qué consulta falló sin dejar datos en los logs.
+  if (!res.ok) throw new Error(`Mercado Pago respondió ${res.status} en ${path.split("?")[0].replace(/\/[^/]*\d[^/]*/g, "/:id")}.`);
   return res.json() as Promise<T>;
 }
 export function validWebhook(req: Request, id: string): boolean {
