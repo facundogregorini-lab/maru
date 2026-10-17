@@ -64,9 +64,20 @@ async function apifyFetch(url: string, token: string, init?: RequestInit) {
   return (await res.json()) as { data?: Record<string, unknown> } & unknown[];
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = []): Promise<ImportResult> {
+/** Gasto real del mes según Apify (incluye todo lo que corrió la cuenta este mes). */
+async function apifyMonthlyUsage(token: string): Promise<number> {
+  const d = ((await apifyFetch("https://api.apify.com/v2/users/me/limits", token)).data ?? {}) as Record<string, Record<string, unknown>>;
+  const usage = d.current?.monthlyUsageUsd;
+  if (typeof usage !== "number" || !Number.isFinite(usage)) throw new Error("Apify no informó el gasto del mes: no se corre nada.");
+  return usage;
+}
+
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
-  let spent = spentBefore;
+  // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
+  // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
+  let spent = useAccount ? await apifyMonthlyUsage(token) : spentBefore;
+  if (useAccount) log(`Gasto real de Apify este mes: US$${spent.toFixed(3)} (tope US$${budgetUsd}).`);
   for (const source of sources) {
     const config = APIFY_JOBS[source];
     for (const keyword of (custom.length ? custom : APIFY_KEYWORDS[source]).slice(0, keywordsPerSource)) {
@@ -168,7 +179,7 @@ async function main() {
     if (!(apifyBudget > 0 && apifyBudget <= 5)) throw new Error("Indicá --budget-usd entre 0 y 5 (presupuesto aprobado por el dueño).");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom);
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account");
   }
 
   const inv = await readJson<Inventory>(INV, emptyInventory("real"));
