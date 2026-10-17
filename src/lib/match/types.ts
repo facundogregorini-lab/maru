@@ -134,6 +134,8 @@ export type StoredPosting = NormalizedPosting & {
   closedAt?: string;
   /** Última vez que se miró la página original de un aviso importado (liveness.ts). */
   lastLiveCheckAt?: string;
+  /** Resultado de esa revisión: "desconocido" = la fuente no respondió o bloqueó al bot. */
+  lastLiveResult?: "abierta" | "cerrada" | "desconocido";
   /** Calculados al recibir el aviso completo (después se puede recortar la descripción). */
   eligibility: EligibilityResult;
   extracted: Extracted;
