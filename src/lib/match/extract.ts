@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 4;
+export const EXTRACTION_VERSION = 5;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -208,8 +208,31 @@ const LANGS: [string, RegExp][] = [
   ["francés", /\b(french|frances)\b/],
   ["alemán", /\b(german|aleman)\b/],
   ["italiano", /\b(italian|italiano)\b/],
+  ["chino", /\b(chinese|chino|mandarin)\b/],
+  ["japonés", /\b(japanese|japones)\b/],
+  ["ruso", /\b(russian|ruso)\b/],
+  ["árabe", /\b(arabic|arabe)\b/],
+  ["hebreo", /\b(hebrew|hebreo)\b/],
+  ["neerlandés", /\b(dutch|neerlandes|holandes)\b/],
 ];
 const LEVEL = /(native|nativo|bilingual|bilingue|fluent|fluido|fluency|proficient|advanced|avanzado|c2|c1|b2|b1|intermediate|intermedio|conversational|conversacional|basic|basico)/;
+
+const EN_WORDS = new Set(["the", "and", "you", "will", "with", "our", "for", "are", "we", "your", "to", "of", "is", "in", "be", "this", "team", "experience"]);
+const ES_WORDS = new Set(["el", "la", "los", "las", "de", "que", "y", "para", "con", "en", "nuestro", "nuestra", "una", "del", "por", "experiencia", "equipo"]);
+
+/** ¿El aviso está escrito en inglés? Cuenta palabras funcionales de los primeros 2.000 caracteres. */
+export function writtenInEnglish(text: string): boolean {
+  let en = 0;
+  let es = 0;
+  for (const w of fold(text.slice(0, 2000)).split(/\s+/)) {
+    if (EN_WORDS.has(w)) en++;
+    else if (ES_WORDS.has(w)) es++;
+  }
+  return en >= 12 && en > 3 * es;
+}
+
+/** Nivel que se infiere cuando el aviso está escrito en inglés y no dice cuál pide. */
+export const ENGLISH_IMPLICIT = "intermedio o más (el aviso está escrito en inglés)";
 
 export function languagesFrom(text: string, desirableText: string): LanguageReq[] {
   const out: LanguageReq[] = [];
@@ -223,6 +246,13 @@ export function languagesFrom(text: string, desirableText: string): LanguageReq[
     if (lang === "español" && !LEVEL.test(around)) continue;
     const level = around.match(LEVEL)?.[1] ?? "";
     out.push({ language: lang, level, required: !re.test(fd) });
+  }
+  // Un aviso entero en inglés (típico de empresas de EE. UU.) casi siempre exige trabajar en inglés,
+  // aunque no lo diga como requisito. Lo marcamos explícito para que el filtro de idioma funcione.
+  if (writtenInEnglish(text)) {
+    const en = out.find((l) => l.language === "inglés");
+    if (!en) out.push({ language: "inglés", level: ENGLISH_IMPLICIT, required: true });
+    else if (!en.level) en.level = ENGLISH_IMPLICIT;
   }
   return out;
 }
@@ -277,7 +307,8 @@ export function extract(input: {
     family,
     seniority,
     employmentType,
-    languages: languagesFrom(descriptionText, sections.desirable),
+    // El título también cuenta: "Recruiter con chino", "Customer Support - Portuguese".
+    languages: languagesFrom(`${title}\n${descriptionText}`, sections.desirable),
     skillsRequired: req,
     skillsDesirable: des,
     skillsMentioned: mentioned,
