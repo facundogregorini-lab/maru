@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { safeFetch } from "./match/http";
 
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
@@ -21,14 +22,27 @@ export function isHttpUrl(value: string): boolean {
   }
 }
 
+const MAX_BYTES = 3_000_000;
+
+/**
+ * Lee la página del aviso. Sólo direcciones públicas (nada de la red interna, ni siquiera después de una
+ * redirección) y como mucho 3 MB: el link lo escribe la persona.
+ */
 async function fetchHtml(url: string): Promise<string> {
-  const res = await fetch(url, {
-    headers: { "User-Agent": UA, "Accept-Language": "es-AR,es;q=0.9,en;q=0.8" },
-    redirect: "follow",
-    signal: AbortSignal.timeout(15_000),
-  });
+  const res = await safeFetch(url, { timeoutMs: 15_000, headers: { "User-Agent": UA, "Accept-Language": "es-AR,es;q=0.9,en;q=0.8" } });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.text();
+  const reader = res.body?.getReader();
+  if (!reader) return "";
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  while (size < MAX_BYTES) {
+    const part = await reader.read();
+    if (part.done) break;
+    chunks.push(part.value);
+    size += part.value.length;
+  }
+  await reader.cancel().catch(() => {});
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 /** Busca datos estructurados schema.org/JobPosting, que muchos portales publican. */

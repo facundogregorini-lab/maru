@@ -125,13 +125,13 @@ export async function assertPublicUrl(raw: string, resolve: Resolver = defaultRe
 }
 
 /** GET de una URL pública siguiendo como máximo 3 redirecciones, validando cada salto. */
-export async function safeFetch(raw: string, opts: { resolve?: Resolver; fetchImpl?: FetchLike; timeoutMs?: number } = {}): Promise<Response> {
-  const { resolve = defaultResolver, fetchImpl = fetch, timeoutMs = 15_000 } = opts;
+export async function safeFetch(raw: string, opts: { resolve?: Resolver; fetchImpl?: FetchLike; timeoutMs?: number; headers?: Record<string, string> } = {}): Promise<Response> {
+  const { resolve = defaultResolver, fetchImpl = fetch, timeoutMs = 15_000, headers = { "User-Agent": USER_AGENT } } = opts;
   let url = (await assertPublicUrl(raw, resolve)).toString();
   for (let hop = 0; hop < 4; hop++) {
     const res = await fetchImpl(url, {
       redirect: "manual",
-      headers: { "User-Agent": USER_AGENT },
+      headers,
       signal: AbortSignal.timeout(timeoutMs),
     });
     if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {

@@ -186,7 +186,31 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
   - canonical de ids alias;
   - fechas en el HTML inicial.
 
-**Auditorías pendientes de corregir:** Postulación, CV, Carta (ya reportadas), Entrevista y Video, cuenta y cobros.
+**Seguridad (17/10, hecha; hallazgos de las auditorías de Postulación, CV, Carta y cuenta):**
+- **PDF:** Chromium renderiza el CV sin JavaScript y con CSP. Antes un `<script>` que esquivaba el filtro corría en el servidor y abría WebSockets a la red interna. Hay un test con ese caso.
+- **Leer el aviso por link** (`src/lib/job.ts`): usa `safeFetch` (sólo IPs públicas, también después de cada redirección) y lee como mucho 3 MB. Antes leía 127.0.0.1 o 169.254.169.254.
+- **Rate limit:** `/api/export/*` y `/api/auth/request` pasan por el middleware, por IP.
+- **Magic link:**
+  - abrir el link muestra "Vas a entrar como X" y la sesión se crea con el botón (POST del mismo origen); antes un link ajeno te dejaba en la cuenta de otro y tus datos se subían ahí;
+  - el link sirve una sola vez (`takeCounter` en Redis);
+  - el freno por casilla es compartido y junta "ana+1@" con "ana@".
+- **/precios:** "El más elegido" pasa a "El más conveniente". No había datos que respaldaran el primero.
+
+**Cobros encendidos en producción** (`/api/billing/status` → enabled, 17/10). Para el dueño:
+- definir `NEXT_PUBLIC_CONTACT_EMAIL`;
+- los términos hablan de "suscripción mensual" y hay tres planes;
+- falta el botón de arrepentimiento (Res. 424/2020).
+
+**Auditorías pendientes de corregir:**
+- **Postulación:** recargar pierde el aviso pegado; "Adaptar mi CV" desde el seguimiento borra el CV generado; el cupo se descuenta si la IA falla; errores de red en inglés.
+- **CV:** regenerar borra ediciones; "Ocultar experiencia" no se ve en el editor; secciones vacías desaparecen; ATS con punto final; foto HEIC.
+- **Carta:** reescribir un párrafo con foco no hace nada; perfil y carta en paralelo pierden la carta; volver sin regenerar.
+- **Entrevista y Video:** "Terminar" deja el micrófono abierto; el informe se pide dos veces; el handoff se pisa con la sesión vieja; teleprompter sin pausa.
+- **Cuenta:**
+  - cambiar de cuenta borra el CV, la carta, la entrevista y el video sin avisar;
+  - "Borrar mis datos" deja `maru:sync:v1`;
+  - "Salir" no revoca la cookie;
+  - OG por página.
 
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 

@@ -75,7 +75,8 @@ export async function POST(req: Request) {
   }
   const marginMm = Math.max(10, Math.min(24, Math.round(((padY ?? 48) / 96) * 25.4)));
   // Las fuentes van embebidas en base64: no dependen de URLs relativas (/_next/static/...) que el servidor no resuelve.
-  const doc = `<!doctype html><html><head><meta charset="utf-8"><style>
+  // CSP: aunque algo se escape del filtro, el documento no puede cargar ni ejecutar nada de afuera.
+  const doc = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; font-src data:; style-src 'unsafe-inline'"><style>
 ${await fontFaceCss()}
 @page { size: A4; margin: ${marginMm}mm 0; }
 html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -87,6 +88,8 @@ html, body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust
     const b = browser;
     const page = await step("render", async () => {
       const p = await b.newPage();
+      // El CV es marcado y estilos: sin JavaScript (el filtro de <script> se puede esquivar y la intercepción no cubre WebSockets).
+      await p.setJavaScriptEnabled(false);
       // Sólo recursos embebidos: bloqueamos cualquier pedido de red.
       await p.setRequestInterception(true);
       p.on("request", (r) => (r.url().startsWith("data:") ? r.continue() : r.abort()));
