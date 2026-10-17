@@ -31,6 +31,8 @@ import {
 
 /** Cuánto modula la intención declarada el total (0 = nada, 1 = todo). */
 export const INTENT_GATE = 0.4;
+/** Por debajo de este % de coincidencia una búsqueda no se lista como "para vos". */
+export const MIN_SCORE = 25;
 
 /** Desde cuántos días se esconde un aviso de los resultados (salvo que la persona lo haya guardado). */
 export const HIDE_AFTER_DAYS = 120;
@@ -252,13 +254,16 @@ export type RankInput = {
   weights?: Weights;
   limit?: number;
   now?: Date;
+  /** Coincidencia mínima para listar (por defecto MIN_SCORE). */
+  minScore?: number;
 };
 
 export type RankOutput = {
   eligible: RankedItem[];
   pending: RankedItem[];
   saved: RankedItem[];
-  counts: { open: number; eligible: number; pending: number; afterHardFilters: number; shown: number };
+  /** lowMatch: abiertas que pasan las condiciones pero con coincidencia menor a MIN_SCORE (no se listan). */
+  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number };
 };
 
 type Scored = { item: RankedItem; raw: number };
@@ -269,6 +274,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const now = input.now ?? new Date();
   const limit = input.limit ?? 40;
   const f = input.filters ?? {};
+  const minScore = input.minScore ?? MIN_SCORE;
 
   const pSkills = profileSkillSet(profile);
   const pLangs = new Map(profile.languages.map((l) => [normLang(l.language), l.level]));
@@ -284,15 +290,18 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const savedIds = new Set(interactions.saved);
   const discarded = new Map(interactions.discarded.map((d) => [d.id, d]));
   const blockedCompanies = new Set(interactions.discarded.filter((d) => d.reason === "empresa" && d.company).map((d) => fold(d.company!)));
-  const userPlaces = [prefs.ciudad, ...prefs.otrosLugares].map(fold).filter(Boolean);
+  // La ciudad es lo que va antes de la primera coma ("Córdoba, Argentina" → "córdoba").
+  const userPlaces = [prefs.ciudad, ...prefs.otrosLugares].map((x) => fold(x.split(",")[0])).filter(Boolean);
   const userCountryWords = prefs.autorizacion.flatMap((a) => COUNTRY_WORDS[fold(a)] ?? [fold(a)]);
   const placeMatches = (locs: string[]) => {
     const l = fold(locs.join(" | "));
-    return userPlaces.some((p) => l.includes(p) || (/(buenos aires|caba|capital federal)/.test(p) && /(buenos aires|caba|capital federal)/.test(l)));
+    const segs = placeSegments(locs);
+    return userPlaces.some((p) => segs.some((seg) => samePlace(seg, p)) || (/(buenos aires|caba|capital federal)/.test(p) && /(buenos aires|caba|capital federal)/.test(l)));
   };
 
   let open = 0;
   let afterHard = 0;
+  let lowMatch = 0;
   const elig: Scored[] = [];
   const pend: Scored[] = [];
   const savedOut: Scored[] = [];
@@ -519,6 +528,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     }
     if (isSaved) raw = Math.min(1, raw * 1.03);
 
+    if (wpValue !== "remoto" && userPlaces.length && o.locations.length && placeMatches(o.locations)) reasonsScored.push([0.6, `Es en ${prefs.ciudad.split(",")[0].trim() || "tu ciudad"}, donde buscás.`]);
     if (o.eligibility.status === "elegible") reasonsScored.push([0.45, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
     if (o.eligibility.timezone) pending.push(`Horario pedido: ${o.eligibility.timezone}. Es una condición horaria, no un permiso de contratación.`);
 
@@ -540,14 +550,15 @@ export function rankOpportunities(input: RankInput): RankOutput {
       id: o.id,
       title: sanitizeDisplay(displayTitle(o.title), 160),
       company: sanitizeDisplay(o.company, 100),
-      locations: argentinaFirst(o.locations).map((l) => sanitizeDisplay(l, 80)),
+      locations: displayLocations(o.locations, o.eligibility.status === "elegible" && wpValue === "remoto").map((l) => sanitizeDisplay(l, 80)),
       workplace: wpValue,
       workplaceLabel: wpInferred ? `${WORKPLACE_LABEL[wpValue]} (inferido)` : WORKPLACE_LABEL[wpValue],
       eligibility: o.eligibility,
       family: ex.family.value,
       seniority: ex.seniority?.value ?? null,
       employmentType: ex.employmentType?.value ?? null,
-      score: Math.round(Math.max(0, Math.min(1, raw)) * 100),
+      // Nunca 100%: con datos que faltan o se infieren, el tope es más bajo.
+      score: Math.min(conf >= 0.75 ? 98 : 95, Math.round(Math.max(0, Math.min(1, raw)) * 100)),
       confidence: conf >= 0.75 ? "alta" : conf >= 0.5 ? "media" : "baja",
       depth: "reglas",
       reasons: reasonsScored.sort((a, b) => b[0] - a[0]).map((r) => r[1]).filter((r, i, arr) => arr.indexOf(r) === i).slice(0, 3),
@@ -569,6 +580,11 @@ export function rankOpportunities(input: RankInput): RankOutput {
     const scored = { item, raw };
     if (isSaved) savedOut.push(scored);
     if (o.status !== "abierta" || excludedByHard || (o.eligibility.status === "no_elegible" && bucket === "eligible")) continue;
+    // Lo que casi no se parece a lo que busca no es "para vos": se cuenta aparte. Si filtra por área, se muestra igual.
+    if (item.score < minScore && !f.families?.length) {
+      lowMatch++;
+      continue;
+    }
     (bucket === "eligible" ? elig : pend).push(scored);
   }
 
@@ -577,7 +593,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     eligible: sortTop(elig),
     pending: sortTop(pend),
     saved: savedOut.sort((a, b) => b.raw - a.raw).map((s) => s.item),
-    counts: { open, eligible: elig.length, pending: pend.length, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
+    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
   };
 }
 
@@ -591,6 +607,46 @@ const AI_TASKS = /\b(train(ing)? (ai|llm|large language) models?|training data f
 const AR_PLACE = /argentin|buenos aires|caba|capital federal|c[oó]rdoba|rosario|mendoza|tucum[aá]n|la plata|mar del plata|neuqu[eé]n|salta|santa fe/i;
 /** Si se puede trabajar desde Argentina, que la tarjeta lo muestre primero. */
 export const argentinaFirst = (locs: string[]) => [...locs.filter((l) => AR_PLACE.test(l)), ...locs.filter((l) => !AR_PLACE.test(l))];
+
+/** Partes de cada ubicación ("San Miguel de Tucumán, Tucumán" → ["san miguel de tucuman", "tucuman"]). */
+export function placeSegments(locs: string[]): string[] {
+  return locs.flatMap((l) => l.split(/,|\||\s[-–]\s|\(|\)/).map((x) => fold(x))).filter(Boolean);
+}
+
+/**
+ * La parte de una ubicación es el lugar que eligió la persona: igual, "Córdoba Capital" para "Córdoba"
+ * o "San Miguel de Tucumán" para "Tucumán". "Rosario de Lerma" (Salta) no es Rosario.
+ */
+export function samePlace(seg: string, place: string): boolean {
+  if (seg === place) return true;
+  if (seg.startsWith(`${place} `)) return !/^(de|del|de la|de los)\b/.test(seg.slice(place.length + 1));
+  return seg.endsWith(` de ${place}`);
+}
+
+const placeKey = (l: string) =>
+  fold(l)
+    .replace(/\b(argentina|provincia de|province|prov|cdad autonoma de|ciudad autonoma de)\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/**
+ * Ubicaciones para mostrar: Argentina primero, sin repetir el mismo lugar escrito distinto
+ * ("Rosario, Santa Fe" y "Rosario, Santa Fe, Argentina") y sin un "Argentina" suelto si hay una ciudad.
+ * Si es remoto y elegible pero las ubicaciones no nombran Argentina, lo dice primero.
+ */
+export function displayLocations(locs: string[], remoteFromAr = false): string[] {
+  const out: string[] = [];
+  const keys: string[] = [];
+  for (const l of argentinaFirst(locs)) {
+    const k = placeKey(l);
+    if (keys.some((x) => x === k || (k && (x.startsWith(`${k} `) || k.startsWith(`${x} `))))) continue;
+    out.push(l.trim());
+    keys.push(k);
+  }
+  const result = out.some((l) => placeKey(l) && AR_PLACE.test(l)) ? out.filter((l) => placeKey(l)) : out;
+  if (!remoteFromAr || result.some((l) => AR_PLACE.test(l))) return result;
+  return ["Remoto desde Argentina", ...result.filter((l) => !/^(remote|remoto|anywhere|worldwide)$/.test(fold(l)))];
+}
 
 /** Variedad: como mucho 2 avisos de la misma empresa en los primeros 10 (el resto baja, no desaparece). */
 function diversify(sorted: Scored[], top = 10, perCompany = 2): Scored[] {

@@ -56,6 +56,14 @@ describe("searchJobs", () => {
     expect((await searchJobs(parseJobQuery({ donde: "todo", q: "zzzz-no-existe" }), NOW)).total).toBe(0);
   });
 
+  it("busca también por lugar", async () => {
+    const { results } = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
+    const withPlace = results.find((r) => r.where && !/remot/i.test(r.where))!;
+    const place = withPlace.where.split(/[,·]/)[0].trim();
+    const found = await searchJobs(parseJobQuery({ donde: "todo", q: place }), NOW);
+    expect(found.results.map((r) => r.id)).toContain(withPlace.id);
+  });
+
   it("no lista avisos de más de 120 días, pero su página sigue andando", async () => {
     const { results } = await searchJobs(parseJobQuery({ donde: "todo" }), NOW);
     const later = new Date(NOW.getTime() + 130 * 86_400_000);

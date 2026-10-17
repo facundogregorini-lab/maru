@@ -57,8 +57,12 @@ export function contentHash(p: NormalizedPosting): string {
 }
 
 /** Si la fuente no informa modalidad, usamos la que el aviso declara explícitamente en su texto. */
+/** Ubicaciones que en realidad dicen la modalidad ("Desde casa", "Remote"). */
+const REMOTE_PLACE = /^\s*(remote|remoto|remota|desde (tu |su )?casa|home office|teletrabajo|work from home|anywhere)\b/;
+
 export function withWorkplace(p: NormalizedPosting): NormalizedPosting {
   if (p.workplace.value !== "desconocido") return p;
+  if (p.locations.length && p.locations.every((l) => REMOTE_PLACE.test(fold(l)))) return { ...p, workplace: { value: "remoto", from: "fuente", evidence: `ubicación: ${p.locations[0].slice(0, 60)}` } };
   const found = workplaceFromDescription(p.descriptionText);
   if (found) return { ...p, workplace: { value: found.value, from: "descripcion", evidence: found.evidence } };
   const inferred = inferPresencial(p);

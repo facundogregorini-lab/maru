@@ -1,7 +1,7 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
 import { displayTitle, isInferred } from "./match/labels";
 import { loadInventory, resolveId } from "./match/load";
-import { ageDays, argentinaFirst, HIDE_AFTER_DAYS } from "./match/ranking";
+import { ageDays, displayLocations, HIDE_AFTER_DAYS } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
 
 /** Buscador simple sobre el inventario real: filtra, ordena por más nuevas y pagina. */
@@ -72,7 +72,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     title: displayTitle(o.title),
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
-    where: argentinaFirst(o.locations).slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
+    where: ((l) => l.slice(0, 2).join(" · ") + (l.length > 2 ? ` · +${l.length - 2}` : ""))(displayLocations(o.locations, o.eligibility.status === "elegible" && o.workplace.value === "remoto")),
     modalidad: MODALIDADES[o.workplace.value] ? `${MODALIDADES[o.workplace.value]}${isInferred(o.workplace) ? " (inferido)" : ""}` : "",
     contrato: o.extracted.employmentType ? CONTRATOS[o.extracted.employmentType.value] : "",
     nivel: o.extracted.seniority ? (NIVELES[o.extracted.seniority.value] ?? "") : "",
@@ -99,7 +99,8 @@ export async function searchJobs(query: JobQuery, now = new Date()): Promise<{ t
     if (query.nivel && o.extracted.seniority?.value !== query.nivel) return false;
     if (query.modalidad && o.workplace.value !== query.modalidad) return false;
     if (words.length) {
-      const hay = fold(`${o.title} ${o.company}`);
+      // También por lugar: "vendedor córdoba" encuentra vendedores en Córdoba.
+      const hay = fold(`${o.title} ${o.company} ${o.locations.join(" ")}`);
       if (!words.every((w) => hay.includes(w))) return false;
     }
     return true;

@@ -63,8 +63,9 @@ const union = (lists: string[][]) => [...new Set(lists.flat())];
 export function groupOpportunities(opps: Opportunity[]): { opportunities: Opportunity[]; alias: Map<string, string> } {
   const groups = new Map<string, Opportunity[]>();
   for (const o of opps) {
-    // "Importante empresa del sector" no es una empresa: no se junta con otras que se llaman igual.
-    const company = isGenericCompany(o.company) ? `#${o.id}` : companyKey(o.company);
+    // "Importante empresa del sector" no es una empresa: sólo se junta con el mismo nombre en el mismo lugar
+    // (el mismo aviso visto dos veces), no con otras que se llaman igual en otras ciudades.
+    const company = isGenericCompany(o.company) ? `#${fold(o.company)}|${fold(o.locations[0] ?? "")}` : companyKey(o.company);
     const key = `${fold(baseTitle(o.title, o.locations))}|${company}`;
     const g = groups.get(key);
     if (g) g.push(o);

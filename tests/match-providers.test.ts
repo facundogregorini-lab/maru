@@ -251,6 +251,8 @@ describe("inventario con importaciones parciales", () => {
     // Si el texto habla de remoto o híbrido, o no hay una ciudad, no se adivina.
     expect(serp({ description: `${description} Posibilidad de home office.` }).value).toBe("desconocido");
     expect(serp({ location: "Argentina" }).value).toBe("desconocido");
+    // "Desde casa" como ubicación es la modalidad: remoto.
+    expect(serp({ location: "Desde casa" })).toMatchObject({ value: "remoto", from: "fuente" });
     // Lo que el aviso declara no se marca como inferido.
     expect(isInferred(serp({ description: `${description} Modalidad: presencial.` }))).toBe(false);
   });

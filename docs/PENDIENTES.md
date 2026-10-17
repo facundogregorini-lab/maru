@@ -93,6 +93,20 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
 
 **Seniority:** el 45% de los grupos elegibles no la tiene, y casi todos son avisos que no la dicen ("Vendedor", "Asesor comercial"). No se infiere, para no adivinar.
 
+**Auditoría del Match (17/10):** corrí los 8 perfiles de E0 (`docs/research/e0-2026-10-16/perfiles.json`) contra el inventario sincronizado y corregí lo que salía mal:
+- "Para vos" contaba todos los avisos elegibles (3.443), aunque fueran de otra área con 5% de coincidencia. Ahora sólo lista los que llegan a `MIN_SCORE` (25%) y quedan entre 85 y 678 por perfil. El resto se cuenta en `counts.lowMatch` y la pantalla explica cómo verlos: filtrando por área se muestran igual.
+- La ciudad se compara por partes (`placeSegments` y `samePlace`): "Rosario de Lerma" (Salta) ya no cuenta como Rosario. La ciudad de la persona es lo que va antes de la coma.
+- Avisos de "Confidencial" duplicados: con el mismo nombre genérico, el mismo título y el mismo lugar, se juntan.
+- El % nunca es 100: el tope es 98, o 95 si falta información.
+- Ubicaciones (`displayLocations`):
+  - sin repetir el mismo lugar escrito distinto;
+  - sin "Argentina" suelto si hay una ciudad;
+  - "Remoto desde Argentina" cuando es elegible y remoto pero las ubicaciones no lo dicen.
+- "Desde casa" o "Remote" como ubicación ahora cuenta como modalidad remota.
+- Nuevo motivo: "Es en <ciudad>, donde buscás".
+- `/busquedas`: la búsqueda por texto incluye el lugar ("vendedor córdoba").
+- Sin cambiar: la seniority que falta no se infiere. Logística y datos junior siguen con poca oferta, y ahí el problema es de adquisición, no de ranking.
+
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 
 **Después de cada merge:** correr el workflow `match-sync` a mano (Actions → match-sync → Run workflow) para re-analizar el inventario con `EXTRACTION_VERSION` 7. Si no, se hace solo en la sync diaria de las 9:17 UTC.
