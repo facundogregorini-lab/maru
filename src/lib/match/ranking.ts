@@ -70,6 +70,7 @@ const EQUIV: string[][] = [
   ["producto", "product"],
   ["disenador", "designer", "diseno", "design"],
   ["datos", "data"],
+  ["ia", "ai"],
   ["operaciones", "operations", "ops"],
   ["finanzas", "finance", "financiero", "financiera", "financial"],
   ["contador", "contadora", "accountant", "contable", "contabilidad", "accounting"],
@@ -110,19 +111,23 @@ const canon = (t: string) => EQ.get(t) ?? t.replace(/s$/, "");
 const SEN_WORDS = new Set(["senior", "sr", "sr.", "junior", "jr", "jr.", "ssr", "semi", "mid", "trainee", "ii", "iii", "i"]);
 
 export function roleTokens(s: string): Set<string> {
-  return new Set(tokens(s).filter((t) => !SEN_WORDS.has(t)).map(canon));
+  const phrases = fold(s).replace(/\b(inteligencia artificial|artificial intelligence|ia generativa|generative ai|genai)\b/g, " ia ")
+    .replace(/\bcomercio electronico\b/g, " ecommerce ");
+  return new Set(tokens(phrases).filter((t) => !SEN_WORDS.has(t)).map(canon));
 }
+
+const GOAL_FILLER = new Set(["quiero", "busco", "buscando", "trabajar", "trabajo", "gustaria", "dedicarme", "enfocarme", "me", "area", "rol", "puesto"]);
 
 /** Palabras de cargo que no dicen de qué es el puesto ("Analista de calidad" no se parece a "Analista de logística"). */
 const GENERIC_ROLE = new Set(
-  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant"].map(canon),
+  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant", "director", "head", "founder", "cofounder", "fundador", "fundadora", "owner"].map(canon),
 );
 
 /** Similitud de cargos: manda lo específico; si sólo comparten palabras genéricas, cuenta poco. */
 function roleSim(a: Set<string>, b: Set<string>): number {
   const ca = new Set([...a].filter((t) => !GENERIC_ROLE.has(t)));
   const cb = new Set([...b].filter((t) => !GENERIC_ROLE.has(t)));
-  if (!ca.size || !cb.size) return dice(a, b);
+  if (!ca.size || !cb.size) return 0.2 * dice(a, b);
   return 0.8 * dice(ca, cb) + 0.2 * dice(a, b);
 }
 
@@ -131,6 +136,12 @@ function dice(a: Set<string>, b: Set<string>): number {
   let inter = 0;
   for (const x of a) if (b.has(x)) inter++;
   return (2 * inter) / (a.size + b.size);
+}
+
+/** Un objetivo corto no pierde afinidad porque el aviso incluya muchos otros términos. */
+function goalCoverage(goal: Set<string>, evidence: Set<string>): number {
+  if (!goal.size) return 0;
+  return [...goal].filter((t) => evidence.has(t)).length / goal.size;
 }
 
 /** Un título con región o especialidad adicional conserva el rol que contiene.
@@ -289,7 +300,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const pLangs = new Map(profile.languages.map((l) => [normLang(l.language), l.level]));
   const desired = [...prefs.rolesDeseados, prefs.objetivo].filter((s) => s.trim());
   const desiredTokens = prefs.rolesDeseados.map((r) => ({ label: r, toks: roleTokens(r) })).filter((r) => r.toks.size);
-  const objetivoTokens = roleTokens(prefs.objetivo);
+  const objetivoTokens = new Set([...roleTokens(prefs.objetivo)].filter((t) => !GOAL_FILLER.has(t)));
   const desiredFamilies = new Set<RoleFamily>(desired.map(familyFromTitle).filter((x) => x !== "otros"));
   const professionalTitles = [...new Set([...profile.titles.slice(0, 3), profile.headline].filter((t) => t.trim()))];
   const pastTitles = professionalTitles.map((t) => ({ label: t, toks: roleTokens(t) }));
@@ -457,18 +468,24 @@ export function rankOpportunities(input: RankInput): RankOutput {
     // Intención profesional (35%)
     const titleToks = roleTokens(o.title);
     const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSimilarity(d.toks, titleToks)));
-    const objSim = objetivoTokens.size ? dice(objetivoTokens, new Set([...titleToks, ...[...req, ...ment].map(canon)])) : 0;
+    const skillTokens = (skills: string[]) => new Set(skills.flatMap((s) => [...roleTokens(s)]));
+    const objSim = Math.max(
+      goalCoverage(objetivoTokens, new Set([...titleToks, ...skillTokens(findSkills(o.title))])),
+      0.85 * goalCoverage(objetivoTokens, skillTokens(req)),
+      0.6 * goalCoverage(objetivoTokens, skillTokens(des)),
+      0.3 * goalCoverage(objetivoTokens, skillTokens(ment)),
+    );
     const famDesired = desiredFamilies.has(ex.family.value);
     const hasIntent = desiredTokens.length > 0 || objetivoTokens.size > 0;
     let intent = 0;
     if (hasIntent) {
-      intent = Math.min(1, Math.max(desiredSim, objSim * 0.8) + (famDesired ? 0.3 : 0));
-      if (prefs.carrera === "continuidad" && !desiredTokens.length) intent = Math.max(intent, titleSim);
+      intent = Math.min(1, Math.max(desiredSim, objSim) + (famDesired ? 0.3 : 0));
     }
     if (desiredSim >= 0.5) {
       const best = desiredTokens.reduce((a, b) => (roleSimilarity(b.toks, titleToks) > roleSimilarity(a.toks, titleToks) ? b : a));
       reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
-    } else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
+    } else if (objSim >= 0.5) reasonsScored.push([0.9, `El aviso se relaciona con tu objetivo: “${sanitizeDisplay(prefs.objetivo, 160)}”.`]);
+    else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
     if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore !== null && skillScore >= 0.4) {
       reasonsScored.push([0.75, "Es un cambio de área, pero varias de tus habilidades se transfieren."]);
     }

@@ -119,7 +119,7 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 1. **Incompatibilidades primero**: no elegibles, roles a evitar, descartes, empresas bloqueadas y condiciones marcadas como indispensables (si el aviso no informa el dato, no se excluye: se avisa que falta confirmarlo).
 2. **Puntaje** ("Compatibilidad estimada", nunca probabilidad de contratación):
    - 40 % habilidades y experiencia (cuando hay requisitos y deseables, pesan 85/15 dentro de habilidades; años pedidos vs. años en el CV; en cambio de carrera pesan más las habilidades transferibles que el cargo anterior),
-   - 35 % intención profesional (roles deseados y objetivo, con equivalencias español/inglés),
+   - 35 % intención profesional (roles deseados y objetivo, con equivalencias español/inglés e IA/AI; objetivos cortos se comparan por cobertura de sus términos, ponderando título, requisitos, deseables y contexto),
    - 15 % seniority,
    - 10 % preferencias adicionales (modalidad, contrato, salario publicado comparable, idiomas).
    - Las dimensiones ausentes se omiten y se reponderan las disponibles. No se asigna 50% por falta de información ni se penaliza dos veces la intención. Se puede alcanzar 100; no se normaliza contra el mejor aviso del catálogo. Ubicación e idioma conservan sus ajustes específicos de E0.
