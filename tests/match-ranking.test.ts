@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
-import { profileToMatch, yearsOfExperience } from "@/lib/match/profile";
+import { estimateSeniority, profileToMatch, yearsOfExperience } from "@/lib/match/profile";
 import { DEFAULT_WEIGHTS, rankOpportunities, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
-import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
+import type { MatchPrefs, MatchProfile, Opportunity } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
 
@@ -124,6 +124,110 @@ describe("ranking explicable", () => {
     expect(weightsFromEnv("40,35,15,10")).toEqual(DEFAULT_WEIGHTS);
     expect(weightsFromEnv("1,1,1,1").habilidades).toBeCloseTo(0.25);
     expect(weightsFromEnv("x")).toEqual(DEFAULT_WEIGHTS);
+    expect(weightsFromEnv("0,0,0,0")).toEqual(DEFAULT_WEIGHTS);
+  });
+});
+
+describe("calibración del porcentaje de afinidad", () => {
+  async function example(patch: Partial<Opportunity> = {}) {
+    const inv = await inventory();
+    const template = inv.opportunities.find((o) => o.title === "Senior Data Analyst")!;
+    return {
+      ...template, descriptionComplete: true,
+      eligibility: { status: "elegible", evidence: ["Argentina"] },
+      workplace: { value: "remoto", from: "fuente" },
+      extracted: {
+        family: { value: "datos", from: "titulo" }, seniority: { value: "senior", from: "titulo" },
+        employmentType: { value: "full_time", from: "fuente" }, yearsRequired: 4,
+        skillsRequired: ["sql", "python"], skillsDesirable: [], skillsMentioned: [],
+        languages: [{ language: "inglés", level: "Avanzado", required: true }],
+      },
+      ...patch,
+    } satisfies Opportunity;
+  }
+  function run(o: Opportunity, profile = dataProfile, extra: Partial<RankInput> = {}) {
+    return rankOpportunities({
+      opportunities: [o], postings: new Map(), profile,
+      prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] },
+      interactions: noInteractions, now: NOW, ...extra,
+    }).eligible[0];
+  }
+
+  it("un perfil alineado puede alcanzar 100 sin depender del resto del catálogo", async () => {
+    const o = await example();
+    expect(run(o).score).toBe(100);
+    const larger = rankOpportunities({ opportunities: [o, { ...o, id: "otra", title: "Marketing Assistant" }], postings: new Map(), profile: dataProfile, prefs: { ...basePrefs, rolesDeseados: ["Data Analyst"] }, interactions: noInteractions, now: NOW });
+    expect(larger.eligible.find((i) => i.id === o.id)?.score).toBe(100);
+  });
+
+  it("no castiga un rol contenido en un título más largo ni su traducción", async () => {
+    const o = await example({ title: "Senior Data Analyst - Risk LATAM" });
+    expect(run(o, dataProfile, { prefs: { ...basePrefs, rolesDeseados: ["Analista de datos"] } }).score).toBeGreaterThanOrEqual(95);
+  });
+
+  it("no reconoce como equivalentes dos roles que sólo comparten 'analista'", async () => {
+    const o = await example({ title: "Marketing Analyst" });
+    o.extracted.family.value = "marketing";
+    o.extracted.skillsRequired = ["seo", "sem"];
+    expect(run(o).score).toBeLessThan(70);
+  });
+
+  it("los datos ausentes bajan la confianza sin convertirse en 50% de cumplimiento", async () => {
+    const o = await example();
+    const full = run(o);
+    o.extracted.seniority = null;
+    o.extracted.skillsRequired = [];
+    o.extracted.languages = [];
+    o.descriptionComplete = false;
+    const sparse = run(o);
+    expect(sparse.score).toBe(full.score);
+    expect(sparse.confidence).not.toBe("alta");
+    expect(sparse.gaps).toEqual([]);
+  });
+
+  it("preferir un rol sin evidencia profesional no crea un match perfecto", async () => {
+    const o = await example();
+    o.extracted.skillsRequired = [];
+    o.extracted.seniority = null;
+    o.extracted.languages = [];
+    const empty = { ...dataProfile, headline: "", titles: [], skills: [], yearsExperience: null };
+    expect(run(o, empty).score).toBeLessThan(60);
+  });
+
+  it("una lista larga de deseables no desplaza los requisitos cumplidos", async () => {
+    const o = await example();
+    o.extracted.skillsDesirable = ["looker", "aws", "gcp", "azure", "sap", "crm", "erp", "seo"];
+    expect(run(o).score).toBeGreaterThanOrEqual(95);
+    o.extracted.skillsRequired = ["ruby", "php", "java"];
+    expect(run(o).score).toBeLessThan(85);
+    expect(run(o).gaps.join(" ")).toMatch(/ruby/);
+  });
+
+  it("un nivel adyacente se considera cercano y una brecha grande sigue pesando", async () => {
+    const o = await example();
+    o.extracted.seniority!.value = "semi_senior";
+    const adjacent = run(o).score;
+    o.extracted.seniority!.value = "director";
+    expect(adjacent).toBeGreaterThanOrEqual(95);
+    expect(run(o).score).toBeLessThan(adjacent - 10);
+    expect(run(o).gaps.join(" ")).toMatch(/Director/);
+  });
+
+  it("guardar o envejecer un aviso no cambia la afinidad del perfil", async () => {
+    const o = await example();
+    const initial = run(o).score;
+    const saved = run(o, dataProfile, { interactions: { saved: [o.id], discarded: [] } });
+    expect(saved.score).toBe(initial);
+    o.publishedAt = "2025-01-01T00:00:00Z";
+    expect(run(o).score).toBe(initial);
+  });
+
+  it("reconoce administración / administrativo / administrativa sin inventar otras habilidades", async () => {
+    const o = await example({ title: "Analista administrativo" });
+    o.extracted.family.value = "administracion";
+    o.extracted.skillsRequired = ["excel"];
+    const p = { ...dataProfile, headline: "Analista administrativa", titles: ["Analista de Administración"], skills: ["Excel"] };
+    expect(run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Administrative Analyst"] } }).score).toBe(100);
   });
 });
 
@@ -152,5 +256,9 @@ describe("perfil para el match", () => {
     expect(m.skills).toEqual(expect.arrayContaining(["SEO", "sem", "sql"]));
     expect(JSON.stringify(m)).not.toContain("ana@mail.com");
     expect(Object.keys(m)).not.toContain("nombre");
+  });
+  it("los años por sí solos no convierten a alguien en lead", () => {
+    expect(estimateSeniority({ ...dataProfile, yearsExperience: 18 })).toBe("senior");
+    expect(estimateSeniority({ ...dataProfile, titles: ["Data Lead"], yearsExperience: 18 })).toBe("lead");
   });
 });

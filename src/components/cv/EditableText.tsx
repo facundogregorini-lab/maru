@@ -3,8 +3,8 @@
 import { useEffect, useRef, type CSSProperties, type ElementType } from "react";
 
 /**
- * Texto editable en el lugar. Es "no controlado" mientras tiene foco (para no mover el cursor)
- * y confirma el cambio al salir. Si el valor cambia desde afuera (p. ej. regenerar con IA), se actualiza.
+ * Conserva el DOM mientras tiene foco para no mover el cursor, pero publica cada edición
+ * para que el documento se guarde incluso si se recarga sin salir del campo.
  */
 export default function EditableText({
   value,
@@ -24,6 +24,8 @@ export default function EditableText({
   label?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const initialValue = useRef(value);
+  const focusValue = useRef(value);
 
   useEffect(() => {
     const el = ref.current;
@@ -42,6 +44,12 @@ export default function EditableText({
       data-placeholder={placeholder}
       className="cv-editable"
       style={style}
+      onFocus={() => { focusValue.current = value; }}
+      onInput={(e: React.FormEvent<HTMLElement>) => {
+        // No recortar mientras escribe: el espacio final todavía puede ser parte de una palabra.
+        const v = e.currentTarget.innerText.replace(/ /g, " ");
+        if (v !== value) onChange(v);
+      }}
       onBlur={(e: React.FocusEvent<HTMLElement>) => {
         const v = e.currentTarget.innerText.replace(/ /g, " ").trim();
         if (v !== value) onChange(v);
@@ -52,7 +60,8 @@ export default function EditableText({
           e.currentTarget.blur();
         }
         if (e.key === "Escape") {
-          e.currentTarget.innerText = value;
+          e.currentTarget.innerText = focusValue.current;
+          onChange(focusValue.current);
           e.currentTarget.blur();
         }
       }}
@@ -62,7 +71,7 @@ export default function EditableText({
         document.execCommand("insertText", false, e.clipboardData.getData("text/plain"));
       }}
     >
-      {value}
+      {initialValue.current}
     </Tag>
   );
 }

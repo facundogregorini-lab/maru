@@ -24,13 +24,11 @@ import {
  * 2. Recuperación por texto con equivalencias español/inglés.
  * 3. Puntaje = 40% habilidades y experiencia + 35% intención profesional
  *    + 15% seniority + 10% preferencias adicionales (configurable con MATCH_WEIGHTS="40,35,15,10").
- *    Si la persona declaró roles u objetivo, además el total se multiplica por (1 − 0,4 × (1 − intención)).
- * Los datos faltantes bajan la CONFIANZA, no se convierten en coincidencias ni en incumplimientos.
+ *    Se promedian sólo dimensiones informadas; la intención no se penaliza por segunda vez.
+ * Los datos faltantes bajan la CONFIANZA. No equivalen a un 50% de cumplimiento.
+ * Guardados, descartes y frescura ajustan el orden, nunca el porcentaje de compatibilidad.
  * El puntaje es una "compatibilidad estimada", nunca una probabilidad de contratación.
  */
-
-/** Cuánto modula la intención declarada el total (0 = nada, 1 = todo). */
-export const INTENT_GATE = 0.4;
 
 export type Weights = { habilidades: number; intencion: number; seniority: number; extras: number };
 export const DEFAULT_WEIGHTS: Weights = { habilidades: 0.4, intencion: 0.35, seniority: 0.15, extras: 0.1 };
@@ -38,7 +36,8 @@ export const DEFAULT_WEIGHTS: Weights = { habilidades: 0.4, intencion: 0.35, sen
 export function weightsFromEnv(raw = process.env.MATCH_WEIGHTS): Weights {
   const n = (raw ?? "").split(",").map(Number);
   if (n.length !== 4 || n.some((x) => !Number.isFinite(x) || x < 0)) return DEFAULT_WEIGHTS;
-  const sum = n.reduce((a, b) => a + b, 0) || 1;
+  const sum = n.reduce((a, b) => a + b, 0);
+  if (!sum) return DEFAULT_WEIGHTS;
   return { habilidades: n[0] / sum, intencion: n[1] / sum, seniority: n[2] / sum, extras: n[3] / sum };
 }
 
@@ -59,8 +58,8 @@ const EQUIV: string[][] = [
   ["disenador", "designer", "diseno", "design"],
   ["datos", "data"],
   ["operaciones", "operations", "ops"],
-  ["finanzas", "finance", "financiero", "financial"],
-  ["contador", "accountant", "contable", "accounting"],
+  ["finanzas", "finance", "financiero", "financiera", "financial"],
+  ["contador", "contadora", "accountant", "contable", "contabilidad", "accounting"],
   ["recursos", "human", "people", "rrhh", "hr"],
   ["reclutador", "recruiter", "recruiting", "talent", "seleccion"],
   ["logistica", "logistics", "supply"],
@@ -68,7 +67,7 @@ const EQUIV: string[][] = [
   ["lider", "lead", "leader"],
   ["director", "head"],
   ["asistente", "assistant"],
-  ["administrativo", "administrative", "admin"],
+  ["administrativo", "administrativa", "administracion", "administrative", "admin"],
   ["proyectos", "proyecto", "project", "projects"],
   ["negocios", "business"],
   ["desarrollo", "development"],
@@ -96,6 +95,7 @@ for (const group of EQUIV) for (const w of group) EQ.set(w, group[0]);
 
 const canon = (t: string) => EQ.get(t) ?? t.replace(/s$/, "");
 const SEN_WORDS = new Set(["senior", "sr", "sr.", "junior", "jr", "jr.", "ssr", "semi", "mid", "trainee", "ii", "iii", "i"]);
+const GENERIC_ROLE_WORDS = new Set(["analista", "gerente", "director", "asistente", "especialista", "coordinador", "lider", "ejecutivo"]);
 
 export function roleTokens(s: string): Set<string> {
   return new Set(tokens(s).filter((t) => !SEN_WORDS.has(t)).map(canon));
@@ -108,6 +108,15 @@ function dice(a: Set<string>, b: Set<string>): number {
   return (2 * inter) / (a.size + b.size);
 }
 
+/** Un título con región o especialidad adicional conserva el rol que contiene.
+ * Compartir sólo "analista"/"manager" nunca activa ese reconocimiento. */
+function roleSimilarity(a: Set<string>, b: Set<string>): number {
+  const overlap = [...a].filter((t) => b.has(t));
+  const containsRole = overlap.length === Math.min(a.size, b.size)
+    && overlap.some((t) => !GENERIC_ROLE_WORDS.has(t));
+  return Math.max(dice(a, b), containsRole ? 0.9 : 0);
+}
+
 /* ---------- helpers ---------- */
 
 const SKILL_ALIAS = (s: string) => {
@@ -116,7 +125,7 @@ const SKILL_ALIAS = (s: string) => {
 };
 
 function profileSkillSet(m: MatchProfile): Set<string> {
-  return new Set(m.skills.flatMap(SKILL_ALIAS));
+  return new Set([...m.skills.flatMap(SKILL_ALIAS), ...findSkills([m.headline, ...m.titles, m.summary].join("\n"))]);
 }
 
 const LANG_EN: Record<string, string> = { ingles: "inglés", english: "inglés", portugues: "portugués", portuguese: "portugués", espanol: "español", spanish: "español", italiano: "italiano", italian: "italiano", frances: "francés", french: "francés", aleman: "alemán", german: "alemán" };
@@ -250,8 +259,9 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const desiredTokens = prefs.rolesDeseados.map((r) => ({ label: r, toks: roleTokens(r) })).filter((r) => r.toks.size);
   const objetivoTokens = roleTokens(prefs.objetivo);
   const desiredFamilies = new Set<RoleFamily>(desired.map(familyFromTitle).filter((x) => x !== "otros"));
-  const pastTitles = profile.titles.slice(0, 3).map((t) => ({ label: t, toks: roleTokens(t) }));
-  const pastFamilies = new Set<RoleFamily>(profile.titles.slice(0, 3).map(familyFromTitle).filter((x) => x !== "otros"));
+  const professionalTitles = [...new Set([...profile.titles.slice(0, 3), profile.headline].filter((t) => t.trim()))];
+  const pastTitles = professionalTitles.map((t) => ({ label: t, toks: roleTokens(t) }));
+  const pastFamilies = new Set<RoleFamily>(professionalTitles.map(familyFromTitle).filter((x) => x !== "otros"));
   const avoid = prefs.evitar.map((e) => fold(e)).filter((e) => e.length > 2);
   const targetSen = prefs.seniorities.length ? prefs.seniorities : [estimateSeniority(profile)].filter(Boolean) as Seniority[];
   const hard = new Set(prefs.indispensables);
@@ -355,19 +365,25 @@ export function rankOpportunities(input: RankInput): RankOutput {
     const ment = ex.skillsMentioned;
     const matchedReq = req.filter((s) => pSkills.has(s));
     const matchedDes = des.filter((s) => pSkills.has(s));
-    let skillScore = 0.5;
+    let skillScore: number | null = null;
     if (req.length || des.length) {
-      skillScore = (2 * matchedReq.length + matchedDes.length) / (2 * req.length + des.length);
-      note(true);
+      // Una lista larga de "nice to have" no debe pesar más que los requisitos cumplidos.
+      const required = req.length ? matchedReq.length / req.length : null;
+      const desirable = des.length ? matchedDes.length / des.length : null;
+      skillScore = required !== null && desirable !== null ? 0.85 * required + 0.15 * desirable : required ?? desirable;
+      note(profile.skills.length > 0);
     } else if (ment.length) {
       skillScore = Math.min(1, ment.filter((s) => pSkills.has(s)).length / Math.min(4, ment.length));
       note(false);
     } else note(false);
-    const titleSim = Math.max(0, ...pastTitles.map((t) => dice(t.toks, roleTokens(o.title))));
+    const titleSim = Math.max(0, ...pastTitles.map((t) => roleSimilarity(t.toks, roleTokens(o.title))));
     const famPast = pastFamilies.has(ex.family.value);
     const expScore = Math.min(1, titleSim + (famPast ? 0.25 : 0));
     const mix = prefs.carrera === "cambio" ? [0.8, 0.2] : prefs.carrera === "continuidad" ? [0.55, 0.45] : [0.65, 0.35];
-    let candidateFit = mix[0] * skillScore + mix[1] * expScore;
+    const hasExperience = pastTitles.some((t) => t.toks.size);
+    note(hasExperience);
+    const fitWeight = (skillScore !== null ? mix[0] : 0) + (hasExperience ? mix[1] : 0);
+    let candidateFit = fitWeight ? ((skillScore ?? 0) * mix[0] + (hasExperience ? expScore * mix[1] : 0)) / fitWeight : 0;
     if (ex.yearsRequired !== null && profile.yearsExperience !== null && profile.yearsExperience + 1 < ex.yearsRequired) {
       candidateFit *= 0.8;
       gaps.push(`Pide ${ex.yearsRequired}+ años de experiencia; tu CV suma alrededor de ${Math.floor(profile.yearsExperience)}.`);
@@ -375,7 +391,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (matchedReq.length) reasonsScored.push([0.9, `Tu CV menciona ${list(matchedReq.slice(0, 3))}, que el aviso pide como requisito${matchedReq.length > 1 ? "s" : ""}.`]);
     else if (matchedDes.length) reasonsScored.push([0.6, `Tu CV menciona ${list(matchedDes.slice(0, 3))}, que el aviso valora.`]);
     if (titleSim >= 0.5 && pastTitles[0]) {
-      const best = pastTitles.reduce((a, b) => (dice(b.toks, roleTokens(o.title)) > dice(a.toks, roleTokens(o.title)) ? b : a));
+      const best = pastTitles.reduce((a, b) => (roleSimilarity(b.toks, roleTokens(o.title)) > roleSimilarity(a.toks, roleTokens(o.title)) ? b : a));
       reasonsScored.push([0.7 + titleSim * 0.2, `Tu experiencia como ${best.label} se relaciona directamente con este puesto.`]);
     }
     for (const s of req.filter((s) => !pSkills.has(s)).slice(0, 3)) {
@@ -384,44 +400,45 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     // Intención profesional (35%)
     const titleToks = roleTokens(o.title);
-    const desiredSim = Math.max(0, ...desiredTokens.map((d) => dice(d.toks, titleToks)));
+    const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSimilarity(d.toks, titleToks)));
     const objSim = objetivoTokens.size ? dice(objetivoTokens, new Set([...titleToks, ...[...req, ...ment].map(canon)])) : 0;
     const famDesired = desiredFamilies.has(ex.family.value);
-    let intent: number;
-    if (desiredTokens.length || objetivoTokens.size) {
+    const hasIntent = desiredTokens.length > 0 || objetivoTokens.size > 0;
+    let intent = 0;
+    if (hasIntent) {
       intent = Math.min(1, Math.max(desiredSim, objSim * 0.8) + (famDesired ? 0.3 : 0));
       if (prefs.carrera === "continuidad" && !desiredTokens.length) intent = Math.max(intent, titleSim);
-    } else intent = prefs.carrera === "cambio" ? 0.3 : titleSim;
+    }
     if (desiredSim >= 0.5) {
-      const best = desiredTokens.reduce((a, b) => (dice(b.toks, titleToks) > dice(a.toks, titleToks) ? b : a));
+      const best = desiredTokens.reduce((a, b) => (roleSimilarity(b.toks, titleToks) > roleSimilarity(a.toks, titleToks) ? b : a));
       reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
     } else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
-    if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore >= 0.4) {
+    if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore !== null && skillScore >= 0.4) {
       reasonsScored.push([0.75, "Es un cambio de área, pero varias de tus habilidades se transfieren."]);
     }
 
     // Seniority (15%)
-    let senScore = 0.5;
+    let senScore: number | null = null;
     if (ex.seniority && targetSen.length) {
       const idx = SENIORITY_ORDER.indexOf(ex.seniority.value);
       const d = Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - idx)));
-      senScore = d === 0 ? 1 : d === 1 ? 0.6 : d === 2 ? 0.25 : 0;
+      senScore = d === 0 ? 1 : d === 1 ? 0.8 : d === 2 ? 0.35 : 0;
       note(true);
       if (d >= 2) gaps.push(`Es un puesto ${SENIORITY_LABEL[ex.seniority.value]}; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`);
     } else note(false);
 
     // Preferencias adicionales (10%)
     const extras: number[] = [];
-    if (wpValue !== "desconocido") {
+    if (prefs.modalidades.length && wpValue !== "desconocido") {
       const ok = !prefs.modalidades.length || prefs.modalidades.includes(wpValue);
       extras.push(ok ? 1 : 0);
       if (ok && prefs.modalidades.length) reasonsScored.push([0.5, `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
       note(true);
-    } else note(false);
-    if (ex.employmentType) {
+    } else if (prefs.modalidades.length) note(false);
+    if (prefs.contratos.length && ex.employmentType) {
       extras.push(!prefs.contratos.length || prefs.contratos.includes(ex.employmentType.value) ? 1 : 0.2);
       note(true);
-    } else note(false);
+    } else if (prefs.contratos.length) note(false);
     if (salaryOk !== null) {
       extras.push(salaryOk ? 1 : 0.2);
       if (salaryOk) reasonsScored.push([0.55, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
@@ -431,29 +448,33 @@ export function rankOpportunities(input: RankInput): RankOutput {
       const need = needLevel(l.level);
       if (mine === undefined) {
         gaps.push(`Pide ${l.language}${l.level ? ` (${l.level})` : ""}: no aparece en tu CV.`);
-        extras.push(0.3);
+        note(false);
       } else if (langRank(mine) && langRank(mine) < need) {
         gaps.push(`Pide ${l.language} ${l.level}; tu CV dice ${mine}.`);
         extras.push(0.4);
-      } else extras.push(1);
+        note(true);
+      } else { extras.push(1); note(true); }
     }
-    if (o.publishedAt) extras.push((now.getTime() - new Date(o.publishedAt).getTime()) / 86_400_000 <= 14 ? 1 : 0.6);
-    const extraScore = extras.length ? extras.reduce((a, b) => a + b, 0) / extras.length : 0.5;
+    const extraScore = extras.length ? extras.reduce((a, b) => a + b, 0) / extras.length : null;
 
     note(o.descriptionComplete);
     note(o.eligibility.status === "elegible");
 
-    let raw = w.habilidades * candidateFit + w.intencion * intent + w.seniority * senScore + w.extras * extraScore;
-    // Si la persona dijo qué quiere hacer, un puesto que no se parece a eso no debería liderar
-    // aunque encaje con su experiencia (clave en cambios de carrera).
-    if (desiredTokens.length || objetivoTokens.size) raw *= 1 - INTENT_GATE * (1 - intent);
+    const dimensions: [number, number | null][] = [
+      [w.habilidades, candidateFit], [w.intencion, hasIntent ? intent : null],
+      [w.seniority, senScore], [w.extras, extraScore],
+    ];
+    const available = dimensions.reduce((sum, [weight, value]) => sum + (value !== null ? weight : 0), 0);
+    const raw = available ? dimensions.reduce((sum, [weight, value]) => sum + weight * (value ?? 0), 0) / available : 0;
+    // En un cambio de carrera priorizamos la intención para ordenar, sin castigar dos veces el %.
+    let order = raw * (prefs.carrera === "cambio" && hasIntent ? 0.6 + 0.4 * intent : 1);
 
     // Feedback explícito: lo que descartó o guardó antes cambia el orden.
     for (const d of interactions.discarded) {
-      if (d.reason === "rol" && d.family === ex.family.value && dice(new Set(d.titleTokens ?? []), titleToks) >= 0.5) raw *= 0.75;
-      if (d.reason === "seniority" && d.titleTokens && ex.seniority && dice(new Set(d.titleTokens), titleToks) >= 0.3) raw *= 0.9;
+      if (d.reason === "rol" && d.family === ex.family.value && dice(new Set(d.titleTokens ?? []), titleToks) >= 0.5) order *= 0.75;
+      if (d.reason === "seniority" && d.titleTokens && ex.seniority && dice(new Set(d.titleTokens), titleToks) >= 0.3) order *= 0.9;
     }
-    if (isSaved) raw = Math.min(1, raw * 1.03);
+    if (isSaved) order *= 1.03;
 
     if (o.eligibility.status === "elegible") reasonsScored.push([0.45, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
     if (o.eligibility.timezone) pending.push(`Horario pedido: ${o.eligibility.timezone}. Es una condición horaria, no un permiso de contratación.`);
@@ -499,17 +520,19 @@ export function rankOpportunities(input: RankInput): RankOutput {
       ...(isSaved ? { saved: true } : {}),
       ...(external ? { external: true, reviewedLabel: "Agregada por vos" } : {}),
     };
-    const scored = { item, raw };
+    const scored = { item, raw: order };
     if (isSaved) savedOut.push(scored);
     if (o.status !== "abierta" || excludedByHard || (o.eligibility.status === "no_elegible" && bucket === "eligible")) continue;
     (bucket === "eligible" ? elig : pend).push(scored);
   }
 
-  const sortTop = (arr: Scored[]) => arr.sort((a, b) => b.raw - a.raw).slice(0, limit).map((s) => s.item);
+  const sort = (a: Scored, b: Scored) => b.raw - a.raw
+    || (Date.parse(b.item.publishedAt ?? b.item.reviewedAt) - Date.parse(a.item.publishedAt ?? a.item.reviewedAt));
+  const sortTop = (arr: Scored[]) => arr.sort(sort).slice(0, limit).map((s) => s.item);
   return {
     eligible: sortTop(elig),
     pending: sortTop(pend),
-    saved: savedOut.sort((a, b) => b.raw - a.raw).map((s) => s.item),
+    saved: savedOut.sort(sort).map((s) => s.item),
     counts: { open, eligible: elig.length, pending: pend.length, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
   };
 }

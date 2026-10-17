@@ -54,12 +54,12 @@ export function profileToMatch(p: Profile): MatchProfile {
 
 /** Seniority estimada: primero el cargo actual, si no, los años de experiencia. */
 export function estimateSeniority(m: MatchProfile): Seniority | null {
-  const fromTitle = m.titles[0] ? seniorityFromTitle(m.titles[0]) : null;
+  const fromTitle = seniorityFromTitle(m.titles[0] || m.headline);
   if (fromTitle) return fromTitle;
   const y = m.yearsExperience;
   if (y === null) return null;
   if (y < 2) return "junior";
   if (y < 5) return "semi_senior";
-  if (y < 9) return "senior";
-  return "lead";
+  // Antigüedad no implica liderazgo de personas ni de especialidad.
+  return "senior";
 }

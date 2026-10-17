@@ -130,6 +130,11 @@ export default function Results({
         </div>
       </div>
 
+      <p className="mt-4 text-xs leading-relaxed text-muted">
+        El porcentaje estima afinidad con tu perfil y lo que buscás según los datos disponibles.
+        La información faltante se indica por separado. No es una probabilidad de contratación ni una comparación con todo el mercado.
+      </p>
+
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <div className="inline-flex flex-wrap rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
           {(
@@ -287,6 +292,7 @@ function JobCard({
           <div className={`ml-auto shrink-0 self-start rounded-xl px-3 py-1.5 text-center sm:hidden ${tone}`}>
             <p className="text-xl font-bold leading-none">{item.score}%</p>
             <p className="text-[10px] font-semibold uppercase">match</p>
+            <p className="mt-1 max-w-20 text-[10px] leading-tight">Info. {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}</p>
           </div>
         </div>
         <hr className="my-3 border-black/[0.07]" />
@@ -427,17 +433,17 @@ function JobCard({
         )}
       </div>
 
-      {/* El panel negro de jobright, con la compatibilidad real. */}
+      {/* Afinidad y calidad de la información se muestran por separado. */}
       <div
         className="m-1 hidden w-[164px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:flex"
-        title="Compatibilidad estimada a partir de tu perfil y lo que buscás. No es una probabilidad de contratación."
+        title="Afinidad según los datos disponibles de tu perfil y el aviso. Revisá las brechas y condiciones pendientes; no es una probabilidad de contratación."
       >
         <ScoreRing value={item.score} />
         <p className="mt-3 text-sm font-semibold uppercase">{item.score >= 70 ? "Match fuerte" : item.score >= 45 ? "Buen match" : "Match posible"}</p>
         <p className="mt-3 w-full border-t border-white/20 pt-3 text-[11px] leading-relaxed text-white/80">
           Compatibilidad estimada
           <br />
-          Información {item.confidence === "alta" ? "completa" : item.confidence === "media" ? "parcial" : "escasa"}
+          Información {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}
         </p>
       </div>
     </article>
