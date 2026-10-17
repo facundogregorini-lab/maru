@@ -2,6 +2,30 @@
 
 Actualizado el 16/10/2026 (noche: importación de avisos, ver "Avisos: qué falta"). Las PR #23 (cuentas, sincronización y planes), #24 (teleprompter, cámaras y perfil en texto), #26 (piloto Apify y calidad de avisos), #27 (panel privado de proveedores), #29 (muestras y fechas SerpAPI) y #30 (allowlist admin) ya están integradas en `main`. El login Google de la PR #22 está preservado. Los pilotos siguen separados del inventario público; no se activaron consumos recurrentes.
 
+## Calidad de avisos: plan en curso (desde 17/10/2026)
+
+Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se anota acá**, para que otra sesión pueda seguir si se cortan los tokens. Diagnóstico de partida (17/10, sobre 3.966 oportunidades elegibles):
+- 22% en "Otros";
+- 46% sin seniority;
+- 39% sin modalidad;
+- 14,5% con más de 60 días (todas de ATS gratuitos);
+- 2.854 importados nunca revisados por liveness;
+- "Córdoba, España" figuraba como elegible.
+
+| # | Paso | Estado |
+| --- | --- | --- |
+| A | Clasificación: familias nuevas (Industria y oficios, Gastronomía y hotelería, Comercio y retail, Seguridad, IA e idiomas por proyecto), reglas corregidas y seniority de oficios | **Hecho** (ver abajo) |
+| B | Elegibilidad: el país antes que la ciudad (Córdoba, España) y "por confirmar" viejos | Pendiente |
+| C | Frescura: ranking por antigüedad (bajar >60 días, ocultar >120) y liveness rotativa de todos los importados | Pendiente |
+| D | Modalidad: "presencial (inferido)" en portales locales con ciudad y sin mención de remoto | Pendiente |
+| E | Métricas de calidad en `match:report` y presentación (empresa confidencial, consultoras, sufijos de ciudad en el título) | Pendiente |
+| F | Google Jobs mensual automático (gratis) | Pendiente: lo decide el dueño |
+
+**A (hecho):** `EXTRACTION_VERSION` 6. Por título, "Otros" baja de 4.404 a 1.327 publicaciones abiertas, y en elegibles de 956 a 242. La sync diaria re-analiza todo con las reglas nuevas.
+- Las familias nuevas suman 2.290 publicaciones abiertas: 1.769 de IA e idiomas, 261 de industria y oficios, 126 de comercio, 94 de gastronomía y 20 de seguridad.
+- Lo que queda en "Otros" son títulos sin área clara ("Manager", "Specialist", "Principal").
+- Se revisaron a mano los 319 títulos que cambiaron de área y se corrigieron los errores (inmobiliario, personas, ingenieros de procesos).
+
 ## Próximos pasos (17/10/2026, cierre de la base de avisos)
 
 Estado: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 empleadores con elegibles** (E0: 909 grupos y 90 empleadores).
@@ -12,7 +36,7 @@ Estado: **13.128 oportunidades abiertas, 3.683 elegibles desde Argentina, 1.505 
 En orden de impacto:
 
 1. **Google Jobs todos los meses** (gratis). Sus avisos vencen a los 21 días sin volver a verse: sin esta corrida se pierden ~860 avisos elegibles. Correr `match-providers` con `provider=serpapi`, `--max-searches=80 --reserve=20` y las búsquedas que más rindieron (ver IMPORTACIONES, "Próximas corridas"). **Decisión del dueño:** si se agenda un cron mensual (no cuesta plata; usa sólo el plan gratuito y deja la reserva).
-2. **Clasificar "Otros"** (3.645 publicaciones abiertas, 27%). En las APIs son oficios (chofer, mozo, operario, vigilador, electricista); en los ATS son puestos que el clasificador no reconoce. Sumar familias "gastronomía y hotelería", "seguridad", "oficios y producción" y revisar una muestra de los ATS. Mejora filtros por área y la medición por perfil.
+2. ~~**Clasificar "Otros"**~~ (hecho en el paso A de "Calidad de avisos"). Era: 3.645 publicaciones abiertas, 27%. En las APIs son oficios (chofer, mozo, operario, vigilador, electricista); en los ATS son puestos que el clasificador no reconoce. Sumar familias "gastronomía y hotelería", "seguridad", "oficios y producción" y revisar una muestra de los ATS. Mejora filtros por área y la medición por perfil.
 3. **Apify: decidir presupuesto** (quedan ~US$0,44 del tope aprobado de US$5). Si se aprueba más, conviene Computrabajo:
    - es lo que más avisos elegibles nuevos trae (900, 6,6% duplicado), a ≈ US$0,003 por aviso;
    - Indeed es más barato (≈ US$0,0007) pero descarta 2 de cada 3 filas;

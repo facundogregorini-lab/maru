@@ -43,6 +43,11 @@ export type RoleFamily =
   | "salud"
   | "educacion"
   | "consultoria"
+  | "produccion"
+  | "gastronomia"
+  | "comercio"
+  | "seguridad"
+  | "entrenamiento_ia"
   | "otros";
 
 /** De dónde salió cada dato: así podemos explicar y auditar sin inventar. */

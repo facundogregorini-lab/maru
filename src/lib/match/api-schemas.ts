@@ -29,6 +29,11 @@ const FAMILIES = [
   "salud",
   "educacion",
   "consultoria",
+  "produccion",
+  "gastronomia",
+  "comercio",
+  "seguridad",
+  "entrenamiento_ia",
   "otros",
 ] as const;
 
