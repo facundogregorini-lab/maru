@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extract, familyFromTitle, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
+import { extract, familyFromTitle, findSkills, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
 
 describe("calidad de los avisos locales", () => {
   it.each([
@@ -78,5 +78,20 @@ describe("años pedidos y primer empleo", () => {
   it("un aviso sin experiencia previa es junior", () => {
     const e = extract({ title: "Vendedor/a de salón", descriptionText: "Buscamos personas para atención al público. No se requiere experiencia, te capacitamos." });
     expect(e.seniority).toMatchObject({ value: "junior", from: "descripcion" });
+  });
+});
+
+describe("habilidades de áreas no técnicas", () => {
+  it("reconoce herramientas y tareas de administración, RR. HH., logística y comercio", () => {
+    const s = findSkills("Experiencia en facturación, conciliaciones bancarias y Tango Gestión. Manejo de WMS y control de stock. Licencia de conducir profesional. Liquidación de IVA e Ingresos Brutos. Clima laboral y onboarding.");
+    for (const k of ["facturación", "conciliaciones bancarias", "tango gestión", "wms", "gestión de inventario", "licencia de conducir", "impuestos argentinos", "clima laboral", "onboarding"]) expect(s).toContain(k);
+  });
+
+  it("no toma beneficios ni etapas del proceso como habilidades", () => {
+    const s = findSkills("Te brindamos capacitación constante. El proceso incluye 2 entrevistas. Ganancias por comisiones. Stock options.");
+    expect(s).not.toContain("capacitación");
+    expect(s).not.toContain("entrevistas por competencias");
+    expect(s).not.toContain("impuestos argentinos");
+    expect(s).not.toContain("gestión de inventario");
   });
 });
