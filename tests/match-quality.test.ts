@@ -95,3 +95,10 @@ describe("habilidades de áreas no técnicas", () => {
     expect(s).not.toContain("gestión de inventario");
   });
 });
+
+describe("habilidades de banca y marketing", () => {
+  it("reconoce riesgo crediticio, prevención de lavado, mercado de capitales y trade marketing", () => {
+    const s = findSkills("Análisis de crédito y scoring de cartera. Normativa de prevención de lavado (PLD/KYC). Renta fija. Trade marketing en punto de venta.");
+    for (const k of ["riesgo crediticio", "prevención de lavado", "mercado de capitales", "trade marketing"]) expect(s).toContain(k);
+  });
+});

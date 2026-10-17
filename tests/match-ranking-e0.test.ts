@@ -76,3 +76,24 @@ describe("ranking: tipo de puesto además del área", () => {
     if (op) expect(op.score).toBeLessThan(out.eligible[0].score - 15);
   });
 });
+
+describe("ranking: calificadores del título y Gran Buenos Aires", () => {
+  it("lo que sigue a 'con' no es el puesto", () => {
+    expect(roleSimilarity(parseRole("Asistente de marketing"), parseRole("Recepcionista con perfil en marketing y comunicación"))).toBeLessThan(0.3);
+    expect(roleSimilarity(parseRole("Analista de riesgo"), parseRole("Analista de Riesgos Crediticios con experiencia en banca"))).toBeGreaterThan(0.8);
+  });
+
+  it("para quien busca en la ciudad, el Gran Buenos Aires pesa poco; otra provincia, mucho", () => {
+    const caba: MatchPrefs = { ...prefs, ciudad: "Buenos Aires", modalidades: ["hibrido", "remoto"] };
+    const run = (loc: string) => {
+      const inv = emptyInventory("fixture");
+      applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: normalizeFantastic([row("x", "Analista contable", "Empresa", { remote_derived: false, ai_work_arrangement: "Hybrid", locations_derived: [loc] })], "fantastic_ats", "test", NOW.getTime()).postings, complete: false }, NOW.toISOString());
+      inv.opportunities = buildOpportunities(inv.postings);
+      return rankOpportunities({ opportunities: inv.opportunities, postings: new Map(inv.postings.map((p) => [p.key, p])), profile, prefs: caba, interactions: noInteractions, now: NOW }).eligible[0];
+    };
+    const gba = run("Martínez, Buenos Aires, Argentina");
+    const lejos = run("Córdoba, Córdoba, Argentina");
+    expect(gba.score).toBeGreaterThan(lejos.score + 10);
+    expect(gba.gaps.join(" ")).toMatch(/Gran Buenos Aires/);
+  });
+});

@@ -112,7 +112,7 @@ export const SOURCES: SourceInfo[] = [
     access: "GET https://api.smartrecruiters.com/v1/companies/<empresa>/postings?country=ar y /postings/<id> (sin autenticación).",
     terms:
       "La Posting API es pública y está pensada para mostrar los avisos de la empresa fuera de su sitio. Mismo uso conservador que Greenhouse: extracto y enlace al aviso del empleador.",
-    limits: "100 por página; sólo avisos de Argentina; hasta 80 detalles por empresa y sincronización, en serie.",
+    limits: "100 por página; sólo avisos de Argentina; hasta 40 detalles por empresa y sincronización, en serie.",
     reviewedAt: "2026-10-17",
     status: "habilitada",
     enabled: true,
@@ -134,6 +134,23 @@ export const SOURCES: SourceInfo[] = [
     cost: "gratis",
     partialFeed: false,
     linkRequired: false,
+  },
+  {
+    id: "workday",
+    name: "Workday (búsqueda del sitio de empleo de cada empresa)",
+    kind: "ats",
+    docs: ["https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers"],
+    access: "POST https://<empresa>.<wdN>.myworkdayjobs.com/wday/cxs/<empresa>/<sitio>/jobs con searchText=Argentina y GET del detalle (sin autenticación).",
+    terms:
+      "No es una API documentada: es la búsqueda JSON que usa el propio sitio de empleo público de la empresa. Uso mínimo y conservador: sólo avisos de Argentina, en serie, extracto y enlace al aviso del empleador. Si una empresa lo bloquea o pide que no se use, se la excluye del directorio.",
+    limits: "20 por página, hasta 5 páginas y 40 detalles por empresa y sincronización.",
+    reviewedAt: "2026-10-17",
+    status: "habilitada",
+    enabled: true,
+    cost: "gratis",
+    partialFeed: false,
+    linkRequired: false,
+    notes: "El sitio se identifica como <empresa>.<wdN>.<sitio>, tomado de avisos reales de esa empresa.",
   },
   {
     id: "getonbrd",

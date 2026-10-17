@@ -1,0 +1,250 @@
+{
+  "etapa": "E0",
+  "fecha": "2026-10-17T22:59:06.868Z",
+  "commit": null,
+  "nota": "Ranking actual por reglas, sin cambios. Chequeos 'auto' = señales de apoyo, no etiqueta de verdad. Ver revision.json para la revisión manual.",
+  "catalogo": {
+    "generatedAt": "2026-10-17T22:02:03.566Z",
+    "niveles": {
+      "registros": 13733,
+      "registrosAbiertos": 13424,
+      "oportunidadesCanonicasAbiertas": 13180,
+      "gruposVisualesAbiertos": 9575
+    },
+    "elegibilidad": {
+      "no_elegible": 5230,
+      "elegible": 3768,
+      "por_confirmar": 577
+    },
+    "empleadores": {
+      "abiertos": 1979,
+      "elegibles": 1580
+    },
+    "fuentesRegistrosAbiertos": {
+      "lever": 4552,
+      "greenhouse": 2578,
+      "ashby": 1368,
+      "serpapi": 1013,
+      "getonbrd": 989,
+      "apify-computrabajo": 900,
+      "apify-linkedin": 517,
+      "jobicy": 469,
+      "teamtailor": 399,
+      "fantastic_jb": 250,
+      "apify-indeed": 213,
+      "fantastic_ats": 163,
+      "remotive": 13
+    },
+    "familiaElegibles": {
+      "ventas": 697,
+      "finanzas": 442,
+      "software": 407,
+      "logistica": 298,
+      "rrhh": 225,
+      "otros": 215,
+      "administracion": 179,
+      "produccion": 179,
+      "marketing": 150,
+      "operaciones": 136,
+      "atencion_cliente": 128,
+      "comercio": 120,
+      "entrenamiento_ia": 116,
+      "datos": 110,
+      "gastronomia": 88,
+      "salud": 79,
+      "diseno": 56,
+      "producto": 49,
+      "consultoria": 31,
+      "educacion": 25,
+      "seguridad": 20,
+      "legal": 18
+    },
+    "familiaPorConfirmar": {
+      "software": 245,
+      "ventas": 122,
+      "marketing": 45,
+      "datos": 44,
+      "operaciones": 22,
+      "otros": 19,
+      "diseno": 15,
+      "atencion_cliente": 15,
+      "producto": 12,
+      "finanzas": 12,
+      "consultoria": 9,
+      "educacion": 4,
+      "rrhh": 4,
+      "legal": 3,
+      "entrenamiento_ia": 2,
+      "produccion": 2,
+      "administracion": 1,
+      "logistica": 1
+    },
+    "seniorityElegibles": {
+      "sin_dato": 1695,
+      "semi_senior": 617,
+      "senior": 475,
+      "junior": 427,
+      "manager": 303,
+      "lead": 191,
+      "director": 30,
+      "pasantia": 25,
+      "ejecutivo": 5
+    },
+    "modalidadElegibles": {
+      "presencial": 2290,
+      "remoto": 871,
+      "hibrido": 431,
+      "desconocido": 176
+    },
+    "antiguedadElegibles": {
+      "≤7d": 2155,
+      "8-30d": 923,
+      "31-90d": 359,
+      ">90d": 331
+    },
+    "elegiblesConUbicacionArgentina": 3143
+  },
+  "perfiles": [
+    {
+      "id": "M1-marketing-digital-ssr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": false,
+      "ranking": {
+        "open": 7080,
+        "eligible": 430,
+        "pending": 170,
+        "lowMatch": 3370,
+        "afterHardFilters": 3970,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 10,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 7,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 9,
+        "descripcionCompleta": 10,
+        "scoreMedio": 82
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "marketing"
+        ],
+        "elegiblesDelArea": 150,
+        "elegiblesDelAreaConSeniorityPosible": 105,
+        "empleadoresDelArea": 64
+      }
+    },
+    {
+      "id": "M2-trade-marketing-jr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": false,
+      "ranking": {
+        "open": 7080,
+        "eligible": 432,
+        "pending": 23,
+        "lowMatch": 3521,
+        "afterHardFilters": 3976,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 18,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 9,
+        "seniorityCompatible": 5,
+        "seniorityDesconocido": 2,
+        "ubicacionPosible": 1,
+        "descripcionCompleta": 9,
+        "scoreMedio": 53
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "marketing"
+        ],
+        "elegiblesDelArea": 150,
+        "elegiblesDelAreaConSeniorityPosible": 89,
+        "empleadoresDelArea": 64
+      }
+    },
+    {
+      "id": "F2-banca-riesgo-ssr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": false,
+      "ranking": {
+        "open": 7080,
+        "eligible": 547,
+        "pending": 159,
+        "lowMatch": 3264,
+        "afterHardFilters": 3970,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 19,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 10,
+        "seniorityCompatible": 9,
+        "seniorityDesconocido": 1,
+        "ubicacionPosible": 8,
+        "descripcionCompleta": 9,
+        "scoreMedio": 66
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "finanzas",
+          "administracion"
+        ],
+        "elegiblesDelArea": 621,
+        "elegiblesDelAreaConSeniorityPosible": 563,
+        "empleadoresDelArea": 424
+      }
+    },
+    {
+      "id": "T2-dev-jr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": false,
+      "ranking": {
+        "open": 7080,
+        "eligible": 322,
+        "pending": 217,
+        "lowMatch": 3431,
+        "afterHardFilters": 3970,
+        "shown": 40
+      },
+      "top20": {
+        "mostrados": 20,
+        "empresasDistintas": 11,
+        "duplicadosVisibles": 0
+      },
+      "top10Automatico": {
+        "familiaDelArea": 9,
+        "seniorityCompatible": 3,
+        "seniorityDesconocido": 3,
+        "ubicacionPosible": 9,
+        "descripcionCompleta": 9,
+        "scoreMedio": 62
+      },
+      "ofertaCatalogo": {
+        "familias": [
+          "software"
+        ],
+        "elegiblesDelArea": 407,
+        "elegiblesDelAreaConSeniorityPosible": 179,
+        "empleadoresDelArea": 156
+      }
+    }
+  ]
+}

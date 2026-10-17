@@ -1136,6 +1136,204 @@
       "evidence": "https://tether.recruitee.com/",
       "addedAt": "2026-10-17",
       "status": "candidata"
+    },
+    {
+      "name": "Accenture",
+      "sourceId": "workday",
+      "slug": "accenture.wd103.AccentureCareers",
+      "sector": "multinacional",
+      "evidence": "https://accenture.wd103.myworkdayjobs.com/AccentureCareers/job/Buenos-Aires/Desarrollador-Javascript-con-conocimientos-en-APX_14824693",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Chevron",
+      "sourceId": "workday",
+      "slug": "chevron.wd5.jobs",
+      "sector": "multinacional",
+      "evidence": "https://chevron.wd5.myworkdayjobs.com/jobs/job/Buenos-Aires-Buenos-Aires-Argentina/Talent-Acquisition-Specialist_R000074390",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "dentsu",
+      "sourceId": "workday",
+      "slug": "dentsuaegis.wd3.DAN_GLOBAL",
+      "sector": "multinacional",
+      "evidence": "https://dentsuaegis.wd3.myworkdayjobs.com/DAN_GLOBAL/job/Buenos-Aires/Talent-Acquisition-Advisor--Temporal_R1133200",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Essity",
+      "sourceId": "workday",
+      "slug": "essity.wd3.Job_opportunities",
+      "sector": "multinacional",
+      "evidence": "https://essity.wd3.myworkdayjobs.com/en-US/Job_opportunities/job/Santa-Cruz--Bolivia/Trade-Marketing-Analyst_Essity264964-1",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Fiserv",
+      "sourceId": "workday",
+      "slug": "fiserv.wd5.EXT",
+      "sector": "multinacional",
+      "evidence": "https://fiserv.wd5.myworkdayjobs.com/EXT/job/Buenos-Aires---Retiro/Supervisor-de-Canales-Comerciales---AMBA_R-10404871",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Flowserve",
+      "sourceId": "workday",
+      "slug": "flowserve.wd1.applied",
+      "sector": "multinacional",
+      "evidence": "https://flowserve.wd1.myworkdayjobs.com/applied/job/Mendoza-Argentina/Production-Supervisor_R-21462",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "General Motors",
+      "sourceId": "workday",
+      "slug": "generalmotors.wd5.Careers_GM",
+      "sector": "multinacional",
+      "evidence": "https://generalmotors.wd5.myworkdayjobs.com/Careers_GM/job/Alvear-Santa-Fe-Argentina/Coordinador-de-la-Planta-de-Tratamiento-de-Efluentes_JR-202621966",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "GSK",
+      "sourceId": "workday",
+      "slug": "gsk.wd5.GSKCareers",
+      "sector": "multinacional",
+      "evidence": "https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Argentina---Buenos-Aires-Province---Buenos-Aires/Agente-de-Propaganda-Medica--Onco-Hematologa--APM-_449430",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Haleon",
+      "sourceId": "workday",
+      "slug": "gsknch.wd3.GSKCareers",
+      "sector": "multinacional",
+      "evidence": "https://gsknch.wd3.myworkdayjobs.com/en-US/GSKCareers/job/Argentina---Buenos-Aires-Province---Buenos-Aires/Analista-de-Control-de-Calidad--Producto-terminado---Temporal_548966",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Helmerich & Payne",
+      "sourceId": "workday",
+      "slug": "hpinc.wd5.HPINC",
+      "sector": "multinacional",
+      "evidence": "https://hpinc.wd5.myworkdayjobs.com/HPINC/job/Martinez-Buenos-Aires-Argentina/Analista-de-Contabilidad_REQ-2913",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "IFF",
+      "sourceId": "workday",
+      "slug": "iff.wd5.IFF_Careers",
+      "sector": "multinacional",
+      "evidence": "https://iff.wd5.myworkdayjobs.com/en-US/IFF_Careers/job/Garin-Argentina/Analista-de-Control-de-Calidad-de-Fragancias_R22593",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "IQVIA",
+      "sourceId": "workday",
+      "slug": "iqvia.wd1.IQVIA",
+      "sector": "multinacional",
+      "evidence": "https://iqvia.wd1.myworkdayjobs.com/IQVIA/job/Buenos-Aires-Argentina/Contacts---Proposal-Developer_R1568616",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Marsh McLennan",
+      "sourceId": "workday",
+      "slug": "mmc.wd1.MMC",
+      "sector": "multinacional",
+      "evidence": "https://mmc.wd1.myworkdayjobs.com/MMC/job/Buenos-Aires---Cordoba/Analista-Mejora-continua---Transformacin_R_367063",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Natura",
+      "sourceId": "workday",
+      "slug": "natura.wd501.NaturaCarreiras",
+      "sector": "multinacional",
+      "evidence": "https://natura.wd501.myworkdayjobs.com/NaturaCarreiras/job/Natura-Argentina---Buenos-Aires-Natura-Argentina/Analista-Pleno-Gestin-Comercial-Eventual_JR40299-1",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Pfizer",
+      "sourceId": "workday",
+      "slug": "pfizer.wd1.PfizerCareers",
+      "sector": "multinacional",
+      "evidence": "https://pfizer.wd1.myworkdayjobs.com/en-US/PfizerCareers/job/Argentina---Buenos-Aires/Health-Representative-Specialty-Care-RD-CABA-AMBA_4965517",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Prysmian",
+      "sourceId": "workday",
+      "slug": "prysmiangroup.wd3.Careers",
+      "sector": "multinacional",
+      "evidence": "https://prysmiangroup.wd3.myworkdayjobs.com/en-US/Careers/job/Buenos-Aires/Pre-Sales-Analyst_R-37112",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "PwC (jóvenes profesionales)",
+      "sourceId": "workday",
+      "slug": "pwc.wd3.Global_Campus_Careers",
+      "sector": "multinacional",
+      "evidence": "https://pwc.wd3.myworkdayjobs.com/Global_Campus_Careers/job/Buenos-Aires/Junior---Auditora-Externa-Contable_765886WD",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "PwC",
+      "sourceId": "workday",
+      "slug": "pwc.wd3.Global_Experienced_Careers",
+      "sector": "multinacional",
+      "evidence": "https://pwc.wd3.myworkdayjobs.com/Global_Experienced_Careers/job/Buenos-Aires/Gerente---Auditora-Externa-Contable_768292WD-1",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Stanley Black & Decker",
+      "sourceId": "workday",
+      "slug": "sbdinc.wd1.Stanley_Black_Decker_Career_Site",
+      "sector": "multinacional",
+      "evidence": "https://sbdinc.wd1.myworkdayjobs.com/Stanley_Black_Decker_Career_Site/job/El-Talar-Buenos-Aires-Province-Argentina/Sales-Engineer_REQ-1000048466",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Teladoc Health",
+      "sourceId": "workday",
+      "slug": "teladoc.wd503.teladochealth_is_hiring",
+      "sector": "multinacional",
+      "evidence": "https://teladoc.wd503.myworkdayjobs.com/en-US/teladochealth_is_hiring/job/ARG---Bahia-Blanca/Customer-Service-Manager---Bahia-Blanca_JR21214",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Thomson Reuters",
+      "sourceId": "workday",
+      "slug": "thomsonreuters.wd5.External_Career_Site",
+      "sector": "multinacional",
+      "evidence": "https://thomsonreuters.wd5.myworkdayjobs.com/en-US/External_Career_Site/job/Argentina-Buenos-Aires/Ejecutivo-de-cuentas_JREQ204173",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Weir",
+      "sourceId": "workday",
+      "slug": "weir.wd3.Weir_External_Careers",
+      "sector": "multinacional",
+      "evidence": "https://weir.wd3.myworkdayjobs.com/en-US/Weir_External_Careers/job/San-Juan/Administrador-de-Proyectos_R0039861-1",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
     }
   ]
 }
