@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Maru Coach: completá postulaciones con tu CV",
   "short_name": "Maru Coach",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Cargá tu CV una vez y completá formularios de postulación con un clic. Vos revisás y enviás.",
   "minimum_chrome_version": "116",
   "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },

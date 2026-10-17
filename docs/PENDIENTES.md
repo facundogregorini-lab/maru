@@ -1,14 +1,23 @@
 # Estado y próximos pasos de Maru
 
+## Desplegables de la extensión (17/10/2026, versión 0.3.1)
+
+- Caso reportado: HiringRoom, vacante AI Business Partner de Newsan, pasos 2 y 3. Inspeccionados documento, país y los formularios desplegables de educación, idiomas y experiencia, sin datos personales ni envío de postulación.
+- Causa: React Select antiguo sin `role=combobox` ni roles de opciones; inputs de uno o dos píxeles y algunos readonly. Ahora se reconoce su contenedor visible y se leen sus opciones por clase dentro de ese mismo control. También cubre botones/divs con ARIA y React Select actual sin buscador.
+- Selección con eventos de mouse/puntero y teclado, espera acotada, cierre del menú y verificación del valor. No contar un clic rechazado como éxito ni elegir la primera de varias coincidencias. Preservar selecciones previas, opciones deshabilitadas y cambios de la persona mientras espera. Bloquear el submit sólo durante lectura/aplicación; el envío manual posterior sigue funcionando.
+- Integrada sobre PR #78: conserva exclusión de frames ajenos, una ejecución por pestaña, número de lectura y restricciones de datos sensibles. Versionado del content script para reemplazar una inyección anterior al actualizar.
+- QC en Chrome: 8 campos completados en la fixture compartida (incluidas las dos variantes de HiringRoom), 2 casos deliberadamente pendientes, 3 selecciones previas conservadas y cero envíos; React Select real completa 3 y conserva Uruguay. 358 tests aprobados (16 regresiones nuevas), 7 omitidos; TypeScript y ESLint sin errores. La extensión instalada no se controló de punta a punta: no confundir inspección de HiringRoom con una postulación real. Registro: [QC de extensión](QC-EXTENSION-2026-10-17.md).
+- Para el dueño: actualizar los archivos de la misma carpeta instalada, recargar Maru en `chrome://extensions` y volver a tocar Completar. No desinstalar para actualizar. En HiringRoom abrir primero los bloques del paso 3; si elegir país habilita provincia/localidad, volver a completar para leer las nuevas opciones. No hay consultas extra automáticas ni cambios de permisos.
+
 ## Escritura con Slop Monstruo (17/10/2026)
 
-**Publicación pendiente por cuota de Vercel:** PR #75 (home y CTA) está en Production. La preview de PR #76 fue rechazada con `Deployment rate limited — retry in 24 hours` (`build-rate-limit`). El código de escritura tiene CI de GitHub aprobado. No afirmar que ya está activo para usuarios hasta ver un deployment Ready del commit de main que incluya PR #76.
+**Publicación confirmada:** el 17/10 a las 17:49 ART se verificó `www.marucoach.com` en Production, Ready, deployment `dpl_GzPce2gzoVKuqRfiTnzpnsWw9cxz`, commit `8d50661` (incluye PR #76 y #78). El rechazo anterior por `build-rate-limit` quedó superado.
 
-Próxima acción al liberarse la cuota: redeployar el último `main`, confirmar Ready y aliases de `www.marucoach.com`, y generar una carta y un guion con datos ficticios. Verificar idioma, hechos y longitud, y correr el checker sobre los resultados. No cambiar el plan de Vercel ni las claves para esto.
+Queda la prueba con proveedor real de una carta y un guion ficticios para verificar idioma, hechos, longitud y checker. El código ya está publicado; esa validación no se realizó en esta pasada de desplegables.
 
 - Fuente en español fijada y licenciada, skill instalada y adaptación de servidor para todos los planes. Política común en las 14 rutas de redacción; extracción literal excluida.
 - Checker de prosa y una revisión condicional por pedido, con guardias de cifras, siglas, links, campos permitidos, longitud y esquema. Timeout o error conserva la generación válida; no usa cuotas extra del usuario ni sesiones CLI. La segunda familia de modelos de la skill no está implementada online. Detalles y límites: `docs/ESCRITURA.md`.
-- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste también espera el deploy de PR #76.
+- Ajuste final del CTA de Match: lleva directamente a `#empezar` con el aviso precargado, igual que las tarjetas de Búsquedas, para evitar otra pantalla de presentación. Este ajuste está incluido en el deployment confirmado arriba.
 - Corregidos los laureles “100% gratis” en las landings de herramientas y la FAQ de entrevista que decía un pedido por mes en vez de por semana. Se muestran los límites de los planes.
 - Validación: 340 tests aprobados (14 de escritura), 7 omitidos; TypeScript y ESLint sin errores. El smoke test con cartas y guiones del proveedor real queda pendiente del deploy. No se reescriben documentos ya guardados.
 

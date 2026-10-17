@@ -36,6 +36,16 @@ function App() {
           />
         </div>
       ))}
+      <label id="nonsearch-label" htmlFor="nonsearch">País (menú sin escritura)</label>
+      <Select<Opt>
+        inputId="nonsearch"
+        aria-labelledby="nonsearch-label"
+        classNamePrefix="select"
+        isSearchable={false}
+        options={opts("Argentina", "Brazil", "Chile")}
+        value={opts("Argentina", "Brazil", "Chile").find((o) => o.value === state.nonsearch) ?? null}
+        onChange={(o) => setState((s) => ({ ...s, nonsearch: o?.value ?? "" }))}
+      />
       {/* Como los buscadores de ciudades: sin opciones hasta que se tipea. */}
       <label id="city-label" htmlFor="city">City</label>
       <Select<Opt> inputId="city" aria-labelledby="city-label" classNamePrefix="select" options={[]} />

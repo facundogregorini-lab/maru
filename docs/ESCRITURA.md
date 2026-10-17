@@ -1,6 +1,6 @@
 # Escritura de Maru
 
-**Estado al 17/10/2026:** implementación y pruebas listas en PR #76. Publicación pendiente: Vercel rechazó la nueva preview por `build-rate-limit` y pide reintentar en 24 horas. Production sirve el home/CTA de PR #75; todavía no aplica esta política de escritura.
+**Estado al 17/10/2026, 17:49 ART:** PR #76 incluida en Production, Ready, commit `8d50661`, deployment `dpl_GzPce2gzoVKuqRfiTnzpnsWw9cxz`, con alias `www.marucoach.com`. El límite de deploy previo quedó superado. La prueba con cartas y guiones del proveedor real sigue pendiente; se verificaron publicación y pruebas automatizadas.
 
 ## Definición de producto
 
