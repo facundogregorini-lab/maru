@@ -109,3 +109,7 @@ Google Jobs (SerpApi, plan gratuito): 15 búsquedas `v-…` de las 16 preparadas
 
 Rechazos: 36 sólo ofrecían agregadores secundarios y 1 tenía descripción corta. El plan gratuito se renueva a principio de mes: ahí se pueden repetir las búsquedas sin resultados con otra redacción ("maestro mayor de obras", "oficial de negocios banco", "farmacia Córdoba").
 
+## Corrida automática de marketing y finanzas (desde 17/10/2026)
+
+El workflow `match-providers` corre solo los días 2 y 17 de cada mes a las 10:07 UTC, después de la sync diaria: Google Jobs (plan gratuito de SerpApi) con la tanda `--queries=mensual`, que son las búsquedas `mk-…` (14 de marketing) y `fz-…` (16 de finanzas), `--max-searches=30 --reserve=20`. Usa como máximo 60 de las 250 búsquedas del mes y nunca toca la reserva. Dos corridas por mes porque los avisos de Google Jobs vencen a los 21 días sin volver a verse. Se puede lanzar a mano igual que antes; a mano sigue empezando en modo "plan".
+

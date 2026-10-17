@@ -1,10 +1,14 @@
 # Importa avisos de proveedores con cuota (Fantastic.jobs trial, SerpApi gratuito, Apify con tope)
-# al inventario de "Encontrá tu trabajo perfecto". SÓLO se lanza a mano (Actions → match-providers):
-# no tiene cron. Por defecto corre en modo "plan" (sin red). Ver docs/IMPORTACIONES.md.
+# al inventario de "Encontrá tu trabajo perfecto". Se lanza a mano (Actions → match-providers; por defecto
+# en modo "plan", sin red) y dos veces por mes, solo, con Google Jobs gratis para marketing y finanzas
+# (días 2 y 17, 10:07 UTC: 30 búsquedas del plan gratuito por corrida, reserva 20; los avisos de Google
+# Jobs vencen a los 21 días sin volver a verse). Ver docs/IMPORTACIONES.md.
 # Claves: secrets FANTASTIC_JOBS, SERP_API y APIFY_TOKEN del repo; nunca como inputs ni en el log.
 name: match-providers
 
 on:
+  schedule:
+    - cron: "7 10 2,17 * *"
   workflow_dispatch:
     inputs:
       provider:
@@ -55,9 +59,10 @@ jobs:
           FANTASTIC_JOBS: ${{ secrets.FANTASTIC_JOBS }}
           SERP_API: ${{ secrets.SERP_API }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          PROVIDER: ${{ github.event.inputs.provider }}
-          MODE: ${{ github.event.inputs.mode }}
-          ARGS: ${{ github.event.inputs.args }}
+          # La corrida mensual programada no trae inputs: Google Jobs gratis, tanda "mensual" (marketing y finanzas).
+          PROVIDER: ${{ github.event.inputs.provider || 'serpapi' }}
+          MODE: ${{ github.event.inputs.mode || 'run' }}
+          ARGS: ${{ github.event_name == 'schedule' && '--queries=mensual --max-searches=30 --reserve=20' || github.event.inputs.args }}
         run: |
           case "$PROVIDER" in fantastic|serpapi|apify) ;; *) echo "provider inválido"; exit 1;; esac
           case "$MODE" in plan|status|run) ;; *) echo "mode inválido"; exit 1;; esac
@@ -68,9 +73,9 @@ jobs:
           done
           npx --yes tsx@4 scripts/match-import.ts --provider="$PROVIDER" --mode="$MODE" "${EXTRA[@]}"
       - name: Guardar inventario y consumo
-        if: ${{ github.event.inputs.mode == 'run' && always() }}
+        if: ${{ (github.event.inputs.mode || 'run') == 'run' && always() }}
         env:
-          PROVIDER: ${{ github.event.inputs.provider }}
+          PROVIDER: ${{ github.event.inputs.provider || 'serpapi' }}
         run: |
           git config user.name "maru-match-bot"
           git config user.email "maru-match-bot@users.noreply.github.com"

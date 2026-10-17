@@ -1,6 +1,6 @@
 {
   "$comment": "Directorio de empleadores. 'candidata' = hay evidencia pública de su bolsa (URL en 'evidence'); la primera sincronización la confirma como integrada, sin vacantes elegibles o fallida. No agregar empresas sin evidencia.",
-  "reviewedAt": "2026-10-15",
+  "reviewedAt": "2026-10-17",
   "companies": [
     {
       "name": "OLIVER Agency - Argentina",
@@ -963,6 +963,177 @@
       "region": "us",
       "sector": "consultora de RR. HH.",
       "evidence": "https://umbralcapitalhumano.na.teamtailor.com/jobs (visto en el feed ATS de Fantastic para Argentina, 17/10)",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Inspired Way",
+      "sourceId": "teamtailor",
+      "slug": "inspiredway.teamtailor.com",
+      "sector": "consultora / administración",
+      "evidence": "https://inspiredway.teamtailor.com/jobs/8554360-asistente-administrativo-a-retail",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Workster Jobs",
+      "sourceId": "teamtailor",
+      "slug": "worksterjobs.teamtailor.com",
+      "sector": "staffing",
+      "evidence": "https://worksterjobs.teamtailor.com/jobs/8555163-trust-safety-product-manager-ai-technology",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Apply Minds",
+      "sourceId": "teamtailor",
+      "slug": "applyminds-1747397997.teamtailor.com",
+      "sector": "staffing / diseño",
+      "evidence": "https://applyminds-1747397997.teamtailor.com/jobs/8554277-digital-designer-front-end-developer-html-css",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "COMAFI (The Capita Corporation)",
+      "sourceId": "teamtailor",
+      "slug": "thecapitacorporation.na.teamtailor.com",
+      "sector": "banca",
+      "evidence": "https://thecapitacorporation.na.teamtailor.com/jobs/719770-analista-jr-de-compras",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Suessa",
+      "sourceId": "teamtailor",
+      "slug": "suessa.teamtailor.com",
+      "sector": "finanzas",
+      "evidence": "https://suessa.teamtailor.com/jobs/8541514-analista-de-payroll-contrato-por-proyecto",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "APDES",
+      "sourceId": "teamtailor",
+      "slug": "apdes.na.teamtailor.com",
+      "sector": "educación",
+      "evidence": "https://apdes.na.teamtailor.com/jobs/702133-maestra-de-grado-cordoba",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "WILD FI",
+      "sourceId": "teamtailor",
+      "slug": "wildfi.na.teamtailor.com",
+      "sector": "fintech / diseño",
+      "evidence": "https://wildfi.na.teamtailor.com/jobs/719125-multimedia-designer",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "ASAP Consulting",
+      "sourceId": "teamtailor",
+      "slug": "asapconsulting-busquedas.na.teamtailor.com",
+      "sector": "consultora",
+      "evidence": "https://asapconsulting-busquedas.na.teamtailor.com/jobs/720622-analista-funcional-consultor-de-ia",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Pearster",
+      "sourceId": "teamtailor",
+      "slug": "pearster-1746721541.na.teamtailor.com",
+      "sector": "finanzas",
+      "evidence": "https://pearster-1746721541.na.teamtailor.com/jobs/720273-semi-senior-financial-analyst",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Ruby Labs",
+      "sourceId": "ashby",
+      "slug": "ruby-labs",
+      "sector": "tecnología / datos",
+      "evidence": "https://jobs.ashbyhq.com/ruby-labs/c47b2547-493e-4a15-be15-f6edd7461de9",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Abacum",
+      "sourceId": "ashby",
+      "slug": "abacum",
+      "sector": "fintech (FP&A)",
+      "evidence": "https://jobs.ashbyhq.com/abacum/ad2196bd-44fe-45e4-a0f5-431c93de79fc",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Louis Dreyfus Company",
+      "sourceId": "smartrecruiters",
+      "slug": "LouisDreyfusCompany",
+      "sector": "agroindustria / trading",
+      "evidence": "https://jobs.smartrecruiters.com/LouisDreyfusCompany/744000155848939-representante-comercial-sr-acopios-la-pampa-",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Walmart",
+      "sourceId": "smartrecruiters",
+      "slug": "WalmartInc",
+      "sector": "retail",
+      "evidence": "https://jobs.smartrecruiters.com/WalmartInc/3743990016097835-coordinador-senior-gestion-de-cadena-de-suministro-san-jose-costa-rica-",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Accor",
+      "sourceId": "smartrecruiters",
+      "slug": "AccorHotel",
+      "sector": "hotelería",
+      "evidence": "https://jobs.smartrecruiters.com/AccorHotel/744000156006195-auxiliar-de-mantenimiento-hotel-sofitel-cardales",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Talan",
+      "sourceId": "smartrecruiters",
+      "slug": "Talan",
+      "sector": "consultoría tecnológica",
+      "evidence": "https://jobs.smartrecruiters.com/Talan/744000155762025-backend-developer-spark-spala-pl-sql-",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Sika",
+      "sourceId": "smartrecruiters",
+      "slug": "SikaAG",
+      "sector": "industria / construcción",
+      "evidence": "https://jobs.smartrecruiters.com/SikaAG/744000156057069-supervisora-de-logistica",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Lesaffre",
+      "sourceId": "smartrecruiters",
+      "slug": "Lesaffre",
+      "sector": "alimentos",
+      "evidence": "https://jobs.smartrecruiters.com/Lesaffre/744000156008829-encargado-de-abastecimiento",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Cocos Capital",
+      "sourceId": "recruitee",
+      "slug": "cocoscapital",
+      "sector": "fintech / inversiones",
+      "evidence": "https://cocoscapital.recruitee.com/o/responsable-de-contabilidad-administracion-experiencia-bancaria",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Tether",
+      "sourceId": "recruitee",
+      "slug": "tether",
+      "sector": "fintech / cripto",
+      "evidence": "https://tether.recruitee.com/",
       "addedAt": "2026-10-17",
       "status": "candidata"
     }
