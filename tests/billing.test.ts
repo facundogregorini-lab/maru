@@ -12,7 +12,7 @@ async function setup() {
   const server = await import("@/lib/billing/server");
   return server;
 }
-function apiFixture(amount = 10000) {
+function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boolean } = {}) {
   let reference = "";
   let status = "pending";
   let paymentStatus = "approved";
@@ -27,6 +27,16 @@ function apiFixture(amount = 10000) {
       if (init?.method === "PUT") status = "cancelled";
       return Response.json({ id: "sub1", external_reference: reference, status });
     }
+    if (path === "/preapproval/search") {
+      if (opts.searchFails) return Response.json({}, { status: 400 });
+      return Response.json({ results: opts.other ? [{ id: "sub2", external_reference: reference, status: "authorized" }, { id: "x9", external_reference: "otra", status: "authorized" }] : [] });
+    }
+    if (path === "/preapproval/sub2") return Response.json({ id: "sub2", external_reference: reference, status: "authorized" });
+    if (path === "/authorized_payments/search" && opts.other) {
+      const id = new URL(String(url)).searchParams.get("preapproval_id");
+      return Response.json({ results: id === "sub2" ? [{ id: 101, preapproval_id: "sub2", payment: { id: 200 } }] : [] });
+    }
+    if (path === "/authorized_payments/101") return Response.json({ id: 101, preapproval_id: "sub2", payment: { id: 200 } });
     if (path === "/authorized_payments/search") return Response.json({ results: [{ id: 100, preapproval_id: "sub1", payment: { id: 200 } }] });
     if (path === "/authorized_payments/100") return Response.json({ id: 100, preapproval_id: "sub1", payment: { id: 200 } });
     if (path === "/v1/payments/200") return Response.json({ id: 200, status: paymentStatus, transaction_amount: amount, currency_id: "ARS", date_approved: approvedAt });
@@ -70,6 +80,22 @@ describe("suscripción validada en el servidor", () => {
   });
   it("recupera un pago acreditado aunque no haya llegado el webhook", async () => {
     const s = await setup(); const fixture = apiFixture();
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    await s.refreshSubscription("ana@example.com");
+    expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);
+  });
+  it("recupera el pago si Mercado Pago lo autorizó en otra suscripción con la misma referencia", async () => {
+    const s = await setup(); apiFixture(4500, { other: true });
+    await s.checkout("ana@example.com", "semanal");
+    await s.refreshSubscription("ana@example.com");
+    const sub = await s.readSubscription("ana@example.com");
+    expect(s.hasPaidAccess(sub)).toBe(true);
+    expect(sub?.id).toBe("sub2");
+    expect(sub?.status).toBe("authorized");
+  });
+  it("un paso fallido de la recuperación no impide acreditar el pago", async () => {
+    const s = await setup(); const fixture = apiFixture(10000, { searchFails: true });
+    vi.spyOn(console, "error").mockImplementation(() => {});
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.refreshSubscription("ana@example.com");
     expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);

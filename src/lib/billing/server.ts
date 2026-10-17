@@ -62,14 +62,31 @@ export async function checkout(email: string, planId: PlanId): Promise<string> {
 export async function refreshSubscription(email: string): Promise<Subscription | null> {
   const current = await readSubscription(email);
   if (!current?.id || !billingReady()) return current;
-  const sub = await mp<Preapproval>(`/preapproval/${encodeURIComponent(current.id)}`);
-  if (sub.external_reference !== current.reference) throw new Error("La suscripción no coincide.");
-  await change(email, (s) => s.reference === sub.external_reference ? { ...s, status: sub.status } : s);
-  // Recupera la confirmación si el webhook se demoró o no llegó. El pago se verifica por la misma vía.
-  const invoices = await mp<{ results: Invoice[] }>(`/authorized_payments/search?preapproval_id=${encodeURIComponent(current.id)}&limit=50`);
-  const latest = invoices.results.filter((invoice) => invoice.payment?.id).sort((a,b) => Number(b.id) - Number(a.id)).slice(0,3);
-  for (const invoice of latest) await processNotification("subscription_authorized_payment", String(invoice.id));
-  return readSubscription(email);
+  // Además de la guardada, cualquier suscripción con nuestra referencia: Mercado Pago puede terminar
+  // autorizando otra en el checkout, y entonces la guardada queda "pending" para siempre.
+  const ids = new Set([current.id]);
+  const errors: unknown[] = [];
+  try {
+    const found = await mp<{ results?: Preapproval[] }>(`/preapproval/search?q=${encodeURIComponent(current.reference)}&limit=20`);
+    for (const sub of found.results ?? []) if (sub.id && sub.external_reference === current.reference) ids.add(sub.id);
+  } catch (err) { errors.push(err); }
+  for (const id of ids) {
+    try {
+      await processNotification("subscription_preapproval", id);
+      // Recupera la confirmación si el webhook se demoró o no llegó. El pago se verifica por la misma vía.
+      const invoices = await mp<{ results?: Invoice[] }>(`/authorized_payments/search?preapproval_id=${encodeURIComponent(id)}&limit=50`);
+      const latest = (invoices.results ?? []).filter((invoice) => invoice.payment?.id).sort((a,b) => Number(b.id) - Number(a.id)).slice(0,3);
+      for (const invoice of latest) {
+        try { await processNotification("subscription_authorized_payment", String(invoice.id)); }
+        catch (err) { errors.push(err); }
+      }
+    } catch (err) { errors.push(err); }
+  }
+  const next = await readSubscription(email);
+  for (const err of errors) console.error("[billing refresh]", err instanceof Error ? err.message : "error");
+  // Un paso fallido no tapa lo que sí se pudo conciliar.
+  if (errors.length && !hasPaidAccess(next)) throw errors[0];
+  return next;
 }
 export async function cancel(email: string): Promise<void> {
   const current = await readSubscription(email);
@@ -98,7 +115,9 @@ export async function processNotification(type: string, id: string): Promise<voi
   const binding = (await getManyJson<{ email: string }>([`maru:billing:ref:${sub.external_reference}`]))[0];
   if (!binding) return;
   const current = await readSubscription(binding.email);
-  if (!current || current.reference !== sub.external_reference || (current.id && current.id !== sub.id)) return;
+  if (!current || current.reference !== sub.external_reference) return;
+  // Otra suscripción con la misma referencia (secreta, del servidor) sólo reemplaza a la guardada si quedó autorizada.
+  if (current.id && current.id !== sub.id && sub.status !== "authorized") return;
   if (invoice?.payment?.id) payment = await mp<Payment>(`/v1/payments/${invoice.payment.id}`);
   if (payment) await setJson(`maru:billing:payment:${payment.id}`, { subId: sub.id });
   await change(binding.email, (s) => {

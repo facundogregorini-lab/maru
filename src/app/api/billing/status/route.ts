@@ -19,5 +19,8 @@ export async function POST(req: Request) {
   if (!email) return billingJson({ error: "Ingresá con tu email.", code: "AUTH_REQUIRED" }, 401);
   if (!billingEnabled()) return GET(req);
   try { await refreshSubscription(email); return GET(req); }
-  catch { return billingJson({ error: "No pudimos actualizar tu suscripción.", code: "PLAN_UNAVAILABLE" }, 503); }
+  catch (err) {
+    console.error("[billing status]", err instanceof Error ? err.message : "error");
+    return billingJson({ error: "No pudimos actualizar tu suscripción.", code: "PLAN_UNAVAILABLE" }, 503);
+  }
 }
