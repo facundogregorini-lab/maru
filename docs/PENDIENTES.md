@@ -44,7 +44,8 @@ Rama `claude/conversiones-google-ads`. Detalle completo en `docs/TRACKING.md`.
 - **Hecho en código:** etiqueta de Google directa (sin GTM), capa central `src/lib/tracking`, deduplicación por cuenta en Redis, los cuatro eventos (activación, límite con planes visibles, inicio de checkout, compra verificada) y el modal de planes al chocar con el cupo gratis (`PaywallHost`). Apagado mientras no estén las variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Vercel.
 - **Hecho en Google Ads:** 4 acciones "Maru | …" (todas secundarias), objetivo personalizado "Maru | Optimización límite gratuito" (sólo "Límite alcanzado") asignado como único objetivo a las 3 campañas MARU_AR_SEARCH_*.
 - **Hecho:** `/privacidad` actualizada con la etiqueta de Google Ads. Puja de las 3 campañas de Maru: Maximizar conversiones (objetivo personalizado).
-- **Falta:** variables `NEXT_PUBLIC_GOOGLE_ADS_*` en Production + deploy y verificación en producción (lista en `docs/TRACKING.md`).
+- **Hecho:** variables `NEXT_PUBLIC_GOOGLE_ADS_*` cargadas en Vercel (Production, tipo Config).
+- **Falta:** mergear esta rama a `main` (dispara el deploy de producción) y la verificación en producción (lista en `docs/TRACKING.md`).
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 

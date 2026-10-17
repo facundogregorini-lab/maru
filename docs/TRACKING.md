@@ -6,7 +6,7 @@ Etiqueta de Google cargada **directamente en el código** (sin Google Tag Manage
 
 - Código listo en la rama `claude/conversiones-google-ads`.
 - `/privacidad` explica la etiqueta de Google Ads, sus cookies de medición y qué no se envía.
-- Se activa con las variables de abajo en Vercel (Production) y un deploy nuevo (las `NEXT_PUBLIC_*` se fijan al compilar). Sin `NEXT_PUBLIC_GOOGLE_ADS_ID` no se carga nada.
+- Variables de abajo cargadas en Vercel (Production) el 17/10/2026. Se activa con el primer deploy de producción que incluya este código (las `NEXT_PUBLIC_*` se fijan al compilar). Sin `NEXT_PUBLIC_GOOGLE_ADS_ID` no se carga nada.
 
 ## Variables (Vercel → Settings → Environment Variables, sólo Production)
 
@@ -82,7 +82,7 @@ Acciones nativas de sitio web (evento manual), ventana post-clic 30 días, atrib
 
 "Límite alcanzado" quedó **secundaria**: Google agregó su categoría como objetivo predeterminado de la cuenta, que usan las 4 campañas de Templo Ninja; como principal habría entrado en su optimización. Se incluye sólo en el objetivo personalizado **"Maru | Optimización límite gratuito"**, que es el único objetivo de `MARU_AR_SEARCH_CV` (24357953172), `MARU_AR_SEARCH_REMOTO` (24357953175) y `MARU_AR_SEARCH_CARTA` (24357953217). Google usa para pujar las acciones de un objetivo personalizado aunque sean secundarias.
 
-**Puja**: las tres campañas de Maru usan *Maximizar clics*, que no optimiza conversiones (las cuenta para informes). Para optimizar por el límite hay que pasar a *Maximizar conversiones* (o CPA objetivo cuando haya volumen). No se cambió.
+**Puja**: las tres campañas de Maru pasaron de *Maximizar clics* (con límites de CPC de 700, 350 y 300 ARS) a *Maximizar conversiones* sin CPA objetivo, optimizando por el objetivo personalizado. Siguen en pausa y con el mismo presupuesto. Cuando haya volumen (≈30 conversiones/mes) conviene evaluar un CPA objetivo.
 
 ## Verificación pendiente en producción (con la etiqueta activa)
 
