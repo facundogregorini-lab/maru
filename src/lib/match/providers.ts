@@ -255,7 +255,7 @@ export function fantasticEmployers(rows: unknown[]): Employer[] {
 /** Portales de origen conocidos: válidos, pero preferimos el sitio del empleador si Google lo ofrece. */
 const PORTALS = /(^|\.)(linkedin\.com|bumeran\.com\.ar|zonajobs\.com\.ar|computrabajo\.com|indeed\.com|glassdoor\.com(\.ar)?|getonbrd\.com|universia\.(net|com\.ar)|empleos\.clarin\.com|hiringroom\.com|michaelpage\.com\.ar|randstad\.com\.ar|adecco\.com\.ar|manpower\.com\.ar)$/;
 /** Agregadores secundarios: repiten avisos de otros sitios y suelen interponer su propia página. */
-const AGGREGATORS = /(^|\.)(talent\.com|jooble\.org|jobrapido\.com|trabajo\.org|opcionempleo\.com(\.ar)?|careerjet\.com(\.ar)?|adzuna\.com(\.ar)?|whatjobs\.com|jobsora\.com|trovit\.com(\.ar)?|jobted\.com(\.ar)?|kitempleo\.com(\.ar)?|mitula\.com(\.ar)?|empleo\.com\.ar|halaxia\.com|recruit\.net|jora\.com|learn4good\.com|bebee\.com)$/;
+const AGGREGATORS = /(^|\.)(talent\.com|jooble\.org|jobrapido\.com|trabajo\.org|opcionempleo\.com(\.ar)?|careerjet\.com(\.ar)?|adzuna\.com(\.ar)?|whatjobs\.com|jobsora\.com|trovit\.com(\.ar)?|jobted\.com(\.ar)?|kitempleo\.com(\.ar)?|mitula\.com(\.ar)?|empleo\.com\.ar|halaxia\.com|recruit\.net|jora\.com|learn4good\.com|bebee\.com|jobleads\.com|trabajoar\.com|empleosyempleos\.com\.ar)$/;
 
 export function pickApplyLink(options: unknown[]): { url: string; via: string } | null {
   const links = options
