@@ -3146,6 +3146,226 @@
       "rows": 4,
       "consumed": 1,
       "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "97Alftqd3Izbgnbkm",
+        "datasetId": "dZmldIgfddMBqM5Lx"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 3.359,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo rosario",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "f6deIYayrVHAIVB2u",
+        "datasetId": "FJ7TQsbIhYanmFVBo"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 3.53,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo mendoza",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "yFt14YsDo8YPUwdQ9",
+        "datasetId": "U1kUNhyDT6FPPJduE"
+      },
+      "rows": 40,
+      "consumed": 0.068,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 3.598,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo neuquen",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "MJouBfoDkus4KNAq9",
+        "datasetId": "LdDSPiwnKCJ41h7uZ"
+      },
+      "rows": 77,
+      "consumed": 0.1319,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 3.73,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo santa fe",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "cLb0tThCg2wPLOUu1",
+        "datasetId": "FOMX81XT0VfS8ZxIX"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 3.901,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo mar del plata",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "iGtvsTfpgelRNThvd",
+        "datasetId": "IOXo4HnsbdUtBkoGX"
+      },
+      "rows": 19,
+      "consumed": 0.0323,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 3.933,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "vendedor tucuman",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "nxbR554gJ5iyPjcPK",
+        "datasetId": "nYtNnYcO33SYyqvlw"
+      },
+      "rows": 75,
+      "consumed": 0.1285,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 4.061,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "vendedor cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "FpMnvQtFeuTDx4A0Q",
+        "datasetId": "lAdtmWFVgbhrujVBh"
+      },
+      "rows": 100,
+      "consumed": 0.171,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 4.232,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "atencion al cliente cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "YEPLf0yhDqLyRZ4aA",
+        "datasetId": "wXvgRwG7mP2tY6KYj"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 4.402,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "atencion al cliente rosario",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "DfqqB9T5q0SCLyJS0",
+        "datasetId": "iQbu0xQHoLT4w7tdm"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 4.572,
+        "budgetUsd": 4.9
+      }
+    },
+    {
+      "at": "2026-10-17T14:38:17.409Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "recursos humanos cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "runId": "CuYo8V6UnIDO6klIh",
+        "datasetId": "sEoVIptXbhPuSgyv8"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 4.742,
+        "budgetUsd": 4.9
+      }
     }
   ]
 }
