@@ -304,9 +304,17 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const userPlaces = [prefs.ciudad, ...prefs.otrosLugares].map((x) => fold(x.split(",")[0])).filter(Boolean);
   const userCountryWords = prefs.autorizacion.flatMap((a) => COUNTRY_WORDS[fold(a)] ?? [fold(a)]);
   const placeMatches = (locs: string[]) => {
-    const l = fold(locs.join(" | "));
     const segs = placeSegments(locs);
-    return userPlaces.some((p) => segs.some((seg) => samePlace(seg, p)) || (/(buenos aires|caba|capital federal)/.test(p) && /(buenos aires|caba|capital federal)/.test(l)));
+    const isBaCity = (s: string) => /^(buenos aires|caba|capital federal|ciudad autonoma de buenos aires|cdad autonoma de buenos aires)$/.test(s);
+    // "Mar del Plata, Buenos Aires" no es la ciudad de Buenos Aires. En esa preferencia
+    // comparamos la primera ciudad, sin confundir el país ni la provincia que le siguen.
+    const cities = locs.flatMap((l) => l.split("|").map((part) => placeSegments([part]).find((seg) =>
+      !/^(argentina|ar|latam|latin america|south america|remote|remoto|worldwide)$/.test(seg)
+      && !/^(provincia de|province of|province|estado de|state of)\b/.test(seg),
+    ) ?? ""));
+    return userPlaces.some((p) => isBaCity(p)
+      ? cities.some((city) => isBaCity(city))
+      : segs.some((seg) => samePlace(seg, p)));
   };
 
   let open = 0;

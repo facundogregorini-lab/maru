@@ -5,34 +5,18 @@
   "profiles": [
     {
       "profile": "Administración semi senior",
-      "eligible": 755,
+      "eligible": 667,
       "max": 100,
-      "top20Mean": 87,
-      "atLeast70": 38,
-      "atLeast90": 6,
+      "top20Mean": 78,
+      "atLeast70": 16,
+      "atLeast90": 2,
       "top5": [
-        {
-          "id": "4179c832ec9184",
-          "title": "Administrativo/a",
-          "company": "TuTrabajoMDP.com.ar",
-          "score": 100,
-          "confidence": "media",
-          "gaps": []
-        },
         {
           "id": "a924ba9fba4f50",
           "title": "Coordinador administrativo",
           "company": "Red Psi",
           "score": 100,
           "confidence": "media",
-          "gaps": []
-        },
-        {
-          "id": "49fe93235ba040",
-          "title": "Analista contable administrativo",
-          "company": "Importante empresa del sector",
-          "score": 98,
-          "confidence": "alta",
           "gaps": []
         },
         {
@@ -44,45 +28,49 @@
           "gaps": []
         },
         {
-          "id": "1bd64423133859",
-          "title": "Administrativo/a recepcionista",
-          "company": "Grupo Arkhos",
-          "score": 95,
+          "id": "1489c5b0b4835d",
+          "title": "Analista de Administración de Personal - Experiencia en liquidación",
+          "company": "BURGER FACTORY",
+          "score": 88,
           "confidence": "alta",
+          "gaps": [
+            "Pide payroll como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
+        },
+        {
+          "id": "a6510cf8973368",
+          "title": "Asistente Administrativo Industrial (Plástico) - Presencial",
+          "company": "EstrategiaRRHH",
+          "score": 87,
+          "confidence": "media",
           "gaps": []
+        },
+        {
+          "id": "18a4537bec46ba",
+          "title": "Administración de Gestoría",
+          "company": "Grupo Taraborelli",
+          "score": 83,
+          "confidence": "alta",
+          "gaps": [
+            "Pide análisis de datos como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
         }
       ]
     },
     {
       "profile": "Ventas senior",
-      "eligible": 968,
+      "eligible": 916,
       "max": 100,
-      "top20Mean": 95,
-      "atLeast70": 154,
-      "atLeast90": 28,
+      "top20Mean": 93,
+      "atLeast70": 93,
+      "atLeast90": 21,
       "top5": [
-        {
-          "id": "d051f0a57f84e3",
-          "title": "VENDEDOR",
-          "company": "Distribuidora Espora",
-          "score": 100,
-          "confidence": "media",
-          "gaps": []
-        },
         {
           "id": "c998790395c5ba",
           "title": "Vendedor",
           "company": "IPMagna",
           "score": 100,
           "confidence": "alta",
-          "gaps": []
-        },
-        {
-          "id": "7b8fbd91613dcb",
-          "title": "Vendedor SR",
-          "company": "Grupo Consultores de Empresas",
-          "score": 100,
-          "confidence": "media",
           "gaps": []
         },
         {
@@ -100,15 +88,31 @@
           "score": 100,
           "confidence": "media",
           "gaps": []
+        },
+        {
+          "id": "edf5513cbcdee7",
+          "title": "Account Executive",
+          "company": "GenIT",
+          "score": 100,
+          "confidence": "media",
+          "gaps": []
+        },
+        {
+          "id": "35f83cea3bfb34",
+          "title": "Account Executive - AI Agents",
+          "company": "Wing Assistant",
+          "score": 99,
+          "confidence": "alta",
+          "gaps": []
         }
       ]
     },
     {
       "profile": "Datos senior",
-      "eligible": 589,
+      "eligible": 508,
       "max": 92,
       "top20Mean": 83,
-      "atLeast70": 39,
+      "atLeast70": 35,
       "atLeast90": 1,
       "top5": [
         {
@@ -171,10 +175,10 @@
     },
     {
       "profile": "Marketing junior",
-      "eligible": 356,
+      "eligible": 274,
       "max": 85,
-      "top20Mean": 70,
-      "atLeast70": 9,
+      "top20Mean": 69,
+      "atLeast70": 8,
       "atLeast90": 0,
       "top5": [
         {
@@ -241,30 +245,12 @@
     },
     {
       "profile": "Operaciones senior",
-      "eligible": 680,
-      "max": 100,
-      "top20Mean": 83,
-      "atLeast70": 36,
-      "atLeast90": 1,
+      "eligible": 585,
+      "max": 88,
+      "top20Mean": 79,
+      "atLeast70": 30,
+      "atLeast90": 0,
       "top5": [
-        {
-          "id": "621bbfc44380ac",
-          "title": "Coordinador de Operaciones",
-          "company": "TROVA | People & Talent",
-          "score": 100,
-          "confidence": "media",
-          "gaps": []
-        },
-        {
-          "id": "f03653dce95711",
-          "title": "Analista Jr. de Operaciones - The Capita Corporation",
-          "company": "COMAFI",
-          "score": 89,
-          "confidence": "alta",
-          "gaps": [
-            "Es un puesto Junior; apuntás a Senior."
-          ]
-        },
         {
           "id": "630621a93261e5",
           "title": "Analista de Operaciones",
@@ -292,6 +278,26 @@
           "score": 86,
           "confidence": "baja",
           "gaps": []
+        },
+        {
+          "id": "e6915787d28e8c",
+          "title": "Business Operations Manager",
+          "company": "Sterlington, PLLC",
+          "score": 85,
+          "confidence": "alta",
+          "gaps": [
+            "Es un puesto Manager; apuntás a Senior."
+          ]
+        },
+        {
+          "id": "43480f4d532664",
+          "title": "Creative Operations Coordinator",
+          "company": "Scale Army",
+          "score": 84,
+          "confidence": "alta",
+          "gaps": [
+            "Pide liderazgo como requisito: no aparece en tu CV. Si lo manejás, sumalo."
+          ]
         }
       ]
     }

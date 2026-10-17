@@ -276,6 +276,19 @@ describe("calibración del porcentaje de afinidad", () => {
     const p = { ...dataProfile, headline: "Analista administrativa", titles: ["Analista de Administración"], skills: ["Excel"] };
     expect(run(o, p, { prefs: { ...basePrefs, rolesDeseados: ["Administrative Analyst"] } }).score).toBe(100);
   });
+
+  it("Buenos Aires ciudad no coincide con otra ciudad de la provincia", async () => {
+    const o = await example({ workplace: { value: "presencial", from: "fuente" } });
+    const prefs: MatchPrefs = { ...basePrefs, ciudad: "Buenos Aires", rolesDeseados: ["Data Analyst"], indispensables: ["ubicacion"] };
+    for (const location of ["Mar del Plata, Provincia de Buenos Aires", "Mar del Plata, Buenos Aires, Argentina", "Tandil, Buenos Aires"] ) {
+      o.locations = [location];
+      expect(run(o, dataProfile, { prefs })).toBeUndefined();
+    }
+    for (const location of ["CABA", "Capital Federal", "Buenos Aires, Argentina", "Argentina - Buenos Aires", "Ciudad Autónoma de Buenos Aires"]) {
+      o.locations = [location];
+      expect(run(o, dataProfile, { prefs }).score).toBe(100);
+    }
+  });
 });
 
 describe("perfil para el match", () => {

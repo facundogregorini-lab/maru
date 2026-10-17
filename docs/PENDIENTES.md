@@ -4,7 +4,8 @@
 
 - Calibración pedida por el dueño: quitar la doble penalización de intención y los topes 95/98; datos ausentes afectan confianza, sin asignarles 50%. Roles contenidos en títulos largos, equivalencias locales y deseables con peso limitado. La antigüedad de una persona no implica Lead.
 - Afinidad separada del orden: guardados, descartes y frescura mantienen el ranking sin alterar el porcentaje. Se preservan las mejoras hasta PR #70, incluidos ubicación, elegibilidad, variedad de empresas, idioma y ocultamiento a 120 días. Las búsquedas agregadas por la persona no desaparecen por el umbral de coincidencia mínima.
-- Regresión reproducible con cinco perfiles ficticios sobre el mismo catálogo: [decisiones, muestra y resultados](QC-MATCH-2026-10-17.md). Máximos administración 82→100, ventas 95→100, datos 91→92, marketing junior 74→85, operaciones 93→100. Son pruebas de coherencia, no validación de contrataciones.
+- Regresión reproducible con cinco perfiles ficticios sobre el mismo catálogo: [decisiones, muestra y resultados](QC-MATCH-2026-10-17.md). Máximos administración 82→100, ventas 95→100, datos 91→92, marketing junior 74→85, operaciones 93→88 (baja al corregir ciudad/provincia). Son pruebas de coherencia, no validación de contrataciones.
+- QC visual detectó que Mar del Plata, Provincia de Buenos Aires se presentaba como la ciudad de Buenos Aires. Corregida esa comparación, con regresiones de formatos y alias CABA/Capital Federal. Guardar, preparar postulación y cambiar estado en seguimiento comprobados en preview, con datos ficticios.
 - Bug del editor CV/carta corregido: guardar mientras escribe, conservando el cursor y Escape. Antes se perdía la última edición si recargaba sin salir del campo.
 - Ver el registro de QC en ese documento para distinguir esta pasada de la anterior y sus limitaciones. No repetir importaciones de proveedores para validar el ranking: `scripts/match-calibration.ts` usa el inventario local.
 
