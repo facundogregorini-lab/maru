@@ -5,7 +5,7 @@ import { enabledSources } from "./sources";
 
 export type CompanyEntry = {
   name: string;
-  sourceId?: "greenhouse" | "lever" | "ashby" | "teamtailor";
+  sourceId?: "greenhouse" | "lever" | "ashby" | "teamtailor" | "smartrecruiters" | "recruitee";
   slug?: string;
   region?: "us" | "eu";
   sector?: string;

@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -657,6 +657,154 @@ export async function fetchTeamtailor(board: Board, opts?: RetryOptions & { maxP
   return { postings, complete: false, received };
 }
 
+/* ---------- SmartRecruiters (Posting API pública) ---------- */
+
+type SrPosting = {
+  id: string;
+  name: string;
+  refNumber?: string;
+  releasedDate?: string;
+  location?: { city?: string; region?: string; country?: string; remote?: boolean; hybrid?: boolean; fullLocation?: string };
+  department?: { label?: string };
+  typeOfEmployment?: { label?: string };
+  experienceLevel?: { label?: string };
+  company?: { name?: string; identifier?: string };
+  postingUrl?: string;
+  applyUrl?: string;
+  jobAd?: { sections?: Record<string, { title?: string; text?: string } | undefined> };
+};
+const SR_PAGE = 100;
+const SR_MAX_DETAILS = 80;
+
+export function normalizeSmartRecruiters(j: SrPosting, board: Board): NormalizedPosting {
+  const loc = j.location ?? {};
+  const where = loc.fullLocation || [loc.city, loc.region, loc.country?.toUpperCase()].filter(Boolean).join(", ");
+  const workplace = loc.remote ? wp("remoto", "fuente", "location.remote") : loc.hybrid ? wp("hibrido", "fuente", "location.hybrid") : wp(workplaceFromText(where), "fuente");
+  const sections = j.jobAd?.sections ?? {};
+  const html = ["jobDescription", "qualifications", "additionalInformation"].map((k) => sections[k]?.text ?? "").join("\n");
+  const text = htmlToText(html, DESC_MAX);
+  const url = j.postingUrl || `https://jobs.smartrecruiters.com/${encodeURIComponent(board.slug ?? "")}/${encodeURIComponent(j.id)}`;
+  const country = loc.country ? loc.country.toUpperCase() : null;
+  return {
+    sourceId: "smartrecruiters",
+    boardId: board.boardId,
+    externalId: j.id,
+    title: j.name.trim(),
+    company: board.company || j.company?.name || board.slug || "",
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: j.applyUrl || url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: where ? [where] : [],
+    countries: country && workplace.value !== "remoto" ? [country] : [],
+    regionText: [],
+    workplace,
+    remoteFlag: typeof loc.remote === "boolean" ? loc.remote : null,
+    employmentType: null,
+    department: j.department?.label || undefined,
+    salary: null,
+    publishedAt: iso(j.releasedDate),
+    updatedAt: null,
+    expiresAt: null,
+    ...(j.typeOfEmployment?.label ? { employmentHint: j.typeOfEmployment.label } : {}),
+    ...(j.experienceLevel?.label ? { seniorityHint: j.experienceLevel.label } : {}),
+  };
+}
+
+/**
+ * SmartRecruiters publica los avisos de cada empresa sin autenticación (Posting API). Las empresas grandes
+ * tienen miles en el mundo: pedimos sólo los de Argentina y leemos el detalle (descripción) de cada uno.
+ */
+export async function fetchSmartRecruiters(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
+  const company = assertSlug(board.slug);
+  const base = `https://api.smartrecruiters.com/v1/companies/${company}/postings`;
+  const list: SrPosting[] = [];
+  let complete = false;
+  for (let page = 0; page < (opts?.maxPages ?? 5); page++) {
+    const data = await fetchJson<{ content?: SrPosting[]; totalFound?: number }>(`${base}?country=ar&limit=${SR_PAGE}&offset=${page * SR_PAGE}`, opts);
+    if (!Array.isArray(data.content)) throw new Error("Respuesta de SmartRecruiters sin 'content'");
+    list.push(...data.content);
+    if (data.content.length < SR_PAGE || list.length >= (data.totalFound ?? 0)) {
+      complete = true;
+      break;
+    }
+  }
+  const postings: NormalizedPosting[] = [];
+  for (const [i, j] of list.entries()) {
+    // Sin el detalle no hay descripción: si hay demasiados, los últimos quedan sólo con el título.
+    const full = i < SR_MAX_DETAILS ? await fetchJson<SrPosting>(`${base}/${encodeURIComponent(j.id)}`, opts).catch(() => j) : j;
+    postings.push(normalizeSmartRecruiters({ ...j, ...full }, board));
+  }
+  return { postings, complete, received: list.length };
+}
+
+/* ---------- Recruitee (API pública del sitio de empleo) ---------- */
+
+type RecruiteeOffer = {
+  id: number;
+  title: string;
+  slug?: string;
+  description?: string;
+  requirements?: string;
+  location?: string;
+  city?: string;
+  state_name?: string;
+  country?: string;
+  country_code?: string;
+  remote?: boolean;
+  hybrid?: boolean;
+  on_site?: boolean;
+  department?: string;
+  employment_type_code?: string;
+  careers_url?: string;
+  careers_apply_url?: string;
+  published_at?: string;
+  created_at?: string;
+};
+
+export function normalizeRecruitee(o: RecruiteeOffer, board: Board): NormalizedPosting {
+  const where = o.location || [o.city, o.state_name, o.country].filter(Boolean).join(", ");
+  const workplace = o.remote ? wp("remoto", "fuente", "remote") : o.hybrid ? wp("hibrido", "fuente", "hybrid") : o.on_site ? wp("presencial", "fuente", "on_site") : wp(workplaceFromText(where), "fuente");
+  const text = htmlToText(`${o.description ?? ""}\n${o.requirements ?? ""}`, DESC_MAX);
+  const url = o.careers_url || `https://${board.slug}.recruitee.com/o/${o.slug ?? o.id}`;
+  const country = o.country_code ? o.country_code.toUpperCase() : countryIso(o.country);
+  return {
+    sourceId: "recruitee",
+    boardId: board.boardId,
+    externalId: String(o.id),
+    title: o.title.trim(),
+    company: board.company || board.slug || "",
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: o.careers_apply_url || url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: where ? [where] : [],
+    countries: country && workplace.value !== "remoto" ? [country] : [],
+    regionText: [],
+    workplace,
+    remoteFlag: typeof o.remote === "boolean" ? o.remote : null,
+    employmentType: null,
+    department: o.department || undefined,
+    salary: null,
+    publishedAt: iso(o.published_at ?? o.created_at),
+    updatedAt: null,
+    expiresAt: null,
+    ...(o.employment_type_code ? { employmentHint: o.employment_type_code.replace(/_/g, " ") } : {}),
+  };
+}
+
+export async function fetchRecruitee(board: Board, opts?: RetryOptions): Promise<BoardFetch> {
+  const slug = assertSlug(board.slug);
+  if (!/^[a-z0-9-]+$/i.test(slug)) throw new Error(`Cuenta de Recruitee inválida: ${board.slug}`);
+  const data = await fetchJson<{ offers?: RecruiteeOffer[] }>(`https://${slug}.recruitee.com/api/offers/`, opts);
+  if (!Array.isArray(data.offers)) throw new Error("Respuesta de Recruitee sin 'offers'");
+  return { postings: data.offers.map((o) => normalizeRecruitee(o, board)), complete: true, received: data.offers.length };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -665,6 +813,8 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   jobicy: fetchJobicy,
   getonbrd: fetchGetonbrd,
   teamtailor: fetchTeamtailor,
+  smartrecruiters: fetchSmartRecruiters,
+  recruitee: fetchRecruitee,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */

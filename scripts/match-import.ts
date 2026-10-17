@@ -15,7 +15,7 @@ import path from "node:path";
 import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, normalizeApifyJobs, type ApifyJobSource } from "../src/lib/match/apify";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
-import { FANTASTIC_COHORTS, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
+import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
 import type { BoardSyncResult, Inventory, NormalizedPosting } from "../src/lib/match/types";
 
 const DATA = path.join(process.cwd(), "data", "match");
@@ -138,7 +138,9 @@ async function main() {
   const ledger = await readJson<{ entries: LedgerEntry[] }>(LEDGER, { entries: [] });
 
   const fantasticPlan = { cohorts: csv("cohorts", FANTASTIC_COHORTS.map((c) => c.id)), feeds: csv("feeds", ["ats", "jb"]).map((f) => (f === "jb" ? "fantastic_jb" : "fantastic_ats")) as ("fantastic_ats" | "fantastic_jb")[], limit: num("limit", 50), maxJobs: num("max-jobs", 300), timeFrame: (arg("time-frame") ?? "7d") as "24h" | "7d" | "1m", offset: num("offset", 0) };
-  const queryIds = csv("queries", SERP_QUERIES.map((q) => q.id));
+  const queryArg = csv("queries", SERP_QUERIES.map((q) => q.id));
+  // "mensual" = la tanda automática de cada mes (marketing y finanzas).
+  const queryIds = queryArg.flatMap((id) => (id === "mensual" ? SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p))).map((q) => q.id) : [id]));
   const serpPlan = { queries: SERP_QUERIES.filter((q) => queryIds.includes(q.id)), maxSearches: num("max-searches", 12), reserve: num("reserve", 20) };
   const apifySources = csv("sources", ["computrabajo", "indeed", "linkedin"]).filter((s): s is ApifyJobSource => Object.hasOwn(APIFY_JOBS, s));
   const apifyRows = Math.min(200, Math.max(1, num("rows", 100)));

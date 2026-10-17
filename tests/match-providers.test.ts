@@ -3,7 +3,7 @@ import { apifyNextCap } from "@/lib/match/apify";
 import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported } from "@/lib/match/inventory";
 import { workplaceFromDescription } from "@/lib/match/connectors";
 import { isInferred } from "@/lib/match/labels";
-import { FANTASTIC_COHORTS, normalizeFantastic, normalizeSerp, pickApplyLink, relativeAgeDays, runFantastic, runSerp, SERP_QUERIES } from "@/lib/match/providers";
+import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, normalizeFantastic, normalizeSerp, pickApplyLink, relativeAgeDays, runFantastic, runSerp, SERP_QUERIES } from "@/lib/match/providers";
 
 const NOW = "2026-10-17T12:00:00.000Z";
 const T = Date.parse(NOW);
@@ -262,5 +262,15 @@ describe("inventario con importaciones parciales", () => {
     applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: normalizeFantastic([fantasticRow], "fantastic_ats", "G1", T).postings, complete: false }, NOW);
     expect(inv.postings[0].eligibility.status).toBe("elegible");
     expect(inv.postings[0].extracted.family.value).not.toBe("software");
+  });
+});
+
+describe("tanda automática de marketing y finanzas", () => {
+  it("tiene búsquedas de marketing y de finanzas con ids únicos", () => {
+    const monthly = SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p)));
+    expect(monthly.filter((q) => q.id.startsWith("mk-")).length).toBeGreaterThanOrEqual(10);
+    expect(monthly.filter((q) => q.id.startsWith("fz-")).length).toBeGreaterThanOrEqual(10);
+    expect(monthly.length).toBeLessThanOrEqual(30); // entra en una corrida de --max-searches=30
+    expect(new Set(SERP_QUERIES.map((q) => q.id)).size).toBe(SERP_QUERIES.length);
   });
 });

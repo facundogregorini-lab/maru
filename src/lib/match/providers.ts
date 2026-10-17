@@ -44,6 +44,9 @@ export const FANTASTIC_COHORTS: Cohort[] = [
  * de reserva (atención en Mar del Plata, datos en Neuquén) para no sesgar su comprobación.
  */
 export type SerpQuery = { id: string; q: string };
+
+/** `--queries=mensual`: la tanda automática de cada mes (marketing y finanzas). */
+export const MONTHLY_QUERY_PREFIXES = ["mk-", "fz-"];
 export const SERP_QUERIES: SerpQuery[] = [
   { id: "adm-cba", q: "administrativo contable Córdoba" },
   { id: "fin-ros", q: "analista de finanzas Rosario" },
@@ -105,6 +108,37 @@ export const SERP_QUERIES: SerpQuery[] = [
   { id: "v-salud-enf", q: "enfermero Buenos Aires" },
   { id: "v-salud-farm", q: "farmacéutico Córdoba" },
   { id: "v-salud-adm", q: "administrativo de salud Mendoza" },
+  // Automático (workflow match-providers, días 2 y 17): marketing y finanzas, las áreas que el dueño quiere fuertes.
+  { id: "mk-analista-caba", q: "analista de marketing Buenos Aires" },
+  { id: "mk-digital-caba", q: "marketing digital Buenos Aires" },
+  { id: "mk-cm-caba", q: "community manager Buenos Aires" },
+  { id: "mk-trade", q: "trade marketing Argentina" },
+  { id: "mk-brand", q: "brand manager Argentina" },
+  { id: "mk-performance", q: "performance marketing Argentina" },
+  { id: "mk-seo", q: "SEO SEM Argentina" },
+  { id: "mk-growth", q: "growth marketing Argentina" },
+  { id: "mk-ecommerce", q: "ecommerce marketing Argentina" },
+  { id: "mk-comunicacion", q: "comunicación institucional Buenos Aires" },
+  { id: "mk-cba", q: "marketing Córdoba" },
+  { id: "mk-ros", q: "marketing Rosario" },
+  { id: "mk-mza", q: "marketing Mendoza" },
+  { id: "mk-contenido", q: "content manager Argentina" },
+  { id: "fz-analista-caba", q: "analista financiero Buenos Aires" },
+  { id: "fz-tesoreria-caba", q: "analista de tesorería Buenos Aires" },
+  { id: "fz-contable-caba", q: "analista contable Buenos Aires" },
+  { id: "fz-creditos", q: "analista de créditos Argentina" },
+  { id: "fz-banco", q: "oficial de negocios banco Argentina" },
+  { id: "fz-riesgo", q: "analista de riesgo Buenos Aires" },
+  { id: "fz-controller", q: "controller financiero Argentina" },
+  { id: "fz-costos", q: "analista de costos Argentina" },
+  { id: "fz-impuestos", q: "analista de impuestos Buenos Aires" },
+  { id: "fz-auditor", q: "auditor Buenos Aires" },
+  { id: "fz-seguros", q: "analista de seguros Buenos Aires" },
+  { id: "fz-fintech", q: "fintech analista Argentina" },
+  { id: "fz-cba", q: "analista financiero Córdoba" },
+  { id: "fz-ros", q: "analista contable Rosario" },
+  { id: "fz-mza", q: "analista financiero Mendoza" },
+  { id: "fz-tuc", q: "analista contable Tucumán" },
   { id: "adm2-mza", q: "administrativo Mendoza" },
   { id: "atc2-cba", q: "atención al cliente Córdoba" },
   { id: "ven2-cba", q: "vendedor Córdoba" },
