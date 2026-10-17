@@ -64,12 +64,12 @@ async function apifyFetch(url: string, token: string, init?: RequestInit) {
   return (await res.json()) as { data?: Record<string, unknown> } & unknown[];
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = []): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   let spent = spentBefore;
   for (const source of sources) {
     const config = APIFY_JOBS[source];
-    for (const keyword of APIFY_KEYWORDS[source].slice(0, keywordsPerSource)) {
+    for (const keyword of (custom.length ? custom : APIFY_KEYWORDS[source]).slice(0, keywordsPerSource)) {
       const cap = apifyNextCap(source, rows, spent, budgetUsd);
       if (!cap) {
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
@@ -166,7 +166,9 @@ async function main() {
   else if (provider === "serpapi") result = await runSerp(key("SERP_API"), serpPlan, log, nowIso);
   else {
     if (!(apifyBudget > 0 && apifyBudget <= 5)) throw new Error("Indicá --budget-usd entre 0 y 5 (presupuesto aprobado por el dueño).");
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso);
+    // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
+    const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom);
   }
 
   const inv = await readJson<Inventory>(INV, emptyInventory("real"));

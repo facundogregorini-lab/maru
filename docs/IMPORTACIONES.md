@@ -10,7 +10,7 @@ Sólo a mano, desde **GitHub → Actions → match-providers → Run workflow** 
 | --- | --- |
 | `provider` | `fantastic`, `serpapi` o `apify` |
 | `mode` | `plan`: muestra qué haría, sin red (default). `status`: lee el saldo (Fantastic usa 1 request de conteo, que no gasta créditos de avisos). `run`: importa y commitea `data/match/`. |
-| `args` | Opcional. Fantastic: `--cohorts=G1,G2,T1 --feeds=ats,jb --limit=50 --max-jobs=300 --time-frame=7d`. SerpApi: `--max-searches=12 --reserve=20 --queries=adm-cba,fin-ros`. Apify: `--budget-usd=5 --rows=100 --sources=computrabajo,indeed,linkedin --keywords-per-source=10`. |
+| `args` | Opcional. Fantastic: `--cohorts=G1,G2,T1 --feeds=ats,jb --limit=50 --max-jobs=300 --time-frame=7d`. SerpApi: `--max-searches=12 --reserve=20 --queries=adm-cba,fin-ros`. Apify: `--budget-usd=5 --rows=100 --sources=computrabajo,indeed,linkedin --keywords-per-source=10` y opcional `--keywords=administrativo_tucuman,vendedor_salta` (`_` = espacio). |
 
 Las claves se leen de los **secrets del repositorio** (Settings → Secrets and variables → Actions): `FANTASTIC_JOBS`, `SERP_API` y `APIFY_TOKEN`. Las variables de Vercel no llegan a GitHub Actions: hay que cargarlas también ahí. El repo es **público**: nunca pasar claves como inputs del workflow, en argumentos o en archivos. El primer paso del workflow sólo informa si cada secret está "cargado" o "falta".
 
