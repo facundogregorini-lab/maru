@@ -38,12 +38,18 @@ export function useDictation(lang: string) {
   const [error, setError] = useState("");
   const recRef = useRef<Recognition | null>(null);
   const wantRef = useRef(false);
+  // Después de desmontar, nadie puede volver a abrir el micrófono (una promesa vieja que llama a start()).
+  const aliveRef = useRef(true);
 
   useEffect(() => setSupported(recognitionCtor() !== null), []);
   useEffect(
-    () => () => {
-      wantRef.current = false;
-      recRef.current?.abort();
+    () => {
+      aliveRef.current = true;
+      return () => {
+        aliveRef.current = false;
+        wantRef.current = false;
+        recRef.current?.abort();
+      };
     },
     [],
   );
@@ -99,6 +105,7 @@ export function useDictation(lang: string) {
   }, [lang]);
 
   const start = useCallback(() => {
+    if (!aliveRef.current) return;
     setError("");
     wantRef.current = true;
     begin();

@@ -22,11 +22,14 @@ export function useJobInput(target?: HandoffTarget) {
 
   // Viene de una búsqueda de Maru ("Entrená la entrevista", "Grabá tu video"): arrancamos con ella.
   const tookRef = useRef(false);
+  /** true si llegó una búsqueda nueva: el flujo no tiene que restaurar su sesión anterior encima. */
+  const fromHandoff = useRef(false);
   useEffect(() => {
     if (!target || tookRef.current) return;
     tookRef.current = true;
     const h = takeHandoff(target);
     if (!h) return;
+    fromHandoff.current = true;
     setOrigin(h);
     setModo("busqueda");
     setJobUrl(h.jobUrl);
@@ -66,6 +69,7 @@ export function useJobInput(target?: HandoffTarget) {
     payload,
     fallbackToText,
     origin,
+    fromHandoff,
     /** Para mostrar en títulos. */
     label: modo === "general" ? [rol, empresa].filter(Boolean).join(" · ") : "",
     snapshot: () => ({ modo, jobUrl, jobText, empresa, rol }),
