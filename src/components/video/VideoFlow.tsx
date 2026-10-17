@@ -50,6 +50,11 @@ export default function VideoFlow() {
   const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Llegó desde una búsqueda ("Grabá tu video"): empieza con esa, no con el guion anterior.
+    if (job.fromHandoff.current) {
+      remove(SESSION_KEY);
+      return;
+    }
     const s = load<Session>(SESSION_KEY);
     if (!s?.guion) return;
     job.restore(s.job);

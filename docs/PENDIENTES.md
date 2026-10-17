@@ -201,16 +201,38 @@ Se usa en `/busquedas`, el detalle, el Match y la home. Para buscar y agrupar se
 - los términos hablan de "suscripción mensual" y hay tres planes;
 - falta el botón de arrepentimiento (Res. 424/2020).
 
-**Auditorías pendientes de corregir:**
-- **Postulación:** recargar pierde el aviso pegado; "Adaptar mi CV" desde el seguimiento borra el CV generado; el cupo se descuenta si la IA falla; errores de red en inglés.
-- **CV:** regenerar borra ediciones; "Ocultar experiencia" no se ve en el editor; secciones vacías desaparecen; ATS con punto final; foto HEIC.
-- **Carta:** reescribir un párrafo con foco no hace nada; perfil y carta en paralelo pierden la carta; volver sin regenerar.
-- **Entrevista y Video:** "Terminar" deja el micrófono abierto; el informe se pide dos veces; el handoff se pisa con la sesión vieja; teleprompter sin pausa.
+**Productos (17/10, hechos los más graves):**
+- **Entrevista:**
+  - "Terminar" ya no deja el micrófono abierto ni hace hablar otra pregunta: `endedRef` en `Call` y `aliveRef` en `useDictation`;
+  - el informe se pide una sola vez;
+  - "Repetir pregunta" no borra lo ya respondido.
+- **Entrevista y Video:** al llegar desde una búsqueda ya no se restaura la sesión anterior encima (`job.fromHandoff`).
+- **Carta y CV:** "Mejorar", "Más corto" y similares ahora actualizan un párrafo con foco (`EditableText`). Antes se descartaban, y en el celular pasaba siempre.
+- **Carta:**
+  - el perfil se lee y se guarda antes de pedir la carta (antes se podía perder una carta ya generada);
+  - el seguimiento usa el título de la búsqueda y no el que redacta la IA.
+- **Postulación:**
+  - al recargar, el aviso pegado se sigue enviando;
+  - "Adaptar mi CV" desde el seguimiento retoma la postulación de esa misma búsqueda en vez de borrarla;
+  - "Postularme a otra vacante" limpia el aviso y la motivación anteriores.
+
+**Pendiente de las auditorías (para otra tanda):**
+- **Postulación:** cupo que se descuenta si la IA falla; errores de red en inglés; el aviso se lee dos veces; caracteres de control en el Word.
+- **CV:**
+  - regenerar borra ediciones;
+  - "Ocultar experiencia" en el editor;
+  - secciones vacías;
+  - ATS con punto final;
+  - foto HEIC;
+  - saltos de línea en PDF y Word.
+- **Carta:** volver sin regenerar; reescribir aplica el tono aunque falle; Word pago como salida del PDF; topes de largo.
+- **Entrevista y Video:** cupo y "retomar plan"; aviso de privacidad del dictado; WebM sin duración; teleprompter sin pausa y chico en el celular; topes de largo en `/turno`; puntajes fuera de rango.
 - **Cuenta:**
   - cambiar de cuenta borra el CV, la carta, la entrevista y el video sin avisar;
   - "Borrar mis datos" deja `maru:sync:v1`;
   - "Salir" no revoca la cookie;
-  - OG por página.
+  - OG por página;
+  - `<h1>` en AppShell.
 
 **F.** Google Jobs mensual: lo decide el dueño (ver "Próximos pasos", punto 1).
 

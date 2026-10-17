@@ -133,11 +133,11 @@ export default function CartaFlow() {
     setStage("escribiendo");
     try {
       const saved = cv.savedProfile;
-      const [p, c] = await Promise.all([
-        saved ? Promise.resolve({ profile: saved, gaps: findGaps(saved) }) : post<{ profile: Profile; gaps: GapQuestion[] }>("/api/profile", { source: cv.source }),
-        post<{ carta: Carta }>("/api/carta", { ...busqueda(), motivacion, source: cv.source, opciones }),
-      ]);
+      // Primero el perfil, y se guarda apenas llega: si después falla la carta, no hay que volver a leer el CV;
+      // y si falla el perfil, no se gasta una carta que se perdería.
+      const p = saved ? { profile: saved, gaps: findGaps(saved) } : await post<{ profile: Profile; gaps: GapQuestion[] }>("/api/profile", { source: cv.source });
       if (!saved) saveProfile(p.profile);
+      const c = await post<{ carta: Carta }>("/api/carta", { ...busqueda(), motivacion, source: cv.source, opciones });
       setProfile(p.profile);
       setCarta(c.carta);
       setDocState(buildCartaDoc(c.carta, p.profile, lastCvDesign() ?? { template: "moderno" }));
@@ -146,8 +146,9 @@ export default function CartaFlow() {
       const origin = modo === "busqueda" && originRef.current?.jobUrl === jobUrl.trim() ? originRef.current : null;
       upsertTracked(
         modo === "busqueda"
-          ? { id: origin?.id, title: c.carta.puesto || origin?.title || "", company: c.carta.empresa || origin?.company || "", jobUrl: jobUrl.trim(), jobText: jobText.trim() || undefined, artifact: "carta" }
-          : { title: rol.trim() || c.carta.puesto || "Carta espontánea", company: empresa.trim() || c.carta.empresa, artifact: "carta" },
+          ? // El título y la empresa de la búsqueda mandan sobre lo que redactó la IA.
+            { id: origin?.id, title: origin?.title || c.carta.puesto || "", company: origin?.company || c.carta.empresa || "", jobUrl: jobUrl.trim(), jobText: jobText.trim() || undefined, artifact: "carta" }
+          : { title: rol.trim() || "Carta espontánea", company: empresa.trim() || c.carta.empresa, artifact: "carta" },
       );
     } catch (e) {
       const err = e as Error & { code?: string };

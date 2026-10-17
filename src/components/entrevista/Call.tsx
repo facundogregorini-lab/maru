@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { EntrevistaOpciones, EntrevistaPlan, Intercambio, Turno } from "@/lib/schemas";
 import { speak, stopSpeaking, ttsSupported, useDictation } from "../speech";
 import { post } from "../ui";
@@ -55,20 +55,33 @@ export default function Call({
     return () => clearInterval(id);
   }, [answerStart]);
 
-  useEffect(() => () => stopSpeaking(), []);
+  // La llamada terminó (Terminar, o la última respuesta): nada de lo que quedó esperando vuelve a hablar,
+  // abrir el micrófono ni pedir el informe otra vez.
+  const endedRef = useRef(false);
+  useEffect(() => {
+    // React en modo estricto monta, desmonta y vuelve a montar: al montar, la llamada está viva.
+    endedRef.current = false;
+    return () => {
+      endedRef.current = true;
+      stopSpeaking();
+    };
+  }, []);
 
   /** La entrevistadora dice algo y, al terminar, abrimos el turno de respuesta. */
   const say = useCallback(
-    async (text: string, next: { texto: string; repregunta: boolean } | null) => {
+    async (text: string, next: { texto: string; repregunta: boolean } | null, keep = false) => {
       setPhase("speaking");
       setCaption(text);
       if (ttsSupported()) await speak(text, lang);
       else await new Promise((r) => setTimeout(r, Math.min(6000, 1200 + text.length * 25)));
-      if (!next) return;
+      if (!next || endedRef.current) return;
       setCurrent(next);
-      dictation.reset();
-      setTyped("");
-      setAnswerStart(Date.now());
+      // "Repetir pregunta" no borra lo que ya respondiste ni reinicia el tiempo.
+      if (!keep) {
+        dictation.reset();
+        setTyped("");
+        setAnswerStart(Date.now());
+      }
       setPhase("listening");
       if (voice && dictation.supported) dictation.start();
     },
@@ -82,7 +95,7 @@ export default function Call({
 
   function repeat() {
     dictation.stop();
-    void say(current.texto, current);
+    void say(current.texto, current, true);
   }
 
   async function submit() {
@@ -103,6 +116,7 @@ export default function Call({
     } catch {
       // Si la IA tarda o falla, la entrevista sigue igual con la próxima pregunta.
     }
+    if (endedRef.current) return;
 
     if (turno.repregunta) {
       void say(`${turno.reaccion} ${turno.repregunta}`.trim(), { texto: turno.repregunta, repregunta: true });
@@ -110,6 +124,8 @@ export default function Call({
     }
     if (isLast) {
       await say(`${turno.reaccion} ${plan.cierre}`.trim(), null);
+      if (endedRef.current) return;
+      endedRef.current = true;
       setPhase("done");
       onFinish(h);
       return;
@@ -120,6 +136,8 @@ export default function Call({
   }
 
   function finishEarly() {
+    if (endedRef.current) return;
+    endedRef.current = true;
     dictation.stop();
     stopSpeaking();
     const respuesta = (useVoice ? dictation.text : typed).trim();
