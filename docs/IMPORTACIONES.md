@@ -83,3 +83,29 @@ Desde #60, si Google Jobs no responde una búsqueda en 55 s, la búsqueda se sal
    Los avisos de Google Jobs vencen a los 21 días sin volver a verse: sin la corrida mensual, el catálogo vuelve a achicarse.
 3. **Apify:** el tope aprobado (US$5 reales) está casi usado. Para seguir hace falta una aprobación nueva del dueño. Después se corre con `--budget-source=account`. Si se aprueba, Computrabajo es lo que más rinde para el interior.
 4. **Directorio gratuito:** revisar `data/match/providers-discoveries.json` después de cada corrida de Fantastic. Los empleadores con `supported` se suman a `companies.json` y quedan en la sync diaria para siempre. Los que usan Workday, Teamtailor, SuccessFactors o Workable (la mayoría) necesitan conectores nuevos: ver PENDIENTES.
+
+## Corrida por verticales (17/10/2026, 22:02 UTC)
+
+Google Jobs (SerpApi, plan gratuito): 15 búsquedas `v-…` de las 16 preparadas para las verticales con poca oferta. Antes de correr quedaban 35 búsquedas del plan; quedan 20 de reserva.
+
+| Búsqueda | Filas | Aceptadas |
+| --- | ---: | ---: |
+| docente Buenos Aires | 10 | 4 |
+| profesor de inglés Córdoba | 5 | 3 |
+| arquitecto Buenos Aires | 10 | 8 |
+| jefe de obra Argentina | 10 | 10 |
+| maestro mayor de obras Córdoba | 0 | 0 |
+| asesor inmobiliario Rosario | 10 | 6 |
+| diseñador gráfico Buenos Aires | 10 | 7 |
+| editor de video Argentina | 10 | 6 |
+| community manager Córdoba | 10 | 6 |
+| oficial de cuentas banco Argentina | 0 | 0 |
+| productor asesor de seguros | 5 | 2 |
+| analista de riesgo crediticio Buenos Aires | 10 | 6 |
+| enfermero Buenos Aires | 10 | 6 |
+| farmacéutico Córdoba | 0 | 0 |
+| administrativo de salud Mendoza | 3 | 2 |
+| **Total** | **103** | **66** (+53 nuevos, 12 actualizados) |
+
+Rechazos: 36 sólo ofrecían agregadores secundarios y 1 tenía descripción corta. El plan gratuito se renueva a principio de mes: ahí se pueden repetir las búsquedas sin resultados con otra redacción ("maestro mayor de obras", "oficial de negocios banco", "farmacia Córdoba").
+
