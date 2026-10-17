@@ -52,7 +52,7 @@ function fakeModel(f: AutofillField, extras: string): { valor: string; revisar?:
   if (/portfolio|github/.test(l)) return { valor: profile.otros_links[0] };
   if (/years/.test(l)) return { valor: "7", revisar: true, nota: "Calculado desde tu CV" };
   if (/start date/.test(l)) return { valor: "2026-11-01" };
-  if (/country/.test(l)) return { valor: "Argentina" };
+  if (/country|país/.test(l)) return { valor: "Argentina" };
   if (/authorized|remote/.test(l)) return { valor: "Sí" };
   if (/daily/.test(l)) return { valor: "TypeScript\nReact" };
   if (/why|about yourself/.test(l)) return { valor: WHY, revisar: true, nota: "Redactado por Maru" };
@@ -352,13 +352,14 @@ describe.skipIf(!run)("extensión de Chrome", () => {
       ["seleccion", "Country", ["Argentina", "Brazil", "Chile", "Uruguay"]],
       ["seleccion", "Are you legally authorized to work in Argentina?", ["Yes", "No"]],
       ["seleccion", "Gender", ["Female", "Male", "Decline to self-identify"]],
+      ["seleccion", "País (menú sin escritura)", ["Argentina", "Brazil", "Chile"]],
     ]);
 
     const state = JSON.parse(await page.$eval("#state", (n) => n.textContent ?? "{}"));
-    expect(state).toEqual({ prefilled: "uy", country: "argentina", authorized: "yes" });
+    expect(state).toEqual({ prefilled: "uy", country: "argentina", authorized: "yes", nonsearch: "argentina" });
     // Las listas quedan cerradas y el género (no lo completamos nunca) queda marcado como pendiente.
     expect(await page.$$("[role=listbox]")).toHaveLength(0);
-    expect(result).toMatchObject({ completados: 2, revisar: 0, pendientes: 1 });
+    expect(result).toMatchObject({ completados: 3, revisar: 0, pendientes: 1 });
     await page.close();
   }, 30_000);
 

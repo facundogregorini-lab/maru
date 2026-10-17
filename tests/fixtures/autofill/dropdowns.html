@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<title>Maru · prueba de desplegables</title>
+<style>
+body{font:16px system-ui;max-width:980px;margin:28px auto;padding:0 24px;color:#17251d;background:#f4f8f5}h1{font-size:28px}form{display:grid;grid-template-columns:1fr 1fr;gap:20px}.field{padding:16px;background:white;border:1px solid #d4dfd7;border-radius:14px}label,.label{display:block;margin-bottom:10px;font-weight:600}button,input,select{font:inherit;padding:10px;border:1px solid #809488;border-radius:8px;background:white}input,select,[role=combobox]{box-sizing:border-box;width:100%}[role=combobox]{text-align:left;min-height:44px}[role=listbox]{padding:5px;margin-top:4px;background:white;border:1px solid #809488;border-radius:8px}[role=option]{padding:8px;cursor:pointer;border-radius:4px}[role=option]:hover{background:#e3f8e7}[aria-disabled=true]{color:#999;pointer-events:none}pre{white-space:pre-wrap;font:13px ui-monospace;background:#e5eee7;padding:14px;border-radius:10px}[hidden]{display:none!important}.controls{margin:20px 0;display:flex;gap:12px}.controls button{background:#69e5a0;font-weight:600}.wide{grid-column:1/-1}#button-country-list{position:fixed;left:30px;top:190px;z-index:10}
+</style>
+<h1>Desplegables · formulario ficticio de prueba</h1>
+<p>El panel de QC usa el content script real de Maru con respuestas ficticias. No hay llamadas a IA ni envíos externos.</p>
+<form id="application">
+<div class="field" data-case="button">
+<label id="button-country-label" for="button-country">País de residencia · botón</label>
+<button id="button-country" role="combobox" aria-haspopup="listbox" aria-controls="button-country-list" aria-expanded="false" aria-required="true" aria-labelledby="button-country-label" data-placeholder>Seleccioná un país</button>
+</div>
+<div class="field" data-case="readonly">
+<label for="readonly-country">País de residencia · sólo lectura</label>
+<input id="readonly-country" role="combobox" aria-haspopup="listbox" aria-controls="readonly-country-list" aria-expanded="false" readonly required placeholder="Seleccioná un país">
+<div id="readonly-country-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="div">
+<p id="availability-label" class="label">Jornada · menú personalizado</p>
+<div id="availability" role="combobox" tabindex="0" aria-labelledby="availability-label" aria-haspopup="listbox" aria-controls="availability-list" aria-expanded="false" aria-required="true" data-placeholder><span>Seleccioná una opción</span><input type="hidden" name="availability" value=""></div>
+<div id="availability-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="delayed">
+<label for="delayed-country">País de residencia · carga demorada</label>
+<button type="button" id="delayed-country" role="combobox" aria-haspopup="listbox" aria-controls="delayed-country-list" aria-expanded="false" aria-required="true" data-placeholder>Seleccioná un país</button>
+<div id="delayed-country-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="prefilled">
+<label for="prefilled-country">País elegido por la persona</label>
+<button type="button" id="prefilled-country" role="combobox" aria-haspopup="listbox" aria-controls="prefilled-country-list" aria-expanded="false" aria-valuetext="Uruguay">Uruguay</button>
+<div id="prefilled-country-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="composite">
+<p id="composite-label" class="label">País · control con buscador interno</p>
+<div id="composite" role="combobox" tabindex="0" aria-labelledby="composite-label" aria-haspopup="listbox" aria-controls="composite-list" aria-expanded="false" data-placeholder><span>Seleccioná un país</span><input aria-label="Buscar país" placeholder="Buscar…"></div>
+<div id="composite-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="native">
+<label for="native-country">País · selector nativo</label>
+<select id="native-country" required><option value="AR">Argentina</option><option value="" selected>Seleccioná un país</option><option value="BR">Brasil</option><option value="UY" disabled>Uruguay</option></select>
+</div>
+<div class="field" data-case="legacy">
+<label for="legacy-country">País · HiringRoom sin buscador</label>
+<div class="custom-hr-select-container">
+<div class="custom-hr-select__control"><div class="custom-hr-select__value-container"><div class="custom-hr-select__placeholder">Seleccione una opción</div><input id="legacy-country" readonly tabindex="0" aria-autocomplete="list" style="width:1px;min-height:0;padding:0;border:0;opacity:0"></div></div>
+<div class="custom-hr-select__menu" hidden><div class="custom-hr-select__menu-list"></div></div>
+</div>
+</div>
+<div class="field" data-case="legacy-search">
+<label for="legacy-language">Idioma · HiringRoom con buscador</label>
+<div class="custom-hr-select-container">
+<div class="custom-hr-select__control"><div class="custom-hr-select__value-container"><div class="custom-hr-select__placeholder">Seleccione una opción</div><div><div class="custom-hr-select__input"><input id="legacy-language" tabindex="0" aria-autocomplete="list" style="width:2px;min-height:0;padding:0;border:0"></div></div></div></div>
+<div class="custom-hr-select__menu" hidden><div class="custom-hr-select__menu-list"></div></div>
+</div>
+</div>
+<div class="field" data-case="legacy-prefilled">
+<label for="legacy-prefilled">País · HiringRoom ya elegido</label>
+<div class="custom-hr-select-container">
+<div class="custom-hr-select__control"><div class="custom-hr-select__value-container"><div class="custom-hr-select__single-value">Uruguay</div><input id="legacy-prefilled" readonly tabindex="0" aria-autocomplete="list" style="width:1px;min-height:0;padding:0;border:0;opacity:0"></div></div>
+</div>
+</div>
+<div class="field" data-case="native-prefilled">
+<label for="native-prefilled">País nativo elegido por la persona</label>
+<select id="native-prefilled"><option value="AR">Argentina</option><option value="BR">Brasil</option></select>
+</div>
+<div class="field" data-case="blocked">
+<label for="blocked-country">País · control que no acepta el clic</label>
+<button type="button" id="blocked-country" role="combobox" aria-haspopup="listbox" aria-controls="blocked-country-list" aria-expanded="false" aria-required="true" data-placeholder>Seleccioná un país</button>
+<div id="blocked-country-list" role="listbox" hidden></div>
+</div>
+<div class="field" data-case="ambiguous">
+<label for="ambiguous-country">Región · opciones parecidas</label>
+<select id="ambiguous-country" required><option value="">Seleccioná región</option><option value="north">Argentina Norte</option><option value="south">Argentina Sur</option></select>
+</div>
+<button type="submit" class="wide">Enviar formulario ficticio</button>
+</form>
+<pre id="state" aria-label="Estado del formulario"></pre>
+<div id="button-country-list" role="listbox" hidden></div>
+<script src="/dropdowns.js"></script>
+</html>
