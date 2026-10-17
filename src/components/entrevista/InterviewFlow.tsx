@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { EntrevistaOpciones, EntrevistaPlan, Informe, Intercambio } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
 import { upsertTracked } from "@/lib/tracker";
+import { trackActivation } from "@/lib/tracking";
+import { useAuth } from "../auth/AuthProvider";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import JobField, { useJobInput } from "../JobField";
 import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
@@ -53,6 +55,7 @@ export default function InterviewFlow() {
   const [plan, setPlan] = useState<EntrevistaPlan | null>(null);
   const [historial, setHistorial] = useState<Intercambio[]>([]);
   const [informe, setInforme] = useState<Informe | null>(null);
+  const { email } = useAuth();
   const topRef = useRef<HTMLDivElement>(null);
 
   // Retomamos el último informe si se recarga la página.
@@ -117,6 +120,8 @@ export default function InterviewFlow() {
       const { informe } = await post<{ informe: Informe }>("/api/entrevista/informe", { plan, opciones, historial: h });
       setInforme(informe);
       setStage("informe");
+      // Activación: entrevista completa con su informe de feedback (no al recargar un informe guardado).
+      void trackActivation(email, "entrevista", "informe");
       // Si practicó para una búsqueda concreta, queda en el seguimiento.
       if (job.modo === "busqueda") {
         const o = job.origin;

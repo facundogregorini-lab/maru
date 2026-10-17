@@ -3,7 +3,8 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 /** Documentación de endpoints y contrato: docs/COBROS.md. Nunca se confía en el estado recibido por webhook. */
 export type Preapproval = { id: string; status: string; external_reference: string; payer_email?: string; init_point?: string; auto_recurring?: { transaction_amount: number; currency_id: string } };
 export type Invoice = { id: number; preapproval_id: string; payment?: { id: number }; };
-export type Payment = { id: number; status: string; transaction_amount: number; transaction_amount_refunded?: number; currency_id: string; date_approved: string; };
+/** `live_mode` es false en pagos hechos con credenciales de prueba. */
+export type Payment = { id: number; status: string; transaction_amount: number; transaction_amount_refunded?: number; currency_id: string; date_approved: string; live_mode?: boolean };
 export async function mp<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!token) throw new Error("Mercado Pago no está configurado.");

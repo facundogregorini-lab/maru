@@ -74,6 +74,8 @@ function runMemory([op, key, ...args]: Cmd): unknown {
       return "OK";
     case "MGET":
       return [k, ...args.map(String)].map((x) => memory.get(x) ?? null);
+    case "EXISTS":
+      return memory.has(k) ? 1 : 0;
     default:
       throw new DbError(`Comando no soportado en memoria: ${op}`);
   }
@@ -89,8 +91,40 @@ export async function setJson(key: string, value: unknown): Promise<void> {
   await pipeline([["SET", key, JSON.stringify(value)]]);
 }
 
+/**
+ * Guarda la clave sólo si no existe (SET NX), con vencimiento opcional. true = la guardó esta llamada.
+ * Sirve para marcar hitos una única vez aunque lleguen pedidos repetidos o concurrentes.
+ */
+const memoryExpiry = new Map<string, number>();
+export async function setIfAbsent(key: string, value: unknown, ttlMs?: number, now = Date.now()): Promise<boolean> {
+  if (inMemory()) {
+    const expires = memoryExpiry.get(key);
+    if (expires !== undefined && expires <= now) { memory.delete(key); memoryExpiry.delete(key); }
+    if (memory.has(key)) return false;
+    memory.set(key, JSON.stringify(value));
+    if (ttlMs) memoryExpiry.set(key, now + ttlMs);
+    return true;
+  }
+  const cmd: Cmd = ["SET", key, JSON.stringify(value), "NX"];
+  if (ttlMs) cmd.push("PX", Math.max(1, Math.round(ttlMs)));
+  const [result] = await pipeline([cmd]);
+  return result === "OK";
+}
+
+/** true si la clave existe (sin modificarla). */
+export async function keyExists(key: string, now = Date.now()): Promise<boolean> {
+  if (inMemory()) {
+    const expires = memoryExpiry.get(key);
+    if (expires !== undefined && expires <= now) { memory.delete(key); memoryExpiry.delete(key); }
+    return memory.has(key);
+  }
+  const [result] = await pipeline([["EXISTS", key]]);
+  return Number(result) > 0;
+}
+
 /** Para tests. */
 export function resetMemoryDb() {
+  memoryExpiry.clear();
   memory.clear();
 }
 

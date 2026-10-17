@@ -1,5 +1,5 @@
 import { billingJson, billingSession } from "@/lib/billing/http";
-import { billingMissing, billingReady, hasPaidAccess, readSubscription, refreshSubscription, subscriptionPlan } from "@/lib/billing/server";
+import { billingMissing, billingReady, hasPaidAccess, lastPayment, readSubscription, refreshSubscription, subscriptionPlan } from "@/lib/billing/server";
 import { billingEnabled } from "@/lib/plans";
 import { dbConfigured } from "@/lib/db";
 export const runtime = "nodejs";
@@ -11,7 +11,8 @@ export async function GET(req: Request) {
   if (!email || !dbConfigured()) return billingJson({ enabled, missing, plan: "gratis", tier: null, status: "none", paidThrough: null });
   try {
     const sub = await readSubscription(email);
-    return billingJson({ enabled, missing, plan: hasPaidAccess(sub) ? "maru" : "gratis", tier: sub ? subscriptionPlan(sub) : null, status: sub?.status ?? "none", paidThrough: sub?.paidThrough ?? null });
+    // lastPayment: último pago acreditado y verificado (id de Mercado Pago, importe, moneda, primero o renovación), para medir la compra.
+    return billingJson({ enabled, missing, plan: hasPaidAccess(sub) ? "maru" : "gratis", tier: sub ? subscriptionPlan(sub) : null, status: sub?.status ?? "none", paidThrough: sub?.paidThrough ?? null, lastPayment: lastPayment(sub ?? null) });
   } catch { return billingJson({ error: "No pudimos consultar tu plan.", code: "PLAN_UNAVAILABLE" }, 503); }
 }
 export async function POST(req: Request) {

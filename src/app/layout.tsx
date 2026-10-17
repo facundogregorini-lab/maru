@@ -13,7 +13,9 @@ import "@fontsource/source-sans-3/600.css";
 import "@fontsource/source-sans-3/700.css";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
+import PaywallHost from "@/components/billing/PaywallHost";
 import { SITE_URL } from "@/lib/site";
+import { googleTagSnippet } from "@/lib/tracking/tag";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const titillium = Titillium_Web({ subsets: ["latin"], weight: ["300", "400", "600", "700"], variable: "--font-titillium" });
@@ -36,6 +38,9 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: "Maru Coach · Tu coach de carrera con IA", description: DESCRIPTION, images: ["/video/maru-intro-poster.jpg"] },
 };
 
+// Sólo en el deploy de producción de Vercel; el script además verifica el dominio en el navegador.
+const GOOGLE_TAG = process.env.VERCEL_ENV === "production" ? googleTagSnippet() : null;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     // suppressHydrationWarning: el script de abajo agrega la clase "js" antes de que React hidrate.
@@ -46,9 +51,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Vercel Analytics sin dependencia: sólo cuenta visitas y los eventos de track(); se activa en el panel de Vercel. */}
         <script dangerouslySetInnerHTML={{ __html: "window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};" }} />
         {process.env.VERCEL && <script defer src="/_vercel/insights/script.js" />}
+        {/* Etiqueta de Google (Google Ads) directa, sin GTM: una sola carga para todo el sitio. Ver src/lib/tracking/tag.ts. */}
+        {GOOGLE_TAG && <script dangerouslySetInnerHTML={{ __html: GOOGLE_TAG }} />}
       </head>
       <body className="font-sans antialiased">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <PaywallHost />
+        </AuthProvider>
       </body>
     </html>
   );

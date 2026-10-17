@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MaruSprite } from "./maru/PixelMaru";
+import { notifyPlanLimit } from "@/lib/tracking/paywall";
 
 /** Piezas visuales compartidas por todas las secciones de Maru. */
 
@@ -106,6 +107,10 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
     });
   }
   const data = await res.json().catch(() => ({ error: "Respuesta inesperada del servidor." }));
-  if (!res.ok) throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
+  if (!res.ok) {
+    // Si el cupo gratis frenó la acción, se abren los planes (PaywallHost). El mensaje de error sigue igual.
+    notifyPlanLimit(url, res.status, data.code);
+    throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
+  }
   return data as T;
 }

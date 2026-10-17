@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 
-/** `guard`: para copiar algo que exige login (p. ej. el CV), recibe la acción y decide si correrla. */
-export default function CopyButton({ text, label = "Copiar", guard }: { text: string; label?: string; guard?: (copy: () => Promise<void>) => void }) {
+/**
+ * `guard`: para copiar algo que exige login (p. ej. el CV), recibe la acción y decide si correrla.
+ * `onCopied`: se llama sólo si el navegador confirmó la copia.
+ */
+export default function CopyButton({ text, label = "Copiar", guard, onCopied }: { text: string; label?: string; guard?: (copy: () => Promise<void>) => void; onCopied?: () => void }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     await navigator.clipboard.writeText(text);
+    onCopied?.();
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
