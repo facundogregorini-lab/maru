@@ -1,4 +1,5 @@
 import { AREAS, MODALIDADES, NIVELES, type JobQuery } from "./jobFilters";
+import { isInferred } from "./match/labels";
 import { loadInventory, resolveId } from "./match/load";
 import { ageDays, argentinaFirst, HIDE_AFTER_DAYS } from "./match/ranking";
 import type { EmploymentType, Opportunity, Salary } from "./match/types";
@@ -72,7 +73,7 @@ function toResult(o: Opportunity, postings: Postings): JobResult | null {
     company: o.company,
     area: AREAS[o.extracted.family.value] ?? "",
     where: argentinaFirst(o.locations).slice(0, 2).join(" · ") + (o.locations.length > 2 ? ` · +${o.locations.length - 2}` : ""),
-    modalidad: MODALIDADES[o.workplace.value] ?? "",
+    modalidad: MODALIDADES[o.workplace.value] ? `${MODALIDADES[o.workplace.value]}${isInferred(o.workplace) ? " (inferido)" : ""}` : "",
     contrato: o.extracted.employmentType ? CONTRATOS[o.extracted.employmentType.value] : "",
     nivel: o.extracted.seniority ? (NIVELES[o.extracted.seniority.value] ?? "") : "",
     anios: o.extracted.yearsRequired,
