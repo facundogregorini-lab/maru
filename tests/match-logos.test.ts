@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { companyKey, shareCompanyLogos } from "@/lib/match/logos";
+import { companyDomains, companyKey, domainLogo, shareCompanyLogos, withCompanyLogos } from "@/lib/match/logos";
 import type { StoredPosting } from "@/lib/match/types";
 
 const p = (key: string, company: string, companyLogo?: string) => ({ key, company, ...(companyLogo ? { companyLogo } : {}) }) as StoredPosting;
@@ -24,5 +24,31 @@ describe("logos compartidos por empresa", () => {
     expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
     expect(out.find((x) => x.key === "e")!.companyLogo).toBeUndefined();
     expect(out.find((x) => x.key === "f")!.companyLogo).toBe("http://inseguro/logo.png");
+  });
+});
+
+describe("logo por el sitio de la empresa", () => {
+  const d = (key: string, company: string, descriptionText: string) => ({ key, company, descriptionText }) as StoredPosting;
+  it("usa el dominio del aviso sólo si coincide con el nombre de la empresa", () => {
+    const domains = companyDomains([
+      d("a", "Caylent", "Join us at caylent.com. Apply on boards.greenhouse.io or write to jobs@caylent.com"),
+      d("b", "Santex", "Más info en www.santexgroup.com"),
+      d("c", "Worldwide Clinical Trials", "Visit worldwide.com"),
+      d("d", "Knight Piesold", "Apply at knightpiesold.catsone.com"),
+      d("e", "Confidencial", "confidencial.com"),
+      d("f", "Acme", "Somos partners de google.com y linkedin.com"),
+    ]);
+    expect(domains.get(companyKey("Caylent"))).toBe("caylent.com");
+    expect(domains.get(companyKey("Santex"))).toBe("santexgroup.com");
+    expect(domains.has(companyKey("Worldwide Clinical Trials"))).toBe(false);
+    expect(domains.has(companyKey("Knight Piesold"))).toBe(false);
+    expect(domains.has(companyKey("Confidencial"))).toBe(false);
+    expect(domains.has(companyKey("Acme"))).toBe(false);
+  });
+
+  it("completa con el ícono del sitio sólo lo que no tiene logo", () => {
+    const out = withCompanyLogos([d("a", "Caylent", "caylent.com"), { ...d("b", "Bunge", "bunge.com"), companyLogo: "https://img/bunge.png" }]);
+    expect(out[0].companyLogo).toBe(domainLogo("caylent.com"));
+    expect(out[1].companyLogo).toBe("https://img/bunge.png");
   });
 });
