@@ -16,7 +16,7 @@ export default function BillingPanel() {
   const read = useCallback(async (refresh = false) => {
     const res = await fetch("/api/billing/status", { method: refresh ? "POST" : "GET", cache: "no-store", headers: email ? { "X-Maru-Account": email } : {} });
     const body = await res.json();
-    if (!res.ok) throw new Error(body.error ?? "No pudimos consultar tu plan.");
+    if (!res.ok) throw new Error(`${body.error ?? "No pudimos consultar tu plan."}${body.detail ? ` Detalle: ${body.detail}` : ""}`);
     setStatus(body);
   }, [email]);
   useEffect(() => {

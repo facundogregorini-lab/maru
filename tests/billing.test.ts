@@ -12,7 +12,7 @@ async function setup() {
   const server = await import("@/lib/billing/server");
   return server;
 }
-function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boolean } = {}) {
+function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boolean; noInvoices?: boolean } = {}) {
   let reference = "";
   let status = "pending";
   let paymentStatus = "approved";
@@ -32,6 +32,8 @@ function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boole
       return Response.json({ results: opts.other ? [{ id: "sub2", external_reference: reference, status: "authorized" }, { id: "x9", external_reference: "otra", status: "authorized" }] : [] });
     }
     if (path === "/preapproval/sub2") return Response.json({ id: "sub2", external_reference: reference, status: "authorized" });
+    if (path === "/v1/payments/search") return Response.json({ results: new URL(String(url)).searchParams.get("external_reference") === reference ? [{ id: 200, status: paymentStatus }] : [] });
+    if (path === "/authorized_payments/search" && opts.noInvoices) return Response.json({ results: [] });
     if (path === "/authorized_payments/search" && opts.other) {
       const id = new URL(String(url)).searchParams.get("preapproval_id");
       return Response.json({ results: id === "sub2" ? [{ id: 101, preapproval_id: "sub2", payment: { id: 200 } }] : [] });
@@ -99,6 +101,19 @@ describe("suscripción validada en el servidor", () => {
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.refreshSubscription("ana@example.com");
     expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);
+  });
+  it("encuentra el pago por la referencia si no aparece en los comprobantes", async () => {
+    const s = await setup(); const fixture = apiFixture(10000, { noInvoices: true });
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    await s.refreshSubscription("ana@example.com");
+    expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);
+  });
+  it("explica por qué no acreditó un pago aprobado con otro importe", async () => {
+    const s = await setup(); const fixture = apiFixture(4000);
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    await s.checkout("ana@example.com", "semanal"); fixture.authorize();
+    await expect(s.refreshSubscription("ana@example.com")).rejects.toThrow(/4000 ARS \(plan semanal: 4500 ARS\)/);
+    expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(false);
   });
   it("rechaza firmas falsas y un ID modificado; admite reintentos firmados", async () => {
     await setup();

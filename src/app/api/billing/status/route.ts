@@ -20,7 +20,9 @@ export async function POST(req: Request) {
   if (!billingEnabled()) return GET(req);
   try { await refreshSubscription(email); return GET(req); }
   catch (err) {
-    console.error("[billing status]", err instanceof Error ? err.message : "error");
-    return billingJson({ error: "No pudimos actualizar tu suscripción.", code: "PLAN_UNAVAILABLE" }, 503);
+    const detail = err instanceof Error ? err.message.slice(0, 200) : "error";
+    console.error("[billing status]", detail);
+    // El detalle viene de nuestros mensajes o del código HTTP de Mercado Pago: sin datos personales ni claves.
+    return billingJson({ error: "No pudimos actualizar tu suscripción.", detail, code: "PLAN_UNAVAILABLE" }, 503);
   }
 }
