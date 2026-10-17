@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
 import { profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
-import { DEFAULT_WEIGHTS, rankOpportunities, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
+import { DEFAULT_WEIGHTS, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
@@ -25,7 +25,7 @@ async function rank(profile: MatchProfile, prefs: MatchPrefs, extra: Partial<Ran
   const inv = await inventory();
   return {
     inv,
-    out: rankOpportunities({ opportunities: inv.opportunities, postings: new Map(inv.postings.map((p) => [p.key, p])), profile, prefs, interactions: noInteractions, now: NOW, ...extra }),
+    out: rankOpportunities({ opportunities: inv.opportunities, postings: new Map(inv.postings.map((p) => [p.key, p])), profile, prefs, interactions: noInteractions, now: NOW, minScore: 0, ...extra }),
   };
 }
 
@@ -44,6 +44,27 @@ describe("antigüedad de los avisos", () => {
     expect([...gone.eligible, ...gone.pending]).toHaveLength(0);
     const { out: kept } = await rank(dataProfile, basePrefs, { now: days(140), interactions: { saved: [target.id], discarded: [] } });
     expect(kept.saved.map((r) => r.id)).toContain(target.id);
+  });
+});
+
+describe("coincidencia mínima", () => {
+  it("lo que casi no se parece a lo que busca no se lista como para vos, salvo que filtre por área", async () => {
+    const prefs: MatchPrefs = { ...basePrefs, carrera: "continuidad", rolesDeseados: ["Data Analyst"] };
+    const { out: all } = await rank(dataProfile, prefs);
+    const low = [...all.eligible, ...all.pending].filter((r) => r.score < 25);
+    expect(low.length).toBeGreaterThan(0);
+    const { out } = await rank(dataProfile, prefs, { minScore: undefined });
+    const titles = [...out.eligible, ...out.pending].map((r) => r.title);
+    for (const r of low) expect(titles).not.toContain(r.title);
+    expect(out.counts.lowMatch).toBeGreaterThanOrEqual(low.length);
+    expect(out.eligible[0].title).toBe("Senior Data Analyst");
+    const { out: filtered } = await rank(dataProfile, prefs, { minScore: undefined, filters: { families: [low[0].family] } });
+    expect([...filtered.eligible, ...filtered.pending].map((r) => r.title)).toContain(low[0].title);
+  });
+
+  it("el % nunca llega a 100", async () => {
+    const { out } = await rank(dataProfile, { ...basePrefs, carrera: "continuidad", rolesDeseados: ["Data Analyst"] });
+    expect(Math.max(...[...out.eligible, ...out.pending].map((r) => r.score))).toBeLessThanOrEqual(98);
   });
 });
 
@@ -184,5 +205,23 @@ describe("aptitudes largas del CV", () => {
     ]);
     expect(splitSkill("Google Ads")).toEqual(["Google Ads"]);
     expect(splitSkill("  ")).toEqual([]);
+  });
+});
+
+describe("ubicaciones", () => {
+  const has = (locs: string[], place: string) => placeSegments(locs).some((seg) => samePlace(seg, place));
+  it("reconoce la ciudad por partes, sin confundir ciudades que empiezan igual", () => {
+    expect(has(["Rosario, Santa Fe"], "rosario")).toBe(true);
+    expect(has(["Rosario de Lerma, Salta, Argentina"], "rosario")).toBe(false);
+    expect(has(["San Miguel de Tucumán, Tucumán"], "tucuman")).toBe(true);
+    expect(has(["Córdoba Capital"], "cordoba")).toBe(true);
+  });
+  it("muestra cada lugar una vez, Argentina primero y aclara el remoto desde Argentina", () => {
+    expect(displayLocations(["Rosario, Santa Fe", "Rosario, Santa Fe, Argentina"])).toEqual(["Rosario, Santa Fe"]);
+    expect(displayLocations(["Argentina", "Córdoba"])).toEqual(["Córdoba"]);
+    expect(displayLocations(["Mexico - Monterrey", "Argentina - Buenos Aires"])[0]).toBe("Argentina - Buenos Aires");
+    expect(displayLocations(["South Africa - Cape Town"], true)[0]).toBe("Remoto desde Argentina");
+    expect(displayLocations(["South Africa - Cape Town"])[0]).toBe("South Africa - Cape Town");
+    expect(displayLocations(["Remote"], true)).toEqual(["Remoto desde Argentina"]);
   });
 });

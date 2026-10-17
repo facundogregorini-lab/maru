@@ -6,7 +6,7 @@ import type { ExternalJob } from "@/lib/match/api-schemas";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
-import { roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
+import { MIN_SCORE, roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
 import CompanyTile from "../busquedas/CompanyTile";
@@ -203,6 +203,11 @@ export default function Results({
               Viendo {list.length} de {(tab === "elegibles" ? data.counts.eligible : data.counts.pending).toLocaleString("es-AR")}
             </p>
           </div>
+        )}
+        {data && tab !== "guardadas" && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
+          <p className="mt-6 text-center text-sm text-muted">
+            Hay {data.counts.lowMatch.toLocaleString("es-AR")} búsquedas más que coinciden menos del {MIN_SCORE}% con tu perfil y lo que buscás. Para verlas, filtrá por área o sumá roles en “Lo que busco”.
+          </p>
         )}
         {data && tab === "elegibles" && data.eligible.length > 0 && data.eligible.length < 5 && (
           <p className="mt-6 text-center text-sm text-muted">

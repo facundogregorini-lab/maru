@@ -71,6 +71,12 @@ describe("títulos con sufijo de lugar y empresas genéricas", () => {
     ]);
     expect(opportunities).toHaveLength(3);
     expect(opportunities.find((o) => o.title.startsWith("Vendedor"))!.locations).toHaveLength(2);
+    // El mismo aviso confidencial visto dos veces en el mismo lugar sí se junta.
+    const same = groupOpportunities([
+      opp("d1", { title: "Vendedor/a", company: "Confidencial", locations: ["Mar del Plata"], elig: "elegible" }),
+      opp("d2", { title: "VENDEDOR/A", company: "Confidencial", locations: ["Mar del Plata"], elig: "elegible" }),
+    ]);
+    expect(same.opportunities).toHaveLength(1);
   });
 
   it("reconoce nombres genéricos y consultoras sin confundir empresas reales", () => {
