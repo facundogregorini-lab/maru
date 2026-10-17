@@ -38,14 +38,15 @@ export function retryAfterMs(header: string | null, now = Date.now()): number | 
   return Number.isFinite(date) ? Math.max(0, date - now) : null;
 }
 
-export async function fetchJson<T>(url: string, opts: RetryOptions = {}): Promise<T> {
+/** GET con reintentos limitados (red, 429, 5xx) y respeto de Retry-After. */
+async function fetchWithRetry(url: string, accept: string, opts: RetryOptions): Promise<Response> {
   const { retries = 3, timeoutMs = 20_000, fetchImpl = fetch, sleep = defaultSleep, maxRetryAfterMs = 120_000 } = opts;
   let attempt = 0;
   for (;;) {
     let res: Response;
     try {
       res = await fetchImpl(url, {
-        headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
+        headers: { "User-Agent": USER_AGENT, Accept: accept },
         signal: AbortSignal.timeout(timeoutMs),
       });
     } catch (err) {
@@ -53,7 +54,7 @@ export async function fetchJson<T>(url: string, opts: RetryOptions = {}): Promis
       await sleep(backoff(attempt++));
       continue;
     }
-    if (res.ok) return (await res.json()) as T;
+    if (res.ok) return res;
     const retriable = res.status === 429 || res.status >= 500;
     if (!retriable || attempt >= retries) throw new HttpError(`HTTP ${res.status}`, res.status);
     const wait = retryAfterMs(res.headers.get("retry-after"));
@@ -61,6 +62,15 @@ export async function fetchJson<T>(url: string, opts: RetryOptions = {}): Promis
     await sleep(wait ?? backoff(attempt));
     attempt++;
   }
+}
+
+export async function fetchJson<T>(url: string, opts: RetryOptions = {}): Promise<T> {
+  return (await (await fetchWithRetry(url, "application/json", opts)).json()) as T;
+}
+
+/** Igual que fetchJson pero devuelve texto (feeds RSS/XML). */
+export async function fetchText(url: string, opts: RetryOptions = {}): Promise<string> {
+  return (await fetchWithRetry(url, "application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.5", opts)).text();
 }
 
 function backoff(attempt: number): number {

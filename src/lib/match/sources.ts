@@ -88,6 +88,23 @@ export const SOURCES: SourceInfo[] = [
     linkRequired: false,
   },
   {
+    id: "teamtailor",
+    name: "Teamtailor (RSS del sitio de empleo)",
+    kind: "ats",
+    docs: ["https://support.teamtailor.com/en/articles/11171756-rss-feed-how-to-guide"],
+    access: "GET https://<sitio>/jobs.rss?per_page=100&offset=N (sin autenticación).",
+    terms:
+      "La guía de Teamtailor documenta el feed RSS de cada sitio de empleo y aclara que sus datos son públicos (se usa, por ejemplo, para Job Wrapping de LinkedIn). Mismo uso conservador que Greenhouse: extracto y enlace al aviso del empleador.",
+    limits: "100 avisos por página; 1 sitio por empresa y por sincronización, en serie.",
+    reviewedAt: "2026-10-16",
+    status: "habilitada",
+    enabled: true,
+    cost: "gratis",
+    partialFeed: false,
+    linkRequired: false,
+    notes: "Las etiquetas propias (remoteStatus, tt:location, tt:department) salen de implementaciones de terceros: el parser las lee si están y si no deja el dato como desconocido.",
+  },
+  {
     id: "getonbrd",
     name: "Get on Board (API pública)",
     kind: "portal",

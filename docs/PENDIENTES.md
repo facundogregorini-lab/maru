@@ -34,7 +34,7 @@ Hecho:
 Detalle operativo y saldos en [IMPORTACIONES.md](IMPORTACIONES.md). Pendiente, en orden de impacto:
 
 1. **Segundo corte de Fantastic antes del 22/10** con los ~177 créditos que quedan (comando en IMPORTACIONES.md). Después el trial vence y no se paga.
-2. **Conectores gratuitos nuevos para ATS que aparecieron en Fantastic.** Teamtailor (12 empleadores), Workable (10), Workday (9), SuccessFactors (6) y SmartRecruiters (3). Es la forma sostenible de cubrir empleadores argentinos generalistas (Natura, Quilmes/AB InBev, Swiss Medical, EY, Bidcom, BYMA…) sin pagar.
+2. **Conectores gratuitos nuevos para ATS que aparecieron en Fantastic.** **Teamtailor ya está hecho** (17/10): usa el RSS público documentado y suma 8 empleadores argentinos (Bidcom, BYMA, Día, Naranja X, PECOM, CDA, Talento Cumbre, David Kennedy). Faltan Workable (10), Workday (9), SuccessFactors (6) y SmartRecruiters (3). Es la forma sostenible de cubrir empleadores argentinos generalistas (Natura, Quilmes/AB InBev, Swiss Medical, EY, Bidcom, BYMA…) sin pagar.
    - Workday tiene un endpoint JSON público por tenant (`/wday/cxs/{tenant}/{site}/jobs`). Teamtailor y Workable tienen páginas de empleo públicas.
    - Antes de implementarlos, revisar la documentación y las condiciones de cada endpoint (PLAN-AVISOS §5). No usar scraping indiscriminado.
 3. **Modalidad desconocida:** ~1.000 elegibles no informan modalidad. Se infiere sólo de frases explícitas; ampliar patrones con casos reales, sin adivinar.
