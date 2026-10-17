@@ -270,7 +270,8 @@ describe("tanda automática de marketing y finanzas", () => {
     const monthly = SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p)));
     expect(monthly.filter((q) => q.id.startsWith("mk-")).length).toBeGreaterThanOrEqual(10);
     expect(monthly.filter((q) => q.id.startsWith("fz-")).length).toBeGreaterThanOrEqual(10);
-    expect(monthly.length).toBeLessThanOrEqual(30); // entra en una corrida de --max-searches=30
+    expect(monthly.filter((q) => q.id.startsWith("tj-")).length).toBeGreaterThanOrEqual(5);
+    expect(monthly.length).toBeLessThanOrEqual(36); // entra en una corrida de --max-searches=36
     expect(new Set(SERP_QUERIES.map((q) => q.id)).size).toBe(SERP_QUERIES.length);
   });
 });

@@ -1334,6 +1334,150 @@
       "evidence": "https://weir.wd3.myworkdayjobs.com/en-US/Weir_External_Careers/job/San-Juan/Administrador-de-Proyectos_R0039861-1",
       "addedAt": "2026-10-17",
       "status": "candidata"
+    },
+    {
+      "name": "Mercado Libre",
+      "sourceId": "eightfold",
+      "slug": "mercadolibre.eightfold.ai",
+      "sector": "tecnología / e-commerce / fintech",
+      "evidence": "https://mercadolibre.eightfold.ai/careers/job/44853699-l%C3%ADder-de-operaciones-mercado-env%C3%ADos-buenos-aires-argentina",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Softtek",
+      "sourceId": "eightfold",
+      "slug": "softtek.eightfold.ai",
+      "sector": "tecnología",
+      "evidence": "https://softtek.eightfold.ai/careers/job/893398087959-software-engineer-web-microsoft-pr-argentina",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Haleon",
+      "sourceId": "eightfold",
+      "slug": "careers.haleon.com",
+      "sector": "consumo / salud",
+      "evidence": "https://careers.haleon.com/careers/job/563705892957621-analista-de-control-de-calidad-producto-terminado-temporal-san-fernando-buenos-aires-argentina",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "YPF",
+      "sourceId": "successfactors",
+      "slug": "oportunidades.ypf.com",
+      "sector": "energía",
+      "evidence": "https://oportunidades.ypf.com/job/Federal-ANALISTA-COSTOS-CAPI-1106/1440520500/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Techint",
+      "sourceId": "successfactors",
+      "slug": "careers.techint.com",
+      "sector": "industria",
+      "evidence": "https://careers.techint.com/job/AR-Buenos-Aires-Development-Trainee/1440224100/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "EY",
+      "sourceId": "successfactors",
+      "slug": "careers.ey.com~ey",
+      "sector": "auditoría / consultoría",
+      "evidence": "https://careers.ey.com/ey/job/Buenos-Aires-EY-Analista-Junior-de-Gesti%C3%B3n-de-Riesgos-para-la-Industria-Financiera-CABA-1437/1448547733/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Swiss Medical Group",
+      "sourceId": "successfactors",
+      "slug": "swissmedical.jobs2web.com",
+      "sector": "salud / seguros",
+      "evidence": "https://swissmedical.jobs2web.com/job/Capital-Federal-Analista-Jr_-de-Cobranzas-y-Cuentas-Corrientes/1440664600/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Grupo Sancor Seguros",
+      "sourceId": "successfactors",
+      "slug": "empleos.gruposancorseguros.com",
+      "sector": "seguros",
+      "evidence": "https://empleos.gruposancorseguros.com/job/Mar-del-Plata-Asesor-de-Ventas-Bah%C3%ADa-Blanca/1337459562/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Claro",
+      "sourceId": "successfactors",
+      "slug": "claroempleos-aup.com",
+      "sector": "telecomunicaciones",
+      "evidence": "https://claroempleos-aup.com/job/Externa-Asesor-Comercial-CAC-Abasto-Shop/606947617/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Bunge",
+      "sourceId": "successfactors",
+      "slug": "jobs.bunge.com",
+      "sector": "agroindustria",
+      "evidence": "https://jobs.bunge.com/job/Capital-Federal-Analista-Senior-de-Pricing-1002/1447122333/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Grupo Mirgor",
+      "sourceId": "successfactors",
+      "slug": "empleos.mirgor.com.ar",
+      "sector": "industria / retail",
+      "evidence": "https://empleos.mirgor.com.ar/job/Analista-de-Reporting-%28Argentina%29-CABA/1439523700/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "BCD Travel",
+      "sourceId": "successfactors",
+      "slug": "jobs.bcdtravel.com",
+      "sector": "viajes corporativos",
+      "evidence": "https://jobs.bcdtravel.com/job/Buenos-Aires-Agente-de-ventas-corporativo/1374899657/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "COFCO International",
+      "sourceId": "successfactors",
+      "slug": "careers.cofcointernational.com",
+      "sector": "agroindustria",
+      "evidence": "https://careers.cofcointernational.com/job/General-Villegas-Comercial-de-Acopio-Buen/1366610057/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "Arauco",
+      "sourceId": "successfactors",
+      "slug": "jobs.arauco.com~Argentina",
+      "sector": "forestal / industria",
+      "evidence": "https://jobs.arauco.com/Argentina/job/Ingeniero-Guillermo-N_-Juarez-Auxiliar-Administrativo-N/1440183100/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "DRiV",
+      "sourceId": "successfactors",
+      "slug": "jobs.driv.com",
+      "sector": "autopartes",
+      "evidence": "https://jobs.driv.com/job/La-Plata-Sales-Supervisor/1440069000/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
+    },
+    {
+      "name": "AngloGold Ashanti",
+      "sourceId": "successfactors",
+      "slug": "careers.anglogoldashanti.com",
+      "sector": "minería",
+      "evidence": "https://careers.anglogoldashanti.com/job/Santa-Cruz-Jefe-de-Mantenimiento-de-Equipos-Pesados/1439040833/",
+      "addedAt": "2026-10-17",
+      "status": "candidata"
     }
   ]
 }
