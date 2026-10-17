@@ -3366,6 +3366,113 @@
         "spentUsd": 4.742,
         "budgetUsd": 4.9
       }
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 118,
+        "total_searches_left": 118,
+        "searches_per_month": 250,
+        "this_month_usage": 132,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "cajero Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recepcionista Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "repositor Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "telemarketer Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "cobranzas Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-10-17T14:41:26.461Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "cajero zona norte Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": null,
+      "quota": {},
+      "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
     }
   ]
 }
