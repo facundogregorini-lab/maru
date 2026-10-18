@@ -365,7 +365,7 @@ Fondo `rgba(0,0,0,.04)`, sin borde, radio 12, 48 px de alto, padding `0 12px` y 
 | Tarjeta de paso | `ui.tsx` (`StepCard`), `app/page.tsx` (`#como-funciona`) | `StepCard` ya usa `#f2f4f5` y círculo neón; ajustar radio 24, padding 24 y número de 36. La sección "cómo funciona" pasa de fondo negro a panel `#f2f4f5` con tarjetas blancas |
 | Hero de home | `src/app/page.tsx`, `landing/HeroVideoPlayer.tsx` | Display Titillium 88/80 y lead 46/48 400. Marco del video con borde de 1 px y radio 16. Botón de 56 |
 | Features alternadas con panel de maqueta | `src/app/page.tsx` (`Feature`), `landing/Mocks.tsx` (`MockPanel`) | Hoy hay tarjetas en grilla de 2. Pasar a filas alternadas texto/panel de 768 × 576, con panel `#effbe8` de radio 24 y tarjeta trasera `#dbf2cc` inclinada |
-| Sellos con laureles | `landing/Laurels.tsx` | Ya respeta la regla de datos verdaderos. Sólo ajustar tipografía (10–14 px, 700) |
+| Sellos con laureles | `landing/Laurels.tsx` | Hecho el 18/10: 108 × 30 en mobile y 144 × 40 en escritorio, gap 12, con datos verdaderos y link a la página que respalda cada sello |
 | Cinta de avisos en vivo | `src/app/page.tsx` ("Incorporadas recientemente"), `.marquee` | Pasar la grilla de recientes a cinta negra `#0a0a0a` con marquee |
 | Testimonios | `landing/EvidenceWall.tsx`, `landing/Evidence.tsx` | Tarjetas de 348 × 328 con radio `0 40 40 40` y borde fino, en cinta. Sin inventar testimonios |
 | FAQ | `landing/Faq.tsx` | Ítems: fondo `rgba(0,0,0,.04)` en vez de `bg-brand-soft`, 64 px, radio 12, ícono de círculo con "+". Sección con radio `120px 0 0 0` |

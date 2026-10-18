@@ -1,5 +1,13 @@
 # Estado y próximos pasos de Maru
 
+## Home mobile igual a jobright: hero, laureles y cifras (18/10/2026)
+
+- Pedido del dueño con capturas de iPhone: el hero y las cifras de la home tenían que copiar las medidas de jobright. Se midieron sus estilos computados a 390 y 1440 px y se aplicaron en `src/app/page.tsx`.
+- Mobile: línea liviana Titillium 36/32 en mayúsculas, titular de 60 px (baja hasta 48 en pantallas de 360), bajada de 13/16, dos botones de 36 px uno al lado del otro, marco del video a 16 px del borde con barra de 41 px y 44 px entre bloques. Cifras en Titillium 24 700 con línea guía de guiones de 1 px hasta un ícono de 24 y rótulo de 13/16; titular de la sección centrado en 32 px.
+- Volvieron los laureles (`Laurels.tsx`, 108 × 30 en mobile y 144 × 40 en escritorio), con datos de Maru y no premios: «Del CV a la entrevista», «Extensión para Chrome» y «Plan gratis sin tarjeta». Cada sello es un link a la página que lo respalda (entrevista, extensión y planes). El QC del 17/10 los había sacado por parecer premios; los volvió a pedir el dueño.
+- Escritorio: sellos arriba del titular de 52 px, conector punteado hacia las cifras y cifras de 44/48 como en jobright.
+- QC: sin desborde horizontal a 360, 390, 768 y 1440 px. Capturas comparativas fuera del repo.
+
 ## Login sólo con Google y funnels en PostHog (18/10/2026)
 
 - **Login:** se sacó el link por email. Quedan `/api/auth/google` y su callback; se borraron `/api/auth/request`, `/api/auth/verify`, `src/lib/mailer.ts` y `nodemailer`. `SMTP_URL` y `EMAIL_FROM` ya no se usan (se pueden borrar de Vercel). Sin `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` el diálogo avisa que el ingreso no está disponible. Las sesiones viejas creadas con el link siguen valiendo (misma cookie).
