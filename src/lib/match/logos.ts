@@ -36,7 +36,7 @@ export function shareCompanyLogos(postings: StoredPosting[]): StoredPosting[] {
 }
 
 /** Dominios que aparecen en avisos pero no son de la empresa (bolsas, redes, correo). */
-const NOT_COMPANY = /(greenhouse|lever|ashbyhq|teamtailor|linkedin|indeed|computrabajo|bumeran|zonajobs|glassdoor|google|facebook|instagram|twitter|youtube|bit|workable|bamboohr|smartrecruiters|catsone|gmail|hotmail|outlook|yahoo)$/;
+const NOT_COMPANY = /(greenhouse|lever|ashbyhq|teamtailor|linkedin|indeed|computrabajo|bumeran|zonajobs|glassdoor|google|facebook|instagram|twitter|youtube|bit|workable|bamboohr|breezy|smartrecruiters|catsone|gmail|hotmail|outlook|yahoo)$/;
 const DOMAIN = /\b(?:www\.)?([a-z0-9-]+\.(?:com\.ar|com|io|ai|co|ar|net|org|tech|app|dev|global))\b/g;
 
 /**

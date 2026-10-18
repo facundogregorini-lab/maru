@@ -1478,6 +1478,33 @@
       "evidence": "https://careers.anglogoldashanti.com/job/Santa-Cruz-Jefe-de-Mantenimiento-de-Equipos-Pesados/1439040833/",
       "addedAt": "2026-10-17",
       "status": "candidata"
+    },
+    {
+      "name": "Rockcruit",
+      "sourceId": "breezy",
+      "slug": "rockcruit",
+      "sector": "staffing / ventas y tecnología",
+      "evidence": "https://rockcruit.breezy.hr/json",
+      "addedAt": "2026-10-18",
+      "status": "candidata"
+    },
+    {
+      "name": "Flux IT",
+      "sourceId": "breezy",
+      "slug": "fluxit",
+      "sector": "tecnología (empresa argentina)",
+      "evidence": "https://fluxit.breezy.hr/",
+      "addedAt": "2026-10-18",
+      "status": "candidata"
+    },
+    {
+      "name": "Satellogic",
+      "sourceId": "bamboohr",
+      "slug": "satellogic",
+      "sector": "tecnología / aeroespacial",
+      "evidence": "https://satellogic.bamboohr.com/careers/list",
+      "addedAt": "2026-10-18",
+      "status": "candidata"
     }
   ]
 }
