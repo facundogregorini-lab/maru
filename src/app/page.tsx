@@ -4,6 +4,7 @@ import JobSearchBar from "@/components/busquedas/JobSearchBar";
 import CtaScene from "@/components/landing/CtaScene";
 import Faq from "@/components/landing/Faq";
 import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
+import Laurels from "@/components/landing/Laurels";
 import { ChatMock, CvMock, MatchMock, VideoMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import { MaruSprite } from "@/components/maru/PixelMaru";
@@ -21,61 +22,78 @@ export default async function Home() {
   const data = await landingData();
   return (
     <SiteShell>
-      {/* Hero como el de jobright: verde claro a todo el ancho, video a la izquierda y titular a la derecha. */}
-      <section aria-labelledby="inicio-t" className="full-bleed -mt-8 bg-hero px-5 pb-14 pt-10 sm:pb-20 sm:pt-16">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-10 lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)] lg:gap-12 [&>*]:min-w-0">
+      {/* Hero como el de jobright: verde claro a todo el ancho, video a la izquierda y titular a la derecha.
+          En mobile copia sus medidas a 390 px: 36 + 60 px de titular, bajada de 13, dos botones de 36 y marco a 16 px del borde. */}
+      <section aria-labelledby="inicio-t" className="full-bleed -mt-8 bg-hero px-4 py-11 sm:px-5 sm:pb-20 sm:pt-16">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-11 lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)] lg:gap-12 [&>*]:min-w-0">
           <div className="order-2 lg:order-1">
             <div className="overflow-hidden rounded-2xl border border-ink bg-white">
-              <div aria-hidden className="flex gap-1.5 border-b border-ink px-4 py-3">
+              <div aria-hidden className="flex gap-1 border-b border-ink p-4">
                 {[0, 1, 2].map((i) => <span key={i} className="h-2 w-2 rounded-full bg-ink" />)}
               </div>
               <HeroVideoPlayer />
             </div>
-            <p className="mt-3 text-center text-xs text-ink/65">Demo ilustrativa. Las cifras actuales del catálogo están debajo.</p>
+            <p className="mt-2 text-center text-[11px] leading-4 text-ink/65 sm:mt-3 sm:text-xs">Demo ilustrativa. Las cifras actuales del catálogo están debajo.</p>
           </div>
           <div className="order-1 text-center lg:order-2 lg:text-left">
-            <p className="font-display text-[28px] font-normal leading-tight sm:text-[46px] sm:leading-[48px]">Tu coach de carrera con IA</p>
-            <h1 id="inicio-t" className="mt-1 font-display text-[52px] font-semibold leading-[1] tracking-tight sm:text-[76px] xl:text-[88px] xl:leading-[80px]">
-              Buscá trabajo con Maru
+            {/* Las dos líneas del titular de jobright («No more solo job hunting / Do it with AI»), en español. */}
+            <h1 id="inicio-t" className="font-display">
+              <span className="mx-auto block max-w-[340px] text-[36px] font-normal uppercase leading-[32.4px] sm:max-w-none sm:text-[46px] sm:normal-case sm:leading-[48px]">Basta de buscar trabajo sin ayuda</span>
+              <span className="mt-2 block text-[clamp(48px,15.4vw,60px)] font-semibold leading-[0.93] sm:mt-1 sm:text-[76px] sm:leading-[1] sm:tracking-tight xl:text-[88px] xl:leading-[80px]">Hacelo con IA</span>
             </h1>
-            <p className="mx-auto mt-5 max-w-lg text-base leading-6 sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-2 max-w-lg text-[13px] leading-4 sm:mt-5 sm:text-lg sm:leading-6 lg:mx-0">
               Encontrá avisos para tu perfil y prepará cada postulación con tu experiencia real: desde el CV hasta la entrevista.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-              <Link href="/match" className="press inline-flex h-12 min-w-[200px] items-center justify-center rounded-[28px] bg-ink px-8 font-display text-lg font-bold uppercase text-white sm:h-14 sm:min-w-[280px] sm:text-2xl">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 lg:justify-start">
+              <Link href="/match" className="press inline-flex h-9 items-center justify-center rounded-[28px] bg-ink px-4 text-sm font-semibold text-white sm:h-14 sm:min-w-[280px] sm:px-8 sm:font-display sm:text-2xl sm:font-bold sm:uppercase">
                 Probá gratis
               </Link>
-              <Link href="/busquedas" className="press inline-flex h-12 items-center justify-center rounded-[28px] bg-white px-6 font-semibold shadow-[inset_0_0_0_1px_#000] sm:h-14">
+              <Link href="/busquedas" className="press inline-flex h-9 items-center justify-center rounded-[28px] whitespace-nowrap bg-white px-2 text-sm font-semibold shadow-[inset_0_0_0_1px_#000] sm:h-14 sm:px-6 sm:text-base">
                 Explorar búsquedas
               </Link>
             </div>
-            <p className="mt-4 text-sm text-ink/70">Sin tarjeta. <Link href="/precios" className="font-medium underline underline-offset-4">Ver planes y límites</Link></p>
+            <p className="mt-3 text-[13px] leading-4 text-ink/70 sm:mt-4 sm:text-sm">Sin tarjeta. <Link href="/precios" className="font-medium underline underline-offset-4">Ver planes y límites</Link></p>
           </div>
         </div>
 
-        {/* Métricas con línea guía hasta el ícono, como en jobright, pero con los datos de hoy del catálogo. */}
-        <div className="mx-auto mt-14 grid max-w-[1200px] gap-10 lg:mt-20 lg:grid-cols-2 lg:gap-12">
-          <h2 className="font-display text-[34px] font-bold uppercase leading-[1.05] sm:text-5xl">
-            Lo que hay hoy
-            <br />
-            en Maru
-          </h2>
-          <dl className="space-y-5">
+        {/* Sellos y métricas como en jobright: laureles con datos de Maru y líneas guía hasta el ícono, con las cifras de hoy del catálogo. */}
+        <div className="mx-auto mt-6 grid max-w-[1200px] gap-6 sm:mt-14 lg:mt-24 lg:grid-cols-[532px_108px_minmax(0,512px)] lg:items-center lg:justify-between lg:gap-0">
+          <div>
+            <Laurels
+              items={[
+                { top: "Del CV a la", main: "Entrevista", href: "/entrevista", label: "Del CV a la entrevista: practicá tu entrevista" },
+                { top: "Extensión para", main: "Chrome", href: EXTENSION_URL, label: "Extensión para Chrome" },
+                { top: "Plan gratis", main: "Sin tarjeta", href: "/precios", label: "Plan gratis sin tarjeta: ver planes y límites" },
+              ]}
+            />
+            <h2 className="mx-auto mt-11 max-w-[326px] text-center font-display text-[32px] font-bold uppercase leading-8 sm:max-w-none sm:text-5xl sm:leading-[48px] lg:mt-[58px] lg:text-left lg:text-[52px] lg:leading-[52px]">
+              Resultados reales,
+              <br />
+              no solo promesas
+            </h2>
+          </div>
+          {/* Conector punteado entre el titular y las cifras, como el de jobright (sólo escritorio). */}
+          <svg viewBox="0 0 108 220" aria-hidden className="hidden w-[108px] lg:block" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="8" cy="160" r="3" fill="currentColor" stroke="none" />
+            <path d="M14 160H48M100 24H64q-16 0-16 16v140q0 16 16 16H100" strokeDasharray="2 4" />
+            <path d="M94 18l6 6-6 6M94 190l6 6-6 6" />
+          </svg>
+          <ul className="space-y-3 px-4 sm:space-y-2 sm:px-0">
             {[
               { value: fmt(data.eligible), label: "avisos para buscar desde Argentina", icon: "pin" },
               { value: fmt(data.companies), label: "empresas que publican en el catálogo", icon: "building" },
               { value: fmt(data.total), label: "avisos abiertos, incluidos los que piden otro país", icon: "list" },
             ].map((m) => (
-              <div key={m.label} className="flex items-end gap-4">
-                <div className="min-w-0">
-                  <dd className="font-display text-[40px] font-semibold leading-[48px] tabular-nums sm:text-[44px]">{m.value}</dd>
-                  <dt className="text-base font-light leading-5">{m.label}</dt>
+              <li key={m.label}>
+                <div className="flex items-center gap-3 sm:gap-8">
+                  <strong className="font-display text-2xl font-bold leading-6 tabular-nums sm:text-[44px] sm:font-semibold sm:leading-[48px]">{m.value}</strong>
+                  <span aria-hidden className="mt-1 h-0 flex-1 border-t border-dashed border-ink" />
+                  <MetricIcon name={m.icon as "pin" | "building" | "list"} />
                 </div>
-                <span aria-hidden className="leader mb-6 hidden sm:block" />
-                <MetricIcon name={m.icon as "pin" | "building" | "list"} />
-              </div>
+                <p className="text-[13px] leading-4 sm:text-base sm:font-light sm:leading-5">{m.label}</p>
+              </li>
             ))}
-          </dl>
+          </ul>
         </div>
       </section>
 
@@ -188,7 +206,7 @@ const METRIC_ICONS = {
 
 function MetricIcon({ name }: { name: keyof typeof METRIC_ICONS }) {
   return (
-    <svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mb-1 shrink-0">
+    <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="h-6 w-6 shrink-0 sm:h-10 sm:w-10">
       {METRIC_ICONS[name]}
     </svg>
   );

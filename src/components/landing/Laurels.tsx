@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 /**
  * Insignias con laureles como las de jobright (Product Hunt, OpenAI, Trustpilot), pero con datos
- * verdaderos de Maru en vez de premios que no tenemos.
+ * verdaderos de Maru en vez de premios que no tenemos. Cada sello lleva a la página que lo respalda.
  */
 
 // Rama izquierda: un tallo curvo con hojas que apuntan hacia arriba y afuera.
@@ -32,24 +34,29 @@ const LEAVES = [0.12, 0.3, 0.48, 0.66, 0.84]
 
 function Branch({ flip = false }: { flip?: boolean }) {
   return (
-    <svg viewBox="-4 0 24 48" width="18" height="40" aria-hidden className={`shrink-0 ${flip ? "-scale-x-100" : ""}`}>
+    <svg viewBox="-4 0 24 48" aria-hidden className={`h-full w-auto shrink-0 ${flip ? "-scale-x-100" : ""}`}>
       <path d={`M${STEM.x0} ${STEM.y0}Q${STEM.cx} ${STEM.cy} ${STEM.x1} ${STEM.y1}`} fill="none" stroke="currentColor" strokeWidth="1.3" />
       <path d={LEAVES} fill="currentColor" />
     </svg>
   );
 }
 
-export default function Laurels({ items }: { items: { top: string; main: string }[] }) {
+export type Laurel = { top: string; main: string; href: string; label: string };
+
+/** Fila de sellos con las medidas de jobright: 108 × 30 en mobile y 144 × 40 desde 1024 px, separados por 12. */
+export default function Laurels({ items }: { items: Laurel[] }) {
   return (
-    <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 lg:justify-start">
+    <ul className="flex justify-center gap-3 lg:justify-start">
       {items.map((it) => (
-        <li key={it.main} className="flex items-center gap-1">
-          <Branch />
-          <span className="min-w-[88px] text-center leading-tight">
-            <span className="block text-[10px] font-semibold">{it.top}</span>
-            <span className="block whitespace-nowrap font-display text-[15px] font-bold uppercase">{it.main}</span>
-          </span>
-          <Branch flip />
+        <li key={it.main} className="min-w-0 max-w-[108px] flex-1 lg:max-w-36">
+          <Link href={it.href} aria-label={it.label} className="flex h-[30px] w-full items-center justify-between transition-opacity hover:opacity-70 lg:h-10">
+            <Branch />
+            <span className="min-w-0 text-center">
+              <span className="block whitespace-nowrap text-[8px] font-semibold leading-[10px] lg:text-[11px] lg:leading-[13px]">{it.top}</span>
+              <span className="block whitespace-nowrap font-display text-[13px] font-bold uppercase leading-[14px] lg:text-[17px] lg:leading-[19px]">{it.main}</span>
+            </span>
+            <Branch flip />
+          </Link>
         </li>
       ))}
     </ul>
