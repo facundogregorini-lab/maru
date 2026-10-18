@@ -68,7 +68,7 @@ export default async function JobPage({ params }: Props) {
           </div>
 
           {(j.skillsRequired.length > 0 || j.languages.length > 0 || j.anios != null) && (
-            <Section title="Requisitos" icon="🎯">
+            <Section title="Requisitos" icon="target">
               {j.skillsRequired.length > 0 && <Chips items={j.skillsRequired} />}
               <ul className="mt-3 space-y-1.5 text-sm">
                 {j.anios != null && <li>• {j.anios}+ años de experiencia</li>}
@@ -79,12 +79,12 @@ export default async function JobPage({ params }: Props) {
             </Section>
           )}
           {j.skillsDesirable.length > 0 && (
-            <Section title="Suma si tenés" icon="✨">
+            <Section title="Suma si tenés" icon="plus">
               <Chips items={j.skillsDesirable} />
             </Section>
           )}
           {paragraphs.length > 0 && (
-            <Section title="La búsqueda" icon="📋">
+            <Section title="La búsqueda" icon="doc">
               <div className="space-y-3 text-sm leading-relaxed text-ink/85">
                 {paragraphs.map((p, i) => (
                   <p key={i} className="whitespace-pre-line">
@@ -165,13 +165,20 @@ export default async function JobPage({ params }: Props) {
   );
 }
 
-function Section({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) {
+/** Íconos de línea de 16 px y trazo 1.5, como los de jobright (sin emojis). */
+const SECTION_ICONS = {
+  target: <path d="M8 14.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 8h.01" />,
+  plus: <path d="M8 3v10M3 8h10" />,
+  doc: <path d="M4 1.5h5.5L12.5 4.5V14.5H4zM9.5 1.5v3h3M6 8h5M6 11h5" />,
+} as const;
+
+function Section({ title, icon, children }: { title: string; icon: keyof typeof SECTION_ICONS; children: React.ReactNode }) {
   return (
-    <section className="mt-6 border-t border-black/[0.07] pt-6">
-      <h2 className="flex items-center gap-2 text-lg font-bold">
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-soft text-base" aria-hidden>
-          {icon}
-        </span>
+    <section className="mt-6 border-t border-surface pt-6">
+      <h2 className="flex items-center gap-2 text-lg font-semibold">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          {SECTION_ICONS[icon]}
+        </svg>
         {title}
       </h2>
       <div className="mt-3">{children}</div>
@@ -183,7 +190,7 @@ function Chips({ items, small = false }: { items: string[]; small?: boolean }) {
   return (
     <ul className="flex flex-wrap gap-1.5">
       {items.map((s) => (
-        <li key={s} className={`rounded-md bg-[#f2f4f5] ${small ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"}`}>
+        <li key={s} className={`rounded-lg border border-black/[0.12] bg-surface-5 font-medium ${small ? "px-2 py-0.5 text-[11px]" : "px-3 py-2 text-xs"}`}>
           {s}
         </li>
       ))}
