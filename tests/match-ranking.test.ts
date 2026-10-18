@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { fetchAshby, fetchGreenhouse, fetchLever, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
 import { estimateSeniority, profileToMatch, splitSkill, yearsOfExperience } from "@/lib/match/profile";
-import { DEFAULT_WEIGHTS, MAX_SCORE, displayLocations, placeSegments, rankOpportunities, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
+import { DEFAULT_WEIGHTS, MAX_SCORE, displayLocations, parseRole, placeSegments, rankOpportunities, roleSimilarity, samePlace, weightsFromEnv, type RankInput } from "@/lib/match/ranking";
 import type { MatchPrefs, MatchProfile, Opportunity } from "@/lib/match/types";
 import type { Profile } from "@/lib/schemas";
 import { BOARDS, basePrefs, dataProfile, fakeFetch, fixture, noInteractions, noSleep } from "./match-helpers";
@@ -329,6 +329,36 @@ describe("calibración del porcentaje de afinidad", () => {
     o.extracted.skillsMentioned = ["inteligencia artificial"];
     const p = { ...dataProfile, titles: ["Consultor de IA"], headline: "Consultor de IA", skills: ["LLMs"] };
     expect(run(o, p, { minScore: 0, prefs: { ...basePrefs, objetivo: "inteligencia artificial", rolesDeseados: [] } }).score).toBeLessThan(50);
+  });
+
+  it("en datos separa la disciplina: Data Scientist no es Data Engineer, Data Architect sí es el paso siguiente", () => {
+    const engineer = parseRole("Data Engineer");
+    expect(roleSimilarity(engineer, parseRole("Senior Data Scientist"))).toBeLessThan(0.6);
+    expect(roleSimilarity(engineer, parseRole("Data Engineer - Databricks"))).toBeGreaterThanOrEqual(0.9);
+    expect(roleSimilarity(engineer, parseRole("Sr AWS Data Architect"))).toBeGreaterThanOrEqual(0.6);
+    expect(roleSimilarity(parseRole("Analista de datos"), parseRole("Data Analyst"))).toBe(1);
+  });
+
+  it("'Administrativo contable' sin nivel se estima junior para un perfil senior, sin mostrarlo como dato", async () => {
+    const make = (title: string) => example({ title, extracted: { ...base.extracted, family: { value: "finanzas", from: "titulo" }, seniority: null, skillsRequired: ["contabilidad"], yearsRequired: null, languages: [] } });
+    const base = await example();
+    const p = { ...dataProfile, headline: "Contador senior", titles: ["Contador senior", "Analista contable"], skills: ["contabilidad"] };
+    const prefs = { ...basePrefs, rolesDeseados: ["Contador senior"], seniorities: ["senior" as const] };
+    const support = run(await make("Administrativo contable"), p, { prefs });
+    const analyst = run(await make("Analista administrativo contable"), p, { prefs });
+    expect(support.seniority).toBeNull();
+    expect(support.gaps.join(" ")).toMatch(/parece un puesto de apoyo/);
+    expect(support.score).toBeLessThan(analyst.score);
+    expect(analyst.gaps.join(" ")).not.toMatch(/puesto de apoyo/);
+  });
+
+  it("sin modalidad informada, otra provincia pesa como un híbrido en otra ciudad", async () => {
+    const here = await example({ workplace: { value: "desconocido", from: "fuente" }, locations: ["Buenos Aires, Argentina"] });
+    const far = await example({ workplace: { value: "desconocido", from: "fuente" }, locations: ["Córdoba, Córdoba"] });
+    const a = run(here);
+    const b = run(far);
+    expect(b.score).toBeLessThanOrEqual(Math.round(a.score * 0.8) + 1);
+    expect(b.pending.join(" ")).toMatch(/no aclara si es remoto/);
   });
 
   it("Founder/Director no cuenta como experiencia directa en Head of Art", async () => {
