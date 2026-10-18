@@ -80,7 +80,8 @@ Detalle en `docs/TRACKING.md` → "Píxel de Meta".
 
 - **Hecho en código:** píxel de Meta directo (sin GTM), mismos cuatro hitos y misma deduplicación que Google Ads desde un único punto de envío (`maru_core_activation`, `maru_paywall_viewed`, `InitiateCheckout`, `Purchase` con importe ARS). `/privacidad` actualizada.
 - **Falta (manual en Meta):** crear el píxel "Maru Web" en la cuenta Costa Reset (1356376906306947) y pasar su ID; cargarlo en Vercel como `NEXT_PUBLIC_META_PIXEL_ID` y redeployar; crear la conversión personalizada "Maru | Límite gratuito alcanzado" sobre `maru_paywall_viewed`; verificar en "Probar eventos".
-- **Falta:** campaña de Maru en Meta (5.000 ARS/día) optimizando por esa conversión, con creativos estáticos; reel como próximo paso.
+- **Hecho:** merge a `main` (PR #98). Creativos estáticos (5 piezas × feed y stories) y plan de campaña en `marketing/meta-ads/`.
+- **Falta:** una página de Facebook (e Instagram) de Maru en la cuenta Costa Reset: hoy sólo está la de Templo Ninja. Con eso y la conversión personalizada, crear la campaña de `marketing/meta-ads/README.md` (5.000 ARS/día, en pausa). Reel de uso de la plataforma: próximo paso (conjunto 2).
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
