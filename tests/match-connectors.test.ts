@@ -187,6 +187,12 @@ describe("elegibilidad desde Argentina", () => {
     ];
     for (const d of unclear) expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: d })).status, d).toBe("por_confirmar");
   });
+  it("remoto sin región: el título que dice 'Worldwide' lo habilita; 'Global' a secas no", () => {
+    const e = classifyEligibility(posting({ title: "Senior Node.js Software Engineer - Holepunch (100% Remote, Worldwide)", locations: ["Remote job"], workplace: remote }));
+    expect(e.status).toBe("elegible");
+    expect(e.evidence[0]).toMatch(/El título dice/);
+    expect(classifyEligibility(posting({ title: "Head of Global Events and Travel (100% REMOTE)", locations: ["Remote job"], workplace: remote })).status).toBe("por_confirmar");
+  });
   it("remoto sin región: pedir residencia en otro país lo descarta", () => {
     for (const d of ["100% remote position for candidates located in Colombia.", "Residencia en Ciudad de México requerida.", "Candidates must be currently based and authorized to work in Mexico."]) {
       expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: d })).status, d).toBe("no_elegible");

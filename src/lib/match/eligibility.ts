@@ -129,6 +129,8 @@ const EXCLUDES_AR = /\b(excluding|except|not (available|open) (in|to)|no candida
 // La región sólo cuenta cuando el aviso la ata a dónde vive o trabaja la persona: "clientes de LATAM",
 // "experiencia en LATAM" o "LATAM Airlines" no dicen nada de desde dónde contratan.
 const AR_REGION = String.raw`(latam|latin america|latinoamerica|america latina|south america|sudamerica|argentina)`;
+const TITLE_WORLDWIDE = /\b(remote,? worldwide|worldwide remote|remote \(?worldwide\)?|remote[ -]+anywhere|work from anywhere|anywhere in the world|remoto desde cualquier pais)\b/;
+
 const DESC_ALLOWS = new RegExp(
   [
     String.raw`open to ((candidates|applicants|contractors|talent|professionals|people)\b[^.\n]{0,40}\b)?${AR_REGION}`,
@@ -231,6 +233,9 @@ export function classifyEligibility(
     if (WORK_AUTH_US.test(desc)) return result("no_elegible", ["La descripción pide permiso de trabajo en EE. UU."]);
     const allow = desc.match(DESC_ALLOWS);
     if (allow) return result("elegible", [`La descripción dice: “${allow[0]}”`]);
+    // "Senior Engineer (100% Remote, Worldwide)": el título ya dice que es desde cualquier país.
+    const worldwide = title.match(TITLE_WORLDWIDE);
+    if (worldwide) return result("elegible", [`El título dice: “${worldwide[0]}”`]);
     const elsewhere = desc.match(DESC_ELSEWHERE);
     // "Santiago" también es Santiago del Estero: si lo que sigue nombra un lugar argentino, no descarta.
     if (elsewhere && !hasArPlace(desc.slice(elsewhere.index, (elsewhere.index ?? 0) + elsewhere[0].length + 20))) return result("no_elegible", [`La descripción pide vivir en otro lugar: “${elsewhere[0]}”`]);
