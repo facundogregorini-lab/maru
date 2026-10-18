@@ -3,11 +3,12 @@
  * No decide nada por su cuenta: sale exactamente cuando la conversión sale a Google Ads (misma deduplicación
  * en index.ts y misma decisión de adsDecision), así las dos plataformas miden los mismos hitos.
  *
- *   activation     → trackCustom maru_core_activation
- *   paywall        → trackCustom maru_paywall_viewed   (base de la conversión personalizada de optimización)
+ *   activation     → trackCustom maru_core_activation (eventID act_… del servidor)
+ *   paywall        → trackCustom maru_paywall_viewed   (eventID pw_…; base de la conversión personalizada de optimización)
  *   begin_checkout → track InitiateCheckout           (eventID co_<checkoutId>)
  *   purchase       → track Purchase {value, currency} (eventID mp_<payment_id>)
  *
+ * El eventID es el mismo que usa la API de conversiones (capi.ts) para que Meta deduplique navegador y servidor.
  * Sólo value, currency y el eventID; nunca datos personales. En modo de prueba se registra en window.__maruMeta.
  */
 import type { AdsDecision, AdsParams } from "./ads";
@@ -38,14 +39,14 @@ export function metaBlocked(): boolean {
  * Envía el hito a Meta según lo que se decidió para Google (`decision`): "live" lo envía, "dry_run" sólo lo
  * registra, y cualquier otro caso (etiqueta apagada, bloqueada o parámetros inválidos) no lo envía.
  */
-export function sendMetaEvent(conversion: AdsConversion, params: AdsParams, decision: AdsDecision): MetaResult {
+export function sendMetaEvent(conversion: AdsConversion, params: AdsParams, decision: AdsDecision, eventIdOverride?: string): MetaResult {
   if (typeof window === "undefined" || !metaPixelId()) return "off";
   const w = window as MetaWindow;
   const { name, standard } = META_EVENTS[conversion];
   const clean = cleanParams(params) ?? {};
   const data: Record<string, unknown> = {};
   if (clean.value !== undefined) Object.assign(data, { value: clean.value, currency: clean.currency });
-  const eventID = clean.transaction_id;
+  const eventID = eventIdOverride ?? clean.transaction_id;
   const done = (result: MetaResult) => {
     (w.__maruMeta ??= []).push({ conversion, event: name, data, eventID, result, at: Date.now() });
     if (result === "dry_run") console.info("[maru:meta]", name, result, data, eventID ?? "");

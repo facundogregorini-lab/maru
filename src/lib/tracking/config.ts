@@ -66,12 +66,14 @@ export const adsConfig = (): AdsConfig => parseAdsConfig(raw());
 export const isAdsHost = (hostname: string, config = adsConfig()) => config.hosts.includes(hostname.toLowerCase());
 
 /**
- * Píxel de Meta de Maru (también cargado directo, sin GTM). Tampoco es secreto: NEXT_PUBLIC_META_PIXEL_ID en Vercel.
- * Sin un ID válido el píxel no se carga. Usa los mismos dominios de producción que la etiqueta de Google.
+ * Píxel de Meta de Maru (también cargado directo, sin GTM). No es secreto: va en el código, y NEXT_PUBLIC_META_PIXEL_ID
+ * lo reemplaza. Con un ID inválido el píxel no se carga. Usa los mismos dominios de producción que la etiqueta de Google.
  */
 const PIXEL_ID = /^\d{10,20}$/;
 export function parseMetaPixelId(raw: string | undefined): string | null {
   const id = raw?.trim() ?? "";
   return PIXEL_ID.test(id) ? id : null;
 }
-export const metaPixelId = (): string | null => parseMetaPixelId(process.env.NEXT_PUBLIC_META_PIXEL_ID);
+/** Conjunto de datos "Maru Coach" (negocio Costa Reset). Es público: viaja igual al navegador. La variable lo reemplaza si hace falta. */
+export const DEFAULT_META_PIXEL_ID = "1466577088716669";
+export const metaPixelId = (): string | null => parseMetaPixelId(process.env.NEXT_PUBLIC_META_PIXEL_ID || DEFAULT_META_PIXEL_ID);

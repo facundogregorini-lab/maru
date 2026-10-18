@@ -154,7 +154,9 @@ describe("deduplicación por cuenta en el servidor", () => {
     });
     expect((await POST(req())).status).toBe(401);
     const cookie = `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}`;
-    expect(await (await POST(req(cookie))).json()).toEqual({ first: true });
+    const first = await (await POST(req(cookie))).json();
+    expect(first).toMatchObject({ first: true });
+    expect(first.eventId).toMatch(/^pw_[a-f0-9]{24}$/); // el píxel repite este id para deduplicar con la API de conversiones
     expect(await (await POST(req(cookie))).json()).toEqual({ first: false });
   });
 });
@@ -296,5 +298,75 @@ describe("píxel de Meta", () => {
     const { sendMetaEvent } = await import("@/lib/tracking/meta");
     expect(sendMetaEvent("paywall", {}, adsDecision("paywall"))).toBe("dry_run");
     expect(fbq).not.toHaveBeenCalled();
+  });
+});
+
+describe("API de conversiones de Meta", () => {
+  const PIXEL = "1466577088716669";
+  function env() {
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", PIXEL);
+    vi.stubEnv("META_CAPI_ACCESS_TOKEN", "EAAtokendeprueba1234567890");
+  }
+  const req = (host = "www.marucoach.com", extra: Record<string, string> = {}) => new Request(`https://${host}/api/tracking/milestone`, {
+    method: "POST",
+    headers: { "x-forwarded-for": "190.1.2.3, 10.0.0.1", "user-agent": "Mozilla/5.0", cookie: "_fbp=fb.1.1700000000000.123456; _fbc=fb.1.1700000000000.AbC-123; maru_session=x", referer: `https://${host}/cv?utm_source=meta`, ...extra },
+  });
+
+  it("sin token o sin píxel no se activa", async () => {
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", PIXEL);
+    const { capiConfig } = await import("@/lib/tracking/capi");
+    expect(capiConfig({})).toBeNull();
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", "");
+    expect(capiConfig({ META_CAPI_ACCESS_TOKEN: "EAAtokendeprueba1234567890" })?.pixelId).toBe(PIXEL); // sin variable: el de Maru
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", "no-es-un-id");
+    expect(capiConfig({ META_CAPI_ACCESS_TOKEN: "EAAtokendeprueba1234567890" })).toBeNull();
+  });
+
+  it("arma el mismo evento que el píxel, con IP, navegador y cookies de Meta, sin datos personales", async () => {
+    env();
+    const { buildCapiEvent, capiConfig, milestoneEventId } = await import("@/lib/tracking/capi");
+    const config = capiConfig()!;
+    const ev = buildCapiEvent(req(), { milestone: "purchase", eventId: milestoneEventId("purchase", "200"), value: { amount: 22500, currency: "ARS" } }, config, 1_700_000_000_000)!;
+    expect(ev).toEqual({
+      event_name: "Purchase", event_time: 1_700_000_000, event_id: "mp_200", action_source: "website",
+      event_source_url: "https://www.marucoach.com/cv",
+      user_data: { client_ip_address: "190.1.2.3", client_user_agent: "Mozilla/5.0", fbp: "fb.1.1700000000000.123456", fbc: "fb.1.1700000000000.AbC-123" },
+      custom_data: { value: 22500, currency: "ARS" },
+    });
+    expect(buildCapiEvent(req(), { milestone: "paywall", eventId: "pw_x" }, config)!.event_name).toBe("maru_paywall_viewed");
+    expect(milestoneEventId("begin_checkout", "abc")).toBe("co_abc");
+    expect(buildCapiEvent(req("maru-git-x.vercel.app"), { milestone: "paywall", eventId: "pw_x" }, config)).toBeNull(); // previews: no sale
+  });
+
+  it("envía a la Graph API con el código de prueba si está, y un fallo no lanza", async () => {
+    env();
+    vi.stubEnv("META_CAPI_TEST_EVENT_CODE", "TEST12345");
+    const fetchMock = vi.fn(async () => Response.json({ events_received: 1 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { sendCapiEvent } = await import("@/lib/tracking/capi");
+    expect(await sendCapiEvent(req(), { milestone: "activation", eventId: "act_1" })).toBe("sent");
+    const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toContain(`graph.facebook.com/v23.0/${PIXEL}/events?access_token=`);
+    const body = JSON.parse(String(init.body));
+    expect(body.test_event_code).toBe("TEST12345");
+    expect(body.data[0]).toMatchObject({ event_name: "maru_core_activation", event_id: "act_1" });
+    expect(JSON.stringify(body)).not.toMatch(/@|maru_session/);
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("red"); }));
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(await sendCapiEvent(req(), { milestone: "activation", eventId: "act_1" })).toBe("error");
+  });
+
+  it("el píxel usa el eventID que devolvió el servidor", async () => {
+    stubAdsEnv();
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", PIXEL);
+    const fbq = vi.fn();
+    const gtag = vi.fn((...args: unknown[]) => (args[2] as { event_callback: () => void }).event_callback());
+    const win = stubBrowser("www.marucoach.com", gtag) as Window & { fbq?: unknown; __maruMetaLoaded?: boolean };
+    win.fbq = fbq; win.__maruMetaLoaded = true;
+    vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {} });
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ first: true, eventId: "pw_abc123" })));
+    const { trackPaywallViewed } = await import("@/lib/tracking");
+    await trackPaywallViewed("ana@example.com", "cv");
+    expect(fbq.mock.calls).toEqual([["trackCustom", "maru_paywall_viewed", {}, { eventID: "pw_abc123" }]]);
   });
 });
