@@ -13,7 +13,8 @@ export type ProductEvent =
   | "checkout_creado" // el servidor creó la suscripción en Mercado Pago
   | "checkout_error" // el clic en un plan no llegó a checkout
   | "compra_confirmada" // pago aprobado verificado por el servidor
-  | "ads_bloqueado"; // la etiqueta de Google no cargó (bloqueador, red): la conversión no salió
+  | "ads_bloqueado" // la etiqueta de Google no cargó (bloqueador, red): la conversión no salió
+  | "meta_bloqueado"; // el píxel de Meta no cargó: el hito salió a Google pero no a Meta
 
 export type ProductProps = Partial<{
   herramienta: "cv" | "carta" | "video" | "entrevista";

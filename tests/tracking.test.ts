@@ -219,3 +219,82 @@ describe("checkout y compra verificada", () => {
     expect(s.lastPayment(await s.readSubscription("ana@example.com"))).toBeNull();
   });
 });
+
+describe("píxel de Meta", () => {
+  const PIXEL = "1234567890123456";
+  function stubMeta(hostname: string, fbq?: (...args: unknown[]) => void) {
+    stubAdsEnv();
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", PIXEL);
+    const gtag = vi.fn((...args: unknown[]) => (args[2] as { event_callback: () => void }).event_callback());
+    const win = stubBrowser(hostname, gtag) as Window & { fbq?: unknown; __maruMetaLoaded?: boolean; __maruMeta?: { event: string; result: string }[] };
+    win.fbq = fbq;
+    win.__maruMetaLoaded = fbq ? true : undefined;
+    return win;
+  }
+
+  it("el píxel se carga una vez, sin eventos automáticos, sólo en producción y con un ID válido", async () => {
+    vi.stubEnv("NEXT_PUBLIC_META_PIXEL_ID", PIXEL);
+    const { metaPixelSnippet } = await import("@/lib/tracking/tag");
+    const js = metaPixelSnippet()!;
+    expect(js).toContain(`n('init',"${PIXEL}")`);
+    expect(js).toContain(`n('set','autoConfig',false,"${PIXEL}")`);
+    expect(js.indexOf("autoConfig")).toBeLessThan(js.indexOf("'init'"));
+    expect(js).toContain("connect.facebook.net/en_US/fbevents.js");
+    expect(js).toContain('["www.marucoach.com","marucoach.com"]');
+    expect(js).not.toMatch(/GTM-|gtm\.js/);
+    const { parseMetaPixelId } = await import("@/lib/tracking/config");
+    expect(parseMetaPixelId("abc")).toBeNull();
+    expect(metaPixelSnippet(null)).toBeNull();
+  });
+
+  it("los hitos salen con los nombres de origen o el evento estándar equivalente, y sólo value, currency y eventID", async () => {
+    const fbq = vi.fn();
+    stubMeta("www.marucoach.com", fbq);
+    const { sendMetaEvent } = await import("@/lib/tracking/meta");
+    expect(sendMetaEvent("paywall", {}, "live")).toBe("sent");
+    expect(sendMetaEvent("activation", {}, "live")).toBe("sent");
+    expect(sendMetaEvent("begin_checkout", { transaction_id: "co_abc" }, "live")).toBe("sent");
+    expect(sendMetaEvent("purchase", { value: 22500, currency: "ARS", transaction_id: "mp_200" }, "live")).toBe("sent");
+    expect(fbq.mock.calls).toEqual([
+      ["trackCustom", "maru_paywall_viewed", {}, undefined],
+      ["trackCustom", "maru_core_activation", {}, undefined],
+      ["track", "InitiateCheckout", {}, { eventID: "co_abc" }],
+      ["track", "Purchase", { value: 22500, currency: "ARS" }, { eventID: "mp_200" }],
+    ]);
+  });
+
+  it("sigue la decisión de Google: en modo de prueba sólo registra, y sin envío a Google no sale", async () => {
+    const fbq = vi.fn();
+    const win = stubMeta("www.marucoach.com", fbq);
+    const { sendMetaEvent } = await import("@/lib/tracking/meta");
+    expect(sendMetaEvent("paywall", {}, "dry_run")).toBe("dry_run");
+    expect(sendMetaEvent("paywall", {}, "blocked")).toBe("off");
+    expect(sendMetaEvent("purchase", { transaction_id: "ana@example.com" }, "invalid")).toBe("off");
+    expect(fbq).not.toHaveBeenCalled();
+    expect(win.__maruMeta?.map((e) => e.result)).toEqual(["dry_run", "off", "off"]);
+    win.__maruMetaLoaded = false;
+    expect(sendMetaEvent("paywall", {}, "live")).toBe("blocked");
+  });
+
+  it("el primer límite sale una sola vez a Google y a Meta, aunque se repita la exposición", async () => {
+    const fbq = vi.fn();
+    const win = stubMeta("www.marucoach.com", fbq);
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) });
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, { status: 401 }))); // sin sesión: decide este navegador
+    const { trackPaywallViewed } = await import("@/lib/tracking");
+    await trackPaywallViewed(null, "cv");
+    await trackPaywallViewed(null, "cv");
+    expect(fbq.mock.calls).toEqual([["trackCustom", "maru_paywall_viewed", {}, undefined]]);
+    expect((win as unknown as { gtag: { mock: { calls: unknown[] } } }).gtag.mock.calls).toHaveLength(1);
+  });
+
+  it("en previews no envía a Meta aunque haya ID", async () => {
+    const fbq = vi.fn();
+    stubMeta("maru-git-rama-grego7.vercel.app", fbq);
+    const { adsDecision } = await import("@/lib/tracking/ads");
+    const { sendMetaEvent } = await import("@/lib/tracking/meta");
+    expect(sendMetaEvent("paywall", {}, adsDecision("paywall"))).toBe("dry_run");
+    expect(fbq).not.toHaveBeenCalled();
+  });
+});

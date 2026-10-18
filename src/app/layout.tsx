@@ -16,7 +16,7 @@ import AuthProvider from "@/components/auth/AuthProvider";
 import PaywallHost from "@/components/billing/PaywallHost";
 import PostHogPageviews from "@/components/PostHogPageviews";
 import { SITE_URL } from "@/lib/site";
-import { googleTagSnippet } from "@/lib/tracking/tag";
+import { googleTagSnippet, metaPixelSnippet } from "@/lib/tracking/tag";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const titillium = Titillium_Web({ subsets: ["latin"], weight: ["300", "400", "600", "700"], variable: "--font-titillium" });
@@ -41,6 +41,7 @@ export const metadata: Metadata = {
 
 // Sólo en el deploy de producción de Vercel; el script además verifica el dominio en el navegador.
 const GOOGLE_TAG = process.env.VERCEL_ENV === "production" ? googleTagSnippet() : null;
+const META_PIXEL = process.env.VERCEL_ENV === "production" ? metaPixelSnippet() : null;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -54,6 +55,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {process.env.VERCEL && <script defer src="/_vercel/insights/script.js" />}
         {/* Etiqueta de Google (Google Ads) directa, sin GTM: una sola carga para todo el sitio. Ver src/lib/tracking/tag.ts. */}
         {GOOGLE_TAG && <script dangerouslySetInnerHTML={{ __html: GOOGLE_TAG }} />}
+        {/* Píxel de Meta de Maru, directo y sin GTM. Ver src/lib/tracking/tag.ts y meta.ts. */}
+        {META_PIXEL && <script dangerouslySetInnerHTML={{ __html: META_PIXEL }} />}
       </head>
       <body className="font-sans antialiased">
         <AuthProvider>

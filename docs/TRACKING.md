@@ -119,3 +119,52 @@ Acciones nativas de sitio web (evento manual), ventana post-clic 30 días, atrib
 5. Compras aprobada/pendiente/rechazada: en un entorno con credenciales de prueba de Mercado Pago (no en producción, no con pagos reales).
 6. Revisar en la pestaña Red que ningún parámetro lleva email, nombre, CV ni texto de cartas.
 7. Templo Ninja: sin cambios en su código; en Ads sus campañas siguen con los objetivos predeterminados (Compra = TN Purchase, Interacción = TN Práctica).
+
+# Píxel de Meta (desde el 18/10/2026)
+
+Píxel cargado **directamente en el código** (sin Google Tag Manager), en la cuenta publicitaria **Costa Reset (1356376906306947)**, la misma de Templo Ninja. Templo Ninja tiene su propio píxel ("Templo Ninja Web", 2167285730522630) en otro repositorio: no se tocó.
+
+## Regla central: mismos hitos que Google Ads
+
+Meta no tiene lógica propia. `sendAdsConversion` en `src/lib/tracking/index.ts` es el único punto de envío: después de la misma deduplicación (`claimFirst`), calcula `adsDecision` (la misma decisión que usa Google) y manda el hito a Meta **sólo si sale a Google en ese momento**. Así:
+
+- Recargas, reintentos, reaperturas del modal, efectos dobles y cambios de ruta: no repiten en ninguna de las dos plataformas (mismas reglas de arriba).
+- Modo de prueba (previews, localhost, `?maru_ads_debug=1`): tampoco sale a Meta; queda en `window.__maruMeta` y en la consola (`[maru:meta]`).
+- Si gtag.js está bloqueado, el hito no se consume y no sale a ninguna. Si sólo fbevents.js está bloqueado, sale a Google y queda `meta_bloqueado` en analytics.
+
+| Evento de origen | Evento en Meta | Parámetros | eventID | Rol en Meta |
+|---|---|---|---|---|
+| `maru_core_activation` | `maru_core_activation` (personalizado) | — | — | Medición del funnel |
+| `maru_paywall_viewed` | `maru_paywall_viewed` (personalizado) | — | — | **Optimización** vía la conversión personalizada "Maru \| Límite gratuito alcanzado" |
+| `maru_begin_checkout` | `InitiateCheckout` (estándar) | — | `co_<checkoutId>` | Medición del funnel |
+| `maru_purchase` | `Purchase` (estándar) | `value` (ARS reales), `currency: "ARS"` | `mp_<payment_id>` | Medición del funnel |
+
+Además, `PageView` en la carga (Meta sigue solo la navegación interna). Sin eventos automáticos (`autoConfig` apagado: el píxel no lee botones ni formularios) y sin coincidencias avanzadas: nunca viaja email, nombre, CV ni texto. El `eventID` deja lista la deduplicación si más adelante se agrega la API de conversiones (servidor).
+
+## Variable (Vercel → Production)
+
+| Variable | Valor |
+|---|---|
+| `NEXT_PUBLIC_META_PIXEL_ID` | ID del píxel "Maru Web" (pendiente: crearlo en el Administrador de eventos) |
+
+Sin un ID válido no se carga nada. Usa los mismos dominios que la etiqueta de Google (`NEXT_PUBLIC_GOOGLE_ADS_HOSTS`) y sólo en `VERCEL_ENV=production`. Al ser `NEXT_PUBLIC_*`, exige un nuevo deploy.
+
+## Dónde está cada cosa
+
+| Pieza | Archivo |
+|---|---|
+| Carga única de fbevents.js | `metaPixelSnippet` en `src/lib/tracking/tag.ts`, `src/app/layout.tsx` |
+| ID del píxel | `metaPixelId` en `src/lib/tracking/config.ts` |
+| Mapeo y envío `fbq('track' \| 'trackCustom', …)` | `src/lib/tracking/meta.ts` |
+| Decisión compartida con Google | `adsDecision` en `src/lib/tracking/ads.ts`, `sendAdsConversion` en `src/lib/tracking/index.ts` |
+
+## Configuración en Meta (manual: el conector de Meta no crea píxeles ni conversiones personalizadas)
+
+1. **Píxel**: Administrador de eventos → Conectar orígenes de datos → Web → nombre "Maru Web", en el negocio Costa Reset, asignado a la cuenta 1356376906306947. Configuración: sin eventos automáticos, sin coincidencias avanzadas automáticas. Cargar su ID en `NEXT_PUBLIC_META_PIXEL_ID` y redeployar.
+2. **Dominio**: verificar `marucoach.com` en el Business Manager y priorizar `maru_paywall_viewed` primero en "Medición de eventos agregados" si Meta lo pide.
+3. **Conversión personalizada** "Maru | Límite gratuito alcanzado": origen el píxel "Maru Web", evento `maru_paywall_viewed` (aparece en la lista después del primer disparo), sin reglas extra, categoría "Cliente potencial", sin valor.
+4. **Campañas de Maru**: optimizar los conjuntos de anuncios sólo por esa conversión personalizada. Los demás eventos quedan para analizar el funnel.
+
+## Verificación en "Probar eventos"
+
+Administrador de eventos → Maru Web → Probar eventos → abrir `https://www.marucoach.com`: tiene que aparecer `PageView`. Con una cuenta de prueba sin plan, agotar el cupo (p. ej. 2 CV en el día) → `maru_paywall_viewed` una sola vez (repetir el intento o reabrir los planes no suma). Descargar un CV → `maru_core_activation`. Elegir un plan → `InitiateCheckout` (cancelar en Mercado Pago sin pagar). `Purchase` sólo con un pago real aprobado. Ojo: fuera del modo de prueba estos eventos son reales y consumen los hitos de esa cuenta.

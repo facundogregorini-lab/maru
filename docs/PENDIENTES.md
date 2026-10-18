@@ -74,6 +74,14 @@ Mergeado a `main` en la PR #77. Detalle completo en `docs/TRACKING.md`.
 - **Hecho:** merge a `main` (PR #77, commit `6d4fd34`).
 - **Falta:** el deploy de producción. Vercel lo rechazó el 17/10 a las 22:27 UTC por la cuota diaria del plan gratis (`api-deployments-free-per-day`); producción sigue en el `main` de la PR #91, sin la etiqueta. Al liberarse la cuota, redeployar el último `main` y confirmar un deployment Ready que incluya `6d4fd34` (ver la nota de publicación al principio). Después, la verificación en producción (lista en `docs/TRACKING.md`).
 
+## Píxel de Meta (18/10/2026)
+
+Detalle en `docs/TRACKING.md` → "Píxel de Meta".
+
+- **Hecho en código:** píxel de Meta directo (sin GTM), mismos cuatro hitos y misma deduplicación que Google Ads desde un único punto de envío (`maru_core_activation`, `maru_paywall_viewed`, `InitiateCheckout`, `Purchase` con importe ARS). `/privacidad` actualizada.
+- **Falta (manual en Meta):** crear el píxel "Maru Web" en la cuenta Costa Reset (1356376906306947) y pasar su ID; cargarlo en Vercel como `NEXT_PUBLIC_META_PIXEL_ID` y redeployar; crear la conversión personalizada "Maru | Límite gratuito alcanzado" sobre `maru_paywall_viewed`; verificar en "Probar eventos".
+- **Falta:** campaña de Maru en Meta (5.000 ARS/día) optimizando por esa conversión, con creativos estáticos; reel como próximo paso.
+
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
 Regla de trabajo pedida por el dueño: **cada avance se mergea a `main` y se anota acá**, para que otra sesión pueda seguir si se cortan los tokens. Diagnóstico de partida (17/10, sobre 3.966 oportunidades elegibles):

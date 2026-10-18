@@ -77,6 +77,17 @@ function log(entry: LogEntry) {
   if (entry.result === "dry_run" || adsDebug()) console.info("[maru:ads]", entry.conversion, entry.result, entry.send_to, entry.params);
 }
 
+/** Qué pasaría ahora con esta conversión, sin enviarla: "live" si saldría a Google. El píxel de Meta sigue la misma decisión. */
+export type AdsDecision = "live" | Exclude<AdsResult, "sent" | "queued">;
+export function adsDecision(conversion: AdsConversion, params: AdsParams = {}, config: AdsConfig = adsConfig()): AdsDecision {
+  if (typeof window === "undefined") return "off";
+  if (!cleanParams(params)) return "invalid";
+  const mode = adsMode(config);
+  if (!config.sendTo[conversion] || mode === "off") return "off";
+  if (mode === "dry_run") return "dry_run";
+  return adsBlocked() ? "blocked" : "live";
+}
+
 /**
  * Envía una conversión. `waitMs`: espera la confirmación de la etiqueta hasta ese tiempo (para no
  * perder el envío al navegar fuera del sitio) y siempre resuelve, aunque no llegue: nunca traba al usuario.
@@ -86,16 +97,13 @@ export function sendAdsConversion(conversion: AdsConversion, params: AdsParams =
   const config = adsConfig();
   const sendTo = config.sendTo[conversion];
   const clean = cleanParams(params);
-  const mode = adsMode(config);
   const done = (result: AdsResult) => {
     log({ conversion, send_to: sendTo, params: clean ?? params, result, at: Date.now() });
     return result;
   };
-  if (!clean) return Promise.resolve(done("invalid"));
-  if (!sendTo || mode === "off") return Promise.resolve(done("off"));
-  if (mode === "dry_run") return Promise.resolve(done("dry_run"));
+  const decision = adsDecision(conversion, params, config);
+  if (decision !== "live") return Promise.resolve(done(decision));
   const w = window as AdsWindow;
-  if (adsBlocked()) return Promise.resolve(done("blocked"));
 
   return new Promise<AdsResult>((resolve) => {
     let settled = false;

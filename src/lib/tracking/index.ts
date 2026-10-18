@@ -2,11 +2,13 @@
  * Capa central de medición de Maru (navegador). Separa:
  *  A) eventos de producto (analytics.ts): pueden repetirse y llevan más detalle;
  *  B) conversiones de Google Ads (ads.ts): una por cuenta (activación, primer límite), una por checkout_id
- *     o por pago verificado, según las reglas de docs/TRACKING.md.
+ *     o por pago verificado, según las reglas de docs/TRACKING.md. Cada una sale también al píxel de Meta
+ *     (meta.ts) en el mismo momento y con la misma deduplicación.
  * Ninguna función recibe ni envía emails, nombres, CVs ni cartas: el email sólo viaja a nuestro servidor
  * (cabecera X-Maru-Account, como el resto de la cuenta) para deduplicar por cuenta.
  */
-import { adsBlocked, adsMode, sendAdsConversion as sendRaw, type AdsParams, type AdsResult } from "./ads";
+import { adsBlocked, adsDecision, adsMode, sendAdsConversion as sendRaw, type AdsParams, type AdsResult } from "./ads";
+import { sendMetaEvent } from "./meta";
 import type { AdsConversion } from "./config";
 import { trackProduct } from "./analytics";
 import type { Milestone } from "./server";
@@ -71,8 +73,12 @@ export async function syncLocalMilestones(email: string): Promise<void> {
   for (const m of ["activation", "paywall"] as const) if (localGet(m)) await serverClaim(email, m, undefined, "mark");
 }
 
-/** Envía y deja constancia en analytics si la etiqueta estaba bloqueada (no se marca como entregada). */
+/**
+ * Envía a Google Ads y, con la misma decisión, al píxel de Meta. Deja constancia en analytics si una etiqueta
+ * estaba bloqueada (no se marca como entregada).
+ */
 async function sendAdsConversion(conversion: AdsConversion, params?: AdsParams, opts?: { waitMs?: number }): Promise<AdsResult> {
+  if (sendMetaEvent(conversion, params ?? {}, adsDecision(conversion, params)) === "blocked") trackProduct("meta_bloqueado", { conversion });
   const result = await sendRaw(conversion, params, opts);
   if (result === "blocked") trackProduct("ads_bloqueado", { conversion });
   return result;

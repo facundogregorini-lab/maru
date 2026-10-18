@@ -1,4 +1,4 @@
-import { adsConfig, type AdsConfig } from "./config";
+import { adsConfig, metaPixelId, type AdsConfig } from "./config";
 
 /**
  * Script en línea del <head> que inicializa window.dataLayer/gtag y carga gtag.js UNA vez, sólo en los
@@ -28,5 +28,33 @@ export function googleTagSnippet(config: AdsConfig = adsConfig()): string | null
     "s.onerror=function(){window.__maruAdsLoaded=false};",
     "document.head.appendChild(s);",
     "})();",
+  ].join("");
+}
+
+/**
+ * Píxel de Meta de Maru, directo y una sola vez, en los mismos dominios de producción. Sin "eventos automáticos"
+ * (autoConfig apagado: no lee botones ni formularios) y sin coincidencias avanzadas: sólo PageView (Meta sigue
+ * solo los cambios de ruta del sitio) y los hitos de meta.ts.
+ *
+ * window.__maruMetaLoaded queda true al cargar y false si el navegador lo bloquea. null si no hay ID válido.
+ */
+export function metaPixelSnippet(pixelId: string | null = metaPixelId(), config: AdsConfig = adsConfig()): string | null {
+  if (!pixelId) return null;
+  const id = JSON.stringify(pixelId);
+  const hosts = JSON.stringify(config.hosts);
+  return [
+    "(function(w,d){",
+    `var hosts=${hosts};`,
+    "if(hosts.indexOf(location.hostname.toLowerCase())<0||w.fbq)return;",
+    "var n=w.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};",
+    "if(!w._fbq)w._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];",
+    "var s=d.createElement('script');s.async=true;s.src='https://connect.facebook.net/en_US/fbevents.js';",
+    "s.onload=function(){w.__maruMetaLoaded=true};",
+    "s.onerror=function(){w.__maruMetaLoaded=false};",
+    "d.head.appendChild(s);",
+    `n('set','autoConfig',false,${id});`,
+    `n('init',${id});`,
+    "n('track','PageView');",
+    "})(window,document);",
   ].join("");
 }
