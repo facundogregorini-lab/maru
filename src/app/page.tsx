@@ -104,7 +104,7 @@ export default async function Home() {
             {[...data.latest, ...data.latest].map((j, i) => (
               <Link key={`${j.id}-${i}`} href={`/busquedas/${j.id}`} aria-hidden={i >= data.latest.length || undefined} tabIndex={i >= data.latest.length ? -1 : undefined} className="mr-16 flex shrink-0 items-center gap-4 hover:opacity-80">
                 <span className="rounded-[10px] shadow-[0_0_0_0.5px_rgba(255,255,255,0.15)]">
-                  <CompanyTile name={displayCompany(j.company)} size={48} />
+                  <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={48} />
                 </span>
                 <span>
                   <span className="block text-[13px] leading-4 text-white/90">
