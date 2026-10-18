@@ -40,7 +40,7 @@ scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──
 
 | Variable | Para qué |
 | --- | --- |
-| `ADMIN_EMAILS` | Emails separados por comas, espacios o saltos de línea con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere sesión del login existente, por Google o magic link. |
+| `ADMIN_EMAILS` | Emails separados por comas, espacios o saltos de línea con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere sesión del login existente, con Google. |
 | `MATCH_WEIGHTS` | Opcional. Pesos del ranking `habilidades,intención,seniority,extras`. Default `40,35,15,10`. |
 | `MATCH_DISABLED_SOURCES` | Opcional. Fuentes a apagar sin tocar código, ej. `remotive,jobicy`. |
 | `MATCH_SYNC_BUDGET_MS` | Opcional (script). Tiempo máximo de una ejecución antes de guardar checkpoint. Default 20 min. |

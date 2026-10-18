@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { handoffJob, type HandoffTarget } from "@/lib/match/clientStore";
+import { capture } from "@/lib/tracking/posthog";
 
 /** Lleva esta búsqueda (link y texto completo) a otra herramienta de Maru, lista para usar. */
 export default function PrepareJob({ id, to, children, className }: { id: string; to: HandoffTarget; children: React.ReactNode; className: string }) {
@@ -17,6 +18,7 @@ export default function PrepareJob({ id, to, children, className }: { id: string
       const res = await fetch(`/api/match/oportunidad?id=${encodeURIComponent(id)}`);
       const d = (await res.json()) as { id?: string; url?: string; text?: string; title?: string; company?: string; error?: string };
       if (!res.ok) throw new Error(d.error ?? "No pudimos abrir esta búsqueda.");
+      capture("busqueda_preparar", { destino: to });
       handoffJob(to, { id: d.id, jobUrl: d.url ?? "", jobText: d.text ?? "", title: d.title ?? "", company: d.company ?? "" });
       router.push(`/${to}#empezar`);
     } catch (e) {

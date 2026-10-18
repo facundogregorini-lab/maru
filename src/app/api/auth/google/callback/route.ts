@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 
 const clearState = `${OAUTH_COOKIE}=; Path=/api/auth/google; HttpOnly; SameSite=Lax; Max-Age=0`;
 
-/** Google vuelve acá: valida el estado (firmado y de este navegador), obtiene el email y deja la sesión, igual que el magic link. */
+/** Google vuelve acá: valida el estado (firmado y de este navegador), obtiene el email y deja la sesión. */
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const state = readOAuthState(url.searchParams.get("state"));

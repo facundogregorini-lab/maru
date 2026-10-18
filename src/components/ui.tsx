@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { MaruSprite } from "./maru/PixelMaru";
 import { notifyPlanLimit } from "@/lib/tracking/paywall";
+import { capture, herramientaDeResultado } from "@/lib/tracking/posthog";
 
 /** Piezas visuales compartidas por todas las secciones de Maru. */
 
@@ -112,5 +113,7 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
     notifyPlanLimit(url, res.status, data.code);
     throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
   }
+  const herramienta = herramientaDeResultado(url);
+  if (herramienta) capture("herramienta_resultado", { herramienta });
   return data as T;
 }

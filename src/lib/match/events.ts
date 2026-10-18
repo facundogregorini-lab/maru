@@ -1,9 +1,9 @@
 /**
- * Eventos propios del flujo de match. Maru todavía no tiene analytics instalado, así que esto es un
- * punto único y seguro: si en el futuro se agrega Vercel Analytics (window.va) o similar, los eventos
- * salen por ahí. Nunca se envían datos personales: sólo nombre del evento y valores agregados.
+ * Eventos propios del flujo de match. Salen por Vercel Analytics (window.va) y PostHog.
+ * Nunca se envían datos personales: sólo nombre del evento y valores agregados.
  * No toca píxeles ni eventos de conversión existentes.
  */
+import { capture } from "@/lib/tracking/posthog";
 
 export type MatchEvent =
   | "match_inicio"
@@ -28,6 +28,7 @@ export function track(event: MatchEvent, props: Props = {}): void {
   try {
     const va = (window as unknown as { va?: (t: "event", d: { name: string; data?: Props }) => void }).va;
     va?.("event", { name: event, data: safe });
+    capture(event, safe);
     window.dispatchEvent(new CustomEvent("maru:event", { detail: { event, ...safe } }));
   } catch {
     // los eventos nunca rompen la app

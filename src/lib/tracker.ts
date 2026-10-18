@@ -1,4 +1,5 @@
 import { load, save } from "./storage";
+import { capture } from "./tracking/posthog";
 
 /**
  * Seguimiento de postulaciones (el "Job Tracker" de jobright): vive en este navegador, como el perfil, y con sesión
@@ -173,6 +174,7 @@ function patch(id: string, fn: (it: TrackItem) => TrackItem): void {
 /** La persona mueve la tarjeta: acá sí puede ir para atrás. */
 export function setStatus(id: string, status: TrackStatus): void {
   patch(id, (it) => ({ ...it, status }));
+  capture("seguimiento_estado", { estado: status });
 }
 
 export function setNotes(id: string, notes: string): void {

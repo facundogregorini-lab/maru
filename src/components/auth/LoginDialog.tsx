@@ -1,43 +1,35 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { load, save } from "@/lib/storage";
 import { MaruHead } from "../maru/PixelMaru";
 import { useAuth } from "./AuthProvider";
 
-const LAST_EMAIL_KEY = "maru:email";
-
 /**
- * Ingreso con Google (en una ventana aparte, para no perder lo que hay en esta pestaña) o con magic link.
+ * Ingreso con Google, en una ventana aparte para no perder lo que hay en esta pestaña.
  * Mientras espera, consulta la sesión cada 3 s (y escucha a la ventana de Google):
  * si la persona entra en otra pestaña o ventana de este navegador, este diálogo se entera solo y sigue.
  */
 export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { open: boolean; reason: string; onClose: () => void; onLoggedIn: () => void }) {
   const { refresh, google } = useAuth();
-  const [email, setEmail] = useState("");
-  const [sentTo, setSentTo] = useState<string | null>(null);
   const [withGoogle, setWithGoogle] = useState(false);
-  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const d = dialogRef.current;
     if (!d) return;
     if (open && !d.open) {
-      setEmail((e) => e || load<string>(LAST_EMAIL_KEY) || "");
-      setSentTo(null);
       setWithGoogle(false);
       setError("");
       d.showModal();
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => buttonRef.current?.focus(), 50);
     }
     if (!open && d.open) d.close();
   }, [open]);
 
   useEffect(() => {
-    if (!open || (!sentTo && !withGoogle)) return;
+    if (!open || !withGoogle) return;
     const check = async () => {
       if (await refresh()) onLoggedIn();
     };
@@ -49,7 +41,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
         if (e.data === "ok") void check();
         else if (e.data === "error") {
           setWithGoogle(false);
-          setError("No pudimos ingresar con Google. Probá de nuevo o usá tu email.");
+          setError("No pudimos ingresar con Google. Probá de nuevo.");
         }
       };
     } catch {
@@ -59,7 +51,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
       clearInterval(id);
       channel?.close();
     };
-  }, [open, sentTo, withGoogle, refresh, onLoggedIn]);
+  }, [open, withGoogle, refresh, onLoggedIn]);
 
   function continueWithGoogle() {
     setError("");
@@ -68,27 +60,6 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
     // Si el navegador bloquea la ventana, vamos a Google en esta misma pestaña (y volvemos a esta página).
     if (!w) return void window.location.assign(`/api/auth/google?next=${next}`);
     setWithGoogle(true);
-  }
-
-  async function send(e?: React.FormEvent) {
-    e?.preventDefault();
-    setError("");
-    setSending(true);
-    try {
-      const res = await fetch("/api/auth/request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, next: window.location.pathname }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error ?? "No pudimos enviarte el email.");
-      save(LAST_EMAIL_KEY, email.trim());
-      setSentTo(email.trim());
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setSending(false);
-    }
   }
 
   return (
@@ -139,95 +110,36 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
           </button>
         </div>
 
-        {!sentTo ? (
-          <form onSubmit={send}>
-            <h2 id="login-title" className="mt-2 text-center text-2xl">
-              Ingresá a <strong>Maru</strong>
-            </h2>
-            {reason !== "entrar a Maru" && <p className="mt-1 text-center text-sm text-muted">para {reason}</p>}
-            {google && (
-              <>
-                <button
-                  type="button"
-                  onClick={continueWithGoogle}
-                  className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg bg-white px-6 py-3 font-bold text-ink ring-1 ring-ink/20 transition hover:bg-[#f5f6f7] disabled:opacity-60"
-                >
-                  <GoogleIcon />
-                  Continuar con Google
-                </button>
-                {withGoogle && (
-                  <p aria-live="polite" className="mt-2 text-center text-xs text-muted">
-                    Terminá en la ventana de Google: apenas entres, seguimos acá.
-                  </p>
-                )}
-                <p className="mt-6 flex items-center gap-3 text-xs uppercase text-muted before:h-px before:flex-1 before:bg-ink/10 after:h-px after:flex-1 after:bg-ink/10">
-                  o con tu email
-                </p>
-              </>
-            )}
-            <label className="sr-only" htmlFor="login-email">
-              Tu email
-            </label>
-            <input
-              id="login-email"
-              ref={inputRef}
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Tu email"
-              className={`${google ? "mt-6" : "mt-8"} w-full rounded-lg bg-[#f5f6f7] px-4 py-3 text-base outline-none transition placeholder:text-ink/40 focus:ring-2 focus:ring-ink`}
-            />
-            {error && (
-              <p role="alert" className="mt-2 text-sm text-brand-dark">
-                {error}
-              </p>
-            )}
+        <h2 id="login-title" className="mt-2 text-center text-2xl">
+          Ingresá a <strong>Maru</strong>
+        </h2>
+        {reason !== "entrar a Maru" && <p className="mt-1 text-center text-sm text-muted">para {reason}</p>}
+        {google ? (
+          <>
             <button
-              type="submit"
-              disabled={sending || !email.trim()}
-              className="mt-5 w-full rounded-lg bg-ink px-6 py-3 font-bold uppercase text-white transition hover:bg-black disabled:opacity-60"
+              ref={buttonRef}
+              type="button"
+              onClick={continueWithGoogle}
+              className="mt-8 flex w-full items-center justify-center gap-3 rounded-lg bg-white px-6 py-3 font-bold text-ink ring-1 ring-ink/20 transition hover:bg-[#f5f6f7] disabled:opacity-60"
             >
-              {sending ? "Enviando…" : "Mandame el link"}
+              <GoogleIcon />
+              Continuar con Google
             </button>
-            <p className="mt-4 text-center text-xs leading-relaxed text-muted">
-              Sin contraseña: {google ? "entrá con Google o con " : "te mandamos "}un link a tu email. Lo que armaste queda guardado mientras tanto.
-            </p>
-          </form>
-        ) : (
-          <div aria-live="polite">
-            <h2 id="login-title" className="mt-4 font-display text-2xl tracking-tight">
-              Revisá tu email
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              Te mandamos un link a <span className="font-medium text-ink">{sentTo}</span>. Abrilo <b>en este mismo navegador</b>: apenas
-              entres, seguimos donde estabas.
-            </p>
-            <div className="mt-5 flex items-center gap-3 rounded-2xl bg-sand px-4 py-3 text-sm text-muted">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand/60" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand" />
-              </span>
-              Esperando que abras el link… (vence en 15 minutos)
-            </div>
-            {error && (
-              <p role="alert" className="mt-2 text-sm text-brand-dark">
-                {error}
+            {withGoogle && (
+              <p aria-live="polite" className="mt-2 text-center text-xs text-muted">
+                Terminá en la ventana de Google: apenas entres, seguimos acá.
               </p>
             )}
-            <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              <button type="button" onClick={() => send()} disabled={sending} className="text-brand-dark underline underline-offset-4 disabled:opacity-60">
-                {sending ? "Reenviando…" : "Reenviar el link"}
-              </button>
-              <button type="button" onClick={() => setSentTo(null)} className="text-muted underline underline-offset-4 hover:text-ink">
-                Usar otro email
-              </button>
-            </div>
-            <p className="mt-4 text-xs text-muted">¿No llega? Revisá spam o promociones.</p>
-          </div>
+          </>
+        ) : (
+          <p className="mt-8 rounded-2xl bg-sand px-4 py-3 text-center text-sm text-muted">El ingreso no está disponible en este momento. Probá en un rato.</p>
         )}
+        {error && (
+          <p role="alert" className="mt-2 text-center text-sm text-brand-dark">
+            {error}
+          </p>
+        )}
+        <p className="mt-4 text-center text-xs leading-relaxed text-muted">Sin contraseña: entrás con tu cuenta de Google. Lo que armaste queda guardado mientras tanto.</p>
       </div>
       </div>
     </dialog>

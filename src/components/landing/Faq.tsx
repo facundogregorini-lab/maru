@@ -32,7 +32,7 @@ const FAQ = [
   },
   {
     q: "¿Necesito una cuenta?",
-    a: "Podés explorar búsquedas sin cuenta. Para sincronizar tus datos, descargar documentos y usar las herramientas del plan necesitás ingresar. Podés hacerlo con Google o con un enlace por email, cuando está habilitado.",
+    a: "Podés explorar búsquedas sin cuenta. Para sincronizar tus datos, descargar documentos y usar las herramientas del plan necesitás ingresar. Entrás con tu cuenta de Google, sin contraseña.",
   },
 ];
 

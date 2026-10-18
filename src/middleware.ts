@@ -33,7 +33,6 @@ export const config = {
     "/api/video/:path*",
     "/api/autofill",
     "/api/export/:path*",
-    "/api/auth/request",
     "/api/tracking/:path*",
   ],
 };
