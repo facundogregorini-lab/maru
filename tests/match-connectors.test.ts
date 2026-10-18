@@ -168,6 +168,37 @@ describe("elegibilidad desde Argentina", () => {
     expect(e.status).toBe("por_confirmar");
     expect(e.evidence[0]).toMatch(/no dice si contratan desde Argentina/);
   });
+  it("remoto sin región: la descripción que ata la residencia a LATAM o a cualquier lugar lo habilita", () => {
+    const ok = [
+      "Fully remote position open to candidates across Latin America.",
+      "Location: Remote Latin America. Contractor engagement.",
+      "Based in Latin America with 6 hours of overlap with US Pacific time.",
+      "100% remoto desde cualquier país de Latinoamérica. Pago en USD.",
+      "Debes residir actualmente en Chile, Argentina o Perú.",
+      "Esta posición está abierta para todo LATAM.",
+      "Fully remote: we hire globally.",
+    ];
+    for (const d of ok) expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: d })).status, d).toBe("elegible");
+    const unclear = [
+      "Trabajarás con clientes de LATAM y Norteamérica.",
+      "Se valorará experiencia previa en LATAM Airlines.",
+      "Títulos de universidades de Chile o de cualquier parte del mundo.",
+      "This role can be based anywhere in North Dakota.",
+    ];
+    for (const d of unclear) expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: d })).status, d).toBe("por_confirmar");
+  });
+  it("remoto sin región: pedir residencia en otro país lo descarta", () => {
+    for (const d of ["100% remote position for candidates located in Colombia.", "Residencia en Ciudad de México requerida.", "Candidates must be currently based and authorized to work in Mexico."]) {
+      expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: d })).status, d).toBe("no_elegible");
+    }
+    expect(classifyEligibility(posting({ locations: ["Remote"], workplace: remote, descriptionText: "Debes residir en Santiago del Estero." })).status).not.toBe("no_elegible");
+  });
+  it("un remoto atado a un estado o región de otro país no es elegible", () => {
+    for (const l of ["New South Wales", "Saskatchewan", "Texas", "Remote - North America", "Victoria"]) {
+      expect(classifyEligibility(posting({ locations: [l], workplace: remote })).status, l).toBe("no_elegible");
+    }
+    expect(classifyEligibility(posting({ locations: ["Victoria, Entre Ríos"], workplace: remote })).status).toBe("elegible");
+  });
   it("Buenos Aires es elegible; Córdoba, España no", () => {
     expect(classifyEligibility(posting({ locations: ["Buenos Aires, Argentina"] })).status).toBe("elegible");
     expect(classifyEligibility(posting({ locations: ["Córdoba, Spain"] })).status).toBe("no_elegible");
