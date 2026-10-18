@@ -41,7 +41,8 @@ function Branch({ flip = false }: { flip?: boolean }) {
   );
 }
 
-export type Laurel = { top: string; main: string; href: string; label: string };
+/** `second` parte el texto grande en dos renglones (más chicos) cuando no entra en el ancho del sello. */
+export type Laurel = { top: string; main: string; second?: string; href: string; label: string };
 
 /** Fila de sellos con las medidas de jobright: 108 × 30 en mobile y 144 × 40 desde 1024 px, separados por 12. */
 export default function Laurels({ items }: { items: Laurel[] }) {
@@ -52,8 +53,15 @@ export default function Laurels({ items }: { items: Laurel[] }) {
           <Link href={it.href} aria-label={it.label} className="flex h-[30px] w-full items-center justify-between transition-opacity hover:opacity-70 lg:h-10">
             <Branch />
             <span className="min-w-0 text-center">
-              <span className="block whitespace-nowrap text-[8px] font-semibold leading-[10px] lg:text-[11px] lg:leading-[13px]">{it.top}</span>
-              <span className="block whitespace-nowrap font-display text-[13px] font-bold uppercase leading-[14px] lg:text-[17px] lg:leading-[19px]">{it.main}</span>
+              <span className={`block whitespace-nowrap text-[8px] font-semibold lg:text-[11px] ${it.second ? "leading-[9px] lg:leading-3" : "leading-[10px] lg:leading-[13px]"}`}>{it.top}</span>
+              {it.second ? (
+                <span className="block whitespace-nowrap font-display text-[11px] font-bold uppercase leading-[11px] lg:text-sm lg:leading-[14px]">
+                  <span className="block">{it.main}</span>
+                  <span className="block">{it.second}</span>
+                </span>
+              ) : (
+                <span className="block whitespace-nowrap font-display text-[13px] font-bold uppercase leading-[14px] lg:text-[17px] lg:leading-[19px]">{it.main}</span>
+              )}
             </span>
             <Branch flip />
           </Link>
