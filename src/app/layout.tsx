@@ -14,6 +14,7 @@ import "@fontsource/source-sans-3/700.css";
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 import PaywallHost from "@/components/billing/PaywallHost";
+import PostHogPageviews from "@/components/PostHogPageviews";
 import { SITE_URL } from "@/lib/site";
 import { googleTagSnippet } from "@/lib/tracking/tag";
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AuthProvider>
           {children}
           <PaywallHost />
+          <PostHogPageviews />
         </AuthProvider>
       </body>
     </html>

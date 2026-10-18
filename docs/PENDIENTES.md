@@ -1,5 +1,10 @@
 # Estado y próximos pasos de Maru
 
+## Login sólo con Google y funnels en PostHog (18/10/2026)
+
+- **Login:** se sacó el link por email. Quedan `/api/auth/google` y su callback; se borraron `/api/auth/request`, `/api/auth/verify`, `src/lib/mailer.ts` y `nodemailer`. `SMTP_URL` y `EMAIL_FROM` ya no se usan (se pueden borrar de Vercel). Sin `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` el diálogo avisa que el ingreso no está disponible. Las sesiones viejas creadas con el link siguen valiendo (misma cookie).
+- **PostHog:** `posthog-js` con eventos propios y dos tableros (funnel general y uno por herramienta) en el proyecto 670796 de Growth Labs 2. Detalle en [TRACKING.md](TRACKING.md#posthog-funnels-de-producto-desde-el-18102026). Falta: `NEXT_PUBLIC_POSTHOG_KEY` en Vercel (Production) y un deploy; después, revisar en PostHog → Activity que lleguen `$pageview` y `seccion_vista` desde www.marucoach.com.
+
 ## Foto del CV en PDF y preguntas opcionales (17/10/2026)
 
 **Publicación a comprobar:** Vercel rechazó la preview de PR #83 con `Deployment rate limited — retry in 24 hours`. No afirmar que estos cambios ya están activos hasta confirmar un deployment Ready de main que los incluya. Si también rechaza Production, reintentar el último main cuando se libere la cuota; no cambiar el plan ni crear otro proyecto para eludirla.

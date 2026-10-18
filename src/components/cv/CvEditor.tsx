@@ -92,7 +92,7 @@ export default function CvEditor({
     }
   }
 
-  // Descargar o copiar el CV exige haber ingresado con el magic link.
+  // Descargar o copiar el CV exige haber ingresado.
   const gate = useLoginGate();
 
   function exportAs(kind: "pdf" | "docx") {

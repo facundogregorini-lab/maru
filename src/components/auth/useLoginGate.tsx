@@ -8,7 +8,7 @@ type Action = (justLoggedIn: boolean) => void | Promise<void>;
 
 /**
  * Exige haber ingresado antes de una acción (descargar, copiar…).
- * Con sesión, corre la acción; sin sesión, abre el diálogo del magic link y la retoma apenas ingresa.
+ * Con sesión, corre la acción; sin sesión, abre el diálogo de ingreso y la retoma apenas ingresa.
  *
  *   const gate = useLoginGate();
  *   gate.run("descargar tu CV", () => download());

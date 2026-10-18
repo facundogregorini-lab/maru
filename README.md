@@ -83,25 +83,24 @@ npm run dev
 
 Abrí http://localhost:3000.
 
-## Login con Google o magic link
+## Login con Google
 
-Cualquier persona puede **ingresar** desde el header de todas las páginas. Para **descargar o copiar el CV y la carta, o descargar el video**, es obligatorio: con **Continuar con Google** o con un link que Maru manda por email (sin contraseña). El navegador queda recordado por 180 días y la persona sigue donde estaba.
+Cualquier persona puede **ingresar** desde el header de todas las páginas. Para **descargar o copiar el CV y la carta, o descargar el video**, es obligatorio. El único ingreso es **Continuar con Google** (sin contraseña; el link por email se sacó el 18/10/2026). El navegador queda recordado por 180 días y la persona sigue donde estaba.
 
-- El login no usa la base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos; al abrirlo se crea una sesión firmada en una cookie `httpOnly`.
+- El login no usa la base de datos: al volver de Google se crea una sesión firmada (HMAC) en una cookie `httpOnly`.
 - Las descargas se validan en el servidor (`/api/export/pdf` y `/api/export/docx` devuelven 401 sin sesión).
-- Si la persona abre el link en otra pestaña del mismo navegador, la pestaña original lo detecta y sigue con la descarga sola.
 
-Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `SMTP_URL` y `EMAIL_FROM`. Cualquier SMTP sirve (Brevo, Resend, SendGrid, Gmail con contraseña de aplicación).
+Variables: `AUTH_SECRET` (32+ caracteres, `openssl rand -base64 48`), `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`. Sin las de Google, el diálogo avisa que el ingreso no está disponible.
 
 ### Continuar con Google
 
 - Google se abre en una ventana aparte (`/api/auth/google?popup=1`), así no se pierde lo que hay en la pestaña (por ejemplo, un video grabado). Al volver, la ventana avisa por `BroadcastChannel` y se cierra; el diálogo retoma la descarga. Si el navegador bloquea la ventana, el ingreso pasa en la misma pestaña y vuelve a la página.
-- El estado (`state`) va firmado con `AUTH_SECRET` y atado al navegador con la cookie `maru_oauth`; sólo se aceptan emails verificados por Google. La sesión es la misma cookie del magic link.
+- El estado (`state`) va firmado con `AUTH_SECRET` y atado al navegador con la cookie `maru_oauth`; sólo se aceptan emails verificados por Google. La sesión dura 180 días.
 - Configuración, en [Google Cloud Console](https://console.cloud.google.com/):
   1. Crear un proyecto (o usar uno). En **APIs y servicios → Pantalla de consentimiento de OAuth**: tipo *Externo*, nombre "Maru", email de soporte, logo opcional; alcances `openid` y `email`; **Publicar la app** (en modo prueba sólo entran los usuarios de prueba).
   2. En **Credenciales → Crear credenciales → ID de cliente de OAuth**: tipo *Aplicación web*. En **URIs de redirección autorizadas**: `https://maru-grego7.vercel.app/api/auth/google/callback` (y la del dominio propio cuando exista, más `http://localhost:3000/api/auth/google/callback` para desarrollo).
   3. Copiar el ID y el secreto a `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en Vercel y hacer redeploy. Sin esas variables el botón no aparece.
-- Los previews de Vercel tienen otra URL: Google sólo acepta las URIs cargadas, así que ahí conviene probar con el magic link o agregar la URL del preview.
+- Los previews de Vercel tienen otra URL: Google sólo acepta las URIs cargadas, así que para probar ingresando en un preview hay que agregar su URL.
 
 ## Base de datos: tu cuenta en cualquier dispositivo
 
@@ -122,7 +121,7 @@ Con sesión, el **perfil**, el **match** (preferencias, búsquedas guardadas y d
 ## Planes, protección de uso y chat
 
 - `/precios`: comparación de planes, checkout por cuenta, estado y cancelación. La suscripción queda **apagada** por defecto (`NEXT_PUBLIC_BILLING_ENABLED=false`). Precio y límites son una propuesta pendiente de confirmar. Activación, credenciales, pruebas y límites: [docs/COBROS.md](docs/COBROS.md).
-- La cuenta y el plan se identifican igual con Google y con magic link. Un retorno de pago o una marca del navegador no otorgan acceso: se verifica el pago del lado del servidor.
+- La cuenta y el plan se identifican por el email de Google. Un retorno de pago o una marca del navegador no otorgan acceso: se verifica el pago del lado del servidor.
 - La protección por IP usa contadores atómicos en Redis con TTL y claves `maru:rate:` (IP con hash). Sin base configurada queda la alternativa en memoria. Si hay base y falla, las APIs protegidas devuelven 503 para no gastar IA sin control.
 - Chat en `/busquedas`: consultas de carrera y avisos del inventario, enlaces validados por el servidor, consentimiento para enviar el perfil y conversación sin persistencia. Requiere la clave de IA habitual. El historial se limpia al cambiar de cuenta.
 - Guía del seguimiento: `/seguimiento/guia`. Los resultados de Match usan `AppShell`. Logos locales verificados: `public/companies/SOURCES.json` (Simple Icons, versión fijada; sin seguimiento externo de imágenes).
@@ -150,7 +149,7 @@ src/components/video/, src/app/api/video/*   Video: guion, estudio (cámara + te
 src/components/entrevista/, src/app/api/entrevista/*  Entrevista: plan, llamada (voz), turnos y informe
 src/lib/tracker.ts, src/components/tracker/, src/app/seguimiento/  Seguimiento de postulaciones (localStorage + cuenta)
 src/components/speech.ts      Dictado continuo, voz de la entrevistadora y métricas de ritmo
-src/components/auth/, src/lib/auth.ts, src/lib/google.ts, src/app/api/auth/*  Login con Google y magic link
+src/components/auth/, src/lib/auth.ts, src/lib/google.ts, src/app/api/auth/*  Login con Google
 src/app/api/export/pdf, docx  Descargas (exigen sesión)
 src/lib/db.ts, src/lib/sync/, src/app/api/sync  Base de datos y sincronización de la cuenta
 src/app/api/autofill, src/lib/autofill.ts  Autocompletar formularios desde la extensión

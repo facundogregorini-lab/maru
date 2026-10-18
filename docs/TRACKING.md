@@ -1,4 +1,30 @@
-# Medición y conversiones de Google Ads
+# Medición: PostHog y conversiones de Google Ads
+
+## PostHog: funnels de producto (desde el 18/10/2026)
+
+Organización **Growth Labs 2**, proyecto **670796** (US). Tableros:
+
+- [Maru · Funnel general](https://us.posthog.com/project/670796/dashboard/2224638): visita → activación → ve el límite → click en pagar → pago (ventana 30 días), en pasos y por semana.
+- [Maru · Funnels por herramienta](https://us.posthog.com/project/670796/dashboard/2224639): uno por sección, desde la visita a la web (ventana 14 días).
+
+Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/components/PostHogPageviews.tsx` (visitas y descarga de la extensión). Sólo con `NEXT_PUBLIC_POSTHOG_KEY` (clave pública `phc_…` del proyecto, en Vercel → Production) y en los dominios de `NEXT_PUBLIC_GOOGLE_ADS_HOSTS` (por defecto `www.marucoach.com`, `marucoach.com`). Sin autocaptura, sin grabación de sesiones, sin `identify`: el funnel une los pasos por navegador y nunca viaja el email.
+
+| Evento | Cuándo | Propiedades |
+|---|---|---|
+| `$pageview` | Cada página (también al navegar sin recargar) | `seccion` si es una sección |
+| `seccion_vista` | Justo después de la visita a una sección (`postulacion`, `cv`, `carta`, `video`, `entrevista`, `match`, `busquedas`, `seguimiento`, `extension`, `precios`) | `seccion` |
+| `herramienta_resultado` | La IA devolvió el resultado principal (`post()` en `src/components/ui.tsx`): `/api/generate`, `/api/cv/generate`, `/api/carta`, `/api/video/guion`, `/api/entrevista/preparar`, `/api/match/ranking` | `herramienta` |
+| `activacion`, `limite_planes_visto`, `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` | Los mismos eventos de producto de abajo (`trackProduct`) | los mismos, más `seccion` |
+| `match_*` | Eventos del match (`src/lib/match/events.ts`) | los mismos |
+| `busqueda_aviso_original`, `busqueda_preparar` | Abrir el aviso original o llevar la búsqueda a una herramienta | `destino` |
+| `seguimiento_estado` | Cambiar el estado de una postulación en el tablero | `estado` |
+| `extension_descarga` | Clic en el `.zip` de la extensión | — |
+
+Funnel general: `$pageview` → `activacion` → `limite_planes_visto` → `plan_click` ("click en pagar": elige un plan y va a Mercado Pago) → `compra_confirmada`. Por herramienta: `$pageview` → `seccion_vista` → resultado → activación de esa herramienta (en Postulación y CV la activación se separa por `seccion`, porque las dos usan el mismo editor). `seccion_vista` existe porque una misma visita no puede contar para dos pasos del funnel: así, quien entra directo a `/cv` desde un anuncio completa los dos primeros pasos.
+
+Prueba local: `NEXT_PUBLIC_POSTHOG_KEY=phc_test NEXT_PUBLIC_GOOGLE_ADS_HOSTS=localhost npm run dev` y `localStorage.ph_debug = "true"` en la consola: cada evento se imprime como `send "…"`. PostHog descarta los navegadores automatizados (headless) como bots.
+
+# Conversiones de Google Ads
 
 Etiqueta de Google cargada **directamente en el código** (sin Google Tag Manager ni "Conversion Linker" de GTM). Cuenta de Google Ads: **Growth Labs (523-565-8460)**, la misma de Templo Ninja. Las campañas de Maru optimizan **sólo** por "Maru | Límite alcanzado".
 
@@ -57,7 +83,7 @@ Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_
 
 - Etiquetado automático: **activado** en la cuenta (verificado).
 - `marucoach.com` redirige a `www.marucoach.com` conservando `gclid` y `utm_*` (verificado).
-- gtag.js guarda el `gclid` en cookies propias (`_gcl_*`, dominio `.marucoach.com`) en la primera página; sobrevive al login con Google (misma pestaña o popup), al magic link si se abre en el mismo navegador, y a la vuelta de Mercado Pago (`/precios?estado=pendiente`). No hay vinculación entre dominios con Templo Ninja ni con Mercado Pago.
+- gtag.js guarda el `gclid` en cookies propias (`_gcl_*`, dominio `.marucoach.com`) en la primera página; sobrevive al login con Google (misma pestaña o popup), y a la vuelta de Mercado Pago (`/precios?estado=pendiente`). No hay vinculación entre dominios con Templo Ninja ni con Mercado Pago.
 
 ## Compras desde el navegador: límites
 

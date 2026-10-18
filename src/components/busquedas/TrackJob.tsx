@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { capture } from "@/lib/tracking/posthog";
 import { STATUSES, TRACKER_EVENT, findTracked, upsertTracked, type TrackInput, type TrackStatus } from "@/lib/tracker";
 
 type Job = Pick<TrackInput, "id" | "title" | "company" | "jobUrl">;
@@ -9,7 +10,7 @@ type Job = Pick<TrackInput, "id" | "title" | "company" | "jobUrl">;
 /** Abrir la fuente guarda el aviso; el envío lo confirma la persona en su seguimiento. */
 export function ApplyLink({ job, className, children }: { job: Job; className: string; children: React.ReactNode }) {
   return (
-    <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" onClick={() => upsertTracked(job)} className={className}>
+    <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" onClick={() => { capture("busqueda_aviso_original"); upsertTracked(job); }} className={className}>
       {children}
     </a>
   );

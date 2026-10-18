@@ -1,9 +1,10 @@
 /**
- * Eventos de producto (analytics). Salen por Vercel Analytics (window.va), igual que los eventos del match
- * (src/lib/match/events.ts), y por el evento "maru:event" del navegador para depurar.
+ * Eventos de producto (analytics). Salen por Vercel Analytics (window.va) y PostHog (posthog.ts), igual que
+ * los eventos del match (src/lib/match/events.ts), y por el evento "maru:event" del navegador para depurar.
  * Pueden repetirse y llevar más detalle que las conversiones publicitarias, pero nunca datos personales:
  * sólo valores de una lista cerrada (herramienta, plan, códigos, montos agregados).
  */
+import { capture } from "./posthog";
 
 export type ProductEvent =
   | "activacion" // primer resultado útil de una herramienta (se mide cada vez, con `primera`)
@@ -45,6 +46,7 @@ export function trackProduct(event: ProductEvent, props: ProductProps = {}): voi
   try {
     const va = (window as unknown as { va?: (t: "event", d: { name: string; data?: Record<string, string | number | boolean> }) => void }).va;
     va?.("event", { name: event, data });
+    capture(event, data);
     window.dispatchEvent(new CustomEvent("maru:event", { detail: { event, ...data } }));
   } catch {
     // la medición nunca rompe la app

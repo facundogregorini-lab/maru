@@ -1,15 +1,14 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 
 /**
- * Login con magic link sin base de datos: el link lleva un token firmado (HMAC) que vence en 15 minutos;
- * al abrirlo se crea una sesión firmada en una cookie httpOnly que dura 180 días ("recordarme").
+ * Login con Google sin base de datos: al volver de Google se crea una sesión firmada (HMAC) en una cookie
+ * httpOnly que dura 180 días ("recordarme"). El estado de OAuth también va firmado.
  */
 
 export const SESSION_COOKIE = "maru_session";
-export const LOGIN_TTL_S = 15 * 60;
 export const SESSION_TTL_S = 180 * 24 * 60 * 60;
 
-type TokenPayload = { typ: "login" | "session" | "oauth"; email: string; exp: number; n: string; next?: string; popup?: boolean };
+type TokenPayload = { typ: "session" | "oauth"; email: string; exp: number; n: string; next?: string; popup?: boolean };
 
 function secret(): string {
   const s = process.env.AUTH_SECRET;
@@ -47,9 +46,7 @@ function readToken(token: string | undefined | null, typ: TokenPayload["typ"], n
   }
 }
 
-export const createLoginToken = (email: string, now?: number) => createToken("login", email, LOGIN_TTL_S, now);
 export const createSessionToken = (email: string, now?: number) => createToken("session", email, SESSION_TTL_S, now);
-export const verifyLoginToken = (token: string | null, now?: number) => readToken(token, "login", now)?.email ?? null;
 export const verifySessionToken = (token: string | null | undefined, now?: number) => readToken(token, "session", now)?.email ?? null;
 
 /** Estado firmado del ingreso con Google (vence en 10 minutos). `n` va también en una cookie: ata la vuelta a este navegador. */

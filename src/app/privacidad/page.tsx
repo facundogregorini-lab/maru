@@ -43,7 +43,7 @@ export default function PrivacidadPage() {
 
       <h2>Tu email y tu sesión</h2>
       <ul>
-        <li>Podés ingresar con Google (usamos el email verificado que devuelve Google) o con un link de acceso que enviamos a tu email, sin contraseña. Ambos métodos abren la misma cuenta.</li>
+        <li>Ingresás con Google, sin contraseña. Usamos el email verificado que devuelve Google para identificar tu cuenta.</li>
         <li>Al ingresar se guarda una cookie de sesión firmada en tu navegador, que dura hasta 180 días o hasta que salgas.</li>
       </ul>
 
@@ -61,7 +61,11 @@ export default function PrivacidadPage() {
 
       <h2>Medición y pagos</h2>
       <ul>
-        <li>Medimos visitas y el uso de las secciones de forma agregada (Vercel Analytics), sin datos personales.</li>
+        <li>
+          Medimos visitas y el uso de las secciones (Vercel Analytics y PostHog) para saber qué partes de Maru sirven: qué páginas visitás, qué herramienta usás,
+          si llegás al límite gratis o elegís un plan. PostHog guarda un identificador al azar en tu navegador para unir esos pasos. No grabamos tu pantalla ni
+          registramos tus clics, y no enviamos tu email, tu nombre, tu CV, tus cartas ni nada de lo que escribís.
+        </li>
         <li>
           Usamos la etiqueta de Google (Google Ads) para saber qué anuncios nos traen visitas y resultados. La etiqueta guarda cookies de medición publicitaria de
           Google en tu navegador (por ejemplo, el identificador del clic en un anuncio) y le avisa a Google cuando pasan algunos hitos: el primer resultado que

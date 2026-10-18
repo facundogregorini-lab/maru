@@ -5,7 +5,7 @@ Implementación preparada en la rama `codex/cuentas-sync-y-planes`. El cobro que
 ## Qué hace
 
 - `/precios` presenta el estado actual y las opciones. Durante el lanzamiento no permite pagar ni aplica cuotas mensuales.
-- Al habilitar cobro, la cuenta autenticada (Google o magic link) elige un plan y crea una suscripción de Mercado Pago desde `POST /api/billing/checkout` (`{ "plan": "semanal" | "mensual" | "trimestral" }`). Se vincula por una referencia aleatoria generada por el servidor, no por un email enviado desde el navegador.
+- Al habilitar cobro, la cuenta autenticada (con Google) elige un plan y crea una suscripción de Mercado Pago desde `POST /api/billing/checkout` (`{ "plan": "semanal" | "mensual" | "trimestral" }`). Se vincula por una referencia aleatoria generada por el servidor, no por un email enviado desde el navegador.
 - Planes (modelo inspirado en JobRight), en `src/lib/plans.ts`. Confirmar antes de habilitar:
 
   | Plan | Cobro | Frecuencia en Mercado Pago | Equivale a |
