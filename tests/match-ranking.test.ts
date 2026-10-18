@@ -339,6 +339,16 @@ describe("calibración del porcentaje de afinidad", () => {
     expect(roleSimilarity(parseRole("Analista de datos"), parseRole("Data Analyst"))).toBe(1);
   });
 
+  it("el rubro de la empresa no es el área del puesto, y 'auxiliary/clerk' es un cargo de apoyo", () => {
+    const fin = parseRole("Analista financiero");
+    expect(roleSimilarity(fin, parseRole("Analista Junior de Gestión de Riesgos para la Industria Financiera"))).toBeLessThan(0.3);
+    expect(roleSimilarity(fin, parseRole("Analista de finanzas en empresa de consumo masivo"))).toBeGreaterThanOrEqual(0.9);
+    expect(roleSimilarity(parseRole("Contador"), parseRole("Analista Contable para empresa Metalúrgica"))).toBeGreaterThanOrEqual(0.9);
+    expect(roleSimilarity(parseRole("Desarrollador de software"), parseRole("Desarrollador de software en empresa de logística"))).toBeGreaterThanOrEqual(0.9);
+    expect(parseRole("Finance Auxiliary Jr").head).toBe("apoyo");
+    expect(parseRole("Accounts Payable Clerk").head).toBe("apoyo");
+  });
+
   it("'Administrativo contable' sin nivel se estima junior para un perfil senior, sin mostrarlo como dato", async () => {
     const make = (title: string) => example({ title, extracted: { ...base.extracted, family: { value: "finanzas", from: "titulo" }, seniority: null, skillsRequired: ["contabilidad"], yearsRequired: null, languages: [] } });
     const base = await example();
