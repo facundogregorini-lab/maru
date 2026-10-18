@@ -20,7 +20,7 @@ export const META_ICONS = {
 export function MetaItem({ icon, children }: { icon: keyof typeof META_ICONS; children: React.ReactNode }) {
   return (
     <li className="flex min-w-0 items-center gap-1.5">
-      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
         {META_ICONS[icon]}
       </svg>
       <span className="truncate">{children}</span>
@@ -30,7 +30,7 @@ export function MetaItem({ icon, children }: { icon: keyof typeof META_ICONS; ch
 
 export function JobMeta({ j }: { j: JobResult }) {
   return (
-    <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-[13px] sm:grid-cols-3">
+    <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3 sm:gap-x-10">
       <MetaItem icon="where">{j.where || "Ubicación no informada"}</MetaItem>
       {j.contrato && <MetaItem icon="contrato">{j.contrato}</MetaItem>}
       {j.salario && <MetaItem icon="salario">{j.salario}</MetaItem>}
@@ -43,7 +43,7 @@ export function JobMeta({ j }: { j: JobResult }) {
 
 export function TimeTag({ iso, known = true }: { iso: string; known?: boolean }) {
   return (
-    <span className="rounded-md bg-neon/10 px-1.5 py-1 text-[11px] font-medium" title={known ? "Fecha de publicación según la fuente" : "La fuente no da fecha exacta: es cuando la vimos por primera vez"}>
+    <span className="rounded-[6px] bg-neon/10 px-1.5 py-0.5 text-xs" title={known ? "Fecha de publicación según la fuente" : "La fuente no da fecha exacta: es cuando la vimos por primera vez"}>
       {!known && "vista "}
       <TimeAgo iso={iso} />
     </span>
@@ -51,17 +51,17 @@ export function TimeTag({ iso, known = true }: { iso: string; known?: boolean })
 }
 
 export function ArgTag() {
-  return <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1 text-[11px] font-medium">Desde Argentina</span>;
+  return <span className="rounded-[6px] bg-[rgba(20,200,240,0.1)] px-1.5 py-0.5 text-xs">Desde Argentina</span>;
 }
 
 /** Tarjeta de búsqueda como la de jobright: datos a la izquierda y el panel negro de compatibilidad. */
 export default function JobCard({ j }: { j: JobResult }) {
   return (
-    <article className="flex overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]">
+    <article className="flex overflow-hidden rounded-2xl bg-white transition-shadow duration-200 hover:shadow-[var(--shadow-card)]">
       <div className="min-w-0 flex-1 p-4">
         <div className="flex gap-4">
           <span className="hidden sm:block">
-            <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={72} />
+            <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={60} />
           </span>
           <span className="sm:hidden">
             <CompanyTile name={displayCompany(j.company)} logo={j.logo} size={44} />

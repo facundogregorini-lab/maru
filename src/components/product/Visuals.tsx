@@ -1,3 +1,4 @@
+import ScoreRing from "@/components/ScoreRing";
 import CompanyTile from "@/components/busquedas/CompanyTile";
 import { MaruHead } from "@/components/maru/PixelMaru";
 
@@ -10,23 +11,6 @@ const card = "rounded-2xl bg-white shadow-[0_24px_60px_-30px_rgba(0,0,0,0.35)] r
 
 function Caption({ text = "Ejemplo ilustrativo" }: { text?: string }) {
   return <p className="mt-3 text-center text-xs text-muted">{text}</p>;
-}
-
-function ScoreRing({ value, size = 44 }: { value: number; size?: number }) {
-  const r = (size - 5) / 2;
-  const c = 2 * Math.PI * r;
-  return (
-    <span className="relative grid shrink-0 place-items-center" style={{ width: size, height: size }}>
-      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} className="absolute inset-0 -rotate-90" aria-hidden>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth="3" className="stroke-brand-soft" />
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth="3" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} className="stroke-neon" />
-      </svg>
-      <span className="text-sm font-bold">
-        {value}
-        <span className="text-[0.6em]">%</span>
-      </span>
-    </span>
-  );
 }
 
 /** Tres búsquedas apiladas con su compatibilidad (el hero de "AI Job Matcher"). */
@@ -44,7 +28,7 @@ export function JobStackMock() {
             <div className="flex items-start justify-between gap-3">
               <CompanyTile name={j.company} size={44} />
               <span className="flex items-center gap-2 text-[11px] font-bold uppercase">
-                Match fuerte <ScoreRing value={j.score} />
+                Match fuerte <ScoreRing value={j.score} size="sm" />
               </span>
             </div>
             <p className="mt-2 font-semibold">{j.title}</p>
@@ -184,7 +168,7 @@ export function ReportMock() {
     <figure>
       <div className={`${card} mx-auto max-w-[440px] p-5`}>
         <div className="flex items-center gap-4">
-          <ScoreRing value={82} size={72} />
+          <ScoreRing value={82} size="md" />
           <div>
             <p className="text-lg font-bold leading-tight">Muy cerca de estar lista</p>
             <p className="text-xs text-muted">Informe de tu práctica</p>
@@ -220,7 +204,7 @@ export function AtsMock() {
               <p className="text-xs text-muted">Product Manager Sr. · Buenos Aires</p>
             </div>
             <div className="text-center">
-              <ScoreRing value={91} size={64} />
+              <ScoreRing value={91} size="md" />
               <p className="mt-1 text-[10px] font-bold uppercase">ATS</p>
             </div>
           </div>

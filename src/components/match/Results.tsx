@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { itemProps, track } from "@/lib/match/events";
+import ScoreRing, { matchLevel } from "@/components/ScoreRing";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import { MIN_SCORE, roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
@@ -249,7 +250,7 @@ function JobCard({
   const [err, setErr] = useState("");
   const main = item.sources.find((s) => s.kind === "ats") ?? item.sources[0];
   const required = item.sources.filter((s) => s.required);
-  const tone = item.score >= 70 ? "bg-sage-soft text-sage" : item.score >= 45 ? "bg-honey/20 text-ink" : "bg-sand text-muted";
+  const level = matchLevel(item.score);
 
   async function prepare() {
     setErr("");
@@ -275,10 +276,10 @@ function JobCard({
   }
 
   return (
-    <article className="flex overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04]">
+    <article className="flex overflow-hidden rounded-2xl bg-white transition-shadow duration-200 hover:shadow-[var(--shadow-card)]">
       <div className="min-w-0 flex-1 p-4 sm:p-5">
         <div className="flex gap-4">
-          <CompanyTile name={displayCompany(item.company)} logo={item.logo} size={56} />
+          <CompanyTile name={displayCompany(item.company)} logo={item.logo} size={60} />
           <div className="min-w-0">
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
@@ -295,11 +296,11 @@ function JobCard({
               </span>
             </p>
           </div>
-          {/* En celular el puntaje va arriba a la derecha; en compu, en el panel negro. */}
-          <div className={`ml-auto shrink-0 self-start rounded-xl px-3 py-1.5 text-center sm:hidden ${tone}`}>
-            <p className="text-xl font-bold leading-none">{item.score}%</p>
-            <p className="text-[10px] font-semibold uppercase">match</p>
-            <p className="mt-1 max-w-20 text-[10px] leading-tight">Info. {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}</p>
+          {/* En celular el puntaje va arriba a la derecha (anillo chico); en compu, en el panel negro. */}
+          <div className="ml-auto flex shrink-0 flex-col items-center gap-1 self-start text-center sm:hidden">
+            <ScoreRing value={item.score} size="sm" />
+            <p className="text-[10px] font-bold uppercase leading-tight">{level.label}</p>
+            <p className="max-w-20 text-[10px] leading-tight text-muted">Info. {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}</p>
           </div>
         </div>
         <hr className="my-3 border-black/[0.07]" />
@@ -456,8 +457,8 @@ function JobCard({
         className="m-1 hidden w-[164px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:flex"
         title="Afinidad según los datos disponibles de tu perfil y el aviso. Revisá las brechas y condiciones pendientes; no es una probabilidad de contratación."
       >
-        <ScoreRing value={item.score} />
-        <p className="mt-3 text-sm font-semibold uppercase">{item.score >= 70 ? "Match fuerte" : item.score >= 45 ? "Buen match" : "Match posible"}</p>
+        <ScoreRing value={item.score} size="dark" />
+        <p className="mt-3 text-sm font-semibold uppercase">{level.label}</p>
         <p className="mt-3 w-full border-t border-white/20 pt-3 text-[11px] leading-relaxed text-white/80">
           Compatibilidad estimada
           <br />
@@ -465,23 +466,6 @@ function JobCard({
         </p>
       </div>
     </article>
-  );
-}
-
-function ScoreRing({ value }: { value: number }) {
-  const r = 34;
-  const c = 2 * Math.PI * r;
-  return (
-    <span className="relative grid h-20 w-20 place-items-center">
-      <svg viewBox="0 0 80 80" className="absolute inset-0 -rotate-90" aria-hidden>
-        <circle cx="40" cy="40" r={r} fill="none" strokeWidth="5" stroke="rgba(255,255,255,0.15)" />
-        <circle cx="40" cy="40" r={r} fill="none" strokeWidth="5" strokeLinecap="round" stroke="#00f0a0" strokeDasharray={c} strokeDashoffset={c * (1 - value / 100)} />
-      </svg>
-      <span className="text-2xl font-bold">
-        {value}
-        <span className="text-xs">%</span>
-      </span>
-    </span>
   );
 }
 
