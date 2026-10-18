@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
-import { track } from "@/lib/match/events";
+import { itemProps, track } from "@/lib/match/events";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import { MIN_SCORE, roleTokens, type Filters, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
@@ -93,7 +93,7 @@ export default function Results({
     const on = interactions.saved.includes(item.id);
     setInteractions({ ...interactions, saved: on ? interactions.saved.filter((x) => x !== item.id) : [...interactions.saved, item.id] });
     if (!on) {
-      track("match_guardar", { familia: item.family });
+      track("match_guardar", itemProps(item));
       trackItem(item);
     }
   }
@@ -103,7 +103,7 @@ export default function Results({
       saved: interactions.saved.filter((x) => x !== item.id),
       discarded: [...interactions.discarded, { id: item.id, reason, family: item.family, company: item.company, titleTokens: [...roleTokens(item.title)].slice(0, 20) }],
     });
-    track("match_descartar", { motivo: reason });
+    track("match_descartar", { ...itemProps(item), motivo: reason });
   }
 
   const hasActiveFilters = Object.values(filters).some((v) => (Array.isArray(v) ? v.length : v));
@@ -266,7 +266,7 @@ function JobCard({
       }
       handoffToPostulacion({ id: item.id, jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText, title: item.title, company: item.company });
       trackItem(item, { jobUrl: jobUrl.startsWith("maru:") ? "" : jobUrl, jobText });
-      track("match_preparar_postulacion", { posicion: position, fuente: main?.kind ?? "" });
+      track("match_preparar_postulacion", { ...itemProps(item), posicion: position, fuente: main?.kind ?? "" });
       router.push("/postulacion#empezar");
     } catch (e) {
       setErr((e as Error).message);
@@ -369,7 +369,7 @@ function JobCard({
                   {s.kind === "usuario" ? (
                     "Agregada por vos"
                   ) : (
-                    <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
+                    <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { ...itemProps(item), fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
                       {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
                     </a>
                   )}
@@ -423,7 +423,7 @@ function JobCard({
               target="_blank"
               rel="noopener noreferrer nofollow"
               onClick={() => {
-                track("match_ver_busqueda", { fuente: (required[0] ?? main).kind });
+                track("match_ver_busqueda", { ...itemProps(item), fuente: (required[0] ?? main).kind });
                 trackItem(item);
               }}
               className="inline-flex min-h-11 items-center px-2 text-sm text-ink/70 underline underline-offset-4 hover:text-ink"

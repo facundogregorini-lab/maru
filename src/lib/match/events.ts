@@ -20,7 +20,17 @@ export type MatchEvent =
 
 type Props = Record<string, string | number | boolean>;
 
-const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros"]);
+const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros", "tramo", "lista"]);
+
+/** Tramo del % de match: alcanza para comparar guardados y postulaciones por afinidad sin mandar el aviso. */
+export function scoreBand(score: number): string {
+  return score >= 90 ? "90-100" : score >= 80 ? "80-89" : score >= 70 ? "70-79" : score >= 60 ? "60-69" : "0-59";
+}
+
+/** Datos agregados de un resultado para los eventos: tramo, área, confianza y en qué lista estaba. */
+export function itemProps(item: { score: number; family: string; confidence: string; eligibility: { status: string } }): Props {
+  return { tramo: scoreBand(item.score), familia: item.family, confianza: item.confidence, lista: item.eligibility.status === "elegible" ? "elegibles" : "pendientes" };
+}
 
 export function track(event: MatchEvent, props: Props = {}): void {
   if (typeof window === "undefined") return;
