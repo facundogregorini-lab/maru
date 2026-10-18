@@ -32,7 +32,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
             <UserMenu />
             <Link
               href="/match"
-              className="press inline-flex h-8 items-center rounded-full bg-ink px-3.5 text-[13px] font-bold uppercase text-white hover:bg-black sm:h-9 sm:px-5 sm:text-sm"
+              className="press inline-flex h-7 items-center rounded-2xl bg-ink px-3.5 text-sm font-bold uppercase text-white sm:h-9 sm:min-w-[120px] sm:justify-center sm:rounded-[22px] sm:px-5"
             >
               <span className="sm:hidden">Empezar</span>
               <span className="hidden sm:inline">Empezar ahora</span>
@@ -46,7 +46,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
         {children}
       </main>
 
-      <footer className="bg-sand print:hidden">
+      <footer className="bg-hero print:hidden">
         <div className="mx-auto max-w-[1440px] px-5 pb-16 pt-14 sm:px-8 lg:px-[120px]">
           <Link href="/" className="flex w-fit items-center gap-2" aria-label="Maru, ir al inicio">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-neon">
@@ -54,7 +54,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
             </span>
             <span className="font-display text-[30px] font-bold leading-none tracking-tight">Maru</span>
           </Link>
-          <div className="mt-8 grid gap-8 text-xs sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-8 text-[13px] leading-4 sm:grid-cols-2 lg:grid-cols-4">
             <FooterCol title="Herramientas" links={TOOLS} />
             <FooterCol title="Búsquedas populares" links={POPULAR.slice(0, 7)} />
             <FooterCol
@@ -87,8 +87,8 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
 function FooterCol({ title, links }: { title: string; links: readonly { href: string; label: string }[] }) {
   return (
     <div>
-      <h3 className="text-sm font-semibold">{title}</h3>
-      <ul className="mt-3 space-y-1">
+      <h3 className="text-base font-semibold sm:text-sm">{title}</h3>
+      <ul className="mt-4 space-y-2">
         {links.map((l) => (
           <li key={l.href + l.label}>
             <Link href={l.href} className="hover:underline">

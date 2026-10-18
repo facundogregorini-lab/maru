@@ -1,28 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  /* Sistema visual al estilo jobright.ai: blanco, verdes menta, negro puro y un neón para lo importante. */
+  /* Sistema visual al estilo jobright.ai (docs/DISENO-JOBRIGHT.md): blanco, verdes menta, negro puro y neón. */
+  --color-neon: #00f0a0; /* CTA estrella, anillos de match, chips ✓, números de paso */
+  --color-neon-deep: #00d795;
+  --color-aqua: #14c8f0; /* extremo del degradé del anillo */
+  --color-forest: #1c8d4d; /* verde de producto en maquetas y acciones secundarias */
+  --color-mint: #b5ffe4; /* eyebrow y secciones destacadas */
+  --color-pistachio: #d2ffc8;
+  --color-lime: #c8ff6e;
+  --color-hero: #ecffe0; /* hero, FAQ y footer */
+  --color-panel: #effbe8; /* paneles de maqueta */
+  --color-panel-back: #dbf2cc;
+  --color-banner: #e4f7d4;
+  --color-surface: #f2f4f5; /* secciones grises, chip ✗, burbuja de chat, track del anillo */
+  --color-surface-3: #f5f6f7; /* fondo de la app */
+  --color-surface-5: #f8f9fa;
+
   --color-cream: #ffffff; /* fondo de página */
-  --color-sand: #effbe8; /* bloques verde menta */
   --color-paper: #ffffff; /* tarjetas */
-  --color-line: #e5e7eb;
-  --color-ink: #0a0a0a;
-  --color-muted: #5f6672;
-  --color-brand: #1c8c4c; /* verde de producto: acciones, énfasis, puntajes */
+  --color-sand: var(--color-panel);
+  --color-line: #e8eaec;
+  --color-ink: #000000;
+  --color-muted: #5c6066; /* ≈ rgba(0,0,0,.56) sobre blanco, opaco para que sirva en cualquier fondo */
+  --color-brand: var(--color-forest);
   --color-brand-dark: #136c39;
-  --color-brand-soft: #e4f7d4;
+  --color-brand-soft: var(--color-banner);
   --color-brand-light: #a7e6c0;
-  --color-neon: #00f0a0; /* sólo para el CTA estrella y brillos */
-  --color-danger: #b4472a;
-  --color-danger-dark: #8f3519;
-  --color-danger-soft: #f9e6df;
-  --color-sage: #1c8c4c;
-  --color-sage-soft: #e4f7d4;
-  --color-honey: #d49a1c;
+  --color-sage: var(--color-forest);
+  --color-sage-soft: var(--color-banner);
+  /* Rojo y ámbar de jobright para fondos y trazos; el texto de error usa danger-dark por contraste. */
+  --color-danger: #c2253a;
+  --color-danger-dark: #9b1c2e;
+  --color-danger-soft: #ffe5e0;
+  --color-honey: #b87900;
+  --color-warning: #fda700;
+  --color-warning-soft: #fceeba;
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-titillium), ui-sans-serif, system-ui, sans-serif;
 
+  --radius-btn: 28px;
+
+  --shadow-nav: 0 0 2px 0.5px rgba(0, 10, 20, 0.04), 0 0 8px 0 rgba(0, 10, 20, 0.04);
+  --shadow-card: 0 16px 48px 0 rgba(0, 10, 20, 0.08);
+  --shadow-soft: 0 8px 32px 0 rgba(0, 37, 106, 0.04);
+  --shadow-pop: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-chip: inset 0 0 0 0.8px rgba(0, 0, 0, 0.04);
+  --shadow-dot: 0 0 0 4px rgba(0, 215, 149, 0.12);
+
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-btn: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 @layer base {
@@ -135,12 +163,12 @@
 .animate-float { animation: float 7s ease-in-out infinite; }
 
 /* Botones: responden al apretar y se levantan un poco al pasar el mouse. */
-.press { transition: transform 160ms var(--ease-out), background-color 180ms ease, box-shadow 180ms ease, color 180ms ease; }
-.press:hover { transform: translateY(-1px); }
+.press { transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-btn), box-shadow 200ms var(--ease-btn), color 200ms var(--ease-btn), opacity 200ms var(--ease-btn); }
+.press:hover { opacity: 0.88; }
 .press:active { transform: scale(0.97); }
 
 /* Línea punteada entre una métrica y su ícono (como en jobright). */
-.leader { flex: 1; border-bottom: 2px dotted rgba(10, 10, 10, 0.18); transform: translateY(-0.35em); }
+.leader { flex: 1; border-bottom: 1px dashed var(--color-ink); transform: translateY(-0.35em); }
 
 /* Anillo de compatibilidad que se dibuja al entrar en pantalla (92% de 213,6). */
 .ring-draw { stroke-dashoffset: 17.1; }

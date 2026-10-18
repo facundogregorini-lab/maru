@@ -33,27 +33,27 @@ export function NavPills() {
   }, []);
 
   return (
-    <nav aria-label="Secciones" className="hidden items-center gap-6 rounded-full bg-white px-6 py-3 ring-1 ring-line lg:flex">
+    <nav aria-label="Secciones" className="hidden h-11 items-center gap-6 rounded-[60px] bg-white px-6 shadow-[var(--shadow-nav)] lg:flex">
       <details ref={menu} className="group relative">
-        <summary className="flex cursor-pointer list-none items-center gap-1 text-[13px] hover:text-brand [&::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer list-none items-center gap-1 text-[13px] leading-4 hover:opacity-70 [&::-webkit-details-marker]:hidden">
           Herramientas
           <svg viewBox="0 0 10 10" width="9" height="9" aria-hidden className="transition-transform group-open:rotate-180">
             <path d="M1 3h8L5 8z" fill="currentColor" />
           </svg>
         </summary>
-        <div className="absolute left-1/2 top-9 z-50 w-72 -translate-x-1/2 rounded-2xl bg-white p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.35)] ring-1 ring-line">
+        <div className="absolute left-1/2 top-9 z-50 w-72 -translate-x-1/2 rounded-2xl bg-white p-2 shadow-[var(--shadow-card)]">
           {TOOLS.map((t) => (
-            <Link key={t.href} href={t.href} aria-current={path === t.href ? "page" : undefined} className="block rounded-xl px-3 py-2.5 hover:bg-sand aria-[current=page]:bg-sand">
+            <Link key={t.href} href={t.href} aria-current={path === t.href ? "page" : undefined} className="block rounded-xl px-3 py-2.5 hover:bg-surface aria-[current=page]:bg-surface">
               <span className="block text-sm font-semibold">{t.label}</span>
               <span className="block text-xs text-muted">{t.hint}</span>
             </Link>
           ))}
         </div>
       </details>
-      <Link href="/busquedas" aria-current={path === "/busquedas" ? "page" : undefined} className="text-[13px] hover:text-brand aria-[current=page]:font-semibold">
+      <Link href="/busquedas" aria-current={path === "/busquedas" ? "page" : undefined} className="text-[13px] leading-4 hover:opacity-70 aria-[current=page]:font-semibold">
         Búsquedas
       </Link>
-      <Link href="/precios" aria-current={path === "/precios" ? "page" : undefined} className="text-[13px] hover:text-brand aria-[current=page]:font-semibold">
+      <Link href="/precios" aria-current={path === "/precios" ? "page" : undefined} className="text-[13px] leading-4 hover:opacity-70 aria-[current=page]:font-semibold">
         Planes
       </Link>
     </nav>
@@ -68,26 +68,34 @@ export function NavMenu() {
     if (menu.current) menu.current.open = false;
   }, [path]);
   return (
-    <details ref={menu} className="group relative lg:hidden">
-      <summary className="grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full [&::-webkit-details-marker]:hidden" aria-label="Menú">
-        <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
+    <details ref={menu} className="group lg:hidden">
+      <summary className="relative z-[60] grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full [&::-webkit-details-marker]:hidden" aria-label="Menú">
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden className="group-open:hidden">
           <path d="M3 5.5h14M3 10h14M3 14.5h14" />
         </svg>
+        <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden className="hidden group-open:block">
+          <path d="M4.5 4.5l11 11M15.5 4.5l-11 11" />
+        </svg>
       </summary>
-      <div className="absolute left-0 top-11 z-50 w-60 rounded-2xl bg-white p-2 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.35)] ring-1 ring-line">
-        <Link href="/" className={`block rounded-xl px-3 py-2.5 text-sm font-medium ${path === "/" ? "bg-sand" : "hover:bg-black/[0.04]"}`}>
-          Inicio
-        </Link>
-        {NAV.map((n) => (
-          <Link
-            key={n.href}
-            href={n.href}
-            aria-current={path === n.href ? "page" : undefined}
-            className={`block rounded-xl px-3 py-2.5 text-sm font-medium ${path === n.href ? "bg-sand text-ink" : "hover:bg-black/[0.04]"}`}
-          >
-            {n.label}
+      {/* Pantalla completa debajo del header, como en jobright: links grandes y un divisor. */}
+      <div className="fixed inset-x-0 bottom-0 top-[64px] z-50 overflow-y-auto bg-white px-4 pb-10 pt-4 sm:top-[76px] sm:px-8">
+        <nav aria-label="Secciones">
+          <Link href="/" className={`flex h-10 items-center text-base ${path === "/" ? "font-semibold" : ""}`}>
+            Inicio
           </Link>
-        ))}
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} aria-current={path === n.href ? "page" : undefined} className="flex h-10 items-center text-base aria-[current=page]:font-semibold">
+              {n.label}
+            </Link>
+          ))}
+        </nav>
+        <hr className="my-4 border-surface" />
+        <Link href="/#faq" className="flex h-10 items-center text-base">
+          Preguntas frecuentes
+        </Link>
+        <Link href="/privacidad" className="flex h-10 items-center text-base">
+          Privacidad
+        </Link>
       </div>
     </details>
   );
