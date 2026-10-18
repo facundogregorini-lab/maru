@@ -6,6 +6,7 @@
 - Mobile: línea liviana Titillium 36/32 en mayúsculas, titular de 60 px (baja hasta 48 en pantallas de 360), bajada de 13/16, dos botones de 36 px uno al lado del otro, marco del video a 16 px del borde con barra de 41 px y 44 px entre bloques. Cifras en Titillium 24 700 con línea guía de guiones de 1 px hasta un ícono de 24 y rótulo de 13/16; titular de la sección centrado en 32 px.
 - Volvieron los laureles (`Laurels.tsx`, 108 × 30 en mobile y 144 × 40 en escritorio), con datos de Maru y no premios: «Del CV a la entrevista», «Extensión para Chrome» y «Plan gratis sin tarjeta». Cada sello es un link a la página que lo respalda (entrevista, extensión y planes). El QC del 17/10 los había sacado por parecer premios; los volvió a pedir el dueño.
 - Escritorio: sellos arriba del titular de 52 px, conector punteado hacia las cifras y cifras de 44/48 como en jobright.
+- Textos traducidos de jobright, pedido explícito del dueño: el titular pasa a «Basta de buscar trabajo sin ayuda / Hacelo con IA» (las dos líneas dentro del `h1`, como en jobright) y la sección de cifras a «Resultados reales, no solo promesas». Ojo: el QC del 17/10 había sacado «Resultados reales» porque Maru no tiene resultados de contratación medidos; debajo siguen sólo cifras del catálogo. Si se quiere otra vez el criterio anterior, cambiar a «Cifras reales».
 - QC: sin desborde horizontal a 360, 390, 768 y 1440 px. Capturas comparativas fuera del repo.
 
 ## Login sólo con Google y funnels en PostHog (18/10/2026)

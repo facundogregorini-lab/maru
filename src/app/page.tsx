@@ -36,9 +36,10 @@ export default async function Home() {
             <p className="mt-2 text-center text-[11px] leading-4 text-ink/65 sm:mt-3 sm:text-xs">Demo ilustrativa. Las cifras actuales del catálogo están debajo.</p>
           </div>
           <div className="order-1 text-center lg:order-2 lg:text-left">
-            <p className="mx-auto max-w-[313px] font-display text-[36px] font-normal uppercase leading-[32.4px] sm:max-w-none sm:text-[46px] sm:normal-case sm:leading-[48px]">Tu coach de carrera con IA</p>
-            <h1 id="inicio-t" className="mt-2 font-display text-[clamp(48px,15.4vw,60px)] font-semibold leading-[0.93] sm:mt-1 sm:text-[76px] sm:leading-[1] sm:tracking-tight xl:text-[88px] xl:leading-[80px]">
-              Buscá trabajo con Maru
+            {/* Las dos líneas del titular de jobright («No more solo job hunting / Do it with AI»), en español. */}
+            <h1 id="inicio-t" className="font-display">
+              <span className="mx-auto block max-w-[340px] text-[36px] font-normal uppercase leading-[32.4px] sm:max-w-none sm:text-[46px] sm:normal-case sm:leading-[48px]">Basta de buscar trabajo sin ayuda</span>
+              <span className="mt-2 block text-[clamp(48px,15.4vw,60px)] font-semibold leading-[0.93] sm:mt-1 sm:text-[76px] sm:leading-[1] sm:tracking-tight xl:text-[88px] xl:leading-[80px]">Hacelo con IA</span>
             </h1>
             <p className="mx-auto mt-2 max-w-lg text-[13px] leading-4 sm:mt-5 sm:text-lg sm:leading-6 lg:mx-0">
               Encontrá avisos para tu perfil y prepará cada postulación con tu experiencia real: desde el CV hasta la entrevista.
@@ -66,9 +67,9 @@ export default async function Home() {
               ]}
             />
             <h2 className="mx-auto mt-11 max-w-[326px] text-center font-display text-[32px] font-bold uppercase leading-8 sm:max-w-none sm:text-5xl sm:leading-[48px] lg:mt-[58px] lg:text-left lg:text-[52px] lg:leading-[52px]">
-              Lo que hay hoy
+              Resultados reales,
               <br />
-              en Maru
+              no solo promesas
             </h2>
           </div>
           {/* Conector punteado entre el titular y las cifras, como el de jobright (sólo escritorio). */}
