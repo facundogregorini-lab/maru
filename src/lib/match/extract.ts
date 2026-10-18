@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 10;
+export const EXTRACTION_VERSION = 11;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -194,6 +194,55 @@ const FAMILY_RULES: [RoleFamily, RegExp][] = [
   ["operaciones", /\b(operations|operaciones|operation manager|ops\b|project manager|program manager|gerente de proyecto|coordinator|coordinador|process|procesos|business analyst|strategy|estrategia|calidad|quality analyst|mejora continua|planeamiento|planificaci|planning|planner|gestion de produccion|analista de gestion|analista ambiente|seguridad e higiene|transaction management)/],
 ];
 
+/**
+ * Títulos que las reglas principales no cubren ("Subject Matter Expert", "Due Diligence Analyst", "Go to Market").
+ * Sólo se usan si el título no cae en ninguna regla principal, así no cambian lo ya clasificado.
+ */
+const EXTRA_TITLE_RULES: [RoleFamily, RegExp][] = [
+  ["entrenamiento_ia", /\b(subject matter expert|domain expert|ai training|human data|generative ai analyst|evals?\b)/],
+  ["finanzas", /\b(due diligence|ptp\b|asset titl|revenue management)/],
+  ["marketing", /\b(customer insights|consumer insights|loyalty|cro\b|go[ -]to[ -]markets?|gtm\b|ambassador)/],
+  ["ventas", /\b(partners? (manager|specialist)|soluciones digitales|leasing|tenant)/],
+  ["software", /\b(incident manager|delivery (technical )?manager|technical program|automation|automatizaci|workflow)/],
+  ["educacion", /\b(training specialist|enablement|career mentor|job placement)/],
+  ["logistica", /\b(subcontrat|comprador)/],
+  ["diseno", /\b(head of art|art director|animation)/],
+  ["operaciones", /\b(gerente general|general manager|gerente de gestion|strategic project|project lead)/],
+];
+
+/** Áreas que informan algunas fuentes ("Technology & Product", "Risk", "Global Languages Services"). */
+const DEPARTMENT_RULES: [RoleFamily, RegExp][] = [
+  ["entrenamiento_ia", /\b(languages? services|ai services|stem|ai internal|welo data)/],
+  ["datos", /\b(data|analytics)/],
+  ["producto", /^\s*product\s*$|\bproduct (management|team)\b/],
+  ["software", /\b(tech|technology|engineering|it\b|sistemas|tecnologia)/],
+  ["finanzas", /\b(risk|riesgo|finance|finanzas|accounting)/],
+  ["diseno", /\b(creative|design|diseno)/],
+  ["ventas", /\b(commercial|comercial|go to market|sales|ventas|partners)/],
+  ["atencion_cliente", /\b(clients?|customers?|service)\b/],
+  ["produccion", /\b(fabricacion|manufactur|produccion)/],
+];
+
+/** Pistas fuertes en el texto del aviso: proyectos para entrenar modelos de IA. */
+const AI_PROJECT_TEXT = /\b(train(ing)? (ai|llm|large language) models?|training data for( frontier)? ai|improve (ai|llm) models?|rlhf|ai training (project|platform)|evaluate ai (responses|outputs)|entrenar modelos de (ia|inteligencia artificial))\b/;
+
+/** Área del puesto: el título manda; si no alcanza, el área que informa la fuente y por último el texto del aviso. */
+export function familyOf(title: string, department?: string, description = ""): Field<RoleFamily> {
+  const famTitle = familyFromTitle(title);
+  if (famTitle !== "otros") return { value: famTitle, from: "titulo", evidence: title };
+  const t = ` ${fold(title).replace(GENDER_SUFFIX, "")} `.replace(/\s+$/, "");
+  const extra = EXTRA_TITLE_RULES.find(([, re]) => re.test(t));
+  if (extra) return { value: extra[0], from: "titulo", evidence: title };
+  if (department) {
+    const byRules = familyFromTitle(department);
+    const d = ` ${fold(department)} `;
+    const fam = byRules !== "otros" ? byRules : DEPARTMENT_RULES.find(([, re]) => re.test(d))?.[0];
+    if (fam) return { value: fam, from: "fuente", evidence: department };
+  }
+  if (AI_PROJECT_TEXT.test(fold(description.slice(0, 3000)))) return { value: "entrenamiento_ia", from: "descripcion", evidence: "Proyecto para entrenar o evaluar modelos de IA" };
+  return { value: "otros", from: "titulo", evidence: title };
+}
+
 /** "Operario/a", "Cocinero/a", "Repositores/as": se quita la variante de género para que las reglas no la repitan. */
 const GENDER_SUFFIX = /\/(a|as|o|os|es|ra|ras)\b/g;
 
@@ -212,7 +261,7 @@ const SENIORITY_RULES: [Seniority, RegExp][] = [
   ["lead", /\b(lead|lider|staff|principal|architect|arquitect)\b/],
   ["semi_senior", /\b(semi ?senior|ssr\.?|mid|mid-level|ii)\b/],
   ["senior", /\b(senior|sr\.?|sssr|iii)\b/],
-  ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i|ayudante|auxiliar|cadete|aprendiz|medio oficial)\b/],
+  ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i|ayudante|auxiliar|asistente|assistant|cadete|aprendiz|medio oficial)\b/],
   ["pasantia", /\b(intern|internship|pasante|pasantia|becari|practicante|practicas profesionales)\b/],
 ];
 
@@ -362,11 +411,7 @@ export function extract(input: {
   const all = findSkills(`${title}\n${descriptionText}`);
   const mentioned = all.filter((s) => !req.includes(s) && !des.includes(s));
 
-  const famTitle = familyFromTitle(title);
-  const family: Field<RoleFamily> =
-    famTitle !== "otros" || !input.department
-      ? { value: famTitle, from: "titulo", evidence: title }
-      : { value: familyFromTitle(input.department), from: "fuente", evidence: input.department };
+  const family = familyOf(title, input.department, descriptionText);
 
   const years = (sections.required ? yearsRequired(sections.required) : null) ?? yearsRequired(descriptionText);
   const sTitle = seniorityFromTitle(title);

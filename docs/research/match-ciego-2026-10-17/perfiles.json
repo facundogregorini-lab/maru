@@ -1,0 +1,56 @@
+{
+  "$comment": "Perfiles SINTÉTICOS para una comprobación CIEGA del Match: se definieron junto con los criterios antes de mirar resultados y no se usan para ajustar reglas. No contienen datos de personas reales.",
+  "version": 1,
+  "creado": "2026-10-17",
+  "criterios": "Top 5 elegible de cada perfil. Útil = mismo tipo de puesto y área, seniority a un escalón o menos, ubicación posible (remoto elegible o la ciudad/GBA del perfil). Dudoso = cumple el área pero falla seniority o ubicación, o el título es ambiguo. Falso = otra área u otro tipo de puesto. Además: el #1 debería tener 80% o más si es útil.",
+  "perfiles": [
+    {
+      "id": "C1-qa-ssr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": true,
+      "profile": { "headline": "QA Analyst semi senior", "titles": ["QA Analyst", "Tester manual"], "skills": ["testing", "Selenium", "Cypress", "Jira", "SQL", "Postman"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 3, "location": "Córdoba, Argentina", "summary": "Pruebas manuales y automatizadas de aplicaciones web y APIs." },
+      "prefs": { "objetivo": "Crecer en QA automation", "rolesDeseados": ["QA Automation", "QA Analyst", "Tester"], "evitar": [], "ciudad": "Córdoba", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": ["modalidad"], "carrera": "continuidad" }
+    },
+    {
+      "id": "C2-community-jr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": true,
+      "profile": { "headline": "Community manager", "titles": ["Community manager", "Asistente de marketing"], "skills": ["redes sociales", "contenidos", "Canva", "Meta Ads", "copywriting"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 1, "location": "Rosario, Santa Fe, Argentina", "summary": "Gestión de redes y contenidos para comercios y una agencia chica." },
+      "prefs": { "objetivo": "Trabajar en redes sociales y contenidos", "rolesDeseados": ["Community manager", "Social media", "Content creator"], "evitar": [], "ciudad": "Rosario", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido", "presencial"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "C3-contador-sr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": true,
+      "profile": { "headline": "Contador público senior", "titles": ["Contador senior", "Analista contable"], "skills": ["contabilidad", "impuestos", "balances", "auditoría", "SAP", "Excel"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 7, "location": "Buenos Aires, Argentina", "summary": "Cierre contable, balances, impuestos y relación con auditores externos." },
+      "prefs": { "objetivo": "Liderar el área contable de una empresa", "rolesDeseados": ["Contador senior", "Jefe de contabilidad", "Responsable contable"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "presencial"], "seniorities": ["senior", "manager"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "C4-inside-sales-ssr",
+      "publico": "generalista",
+      "area": "ventas",
+      "reserva": true,
+      "profile": { "headline": "Inside sales", "titles": ["Inside sales representative", "SDR"], "skills": ["prospección", "CRM", "HubSpot", "ventas B2B", "negociación"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 3, "location": "Mendoza, Argentina", "summary": "Prospección outbound y calificación de leads para software B2B." },
+      "prefs": { "objetivo": "Ser account executive en software", "rolesDeseados": ["Account Executive", "Inside Sales", "SDR"], "evitar": [], "ciudad": "Mendoza", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "C5-data-engineer-sr",
+      "publico": "tecnologia",
+      "area": "datos",
+      "reserva": true,
+      "profile": { "headline": "Data engineer senior", "titles": ["Data Engineer", "ETL Developer"], "skills": ["Python", "SQL", "AWS", "Spark", "Airflow", "dbt"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 6, "location": "Buenos Aires, Argentina", "summary": "Pipelines de datos en la nube y modelado para analítica." },
+      "prefs": { "objetivo": "Data engineering en empresa de producto", "rolesDeseados": ["Data Engineer", "Analytics Engineer"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "C6-rrhh-cambio",
+      "publico": "generalista",
+      "area": "rrhh",
+      "reserva": true,
+      "profile": { "headline": "Docente que quiere pasar a RR. HH.", "titles": ["Docente de nivel secundario"], "skills": ["capacitación", "comunicación", "Excel", "organización"], "languages": [{ "language": "Español", "level": "nativo" }], "yearsExperience": 5, "location": "La Plata, Buenos Aires, Argentina", "summary": "Docente con experiencia en coordinación de proyectos; estudiando RR. HH." },
+      "prefs": { "objetivo": "Cambiar a recursos humanos", "rolesDeseados": ["Asistente de RRHH", "Analista de capacitación", "Recruiter junior"], "evitar": [], "ciudad": "La Plata", "pais": "AR", "otrosLugares": ["Buenos Aires"], "autorizacion": [], "modalidades": ["hibrido", "presencial", "remoto"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "cambio" }
+    }
+  ]
+}

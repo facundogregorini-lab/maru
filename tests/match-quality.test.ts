@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extract, familyFromTitle, findSkills, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
+import { extract, familyFromTitle, familyOf, findSkills, seniorityFromTitle, yearsRequired } from "@/lib/match/extract";
 
 describe("calidad de los avisos locales", () => {
   it.each([
@@ -100,5 +100,32 @@ describe("habilidades de banca y marketing", () => {
   it("reconoce riesgo crediticio, prevención de lavado, mercado de capitales y trade marketing", () => {
     const s = findSkills("Análisis de crédito y scoring de cartera. Normativa de prevención de lavado (PLD/KYC). Renta fija. Trade marketing en punto de venta.");
     for (const k of ["riesgo crediticio", "prevención de lavado", "mercado de capitales", "trade marketing"]) expect(s).toContain(k);
+  });
+});
+
+describe("área cuando el título no alcanza", () => {
+  it("usa reglas extra del título, el área de la fuente y, por último, el texto", () => {
+    expect(familyOf("Due Diligence Analyst - APAC").value).toBe("finanzas");
+    expect(familyOf("Global Head of Go To Markets").value).toBe("marketing");
+    expect(familyOf("Brazilian Subject Matter Expert in Sports").value).toBe("entrenamiento_ia");
+    expect(familyOf("AI Workflow Automation Manager", "Clients").value).toBe("software");
+    expect(familyOf("Comprador/a Senior - Victoria", "Contratos de Fabricación").value).toBe("logistica");
+    expect(familyOf("Product Specialist", "Product")).toMatchObject({ value: "producto", from: "fuente" });
+    expect(familyOf("Team Lead Monitoreo", "RISK")).toMatchObject({ value: "finanzas", from: "fuente" });
+    expect(familyOf("Session Director", undefined, "Help us improve AI models by recording sessions for AI training projects.")).toMatchObject({ value: "entrenamiento_ia", from: "descripcion" });
+  });
+
+  it("lo que el título ya clasifica no cambia, y lo que no se sabe queda en otros", () => {
+    expect(familyOf("Analista contable", "Product").value).toBe("finanzas");
+    expect(familyOf("SAP Expert").value).toBe("otros");
+    expect(familyOf("Specialist", "Todos los departamentos").value).toBe("otros");
+  });
+});
+
+describe("asistente = junior", () => {
+  it("un puesto de asistente sin nivel explícito cuenta como junior", () => {
+    expect(seniorityFromTitle("Asistente contable")).toBe("junior");
+    expect(seniorityFromTitle("Executive Assistant")).toBe("junior");
+    expect(seniorityFromTitle("Asistente contable senior")).toBe("senior");
   });
 });
