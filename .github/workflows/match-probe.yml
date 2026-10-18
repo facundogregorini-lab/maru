@@ -1,0 +1,48 @@
+# Consulta de investigación para fuentes de avisos: hace GET a URLs públicas e imprime el comienzo de la respuesta.
+# Sirve para revisar APIs de ATS y portales desde una máquina con red (las sesiones de Claude en la nube no la tienen).
+# Sólo GET, sin secretos ni datos de usuarios, y no guarda nada en el repo. Se lanza a mano desde Actions.
+name: match-probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Hasta 10 URLs https separadas por espacio"
+        required: true
+      chars:
+        description: "Caracteres a mostrar de cada respuesta (máximo 20000)"
+        required: false
+        default: "3000"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Consultar
+        env:
+          URLS: ${{ github.event.inputs.urls }}
+          CHARS: ${{ github.event.inputs.chars }}
+        run: |
+          node --input-type=module -e '
+          const urls = (process.env.URLS ?? "").split(/\s+/).filter(Boolean).slice(0, 10);
+          const chars = Math.min(Number(process.env.CHARS) || 3000, 20000);
+          for (const raw of urls) {
+            let url;
+            try { url = new URL(raw); } catch { console.log(`✗ URL inválida: ${raw}`); continue; }
+            if (url.protocol !== "https:") { console.log(`✗ Sólo https: ${raw}`); continue; }
+            try {
+              const res = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 (compatible; maru-probe)", accept: "application/json, text/html;q=0.9, */*;q=0.8" }, signal: AbortSignal.timeout(20000) });
+              const body = await res.text();
+              console.log(`\n===== ${url} → HTTP ${res.status} · ${res.headers.get("content-type") ?? "?"} · ${body.length} caracteres`);
+              console.log(body.slice(0, chars));
+            } catch (err) {
+              console.log(`\n===== ${url} → error: ${err.message}`);
+            }
+          }'
