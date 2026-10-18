@@ -20,6 +20,8 @@ type Email = string | null | undefined;
 const LOCAL_PREFIX = "maru:conv:";
 const inFlight = new Map<string, Promise<boolean>>();
 const seen = new Set<string>();
+/** eventID que devolvió el servidor al marcar el hito: el píxel lo repite para que Meta deduplique con la API de conversiones. */
+const eventIds = new Map<string, string>();
 
 function localGet(key: string): boolean {
   try { return localStorage.getItem(LOCAL_PREFIX + key) === "1"; } catch { return false; }
@@ -29,7 +31,7 @@ function localSet(key: string) {
 }
 
 /** La sesión (cookie) identifica la cuenta; el email, si se conoce, sólo confirma que es la misma (como en /api/sync). */
-async function serverClaim(email: Email, milestone: Milestone, id: string | undefined, mode: "claim" | "check" | "mark"): Promise<boolean | null> {
+async function serverClaim(email: Email, milestone: Milestone, id: string | undefined, mode: "claim" | "check" | "mark"): Promise<{ first: boolean; eventId?: string } | null> {
   try {
     const res = await fetch("/api/tracking/milestone", {
       method: "POST",
@@ -37,7 +39,8 @@ async function serverClaim(email: Email, milestone: Milestone, id: string | unde
       body: JSON.stringify({ milestone, id, mode }),
     });
     if (!res.ok) return null;
-    return ((await res.json()) as { first?: boolean }).first === true;
+    const body = (await res.json()) as { first?: boolean; eventId?: unknown };
+    return { first: body.first === true, eventId: typeof body.eventId === "string" && /^[A-Za-z0-9_-]{1,64}$/.test(body.eventId) ? body.eventId : undefined };
   } catch {
     return null;
   }
@@ -55,8 +58,9 @@ export function claimFirst(milestone: Milestone, email: Email, id?: string): Pro
   const live = adsMode() === "live" && !adsBlocked();
   const run = (async () => {
     // Sin sesión el servidor responde 401 y decide este navegador.
-    let first = await serverClaim(email, milestone, id, live ? "claim" : "check");
-    if (first === null) first = !localGet(key);
+    const claim = await serverClaim(email, milestone, id, live ? "claim" : "check");
+    const first = claim ? claim.first : !localGet(key);
+    if (claim?.eventId) eventIds.set(key, claim.eventId);
     // En modo de prueba la repetición se simula en esta pestaña (memoria), sin tocar el navegador ni la cuenta.
     seen.add(key);
     if (live) localSet(key);
@@ -78,7 +82,8 @@ export async function syncLocalMilestones(email: string): Promise<void> {
  * estaba bloqueada (no se marca como entregada).
  */
 async function sendAdsConversion(conversion: AdsConversion, params?: AdsParams, opts?: { waitMs?: number }): Promise<AdsResult> {
-  if (sendMetaEvent(conversion, params ?? {}, adsDecision(conversion, params)) === "blocked") trackProduct("meta_bloqueado", { conversion });
+  const eventID = eventIds.get(conversion) ?? params?.transaction_id;
+  if (sendMetaEvent(conversion, params ?? {}, adsDecision(conversion, params), eventID) === "blocked") trackProduct("meta_bloqueado", { conversion });
   const result = await sendRaw(conversion, params, opts);
   if (result === "blocked") trackProduct("ads_bloqueado", { conversion });
   return result;

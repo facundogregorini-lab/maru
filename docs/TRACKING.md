@@ -145,9 +145,11 @@ Además, `PageView` en la carga (Meta sigue solo la navegación interna). Sin ev
 
 | Variable | Valor |
 |---|---|
-| `NEXT_PUBLIC_META_PIXEL_ID` | ID del píxel "Maru Web" (pendiente: crearlo en el Administrador de eventos) |
+| `NEXT_PUBLIC_META_PIXEL_ID` (opcional) | Por defecto `1466577088716669` (conjunto de datos "Maru Coach", negocio Costa Reset), fijo en `config.ts`: no hace falta cargarla |
+| `META_CAPI_ACCESS_TOKEN` | Token de la API de conversiones (secreto, tipo Sensitive): Administrador de eventos → Maru Coach → Configuración → API de conversiones → Generar token de acceso |
+| `META_CAPI_TEST_EVENT_CODE` (opcional) | Código `TEST…` de "Probar eventos", sólo mientras se verifica; después borrarla |
 
-Sin un ID válido no se carga nada. Usa los mismos dominios que la etiqueta de Google (`NEXT_PUBLIC_GOOGLE_ADS_HOSTS`) y sólo en `VERCEL_ENV=production`. Al ser `NEXT_PUBLIC_*`, exige un nuevo deploy.
+Sin un ID válido no se carga nada; sin token, la API de conversiones queda apagada y el píxel sigue igual. Usa los mismos dominios que la etiqueta de Google (`NEXT_PUBLIC_GOOGLE_ADS_HOSTS`) y sólo en `VERCEL_ENV=production`. Al ser `NEXT_PUBLIC_*`, exige un nuevo deploy.
 
 ## Dónde está cada cosa
 
@@ -157,14 +159,28 @@ Sin un ID válido no se carga nada. Usa los mismos dominios que la etiqueta de G
 | ID del píxel | `metaPixelId` en `src/lib/tracking/config.ts` |
 | Mapeo y envío `fbq('track' \| 'trackCustom', …)` | `src/lib/tracking/meta.ts` |
 | Decisión compartida con Google | `adsDecision` en `src/lib/tracking/ads.ts`, `sendAdsConversion` en `src/lib/tracking/index.ts` |
+| API de conversiones (servidor) | `src/lib/tracking/capi.ts`, enviada desde `POST /api/tracking/milestone` con `after()` |
+
+## API de conversiones (servidor)
+
+Sale desde el mismo punto que deduplica: cuando `/api/tracking/milestone` marca un hito por primera vez en modo `claim` (es decir, cuando la conversión sale a Google). La ruta devuelve el `eventId` y el navegador lo usa en el píxel, así Meta deduplica navegador y servidor por evento + `eventID`:
+
+| Hito | eventID |
+|---|---|
+| Activación | `act_<aleatorio>` (lo genera el servidor al marcar el hito) |
+| Límite con planes | `pw_<aleatorio>` |
+| Checkout | `co_<checkoutId>` (igual al `transaction_id` de Google) |
+| Compra | `mp_<payment_id>`; el servidor la confirma contra la suscripción (primer pago verificado) y usa su importe |
+
+Datos: IP, navegador, `_fbp`/`_fbc` y la URL de la página (sin parámetros). Sin email, nombre ni hashes de ellos (coherente con `/privacidad`). Sin sesión (decisión del navegador) no hay evento de servidor. Sólo desde los dominios de producción; los errores de Meta quedan en los logs de Vercel como `[maru:capi]` y no afectan al usuario.
 
 ## Configuración en Meta (manual: el conector de Meta no crea píxeles ni conversiones personalizadas)
 
-1. **Píxel**: Administrador de eventos → Conectar orígenes de datos → Web → nombre "Maru Web", en el negocio Costa Reset, asignado a la cuenta 1356376906306947. Configuración: sin eventos automáticos, sin coincidencias avanzadas automáticas. Cargar su ID en `NEXT_PUBLIC_META_PIXEL_ID` y redeployar.
+1. **Píxel**: creado el 18/10/2026, "Maru Coach" (1466577088716669), en el negocio Costa Reset. En su configuración: eventos automáticos y coincidencias avanzadas automáticas **apagados**. Cargar las variables de arriba en Vercel y redeployar.
 2. **Dominio**: verificar `marucoach.com` en el Business Manager y priorizar `maru_paywall_viewed` primero en "Medición de eventos agregados" si Meta lo pide.
-3. **Conversión personalizada** "Maru | Límite gratuito alcanzado": origen el píxel "Maru Web", evento `maru_paywall_viewed` (aparece en la lista después del primer disparo), sin reglas extra, categoría "Cliente potencial", sin valor.
+3. **Conversión personalizada** "Maru | Límite gratuito alcanzado": origen el píxel "Maru Coach", evento `maru_paywall_viewed` (aparece en la lista después del primer disparo), sin reglas extra, categoría "Cliente potencial", sin valor.
 4. **Campañas de Maru**: optimizar los conjuntos de anuncios sólo por esa conversión personalizada. Los demás eventos quedan para analizar el funnel.
 
 ## Verificación en "Probar eventos"
 
-Administrador de eventos → Maru Web → Probar eventos → abrir `https://www.marucoach.com`: tiene que aparecer `PageView`. Con una cuenta de prueba sin plan, agotar el cupo (p. ej. 2 CV en el día) → `maru_paywall_viewed` una sola vez (repetir el intento o reabrir los planes no suma). Descargar un CV → `maru_core_activation`. Elegir un plan → `InitiateCheckout` (cancelar en Mercado Pago sin pagar). `Purchase` sólo con un pago real aprobado. Ojo: fuera del modo de prueba estos eventos son reales y consumen los hitos de esa cuenta.
+Administrador de eventos → Maru Coach → Probar eventos → abrir `https://www.marucoach.com`: tiene que aparecer `PageView`. Con una cuenta de prueba sin plan, agotar el cupo (p. ej. 2 CV en el día) → `maru_paywall_viewed` una sola vez (repetir el intento o reabrir los planes no suma). Descargar un CV → `maru_core_activation`. Elegir un plan → `InitiateCheckout` (cancelar en Mercado Pago sin pagar). `Purchase` sólo con un pago real aprobado. Con `META_CAPI_TEST_EVENT_CODE` cargado, cada hito aparece dos veces en la pestaña (navegador y servidor) con el mismo eventID, marcado como deduplicado. Ojo: fuera del modo de prueba estos eventos son reales y consumen los hitos de esa cuenta.

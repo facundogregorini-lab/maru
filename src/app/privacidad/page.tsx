@@ -76,7 +76,9 @@ export default function PrivacidadPage() {
         <li>
           Usamos el píxel de Meta (Facebook e Instagram) con el mismo fin: saber qué anuncios de Meta nos traen visitas y resultados. Guarda cookies de medición
           publicitaria de Meta en tu navegador, registra las páginas que visitás en Maru y le avisa a Meta cuando pasan los mismos hitos de arriba (con el importe en
-          el caso de una compra). No lee tus formularios ni tus botones, y no le enviamos tu email, tu nombre, tu CV, tus cartas ni nada de lo que escribís. Podés
+          el caso de una compra). Esos mismos hitos también se los avisa nuestro servidor a Meta (API de conversiones), con tu dirección IP, tu navegador y las
+          cookies de Meta, para que la medición no dependa sólo del navegador. No lee tus formularios ni tus botones, y no le enviamos tu email (tampoco cifrado), tu
+          nombre, tu CV, tus cartas ni nada de lo que escribís. Podés
           bloquear o borrar esas cookies desde tu navegador y administrar los anuncios que ves en la configuración de anuncios de tu cuenta de Meta.
         </li>
         <li>Si contratás un plan, Mercado Pago procesa el pago. Maru guarda los identificadores y el estado de la suscripción, el período acreditado y los contadores de uso; nunca ve ni guarda los datos de tu tarjeta.</li>
