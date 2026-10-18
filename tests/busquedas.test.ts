@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { getJob, searchJobs } from "@/lib/busquedas";
-import { landingData } from "@/lib/landing";
+import { atLeast, landingData } from "@/lib/landing";
 import { parseJobQuery } from "@/lib/jobFilters";
 import { fetchGreenhouse, fetchRemotive } from "@/lib/match/connectors";
 import { applyBoard, buildOpportunities, emptyInventory } from "@/lib/match/inventory";
@@ -81,7 +81,20 @@ describe("cifras del home", () => {
     const ar = await searchJobs(parseJobQuery({}), NOW);
     expect(data.total).toBe(all.total);
     expect(data.eligible).toBe(ar.total);
+    expect(data.eligibleCompanies).toBeLessThanOrEqual(data.companies);
+    expect(data.eligibleRemote).toBeLessThanOrEqual(data.eligible);
     const later = new Date(NOW.getTime() + 130 * 86_400_000);
     expect(await landingData(later)).toMatchObject({ total: 0, eligible: 0, latest: [] });
+  });
+});
+
+describe("atLeast", () => {
+  it("redondea hacia abajo de a cien y agrega +; los números chicos van exactos", () => {
+    expect(atLeast(4133)).toBe("4.100+");
+    expect(atLeast(1597)).toBe("1.500+");
+    expect(atLeast(735)).toBe("700+");
+    expect(atLeast(100)).toBe("100+");
+    expect(atLeast(22)).toBe("22");
+    expect(atLeast(0)).toBe("0");
   });
 });
