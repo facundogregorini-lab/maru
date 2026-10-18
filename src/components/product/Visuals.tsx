@@ -13,6 +13,14 @@ function Caption({ text = "Ejemplo ilustrativo" }: { text?: string }) {
   return <p className="mt-3 text-center text-xs text-muted">{text}</p>;
 }
 
+function LineIcon({ d }: { d: string }) {
+  return (
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d={d} />
+    </svg>
+  );
+}
+
 /** Tres búsquedas apiladas con su compatibilidad (el hero de "AI Job Matcher"). */
 export function JobStackMock() {
   const jobs = [
@@ -35,8 +43,8 @@ export function JobStackMock() {
             <p className="text-xs text-muted">{j.company}</p>
             {j.meta && (
               <p className="mt-2 flex gap-4 text-xs">
-                <span>📍 Buenos Aires</span>
-                <span>🏢 Híbrido</span>
+                <span className="flex items-center gap-1"><LineIcon d="M8 14s-4.5-4-4.5-8a4.5 4.5 0 1 1 9 0c0 4-4.5 8-4.5 8zM8 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" /> Buenos Aires</span>
+                <span className="flex items-center gap-1"><LineIcon d="M2.5 7.5 8 3l5.5 4.5M4 6.5V13h8V6.5M6.5 13V9.5h3V13" /> Híbrido</span>
                 <span>✓ Desde Argentina</span>
               </p>
             )}
