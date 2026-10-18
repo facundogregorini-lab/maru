@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors" | "breezy" | "bamboohr";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -1074,6 +1074,160 @@ export async function fetchSuccessFactors(board: Board, opts?: RetryOptions & { 
   return { postings, complete, received: rows.length };
 }
 
+/* ---------- Breezy HR (JSON público del sitio de empleo) ---------- */
+
+type BreezyLocation = { country?: { name?: string; id?: string }; city?: string; name?: string; is_remote?: boolean; remote_details?: { value?: string; label?: string } };
+type BreezyPosition = {
+  id: string;
+  friendly_id?: string;
+  name: string;
+  url?: string;
+  published_date?: string;
+  type?: { id?: string; name?: string };
+  location?: BreezyLocation;
+  locations?: BreezyLocation[];
+  department?: string | null;
+  salary?: string;
+  company?: { name?: string; logo_url?: string };
+};
+const BREEZY_MAX_DETAILS = 40;
+
+/** La descripción está en el HTML del aviso, dentro de `job-description`; el resto de la página es la postulación. */
+export function breezyDescription(html: string): string {
+  const start = html.indexOf('class="job-description"');
+  if (start === -1) return "";
+  const ends = ["apply-button", "position-apply", "<footer", "</body>"].map((m) => html.indexOf(m, start)).filter((i) => i > start);
+  return htmlToText(html.slice(start + 'class="job-description">'.length, ends.length ? Math.min(...ends) : undefined), DESC_MAX);
+}
+
+export function normalizeBreezy(j: BreezyPosition, board: Board, description = ""): NormalizedPosting {
+  const locs = j.locations?.length ? j.locations : j.location ? [j.location] : [];
+  const remote = locs.some((l) => l.is_remote);
+  const detail = locs.map((l) => l.remote_details?.value ?? "").join(" ");
+  const workplace = /hybrid/.test(detail) ? wp("hibrido", "fuente", `remote_details: ${detail.trim()}`) : remote ? wp("remoto", "fuente", `is_remote${detail.trim() ? ` (${detail.trim()})` : ""}`) : wp(workplaceFromText(j.name), "fuente");
+  const countryNames = [...new Set(locs.map((l) => l.country?.name).filter((c): c is string => !!c))];
+  const countries = [...new Set(locs.map((l) => countryIso(l.country?.id ?? l.country?.name)).filter((c): c is string => !!c))];
+  const url = j.url || `https://${board.slug}.breezy.hr/p/${j.friendly_id ?? j.id}`;
+  const logo = j.company?.logo_url?.startsWith("https://") ? encodeURI(j.company.logo_url) : undefined;
+  return {
+    sourceId: "breezy",
+    boardId: board.boardId,
+    externalId: j.id,
+    title: j.name.trim(),
+    company: board.company || j.company?.name || board.slug || "",
+    companySlug: board.slug,
+    ...(logo ? { companyLogo: logo } : {}),
+    sourceUrl: url,
+    applyUrl: `${url}/apply`,
+    linkRequired: false,
+    descriptionText: description,
+    descriptionComplete: description.length > 200,
+    locations: locs.map((l) => l.name ?? "").filter(Boolean),
+    // "Totalmente remoto, dentro de las ubicaciones elegidas": el país es una condición, no una oficina.
+    countries: workplace.value === "remoto" ? [] : countries,
+    regionText: workplace.value === "remoto" ? countryNames : [],
+    workplace,
+    remoteFlag: locs.length ? remote : null,
+    employmentType: null,
+    department: j.department || undefined,
+    salary: j.salary?.trim() ? salary(null, null, "", "desconocido", j.salary.trim()) : null,
+    publishedAt: iso(j.published_date),
+    updatedAt: null,
+    expiresAt: null,
+    ...(j.type?.name ? { employmentHint: j.type.name } : {}),
+  };
+}
+
+export async function fetchBreezy(board: Board, opts?: RetryOptions): Promise<BoardFetch> {
+  const slug = assertSlug(board.slug);
+  if (!/^[a-z0-9-]+$/i.test(slug)) throw new Error(`Cuenta de Breezy inválida: ${board.slug}`);
+  const list = await fetchJson<BreezyPosition[]>(`https://${slug}.breezy.hr/json`, opts);
+  if (!Array.isArray(list)) throw new Error("Respuesta de Breezy inesperada");
+  const postings: NormalizedPosting[] = [];
+  for (const [i, j] of list.entries()) {
+    const url = j.url || `https://${slug}.breezy.hr/p/${j.friendly_id ?? j.id}`;
+    // Sin el detalle no hay descripción: si hay demasiados, los últimos quedan sólo con el título.
+    const description = i < BREEZY_MAX_DETAILS && url.startsWith(`https://${slug}.breezy.hr/`) ? await fetchText(url, opts).then(breezyDescription).catch(() => "") : "";
+    postings.push(normalizeBreezy(j, board, description));
+  }
+  return { postings, complete: true, received: list.length };
+}
+
+/* ---------- BambooHR (API pública del sitio de empleo) ---------- */
+
+type BambooLocation = { city?: string | null; state?: string | null; addressCountry?: string | null };
+type BambooOpening = {
+  id?: string;
+  jobOpeningName: string;
+  departmentLabel?: string | null;
+  employmentStatusLabel?: string | null;
+  location?: BambooLocation;
+  locationType?: string | null;
+  isRemote?: boolean | null;
+  description?: string;
+  datePosted?: string;
+  jobOpeningShareUrl?: string;
+  compensation?: string | null;
+};
+const BAMBOO_MAX_DETAILS = 40;
+/** BambooHR codifica la modalidad: 0 presencial, 1 remoto, 2 híbrido. */
+const BAMBOO_LOCATION_TYPE: Record<string, Workplace> = { "0": "presencial", "1": "remoto", "2": "hibrido" };
+
+export function normalizeBamboo(o: BambooOpening, board: Board, id: string): NormalizedPosting {
+  const loc = o.location ?? {};
+  // A veces "state" trae el país ("Buenos Aires, Argentina") y "city" una lista de países ("Argentina, Uruguay").
+  const parts = [...new Set([...(loc.city ?? "").split(","), loc.state ?? "", loc.addressCountry ?? ""].map((s) => s.trim()).filter((s) => s && s !== "."))];
+  const typed = o.locationType ? BAMBOO_LOCATION_TYPE[o.locationType] : undefined;
+  const workplace = typed ? wp(typed, "fuente", `locationType: ${o.locationType}`) : o.isRemote ? wp("remoto", "fuente", "isRemote") : wp(workplaceFromText(parts.join(" ")), "fuente");
+  const countryParts = parts.filter((p) => countryIso(p) && !/^[A-Za-z]{2}$/.test(p));
+  const countries = [...new Set(countryParts.map((p) => countryIso(p)!))];
+  const text = htmlToText(o.description ?? "", DESC_MAX);
+  const url = o.jobOpeningShareUrl?.replace(/\\\//g, "/") || `https://${board.slug}.bamboohr.com/careers/${id}`;
+  return {
+    sourceId: "bamboohr",
+    boardId: board.boardId,
+    externalId: id,
+    title: o.jobOpeningName.trim(),
+    company: board.company || board.slug || "",
+    companySlug: board.slug,
+    sourceUrl: url,
+    applyUrl: url,
+    linkRequired: false,
+    descriptionText: text,
+    descriptionComplete: text.length > 200,
+    locations: parts.length ? [parts.join(", ")] : [],
+    countries: workplace.value === "remoto" ? [] : countries,
+    regionText: workplace.value === "remoto" ? countryParts : [],
+    workplace,
+    remoteFlag: workplace.value === "remoto" ? true : typed ? false : null,
+    employmentType: null,
+    department: o.departmentLabel || undefined,
+    salary: o.compensation?.trim() ? salary(null, null, "", "desconocido", o.compensation.trim()) : null,
+    publishedAt: iso(o.datePosted),
+    updatedAt: null,
+    expiresAt: null,
+    ...(o.employmentStatusLabel ? { employmentHint: o.employmentStatusLabel } : {}),
+  };
+}
+
+export async function fetchBamboo(board: Board, opts?: RetryOptions): Promise<BoardFetch> {
+  const slug = assertSlug(board.slug);
+  if (!/^[a-z0-9-]+$/i.test(slug)) throw new Error(`Cuenta de BambooHR inválida: ${board.slug}`);
+  const base = `https://${slug}.bamboohr.com/careers`;
+  const data = await fetchJson<{ result?: (BambooOpening & { id: string })[] }>(`${base}/list`, opts);
+  if (!Array.isArray(data.result)) throw new Error("Respuesta de BambooHR sin 'result'");
+  const postings: NormalizedPosting[] = [];
+  for (const [i, o] of data.result.entries()) {
+    const id = String(o.id);
+    if (!/^\d+$/.test(id)) continue;
+    const full = i < BAMBOO_MAX_DETAILS
+      ? await fetchJson<{ result?: { jobOpening?: BambooOpening } }>(`${base}/${id}/detail`, opts).then((d) => d.result?.jobOpening).catch(() => undefined)
+      : undefined;
+    postings.push(normalizeBamboo({ ...o, ...full, location: full?.location ?? o.location }, board, id));
+  }
+  return { postings, complete: true, received: data.result.length };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -1087,6 +1241,8 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   workday: fetchWorkday,
   eightfold: fetchEightfold,
   successfactors: fetchSuccessFactors,
+  breezy: fetchBreezy,
+  bamboohr: fetchBamboo,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */
