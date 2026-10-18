@@ -33,7 +33,6 @@ export default async function Home() {
               </div>
               <HeroVideoPlayer />
             </div>
-            <p className="mt-2 text-center text-[11px] leading-4 text-ink/65 sm:mt-3 sm:text-xs">Demo ilustrativa. Las cifras actuales del catálogo están debajo.</p>
           </div>
           <div className="order-1 text-center lg:order-2 lg:text-left">
             {/* Las dos líneas del titular de jobright («No more solo job hunting / Do it with AI»), en español. */}
@@ -57,7 +56,7 @@ export default async function Home() {
         </div>
 
         {/* Sellos y métricas como en jobright: laureles con datos de Maru y líneas guía hasta el ícono, con las cifras de hoy del catálogo. */}
-        <div className="mx-auto mt-6 grid max-w-[1200px] gap-6 sm:mt-14 lg:mt-24 lg:grid-cols-[532px_108px_minmax(0,512px)] lg:items-center lg:justify-between lg:gap-0">
+        <div className="mx-auto mt-11 grid max-w-[1200px] gap-6 sm:mt-14 lg:mt-24 lg:grid-cols-[532px_108px_minmax(0,512px)] lg:items-center lg:justify-between lg:gap-0">
           <div>
             <Laurels
               items={[
