@@ -7,7 +7,7 @@ Cuenta publicitaria **Costa Reset (1356376906306947)**, la misma de Templo Ninja
 | Nivel | Configuración |
 |---|---|
 | Campaña | `MARU \| Límite gratuito \| AR \| Test01` · objetivo Clientes potenciales · presupuesto **5.000 ARS/día** · empieza en pausa |
-| Conjunto 1 · Estáticos | Ubicación de la conversión: sitio web · píxel "Maru Coach" (1466577088716669) · página "Maru Coach" (1382450011616535) · evento de optimización: conversión personalizada **"Maru \| Límite gratuito alcanzado"** (`maru_paywall_viewed`) · Argentina · 22–50 años · público Advantage+ · ubicaciones Advantage+ |
+| Conjunto 1 · Estáticos | Ubicación de la conversión: sitio web · píxel "Maru Coach" (1466577088716669) · página "Maru Coach" (1382450011616535) · evento de optimización: conversión personalizada **"Maru \| Límite gratuito alcanzado"** (`maru_paywall_viewed`) · Argentina · 18–65 años (la categoría especial Empleo no permite acotar edad) · público Advantage+ · ubicaciones Advantage+ |
 | Conjunto 2 · Reel (próximo paso) | Igual al 1, con el reel de uso de la plataforma cuando esté grabado |
 
 URL: `https://www.marucoach.com/<sección>?utm_source=meta&utm_medium=paid_social&utm_campaign=maru_limite_test01&utm_content=<anuncio>`
