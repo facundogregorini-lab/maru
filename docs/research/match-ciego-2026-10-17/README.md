@@ -46,3 +46,15 @@ Corrida sobre el inventario del 17/10 (`resultados.json`):
 ## Límite
 
 Después de mirar estos resultados, estos perfiles **ya no son ciegos**. La próxima comprobación necesita perfiles nuevos, definidos antes de correr.
+
+## Seguimiento (18/10)
+
+Se corrigieron los tres pendientes y se volvieron a correr estos perfiles sobre el inventario del 18/10. Ya no son ciegos: sirven como regresión, no como medición.
+
+- **Data engineer:** en datos e IA el cargo técnico dice la disciplina. "Data Scientist" sale del top 40; "Data Architect" se mantiene como paso siguiente.
+- **Contador senior:** "Administrativo contable" y "Asistente…" sin nivel se estiman junior. Lo hace el ranking, no el aviso, y aparece como brecha: "parece un puesto de apoyo". Salen del top 5 ("Administrativo Contable Temporal" estaba #3 con 98%).
+- **Otra provincia sin modalidad:** pasa de ×0,88 a ×0,8, igual que un híbrido en otra ciudad. Con la ubicación indispensable, de ×0,75 a ×0,7. El híbrido en otra ciudad pasa de ×0,8 a ×0,75.
+  - Community manager en Rosario: el aviso de Córdoba baja de #1 (81%) a #3 (73%).
+  - Cambio a RR. HH.: la pasantía en Neuquén baja de #2 a #5.
+
+Nueva comprobación ciega con 6 perfiles nuevos: [match-ciego-2026-10-18](../match-ciego-2026-10-18/README.md).

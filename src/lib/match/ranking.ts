@@ -162,8 +162,18 @@ const HEAD_OF = new Map<string, Head>();
 for (const [h, words] of Object.entries(HEADS) as [Head, string[]][]) for (const w of words) HEAD_OF.set(canon(w), h);
 
 const ADJECTIVE_HEADS = new Set(["administrativo", "ejecutivo", "ejecutiva", "tecnico"].map(canon));
+/** Cargos de apoyo que, sin un nivel en el aviso, se estiman junior ("Administrativo contable", "Recepcionista"). */
+const SUPPORT_HEADS = new Set(["administrativo", "asistente", "auxiliar", "recepcionista", "secretario", "secretaria"].map(canon));
 
-export type Role = { head: Head | null; domain: Set<string>; all: Set<string> };
+export type Role = { head: Head | null; headWord: string | null; domain: Set<string>; all: Set<string> };
+
+/**
+ * En datos e IA el cargo técnico dice la disciplina: "Data Scientist" y "Data Engineer" comparten
+ * el área, no el trabajo. La disciplina pasa a ser parte del área del puesto. Arquitecto de datos
+ * es el paso siguiente de un data engineer: misma disciplina.
+ */
+const DISCIPLINE: Record<string, string> = { scientist: "ciencia", cientifico: "ciencia", desarrollador: "ingenieria", arquitecto: "ingenieria", architect: "ingenieria", analista: "analisis" };
+const DISCIPLINE_AREAS = new Set(["datos", "ia"]);
 
 /** Un cargo separado en tipo de puesto y área, sin seniority, lugares ni ruido del aviso. */
 export function parseRole(s: string): Role {
@@ -177,7 +187,9 @@ export function parseRole(s: string): Role {
   const head = i === -1 ? null : HEAD_OF.get(words[i])!;
   // Otra palabra de cargo puede decir de qué es ("Asistente administrativo"); las de jerarquía ("Data Analyst Lead"), no.
   const domain = new Set(words.filter((w, j) => j !== i && HEAD_OF.get(w) !== "gestion" && !GENERIC_ROLE.has(w)));
-  return { head, domain, all: new Set(words) };
+  const discipline = i === -1 ? undefined : DISCIPLINE[words[i]];
+  if (discipline && [...domain].some((w) => DISCIPLINE_AREAS.has(w))) domain.add(discipline);
+  return { head, headWord: i === -1 ? null : words[i], domain, all: new Set(words) };
 }
 
 function headFit(a: Head | null, b: Head | null): number {
@@ -550,12 +562,20 @@ export function rankOpportunities(input: RankInput): RankOutput {
 
     // Seniority (15%)
     let senScore: number | null = null;
-    if (ex.seniority && targetSen.length) {
-      const idx = SENIORITY_ORDER.indexOf(ex.seniority.value);
+    // "Administrativo contable" o "Recepcionista" sin nivel: por el cargo es un puesto de apoyo.
+    // Se estima junior para ordenar, sin mostrarlo como dato del aviso.
+    const impliedSen: Seniority | null = !ex.seniority && titleRole.headWord && SUPPORT_HEADS.has(titleRole.headWord) ? "junior" : null;
+    const sen = ex.seniority?.value ?? impliedSen;
+    if (sen && targetSen.length) {
+      const idx = SENIORITY_ORDER.indexOf(sen);
       const d = Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - idx)));
       senScore = d === 0 ? 1 : d === 1 ? 0.8 : d === 2 ? 0.35 : 0;
-      note(true);
-      if (d >= 2) gaps.push(`Es un puesto ${SENIORITY_LABEL[ex.seniority.value]}; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`);
+      note(!impliedSen);
+      if (d >= 2) {
+        gaps.push(impliedSen
+          ? `No dice el nivel, pero por el cargo parece un puesto de apoyo; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`
+          : `Es un puesto ${SENIORITY_LABEL[sen]}; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`);
+      }
     } else note(false);
 
     // Preferencias adicionales (10%)
@@ -614,8 +634,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
       raw *= 0.95;
       gaps.push(`Es ${WORKPLACE_LABEL[wpValue].toLowerCase()} en ${o.locations.slice(0, 2).join(" · ")} (Gran Buenos Aires).`);
     } else if (wpValue !== "remoto" && wpValue !== "desconocido" && o.locations.length && userPlaces.length && !placeMatches(o.locations)) {
-      // Presencial en otra ciudad es mudarse o viajar todos los días: pesa más que híbrido.
-      raw *= wpValue === "presencial" ? 0.7 : 0.8;
+      // Presencial en otra ciudad es mudarse o viajar todos los días; híbrido, viajar seguido.
+      raw *= wpValue === "presencial" ? 0.7 : 0.75;
       gaps.push(
         wpInferred
           ? `Parece presencial en ${o.locations.slice(0, 2).join(" · ")} (no aclara si es remoto), fuera de los lugares que indicaste.`
@@ -625,7 +645,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
     // Sin modalidad informada pero con una ciudad concreta fuera de las elegidas: probablemente presencial allá.
     const onlyCountry = o.locations.every((l) => /^\s*(argentina|remote|remoto|latam|latin america)\b/i.test(l));
     if (wpValue === "desconocido" && o.locations.length && !onlyCountry && userPlaces.length && !placeMatches(o.locations)) {
-      raw *= nearBa ? 0.97 : hard.has("ubicacion") ? 0.75 : 0.88;
+      // Pesa como un híbrido en otra ciudad: casi siempre hay que ir a esa oficina.
+      raw *= nearBa ? 0.97 : hard.has("ubicacion") ? 0.7 : 0.8;
       pending.push(`Se publica en ${argentinaFirst(o.locations).slice(0, 2).join(" · ")} y no aclara si es remoto: confirmalo antes de postularte.`);
     }
 

@@ -1,0 +1,56 @@
+{
+  "$comment": "Perfiles SINTÉTICOS para una comprobación CIEGA del Match: se definieron junto con los criterios antes de correrlos y no se usan para ajustar reglas. No contienen datos de personas reales. Foco en tecnología, marketing y finanzas (las áreas prioritarias del dueño).",
+  "version": 1,
+  "creado": "2026-10-18",
+  "criterios": "Top 5 elegible de cada perfil. Útil = mismo tipo de puesto y área, seniority a un escalón o menos, ubicación posible (remoto elegible o la ciudad/GBA del perfil). Dudoso = cumple el área pero falla seniority o ubicación, o el título es ambiguo. Falso = otra área u otro tipo de puesto. Además: el #1 debería tener 80% o más si es útil.",
+  "perfiles": [
+    {
+      "id": "D1-frontend-ssr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": true,
+      "profile": { "headline": "Desarrolladora frontend semi senior", "titles": ["Frontend Developer", "Desarrolladora web"], "skills": ["React", "TypeScript", "JavaScript", "CSS", "Next.js", "Git"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 3, "location": "Rosario, Santa Fe, Argentina", "summary": "Interfaces web en React para productos SaaS y sitios de comercio electrónico." },
+      "prefs": { "objetivo": "Seguir en frontend con React", "rolesDeseados": ["Frontend Developer", "React Developer"], "evitar": [], "ciudad": "Rosario", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "D2-devops-sr",
+      "publico": "tecnologia",
+      "area": "software",
+      "reserva": true,
+      "profile": { "headline": "DevOps engineer senior", "titles": ["DevOps Engineer", "SRE", "Administrador de sistemas Linux"], "skills": ["AWS", "Kubernetes", "Terraform", "Docker", "Linux", "CI/CD"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 8, "location": "Buenos Aires, Argentina", "summary": "Infraestructura en la nube, automatización de despliegues y monitoreo." },
+      "prefs": { "objetivo": "Plataforma e infraestructura cloud", "rolesDeseados": ["DevOps Engineer", "Site Reliability Engineer", "Platform Engineer"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido"], "seniorities": ["senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "D3-performance-mkt-ssr",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": true,
+      "profile": { "headline": "Analista de marketing digital", "titles": ["Analista de marketing digital", "Paid media specialist"], "skills": ["Google Ads", "Meta Ads", "Google Analytics", "SEO", "Excel", "email marketing"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "intermedio" }], "yearsExperience": 4, "location": "Córdoba, Argentina", "summary": "Campañas pagas y medición para comercio electrónico y servicios." },
+      "prefs": { "objetivo": "Performance marketing", "rolesDeseados": ["Performance Marketing", "Paid Media", "Marketing digital"], "evitar": [], "ciudad": "Córdoba", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["remoto", "hibrido", "presencial"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "D4-marketing-manager",
+      "publico": "generalista",
+      "area": "marketing",
+      "reserva": true,
+      "profile": { "headline": "Gerente de marketing", "titles": ["Gerente de marketing", "Brand manager"], "skills": ["estrategia de marca", "marketing digital", "presupuesto", "liderazgo de equipos", "investigación de mercado"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 12, "location": "Buenos Aires, Argentina", "summary": "Lideré equipos de marca y marketing en consumo masivo y retail." },
+      "prefs": { "objetivo": "Dirigir marketing", "rolesDeseados": ["Marketing Manager", "Head of Marketing", "Brand Manager"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "presencial", "remoto"], "seniorities": ["manager", "director"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "D5-analista-financiero-jr",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": true,
+      "profile": { "headline": "Analista financiero junior", "titles": ["Analista financiero junior", "Pasante de finanzas"], "skills": ["Excel", "modelos financieros", "presupuesto", "Power BI", "flujo de fondos"], "languages": [{ "language": "Español", "level": "nativo" }, { "language": "Inglés", "level": "avanzado" }], "yearsExperience": 1, "location": "Buenos Aires, Argentina", "summary": "Reportes de gestión, presupuesto y análisis de flujo de fondos." },
+      "prefs": { "objetivo": "Crecer en análisis financiero o FP&A", "rolesDeseados": ["Analista financiero", "FP&A Analyst", "Financial Analyst"], "evitar": [], "ciudad": "Buenos Aires", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "presencial", "remoto"], "seniorities": ["junior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    },
+    {
+      "id": "D6-tesoreria-ssr-mendoza",
+      "publico": "generalista",
+      "area": "finanzas",
+      "reserva": true,
+      "profile": { "headline": "Analista de tesorería", "titles": ["Analista de tesorería", "Analista de cuentas a pagar"], "skills": ["tesorería", "conciliaciones bancarias", "cuentas a pagar", "Excel", "SAP"], "languages": [{ "language": "Español", "level": "nativo" }], "yearsExperience": 4, "location": "Mendoza, Argentina", "summary": "Pagos, conciliaciones y posición de caja diaria en una empresa industrial." },
+      "prefs": { "objetivo": "Tesorería o finanzas operativas", "rolesDeseados": ["Analista de tesorería", "Analista de finanzas", "Treasury Analyst"], "evitar": [], "ciudad": "Mendoza", "pais": "AR", "otrosLugares": [], "autorizacion": [], "modalidades": ["hibrido", "presencial", "remoto"], "seniorities": ["semi_senior"], "contratos": [], "salario": null, "indispensables": [], "carrera": "continuidad" }
+    }
+  ]
+}
