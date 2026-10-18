@@ -13,6 +13,10 @@ on:
         description: "Caracteres a mostrar de cada respuesta (máximo 20000)"
         required: false
         default: "3000"
+      find:
+        description: "Opcional: en vez del comienzo, mostrar alrededor de cada aparición de este texto (hasta 5)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -29,6 +33,7 @@ jobs:
         env:
           URLS: ${{ github.event.inputs.urls }}
           CHARS: ${{ github.event.inputs.chars }}
+          FIND: ${{ github.event.inputs.find }}
         run: |
           node --input-type=module -e '
           const urls = (process.env.URLS ?? "").split(/\s+/).filter(Boolean).slice(0, 10);
@@ -41,7 +46,14 @@ jobs:
               const res = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 (compatible; maru-probe)", accept: "application/json, text/html;q=0.9, */*;q=0.8" }, signal: AbortSignal.timeout(20000) });
               const body = await res.text();
               console.log(`\n===== ${url} → HTTP ${res.status} · ${res.headers.get("content-type") ?? "?"} · ${body.length} caracteres`);
-              console.log(body.slice(0, chars));
+              const find = process.env.FIND ?? "";
+              if (!find) { console.log(body.slice(0, chars)); continue; }
+              let at = body.indexOf(find);
+              if (at === -1) console.log(`(no aparece "${find}")`);
+              for (let n = 0; at !== -1 && n < 5; n++, at = body.indexOf(find, at + chars)) {
+                console.log(`--- posición ${at}`);
+                console.log(body.slice(Math.max(0, at - 200), at + chars));
+              }
             } catch (err) {
               console.log(`\n===== ${url} → error: ${err.message}`);
             }
