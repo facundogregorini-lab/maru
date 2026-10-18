@@ -108,6 +108,13 @@ const OTHER_COUNTRIES =
 const OTHER_CITIES =
   /\b(new york|nyc|san francisco|los angeles|seattle|austin|boston|chicago|denver|miami|atlanta|toronto|vancouver|montreal|london|dublin|madrid|barcelona|lisbon|lisboa|paris|berlin|amsterdam|warsaw|bangalore|bengaluru|manila|sydney|melbourne|tel aviv|sao paulo|rio de janeiro|ciudad de mexico|mexico city|cdmx|guadalajara|monterrey|bogota|medellin|santiago|lima|montevideo|asuncion|quito|auckland|wellington|brisbane|perth|athens|budapest|limassol|prague|vienna|zurich|geneva|munich|hamburg|frankfurt|stockholm|copenhagen|oslo|helsinki|milan|rome|brussels|edinburgh|manchester|krakow|bucharest|sofia|belgrade|kyiv|istanbul|cairo|lagos|nairobi|johannesburg|cape town|dubai|abu dhabi|riyadh|doha|hyderabad|pune|chennai|mumbai|delhi|gurgaon|gurugram|noida|tokyo|seoul|shanghai|beijing|shenzhen|taipei|jakarta|kuala lumpur|bangkok|hanoi|ho chi minh|curitiba|porto alegre|belo horizonte|florianopolis|recife|fortaleza|brasilia|campinas|cali|barranquilla|valparaiso|guayaquil|houston|dallas|phoenix|philadelphia|washington|san diego|nashville|raleigh|charlotte|minneapolis|detroit|pittsburgh|calgary|ottawa)\b/;
 
+// Estados, provincias y regiones de otros países que algunas fuentes ponen solas como ubicación de un remoto
+// ("Remote" + "New South Wales", "Saskatchewan", "Texas"): el remoto queda atado a esa zona.
+const FOREIGN_REGION =
+  /\b(north america|norteamerica|new south wales|queensland|south australia|western australia|tasmania|northern territory|australian capital territory|ontario|quebec|british columbia|alberta|saskatchewan|manitoba|nova scotia|new brunswick|newfoundland|prince edward island|canterbury|waikato|taranaki|manawatu|otago|southland|bay of plenty|hawke s bay|northland|alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|west virginia|wisconsin|wyoming|guangdong|bavaria|catalonia|cataluna|andalucia|lombardy|ile-de-france|sao paulo)\b/;
+// Victoria (Australia) sola: hay una Victoria en Entre Ríos, pero esa ya la reconoce la ubicación argentina.
+const VICTORIA_ALONE = /^victoria$/;
+
 const US_STATE = /,\s*(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|DC)\b/;
 
 const US_ONLY_DESC = [
@@ -119,7 +126,33 @@ const US_ONLY_DESC = [
 ];
 const WORK_AUTH_US = /\b(authorized|authorised|eligible|legally able) to work in the (us|u\.s\.|usa|united states)\b|\bus work authorization\b|\bus citizen(s|ship)? (only|required)\b/;
 const EXCLUDES_AR = /\b(excluding|except|not (available|open) (in|to)|no candidates from)\b[^.\n]{0,40}\bargentina\b/;
-const DESC_ALLOWS = /\b(open to (candidates|applicants) (in|from)[^.\n]{0,40}(latam|latin america|argentina|south america|anywhere)|(hiring|hire) (in|from|across) (latam|latin america|argentina)|(remote|remoto)[^.\n]{0,15}(from|desde) (argentina|latam|latin america|anywhere)|we hire anywhere|work from anywhere in the world|candidates (based|located) in (latam|latin america|argentina))\b/;
+// La región sólo cuenta cuando el aviso la ata a dónde vive o trabaja la persona: "clientes de LATAM",
+// "experiencia en LATAM" o "LATAM Airlines" no dicen nada de desde dónde contratan.
+const AR_REGION = String.raw`(latam|latin america|latinoamerica|america latina|south america|sudamerica|argentina)`;
+const DESC_ALLOWS = new RegExp(
+  [
+    String.raw`open to ((candidates|applicants|contractors|talent|professionals|people)\b[^.\n]{0,40}\b)?${AR_REGION}`,
+    String.raw`(hiring|hire) (in|from|across) ${AR_REGION}`,
+    String.raw`(remote|remoto|remota|remotely)( work| position| role| opportunity| work opportunity)?( for| within| from| desde| en| para| in| across| -| /)? (the |todo |toda )?(cualquier (lugar|pais|parte) de |anywhere in )?${AR_REGION}`,
+    String.raw`(based|located|living|live|lives|reside|residing|residir|residis|residas|resida|vivir|vivas|viva) (actualmente )?(in|en|within)\b[^.\n]{0,40}\b${AR_REGION}`,
+    String.raw`(work|trabajar|trabajo) (from|desde) (cualquier (lugar|pais|parte) de |anywhere in )${AR_REGION}`,
+    String.raw`(abierta?|abierto) (a|para) (todo |toda |candidatos de |postulantes de |personas de )?${AR_REGION}`,
+    String.raw`(contratacion|location|ubicacion|modalidad remota?) ?:? ?(remote ?/? ?|remoto ?/? ?)?${AR_REGION}`,
+    String.raw`we hire (anywhere|globally)|we re hiring globally|work from anywhere in the world|anywhere in the world|any location worldwide|desde cualquier (lugar|parte|pais) del mundo`,
+    String.raw`(work|working|trabajar) from anywhere(?! (in|within|across|en)\b)`,
+  ].join("|"),
+);
+// Residencia exigida en otro país o ciudad ("candidates located in Colombia", "residencia en Ciudad de México
+// requerida"). Se mira después de DESC_ALLOWS: "residir en Chile, Argentina o Perú" habilita.
+const ELSEWHERE = `(the )?(${OTHER_COUNTRIES.source.slice(3, -3)}|${OTHER_CITIES.source.slice(3, -3)})\\b`;
+const DESC_ELSEWHERE = new RegExp(
+  [
+    String.raw`\b(candidates|applicants) (must be )?(currently )?(located|based|residing|living) in ${ELSEWHERE}`,
+    String.raw`\bmust (currently )?(be )?(currently )?(located|based|reside|live|living)( and authorized to work)? in ${ELSEWHERE}`,
+    String.raw`\bresidencia en ${ELSEWHERE} (requerida|excluyente|obligatoria)`,
+    String.raw`\b(debes|debe|deberas|deber) (residir|vivir|estar radicad[oa]) en ${ELSEWHERE}`,
+  ].join("|"),
+);
 
 // Ciudades argentinas cuyo nombre se repite en otros países (Córdoba en España, Colombia y México; Rosario en Uruguay;
 // San Juan en Puerto Rico; Santa Fe y Martinez en EE. UU.; San Isidro en Perú).
@@ -187,7 +220,8 @@ export function classifyEligibility(
   if (countries.length) return result("no_elegible", [`Países del puesto: ${countries.join(", ")}`]);
 
   // 5. Otro país o ciudad explícitos.
-  if (loc && (OTHER_COUNTRIES.test(loc) || OTHER_CITIES.test(loc) || US_STATE.test(locRaw))) {
+  const foreignRegion = FOREIGN_REGION.test(loc) || p.locations.some((l) => VICTORIA_ALONE.test(fold(l)));
+  if (loc && (OTHER_COUNTRIES.test(loc) || OTHER_CITIES.test(loc) || US_STATE.test(locRaw) || foreignRegion)) {
     return result("no_elegible", [remote ? `Remoto limitado a: ${locRaw}` : `Presencial u híbrido en: ${locRaw}`]);
   }
 
@@ -197,6 +231,9 @@ export function classifyEligibility(
     if (WORK_AUTH_US.test(desc)) return result("no_elegible", ["La descripción pide permiso de trabajo en EE. UU."]);
     const allow = desc.match(DESC_ALLOWS);
     if (allow) return result("elegible", [`La descripción dice: “${allow[0]}”`]);
+    const elsewhere = desc.match(DESC_ELSEWHERE);
+    // "Santiago" también es Santiago del Estero: si lo que sigue nombra un lugar argentino, no descarta.
+    if (elsewhere && !hasArPlace(desc.slice(elsewhere.index, (elsewhere.index ?? 0) + elsewhere[0].length + 20))) return result("no_elegible", [`La descripción pide vivir en otro lugar: “${elsewhere[0]}”`]);
     return result("por_confirmar", ["Remoto sin región: no dice si contratan desde Argentina."]);
   }
 
