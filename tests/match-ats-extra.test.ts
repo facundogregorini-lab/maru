@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eightfoldDomain, fetchEightfold, fetchRecruitee, fetchSmartRecruiters, fetchSuccessFactors, fetchWorkday, normalizeEightfold, normalizeRecruitee, normalizeSmartRecruiters, normalizeSuccessFactors, normalizeWorkday, parseSuccessFactorsSearch, successFactorsSite, workdaySite, type Board } from "@/lib/match/connectors";
+import { eightfoldDomain, fetchEightfold, inDetailWindow, fetchRecruitee, fetchSmartRecruiters, fetchSuccessFactors, fetchWorkday, normalizeEightfold, normalizeRecruitee, normalizeSmartRecruiters, normalizeSuccessFactors, normalizeWorkday, parseSuccessFactorsSearch, successFactorsSite, workdaySite, type Board } from "@/lib/match/connectors";
 import { boardsFrom } from "@/lib/match/directory";
 import { applyBoard, emptyInventory } from "@/lib/match/inventory";
 
@@ -157,5 +157,28 @@ describe("SuccessFactors: descripción con etiquetas anidadas", () => {
     const p = normalizeSuccessFactors({ title: "Analista de Costos", path: "/job/Federal-ANALISTA-COSTOS/1440520500/", location: "Buenos Aires, AR" }, html, board);
     expect(p.descriptionText).toContain("Segunda parte");
     expect(p.descriptionText).not.toContain("Postularme");
+  });
+});
+
+describe("detalle de a tandas", () => {
+  it("la ventana rota por día y cubre todos los avisos", () => {
+    const day = 86_400_000;
+    const seen = new Set<number>();
+    for (let d = 0; d < 6; d++) for (let i = 0; i < 230; i++) if (inDetailWindow(i, 230, 40, d * day)) seen.add(i);
+    expect(seen.size).toBe(230);
+    expect([...Array(230).keys()].filter((i) => inDetailWindow(i, 230, 40, 3 * day))).toHaveLength(40);
+    expect(inDetailWindow(25, 30, 40)).toBe(true);
+  });
+
+  it("un aviso que vuelve sin detalle conserva la descripción ya leída", () => {
+    const board: Board = { sourceId: "successfactors", boardId: "successfactors:careers.ey.com~ey", slug: "careers.ey.com~ey", company: "EY" };
+    const row = { title: "Analista Contable", path: "/ey/job/Buenos-Aires-1234567/1234567/", location: "CABA, B, AR, 1001 +2 more…" };
+    const withDesc = normalizeSuccessFactors(row, `<html><body><span class="jobdescription">${desc}</span></body></html>`, board);
+    expect(withDesc.locations).toEqual(["CABA, Argentina"]);
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, board.boardId, "successfactors", { postings: [withDesc], complete: true }, "2026-10-18T00:00:00.000Z");
+    applyBoard(inv, board.boardId, "successfactors", { postings: [normalizeSuccessFactors(row, null, board)], complete: true }, "2026-10-19T00:00:00.000Z");
+    expect(inv.postings[0].descriptionText).toContain("conciliaciones bancarias");
+    expect(inv.postings[0].descriptionComplete).toBe(true);
   });
 });

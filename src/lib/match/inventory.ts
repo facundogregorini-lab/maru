@@ -136,12 +136,14 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
 
   for (const raw of fetched.postings) {
     if (!raw.title || !raw.sourceUrl) continue;
-    const p = withWorkplace(raw);
+    let p = withWorkplace(raw);
     const key = postingKey(p);
     if (seen.has(key)) continue; // la misma publicación repetida en una respuesta
     seen.add(key);
-    const hash = contentHash(p);
     const prev = byKey.get(key);
+    // Los conectores leen el detalle de a tandas: si esta vez vino sin descripción, se conserva la ya leída.
+    if (prev && !p.descriptionComplete && prev.descriptionComplete) p = { ...p, descriptionText: prev.descriptionText, descriptionComplete: true };
+    const hash = contentHash(p);
     if (!prev) {
       const a = analyze(p);
       const sp: StoredPosting = {

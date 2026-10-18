@@ -3,7 +3,7 @@ import AutoSubmitForm from "./AutoSubmitForm";
 
 /** Buscador al estilo jobright ("Find your perfect job in a click"): puesto + filtros + GO. Es un GET a /busquedas. */
 export default function JobSearchBar({ value }: { value?: Partial<JobQuery> }) {
-  const field = "h-12 w-full rounded-xl bg-brand-soft px-3 text-base text-ink outline-none placeholder:text-ink/80 focus:ring-2 focus:ring-ink";
+  const field = "h-12 w-full rounded-xl bg-black/[0.04] px-3 text-sm font-medium text-ink outline-none placeholder:text-ink focus:ring-2 focus:ring-ink";
   const select = `${field} cursor-pointer appearance-none pr-8`;
   return (
     <form action="/busquedas" method="get" role="search" aria-label="Buscar empleos" className="grid grid-cols-2 gap-2 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_80px]">
@@ -15,16 +15,16 @@ export default function JobSearchBar({ value }: { value?: Partial<JobQuery> }) {
       <Select name="donde" label="Dónde" value={value?.donde} options={{ ar: "Desde Argentina", todo: "Todo el mundo" }} className={select} noEmpty />
       <Select name="area" label="Área" value={value?.area} options={AREAS} className={select} />
       <Select name="nivel" label="Seniority" value={value?.nivel} options={NIVELES} className={select} />
-      <button type="submit" className="press col-span-2 h-12 rounded-xl bg-ink font-semibold uppercase text-white hover:bg-black lg:col-span-1">
+      <button type="submit" className="press col-span-2 h-12 rounded-xl bg-ink font-semibold uppercase text-white lg:col-span-1">
         Buscar
       </button>
     </form>
   );
 }
 
-function Select({ name, label, value, options, className, noEmpty = false, small = false }: { name: string; label: string; value?: string; options: Record<string, string | undefined>; className: string; noEmpty?: boolean; small?: boolean }) {
+function Select({ name, label, value, options, className, noEmpty = false, small = false, active = false }: { name: string; label: string; value?: string; options: Record<string, string | undefined>; className: string; noEmpty?: boolean; small?: boolean; active?: boolean }) {
   return (
-    <label className={small ? "relative inline-block" : "relative block"}>
+    <label className={`${small ? "relative inline-block" : "relative block"} ${active ? "text-white" : ""}`}>
       <span className="sr-only">{label}</span>
       <select name={name} defaultValue={value ?? ""} className={className}>
         {!noEmpty && <option value="">{label}</option>}
@@ -43,15 +43,17 @@ function Select({ name, label, value, options, className, noEmpty = false, small
 
 /** Filtros en chips, como la fila de jobright (United States ▾, Experience Level ▾, … y "All Filters"). */
 export function JobFilterChips({ value }: { value: JobQuery }) {
-  const chip = "h-8 cursor-pointer appearance-none rounded-lg bg-white pl-2.5 pr-7 text-[13px] text-ink outline-none ring-1 ring-black/[0.06] hover:ring-black/20 focus:ring-2 focus:ring-ink";
+  const chip = "h-9 cursor-pointer appearance-none rounded-xl bg-black/[0.04] pl-3 pr-7 text-[13px] font-medium text-ink outline-none hover:bg-black/[0.08] focus:ring-2 focus:ring-ink";
+  // Filtro activo en negro con texto blanco, como en jobright.
+  const on = "!bg-ink !text-white";
   return (
     <AutoSubmitForm action="/busquedas" method="get" aria-label="Filtros" className="flex flex-wrap items-center gap-2">
       {value.q && <input type="hidden" name="q" value={value.q} />}
-      <Select name="donde" label="Dónde" value={value.donde} options={{ ar: "Desde Argentina", todo: "Todo el mundo" }} className={`${chip} ${value.donde === "ar" ? "!bg-brand-soft" : ""}`} noEmpty small />
-      <Select name="area" label="Área" value={value.area} options={AREAS} className={`${chip} ${value.area ? "!bg-brand-soft" : ""}`} small />
-      <Select name="nivel" label="Seniority" value={value.nivel} options={NIVELES} className={`${chip} ${value.nivel ? "!bg-brand-soft" : ""}`} small />
-      <Select name="modalidad" label="Modalidad" value={value.modalidad} options={MODALIDADES} className={`${chip} ${value.modalidad ? "!bg-brand-soft" : ""}`} small />
-      <button type="submit" className="press flex h-8 items-center gap-1.5 rounded-lg bg-neon px-3 text-[13px] font-medium">
+      <Select name="donde" label="Dónde" value={value.donde} options={{ ar: "Desde Argentina", todo: "Todo el mundo" }} className={`${chip} ${value.donde === "ar" ? on : ""}`} active={value.donde === "ar"} noEmpty small />
+      <Select name="area" label="Área" value={value.area} options={AREAS} className={`${chip} ${value.area ? on : ""}`} active={!!value.area} small />
+      <Select name="nivel" label="Seniority" value={value.nivel} options={NIVELES} className={`${chip} ${value.nivel ? on : ""}`} active={!!value.nivel} small />
+      <Select name="modalidad" label="Modalidad" value={value.modalidad} options={MODALIDADES} className={`${chip} ${value.modalidad ? on : ""}`} active={!!value.modalidad} small />
+      <button type="submit" className="press flex h-9 items-center gap-1.5 rounded-xl bg-neon px-3 text-[13px] font-medium">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
           <path d="M2 4h12M4 8h8M6 12h4" />
         </svg>

@@ -475,7 +475,7 @@ function FilterPanel({ filters, setFilters }: { filters: Filters; setFilters: (f
   const families = useMemo(() => (Object.entries(FAMILY_LABEL) as [RoleFamily, string][]).filter(([k]) => k !== "otros"), []);
   const set = <K extends keyof Filters>(k: K, v: Filters[K]) => setFilters({ ...filters, [k]: v });
   return (
-    <div className="mt-4 space-y-4 rounded-3xl border border-line bg-paper p-5">
+    <div className="mt-4 space-y-4 rounded-[24px] bg-white p-6 shadow-[var(--shadow-soft)]">
       <div>
         <p className="mb-2 text-sm font-medium">Área</p>
         <MultiChips value={filters.families ?? []} onChange={(v) => set("families", v)} options={families} />
