@@ -83,6 +83,8 @@ describe("cifras del home", () => {
     expect(data.eligible).toBe(ar.total);
     expect(data.eligibleCompanies).toBeLessThanOrEqual(data.companies);
     expect(data.eligibleRemote).toBeLessThanOrEqual(data.eligible);
+    // La cinta de la home sólo lleva logos https, y los avisos con logo van antes que los que no tienen.
+    expect(data.latest.every((j) => !j.logo || j.logo.startsWith("https://"))).toBe(true);
     const later = new Date(NOW.getTime() + 130 * 86_400_000);
     expect(await landingData(later)).toMatchObject({ total: 0, eligible: 0, latest: [] });
   });
