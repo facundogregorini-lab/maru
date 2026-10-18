@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   fetchAshby,
+  normalizeGetonbrd,
   fetchGetonbrd,
   fetchGreenhouse,
   fetchJobicy,
@@ -250,5 +251,25 @@ describe("extracción por reglas", () => {
     expect(ex.employmentType).toBeNull();
     expect(ex.skillsRequired).toEqual([]);
     expect(ex.yearsRequired).toBeNull();
+  });
+});
+
+describe("Get on Board: remoto sin país", () => {
+  const board = { sourceId: "getonbrd" as const, boardId: "getonbrd" };
+  const job = (modality: string, countries: string[] = [], description = "<p>Buscamos Growth Marketer para campañas y email.</p>") =>
+    normalizeGetonbrd({ id: "growth-1", attributes: { title: "Growth Marketer", description, remote_modality: modality, countries, company: { data: { attributes: { name: "Acme" } } } } }, board);
+
+  it("fully_remote sin países es remoto global y queda elegible", () => {
+    const p = job("fully_remote");
+    expect(p.remoteGlobal).toBe(true);
+    const e = classifyEligibility(p);
+    expect(e.status).toBe("elegible");
+    expect(e.evidence[0]).toMatch(/sin restricción de país/);
+  });
+
+  it("remote_local, o una descripción que pide vivir en otro país, no", () => {
+    expect(job("remote_local").remoteGlobal).toBeUndefined();
+    expect(classifyEligibility(job("remote_local")).status).toBe("por_confirmar");
+    expect(classifyEligibility(job("fully_remote", [], "<p>Candidates must be based in Mexico.</p>")).status).toBe("no_elegible");
   });
 });

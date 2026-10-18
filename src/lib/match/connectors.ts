@@ -508,7 +508,6 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
   const cities = Array.isArray(a.location_cities) ? (a.location_cities as string[]) : (a.location_cities?.data ?? []).map((c) => c.attributes?.name ?? "").filter(Boolean);
   const countryNames = a.countries ?? [];
   const countries = countryNames.map(countryIso).filter(Boolean) as string[];
-  // "fully_remote" sin país = remoto global según Get on Board; lo dejamos por confirmar salvo zona explícita.
   const region = [a.remote_zone ?? ""].filter(Boolean);
   const text = [
     htmlToText(a.description, 2500),
@@ -535,6 +534,8 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
     descriptionComplete: text.length > 200,
     locations: [...cities, ...countryNames],
     countries: modality === "fully_remote" && !countries.length ? [] : countries,
+    // Get on Board distingue "fully_remote" (desde cualquier país) de "remote_local" (remoto dentro de un país).
+    ...(modality === "fully_remote" && !countries.length ? { remoteGlobal: true } : {}),
     regionText: region,
     workplace,
     remoteFlag: typeof a.remote === "boolean" ? a.remote : null,

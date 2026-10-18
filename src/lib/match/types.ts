@@ -87,6 +87,8 @@ export type NormalizedPosting = {
   regionText: string[];
   workplace: Field<Workplace>;
   remoteFlag: boolean | null;
+  /** La fuente declara el remoto sin restricción de país (Get on Board "fully_remote" sin países). */
+  remoteGlobal?: boolean;
   employmentType: Field<EmploymentType> | null;
   department?: string;
   salary: Field<Salary> | null;
