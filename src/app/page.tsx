@@ -60,9 +60,9 @@ export default async function Home() {
           <div>
             <Laurels
               items={[
-                { top: "Del CV a la", main: "Entrevista", href: "/entrevista", label: "Del CV a la entrevista: practicá tu entrevista" },
+                { top: "Autocompleta en", main: "Greenhouse", second: "y Lever", href: EXTENSION_URL, label: "Autocompleta formularios en Greenhouse y Lever con la extensión" },
                 { top: "Extensión para", main: "Chrome", href: EXTENSION_URL, label: "Extensión para Chrome" },
-                { top: "Plan gratis", main: "Sin tarjeta", href: "/precios", label: "Plan gratis sin tarjeta: ver planes y límites" },
+                { top: "8 herramientas en", main: "Una cuenta", href: "/#herramientas", label: "8 herramientas en una cuenta: ver las herramientas" },
               ]}
             />
             <h2 className="mx-auto mt-11 max-w-[326px] text-center font-display text-[32px] font-bold uppercase leading-8 sm:max-w-none sm:text-5xl sm:leading-[48px] lg:mt-[58px] lg:text-left lg:text-[52px] lg:leading-[52px]">
