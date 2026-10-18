@@ -5,7 +5,24 @@ import { displayTitle, isInferred } from "./match/labels";
 /** Números y búsquedas reales del inventario de Maru para la home (nada inventado). */
 
 export type LandingJob = { id: string; title: string; company: string; workplace: string; firstSeenAt: string };
-export type LandingData = { total: number; companies: number; eligible: number; remote: number; latest: LandingJob[] };
+export type LandingData = {
+  total: number;
+  companies: number;
+  eligible: number;
+  remote: number;
+  /** Lo mismo, contado sólo sobre los avisos que se pueden pedir desde Argentina. */
+  eligibleCompanies: number;
+  eligibleRemote: number;
+  /** Áreas con al menos un aviso elegible, sin contar "otros". */
+  areas: number;
+  latest: LandingJob[];
+};
+
+/** Cifra redondeada hacia abajo para la home ("4.100+"): sigue siendo cierta aunque el catálogo cambie cada hora. */
+export function atLeast(n: number): string {
+  if (n < 100) return n.toLocaleString("es-AR");
+  return `${(Math.floor(n / 100) * 100).toLocaleString("es-AR")}+`;
+}
 
 const WORKPLACE: Record<string, string> = { remoto: "Remoto", hibrido: "Híbrido", presencial: "Presencial" };
 
@@ -29,6 +46,9 @@ export async function landingData(now = new Date()): Promise<LandingData> {
     companies: new Set(open.map((o) => o.company)).size,
     eligible: eligible.length,
     remote: open.filter((o) => o.workplace?.value === "remoto").length,
+    eligibleCompanies: new Set(eligible.map((o) => o.company)).size,
+    eligibleRemote: eligible.filter((o) => o.workplace?.value === "remoto").length,
+    areas: new Set(eligible.map((o) => o.extracted.family.value).filter((f) => f !== "otros")).size,
     latest,
   };
 }

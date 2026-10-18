@@ -9,13 +9,12 @@ import { ChatMock, CvMock, MatchMock, VideoMock } from "@/components/landing/Moc
 import TimeAgo from "@/components/landing/TimeAgo";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
-import { landingData } from "@/lib/landing";
+import { atLeast, landingData } from "@/lib/landing";
 import { POPULAR } from "@/lib/popular";
 import { displayCompany } from "@/lib/match/labels";
 
 // Las cifras se regeneran cada hora y cuentan el mismo catálogo visible en Búsquedas.
 export const revalidate = 3600;
-const fmt = (n: number) => n.toLocaleString("es-AR");
 const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
 
 export default async function Home() {
@@ -72,22 +71,23 @@ export default async function Home() {
             </h2>
           </div>
           {/* Conector punteado entre el titular y las cifras, como el de jobright (sólo escritorio). */}
-          <svg viewBox="0 0 108 220" aria-hidden className="hidden w-[108px] lg:block" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="8" cy="160" r="3" fill="currentColor" stroke="none" />
-            <path d="M14 160H48M100 24H64q-16 0-16 16v140q0 16 16 16H100" strokeDasharray="2 4" />
-            <path d="M94 18l6 6-6 6M94 190l6 6-6 6" />
+          <svg viewBox="0 0 108 296" aria-hidden className="hidden w-[108px] lg:block" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="8" cy="190" r="3" fill="currentColor" stroke="none" />
+            <path d="M14 190H48M100 24H64q-16 0-16 16v196q0 16 16 16H100" strokeDasharray="2 4" />
+            <path d="M94 18l6 6-6 6M94 246l6 6-6 6" />
           </svg>
           <ul className="space-y-3 px-4 sm:space-y-2 sm:px-0">
             {[
-              { value: fmt(data.eligible), label: "avisos para buscar desde Argentina", icon: "pin" },
-              { value: fmt(data.companies), label: "empresas que publican en el catálogo", icon: "building" },
-              { value: fmt(data.total), label: "avisos abiertos, incluidos los que piden otro país", icon: "list" },
+              { value: atLeast(data.eligible), label: "avisos abiertos para postularte desde Argentina", icon: "pin" },
+              { value: atLeast(data.eligibleCompanies), label: "empresas buscando gente en Argentina", icon: "building" },
+              { value: atLeast(data.eligibleRemote), label: "trabajos remotos que podés pedir desde acá", icon: "laptop" },
+              { value: String(data.areas), label: "áreas, de tecnología a gastronomía", icon: "grid" },
             ].map((m) => (
               <li key={m.label}>
                 <div className="flex items-center gap-3 sm:gap-8">
                   <strong className="font-display text-2xl font-bold leading-6 tabular-nums sm:text-[44px] sm:font-semibold sm:leading-[48px]">{m.value}</strong>
                   <span aria-hidden className="mt-1 h-0 flex-1 border-t border-dashed border-ink" />
-                  <MetricIcon name={m.icon as "pin" | "building" | "list"} />
+                  <MetricIcon name={m.icon as keyof typeof METRIC_ICONS} />
                 </div>
                 <p className="text-[13px] leading-4 sm:text-base sm:font-light sm:leading-5">{m.label}</p>
               </li>
@@ -200,7 +200,8 @@ function Feature({ title, body, cta, href, visual }: { title: string; body: stri
 const METRIC_ICONS = {
   pin: <path d="M20 35s-10-9-10-17a10 10 0 1 1 20 0c0 8-10 17-10 17zM20 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />,
   building: <path d="M9 34V9h14v25M23 16h8v18M6 34h28M13 14h2M17 14h2M13 19h2M17 19h2M13 24h2M17 24h2M27 21h0M27 26h0" />,
-  list: <path d="M14 11h18M14 20h18M14 29h18M8 11h1M8 20h1M8 29h1" />,
+  laptop: <path d="M9 11h22v15H9zM5 30h30M17 30l1-2h4l1 2" />,
+  grid: <path d="M8 8h10v10H8zM22 8h10v10H22zM8 22h10v10H8zM22 22h10v10H22z" />,
 } as const;
 
 function MetricIcon({ name }: { name: keyof typeof METRIC_ICONS }) {
