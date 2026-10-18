@@ -180,7 +180,7 @@ function arLocation(raw: string, otherHost: boolean): boolean {
 }
 
 export function classifyEligibility(
-  p: Pick<NormalizedPosting, "locations" | "countries" | "regionText" | "workplace" | "remoteFlag" | "descriptionText"> & { title?: string },
+  p: Pick<NormalizedPosting, "locations" | "countries" | "regionText" | "workplace" | "remoteFlag" | "descriptionText" | "remoteGlobal"> & { title?: string },
 ): EligibilityResult {
   const locRaw = [...p.locations, ...p.regionText].filter(Boolean).join(" | ");
   const loc = fold(locRaw);
@@ -239,6 +239,7 @@ export function classifyEligibility(
     const elsewhere = desc.match(DESC_ELSEWHERE);
     // "Santiago" también es Santiago del Estero: si lo que sigue nombra un lugar argentino, no descarta.
     if (elsewhere && !hasArPlace(desc.slice(elsewhere.index, (elsewhere.index ?? 0) + elsewhere[0].length + 20))) return result("no_elegible", [`La descripción pide vivir en otro lugar: “${elsewhere[0]}”`]);
+    if (p.remoteGlobal) return result("elegible", ["La fuente lo publica como 100% remoto, sin restricción de país."]);
     return result("por_confirmar", ["Remoto sin región: no dice si contratan desde Argentina."]);
   }
 
