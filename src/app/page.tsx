@@ -41,7 +41,7 @@ export default async function Home() {
               <span className="mt-2 block text-[clamp(48px,15.4vw,60px)] font-semibold leading-[0.93] sm:mt-1 sm:text-[76px] sm:leading-[1] sm:tracking-tight xl:text-[88px] xl:leading-[80px]">Hacelo con IA</span>
             </h1>
             <p className="mx-auto mt-2 max-w-lg text-[13px] leading-4 sm:mt-5 sm:text-lg sm:leading-6 lg:mx-0">
-              Encontrá avisos para tu perfil y prepará cada postulación con tu experiencia real: desde el CV hasta la entrevista.
+              Conseguí avisos que encajan con tu perfil, autocompletá postulaciones y adaptá tu CV en menos de 1 minuto.
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 lg:justify-start">
               <Link href="/match" className="press inline-flex h-9 items-center justify-center rounded-[28px] bg-ink px-4 text-sm font-semibold text-white sm:h-14 sm:min-w-[280px] sm:px-8 sm:font-display sm:text-2xl sm:font-bold sm:uppercase">
