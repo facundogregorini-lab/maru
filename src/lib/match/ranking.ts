@@ -155,7 +155,7 @@ const HEADS: Record<Head, string[]> = {
   analisis: ["analista", "especialista", "consultor", "associate", "oficial", "officer", "auditor", "planificador", "planner"],
   tecnico: ["desarrollador", "tecnico", "technician", "arquitecto", "architect", "scientist", "cientifico"],
   gestion: ["gerente", "director", "lider", "coordinador", "coordinadora", "supervisor", "supervisora", "responsable", "encargado", "encargada", "jefa"],
-  apoyo: ["asistente", "auxiliar", "administrativo", "representante", "representative", "operador", "operadora", "agente", "agent", "ejecutivo", "ejecutiva", "recepcionista", "secretario", "secretaria"],
+  apoyo: ["asistente", "auxiliar", "auxiliary", "clerk", "administrativo", "representante", "representative", "operador", "operadora", "agente", "agent", "ejecutivo", "ejecutiva", "recepcionista", "secretario", "secretaria"],
   operativo: ["chofer", "choferes", "conductor", "driver", "operario", "operaria", "repartidor", "cadete", "peon", "mozo", "moza", "camarero", "camarera", "cajero", "cajera", "repositor", "repositora", "vigilador", "vigiladora", "guardia", "ayudante", "estibador", "clarkista", "autoelevadorista", "maquinista", "soldador", "tornero", "cocinero", "cocinera", "bachero", "picker", "mensajero", "promotor", "promotora", "mucama", "limpieza"],
 };
 const HEAD_OF = new Map<string, Head>();
@@ -163,7 +163,7 @@ for (const [h, words] of Object.entries(HEADS) as [Head, string[]][]) for (const
 
 const ADJECTIVE_HEADS = new Set(["administrativo", "ejecutivo", "ejecutiva", "tecnico"].map(canon));
 /** Cargos de apoyo que, sin un nivel en el aviso, se estiman junior ("Administrativo contable", "Recepcionista"). */
-const SUPPORT_HEADS = new Set(["administrativo", "asistente", "auxiliar", "recepcionista", "secretario", "secretaria"].map(canon));
+const SUPPORT_HEADS = new Set(["administrativo", "asistente", "auxiliar", "auxiliary", "clerk", "recepcionista", "secretario", "secretaria"].map(canon));
 
 export type Role = { head: Head | null; headWord: string | null; domain: Set<string>; all: Set<string> };
 
@@ -179,6 +179,10 @@ const DISCIPLINE_AREAS = new Set(["datos", "ia"]);
 export function parseRole(s: string): Role {
   // "Recepcionista con perfil en marketing", "Analista with SQL": lo que sigue a "con" califica, no es el puesto.
   s = s.replace(/\s(con|with)\s.*$/i, "");
+  // "…para la Industria Financiera", "…para empresa metalúrgica": dicen dónde, no de qué es el puesto.
+  s = s
+    .replace(/\s(para|for)\s+((una?|la|el|a|an|the)\s+)?(importante\s+|leading\s+)?(industria|sector|rubro|empresa|compa[nñ][ií]a|company|firma|estudio|industry|banco|bank|consultora|cliente)\b.*$/i, "")
+    .replace(/\s(en|in)\s+((la|el|the)\s+)?(industria|sector|rubro|industry)\b.*$/i, "");
   const words = [...roleTokens(s)].filter((t) => !TITLE_NOISE.has(t) && !/^\W+$/.test(t)).map((t) => t.replace(/[(),:;!?]+/g, "")).filter(Boolean);
   // "Administrativo", "ejecutivo" o "técnico" pueden ser el cargo o un adjetivo ("Administrative Analyst"):
   // si hay otra palabra de cargo, manda la otra.
