@@ -127,6 +127,17 @@ function periodFrom(raw: string | undefined | null): Salary["period"] {
   return "desconocido";
 }
 
+/**
+ * Qué avisos leen el detalle en esta sincronización. Las empresas grandes tienen más avisos que el tope
+ * de pedidos: la ventana rota cada día, así en pocos días todos tienen descripción (applyBoard conserva
+ * la que ya se leyó cuando el aviso vuelve sin detalle).
+ */
+export function inDetailWindow(i: number, total: number, max: number, now = Date.now()): boolean {
+  if (total <= max) return true;
+  const start = (Math.floor(now / 86_400_000) * max) % total;
+  return (i - start + total) % total < max;
+}
+
 const SLUG_RE = /^[A-Za-z0-9._%&~ -]{1,120}$/;
 function assertSlug(slug: string | undefined): string {
   if (!slug || !SLUG_RE.test(slug)) throw new Error(`Slug inválido: ${slug}`);
@@ -733,8 +744,7 @@ export async function fetchSmartRecruiters(board: Board, opts?: RetryOptions & {
   }
   const postings: NormalizedPosting[] = [];
   for (const [i, j] of list.entries()) {
-    // Sin el detalle no hay descripción: si hay demasiados, los últimos quedan sólo con el título.
-    const full = i < SR_MAX_DETAILS ? await fetchJson<SrPosting>(`${base}/${encodeURIComponent(j.id)}`, opts).catch(() => j) : j;
+    const full = inDetailWindow(i, list.length, SR_MAX_DETAILS) ? await fetchJson<SrPosting>(`${base}/${encodeURIComponent(j.id)}`, opts).catch(() => j) : j;
     postings.push(normalizeSmartRecruiters({ ...j, ...full }, board));
   }
   return { postings, complete, received: list.length };
@@ -892,7 +902,7 @@ export async function fetchWorkday(board: Board, opts?: RetryOptions & { maxPage
   const postings: NormalizedPosting[] = [];
   for (const [i, it] of items.entries()) {
     if (!it.externalPath?.startsWith("/")) continue;
-    const detail = i < WD_MAX_DETAILS ? await fetchJson<WdDetail>(`${base}${it.externalPath}`, opts).catch(() => null) : null;
+    const detail = inDetailWindow(i, items.length, WD_MAX_DETAILS) ? await fetchJson<WdDetail>(`${base}${it.externalPath}`, opts).catch(() => null) : null;
     postings.push(normalizeWorkday(it, detail, board));
   }
   return { postings, complete, received: items.length };
@@ -973,7 +983,7 @@ export async function fetchEightfold(board: Board, opts?: RetryOptions & { maxPa
   }
   const postings: NormalizedPosting[] = [];
   for (const [i, j] of list.entries()) {
-    const full = i < EF_MAX_DETAILS && !j.job_description ? await fetchJson<EfPosition>(`${base}/${encodeURIComponent(String(j.id))}?domain=${encodeURIComponent(domain)}`, opts).catch(() => j) : j;
+    const full = inDetailWindow(i, list.length, EF_MAX_DETAILS) && !j.job_description ? await fetchJson<EfPosition>(`${base}/${encodeURIComponent(String(j.id))}?domain=${encodeURIComponent(domain)}`, opts).catch(() => j) : j;
     postings.push(normalizeEightfold({ ...j, ...full }, board));
   }
   return { postings, complete, received: list.length };
@@ -1017,8 +1027,15 @@ export function normalizeSuccessFactors(row: { title: string; path: string; loca
   const desc = rest.split(/<div[^>]*class="[^"]*(?:applylink|apply-button|social|share|jobfooter|job-footer)|<\/article>|<footer\b/i)[0];
   const text = htmlToText(desc, DESC_MAX);
   const posted = detailHtml?.match(/itemprop="datePosted"[^>]*content="([^"]+)"/i)?.[1];
-  const location = row.location;
-  const country = countryIso(location.split(",").pop()) ?? (/\b(AR|Argentina)\b/.test(location) ? "AR" : null);
+  // "CABA, B, AR, 1001 +2 more…": sin código postal, sin la letra de provincia y sin el "+N more".
+  const location = row.location
+    .replace(/\s*\+\s*\d+\s+more.*$/i, "")
+    .split(",")
+    .map((x) => x.trim())
+    .filter((x) => x && !/^\d{3,}$/.test(x) && !/^[A-Z]$/.test(x))
+    .map((x) => (x === "AR" ? "Argentina" : x))
+    .join(", ");
+  const country = countryIso(location.split(",").pop()) ?? (/\b(AR|Argentina)\b/.test(row.location) ? "AR" : null);
   const workplace = wp(workplaceFromText(`${row.title} ${location}`), "fuente");
   const id = row.path.match(/\/(\d{6,})\/?$/)?.[1] ?? row.path;
   return {
@@ -1068,7 +1085,7 @@ export async function fetchSuccessFactors(board: Board, opts?: RetryOptions & { 
   }
   const postings: NormalizedPosting[] = [];
   for (const [i, row] of rows.entries()) {
-    const detail = i < SF_MAX_DETAILS ? await fetchText(`https://${host}${row.path}`, opts).catch(() => null) : null;
+    const detail = inDetailWindow(i, rows.length, SF_MAX_DETAILS) ? await fetchText(`https://${host}${row.path}`, opts).catch(() => null) : null;
     postings.push(normalizeSuccessFactors(row, detail, board));
   }
   return { postings, complete, received: rows.length };
@@ -1146,8 +1163,7 @@ export async function fetchBreezy(board: Board, opts?: RetryOptions): Promise<Bo
   const postings: NormalizedPosting[] = [];
   for (const [i, j] of list.entries()) {
     const url = j.url || `https://${slug}.breezy.hr/p/${j.friendly_id ?? j.id}`;
-    // Sin el detalle no hay descripción: si hay demasiados, los últimos quedan sólo con el título.
-    const description = i < BREEZY_MAX_DETAILS && url.startsWith(`https://${slug}.breezy.hr/`) ? await fetchText(url, opts).then(breezyDescription).catch(() => "") : "";
+    const description = inDetailWindow(i, list.length, BREEZY_MAX_DETAILS) && url.startsWith(`https://${slug}.breezy.hr/`) ? await fetchText(url, opts).then(breezyDescription).catch(() => "") : "";
     postings.push(normalizeBreezy(j, board, description));
   }
   return { postings, complete: true, received: list.length };
@@ -1220,7 +1236,7 @@ export async function fetchBamboo(board: Board, opts?: RetryOptions): Promise<Bo
   for (const [i, o] of data.result.entries()) {
     const id = String(o.id);
     if (!/^\d+$/.test(id)) continue;
-    const full = i < BAMBOO_MAX_DETAILS
+    const full = inDetailWindow(i, data.result.length, BAMBOO_MAX_DETAILS)
       ? await fetchJson<{ result?: { jobOpening?: BambooOpening } }>(`${base}/${id}/detail`, opts).then((d) => d.result?.jobOpening).catch(() => undefined)
       : undefined;
     postings.push(normalizeBamboo({ ...o, ...full, location: full?.location ?? o.location }, board, id));
