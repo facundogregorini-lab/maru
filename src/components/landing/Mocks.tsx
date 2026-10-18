@@ -60,34 +60,36 @@ function Ring({ value, size = 64, stroke = 6, label, big = false }: { value: num
 export function MatchMock({ bare = false }: { bare?: boolean }) {
   return (
     <MockPanel bare={bare} caption="Ejemplo ilustrativo de una recomendación">
-      <div aria-hidden className="absolute left-10 right-16 top-6 h-24 -rotate-3 rounded-2xl bg-white/60" />
-      <div className="animate-float relative mx-auto max-w-md rounded-2xl bg-white p-5 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
-        <div className="absolute -right-4 -top-6 grid h-20 w-20 place-items-center rounded-full bg-brand text-center text-white shadow-lg">
-          <p className="font-display text-2xl font-bold leading-none">
-            92<span className="text-sm">%</span>
+      {/* Tarjetas de atrás inclinadas, como en jobright: una menta y una verde. */}
+      <div aria-hidden className="absolute inset-x-[12%] bottom-[6%] top-[10%] -rotate-[6deg] rounded-[24px] bg-panel-back" />
+      <div aria-hidden className="absolute inset-x-[16%] bottom-[4%] top-[30%] rotate-[3deg] rounded-[24px] bg-forest" />
+      <div className="animate-float relative mx-auto max-w-[420px] rounded-[24px] bg-white p-6 shadow-[var(--shadow-card)]">
+        <div className="absolute -right-5 -top-8 grid h-24 w-24 place-items-center rounded-full bg-forest text-center text-white sm:h-28 sm:w-28">
+          <p className="font-display text-[36px] font-bold leading-none sm:text-[44px]">
+            92<span className="text-base">%</span>
           </p>
-          <p className="-mt-3 text-[10px] font-semibold">compatible</p>
+          <p className="-mt-2 text-sm">General</p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-ink font-display text-lg font-bold text-white">T</span>
-          <div>
-            <span className="rounded bg-brand-soft px-1.5 py-0.5 text-[10px] font-semibold text-brand-dark">Nueva · hace 1 h</span>
-            <p className="mt-1 font-display text-lg font-bold leading-tight">Product Manager Sr.</p>
-            <p className="text-xs text-muted">Tucán · Buenos Aires · Híbrido</p>
+        <div className="flex items-center gap-3 pr-16">
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-ink font-display text-xl font-bold text-white">T</span>
+          <div className="min-w-0">
+            <span className="rounded-[6px] bg-neon/10 px-1.5 py-0.5 text-xs">hace 1 h</span>
+            <p className="mt-1 text-lg font-semibold leading-6">Product Manager Sr.</p>
+            <p className="text-sm text-muted">Tucán · Buenos Aires</p>
           </div>
         </div>
-        <div className="mt-5 flex justify-around">
+        <hr className="my-4 border-surface" />
+        <div className="flex justify-around">
           <Ring value={95} label="Experiencia" />
           <Ring value={90} label="Skills" />
           <Ring value={88} label="Seniority" />
         </div>
-        <p className="mt-5 font-display text-sm font-bold">Por qué encajás</p>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {["✓ Seniority", "✓ Producto B2B", "✓ Inglés C1", "✓ Contrata desde Argentina"].map((t) => (
-            <span key={t} className="rounded-md bg-brand px-2 py-1 text-[11px] font-semibold text-white">
-              {t}
-            </span>
-          ))}
+        <hr className="my-4 border-surface" />
+        <p className="text-base font-medium">Por qué encajás</p>
+        <div className="mt-3 flex flex-col items-start gap-2 text-sm">
+          <span className="rounded-[6px] bg-forest px-3 py-1.5 font-medium text-white">✓ Seniority</span>
+          <span className="rounded-[6px] bg-forest px-3 py-1.5 font-medium text-white">✓ Contrata desde Argentina</span>
+          <span className="rounded-[6px] border border-forest px-3 py-1.5 font-medium text-forest">✕ Inglés avanzado</span>
         </div>
       </div>
     </MockPanel>

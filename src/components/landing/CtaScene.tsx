@@ -49,7 +49,7 @@ export default function CtaScene() {
         <div className="absolute inset-x-0 bottom-[16%] flex justify-center sm:bottom-[30%]">
           <Link
             href="/match"
-            className="press inline-flex h-12 items-center whitespace-nowrap rounded-full border-2 border-ink bg-neon px-7 font-display text-xl font-bold uppercase text-ink hover:shadow-[0_8px_24px_-8px_rgba(0,240,160,0.9)] sm:h-16 sm:px-10 sm:text-[32px]"
+            className="press inline-flex h-12 min-w-[220px] items-center justify-center whitespace-nowrap rounded-[36px] border border-ink bg-neon px-7 font-display text-xl font-bold uppercase leading-10 text-ink sm:h-16 sm:min-w-[280px] sm:px-12 sm:text-[32px]"
           >
             Ver mis matches
           </Link>

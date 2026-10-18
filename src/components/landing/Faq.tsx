@@ -42,19 +42,19 @@ const FAQ = [
  */
 export default function Faq({ children }: { children?: React.ReactNode }) {
   return (
-    <section id="faq" aria-labelledby="faq-t" className="full-bleed relative -mb-28 mt-28 scroll-mt-24 rounded-tl-[64px] bg-sand px-5 pt-20 sm:mt-36 sm:rounded-tl-[160px]">
+    <section id="faq" aria-labelledby="faq-t" className="full-bleed relative -mb-28 mt-28 scroll-mt-24 rounded-tl-[64px] bg-hero px-5 pt-20 sm:mt-36 sm:rounded-tl-[120px]">
       <Reveal className="mx-auto max-w-[800px]">
-        <h2 id="faq-t" data-reveal className="text-center font-display text-4xl font-bold uppercase leading-[1.05] sm:text-5xl">
+        <h2 id="faq-t" data-reveal className="text-center font-display text-4xl font-bold uppercase leading-none sm:text-5xl">
           Preguntas
           <br />
           frecuentes
         </h2>
         <div className="mt-10 space-y-2">
           {FAQ.map((f, i) => (
-            <details key={f.q} data-reveal style={{ "--i": i } as React.CSSProperties} className="group rounded-xl bg-brand-soft">
-              <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium [&::-webkit-details-marker]:hidden">
+            <details key={f.q} data-reveal style={{ "--i": i } as React.CSSProperties} className="group rounded-xl bg-black/[0.04]">
+              <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium leading-6 [&::-webkit-details-marker]:hidden">
                 {f.q}
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden className="shrink-0 transition-transform duration-300 group-open:rotate-45">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden className="shrink-0 transition-transform duration-300 group-open:rotate-45">
                   <circle cx="12" cy="12" r="10.5" />
                   <path d="M12 7v10M7 12h10" />
                 </svg>
