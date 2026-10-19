@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { apifyJobInput, apifyNextCap, normalizeApifyJobs } from "@/lib/match/apify";
+import { analyzeStandalone } from "@/lib/match/inventory";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
 const description = "Buscamos analista para preparar reportes de ventas con SQL y tableros. ".repeat(8);
@@ -45,6 +46,21 @@ describe("piloto de avisos Apify", () => {
     const row = { id: "4480846130", title: "Consultor SAP", companyName: "Empresa", url: "https://ar.linkedin.com/jobs/view/consultor-sap-at-empresa-4480846130", location: "Buenos Aires, Argentina", description: `Qué buscamos?Experiencia en SAP.${description}`, descriptionHtml: `<p>Qué buscamos?</p><ul><li>Experiencia en SAP</li></ul><p>${description}</p>` };
     const [p] = normalizeApifyJobs("linkedin", [row], now).postings;
     expect(p.descriptionText).toMatch(/Qué buscamos\?\n+• Experiencia en SAP/);
+  });
+  it("acepta puestos de LinkedIn para Latinoamérica sin fijar Argentina: decide la elegibilidad", () => {
+    const base = { title: "Senior Data Engineer", companyName: "Empresa", location: "Latin America", descriptionHtml: `<p>${description}</p>` };
+    const rows = [
+      { ...base, id: "4480000001", url: "https://www.linkedin.com/jobs/view/4480000001/" },
+      { ...base, id: "4480000002", url: "https://www.linkedin.com/jobs/view/4480000002/", descriptionHtml: `<p>${description} Candidates must reside in the United States.</p>` },
+      { ...base, id: "4480000003", url: "https://www.linkedin.com/jobs/view/4480000003/", location: "Mexico City, Mexico" },
+    ];
+    const { postings, rejected } = normalizeApifyJobs("linkedin", rows, now);
+    expect(rejected).toEqual({ pais_no_confirmado: 1 });
+    expect(postings.map((p) => p.countries)).toEqual([[], []]);
+    const [ok, usOnly] = postings.map((p) => analyzeStandalone(p, now).eligibility.status);
+    expect(ok).toBe("elegible");
+    expect(usOnly).not.toBe("elegible");
+    expect(apifyJobInput("linkedin", "data engineer", 100, 500, "valig", "month", "Latin America")).toMatchObject({ location: "Latin America" });
   });
   it("arma la entrada de cada Actor de LinkedIn y calcula el tope con su precio", () => {
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "valig")).toMatchObject({ keywords: "data analyst", location: "Argentina", limit: 200, titleExclude: expect.arrayContaining(["chofer"]) });
