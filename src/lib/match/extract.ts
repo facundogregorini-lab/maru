@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 14;
+export const EXTRACTION_VERSION = 15;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -255,7 +255,7 @@ export function familyFromTitle(title: string): RoleFamily {
 /* ---------- Seniority ---------- */
 
 const SENIORITY_RULES: [Seniority, RegExp][] = [
-  ["ejecutivo", /\b(chief|ceo|cto|cfo|coo|cmo|vp|vice ?president|vicepresidente|country manager|general manager|gerente general)\b/],
+  ["ejecutivo", /\b(chief|ceo|cto|cfo|coo|cmo|[se]?vp|avp|vice ?president|vicepresidente|country manager|general manager|gerente general)\b/],
   ["director", /\b(director|directora|head of|head,|jefe de area)\b/],
   ["manager", /\b(manager|gerente|jefe|jefa|supervisor|supervisora|encargad[oa])\b/],
   ["lead", /\b(lead|lider|staff|principal|architect|arquitect)\b/],

@@ -41,7 +41,7 @@ scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──
 | Variable | Para qué |
 | --- | --- |
 | `ADMIN_EMAILS` | Emails separados por comas, espacios o saltos de línea con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere sesión del login existente, con Google. |
-| `MATCH_WEIGHTS` | Opcional. Pesos del ranking `habilidades,intención,seniority,extras`. Default `40,35,15,10`. |
+| `MATCH_WEIGHTS` | Opcional. Pesos del ranking `rol,seniority,requisitos,preferencias`. Default `40,25,20,15`. |
 | `MATCH_DISABLED_SOURCES` | Opcional. Fuentes a apagar sin tocar código, ej. `remotive,jobicy`. |
 | `MATCH_SYNC_BUDGET_MS` | Opcional (script). Tiempo máximo de una ejecución antes de guardar checkpoint. Default 20 min. |
 
@@ -116,15 +116,19 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 
 ## Ranking
 
-1. **Incompatibilidades primero**: no elegibles, roles a evitar, descartes, empresas bloqueadas y condiciones marcadas como indispensables (si el aviso no informa el dato, no se excluye: se avisa que falta confirmarlo).
+1. **Filtros eliminatorios primero** (`src/lib/match/fit.ts`): no elegibles, roles a evitar, descartes, empresas bloqueadas y condiciones indispensables. Además, desde el 19/10/2026, aunque no estén marcados como indispensables:
+   - **Nivel**: si la persona eligió niveles, se excluyen los avisos de nivel inferior y los que están más de dos niveles por encima. El nivel sale del título y de la descripción (personas a cargo, a quién reporta, P&L o presupuesto). Los cargos individuales (analista, especialista, editor, diseñador…) nunca cuentan como liderazgo. Un "Manager" sin equipo a cargo, o un aviso sin nivel cuando se busca liderazgo, va a "Por confirmar".
+   - **Salario**: si el aviso publica un máximo menor al pedido en la misma moneda (por mes; año ÷ 12, hora × 160), se excluye.
+   - **Función**: video, diseño, contenido, comunidad y SDR son otro trabajo aunque compartan área; se excluyen si no aparecen en los cargos, roles deseados u objetivo. No aplica en un cambio de carrera.
 2. **Puntaje** ("Compatibilidad estimada", nunca probabilidad de contratación):
-   - 40 % habilidades y experiencia (cuando hay requisitos y deseables, pesan 85/15 dentro de habilidades; años pedidos vs. años en el CV; en cambio de carrera pesan más las habilidades transferibles que el cargo anterior),
-   - 35 % intención profesional (roles deseados y objetivo, con equivalencias español/inglés e IA/AI; objetivos cortos se comparan por cobertura de sus términos, ponderando título, requisitos, deseables y contexto),
-   - 15 % seniority,
-   - 10 % preferencias adicionales (modalidad, contrato, salario publicado comparable, idiomas).
-   - Las dimensiones ausentes se omiten y se reponderan las disponibles. No se asigna 50% por falta de información ni se penaliza dos veces la intención. Se puede alcanzar 100; no se normaliza contra el mejor aviso del catálogo. Ubicación e idioma conservan sus ajustes específicos de E0.
+   - 40 % encaje de rol: el título contra los cargos del CV, los roles deseados y el objetivo (el objetivo cuenta por el título, no por palabras sueltas de la descripción). El área no suma puntos.
+   - 25 % seniority: nivel del aviso contra el elegido o el que muestra el CV (cargo más alto, equipo a cargo); penaliza por debajo y por encima.
+   - 20 % requisitos críticos: obligatorios 85/15 con deseables; "IA", "ecommerce", "marketing digital" y "comunicación" pesan un cuarto; años pedidos vs. años en el CV.
+   - 15 % preferencias: modalidad, contrato, salario y idiomas.
+   - Tope: si el encaje de rol es menor a 0,5, el total no pasa de 40 %.
+   - Nivel o salario sin informar cuentan 50 %: un aviso sin el dato nunca supera a uno que cumple. Las demás dimensiones ausentes se omiten y se reponderan. Cada aviso devuelve `breakdown` con los puntos y la razón de cada componente.
 3. **Confianza** ("Información amplia / parcial / escasa"): baja cuando faltan habilidades, seniority, preferencias relevantes o descripción completa. La información ausente del aviso no se convierte en un incumplimiento. Un requisito publicado que no aparece en el CV sigue siendo una brecha. Detalle, fórmulas y comparación controlada en [QC-MATCH-2026-10-17.md](QC-MATCH-2026-10-17.md).
-4. **Explicaciones**: hasta 3 motivos con datos concretos del CV o del aviso; brechas que dicen "no aparece en tu CV" (nunca "no tenés"); pendientes como salario no informado, elegibilidad por confirmar u horario.
+4. **Explicaciones**: hasta 3 motivos con datos concretos del CV o del aviso. El primero es el encaje de rol y nivel (con el equipo a cargo, si el CV lo dice); modalidad, ciudad o país van como mucho una vez y nunca primero; "es del área que te interesa" ya no es un motivo; brechas que dicen "no aparece en tu CV" (nunca "no tenés"); pendientes como salario no informado, elegibilidad por confirmar u horario.
 5. **Orden**: descartar con motivo saca la oportunidad y ajusta el orden (mismo rol → baja; "no quiero esta empresa" → excluye la empresa). Guardados, frescura, cambio de carrera y convocatorias abiertas también pueden cambiar el orden; no cambian el porcentaje de afinidad. Se conserva variedad de empresas y ocultamiento de avisos antiguos. El umbral mínimo no oculta búsquedas agregadas por la persona.
 6. No se usan edad, foto, género ni otros atributos personales. El perfil del match sólo tiene cargos, habilidades, idiomas, años de experiencia y ubicación.
 
