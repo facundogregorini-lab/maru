@@ -139,7 +139,7 @@ export default function PrefsForm({
           </div>
         </Field>
 
-        <Field label="¿Tenés una expectativa salarial?" hint="Opcional. No mostramos los avisos que publican un máximo menor en la misma moneda.">
+        <Field label="¿Tenés una expectativa salarial?" hint="Opcional. No mostramos los avisos que publican un máximo menor. Si un aviso no informa salario, lo estimamos y te avisamos cuando parece menor.">
           <div className="grid gap-3 sm:grid-cols-4">
             <input
               type="number"

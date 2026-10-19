@@ -2,7 +2,8 @@ import { RankingRequestSchema, invalidFields, type ExternalJob } from "@/lib/mat
 import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
-import { rankOpportunities, weightsFromEnv } from "@/lib/match/ranking";
+import { rankOpportunities, weightsFromEnv, type RankOutput } from "@/lib/match/ranking";
+import { RERANK_ELIGIBLE, RERANK_PENDING, rerank, rerankEnabled } from "@/lib/match/rerank";
 import type { NormalizedPosting, StoredPosting } from "@/lib/match/types";
 
 export const runtime = "nodejs";
@@ -10,6 +11,8 @@ export const runtime = "nodejs";
 /**
  * Ranking personalizado. Es sin estado: el perfil, las preferencias y las búsquedas propias
  * llegan en el pedido, se usan para ordenar y no se guardan ni se registran en logs.
+ * Las mejores de la etapa por reglas se re-evalúan con IA (rerank.ts); esa evaluación queda
+ * en memoria del proceso hasta una hora para no repetir llamadas al recargar.
  */
 export async function POST(req: Request) {
   const raw = await req.text();
@@ -38,17 +41,24 @@ export async function POST(req: Request) {
     const allPostings = new Map<string, StoredPosting>(postings);
     for (const p of own) allPostings.set(p.key, p);
 
-    const result = rankOpportunities({
-      opportunities: [...inv.opportunities, ...ownOpps],
+    const opportunities = [...inv.opportunities, ...ownOpps];
+    const ai = rerankEnabled();
+    const ranked = rankOpportunities({
+      opportunities,
       postings: allPostings,
       profile,
       prefs,
       interactions: inter,
       filters,
       weights: weightsFromEnv(),
-      limit,
+      // Con IA, la primera etapa entrega las 200 mejores para re-evaluar; después se recorta a la página.
+      limit: ai ? Math.max(limit ?? 40, RERANK_ELIGIBLE, RERANK_PENDING) : limit,
       now,
     });
+    // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
+    const result = ai
+      ? pageOf(await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }), limit ?? 40)
+      : ranked;
 
     return Response.json(
       {
@@ -65,6 +75,13 @@ export async function POST(req: Request) {
     console.error("[match/ranking]", err instanceof Error ? err.message : "error");
     return Response.json({ error: "No pudimos armar tu ranking. Probá de nuevo.", code: "UNKNOWN" }, { status: 500 });
   }
+}
+
+/** La página pedida ("Ver más" suma de a 40), después de re-evaluar. */
+function pageOf<T extends RankOutput>(r: T, limit: number): T {
+  const eligible = r.eligible.slice(0, limit);
+  const pending = r.pending.slice(0, limit);
+  return { ...r, eligible, pending, counts: { ...r.counts, shown: eligible.length + pending.length } };
 }
 
 function externalToPosting(e: ExternalJob): NormalizedPosting {

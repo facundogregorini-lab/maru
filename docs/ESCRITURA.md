@@ -28,6 +28,7 @@ en el navegador ni elegir una opción.
 | Entrevista | Apertura, preguntas, repreguntas, cierre, informe y respuestas sugeridas. Los puntajes se conservan. |
 | Chat | Respuesta de Maru. IDs de avisos y vínculos se conservan. |
 | Extensión | Política común y revisión de textos largos redactados y notas. Opciones, valores copiados y otros campos quedan fuera. |
+| Match (re-evaluación con IA) | Sólo la razón principal de cada aviso. Puntos, niveles, salario y razones por componente quedan fuera. Usa el modelo de la etapa (Haiku por defecto). |
 | Extracción de perfil | Se copia la fuente sin reescritura editorial (`verbatim: true`). |
 
 Las reglas de cada herramienta siguen mandando sobre idioma, registro, longitud,

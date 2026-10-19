@@ -34,5 +34,6 @@ export const config = {
     "/api/autofill",
     "/api/export/:path*",
     "/api/tracking/:path*",
+    "/api/match/ranking",
   ],
 };
