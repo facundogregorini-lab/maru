@@ -56,6 +56,21 @@ describe("API de ranking: privacidad", () => {
     expect(b.headers.get("cache-control")).toBe("no-store");
   });
 
+  it("con ia: false devuelve sólo el orden por reglas y avisa si hay afinado con IA disponible", async () => {
+    const prev = process.env.ANTHROPIC_API_KEY;
+    try {
+      process.env.ANTHROPIC_API_KEY = "test-key";
+      const quick = await (await rankingPOST(req({ profile: dataProfile, prefs: basePrefs, interactions: noInteractions, ia: false }))).json();
+      expect(quick.ia).toEqual({ disponible: true, aplicada: false });
+      delete process.env.ANTHROPIC_API_KEY;
+      const off = await (await rankingPOST(req({ profile: dataProfile, prefs: basePrefs, interactions: noInteractions }))).json();
+      expect(off.ia).toEqual({ disponible: false, aplicada: false });
+    } finally {
+      if (prev === undefined) delete process.env.ANTHROPIC_API_KEY;
+      else process.env.ANTHROPIC_API_KEY = prev;
+    }
+  });
+
   it("valida la entrada y rechaza pedidos inválidos o enormes", async () => {
     expect((await rankingPOST(req({ profile: {}, prefs: basePrefs }))).status).toBe(400);
     const big = new Request("http://localhost/api/match/ranking", { method: "POST", body: "x".repeat(250_000) });

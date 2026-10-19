@@ -118,7 +118,7 @@ function SidePanel({ label, total }: { label: string; total: number }) {
           Encontré {total.toLocaleString("es-AR")} búsquedas abiertas{label ? ` para “${label}”` : ""}. Todas son reales y llevan al aviso original. ¿Querés saber cuáles
           encajan con vos? Subí tu CV y te las ordeno por compatibilidad, con los motivos y lo que te falta mostrar.
         </p>
-        <Link href="/match" className="press mt-4 inline-flex rounded-full bg-neon px-4 py-2 text-sm font-bold uppercase">
+        <Link href="/match#empezar" className="press mt-4 inline-flex rounded-full bg-neon px-4 py-2 text-sm font-bold uppercase">
           Ver mi match
         </Link>
       </div>

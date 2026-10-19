@@ -147,9 +147,9 @@ export function ProductHero({ id, stats, ctaHref = "#empezar" }: { id: ProductId
 }
 
 /** Encabezado del bloque de la herramienta: lo que en jobright sería "empezá" después del registro. */
-export function ToolHeading({ title = "Empezá ahora", hint }: { title?: string; hint?: string }) {
+export function ToolHeading({ title = "Empezá ahora", hint, compact = false }: { title?: string; hint?: string; compact?: boolean }) {
   return (
-    <div id="empezar" className="scroll-mt-24 pt-14 text-center sm:pt-20">
+    <div id="empezar" className={`scroll-mt-24 text-center ${compact ? "pt-2 sm:pt-4" : "pt-14 sm:pt-20"}`}>
       <H2>{title}</H2>
       {hint && <p className="mx-auto mt-3 max-w-xl text-ink/70">{hint}</p>}
     </div>

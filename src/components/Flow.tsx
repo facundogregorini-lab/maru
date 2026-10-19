@@ -14,6 +14,7 @@ import CvEditor from "./cv/CvEditor";
 import CvSourceField, { useCvInput } from "./CvSourceField";
 import Questions from "./Questions";
 import { ProductHero, ProductMore, ToolHeading } from "./product/ProductLanding";
+import { entryHeading, useInAppEntry } from "./product/useInAppEntry";
 import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "./ui";
 import VoiceButton from "./VoiceButton";
 
@@ -56,6 +57,8 @@ type Session = {
 };
 
 export default function Flow() {
+  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
+  const entry = useInAppEntry("postulacion");
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
 
@@ -227,8 +230,8 @@ export default function Flow() {
 
       {stage === "inicio" && (
         <>
-          <ProductHero id="postulacion" />
-          <ToolHeading />
+          {!entry.inApp && <ProductHero id="postulacion" />}
+          <ToolHeading {...entryHeading(entry, "Tu postulación para")} />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="La vacante que te gustó" hint="Pegá el link de la publicación (LinkedIn, Greenhouse, Lever, Workable, la web de la empresa…).">
               <input
@@ -286,7 +289,7 @@ export default function Flow() {
               {!canAnalyze && <p className="text-xs text-muted">{missing.join(" ")}</p>}
             </div>
           </div>
-          <ProductMore id="postulacion" />
+          {!entry.inApp && <ProductMore id="postulacion" />}
         </>
       )}
 

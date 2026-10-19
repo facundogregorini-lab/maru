@@ -326,7 +326,7 @@ function Empty() {
         <Link href="/busquedas" className="press rounded-full bg-ink px-6 py-3 text-sm font-medium text-white hover:bg-black">
           Ver búsquedas
         </Link>
-        <Link href="/match" className="press rounded-full bg-neon px-6 py-3 text-sm font-bold uppercase">
+        <Link href="/match#empezar" className="press rounded-full bg-neon px-6 py-3 text-sm font-bold uppercase">
           Mi match
         </Link>
       </div>

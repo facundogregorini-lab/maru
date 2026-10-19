@@ -53,7 +53,7 @@ export default async function PreciosPage() {
       <div className="mt-12 overflow-hidden rounded-[24px] border border-line">
         <div className="flex flex-wrap items-baseline justify-between gap-2 bg-[#f2f4f5] px-5 py-4 sm:px-6">
           <h2 className="text-xl font-bold sm:text-2xl">Todo lo que incluyen los planes</h2>
-          <Link href="/match" className="text-sm font-semibold underline underline-offset-4">Empezar gratis</Link>
+          <Link href="/match#empezar" className="text-sm font-semibold underline underline-offset-4">Empezar gratis</Link>
         </div>
         <table className="w-full text-left text-sm sm:text-base">
           <thead className="text-xs uppercase tracking-wider text-ink/60">

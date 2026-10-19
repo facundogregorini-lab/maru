@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { MaruSprite } from "./maru/PixelMaru";
+import MaruWorking from "./maru/MaruWorking";
 import { notifyPlanLimit } from "@/lib/tracking/paywall";
 import { capture, herramientaDeResultado } from "@/lib/tracking/posthog";
 
@@ -38,18 +37,9 @@ export function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes
 }
 
 export function Loading({ messages }: { messages: string[] }) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setI((x) => Math.min(x + 1, messages.length - 1)), 6000);
-    return () => clearInterval(id);
-  }, [messages.length]);
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center text-center" aria-live="polite">
-      <WalkingMaru />
-      <p key={i} className="animate-rise mt-6 font-display text-2xl">
-        {messages[i]}
-      </p>
-      <p className="mt-2 text-sm text-muted">Puede tardar un minuto. Vale la pena.</p>
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <MaruWorking title="Maru está trabajando" steps={messages} every={6000} note="Puede tardar un minuto. Vale la pena." />
     </div>
   );
 }
@@ -63,20 +53,6 @@ export function ErrorBanner({ message }: { message: string }) {
   );
 }
 
-/** Maru caminando en el lugar: la espera tiene compañía. */
-function WalkingMaru() {
-  const [frame, setFrame] = useState<"walkA" | "walkB">("walkA");
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setFrame((f) => (f === "walkA" ? "walkB" : "walkA")), 180);
-    return () => clearInterval(id);
-  }, []);
-  return (
-    <div className="grid h-28 w-28 place-items-center rounded-full bg-sand">
-      <MaruSprite size={56} frame={frame} />
-    </div>
-  );
-}
 
 export const inputClass =
   "w-full rounded-xl border border-transparent bg-white px-4 py-3 text-base outline-none ring-1 ring-black/[0.06] transition placeholder:text-ink/40 hover:ring-black/20 focus:ring-2 focus:ring-ink";

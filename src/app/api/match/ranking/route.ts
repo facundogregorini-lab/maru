@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const fields = invalidFields(parsed.error);
     return Response.json({ error: `Revisá tus datos: hay campos inválidos (${fields.join(", ")}).`, code: "BAD_REQUEST", fields }, { status: 400 });
   }
-  const { profile, prefs, interactions, filters, external = [], limit } = parsed.data;
+  const { profile, prefs, interactions, filters, external = [], limit, ia } = parsed.data;
 
   try {
     const { inv, postings, alias } = await loadInventory();
@@ -42,7 +42,9 @@ export async function POST(req: Request) {
     for (const p of own) allPostings.set(p.key, p);
 
     const opportunities = [...inv.opportunities, ...ownOpps];
-    const ai = rerankEnabled();
+    // La web pide primero sin IA (resultados en segundos) y después el afinado, que puede tardar más.
+    const available = rerankEnabled();
+    const ai = available && ia !== false;
     const ranked = rankOpportunities({
       opportunities,
       postings: allPostings,
@@ -63,6 +65,7 @@ export async function POST(req: Request) {
     return Response.json(
       {
         ...result,
+        ia: { disponible: available, aplicada: ai },
         inventory: {
           generatedAt: inv.generatedAt,
           open: inv.opportunities.filter((o) => o.status === "abierta").length,

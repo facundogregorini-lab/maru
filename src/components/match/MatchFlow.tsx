@@ -13,6 +13,7 @@ import type { Profile } from "@/lib/schemas";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import type { Stat } from "@/lib/products";
 import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
+import { useInAppEntry } from "../product/useInAppEntry";
 import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
 import PrefsForm, { EMPTY_PREFS } from "./PrefsForm";
 import ProfileConfirm from "./ProfileConfirm";
@@ -24,6 +25,8 @@ const LOADING = ["Leyendo tu CV…", "Ordenando tu experiencia…", "Detectando 
 
 /** "Encontrá tu trabajo perfecto": CV → confirmar → preferencias → ranking. */
 export default function MatchFlow({ stats }: { stats?: Stat[] }) {
+  // Desde otra pantalla de Maru (#empezar) se va directo al primer paso, sin la presentación.
+  const entry = useInAppEntry();
   const [hydrated, setHydrated] = useState(false);
   const [state, setState] = useState<MatchState>(EMPTY_STATE);
   const [stage, setStage] = useState<Stage>("cv");
@@ -104,8 +107,8 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
 
       {stage === "cv" && (
         <>
-          <ProductHero id="match" stats={stats} />
-          <ToolHeading hint="Reutilizamos el CV que ya cargaste en Maru o subís uno nuevo. Queda guardado en este navegador y, si ingresás, en tu cuenta." />
+          {!entry.inApp && <ProductHero id="match" stats={stats} />}
+          <ToolHeading compact={entry.inApp} />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="Tu CV" hint="Reutilizamos el que ya cargaste en Maru o subís uno nuevo. Queda guardado en este navegador y, si ingresás, en tu cuenta.">
               <CvSourceField input={cv} />
@@ -121,7 +124,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
               )}
             </div>
           </div>
-          <ProductMore id="match" />
+          {!entry.inApp && <ProductMore id="match" />}
         </>
       )}
 

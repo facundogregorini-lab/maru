@@ -46,7 +46,7 @@ export default function AppShell({
           <span className="hidden sm:block">
             <UserMenu />
           </span>
-          <Link href="/match" className="press inline-flex h-8 items-center rounded-full bg-ink px-4 text-[13px] font-extrabold uppercase text-white hover:bg-black sm:h-9 sm:px-5 sm:text-[15px]">
+          <Link href="/match#empezar" className="press inline-flex h-8 items-center rounded-full bg-ink px-4 text-[13px] font-extrabold uppercase text-white hover:bg-black sm:h-9 sm:px-5 sm:text-[15px]">
             Mi match
           </Link>
         </div>

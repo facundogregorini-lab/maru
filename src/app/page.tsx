@@ -43,7 +43,7 @@ export default async function Home() {
               Conseguí avisos que encajan con tu perfil, autocompletá postulaciones y adaptá tu CV en menos de 1 minuto.
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 lg:justify-start">
-              <Link href="/match" className="press inline-flex h-9 items-center justify-center rounded-[28px] bg-ink px-4 text-sm font-semibold text-white sm:h-14 sm:min-w-[280px] sm:px-8 sm:font-display sm:text-2xl sm:font-bold sm:uppercase">
+              <Link href="/match#empezar" className="press inline-flex h-9 items-center justify-center rounded-[28px] bg-ink px-4 text-sm font-semibold text-white sm:h-14 sm:min-w-[280px] sm:px-8 sm:font-display sm:text-2xl sm:font-bold sm:uppercase">
                 Probá gratis
               </Link>
               <Link href="/busquedas" className="press inline-flex h-9 items-center justify-center rounded-[28px] whitespace-nowrap bg-white px-2 text-sm font-semibold shadow-[inset_0_0_0_1px_#000] sm:h-14 sm:px-6 sm:text-base">
@@ -154,10 +154,10 @@ export default async function Home() {
         <p className="mt-3 max-w-2xl text-ink/70">Usá cada herramienta por separado o seguí el recorrido completo con una búsqueda.</p>
         {/* Filas como las de jobright: texto a la izquierda y la maqueta en el panel menta a la derecha. */}
         <div className="mt-10 space-y-16 sm:mt-14 sm:space-y-24">
-          <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match" visual={<MatchMock />} />
-          <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion" visual={<CvMock />} />
-          <Feature title="Practicá tu entrevista" body="Respondé por voz o por escrito. Maru hace repreguntas y al final te muestra qué funcionó y qué podés mejorar." cta="Practicar una entrevista" href="/entrevista" visual={<ChatMock />} />
-          <Feature title="Grabá tu presentación" body="Armá un guion con tu experiencia y leelo en el teleprompter mientras grabás. El feedback de cámara está incluido en los planes pagos." cta="Preparar mi video" href="/video" visual={<VideoMock />} />
+          <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match#empezar" visual={<MatchMock />} />
+          <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion#empezar" visual={<CvMock />} />
+          <Feature title="Practicá tu entrevista" body="Respondé por voz o por escrito. Maru hace repreguntas y al final te muestra qué funcionó y qué podés mejorar." cta="Practicar una entrevista" href="/entrevista#empezar" visual={<ChatMock />} />
+          <Feature title="Grabá tu presentación" body="Armá un guion con tu experiencia y leelo en el teleprompter mientras grabás. El feedback de cámara está incluido en los planes pagos." cta="Preparar mi video" href="/video#empezar" visual={<VideoMock />} />
         </div>
         <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[

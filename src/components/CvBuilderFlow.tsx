@@ -14,6 +14,7 @@ import Questions from "./Questions";
 import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post } from "./ui";
 import VoiceButton from "./VoiceButton";
 import { ProductHero, ProductMore, ToolHeading } from "./product/ProductLanding";
+import { useInAppEntry } from "./product/useInAppEntry";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
 const SESSION_KEY = "maru:cv:v1";
@@ -48,6 +49,8 @@ type Session = {
 };
 
 export default function CvBuilderFlow() {
+  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
+  const entry = useInAppEntry();
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
   const cv = useCvInput();
@@ -153,8 +156,8 @@ export default function CvBuilderFlow() {
 
       {stage === "inicio" && (
         <>
-          <ProductHero id="cv" />
-          <ToolHeading hint="Tu CV queda guardado sólo en este navegador." />
+          {!entry.inApp && <ProductHero id="cv" />}
+          <ToolHeading hint="Tu CV queda guardado sólo en este navegador." compact={entry.inApp} />
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="Tu experiencia" hint="La usamos tal cual: cargos, fechas y estudios se copian de tu perfil, sin inventar nada.">
@@ -237,7 +240,7 @@ export default function CvBuilderFlow() {
               {!cv.ready && <p className="text-xs text-muted">{cv.issue}</p>}
             </div>
           </div>
-          <ProductMore id="cv" />
+          {!entry.inApp && <ProductMore id="cv" />}
         </>
       )}
 
@@ -289,12 +292,12 @@ export default function CvBuilderFlow() {
           )}
 
           <section className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Link href="/postulacion" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+            <Link href="/postulacion#empezar" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">¿Encontraste una búsqueda?</p>
               <p className="mt-2 font-display text-xl">Adaptá tu CV a esa vacante →</p>
               <p className="mt-1 text-sm text-muted">Con el coach de postulación, más respuestas para el formulario.</p>
             </Link>
-            <Link href="/carta" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+            <Link href="/carta#empezar" className="group rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">Sumale una carta</p>
               <p className="mt-2 font-display text-xl">Armá tu carta de presentación →</p>
               <p className="mt-1 text-sm text-muted">Usamos el perfil que ya cargaste.</p>

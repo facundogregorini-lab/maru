@@ -54,6 +54,12 @@ export function handoffToPostulacion(h: Omit<Handoff, "at" | "to">): void {
   handoffJob("postulacion", h);
 }
 
+/** Mira, sin tomarla, la búsqueda que dejaron para esta herramienta. */
+export function peekHandoff(to: HandoffTarget, maxAgeMs = 60 * 60_000): Handoff | null {
+  const h = load<Handoff>(HANDOFF_KEY);
+  return h && (h.to ?? "postulacion") === to && Date.now() - h.at < maxAgeMs ? h : null;
+}
+
 /** Toma la búsqueda que dejaron para esta herramienta (y sólo para esta). */
 export function takeHandoff(to: HandoffTarget = "postulacion", maxAgeMs = 60 * 60_000): Handoff | null {
   const h = load<Handoff>(HANDOFF_KEY);
