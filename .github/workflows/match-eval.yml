@@ -1,7 +1,7 @@
 # Evaluación del orden de /match con re-evaluación por IA: top 20 de los perfiles ficticios de
 # tests/match-eval-cases.ts sobre el inventario del repo. Se lanza a mano desde Actions.
-# Usa el secret ANTHROPIC_API_KEY (Haiku, centavos por corrida). No commitea nada: el resultado
-# queda en el resumen del job y como artefacto.
+# Usa el secret ANTHROPIC_API_KEY (Haiku, ~US$0,25 por corrida). No commitea nada: el resultado
+# queda en el log, en el resumen del job y como artefacto.
 name: match-eval
 
 on:
@@ -28,7 +28,7 @@ jobs:
       - name: Evaluar
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npx --yes tsx@4 scripts/match-eval.ts match-eval.md --ia && cat match-eval.md >> "$GITHUB_STEP_SUMMARY"
+        run: npx --yes tsx@4 scripts/match-eval.ts match-eval.md --ia && cat match-eval.md >> "$GITHUB_STEP_SUMMARY" && cat match-eval.md
       - uses: actions/upload-artifact@v4
         with:
           name: match-eval
