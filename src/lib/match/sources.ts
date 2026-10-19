@@ -363,7 +363,7 @@ export const SOURCES: SourceInfo[] = [
       docs: ["https://docs.apify.com/platform/actors/running/usage-and-resources"],
       access: "Actors de Apify con APIFY_TOKEN (sólo Actions), con tope de gasto por corrida y acumulado.",
       terms: "Avisos públicos sin datos de reclutadores; enlazamos al aviso en el portal de origen.",
-      limits: "Presupuesto aprobado por el dueño: US$5 en total para importaciones (ledger en data/match/providers-ledger.json).",
+      limits: "Presupuesto aprobado por el dueño: US$5 (16/10) más una compra única de hasta US$29 (19/10). Ledger en data/match/providers-ledger.json.",
       reviewedAt: "2026-10-16",
       status: "habilitada",
       enabled: false,

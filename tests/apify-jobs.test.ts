@@ -44,6 +44,7 @@ describe("piloto de avisos Apify", () => {
   it("arma la entrada de cada Actor de LinkedIn y calcula el tope con su precio", () => {
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "valig")).toMatchObject({ keywords: "data analyst", location: "Argentina", limit: 200, titleExclude: expect.arrayContaining(["chofer"]) });
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "cheap")).toMatchObject({ keyword: ["data analyst"], maxItems: 200, saveOnlyUniqueItems: true, jobTitleExclude: expect.arrayContaining(["operario"]) });
+    expect(apifyJobInput("linkedin", "seo", 100, 500, "valig", "month")).toMatchObject({ datePosted: "r2592000" });
     expect(apifyNextCap("linkedin", 500, 0, 5, "valig")).toBeCloseTo(0.22);
     expect(apifyNextCap("linkedin", 500, 0, 5)).toBeCloseTo(1.02);
   });

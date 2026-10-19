@@ -80,6 +80,12 @@ Decisión del dueño: de los proveedores con cuota entran sólo áreas profesion
 
 `--actor=curious` (default, US$2 cada 1.000 filas), `--actor=valig` (US$0,40) o `--actor=cheap` (US$0,70, mínimo 150 filas por búsqueda). Precios del plan gratis de Apify, de su tienda (19/10/2026). Ejemplo: `provider=apify mode=run args=--actor=valig --rows=100 --keywords-per-source=2 --budget-usd=5 --budget-source=account`. Con `--rows` se piden hasta 500 filas por búsqueda.
 
+## Compra única de avisos profesionales (aprobada el 19/10/2026)
+
+El dueño aprobó una compra única de hasta **US$29** en Apify (plan Starter, un mes) para sumar unos 10.000 avisos de las áreas del filtro. El código acepta `--budget-usd` hasta 35: con `--budget-source=account` el tope se compara contra el gasto real del mes, así que se pasa gasto actual + lo que se quiere gastar. `--date-posted=month` amplía la búsqueda a avisos de hasta 30 días (default: una semana).
+
+Prueba del 19/10 con `--actor=valig` (2 búsquedas × 100 filas, crédito gratis de octubre): 200 filas, todas con descripción completa y en Argentina. Pasaron el filtro 185; los otros 15 quedaron `fuera_de_area`. Hubo 66 avisos nuevos y 103 que ya estaban: «data analyst» y «analista financiero» ya se habían buscado antes. Gasto real: US$0,082, unos US$0,41 cada 1.000 filas.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
