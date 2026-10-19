@@ -4918,6 +4918,46 @@
       "rows": 3,
       "consumed": 1,
       "quota": {}
+    },
+    {
+      "at": "2026-10-19T03:42:38.980Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "runId": "obRV2HghBGzajN8hp",
+        "datasetId": "Iwbo40X2eV3dX1O0B"
+      },
+      "rows": 100,
+      "consumed": 0.097,
+      "quota": {
+        "usageTotalUsd": 0.037000000000000005,
+        "spentUsd": 4.654,
+        "budgetUsd": 5
+      }
+    },
+    {
+      "at": "2026-10-19T03:42:38.980Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista financiero",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "runId": "qDGlmIGd37qJdzzFw",
+        "datasetId": "kfEvyNrA0pppftvsN"
+      },
+      "rows": 100,
+      "consumed": 0.097,
+      "quota": {
+        "usageTotalUsd": 0.037000000000000005,
+        "spentUsd": 4.751,
+        "budgetUsd": 5
+      }
     }
   ]
 }
