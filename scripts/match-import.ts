@@ -73,7 +73,7 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious"): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week"): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -91,7 +91,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor);
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window);
       const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
       try {
         const actor = actorName.replace("/", "~");
@@ -185,10 +185,14 @@ async function main() {
   if (provider === "fantastic") result = await runFantastic(key("FANTASTIC_JOBS"), fantasticPlan, log, nowIso);
   else if (provider === "serpapi") result = await runSerp(key("SERP_API"), serpPlan, log, nowIso);
   else {
-    if (!(apifyBudget > 0 && apifyBudget <= 5)) throw new Error("Indicá --budget-usd entre 0 y 5 (presupuesto aprobado por el dueño).");
+    // Tope aprobado por el dueño: US$5 (16/10) más la compra única de hasta US$29 (19/10). Con --budget-source=account
+    // se compara contra el gasto real del mes en Apify, así que el número a pasar es gasto actual + lo que se quiere gastar.
+    if (!(apifyBudget > 0 && apifyBudget <= 35)) throw new Error("Indicá --budget-usd entre 0 y 35 (presupuesto aprobado por el dueño).");
+    const window = arg("date-posted") ?? "week";
+    if (window !== "week" && window !== "month") throw new Error("--date-posted debe ser week o month.");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor);
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window);
   }
 
   // Sólo áreas profesionales (import-filter.ts): lo demás se cuenta como rechazo y no entra.
