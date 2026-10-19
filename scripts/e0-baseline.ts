@@ -11,9 +11,10 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { opportunitiesOf } from "../src/lib/match/inventory";
+import { readInventoryFileSync } from "../src/lib/match/inventory-file";
 import { loadInventory } from "../src/lib/match/load";
 import { rankOpportunities, weightsFromEnv, type RankedItem } from "../src/lib/match/ranking";
-import { SENIORITY_ORDER, type Inventory, type MatchPrefs, type MatchProfile, type RoleFamily, type Seniority } from "../src/lib/match/types";
+import { SENIORITY_ORDER, type MatchPrefs, type MatchProfile, type RoleFamily, type Seniority } from "../src/lib/match/types";
 
 type Perfil = { id: string; publico: string; area: RoleFamily; reserva: boolean; profile: MatchProfile; prefs: MatchPrefs };
 
@@ -71,7 +72,7 @@ async function main() {
   const t = now.getTime();
 
   // ---------- catálogo: registros, oportunidades canónicas y grupos visuales ----------
-  const rawInv = JSON.parse(readFileSync(process.env.MATCH_INVENTORY_PATH ?? path.join("data", "match", "inventory.json"), "utf8")) as Inventory;
+  const rawInv = readInventoryFileSync(process.env.MATCH_INVENTORY_PATH ?? path.join("data", "match", "inventory.json"));
   const canonical = opportunitiesOf(rawInv);
   const openGroups = inv.opportunities.filter((o) => o.status === "abierta");
   const elig = openGroups.filter((o) => o.eligibility.status === "elegible");

@@ -14,6 +14,7 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
 import { filterImported } from "../src/lib/match/import-filter";
+import { readInventoryFile, writeInventoryFile } from "../src/lib/match/inventory-file";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
 import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportBatch, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
@@ -153,7 +154,7 @@ async function persist(result: ImportResult, ledgerBase: LedgerEntry[], nowIso: 
     for (const [k, v] of Object.entries(rejected)) b.rejected[k] = (b.rejected[k] ?? 0) + v;
     p.saved.add(b);
   }
-  const inv = await readJson<Inventory>(INV, emptyInventory("real"));
+  const inv = (await readInventoryFile(INV)) ?? emptyInventory("real");
   if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
   const byBoard = new Map<string, { sourceId: string; postings: NormalizedPosting[]; received: number }>();
   for (const b of pending) {
@@ -174,7 +175,7 @@ async function persist(result: ImportResult, ledgerBase: LedgerEntry[], nowIso: 
     inv.opportunities = buildOpportunities(inv.postings);
     inv.generatedAt = nowIso;
     if (final) recordRun(inv, { startedAt: nowIso, finishedAt: new Date().toISOString(), mode: "incremental", boards: [...p.boards.values()], ...p.totals, errors: result.stopped ? 1 : 0 });
-    await writeJson(INV, forStorage(inv));
+    await writeInventoryFile(INV, forStorage(inv));
   }
   await writeJson(LEDGER, { entries: [...ledgerBase, ...result.ledger].slice(-1000) }, true);
   return inv;

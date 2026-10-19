@@ -6,7 +6,7 @@
 // inventario real (data/match/inventory.json) y Maru, de src/components/maru/sprite.ts.
 
 import { spawn } from "node:child_process";
-import { mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
@@ -26,6 +26,9 @@ const { groupOpportunities, opportunitiesOf } = await import(`data:text/javascri
 /** Números y búsquedas reales del inventario. */
 function inventoryData() {
   const inv = JSON.parse(readFileSync(path.join(ROOT, "data", "match", "inventory.json"), "utf8"));
+  // Los avisos importados van en un archivo aparte (src/lib/match/inventory-file.ts).
+  const importedFile = path.join(ROOT, "data", "match", "inventory-imported.json");
+  if (existsSync(importedFile)) inv.postings.push(...JSON.parse(readFileSync(importedFile, "utf8")).postings);
   const open = groupOpportunities(opportunitiesOf(inv)).opportunities.filter((o) => o.status === "abierta");
   const eligible = open.filter((o) => o.eligibility?.status === "elegible");
   // Búsquedas publicadas por día en los últimos 7 días completos (el día en curso queda afuera).

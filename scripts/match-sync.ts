@@ -13,8 +13,8 @@ import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { boardsFrom, type Directory } from "../src/lib/match/directory";
 import { emptyInventory, forStorage, opportunitiesOf } from "../src/lib/match/inventory";
+import { readInventoryFile, writeInventoryFile } from "../src/lib/match/inventory-file";
 import { runSync, type SyncState } from "../src/lib/match/sync";
-import type { Inventory } from "../src/lib/match/types";
 
 const DATA = path.join(process.cwd(), "data", "match");
 const INV = path.join(DATA, "inventory.json");
@@ -50,18 +50,18 @@ async function main() {
     boards,
     activeBoardIds: all.map((b) => b.boardId),
     loadInventory: async () => {
-      const inv = await readJson<Inventory>(INV, emptyInventory("real"));
+      const inv = (await readInventoryFile(INV)) ?? emptyInventory("real");
       if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real: no se mezcla con fixtures.");
       return { ...emptyInventory("real"), ...inv };
     },
-    saveInventory: (inv) => writeJson(INV, forStorage(inv)),
+    saveInventory: (inv) => writeInventoryFile(INV, forStorage(inv)),
     loadState: () => readJson<SyncState>(STATE, { lock: null, checkpoint: null }),
     saveState: (s) => writeJson(STATE, s, true),
     budgetMs: Number(process.env.MATCH_SYNC_BUDGET_MS) || 20 * 60_000,
     log: (m) => console.log(m),
   });
 
-  const inv = await readJson<Inventory>(INV, emptyInventory("real"));
+  const inv = (await readInventoryFile(INV)) ?? emptyInventory("real");
   const open = opportunitiesOf(inv).filter((o) => o.status === "abierta");
   const by = (s: string) => open.filter((o) => o.eligibility.status === s).length;
   console.log(

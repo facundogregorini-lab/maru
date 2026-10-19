@@ -25,7 +25,7 @@ Localmente: `npx --yes tsx@4 scripts/match-import.ts --provider=... --mode=...` 
 
 ## Qué se guarda
 
-- `data/match/inventory.json`: avisos aceptados, en bolsas `fantastic:ats:ar`, `fantastic:linkedin:ar`, `serpapi:google_jobs:ar` y `apify:{fuente}:ar`. Atribución y enlace a la fuente original en cada uno.
+- `data/match/inventory-imported.json` (desde el 19/10/2026; antes iban en `inventory.json`): avisos aceptados, en bolsas `fantastic:ats:ar`, `fantastic:linkedin:ar`, `serpapi:google_jobs:ar` y `apify:{fuente}:ar`. Atribución y enlace a la fuente original en cada uno.
 - `data/match/providers-ledger.json`: cada llamada con hora, parámetros (sin claves), filas, consumo y saldo informado.
 - `data/match/providers-discoveries.json`: empleadores vistos en el feed ATS de Fantastic y su ATS. Los que usan Greenhouse, Lever o Ashby (`supported`) se pueden sumar gratis al directorio con `npm run match:add-company` y quedan en la sync diaria aunque se termine el trial.
 
@@ -89,6 +89,14 @@ Prueba del 19/10 con `--actor=valig` (2 búsquedas × 100 filas, crédito gratis
 ## Guardado por tanda (desde el 19/10/2026)
 
 Hubo una corrida de Google Jobs (17/10) cuyas búsquedas se perdieron por un conflicto al guardar (#51). Para la compra paga, Apify escribe `inventory.json` y el ledger en disco después de **cada** búsqueda, no sólo al final. El paso "Importar" tiene un tope de 135 minutos, menor que el del job (150). Así, si una búsqueda cuelga o el job se corta, el paso "Guardar inventario y consumo" (`always()`) commitea lo ya pagado. Probado con una Apify simulada que cuelga en la segunda búsqueda: la primera quedó guardada, sin duplicar avisos ni filas del ledger. Además, el workflow comparte el grupo de concurrencia con la sync diaria, así que nunca escriben el inventario a la vez. Los datasets de cada corrida quedan en Apify (el `runId` está en el ledger) por si hubiera que recuperarlos.
+
+## Inventario en dos archivos (desde el 19/10/2026)
+
+Después de la tanda 1, `inventory.json` llegó a 52,6 MB. GitHub avisa desde 50 MB y rechaza archivos de más de 100 MB. Con 9.000 avisos más se habría pasado el límite y el push se habría rechazado, sin guardar lo comprado. Ahora el inventario se guarda en dos archivos (`src/lib/match/inventory-file.ts`):
+- `inventory.json`: bolsas de empleadores y metadatos, 37 MB al migrar.
+- `inventory-imported.json`: avisos de Apify, Google Jobs y Fantastic, 18 MB al migrar.
+
+Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Si `inventory-imported.json` se acerca a 90 MB, hay que partirlo por fuente.
 
 ## Próximas corridas recomendadas
 

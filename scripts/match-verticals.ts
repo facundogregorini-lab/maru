@@ -7,13 +7,12 @@
  * área nuestra cae en dos verticales (finanzas corporativas vs. banca y seguros; logística vs. choferes).
  * Cuenta publicaciones abiertas y oportunidades elegibles desde Argentina que se muestran (menos de 120 días).
  */
-import { readFileSync } from "node:fs";
 import { opportunitiesOf } from "../src/lib/match/inventory";
+import { readInventoryFileSync } from "../src/lib/match/inventory-file";
 import { HIDE_AFTER_DAYS, ageDays } from "../src/lib/match/ranking";
 import { fold } from "../src/lib/match/text";
-import type { Inventory } from "../src/lib/match/types";
 
-const inv = JSON.parse(readFileSync("data/match/inventory.json", "utf8")) as Inventory;
+const inv = readInventoryFileSync("data/match/inventory.json");
 const V = ["1. Tecnología y Desarrollo de Software (IT)","2. Salud y Asistencia Médica","3. Finanzas, Banca y Seguros","4. Ventas y Desarrollo de Negocio","5. Marketing, Comunicación y Publicidad","6. Recursos Humanos y Gestión del Talento","7. Ingeniería, Operaciones y Manufactura","8. Cadena de Suministro, Logística y Transporte","9. Administración, Legal y Finanzas Corporativas","10. Atención al Cliente y Soporte","11. Educación, Capacitación y E-Learning","12. Hotelería, Gastronomía y Turismo","13. Construcción, Arquitectura e Inmobiliario","14. Arte, Medios, Entretenimiento y Creatividad","15. Servicios Generales, Mantenimiento y Oficios","Fuera de la lista: tareas de IA e idiomas por proyecto","Sin clasificar"];
 const has = (t: string, re: RegExp) => re.test(` ${t} `);
 const ART = /\b(graphic|grafic|motion|video editor|editor de video|editor|copywriter|writer|redactor|multimedia|podcast|periodis|journalist|audiovisual|fotograf|photograph|creative director|art direction|art director|illustrat|ilustrador|animator|animador|ugc|content creator|creador de contenido)/;
