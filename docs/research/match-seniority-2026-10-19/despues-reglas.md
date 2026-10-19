@@ -1,6 +1,6 @@
 # Evaluación de /match
 
-Inventario del 2026-10-19T03:42:38.980Z. Perfiles ficticios de `tests/match-eval-cases.ts`.
+Inventario del 2026-10-19T03:42:38.980Z. Perfiles ficticios de `tests/match-eval-cases.ts`. Sólo la etapa por reglas.
 
 ## Líder de growth (caso reportado)
 
