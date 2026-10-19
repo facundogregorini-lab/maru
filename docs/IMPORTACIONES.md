@@ -98,6 +98,15 @@ Después de la tanda 1, `inventory.json` llegó a 52,6 MB. GitHub avisa desde 50
 
 Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Si `inventory-imported.json` se acerca a 90 MB, hay que partirlo por fuente.
 
+## Calidad de los avisos de LinkedIn vía valig (19/10/2026)
+
+- **Descripciones:** valig trae `description` en texto plano, sin saltos de línea («Job DescriptionWe have…»). Con ese texto no se separan requisitos de deseables, y los avisos de la tanda 1 quedaron con 0% de requisitos detectados. Ahora se usa `descriptionHtml`, que conserva párrafos y listas. Con los datos ya pagados de la tanda 1, los requisitos detectados pasan al 76% (las otras fuentes rondan el 70%), el seniority al 90% y la modalidad al 68%.
+- **Releer sin pagar:** `mode=refetch args=--since=AAAA-MM-DD` vuelve a leer los datasets de las corridas de LinkedIn del ledger y los importa con la normalización actual. Leer un dataset no cobra filas. Cada corrida se aplica con su propia hora y en orden, así no cambia la última vez que se vio cada aviso.
+- **Logos:** valig no trae logo. Se suman `KNOWN_DOMAINS` (`logos.ts`) con el sitio oficial de empleadores frecuentes (EY, JPMorganChase, Chevron, Despegar, dLocal, KPMG, Google…) para mostrar su ícono. Los grupos elegibles con logo pasan del 45% al 62%.
+- **Tareas de IA:** «Software Engineer (AI Training)» o «Ingeniero de Software (Entrenamiento de IA)» (Alignerr) pasan a la familia de IA por proyecto, que el filtro de importación deja afuera (`EXTRACTION_VERSION` 16).
+- **Duplicados:** 328 de las 1.335 oportunidades con LinkedIn ya se agrupan con el mismo puesto de otra fuente (Fantastic, Greenhouse, SuccessFactors, Workday, Lever, Ashby): no aparecen dos veces.
+- **Vigencia:** la revisión diaria de importados reconoce el «No longer accepting applications» de LinkedIn.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.

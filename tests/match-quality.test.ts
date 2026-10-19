@@ -19,7 +19,7 @@ describe("calidad de los avisos locales", () => {
     ["Ayudante de cocina", "gastronomia"], ["Mozo/a de salón", "gastronomia"], ["Mucama Hotel 5 Estrellas", "gastronomia"],
     ["Cajero/a", "comercio"], ["Repositor Externo Full Time", "comercio"], ["Vendedor de salón", "comercio"],
     ["Vigilador General CABA", "seguridad"], ["Chofer de reparto", "logistica"], ["Enfermero/a - Chofer", "salud"],
-    ["AI Trainers Network - Spanish", "entrenamiento_ia"], ["Driver / Data Collector in Cordoba, Spain", "entrenamiento_ia"],
+    ["AI Trainers Network - Spanish", "entrenamiento_ia"], ["Software Engineer (AI Training)", "entrenamiento_ia"], ["Ingeniero de Software (Entrenamiento de IA)", "entrenamiento_ia"], ["Driver / Data Collector in Cordoba, Spain", "entrenamiento_ia"],
     ["Analista de Liquidación de Sueldos", "rrhh"], ["Jefe de Personas & Cultura", "rrhh"],
     ["Representante de Envíos | Búsqueda para personas con discapacidad", "otros"],
     ["Analista de Financiamiento Inmobiliario", "finanzas"], ["Asesor Inmobiliario", "ventas"],

@@ -52,3 +52,14 @@ describe("logo por el sitio de la empresa", () => {
     expect(out[1].companyLogo).toBe("https://img/bunge.png");
   });
 });
+
+describe("logo por dominio conocido", () => {
+  it("usa el sitio oficial de empleadores frecuentes que llegan sin logo, también con aclaraciones entre paréntesis", () => {
+    const out = withCompanyLogos([p("a", "JPMorganChase"), p("b", "PwC (jóvenes profesionales)"), p("c", "KPMG Argentina"), p("d", "Empresa Desconocida SA"), p("e", "EY", "https://img/ey.png")]);
+    expect(out.find((x) => x.key === "a")!.companyLogo).toBe(domainLogo("jpmorganchase.com"));
+    expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("pwc.com"));
+    expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("kpmg.com"));
+    expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
+    expect(out.find((x) => x.key === "e")!.companyLogo).toBe("https://img/ey.png");
+  });
+});

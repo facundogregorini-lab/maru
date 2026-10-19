@@ -41,6 +41,11 @@ describe("piloto de avisos Apify", () => {
     expect(b).toMatchObject({ externalId: "4476654521", title: "Analista de datos", company: "Empresa", seniorityHint: "Entry level", employmentHint: "Full-time" });
     expect(JSON.stringify(b)).not.toContain("Persona");
   });
+  it("prefiere la descripción en HTML para conservar párrafos y listas (valig trae el texto plano pegado)", () => {
+    const row = { id: "4480846130", title: "Consultor SAP", companyName: "Empresa", url: "https://ar.linkedin.com/jobs/view/consultor-sap-at-empresa-4480846130", location: "Buenos Aires, Argentina", description: `Qué buscamos?Experiencia en SAP.${description}`, descriptionHtml: `<p>Qué buscamos?</p><ul><li>Experiencia en SAP</li></ul><p>${description}</p>` };
+    const [p] = normalizeApifyJobs("linkedin", [row], now).postings;
+    expect(p.descriptionText).toMatch(/Qué buscamos\?\n+• Experiencia en SAP/);
+  });
   it("arma la entrada de cada Actor de LinkedIn y calcula el tope con su precio", () => {
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "valig")).toMatchObject({ keywords: "data analyst", location: "Argentina", limit: 200, titleExclude: expect.arrayContaining(["chofer"]) });
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "cheap")).toMatchObject({ keyword: ["data analyst"], maxItems: 200, saveOnlyUniqueItems: true, jobTitleExclude: expect.arrayContaining(["operario"]) });

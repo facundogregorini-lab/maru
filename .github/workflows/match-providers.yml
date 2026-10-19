@@ -16,7 +16,7 @@ on:
         required: true
         default: "serpapi"
       mode:
-        description: "plan (sin red) | status (saldo) | run (importa y commitea)"
+        description: "plan (sin red) | status (saldo) | run (importa y commitea) | refetch (Apify: relee corridas pagadas, --since=AAAA-MM-DD)"
         required: true
         default: "plan"
       args:
@@ -67,7 +67,7 @@ jobs:
           ARGS: ${{ github.event_name == 'schedule' && '--queries=mensual --max-searches=36 --reserve=20' || github.event.inputs.args }}
         run: |
           case "$PROVIDER" in fantastic|serpapi|apify) ;; *) echo "provider inválido"; exit 1;; esac
-          case "$MODE" in plan|status|run) ;; *) echo "mode inválido"; exit 1;; esac
+          case "$MODE" in plan|status|run|refetch) ;; *) echo "mode inválido"; exit 1;; esac
           # Sólo opciones --nombre=valor con caracteres seguros.
           read -r -a EXTRA <<< "$ARGS"
           for a in "${EXTRA[@]}"; do
@@ -75,7 +75,7 @@ jobs:
           done
           npx --yes tsx@4 scripts/match-import.ts --provider="$PROVIDER" --mode="$MODE" "${EXTRA[@]}"
       - name: Guardar inventario y consumo
-        if: ${{ (github.event.inputs.mode || 'run') == 'run' && always() }}
+        if: ${{ contains(fromJSON('["run","refetch"]'), github.event.inputs.mode || 'run') && always() }}
         env:
           PROVIDER: ${{ github.event.inputs.provider || 'serpapi' }}
         run: |

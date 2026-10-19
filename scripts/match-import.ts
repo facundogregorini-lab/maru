@@ -135,6 +135,33 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
   return out;
 }
 
+/**
+ * Vuelve a leer los datasets de corridas de LinkedIn ya pagadas (el ledger guarda su datasetId) y las importa
+ * otra vez con la normalización actual. Leer un dataset no cobra filas: sirve para corregir avisos ya comprados,
+ * como las descripciones sin saltos de línea de la compra del 19/10. Cada corrida se aplica con su propia hora,
+ * en orden, para no mover la última vez que se vio cada aviso.
+ */
+async function refetchApify(token: string, entries: LedgerEntry[], since: string, onRun: (partial: ImportResult, at: string) => Promise<void>): Promise<ImportResult> {
+  if (!/^\d{4}-\d{2}-\d{2}/.test(since)) throw new Error("Indicá --since=AAAA-MM-DD (corridas desde esa fecha).");
+  const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
+  const runs = entries
+    .filter((e) => e.provider === "apify" && e.call === "run" && e.at >= since && e.params.datasetId && Object.values(LINKEDIN_ACTORS).some((a) => a.actor === e.params.actor))
+    .sort((a, b) => a.at.localeCompare(b.at));
+  log(`Corridas de LinkedIn a releer desde ${since}: ${runs.length}.`);
+  for (const e of runs) {
+    const alt = e.params.actor !== LINKEDIN_ACTORS.curious.actor;
+    const wanted: readonly string[] = alt ? LINKEDIN_ALT_FIELDS : APIFY_JOBS.linkedin.fields;
+    const fields = [...new Set(wanted.map((f) => f.split(".")[0]))].join(",");
+    const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${e.params.datasetId}/items?clean=true&format=json&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
+    const list = Array.isArray(items) ? items : [];
+    const normalized = normalizeApifyJobs("linkedin", list, e.at);
+    out.batches.push({ sourceId: "apify-linkedin", boardId: "apify:linkedin:ar", postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: e.params.keyword ?? "" });
+    log(`↻ "${e.params.keyword}" (${e.at.slice(0, 16)}): ${list.length} filas, ${normalized.accepted} aceptadas.`);
+    await onRun(out, e.at);
+  }
+  return out;
+}
+
 /* ---------- guardado: después de cada corrida paga y al final ---------- */
 
 type Progress = { saved: Set<ImportBatch>; totals: { created: number; updated: number; unchanged: number; closed: number }; boards: Map<string, BoardSyncResult> };
@@ -187,7 +214,8 @@ async function main() {
   const provider = arg("provider");
   const mode = arg("mode") ?? "plan";
   if (!["fantastic", "serpapi", "apify"].includes(provider ?? "")) throw new Error("Elegí --provider=fantastic, serpapi o apify.");
-  if (!["plan", "status", "run"].includes(mode)) throw new Error("--mode debe ser plan, status o run.");
+  if (!["plan", "status", "run", "refetch"].includes(mode)) throw new Error("--mode debe ser plan, status, run o refetch.");
+  if (mode === "refetch" && provider !== "apify") throw new Error("--mode=refetch sólo existe para Apify.");
   const nowIso = new Date().toISOString();
   const ledger = await readJson<{ entries: LedgerEntry[] }>(LEDGER, { entries: [] });
 
@@ -232,7 +260,8 @@ async function main() {
 
   const progress = newProgress();
   let result: ImportResult;
-  if (provider === "fantastic") result = await runFantastic(key("FANTASTIC_JOBS"), fantasticPlan, log, nowIso);
+  if (mode === "refetch") result = await refetchApify(key("APIFY_TOKEN"), ledger.entries, arg("since") ?? "", (partial, at) => persist(partial, ledger.entries, at, progress).then(() => undefined));
+  else if (provider === "fantastic") result = await runFantastic(key("FANTASTIC_JOBS"), fantasticPlan, log, nowIso);
   else if (provider === "serpapi") result = await runSerp(key("SERP_API"), serpPlan, log, nowIso);
   else {
     // Tope aprobado por el dueño: US$5 (16/10) más la compra única de hasta US$29 (19/10). Con --budget-source=account

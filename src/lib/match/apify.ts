@@ -19,7 +19,7 @@ export const LINKEDIN_ACTORS = {
 } as const;
 export type LinkedinActor = keyof typeof LINKEDIN_ACTORS;
 /** Campos posibles de los Actors alternativos: sólo datos del aviso, nunca de quien lo publicó. */
-export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
+export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionHtml", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
 /** Títulos que los Actors pueden descartar antes de cobrar la fila (el filtro fino es import-filter.ts). */
 export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cadete", "cajero", "repositor", "mozo", "vigilador", "mostrador", "promotor", "telemarketer", "call center"];
 export const linkedinJobId = (link: string) => /\/jobs\/view\/(?:[^/?#]*-)?(\d{6,})/.exec(link)?.[1] ?? "";
@@ -56,7 +56,9 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
     const rawId = str(r.id) || (typeof r.id === "number" ? String(r.id) : "") || str(r.jobId) || (typeof r.jobId === "number" ? String(r.jobId) : "");
     const title = str(r.title) || str(r.jobTitle);
     const company = source === "linkedin" ? str(r.companyName) || str(r.company) || str(obj(r.company).name) : source === "indeed" ? str(r["companyDetails.name"]) || str(obj(r.companyDetails).name) : str(r.company);
-    const description = htmlToText(str(r.descriptionText) || str(r.jobDescription) || str(r.description), 100000);
+    // El HTML conserva los párrafos y las listas: sin ellos no se separan requisitos de deseables
+    // (valig trae "description" en texto plano pegado, sin saltos de línea).
+    const description = htmlToText(str(r.descriptionHtml) || str(r.descriptionText) || str(r.jobDescription) || str(r.description), 100000);
     const sourceUrl = source === "linkedin" ? url(r.link) || url(r.jobUrl) || url(r.url) : source === "indeed" ? url(r.viewJobLink, "https://ar.indeed.com") : url(r.url);
     const applyUrl = source === "indeed" ? url(r.originalApplyUrl) || sourceUrl : url(r.applyUrl) || sourceUrl;
     // En LinkedIn el id sale del enlace: así coinciden los avisos que traen Actors distintos.
