@@ -139,7 +139,7 @@ export default function PrefsForm({
           </div>
         </Field>
 
-        <Field label="¿Tenés una expectativa salarial?" hint="Opcional. Sólo la comparamos con salarios publicados en la misma moneda.">
+        <Field label="¿Tenés una expectativa salarial?" hint="Opcional. No mostramos los avisos que publican un máximo menor en la misma moneda.">
           <div className="grid gap-3 sm:grid-cols-4">
             <input
               type="number"
@@ -167,7 +167,7 @@ export default function PrefsForm({
           </div>
         </Field>
 
-        <Field label="¿Qué condiciones son indispensables?" hint="Si un aviso no cumple una indispensable, no lo mostramos. Si no informa el dato, te avisamos que falta confirmarlo.">
+        <Field label="¿Qué condiciones son indispensables?" hint="Si un aviso no cumple una indispensable, no lo mostramos. Si no informa el dato, te avisamos que falta confirmarlo. El seniority y el salario que elegiste ya filtran aunque no los marques.">
           <MultiChips value={prefs.indispensables} onChange={(v) => set("indispensables", v)} options={HARD_OPTIONS} />
         </Field>
       </div>

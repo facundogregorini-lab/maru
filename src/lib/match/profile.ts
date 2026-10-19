@@ -53,9 +53,32 @@ export function splitSkill(raw: string): string[] {
     .map((x) => x.slice(0, 80));
 }
 
+const TEAM_NUM = /(?:(?:equipo|team|area|área)s?\s+(?:de\s+|of\s+)?(?:m[aá]s de\s+|over\s+|more than\s+)?(\d{1,5})\s*\+?)|(?:(\d{1,5})\s*\+?\s*(?:personas|people|colaboradores|direct reports|reportes|reports|members|miembros|empleados|employees|FTEs?)\b)/i;
+const LEAD_PHRASE = /\b(p&l|presupuesto|budget|lider[eé]|lideré|liderando|led|managed|gestion[eé]|a cargo de|direct reports|reportes directos|cofund|co-?found)/i;
+
+/** Liderazgo demostrado: equipo más grande mencionado y hasta tres frases que lo respaldan. */
+export function leadershipFrom(p: Pick<Profile, "resumen" | "experiencia">): MatchProfile["leadership"] {
+  const lines = [p.resumen, ...p.experiencia.flatMap((e) => [e.descripcion, ...e.logros])]
+    .flatMap((t) => t.split(/(?<=[.;])\s+|\n+/))
+    .map((t) => t.trim())
+    .filter(Boolean);
+  let teamSize: number | null = null;
+  const evidence: string[] = [];
+  for (const line of lines) {
+    const m = line.match(TEAM_NUM);
+    const n = m ? Number(m[1] ?? m[2]) : NaN;
+    // Un número de equipo razonable; "equipo de 2025" o un año no cuentan.
+    const isTeam = Number.isFinite(n) && n >= 2 && n < 5000 && LEAD_PHRASE.test(line);
+    if (isTeam) teamSize = Math.max(teamSize ?? 0, n);
+    if ((isTeam || /\b(p&l|presupuesto|budget)\b/i.test(line)) && evidence.length < 3) evidence.push(line.slice(0, 200));
+  }
+  return teamSize === null && !evidence.length ? undefined : { teamSize, evidence };
+}
+
 export function profileToMatch(p: Profile): MatchProfile {
   const text = [p.titulo, p.resumen, ...p.experiencia.flatMap((e) => [e.cargo, e.descripcion, ...e.logros]), ...p.certificaciones.map((c) => c.nombre)].join("\n");
   const skills = [...new Set([...p.aptitudes.flatMap(splitSkill), ...findSkills(text)])].slice(0, 40);
+  const leadership = leadershipFrom(p);
   return {
     headline: p.titulo.slice(0, 200),
     titles: [...new Set(p.experiencia.map((e) => e.cargo.trim().slice(0, 160)).filter(Boolean))].slice(0, 6),
@@ -64,6 +87,7 @@ export function profileToMatch(p: Profile): MatchProfile {
     yearsExperience: yearsOfExperience(p.experiencia),
     location: p.ubicacion,
     summary: p.resumen.slice(0, 600),
+    ...(leadership ? { leadership } : {}),
   };
 }
 

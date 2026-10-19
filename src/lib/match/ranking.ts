@@ -1,5 +1,5 @@
 import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
-import { estimateSeniority } from "./profile";
+import { functionMismatch, GENERIC_SKILLS, levelScore, levelVerdict, postingLevel, salaryMeets, skillWeight, targetRange } from "./fit";
 import { sourceById } from "./sources";
 import { CONTRACT_LABEL, displayTitle, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
@@ -18,14 +18,17 @@ import {
 } from "./types";
 
 /**
- * Ranking explicable, sin IA y sin credenciales nuevas.
+ * Ranking explicable por reglas: la primera etapa de /match. La segunda (rerank.ts) re-evalúa
+ * con IA las mejores de esta lista.
  *
- * 1. Incompatibilidades explícitas primero (elegibilidad, "evitar", descartes e indispensables).
+ * 1. Filtros eliminatorios primero: elegibilidad, "evitar", descartes, indispensables, nivel menor
+ *    al elegido, salario publicado menor al pedido (misma moneda) y funciones ajenas (fit.ts).
  * 2. Recuperación por texto con equivalencias español/inglés.
- * 3. Puntaje = 40% habilidades y experiencia + 35% intención profesional
- *    + 15% seniority + 10% preferencias adicionales (configurable con MATCH_WEIGHTS="40,35,15,10").
- *    Se promedian sólo dimensiones informadas; la intención no se penaliza por segunda vez.
- * Los datos faltantes bajan la CONFIANZA. No equivalen a un 50% de cumplimiento.
+ * 3. Puntaje = 40% encaje de rol + 25% seniority + 20% requisitos críticos + 15% preferencias
+ *    (configurable con MATCH_WEIGHTS="40,25,20,15"). El área no suma puntos: es un filtro.
+ *    Si el encaje de rol es bajo (< ROLE_FIT_FLOOR), el total no pasa de ROLE_CAP.
+ * Los datos faltantes bajan la CONFIANZA. Sólo nivel y salario sin informar cuentan como 50%:
+ * así un aviso sin el dato nunca supera a uno que cumple.
  * Guardados, descartes y frescura ajustan el orden, nunca el porcentaje de compatibilidad.
  * El puntaje es una "compatibilidad estimada", nunca una probabilidad de contratación.
  */
@@ -45,15 +48,19 @@ export function ageDays(o: Pick<Opportunity, "publishedAt" | "firstSeenAt">, now
   return (now.getTime() - new Date(o.publishedAt ?? o.firstSeenAt).getTime()) / 86_400_000;
 }
 
-export type Weights = { habilidades: number; intencion: number; seniority: number; extras: number };
-export const DEFAULT_WEIGHTS: Weights = { habilidades: 0.4, intencion: 0.35, seniority: 0.15, extras: 0.1 };
+export type Weights = { rol: number; seniority: number; requisitos: number; preferencias: number };
+export const DEFAULT_WEIGHTS: Weights = { rol: 0.4, seniority: 0.25, requisitos: 0.2, preferencias: 0.15 };
+
+/** Con un encaje de rol menor a este, el total no pasa de ROLE_CAP. */
+export const ROLE_FIT_FLOOR = 0.5;
+export const ROLE_CAP = 0.4;
 
 export function weightsFromEnv(raw = process.env.MATCH_WEIGHTS): Weights {
   const n = (raw ?? "").split(",").map(Number);
   if (n.length !== 4 || n.some((x) => !Number.isFinite(x) || x < 0)) return DEFAULT_WEIGHTS;
   const sum = n.reduce((a, b) => a + b, 0);
   if (!sum) return DEFAULT_WEIGHTS;
-  return { habilidades: n[0] / sum, intencion: n[1] / sum, seniority: n[2] / sum, extras: n[3] / sum };
+  return { rol: n[0] / sum, seniority: n[1] / sum, requisitos: n[2] / sum, preferencias: n[3] / sum };
 }
 
 /* ---------- equivalencias es/en ---------- */
@@ -122,7 +129,7 @@ const GOAL_FILLER = new Set(["quiero", "busco", "buscando", "trabajar", "trabajo
 
 /** Palabras de cargo que no dicen de qué es el puesto ("Analista de calidad" no se parece a "Analista de logística"). */
 const GENERIC_ROLE = new Set(
-  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant", "director", "head", "founder", "cofounder", "fundador", "fundadora", "owner"].map(canon),
+  ["analista", "analyst", "asistente", "assistant", "auxiliar", "ejecutivo", "ejecutiva", "executive", "especialista", "specialist", "coordinador", "coordinadora", "coordinator", "responsable", "encargado", "encargada", "jefe", "jefa", "lider", "lead", "gerente", "manager", "representante", "representative", "operador", "operadora", "oficial", "officer", "associate", "consultor", "consultant", "director", "head", "founder", "cofounder", "fundador", "fundadora", "owner", "vp", "svp", "evp", "avp", "vice", "president", "presidente", "vicepresidente", "chief", "global"].map(canon),
 );
 
 function dice(a: Set<string>, b: Set<string>): number {
@@ -237,15 +244,6 @@ const HIGH = /(native|nativo|bilingual|bilingue|fluent|fluido|advanced|avanzado|
 const MID = /(intermediate|intermedio|b1|b2|conversational|conversacional|limited working|profesional limitado|upper)/;
 const langRank = (level: string) => (HIGH.test(fold(level)) ? 3 : MID.test(fold(level)) ? 2 : level.trim() ? 1 : 0);
 
-const PERIOD_FACTOR: Record<Salary["period"], number | null> = { mes: 1, anio: 1 / 12, hora: null, desconocido: null };
-
-/** Máximo publicado expresado por mes en la moneda del aviso; null si no es comparable. */
-function monthlyMax(s: Salary): number | null {
-  const f = PERIOD_FACTOR[s.period];
-  const v = s.max ?? s.min;
-  return f && v ? v * f : null;
-}
-
 export function formatSalary(s: Salary | undefined | null): string | null {
   if (!s) return null;
   if (s.min || s.max) {
@@ -302,7 +300,10 @@ export type RankedItem = {
   employmentType: EmploymentType | null;
   score: number; // 0-100, "compatibilidad estimada"
   confidence: "alta" | "media" | "baja";
-  depth: "reglas"; // ranking básico; la evaluación detallada con IA se hace al preparar la postulación
+  /** "reglas": sólo la primera etapa. "ia": re-evaluada con IA (rerank.ts). */
+  depth: "reglas" | "ia";
+  /** Puntaje por componente, con su razón. Lo usan la API y las evaluaciones; la tarjeta no lo muestra. */
+  breakdown: ScoreBreakdown;
   reasons: string[];
   gaps: string[];
   pending: string[];
@@ -322,6 +323,27 @@ export type RankedItem = {
   external?: boolean;
   saved?: boolean;
 };
+
+export type ScorePart = { puntos: number; max: number; razon: string };
+export type ScoreBreakdown = {
+  rol: ScorePart;
+  seniority: ScorePart;
+  requisitos: ScorePart;
+  preferencias: ScorePart;
+  /** true si el total quedó topeado por un encaje de rol bajo. */
+  tope: boolean;
+  nivelAviso: Seniority | null;
+  nivelCierto: boolean;
+};
+
+/** Las razones de contexto (modalidad, ciudad, país) nunca van primero y como mucho va una. */
+function pickReasons(scored: [number, string][]): string[] {
+  const sorted = [...scored].sort((a, b) => b[0] - a[0]).filter((r, i, arr) => arr.findIndex((x) => x[1] === r[1]) === i);
+  const main = sorted.filter((r) => r[0] >= 0.5).map((r) => r[1]);
+  // Sin una razón de rol, requisitos o salario, el contexto solo no justifica mostrarla "por algo".
+  const context = main.length ? sorted.find((r) => r[0] < 0.5)?.[1] : undefined;
+  return [...main.slice(0, context ? 2 : 3), ...(context ? [context] : [])].slice(0, 3);
+}
 
 export type Filters = {
   families?: RoleFamily[];
@@ -375,7 +397,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const pastTitles = professionalTitles.map((t) => ({ label: t, toks: roleTokens(t), role: parseRole(t) }));
   const pastFamilies = new Set<RoleFamily>(professionalTitles.map(familyFromTitle).filter((x) => x !== "otros"));
   const avoid = prefs.evitar.map((e) => fold(e)).filter((e) => e.length > 2);
-  const targetSen = prefs.seniorities.length ? prefs.seniorities : [estimateSeniority(profile)].filter(Boolean) as Seniority[];
+  const range = targetRange(prefs, profile);
   const hard = new Set(prefs.indispensables);
   const savedIds = new Set(interactions.saved);
   const discarded = new Map(interactions.discarded.map((d) => [d.id, d]));
@@ -469,14 +491,25 @@ export function rankOpportunities(input: RankInput): RankOutput {
       reqLangs.every((l) => langRank(pLangs.get(normLang(l.language)) ?? "") >= needLevel(l.level)),
       `Pide ${reqLangs.map((l) => l.language).join(" y ")}: confirmá tu nivel.`,
     );
-    let salaryOk: boolean | null = null;
     const sal = o.salary?.value;
-    if (prefs.salario?.monto && sal) {
-      const theirs = monthlyMax(sal);
-      const mine = prefs.salario.periodo === "anio" ? prefs.salario.monto / 12 : prefs.salario.monto;
-      if (theirs !== null && sal.currency === prefs.salario.moneda) salaryOk = theirs >= mine;
-    }
+    // Mismo moneda y período: se compara acá. Otra moneda o sin moneda: lo normaliza la IA.
+    const salaryOk = salaryMeets(sal, prefs);
     hardCheck("salario", salaryOk !== null, salaryOk === true, "No informa salario comparable con tu expectativa.");
+    // Filtros eliminatorios: salario publicado menor al pedido, nivel inferior y otra función.
+    if (salaryOk === false) excludedByHard = true;
+    let pl = postingLevel(o.title, ex, primary?.descriptionText ?? "");
+    const lv = levelVerdict(pl, range);
+    // "Administrativo contable" o "Recepcionista" sin nivel: por el cargo es un puesto de apoyo.
+    // Se estima junior para ordenar (nunca para descartar), sin mostrarlo como dato del aviso.
+    const headWord = parseRole(o.title).headWord;
+    const impliedLevel: Seniority | null = !pl.level && headWord && SUPPORT_HEADS.has(headWord) ? "junior" : null;
+    if (impliedLevel) pl = { ...pl, level: impliedLevel, certain: false };
+    if (lv.action === "excluir") excludedByHard = true;
+    else if (lv.action === "pendiente") {
+      bucket = "pending";
+      pending.push(lv.note!);
+    }
+    if (functionMismatch(o.title, profile, prefs)) excludedByHard = true;
     if (excludedByHard && !isSaved) continue;
     if (!excludedByHard) afterHard++;
 
@@ -491,114 +524,90 @@ export function rankOpportunities(input: RankInput): RankOutput {
       if (k) known++;
     };
 
-    // Habilidades y experiencia (40%)
+    // Encaje de función y rol (40%): el título contra la trayectoria, los roles deseados y el objetivo.
+    // El área sola no suma: un Video Editor de marketing no se parece a un Head of Marketing.
+    const titleRole = parseRole(o.title);
+    const titleToks = roleTokens(o.title);
+    const simTo = (r: Role) => roleSimilarity(r, titleRole);
+    const bestPast = pastTitles.reduce<{ label: string; sim: number } | null>((a, t) => (!a || simTo(t.role) > a.sim ? { label: t.label, sim: simTo(t.role) } : a), null);
+    const bestDesired = desiredTokens.reduce<{ label: string; sim: number } | null>((a, d) => (!a || simTo(d.role) > a.sim ? { label: d.label, sim: simTo(d.role) } : a), null);
+    const titleSim = bestPast?.sim ?? 0;
+    const desiredSim = bestDesired?.sim ?? 0;
+    const kind = desiredTokens.length ? Math.max(...desiredTokens.map((d) => headFit(d.role.head, titleRole.head))) : 1;
+    // El objetivo cuenta por lo que dice el título, no por palabras sueltas del aviso ("IA", "ecommerce").
+    const objSim = goalCoverage(objetivoTokens, new Set([...titleToks, ...[...findSkills(o.title)].flatMap((s) => [...roleTokens(s)])])) * kind;
+    const hasExperience = pastTitles.some((t) => t.toks.size);
+    const hasIntent = desiredTokens.length > 0 || objetivoTokens.size > 0;
+    // Mismo tipo de puesto en la misma área ("Backend Engineer" y "Software Engineer"): un piso,
+    // no un match. El área sola no alcanza.
+    const sameKind = pastTitles.some((t) => t.role.head && t.role.head === titleRole.head);
+    const kindFloor = pastFamilies.has(ex.family.value) ? (sameKind ? 0.4 : 0.2) : 0;
+    // En un cambio de carrera manda lo que busca; si no, también vale lo que ya hizo.
+    let roleFit = prefs.carrera === "cambio" && hasIntent
+      ? Math.max(desiredSim, objSim, 0.6 * titleSim)
+      : Math.max(titleSim, desiredSim, objSim, kindFloor);
+    // Querer un rol sin ninguna evidencia en el CV (cargos o habilidades) no es un match.
+    if (!hasExperience && !pSkills.size) roleFit *= 0.6;
+    note(hasExperience || hasIntent);
+
+    // Encaje de seniority (25%): nivel del aviso contra el buscado o el que muestra el CV.
+    const senScore = levelScore(pl, range) ?? 0.5;
+    note(!!pl.level && pl.certain);
+    const level = pl.level;
+    if (level && range) {
+      const i = SENIORITY_ORDER.indexOf(level);
+      const wanted = SENIORITY_ORDER.slice(range.min, range.max + 1).map((s) => SENIORITY_LABEL[s]).join(" o ");
+      if (i < range.min - 1 || i > range.max + 1) {
+        gaps.push(impliedLevel
+          ? `No dice el nivel, pero por el cargo parece un puesto de apoyo; ${range.chosen ? "apuntás a" : "tu CV muestra"} ${wanted}.`
+          : `Es un puesto ${SENIORITY_LABEL[level]}; ${range.chosen ? "apuntás a" : "tu CV muestra"} ${wanted}.`);
+      }
+    }
+
+    // Requisitos críticos (20%): los obligatorios pesan; "IA", "ecommerce" o "marketing digital" casi no.
     const req = ex.skillsRequired;
     const des = ex.skillsDesirable;
-    const ment = ex.skillsMentioned;
+    const weightOf = (xs: string[]) => xs.reduce((s, x) => s + skillWeight(x), 0);
     const matchedReq = req.filter((s) => pSkills.has(s));
     const matchedDes = des.filter((s) => pSkills.has(s));
-    let skillScore: number | null = null;
+    let reqScore: number | null = null;
     if (req.length || des.length) {
-      // Una lista larga de "nice to have" no debe pesar más que los requisitos cumplidos.
-      const required = req.length ? matchedReq.length / req.length : null;
-      const desirable = des.length ? matchedDes.length / des.length : null;
-      skillScore = required !== null && desirable !== null ? 0.85 * required + 0.15 * desirable : required ?? desirable;
+      const required = req.length ? weightOf(matchedReq) / weightOf(req) : null;
+      const desirable = des.length ? weightOf(matchedDes) / weightOf(des) : null;
+      reqScore = required !== null && desirable !== null ? 0.85 * required + 0.15 * desirable : required ?? desirable;
       note(pSkills.size > 0);
-    } else if (ment.length) {
-      skillScore = Math.min(1, ment.filter((s) => pSkills.has(s)).length / Math.min(4, ment.length));
-      note(false);
     } else note(false);
-    const titleRole = parseRole(o.title);
-    const titleSim = Math.max(0, ...pastTitles.map((t) => roleSimilarity(t.role, titleRole)));
-    const famPast = pastFamilies.has(ex.family.value);
-    // Ser del mismo rubro suma, pero no convierte un puesto operativo en uno administrativo (ni al revés).
-    const kindPast = Math.max(0, ...pastTitles.map((t) => headFit(t.role.head, titleRole.head)));
-    const expScore = Math.min(1, titleSim + (famPast ? 0.25 * kindPast : 0));
-    const mix = prefs.carrera === "cambio" ? [0.8, 0.2] : prefs.carrera === "continuidad" ? [0.55, 0.45] : [0.65, 0.35];
-    const hasExperience = pastTitles.some((t) => t.toks.size);
-    note(hasExperience);
-    const fitWeight = (skillScore !== null ? mix[0] : 0) + (hasExperience ? mix[1] : 0);
-    let candidateFit = fitWeight ? ((skillScore ?? 0) * mix[0] + (hasExperience ? expScore * mix[1] : 0)) / fitWeight : 0;
     if (ex.yearsRequired !== null) {
       note(profile.yearsExperience !== null);
       if (profile.yearsExperience === null) pending.push(`Pide ${ex.yearsRequired}+ años de experiencia: confirmá cuántos tenés.`);
     }
     if (ex.yearsRequired !== null && profile.yearsExperience !== null && profile.yearsExperience + 1 < ex.yearsRequired) {
-      candidateFit *= 0.8;
+      reqScore = (reqScore ?? 1) * 0.8;
       gaps.push(`Pide ${ex.yearsRequired}+ años de experiencia; tu CV suma alrededor de ${Math.floor(profile.yearsExperience)}.`);
-    }
-    if (matchedReq.length) reasonsScored.push([0.9, `Tu CV menciona ${list(matchedReq.slice(0, 3))}, que el aviso pide como requisito${matchedReq.length > 1 ? "s" : ""}.`]);
-    else if (matchedDes.length) reasonsScored.push([0.6, `Tu CV menciona ${list(matchedDes.slice(0, 3))}, que el aviso valora.`]);
-    if (titleSim >= 0.5 && pastTitles[0]) {
-      const best = pastTitles.reduce((a, b) => (roleSimilarity(b.role, titleRole) > roleSimilarity(a.role, titleRole) ? b : a));
-      reasonsScored.push([0.7 + titleSim * 0.2, `Tu experiencia como ${best.label} se relaciona directamente con este puesto.`]);
     }
     for (const s of req.filter((s) => !pSkills.has(s)).slice(0, 3)) {
       gaps.push(`Pide ${s} como requisito: no aparece en tu CV. Si lo manejás, sumalo.`);
     }
 
-    // Intención profesional (35%)
-    const titleToks = roleTokens(o.title);
-    const desiredSim = Math.max(0, ...desiredTokens.map((d) => roleSimilarity(d.role, titleRole)));
-    const skillTokens = (skills: string[]) => new Set(skills.flatMap((s) => [...roleTokens(s)]));
-    const objSim = Math.max(
-      goalCoverage(objetivoTokens, new Set([...titleToks, ...skillTokens(findSkills(o.title))])),
-      0.85 * goalCoverage(objetivoTokens, skillTokens(req)),
-      0.6 * goalCoverage(objetivoTokens, skillTokens(des)),
-      0.3 * goalCoverage(objetivoTokens, skillTokens(ment)),
-    );
-    const famDesired = desiredFamilies.has(ex.family.value);
-    const hasIntent = desiredTokens.length > 0 || objetivoTokens.size > 0;
-    let intent = 0;
-    if (hasIntent) {
-      const kind = desiredTokens.length ? Math.max(...desiredTokens.map((d) => headFit(d.role.head, titleRole.head))) : 1;
-      const base = Math.max(desiredSim, objSim * kind);
-      intent = famDesired ? Math.min(1, Math.max(0.5 * kind, base + 0.15 * kind)) : base;
-    }
-    if (desiredSim >= 0.5) {
-      const best = desiredTokens.reduce((a, b) => (roleSimilarity(b.role, titleRole) > roleSimilarity(a.role, titleRole) ? b : a));
-      reasonsScored.push([0.95, `Coincide con lo que buscás: “${best.label}”.`]);
-    } else if (objSim >= 0.5) reasonsScored.push([0.9, `El aviso se relaciona con tu objetivo: “${sanitizeDisplay(prefs.objetivo, 160)}”.`]);
-    else if (famDesired) reasonsScored.push([0.65, `Es del área que te interesa (${FAMILY_LABEL[ex.family.value]}).`]);
-    if (prefs.carrera === "cambio" && !famPast && famDesired && skillScore !== null && skillScore >= 0.4) {
-      reasonsScored.push([0.75, "Es un cambio de área, pero varias de tus habilidades se transfieren."]);
-    }
-
-    // Seniority (15%)
-    let senScore: number | null = null;
-    // "Administrativo contable" o "Recepcionista" sin nivel: por el cargo es un puesto de apoyo.
-    // Se estima junior para ordenar, sin mostrarlo como dato del aviso.
-    const impliedSen: Seniority | null = !ex.seniority && titleRole.headWord && SUPPORT_HEADS.has(titleRole.headWord) ? "junior" : null;
-    const sen = ex.seniority?.value ?? impliedSen;
-    if (sen && targetSen.length) {
-      const idx = SENIORITY_ORDER.indexOf(sen);
-      const d = Math.min(...targetSen.map((s) => Math.abs(SENIORITY_ORDER.indexOf(s) - idx)));
-      senScore = d === 0 ? 1 : d === 1 ? 0.8 : d === 2 ? 0.35 : 0;
-      note(!impliedSen);
-      if (d >= 2) {
-        gaps.push(impliedSen
-          ? `No dice el nivel, pero por el cargo parece un puesto de apoyo; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`
-          : `Es un puesto ${SENIORITY_LABEL[sen]}; apuntás a ${targetSen.map((s) => SENIORITY_LABEL[s]).join(" o ")}.`);
-      }
-    } else note(false);
-
-    // Preferencias adicionales (10%)
-    const extras: number[] = [];
+    // Preferencias (15%): salario, modalidad, contrato e idioma.
+    const prefParts: number[] = [];
     if (prefs.modalidades.length && wpValue !== "desconocido") {
-      const ok = !prefs.modalidades.length || prefs.modalidades.includes(wpValue);
-      extras.push(ok ? 1 : 0);
-      if (ok && prefs.modalidades.length) reasonsScored.push([0.5, wpInferred ? `Parece ${WORKPLACE_LABEL[wpValue]}, como preferís (el aviso no lo aclara).` : `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
+      const ok = prefs.modalidades.includes(wpValue);
+      prefParts.push(ok ? 1 : 0);
+      if (ok) reasonsScored.push([0.4, wpInferred ? `Parece ${WORKPLACE_LABEL[wpValue]}, como preferís (el aviso no lo aclara).` : `Es ${WORKPLACE_LABEL[wpValue]}, como preferís.`]);
       note(true);
     } else if (prefs.modalidades.length) note(false);
     if (prefs.contratos.length && ex.employmentType) {
-      extras.push(!prefs.contratos.length || prefs.contratos.includes(ex.employmentType.value) ? 1 : 0.2);
+      prefParts.push(prefs.contratos.includes(ex.employmentType.value) ? 1 : 0.2);
       note(true);
     } else if (prefs.contratos.length) note(false);
-    if (salaryOk !== null) {
-      extras.push(salaryOk ? 1 : 0.2);
-      if (salaryOk) reasonsScored.push([0.55, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
-    } else if (prefs.salario?.monto) pending.push(sal ? "Publica salario, pero en otra moneda o período: comparalo vos." : "No informa salario.");
-    if (prefs.salario?.monto) note(salaryOk !== null);
+    if (prefs.salario?.monto) {
+      // Sin salario comparable, nunca puntúa como uno que cumple.
+      prefParts.push(salaryOk ? 1 : 0.5);
+      if (salaryOk) reasonsScored.push([0.6, `El salario publicado (${formatSalary(sal)}) está en línea con tu expectativa.`]);
+      else pending.push(sal ? "Publica salario, pero en otra moneda o período: comparalo vos." : "No informa salario.");
+      note(salaryOk !== null);
+    }
     // El idioma también pesa en el total: un aviso que exige inglés avanzado no debería liderar
     // para alguien con nivel intermedio (y menos sin inglés en el CV).
     let langFactor = 1;
@@ -613,22 +622,46 @@ export function rankOpportunities(input: RankInput): RankOutput {
         langFactor = Math.min(langFactor, 0.7);
       } else if (langRank(mine) && langRank(mine) < need) {
         gaps.push(`Pide ${l.language} ${levelLabel(l)}; tu CV dice ${mine}.`);
-        extras.push(0.4);
+        prefParts.push(0.4);
         langFactor = Math.min(langFactor, 0.85);
         note(true);
-      } else { extras.push(1); note(true); }
+      } else { prefParts.push(1); note(true); }
     }
-    const extraScore = extras.length ? extras.reduce((a, b) => a + b, 0) / extras.length : null;
+    const prefScore = prefParts.length ? prefParts.reduce((a, b) => a + b, 0) / prefParts.length : null;
 
     note(o.descriptionComplete);
     note(o.eligibility.status === "elegible");
 
+    // Razones: primero el encaje de rol y nivel, con evidencia del CV.
+    const levelFits = !!level && senScore >= 0.7;
+    const team = profile.leadership?.teamSize;
+    const teamClause = team && level && SENIORITY_ORDER.indexOf(level) >= SENIORITY_ORDER.indexOf("manager") ? `, con un equipo de ${team}+ personas,` : "";
+    const levelClause = levelFits ? `encaja con un puesto ${SENIORITY_LABEL[level!]}` : "se relaciona con este puesto";
+    if (titleSim >= 0.5 && bestPast && titleSim >= desiredSim) {
+      reasonsScored.push([1, `Tu experiencia como ${bestPast.label}${teamClause} ${levelClause}.`]);
+    } else if (desiredSim >= 0.5 && bestDesired) {
+      reasonsScored.push([0.95, `Coincide con lo que buscás (“${bestDesired.label}”)${levelFits ? ` y con tu nivel (${SENIORITY_LABEL[level!]})` : ""}.`]);
+    } else if (objSim >= 0.5) {
+      reasonsScored.push([0.9, `El puesto se relaciona con tu objetivo: “${sanitizeDisplay(prefs.objetivo, 160)}”.`]);
+    }
+    const coreMatched = matchedReq.filter((s) => !GENERIC_SKILLS.has(s));
+    const coreDesired = matchedDes.filter((s) => !GENERIC_SKILLS.has(s));
+    if (coreMatched.length) reasonsScored.push([0.8, `Tu CV menciona ${list(coreMatched.slice(0, 3))}, que el aviso pide como requisito${coreMatched.length > 1 ? "s" : ""}.`]);
+    else if (coreDesired.length) reasonsScored.push([0.55, `Tu CV menciona ${list(coreDesired.slice(0, 3))}, que el aviso valora.`]);
+    if (prefs.carrera === "cambio" && !pastFamilies.has(ex.family.value) && desiredFamilies.has(ex.family.value) && reqScore !== null && reqScore >= 0.4) {
+      reasonsScored.push([0.75, "Es un cambio de área, pero varias de tus habilidades se transfieren."]);
+    }
+
     const dimensions: [number, number | null][] = [
-      [w.habilidades, candidateFit], [w.intencion, hasIntent ? intent : null],
-      [w.seniority, senScore], [w.extras, extraScore],
+      [w.rol, roleFit], [w.seniority, senScore], [w.requisitos, reqScore], [w.preferencias, prefScore],
     ];
     const available = dimensions.reduce((sum, [weight, value]) => sum + (value !== null ? weight : 0), 0);
     let raw = (available ? dimensions.reduce((sum, [weight, value]) => sum + weight * (value ?? 0), 0) / available : 0) * langFactor;
+    // Si el rol casi no encaja, el resto no lo compensa: el total no pasa de ROLE_CAP y,
+    // debajo del tope, sigue ordenado por cuánto encaja el rol.
+    const roleCap = ROLE_CAP * (0.4 + 1.2 * roleFit);
+    const capped = roleFit < ROLE_FIT_FLOOR && raw > roleCap;
+    if (capped) raw = roleCap;
 
     // Condiciones conocidas que dificultan postularse siguen afectando la afinidad (E0).
     if (wpValue !== "desconocido" && prefs.modalidades.length && !prefs.modalidades.includes(wpValue)) raw *= 0.85;
@@ -655,7 +688,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     }
 
     // Preferencias de orden: no alteran cuánto coincide el perfil con este aviso.
-    let order = raw * (prefs.carrera === "cambio" && hasIntent ? 0.6 + 0.4 * intent : 1);
+    let order = raw * (prefs.carrera === "cambio" && hasIntent ? 0.6 + 0.4 * roleFit : 1);
     for (const d of interactions.discarded) {
       if (d.reason === "rol" && d.family === ex.family.value && dice(new Set(d.titleTokens ?? []), titleToks) >= 0.5) order *= 0.75;
       if (d.reason === "seniority" && d.titleTokens && ex.seniority && dice(new Set(d.titleTokens), titleToks) >= 0.3) order *= 0.9;
@@ -667,8 +700,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
     }
     if (isSaved) order *= 1.03;
 
-    if (wpValue !== "remoto" && userPlaces.length && o.locations.length && placeMatches(o.locations)) reasonsScored.push([0.6, `Es en ${prefs.ciudad.split(",")[0].trim() || "tu ciudad"}, donde buscás.`]);
-    if (o.eligibility.status === "elegible") reasonsScored.push([0.45, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
+    if (wpValue !== "remoto" && userPlaces.length && o.locations.length && placeMatches(o.locations)) reasonsScored.push([0.42, `Es en ${prefs.ciudad.split(",")[0].trim() || "tu ciudad"}, donde buscás.`]);
+    if (o.eligibility.status === "elegible") reasonsScored.push([0.38, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
     if (o.eligibility.timezone) pending.push(`Horario pedido: ${o.eligibility.timezone}. Es una condición horaria, no un permiso de contratación.`);
 
     const sources = o.postingKeys
@@ -694,13 +727,22 @@ export function rankOpportunities(input: RankInput): RankOutput {
       workplaceLabel: wpInferred ? `${WORKPLACE_LABEL[wpValue]} (inferido)` : WORKPLACE_LABEL[wpValue],
       eligibility: o.eligibility,
       family: ex.family.value,
-      seniority: ex.seniority?.value ?? null,
+      seniority: pl.certain && pl.level && pl.level !== impliedLevel ? pl.level : ex.seniority?.value ?? null,
       employmentType: ex.employmentType?.value ?? null,
       // Nunca 100%: es una estimación con los datos disponibles, no una certeza.
       score: Math.min(MAX_SCORE, Math.round(Math.max(0, Math.min(1, raw)) * 100)),
       confidence: conf >= 0.75 ? "alta" : conf >= 0.5 ? "media" : "baja",
       depth: "reglas",
-      reasons: reasonsScored.sort((a, b) => b[0] - a[0]).map((r) => r[1]).filter((r, i, arr) => arr.indexOf(r) === i).slice(0, 3),
+      reasons: pickReasons(reasonsScored),
+      breakdown: {
+        rol: { puntos: Math.round(roleFit * w.rol * 100), max: Math.round(w.rol * 100), razon: titleSim >= desiredSim && bestPast ? `Título más parecido de tu CV: ${bestPast.label}` : bestDesired ? `Rol buscado más parecido: ${bestDesired.label}` : "Sin cargos ni roles para comparar" },
+        seniority: { puntos: Math.round(senScore * w.seniority * 100), max: Math.round(w.seniority * 100), razon: level ? `Aviso ${SENIORITY_LABEL[level]}${pl.certain ? "" : " (dudoso)"}` : "El aviso no informa el nivel" },
+        requisitos: { puntos: Math.round((reqScore ?? 0) * w.requisitos * 100), max: Math.round(w.requisitos * 100), razon: reqScore === null ? "El aviso no detalla requisitos" : `${matchedReq.length} de ${req.length} requisitos en tu CV` },
+        preferencias: { puntos: Math.round((prefScore ?? 0) * w.preferencias * 100), max: Math.round(w.preferencias * 100), razon: salaryOk === null && prefs.salario?.monto ? "Salario sin comparar" : salaryOk ? "Salario en línea" : "Según modalidad, contrato e idioma" },
+        tope: capped,
+        nivelAviso: level,
+        nivelCierto: pl.certain,
+      },
       gaps: gaps.slice(0, 4),
       pending: [...new Set(pending.filter(Boolean))].slice(0, 4),
       salary: formatSalary(sal),

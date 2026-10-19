@@ -1,5 +1,12 @@
 # Estado y próximos pasos de Maru
 
+## Match: nivel, salario y función, con re-evaluación por IA (plan en curso, desde 19/10/2026)
+
+Pedido del dueño: /match mostraba Video Editors, analistas y avisos de USD 1.500–5.500 a un líder de growth que filtró Manager/Director/VP y USD 7.000. Decisiones del dueño (19/10): sumar una segunda etapa con IA (Haiku) sólo sobre los avisos que pasan los filtros; la IA normaliza moneda y período, define la moneda cuando falta e infiere el salario no publicado con menos peso; se pueden cambiar los textos de salario e indispensables del formulario.
+
+1. **Hecho (PR 1): etapa por reglas.** `src/lib/match/fit.ts` (nivel del aviso por título y descripción, nivel del CV con equipo a cargo, filtros de nivel/salario/función) y puntaje 40 rol / 25 seniority / 20 requisitos / 15 preferencias con tope de 40 % si el rol no encaja. Razones con rol y nivel primero, `breakdown` por componente. `leadership` nuevo en el perfil (equipo más grande y evidencia, sale de `profileToMatch`). Set de evaluación en `tests/match-eval.test.ts` y top 20 antes/después en [research/match-seniority-2026-10-19](research/match-seniority-2026-10-19/README.md).
+2. **Siguiente (PR 2): re-evaluación con IA.** `src/lib/match/rerank.ts`: las mejores ~40 de la etapa 1 van a Haiku en tandas, con `askStructured` (modelo configurable), JSON por componente y razón, caché en memoria y caída a las reglas ante error. Después, actualizar el texto de salario del formulario (dirá que lo estimamos) y medir costo real.
+
 ## Compra única de avisos profesionales (19/10/2026)
 
 - Pedido del dueño: unos 10.000 avisos más con un tope de US$20–30, compra única (sin repetir cada mes). Sólo áreas como las de jobright: tecnología, datos, producto, diseño, marketing, finanzas, consultoría, legal, RRHH, operaciones, ventas B2B y administración. No quiere oficios, logística, comercio, gastronomía ni similares.

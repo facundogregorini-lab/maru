@@ -50,6 +50,12 @@ export const MatchProfileSchema = z.object({
     .transform((n) => (n === null ? null : Math.min(70, Math.max(0, n)))),
   location: str(160),
   summary: str(1000),
+  leadership: z
+    .object({
+      teamSize: z.number().nullable().transform((n) => (n === null ? null : Math.min(100000, Math.max(0, Math.round(n))))),
+      evidence: list(4, 200),
+    })
+    .optional(),
 });
 
 export const MatchPrefsSchema = z.object({

@@ -160,8 +160,8 @@ describe("ranking explicable", () => {
   });
 
   it("pesos configurables con validación", () => {
-    expect(weightsFromEnv("40,35,15,10")).toEqual(DEFAULT_WEIGHTS);
-    expect(weightsFromEnv("1,1,1,1").habilidades).toBeCloseTo(0.25);
+    expect(weightsFromEnv("40,25,20,15")).toEqual(DEFAULT_WEIGHTS);
+    expect(weightsFromEnv("1,1,1,1").rol).toBeCloseTo(0.25);
     expect(weightsFromEnv("x")).toEqual(DEFAULT_WEIGHTS);
     expect(weightsFromEnv("0,0,0,0")).toEqual(DEFAULT_WEIGHTS);
   });
@@ -208,7 +208,7 @@ describe("calibración del porcentaje de afinidad", () => {
     const o = await example({ title: "Marketing Analyst" });
     o.extracted.family.value = "marketing";
     o.extracted.skillsRequired = ["seo", "sem"];
-    expect(run(o).score).toBeLessThan(70);
+    expect(run(o, dataProfile, { minScore: 0 }).score).toBeLessThan(70);
   });
 
   it("los datos ausentes bajan la confianza sin convertirse en 50% de cumplimiento", async () => {
@@ -243,10 +243,9 @@ describe("calibración del porcentaje de afinidad", () => {
   });
 
   it("un nivel adyacente se considera cercano y una brecha grande sigue pesando", async () => {
-    const o = await example();
-    o.extracted.seniority!.value = "semi_senior";
+    const o = await example({ title: "Data Analyst Semi Senior" });
     const adjacent = run(o).score;
-    o.extracted.seniority!.value = "director";
+    o.title = "Head of Data Analyst Team";
     expect(adjacent).toBeGreaterThanOrEqual(95);
     expect(run(o).score).toBeLessThan(adjacent - 10);
     expect(run(o).gaps.join(" ")).toMatch(/Director/);
@@ -318,7 +317,7 @@ describe("calibración del porcentaje de afinidad", () => {
   it("el texto libre del objetivo no se diluye por el resto de herramientas del aviso", async () => {
     const o = await example({ title: "AI Consultant for Business Process Automation LATAM" });
     const prefs = { ...basePrefs, objetivo: "Quiero trabajar en inteligencia artificial", rolesDeseados: [] };
-    const result = run(o, dataProfile, { prefs, weights: { habilidades: 0, intencion: 1, seniority: 0, extras: 0 } });
+    const result = run(o, dataProfile, { prefs, weights: { rol: 1, seniority: 0, requisitos: 0, preferencias: 0 } });
     expect(result.score).toBe(MAX_SCORE);
   });
 

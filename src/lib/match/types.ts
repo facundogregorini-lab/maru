@@ -229,6 +229,8 @@ export type MatchProfile = {
   yearsExperience: number | null;
   location: string;
   summary: string;
+  /** Liderazgo demostrado en el CV: tamaño de equipo más grande y frases que lo respaldan. */
+  leadership?: { teamSize: number | null; evidence: string[] };
 };
 
 export type Hardable = "modalidad" | "ubicacion" | "seniority" | "contrato" | "salario" | "idioma";
