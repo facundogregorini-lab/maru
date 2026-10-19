@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Compra única de avisos profesionales (19/10/2026)
+
+- Pedido del dueño: unos 10.000 avisos más con un tope de US$20–30, compra única (sin repetir cada mes). Sólo áreas como las de jobright: tecnología, datos, producto, diseño, marketing, finanzas, consultoría, legal, RRHH, operaciones, ventas B2B y administración. No quiere oficios, logística, comercio, gastronomía ni similares.
+- Diagnóstico con lo ya importado (avisos para Argentina): de Computrabajo sólo el 17% era de esas áreas y el 37% eran oficios o similares («Chofer de reparto», «Operarios eventuales», «Atención en mostrador»). De LinkedIn, el 34% era de esas áreas y el 43% de áreas intermedias, aun con palabras genéricas. Indeed trae como mucho 58 avisos por búsqueda.
+- **Hecho (paso 1, sin gastar):** filtro `src/lib/match/import-filter.ts` para Apify, Google Jobs y Fantastic. Entran sólo esas áreas. Atención al cliente y «Otras áreas» entran sólo con puestos de analista para arriba. Se rechazan títulos de chofer, operario, mostrador, cajero, repositor, mozo, vigilador, contact center, vendedor de salón o viajante y similares. La importación los cuenta como `fuera_de_area` o `puesto_no_buscado`. La sync diaria cierra los que ya estaban, con el motivo «Fuera de las áreas que importamos». Simulado sobre el inventario del 19/10: cierra 1.070 importados y los elegibles bajan de 5.200 a 4.130. Las bolsas de empleadores (ATS) no se filtran.
+- Palabras de LinkedIn reemplazadas por 56 búsquedas de esas áreas (`APIFY_KEYWORDS.linkedin`). La fuente por defecto de Apify pasa a ser sólo LinkedIn. En la home, «áreas, de tecnología a gastronomía» pasa a «de tecnología a finanzas».
+- **Siguiente (paso 2):** prueba de hasta US$1 (pendiente de OK del dueño) con 2 o 3 actores de LinkedIn más baratos que el actual (US$2 cada 1.000). Hay que medir cuántos traen descripción completa, cuántos son nuevos y cuántos pasan el filtro. Ojo: la cuenta de Apify usó US$4,56 de US$5 en octubre. Si está en el plan gratis, para gastar más hay que pasar a Starter (US$29 por mes, que vuelven como saldo; cancelarlo después de la compra) o esperar al 1/11.
+- **Paso 3:** compra en tandas de US$5 con tope total aprobado, frenando si bajan los avisos nuevos que pasan el filtro.
+
 ## Home mobile igual a jobright: hero, laureles y cifras (18/10/2026)
 
 - Pedido del dueño con capturas de iPhone: el hero y las cifras de la home tenían que copiar las medidas de jobright. Se midieron sus estilos computados a 390 y 1440 px y se aplicaron en `src/app/page.tsx`.

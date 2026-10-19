@@ -81,7 +81,7 @@ export default async function Home() {
               { value: atLeast(data.eligible), label: "avisos abiertos para postularte desde Argentina", icon: "pin" },
               { value: atLeast(data.eligibleCompanies), label: "empresas buscando gente en Argentina", icon: "building" },
               { value: atLeast(data.eligibleRemote), label: "trabajos remotos que podés pedir desde acá", icon: "laptop" },
-              { value: String(data.areas), label: "áreas, de tecnología a gastronomía", icon: "grid" },
+              { value: String(data.areas), label: "áreas, de tecnología a finanzas", icon: "grid" },
             ].map((m) => (
               <li key={m.label}>
                 <div className="flex items-center gap-3 sm:gap-8">

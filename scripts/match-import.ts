@@ -13,6 +13,7 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, normalizeApifyJobs, type ApifyJobSource } from "../src/lib/match/apify";
+import { filterImported } from "../src/lib/match/import-filter";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
 import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
@@ -142,7 +143,7 @@ async function main() {
   // "mensual" = la tanda automática de cada mes (marketing y finanzas).
   const queryIds = queryArg.flatMap((id) => (id === "mensual" ? SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p))).map((q) => q.id) : [id]));
   const serpPlan = { queries: SERP_QUERIES.filter((q) => queryIds.includes(q.id)), maxSearches: num("max-searches", 12), reserve: num("reserve", 20) };
-  const apifySources = csv("sources", ["computrabajo", "indeed", "linkedin"]).filter((s): s is ApifyJobSource => Object.hasOwn(APIFY_JOBS, s));
+  const apifySources = csv("sources", ["linkedin"]).filter((s): s is ApifyJobSource => Object.hasOwn(APIFY_JOBS, s));
   const apifyRows = Math.min(200, Math.max(1, num("rows", 100)));
   const apifyBudget = num("budget-usd", 0);
   const apifySpent = ledger.entries.filter((e) => e.provider === "apify").reduce((a, e) => a + (e.consumed ?? 0), 0);
@@ -182,6 +183,13 @@ async function main() {
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
     result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account");
+  }
+
+  // Sólo áreas profesionales (import-filter.ts): lo demás se cuenta como rechazo y no entra.
+  for (const b of result.batches) {
+    const { kept, rejected } = filterImported(b.postings);
+    b.postings = kept;
+    for (const [k, v] of Object.entries(rejected)) b.rejected[k] = (b.rejected[k] ?? 0) + v;
   }
 
   const inv = await readJson<Inventory>(INV, emptyInventory("real"));

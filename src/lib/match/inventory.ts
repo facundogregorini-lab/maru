@@ -2,6 +2,7 @@ import { workplaceFromDescription } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
 import { salaryFromText } from "./salary";
+import { importRejection } from "./import-filter";
 import { INFERRED, isInferred } from "./labels";
 import { sourceById } from "./sources";
 import { sha } from "./hash";
@@ -208,7 +209,8 @@ const daysSince = (a: string, now: string) => (new Date(now).getTime() - new Dat
 
 /**
  * Avisos importados de proveedores con cuota (no los consulta la sync diaria): se cierran por el
- * vencimiento informado o si pasan `staleDays` sin volver a verse. Así el catálogo no arrastra
+ * vencimiento informado, si quedan fuera de las áreas que importamos (import-filter.ts) o si pasan
+ * `staleDays` sin volver a verse. Así el catálogo no arrastra
  * avisos viejos cuando se termina el saldo de un proveedor.
  */
 export function expireImported(inv: Inventory, now: string): number {
@@ -217,6 +219,7 @@ export function expireImported(inv: Inventory, now: string): number {
     const source = sourceById(p.sourceId);
     if (!source?.imported || p.status !== "abierta") continue;
     if (p.expiresAt && Date.parse(p.expiresAt) < Date.parse(now)) close(p, now, "Venció según la fuente");
+    else if (importRejection(p.title, p.extracted.family.value)) close(p, now, "Fuera de las áreas que importamos");
     else if (daysSince(p.lastSeenAt, now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
     else continue;
     closed++;
