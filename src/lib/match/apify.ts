@@ -90,11 +90,32 @@ export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: nu
 export const APIFY_PRICE_PER_ROW: Record<ApifyJobSource, number> = { linkedin: 0.002, indeed: 0.0001, computrabajo: 0.0015 };
 export const APIFY_START_USD = 0.02;
 
-/** Palabras clave para importar: generalistas primero (huecos de E0), después tecnología. */
+/**
+ * Palabras clave para importar: sólo áreas profesionales (decisión del dueño, 19/10/2026; ver import-filter.ts).
+ * LinkedIn es la fuente que trae ese perfil; Computrabajo e Indeed traían sobre todo oficios o poco volumen.
+ */
 export const APIFY_KEYWORDS: Record<ApifyJobSource, string[]> = {
-  computrabajo: ["administrativo", "contable", "recursos humanos", "vendedor", "logística", "atención al cliente", "compras", "tesorería", "analista", "asistente"],
-  indeed: ["administrativo", "contable", "recursos humanos", "vendedor", "logística", "atención al cliente", "compras", "analista", "desarrollador", "data analyst"],
-  linkedin: ["analista administrativo", "contador", "recursos humanos", "ejecutivo comercial", "logística", "analista de datos"],
+  linkedin: [
+    // Tecnología y datos
+    "desarrollador backend", "desarrollador frontend", "full stack developer", "software engineer", "qa automation",
+    "devops engineer", "cloud engineer", "mobile developer", "ciberseguridad", "analista funcional", "consultor sap",
+    "data engineer", "data analyst", "data scientist", "business intelligence", "machine learning",
+    // Producto y diseño
+    "product manager", "product owner", "ux ui designer", "product designer", "diseñador gráfico",
+    // Marketing
+    "performance marketing", "marketing digital", "seo", "growth marketing", "content marketing", "brand manager",
+    "trade marketing", "community manager", "crm marketing",
+    // Finanzas
+    "analista financiero", "fp&a", "controller", "tesorería", "auditoría", "analista de impuestos", "analista contable",
+    "contador", "riesgo crediticio", "analista de inversiones",
+    // Ventas B2B y clientes
+    "account executive", "business development", "key account manager", "customer success manager", "sales development representative",
+    // RRHH, legal, operaciones y consultoría
+    "talent acquisition", "hr business partner", "analista de recursos humanos", "compensaciones y beneficios",
+    "abogado", "compliance", "project manager", "business analyst", "analista de procesos", "pmo", "consultor de negocios",
+  ],
+  computrabajo: ["analista contable", "analista financiero", "desarrollador", "analista de recursos humanos", "marketing digital", "analista de datos"],
+  indeed: ["desarrollador", "data analyst", "analista financiero", "marketing", "analista contable", "product manager"],
 };
 
 /** Peor caso de una corrida: inicio + todas las filas pedidas. */

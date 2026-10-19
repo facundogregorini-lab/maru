@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { apifyNextCap } from "@/lib/match/apify";
+import { filterImported, importRejection } from "@/lib/match/import-filter";
 import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported } from "@/lib/match/inventory";
 import { workplaceFromDescription } from "@/lib/match/connectors";
 import { isInferred } from "@/lib/match/labels";
@@ -190,6 +191,31 @@ describe("saldo: nunca más de lo incluido", () => {
     expect(apifyNextCap("linkedin", 100, 0, 5)).toBeCloseTo(0.22);
     expect(apifyNextCap("linkedin", 100, 4.9, 5)).toBe(0);
     expect(apifyNextCap("indeed", 100, 4.9, 5)).toBeCloseTo(0.03);
+  });
+});
+
+describe("filtro de áreas para importaciones pagas", () => {
+  it.each([
+    ["Senior Data Analyst", "datos", null], ["Analista de Impuestos Ssr.", "finanzas", null], ["Account Executive", "ventas", null],
+    ["Customer Success Manager", "atencion_cliente", null], ["Analista de Experiencia de Clientes", "otros", null],
+    ["Chofer de reparto", "logistica", "puesto_no_buscado"], ["Operario/a de Armado de Pedidos", "logistica", "puesto_no_buscado"],
+    ["Atención al cliente en mostrador / Pollería", "atencion_cliente", "puesto_no_buscado"],
+    ["Vendedor de Salón - Comodoro Rivadavia", "comercio", "puesto_no_buscado"], ["Asesor Comercial Vendedor Viajante", "ventas", "puesto_no_buscado"],
+    ["Operador/a de Contact Center", "atencion_cliente", "puesto_no_buscado"], ["Cocinero", "gastronomia", "puesto_no_buscado"],
+    ["Enfermero/a Profesional", "salud", "fuera_de_area"], ["Jefe de logística", "logistica", "fuera_de_area"], ["Profesor de inglés", "educacion", "fuera_de_area"],
+  ] as const)("%s → %s", (title, family, why) => expect(importRejection(title, family)).toBe(why));
+
+  it("la importación descarta lo que no entra y la sync cierra lo que ya estaba, sin tocar las bolsas de empleadores", () => {
+    const rows = [fantasticRow, { ...fantasticRow, id: "7", title: "Chofer de reparto zona norte" }];
+    const batch = normalizeFantastic(rows, "fantastic_ats", "G1", T);
+    expect(filterImported(batch.postings)).toMatchObject({ kept: [{ externalId: "2416629355" }], rejected: { puesto_no_buscado: 1 } });
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: batch.postings, complete: false }, NOW);
+    const ats = { ...batch.postings[1], sourceId: "greenhouse", boardId: "greenhouse:acme", externalId: "g7" };
+    applyBoard(inv, "greenhouse:acme", "greenhouse", { postings: [ats], complete: true }, NOW);
+    expect(expireImported(inv, NOW)).toBe(1);
+    expect(inv.postings.find((p) => p.externalId === "7")!.closedReason).toBe("Fuera de las áreas que importamos");
+    expect(inv.postings.find((p) => p.externalId === "g7")!.status).toBe("abierta");
   });
 });
 

@@ -72,6 +72,10 @@ Catálogo después de la sync: **13.128 oportunidades abiertas, 3.683 elegibles 
 
 Desde #60, si Google Jobs no responde una búsqueda en 55 s, la búsqueda se saltea y la corrida sigue. Si fallan dos seguidas, frena. Las búsquedas "zona norte/oeste/sur" de la tanda 4 traen pocas filas y suelen tardar: no vale la pena repetirlas.
 
+## Filtro de áreas (desde el 19/10/2026)
+
+Decisión del dueño: de los proveedores con cuota entran sólo áreas profesionales, como en jobright (`src/lib/match/import-filter.ts`). Son tecnología, datos, producto, diseño, marketing, finanzas, consultoría, legal, RRHH, operaciones, ventas y administración. Atención al cliente y «Otras áreas» entran sólo con puestos de analista para arriba. Nunca entran chofer, operario, mostrador, cajero, repositor, mozo, vigilador, contact center, vendedor de salón o viajante ni similares. El resumen de cada corrida cuenta esos rechazos (`fuera_de_area`, `puesto_no_buscado`). La sync diaria cierra los importados que no pasan el filtro. Las búsquedas de Google Jobs de oficios (tanda 5) y las generalistas del interior (tanda 2) ahora casi no suman: no conviene gastar búsquedas en ellas.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
