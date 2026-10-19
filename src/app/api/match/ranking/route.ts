@@ -3,6 +3,7 @@ import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
 import { rankOpportunities, weightsFromEnv } from "@/lib/match/ranking";
+import { rerank, rerankEnabled } from "@/lib/match/rerank";
 import type { NormalizedPosting, StoredPosting } from "@/lib/match/types";
 
 export const runtime = "nodejs";
@@ -10,6 +11,8 @@ export const runtime = "nodejs";
 /**
  * Ranking personalizado. Es sin estado: el perfil, las preferencias y las búsquedas propias
  * llegan en el pedido, se usan para ordenar y no se guardan ni se registran en logs.
+ * Las mejores de la etapa por reglas se re-evalúan con IA (rerank.ts); esa evaluación queda
+ * en memoria del proceso hasta una hora para no repetir llamadas al recargar.
  */
 export async function POST(req: Request) {
   const raw = await req.text();
@@ -38,8 +41,9 @@ export async function POST(req: Request) {
     const allPostings = new Map<string, StoredPosting>(postings);
     for (const p of own) allPostings.set(p.key, p);
 
-    const result = rankOpportunities({
-      opportunities: [...inv.opportunities, ...ownOpps],
+    const opportunities = [...inv.opportunities, ...ownOpps];
+    const ranked = rankOpportunities({
+      opportunities,
       postings: allPostings,
       profile,
       prefs,
@@ -49,6 +53,10 @@ export async function POST(req: Request) {
       limit,
       now,
     });
+    // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
+    const result = rerankEnabled()
+      ? await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings })
+      : ranked;
 
     return Response.json(
       {

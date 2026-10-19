@@ -42,6 +42,8 @@ scripts/match-sync.ts  ──escribe──►  data/match/inventory.json  ──
 | --- | --- |
 | `ADMIN_EMAILS` | Emails separados por comas, espacios o saltos de línea con acceso a `/match/admin`. Sin esta variable nadie es admin. Requiere sesión del login existente, con Google. |
 | `MATCH_WEIGHTS` | Opcional. Pesos del ranking `rol,seniority,requisitos,preferencias`. Default `40,25,20,15`. |
+| `MATCH_MODEL` | Opcional. Modelo de la re-evaluación con IA. Default `claude-haiku-5-5`. |
+| `MATCH_IA` | Opcional. `off` apaga la re-evaluación con IA (queda el orden por reglas). |
 | `MATCH_DISABLED_SOURCES` | Opcional. Fuentes a apagar sin tocar código, ej. `remotive,jobicy`. |
 | `MATCH_SYNC_BUDGET_MS` | Opcional (script). Tiempo máximo de una ejecución antes de guardar checkpoint. Default 20 min. |
 
@@ -132,7 +134,7 @@ Para sumar empresas: `/match/admin → Agregar una empresa` valida la URL contra
 5. **Orden**: descartar con motivo saca la oportunidad y ajusta el orden (mismo rol → baja; "no quiero esta empresa" → excluye la empresa). Guardados, frescura, cambio de carrera y convocatorias abiertas también pueden cambiar el orden; no cambian el porcentaje de afinidad. Se conserva variedad de empresas y ocultamiento de avisos antiguos. El umbral mínimo no oculta búsquedas agregadas por la persona.
 6. No se usan edad, foto, género ni otros atributos personales. El perfil del match sólo tiene cargos, habilidades, idiomas, años de experiencia y ubicación.
 
-**Profundidad**: este ranking es básico (reglas + texto) y no usa IA ni credenciales nuevas. La evaluación detallada con IA de una búsqueda concreta ocurre al tocar "Preparar mi postulación", que reutiliza el coach existente (`/api/analyze` y `/api/generate`). La interpretación del CV reutiliza `/api/profile`.
+**Profundidad** (desde el 19/10/2026): dos etapas. La primera es la de arriba (reglas + texto, sin IA). La segunda (`src/lib/match/rerank.ts`) re-evalúa con IA las 30 primeras de "Para vos" y las 10 de "Por confirmar": el modelo (`MATCH_MODEL`, por defecto `claude-haiku-5-5`) clasifica función, nivel y salario (normaliza moneda y período a USD por mes, define la moneda si falta y estima el salario no publicado, que pesa la mitad), aplica los descartes y recién después puntúa 40/25/20/15 con una razón por componente y una razón principal. El servidor aplica las reglas duras: función ajena o nivel claramente inferior → fuera; salario publicado menor → fuera; salario estimado menor → se muestra con aviso; nivel dudoso → "Por confirmar"; rol < 20 → tope de 40. Tandas de 6 avisos en paralelo, `effort: low`, 25 s por tanda sin reintentos y caché en memoria por perfil y aviso durante una hora (recargar, guardar o descartar no vuelve a llamar). Si falla, no hay clave o `MATCH_IA=off`, queda el orden por reglas. La evaluación detallada de una búsqueda concreta sigue en "Preparar mi postulación" (`/api/analyze` y `/api/generate`). La interpretación del CV reutiliza `/api/profile`.
 
 ## Privacidad y seguridad
 

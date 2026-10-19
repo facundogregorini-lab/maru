@@ -8,3 +8,5 @@ Caso reportado: un líder de growth (Fever, Mercado Libre, cofundador SaaS) con 
 Perfiles ficticios en `tests/match-eval-cases.ts`. Se regenera con `npx tsx scripts/match-eval.ts <archivo>`. El set de evaluación automático (`tests/match-eval.test.ts`) usa avisos fijos para que no cambie con cada sincronización.
 
 Líder de growth, antes → después (reglas): Head of Marketing de Halter pasa del puesto 18 (66 %) al 1; salen Video Editor (74 % y 67 %), Creative Strategist, Paid Media Specialist y todos los avisos en USD con máximo menor a 7.000. Los "Manager" sin equipo a cargo y los salarios sin moneda quedan en "Por confirmar".
+
+Pendiente: `despues-ia.md`, con la re-evaluación por IA (`npx tsx scripts/match-eval.ts despues-ia.md --ia` con `ANTHROPIC_API_KEY`, o el workflow manual `match-eval`).
