@@ -76,6 +76,10 @@ Desde #60, si Google Jobs no responde una búsqueda en 55 s, la búsqueda se sal
 
 Decisión del dueño: de los proveedores con cuota entran sólo áreas profesionales, como en jobright (`src/lib/match/import-filter.ts`). Son tecnología, datos, producto, diseño, marketing, finanzas, consultoría, legal, RRHH, operaciones, ventas y administración. Atención al cliente y «Otras áreas» entran sólo con puestos de analista para arriba. Nunca entran chofer, operario, mostrador, cajero, repositor, mozo, vigilador, contact center, vendedor de salón o viajante ni similares. El resumen de cada corrida cuenta esos rechazos (`fuera_de_area`, `puesto_no_buscado`). La sync diaria cierra los importados que no pasan el filtro. Las búsquedas de Google Jobs de oficios (tanda 5) y las generalistas del interior (tanda 2) ahora casi no suman: no conviene gastar búsquedas en ellas.
 
+## Actores de LinkedIn más baratos (desde el 19/10/2026)
+
+`--actor=curious` (default, US$2 cada 1.000 filas), `--actor=valig` (US$0,40) o `--actor=cheap` (US$0,70, mínimo 150 filas por búsqueda). Precios del plan gratis de Apify, de su tienda (19/10/2026). Ejemplo: `provider=apify mode=run args=--actor=valig --rows=100 --keywords-per-source=2 --budget-usd=5 --budget-source=account`. Con `--rows` se piden hasta 500 filas por búsqueda.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
