@@ -5178,6 +5178,386 @@
         "spentUsd": 3.077,
         "budgetUsd": 3.2
       }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data engineer",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "FlKHJxkvgNT2GVF0D",
+        "datasetId": "DsC9OE4ka2Pu2OVQU"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 1.712,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data analyst",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "su50vTHiawcj094xN",
+        "datasetId": "c0iF8bYAH40g3B8aS"
+      },
+      "rows": 300,
+      "consumed": 0.2449,
+      "quota": {
+        "usageTotalUsd": 0.10494,
+        "spentUsd": 1.957,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data scientist",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "5O2aIJwH3nedGAkVE",
+        "datasetId": "DHC9ClXbOin7URXoe"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 2.199,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "business intelligence",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "5LJkGBoOQryNmNq8U",
+        "datasetId": "mwfjusaF7rF0mWNk2"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 2.441,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "machine learning",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "hS3w8pWyisAYKV054",
+        "datasetId": "dAXNk9QktW5JbHhP6"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 2.682,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "fPJCLj9JBkCZrsuKQ",
+        "datasetId": "QxdreN2A28OZcYboJ"
+      },
+      "rows": 300,
+      "consumed": 0.2413,
+      "quota": {
+        "usageTotalUsd": 0.10134,
+        "spentUsd": 2.924,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product owner",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "ikU8c8JCV79cEvOD7",
+        "datasetId": "G54aJrPYWVn8yn4Tj"
+      },
+      "rows": 300,
+      "consumed": 0.2446,
+      "quota": {
+        "usageTotalUsd": 0.10458,
+        "spentUsd": 3.168,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ux ui designer",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "njnfnTGOjlIqhZfvn",
+        "datasetId": "SIkKmGJjmxhbnZmY5"
+      },
+      "rows": 135,
+      "consumed": 0.1067,
+      "quota": {
+        "usageTotalUsd": 0.04374,
+        "spentUsd": 3.275,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product designer",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "N31IsBihJTcMYKmtS",
+        "datasetId": "ZvPGzfInhW1KQOTvi"
+      },
+      "rows": 161,
+      "consumed": 0.1257,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 3.401,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "disenador grafico",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "UhEBh2f5zNDqpYoaK",
+        "datasetId": "5OFRGrZF6NV3nYTqg"
+      },
+      "rows": 261,
+      "consumed": 0.2116,
+      "quota": {
+        "usageTotalUsd": 0.08982,
+        "spentUsd": 3.612,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "performance marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "47dqS6g4GxWGHunYZ",
+        "datasetId": "A3fKRC9QdcxYyvaRo"
+      },
+      "rows": 300,
+      "consumed": 0.2439,
+      "quota": {
+        "usageTotalUsd": 0.10386000000000001,
+        "spentUsd": 3.856,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing digital",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "4y9wLLAF8ccFBCOYe",
+        "datasetId": "51Rc0fmKPOBxDjmKR"
+      },
+      "rows": 300,
+      "consumed": 0.2403,
+      "quota": {
+        "usageTotalUsd": 0.10026,
+        "spentUsd": 4.096,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "seo",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "M0zSToaIt2XM5uihI",
+        "datasetId": "R9Z72IlrVMhHwkM99"
+      },
+      "rows": 170,
+      "consumed": 0.1368,
+      "quota": {
+        "usageTotalUsd": 0.05742,
+        "spentUsd": 4.233,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "growth marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "JndHo8k6hPllCXCUV",
+        "datasetId": "gcPOBLNkJDadOiibF"
+      },
+      "rows": 300,
+      "consumed": 0.2399,
+      "quota": {
+        "usageTotalUsd": 0.0999,
+        "spentUsd": 4.473,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "content marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "Cj6zW6545SHdC1pyN",
+        "datasetId": "ffHsM84QK0Bu00v95"
+      },
+      "rows": 300,
+      "consumed": 0.2439,
+      "quota": {
+        "usageTotalUsd": 0.10386000000000001,
+        "spentUsd": 4.717,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "brand manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "5artWCODx1yrw31Bw",
+        "datasetId": "uZZnQH7Jz9qc9XszZ"
+      },
+      "rows": 300,
+      "consumed": 0.241,
+      "quota": {
+        "usageTotalUsd": 0.10098,
+        "spentUsd": 4.958,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "trade marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "YfZNJLuU3b2mReQku",
+        "datasetId": "nK8P7L4UY89ukSVTT"
+      },
+      "rows": 300,
+      "consumed": 0.2421,
+      "quota": {
+        "usageTotalUsd": 0.10206,
+        "spentUsd": 5.2,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "community manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "NqzauZbHnM5xdAVBf",
+        "datasetId": "y2wjaFH9uRIlYfA9D"
+      },
+      "rows": 300,
+      "consumed": 0.2442,
+      "quota": {
+        "usageTotalUsd": 0.10422000000000001,
+        "spentUsd": 5.444,
+        "budgetUsd": 7
+      }
+    },
+    {
+      "at": "2026-10-19T04:32:07.283Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "crm marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "jIyIl9LTvhhvrlykl",
+        "datasetId": "o2M9vQgn06TaKndPy"
+      },
+      "rows": 300,
+      "consumed": 0.237,
+      "quota": {
+        "usageTotalUsd": 0.09702000000000001,
+        "spentUsd": 5.681,
+        "budgetUsd": 7
+      }
     }
   ]
 }
