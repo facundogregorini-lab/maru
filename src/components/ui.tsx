@@ -2,6 +2,7 @@
 
 import MaruWorking from "./maru/MaruWorking";
 import { notifyPlanLimit } from "@/lib/tracking/paywall";
+import { motivoDe, requestLogin } from "@/lib/loginRequest";
 import { capture, herramientaDeResultado } from "@/lib/tracking/posthog";
 
 /** Piezas visuales compartidas por todas las secciones de Maru. */
@@ -76,7 +77,7 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
   );
 }
 
-export async function post<T>(url: string, body: unknown): Promise<T> {
+export async function post<T>(url: string, body: unknown, retried = false): Promise<T> {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (res.status === 413) {
     throw Object.assign(new Error("Tu archivo es demasiado pesado para enviarlo. Exportalo más liviano (menos de 3 MB) o pegá tu experiencia."), {
@@ -85,6 +86,12 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
   }
   const data = await res.json().catch(() => ({ error: "Respuesta inesperada del servidor." }));
   if (!res.ok) {
+    // Sin sesión: se abre el ingreso con Google y, si entra, la misma llamada sigue sola (una vez).
+    if (res.status === 401 && data.code === "AUTH_REQUIRED" && !retried && typeof window !== "undefined") {
+      capture("herramienta_error", { ruta: url, codigo: "AUTH_REQUIRED" });
+      if (await requestLogin(motivoDe(url))) return post<T>(url, body, true);
+      throw Object.assign(new Error("Ingresá con Google para seguir. Lo que cargaste sigue acá."), { code: "AUTH_REQUIRED" });
+    }
     // Si el cupo gratis frenó la acción, se abren los planes (PaywallHost). El mensaje de error sigue igual.
     notifyPlanLimit(url, res.status, data.code);
     // Para los funnels: en qué ruta y con qué código se corta (AUTH_REQUIRED, PLAN_LIMIT, CV_UNREADABLE…).

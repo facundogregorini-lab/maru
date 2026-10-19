@@ -12,7 +12,7 @@ export function billingSession(req: Request): string | null {
     return expected && expected !== email ? null : email;
   } catch { return null; }
 }
-export const loginRequired = () => billingJson({ error: "Ingresá con tu email desde el menú para continuar.", code: "AUTH_REQUIRED" }, 401);
+export const loginRequired = () => billingJson({ error: "Ingresá con Google para continuar.", code: "AUTH_REQUIRED" }, 401);
 export async function planGuard(req: Request, kind?: UsageKind): Promise<Response | null> {
   if (!billingReady()) return null;
   const email = billingSession(req);
