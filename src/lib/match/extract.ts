@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 15;
+export const EXTRACTION_VERSION = 16;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -168,7 +168,7 @@ export function splitSections(text: string): { required: string; desirable: stri
  * ("Data Collector" es entrenamiento de IA, no datos; "Operario de armado de pedidos" es logística, no producción).
  */
 const FAMILY_RULES: [RoleFamily, RegExp][] = [
-  ["entrenamiento_ia", /\b(ai trainers?|trainers network|ai tutor|data collector|recolector de datos|collecteur|data collection|video collection|data contributor|(audio|voice|video) (data )?contributor|rater|annotat|anotador|etiquetador|transcription|transcripci|linguists?|evaluator|validator|speech (& voice|and voice|data)|voice ai|(mathematics|physics|chemistry|biology|bioinformatics) expert)/],
+  ["entrenamiento_ia", /\b(ai trainers?|ai training|entrenamiento de (la )?ia|ai code ranking|trainers network|ai tutor|data collector|recolector de datos|collecteur|data collection|video collection|data contributor|(audio|voice|video) (data )?contributor|rater|annotat|anotador|etiquetador|transcription|transcripci|linguists?|evaluator|validator|speech (& voice|and voice|data)|voice ai|(mathematics|physics|chemistry|biology|bioinformatics) expert)/],
   ["datos", /\b(data (analyst|scientist|science|engineer|reporting)|analista de datos|analista de reporting|cientific[oa] de datos|business intelligence|\bbi\b|analytics|insights analyst|research scientist|machine learning|ml engineer)/],
   ["producto", /\b(product (manager|owner|lead|director|operations|analyst|management)|desarrollo de producto|gerente de producto|\bpm\b|product ops)/],
   ["diseno", /\b(designer|diseñador|disenador|ux|ui|product design|motion|graphic|grafic)/],

@@ -76,13 +76,35 @@ export function companyDomains(postings: StoredPosting[]): Map<string, string> {
 /** Ícono del sitio de la empresa (servicio público de Google, sin claves). */
 export const domainLogo = (domain: string) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`;
 
-/** Logos de la fuente, después los de la misma empresa y, si no hay, el ícono de su sitio. */
+/**
+ * Sitio de empleadores frecuentes que llegan sin logo (sobre todo de LinkedIn vía Apify, que no lo trae)
+ * y cuyo dominio no aparece en el aviso. Sólo dominios oficiales conocidos; ante la duda, no se agrega.
+ */
+export const KNOWN_DOMAINS: Record<string, string> = {
+  ey: "ey.com", techint: "techint.com", sezzle: "sezzle.com", chevron: "chevron.com", jpmorganchase: "jpmorganchase.com",
+  despegar: "despegar.com", alpaca: "alpaca.markets", accor: "accor.com", dlocal: "dlocal.com", dentsu: "dentsu.com",
+  proxify: "proxify.io", kraken: "kraken.com", avenga: "avenga.com", xometry: "xometry.com", clara: "clara.com",
+  dept: "deptagency.com", talan: "talan.com", globallogic: "globallogic.com", bridgenext: "bridgenext.com", "zs associates": "zs.com",
+  kpmg: "kpmg.com", google: "google.com", "capgemini engineering": "capgemini.com", capgemini: "capgemini.com", pfizer: "pfizer.com",
+  "teladoc health": "teladochealth.com", pedidosya: "pedidosya.com", personal: "personal.com.ar", konecta: "grupokonecta.com",
+  sonda: "sonda.com", supabase: "supabase.com", "air liquide": "airliquide.com", pwc: "pwc.com", "helmerich & payne": "hpinc.com",
+  "precision for medicine": "precisionformedicine.com", "backblaze external website": "backblaze.com", backblaze: "backblaze.com",
+  oliver: "oliver.agency", "scale army": "scalearmy.com", "hire hangar": "hirehangar.com", "wing assistant": "wingassistant.com",
+  alignerr: "alignerr.com", comafi: "comafi.com.ar", "mercado libre": "mercadolibre.com", accenture: "accenture.com",
+  deloitte: "deloitte.com", ibm: "ibm.com", microsoft: "microsoft.com", amazon: "amazon.com", globant: "globant.com",
+  santander: "santander.com", bbva: "bbva.com", "naranja x": "naranjax.com", "mercado pago": "mercadopago.com",
+};
+
+/** También sin aclaraciones entre paréntesis: "PwC (jóvenes profesionales)" → pwc. */
+const knownDomain = (company: string) => KNOWN_DOMAINS[companyKey(company)] ?? KNOWN_DOMAINS[companyKey(company.replace(/\([^)]*\)/g, " "))];
+
+/** Logos de la fuente, después los de la misma empresa y, si no hay, el ícono de su sitio (del aviso o conocido). */
 export function withCompanyLogos(postings: StoredPosting[]): StoredPosting[] {
   const shared = shareCompanyLogos(postings);
   const domains = companyDomains(shared);
   return shared.map((p) => {
     if (p.companyLogo || isGenericCompany(p.company)) return p;
-    const d = domains.get(companyKey(p.company));
+    const d = domains.get(companyKey(p.company)) ?? knownDomain(p.company);
     return d ? { ...p, companyLogo: domainLogo(d) } : p;
   });
 }
