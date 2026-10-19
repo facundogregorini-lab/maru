@@ -2,8 +2,8 @@ import { RankingRequestSchema, invalidFields, type ExternalJob } from "@/lib/mat
 import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
-import { rankOpportunities, weightsFromEnv } from "@/lib/match/ranking";
-import { rerank, rerankEnabled } from "@/lib/match/rerank";
+import { rankOpportunities, weightsFromEnv, type RankOutput } from "@/lib/match/ranking";
+import { RERANK_ELIGIBLE, RERANK_PENDING, rerank, rerankEnabled } from "@/lib/match/rerank";
 import type { NormalizedPosting, StoredPosting } from "@/lib/match/types";
 
 export const runtime = "nodejs";
@@ -42,6 +42,7 @@ export async function POST(req: Request) {
     for (const p of own) allPostings.set(p.key, p);
 
     const opportunities = [...inv.opportunities, ...ownOpps];
+    const ai = rerankEnabled();
     const ranked = rankOpportunities({
       opportunities,
       postings: allPostings,
@@ -50,12 +51,13 @@ export async function POST(req: Request) {
       interactions: inter,
       filters,
       weights: weightsFromEnv(),
-      limit,
+      // Con IA, la primera etapa entrega las 200 mejores para re-evaluar; después se recorta a la página.
+      limit: ai ? Math.max(limit ?? 40, RERANK_ELIGIBLE, RERANK_PENDING) : limit,
       now,
     });
     // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
-    const result = rerankEnabled()
-      ? await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings })
+    const result = ai
+      ? pageOf(await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }), limit ?? 40)
       : ranked;
 
     return Response.json(
@@ -73,6 +75,13 @@ export async function POST(req: Request) {
     console.error("[match/ranking]", err instanceof Error ? err.message : "error");
     return Response.json({ error: "No pudimos armar tu ranking. Probá de nuevo.", code: "UNKNOWN" }, { status: 500 });
   }
+}
+
+/** La página pedida ("Ver más" suma de a 40), después de re-evaluar. */
+function pageOf<T extends RankOutput>(r: T, limit: number): T {
+  const eligible = r.eligible.slice(0, limit);
+  const pending = r.pending.slice(0, limit);
+  return { ...r, eligible, pending, counts: { ...r.counts, shown: eligible.length + pending.length } };
 }
 
 function externalToPosting(e: ExternalJob): NormalizedPosting {

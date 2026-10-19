@@ -13,15 +13,18 @@ import { SENIORITY_ORDER, type MatchPrefs, type MatchProfile, type Opportunity, 
  * aplica los descartes y recién después puntúa por componente. Si falla o no está configurada,
  * queda el orden por reglas.
  *
- * Costo: Haiku por defecto (MATCH_MODEL), tandas de BATCH avisos y caché en memoria por perfil y
- * aviso, así que recargar el ranking, guardar o descartar no vuelve a llamar a la IA.
+ * Costo: Haiku por defecto (MATCH_MODEL), ~22 tandas de BATCH avisos en paralelo (~US$0,06 por
+ * ranking nuevo) y caché en memoria por perfil y aviso, así que recargar el ranking, guardar,
+ * descartar o "Ver más" no vuelve a llamar a la IA.
  * El perfil no se guarda fuera de la memoria del proceso ni se registra en logs.
  */
 
-export const RERANK_ELIGIBLE = 30;
-export const RERANK_PENDING = 10;
-const BATCH = 6;
-const TIMEOUT_MS = 25_000;
+/** Cuántas de cada lista se re-evalúan (pedido del dueño, 19/10: las primeras 200 de "Para vos"). */
+export const RERANK_ELIGIBLE = 200;
+export const RERANK_PENDING = 20;
+/** Avisos por llamada. Todas las tandas van en paralelo: la demora es la de la tanda más lenta. */
+const BATCH = 10;
+const TIMEOUT_MS = 40_000;
 const PROMPT_VERSION = 1;
 const DESCRIPTION_CHARS = 2500;
 
@@ -235,7 +238,7 @@ async function defaultEvaluate(system: string, content: string): Promise<AiEval[
     schema: EvalSchema,
     effort: "low",
     model: rerankModel(),
-    maxTokens: 6000,
+    maxTokens: 10000,
     timeoutMs: TIMEOUT_MS,
     editorialPaths: (d) => d.avisos.map((_, i) => `avisos.${i}.razonPrincipal`),
   });
