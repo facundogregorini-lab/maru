@@ -94,10 +94,12 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious") {
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week") {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
-  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location: "Argentina", datePosted: "r604800", limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
-  if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location: "Argentina", publishedAt: "r604800", maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
+  // Antigüedad máxima del aviso en los Actors alternativos: una semana (default) o un mes.
+  const age = window === "month" ? "r2592000" : "r604800";
+  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location: "Argentina", datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location: "Argentina", publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
   return { keyword, countryCode: "ar", maxJobs: limit, proxyConfiguration: { useApifyProxy: false } };

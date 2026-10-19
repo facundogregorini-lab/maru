@@ -16,7 +16,7 @@ import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, LINKEDIN_ACTOR
 import { filterImported } from "../src/lib/match/import-filter";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
-import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
+import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportBatch, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
 import type { BoardSyncResult, Inventory, NormalizedPosting } from "../src/lib/match/types";
 
 const DATA = path.join(process.cwd(), "data", "match");
@@ -73,7 +73,7 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious"): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -91,7 +91,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor);
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window);
       const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
       try {
         const actor = actorName.replace("/", "~");
@@ -119,6 +119,8 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword });
         out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } });
         log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
+        // Lo pagado se guarda en disco enseguida: si el job se corta después, no se pierde.
+        await onRun?.(out);
         // Diagnóstico sin datos del aviso: si nada pasa, sólo los nombres de campo que llegaron.
         if (list.length && !normalized.accepted) log(`  campos recibidos: ${Object.keys(Object(list[0])).sort().join(", ")} · rechazos ${JSON.stringify(normalized.rejected)}`);
       } catch (e) {
@@ -130,6 +132,52 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
     }
   }
   return out;
+}
+
+/* ---------- guardado: después de cada corrida paga y al final ---------- */
+
+type Progress = { saved: Set<ImportBatch>; totals: { created: number; updated: number; unchanged: number; closed: number }; boards: Map<string, BoardSyncResult> };
+const newProgress = (): Progress => ({ saved: new Set(), totals: { created: 0, updated: 0, unchanged: 0, closed: 0 }, boards: new Map() });
+
+/**
+ * Aplica al inventario en disco los lotes que todavía no se guardaron y reescribe el ledger completo.
+ * Apify lo llama después de cada corrida: si el job se corta, lo ya pagado quedó en disco y el paso
+ * "Guardar inventario y consumo" del workflow (always) lo commitea igual.
+ */
+async function persist(result: ImportResult, ledgerBase: LedgerEntry[], nowIso: string, p: Progress, final = false): Promise<Inventory> {
+  const pending = result.batches.filter((b) => !p.saved.has(b));
+  // Sólo áreas profesionales (import-filter.ts): lo demás se cuenta como rechazo y no entra.
+  for (const b of pending) {
+    const { kept, rejected } = filterImported(b.postings);
+    b.postings = kept;
+    for (const [k, v] of Object.entries(rejected)) b.rejected[k] = (b.rejected[k] ?? 0) + v;
+    p.saved.add(b);
+  }
+  const inv = await readJson<Inventory>(INV, emptyInventory("real"));
+  if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
+  const byBoard = new Map<string, { sourceId: string; postings: NormalizedPosting[]; received: number }>();
+  for (const b of pending) {
+    const acc = byBoard.get(b.boardId) ?? { sourceId: b.sourceId, postings: [], received: 0 };
+    acc.postings.push(...b.postings);
+    acc.received += b.received;
+    byBoard.set(b.boardId, acc);
+  }
+  for (const [boardId, b] of byBoard) {
+    const s = applyBoard(inv, boardId, b.sourceId, { postings: b.postings, complete: false }, nowIso);
+    for (const k of Object.keys(p.totals) as (keyof Progress["totals"])[]) p.totals[k] += s[k];
+    const received = (p.boards.get(boardId)?.received ?? 0) + b.received;
+    p.boards.set(boardId, { boardId, ok: true, complete: false, received, durationMs: 0 });
+    inv.boards[boardId] = { boardId, sourceId: b.sourceId, lastAttemptAt: nowIso, lastOkAt: nowIso, lastError: null, consecutiveFailures: 0, lastReceived: received };
+    log(`${boardId}: +${s.created} nuevos, ~${s.updated} actualizados, =${s.unchanged} sin cambios, ${s.closed} cerrados.`);
+  }
+  if (byBoard.size || (final && p.boards.size)) {
+    inv.opportunities = buildOpportunities(inv.postings);
+    inv.generatedAt = nowIso;
+    if (final) recordRun(inv, { startedAt: nowIso, finishedAt: new Date().toISOString(), mode: "incremental", boards: [...p.boards.values()], ...p.totals, errors: result.stopped ? 1 : 0 });
+    await writeJson(INV, forStorage(inv));
+  }
+  await writeJson(LEDGER, { entries: [...ledgerBase, ...result.ledger].slice(-1000) }, true);
+  return inv;
 }
 
 /* ---------- main ---------- */
@@ -181,50 +229,23 @@ async function main() {
   const state = await readJson<{ lock: { owner: string } | null }>(STATE, { lock: null });
   if (state.lock) throw new Error(`Hay una sincronización en curso (${state.lock.owner}); probá más tarde.`);
 
+  const progress = newProgress();
   let result: ImportResult;
   if (provider === "fantastic") result = await runFantastic(key("FANTASTIC_JOBS"), fantasticPlan, log, nowIso);
   else if (provider === "serpapi") result = await runSerp(key("SERP_API"), serpPlan, log, nowIso);
   else {
-    if (!(apifyBudget > 0 && apifyBudget <= 5)) throw new Error("Indicá --budget-usd entre 0 y 5 (presupuesto aprobado por el dueño).");
+    // Tope aprobado por el dueño: US$5 (16/10) más la compra única de hasta US$29 (19/10). Con --budget-source=account
+    // se compara contra el gasto real del mes en Apify, así que el número a pasar es gasto actual + lo que se quiere gastar.
+    if (!(apifyBudget > 0 && apifyBudget <= 35)) throw new Error("Indicá --budget-usd entre 0 y 35 (presupuesto aprobado por el dueño).");
+    const window = arg("date-posted") ?? "week";
+    if (window !== "week" && window !== "month") throw new Error("--date-posted debe ser week o month.");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor);
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined));
   }
 
-  // Sólo áreas profesionales (import-filter.ts): lo demás se cuenta como rechazo y no entra.
-  for (const b of result.batches) {
-    const { kept, rejected } = filterImported(b.postings);
-    b.postings = kept;
-    for (const [k, v] of Object.entries(rejected)) b.rejected[k] = (b.rejected[k] ?? 0) + v;
-  }
-
-  const inv = await readJson<Inventory>(INV, emptyInventory("real"));
-  if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
-  const totals = { created: 0, updated: 0, unchanged: 0, closed: 0 };
-  const boards: BoardSyncResult[] = [];
-  const byBoard = new Map<string, { sourceId: string; postings: NormalizedPosting[]; received: number }>();
-  for (const b of result.batches) {
-    const acc = byBoard.get(b.boardId) ?? { sourceId: b.sourceId, postings: [], received: 0 };
-    acc.postings.push(...b.postings);
-    acc.received += b.received;
-    byBoard.set(b.boardId, acc);
-  }
-  for (const [boardId, b] of byBoard) {
-    const s = applyBoard(inv, boardId, b.sourceId, { postings: b.postings, complete: false }, nowIso);
-    for (const k of Object.keys(totals) as (keyof typeof totals)[]) totals[k] += s[k];
-    boards.push({ boardId, ok: true, complete: false, received: b.received, durationMs: 0 });
-    inv.boards[boardId] = { boardId, sourceId: b.sourceId, lastAttemptAt: nowIso, lastOkAt: nowIso, lastError: null, consecutiveFailures: 0, lastReceived: b.received };
-    log(`${boardId}: +${s.created} nuevos, ~${s.updated} actualizados, =${s.unchanged} sin cambios, ${s.closed} cerrados.`);
-  }
-  if (byBoard.size) {
-    inv.opportunities = buildOpportunities(inv.postings);
-    inv.generatedAt = nowIso;
-    recordRun(inv, { startedAt: nowIso, finishedAt: new Date().toISOString(), mode: "incremental", boards, ...totals, errors: result.stopped ? 1 : 0 });
-    await writeJson(INV, forStorage(inv));
-  }
-
-  ledger.entries = [...ledger.entries, ...result.ledger].slice(-1000);
-  await writeJson(LEDGER, ledger, true);
+  const inv = await persist(result, ledger.entries, nowIso, progress, true);
+  const totals = progress.totals;
 
   if (result.employers.length) {
     const disc = await readJson<{ updatedAt: string | null; employers: (Employer & { seen: number; lastSeenAt: string })[] }>(DISCOVERIES, { updatedAt: null, employers: [] });
