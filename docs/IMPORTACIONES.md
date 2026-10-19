@@ -111,6 +111,20 @@ Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Lo
 
 Con `--location=latam` (sólo con `--actor=valig` o `cheap`), la búsqueda de LinkedIn usa «Latin America» en lugar de «Argentina». Son, sobre todo, puestos remotos de tecnología, producto y marketing que contratan en toda la región. Esos avisos se guardan sin fijar el país en AR, y `eligibility.ts` decide con la región y la descripción: «Latin America» es elegible salvo que el aviso pida vivir o tener permiso de trabajo en EE. UU. Se siguen rechazando las ubicaciones de otro país («Mexico City, Mexico»).
 
+## Cierre de la compra única (19/10/2026)
+
+| Tanda | Búsquedas | Filas | Nuevos |
+| --- | --- | ---: | ---: |
+| Prueba | data analyst, analista financiero | 200 | 66 |
+| 1 | Tecnología, una semana | 3.823 | 914 |
+| 2 | Datos, producto, diseño y marketing, un mes | 5.227 | 1.388 |
+| 3 | Finanzas, ventas B2B, RRHH, legal y operaciones, un mes | 7.116 | 1.574 |
+| 4a | Tecnología, un mes | 4.470 | 652 |
+| 4b | `--location=latam` (no sirve: devuelve puestos de otros países) | 5.948 | 57 |
+| **Total** | | **26.784** | **4.651** |
+
+Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, conviene buscar con palabras nuevas, porque las de esta compra ya están agotadas para el último mes.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
