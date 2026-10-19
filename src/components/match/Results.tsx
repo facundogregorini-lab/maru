@@ -215,7 +215,7 @@ export default function Results({
                 Maru está afinando el orden con IA
                 <WorkingDots />
               </strong>{" "}
-              <span className="text-muted">Puede tardar hasta un minuto. Mientras tanto ya podés mirar las búsquedas.</span>
+              <span className="text-muted">Puede tardar hasta un minuto. Mientras tanto podés mirar las búsquedas; el orden y los porcentajes aparecen cuando termina.</span>
             </span>
           </p>
         )}
@@ -234,6 +234,7 @@ export default function Results({
               onDiscard={(r) => discard(item, r)}
               onRemoveExternal={item.external ? () => setExternal(external.filter((e) => e.id !== item.id)) : undefined}
               external={external.find((e) => e.id === item.id)}
+              preliminary={refining}
             />
           ))}
         </div>
@@ -277,6 +278,7 @@ function JobCard({
   onDiscard,
   onRemoveExternal,
   external,
+  preliminary = false,
 }: {
   item: RankedItem;
   position: number;
@@ -285,6 +287,8 @@ function JobCard({
   onDiscard: (r: DiscardReason) => void;
   onRemoveExternal?: () => void;
   external?: ExternalJob;
+  /** Orden por reglas mientras la IA afina: sin porcentaje ni botón de postular, para no decidir con un orden que puede cambiar. */
+  preliminary?: boolean;
 }) {
   const router = useRouter();
   const [discarding, setDiscarding] = useState(false);
@@ -318,7 +322,7 @@ function JobCard({
   }
 
   return (
-    <article className="flex overflow-hidden rounded-2xl bg-white transition-shadow duration-200 hover:shadow-[var(--shadow-card)]">
+    <article aria-busy={preliminary || undefined} className={`flex overflow-hidden rounded-2xl bg-white transition duration-200 hover:shadow-[var(--shadow-card)] ${preliminary ? "opacity-60" : ""}`}>
       <div className="min-w-0 flex-1 p-4 sm:p-5">
         <div className="flex gap-4">
           <CompanyTile name={displayCompany(item.company)} logo={item.logo} size={60} />
@@ -340,9 +344,15 @@ function JobCard({
           </div>
           {/* En celular el puntaje va arriba a la derecha (anillo chico); en compu, en el panel negro. */}
           <div className="ml-auto flex shrink-0 flex-col items-center gap-1 self-start text-center sm:hidden">
-            <ScoreRing value={item.score} size="sm" />
-            <p className="text-[10px] font-bold uppercase leading-tight">{level.label}</p>
-            <p className="max-w-20 text-[10px] leading-tight text-muted">Info. {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}</p>
+            {preliminary ? (
+              <Calculating />
+            ) : (
+              <>
+                <ScoreRing value={item.score} size="sm" />
+                <p className="text-[10px] font-bold uppercase leading-tight">{level.label}</p>
+                <p className="max-w-20 text-[10px] leading-tight text-muted">Info. {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}</p>
+              </>
+            )}
           </div>
         </div>
         <hr className="my-3 border-black/[0.07]" />
@@ -457,8 +467,8 @@ function JobCard({
               <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
             </svg>
           </button>
-          <button type="button" onClick={prepare} disabled={preparing} className="press order-last min-h-11 w-full rounded-full bg-neon px-5 py-2.5 text-sm font-bold text-ink hover:bg-neon/80 disabled:opacity-60 sm:w-auto">
-            {preparing ? "Abriendo…" : "Postulación personalizada"}
+          <button type="button" onClick={prepare} disabled={preparing || preliminary} className="press order-last min-h-11 w-full rounded-full bg-neon px-5 py-2.5 text-sm font-bold text-ink hover:bg-neon/80 disabled:opacity-60 sm:w-auto">
+            {preparing ? "Abriendo…" : preliminary ? "Esperá el afinado de Maru" : "Postulación personalizada"}
           </button>
           {main && main.kind !== "usuario" && (
             <a
@@ -499,15 +509,33 @@ function JobCard({
         className="m-1 hidden w-[164px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:flex"
         title="Afinidad según los datos disponibles de tu perfil y el aviso. Revisá las brechas y condiciones pendientes; no es una probabilidad de contratación."
       >
-        <ScoreRing value={item.score} size="dark" />
-        <p className="mt-3 text-sm font-semibold uppercase">{level.label}</p>
-        <p className="mt-3 w-full border-t border-white/20 pt-3 text-[11px] leading-relaxed text-white/80">
-          Compatibilidad estimada
-          <br />
-          Información {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}
-        </p>
+        {preliminary ? (
+          <Calculating dark />
+        ) : (
+          <>
+            <ScoreRing value={item.score} size="dark" />
+            <p className="mt-3 text-sm font-semibold uppercase">{level.label}</p>
+            <p className="mt-3 w-full border-t border-white/20 pt-3 text-[11px] leading-relaxed text-white/80">
+              Compatibilidad estimada
+              <br />
+              Información {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}
+            </p>
+          </>
+        )}
       </div>
     </article>
+  );
+}
+
+/** En lugar del porcentaje mientras la IA afina el orden. */
+function Calculating({ dark = false }: { dark?: boolean }) {
+  return (
+    <p className={`flex flex-col items-center gap-1 text-[11px] font-semibold uppercase leading-tight ${dark ? "text-white/80" : "max-w-20 text-muted"}`}>
+      <span className={`grid h-12 w-12 place-items-center rounded-full border-2 border-dashed font-mono text-base ${dark ? "border-white/40" : "border-line"}`}>
+        <WorkingDots />
+      </span>
+      Calculando
+    </p>
   );
 }
 
