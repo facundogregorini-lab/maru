@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apifyJobInput, normalizeApifyJobs } from "@/lib/match/apify";
+import { apifyJobInput, apifyNextCap, normalizeApifyJobs } from "@/lib/match/apify";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
 const description = "Buscamos analista para preparar reportes de ventas con SQL y tableros. ".repeat(8);
@@ -30,6 +30,22 @@ describe("piloto de avisos Apify", () => {
     const row = { id: "9", title: "Analista", company: "Empresa", url: "https://ar.computrabajo.com/oferta/9", location: "Córdoba", descriptionText: description };
     expect(normalizeApifyJobs("computrabajo", [{ ...row, companyLogo: "https://img.example.com/logo.png" }], now).postings[0].companyLogo).toBe("https://img.example.com/logo.png");
     expect(normalizeApifyJobs("computrabajo", [{ ...row, logo: "http://img.example.com/logo.png" }], now).postings[0]).not.toHaveProperty("companyLogo");
+  });
+  it("los Actors alternativos de LinkedIn dan el mismo id que el actual, sin datos de quien publica", () => {
+    const link = "https://ar.linkedin.com/jobs/view/analista-de-datos-at-empresa-4476654521?refId=abc&trackingId=x";
+    const curious = { id: "4476654521", title: "Analista de datos", companyName: "Empresa", link, location: "Buenos Aires, Argentina", descriptionText: description };
+    const alt = { jobId: 99, jobTitle: "Analista de datos", company: { name: "Empresa" }, jobUrl: "https://www.linkedin.com/jobs/view/4476654521/", location: "Buenos Aires, Argentina", jobDescription: `<p>${description}</p>`, publishedAt: "2026-10-15", experienceLevel: "Entry level", contractType: "Full-time", posterFullName: "Persona" };
+    const [a] = normalizeApifyJobs("linkedin", [curious], now).postings;
+    const [b] = normalizeApifyJobs("linkedin", [alt], now).postings;
+    expect(a.externalId).toBe("4476654521");
+    expect(b).toMatchObject({ externalId: "4476654521", title: "Analista de datos", company: "Empresa", seniorityHint: "Entry level", employmentHint: "Full-time" });
+    expect(JSON.stringify(b)).not.toContain("Persona");
+  });
+  it("arma la entrada de cada Actor de LinkedIn y calcula el tope con su precio", () => {
+    expect(apifyJobInput("linkedin", "data analyst", 200, 500, "valig")).toMatchObject({ keywords: "data analyst", location: "Argentina", limit: 200, titleExclude: expect.arrayContaining(["chofer"]) });
+    expect(apifyJobInput("linkedin", "data analyst", 200, 500, "cheap")).toMatchObject({ keyword: ["data analyst"], maxItems: 200, saveOnlyUniqueItems: true, jobTitleExclude: expect.arrayContaining(["operario"]) });
+    expect(apifyNextCap("linkedin", 500, 0, 5, "valig")).toBeCloseTo(0.22);
+    expect(apifyNextCap("linkedin", 500, 0, 5)).toBeCloseTo(1.02);
   });
   it("usa los límites de cada Actor y restringe el piloto", () => {
     expect(apifyJobInput("linkedin", "analista", 50)).toMatchObject({ limitPerSource: 50, scrapeCompany: false, location: "Argentina" });

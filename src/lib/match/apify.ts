@@ -7,6 +7,22 @@ export const APIFY_JOBS = {
   computrabajo: { actor: "shahidirfan/Computrabajo-Jobs-Scraper", name: "Computrabajo", fields: ["id", "title", "company", "url", "applyUrl", "location", "descriptionText", "postedDate", "updatedAt", "salary", "jobType", "companyLogo", "logo"] },
 } as const;
 export type ApifyJobSource = keyof typeof APIFY_JOBS;
+
+/**
+ * Actors de LinkedIn intercambiables: traen el mismo aviso (id de LinkedIn), a distinto precio por fila
+ * (plan gratis de Apify, 19/10/2026). El inicio se estima en US$0,02 para cubrir también el uso de plataforma.
+ */
+export const LINKEDIN_ACTORS = {
+  curious: { actor: "curious_coder/linkedin-jobs-scraper", pricePerRow: 0.002 },
+  valig: { actor: "valig/linkedin-jobs-scraper", pricePerRow: 0.0004 },
+  cheap: { actor: "cheap_scraper/linkedin-job-scraper", pricePerRow: 0.0007 },
+} as const;
+export type LinkedinActor = keyof typeof LINKEDIN_ACTORS;
+/** Campos posibles de los Actors alternativos: sólo datos del aviso, nunca de quien lo publicó. */
+export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
+/** Títulos que los Actors pueden descartar antes de cobrar la fila (el filtro fino es import-filter.ts). */
+export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cadete", "cajero", "repositor", "mozo", "vigilador", "mostrador", "promotor", "telemarketer", "call center"];
+export const linkedinJobId = (link: string) => /\/jobs\/view\/(?:[^/?#]*-)?(\d{6,})/.exec(link)?.[1] ?? "";
 const str = (v: unknown) => typeof v === "string" ? v.trim() : "";
 const obj = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 function url(value: unknown, base?: string): string {
@@ -37,13 +53,15 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   const reject = (why: string) => { rejected[why] = (rejected[why] ?? 0) + 1; };
   for (const raw of rows) {
     const r = obj(raw);
-    const id = str(r.id) || (typeof r.id === "number" ? String(r.id) : "");
-    const title = str(r.title);
-    const company = source === "linkedin" ? str(r.companyName) : source === "indeed" ? str(r["companyDetails.name"]) || str(obj(r.companyDetails).name) : str(r.company);
-    const description = htmlToText(str(r.descriptionText) || str(r.jobDescription), 100000);
-    const sourceUrl = source === "linkedin" ? url(r.link) : source === "indeed" ? url(r.viewJobLink, "https://ar.indeed.com") : url(r.url);
+    const rawId = str(r.id) || (typeof r.id === "number" ? String(r.id) : "") || str(r.jobId) || (typeof r.jobId === "number" ? String(r.jobId) : "");
+    const title = str(r.title) || str(r.jobTitle);
+    const company = source === "linkedin" ? str(r.companyName) || str(r.company) || str(obj(r.company).name) : source === "indeed" ? str(r["companyDetails.name"]) || str(obj(r.companyDetails).name) : str(r.company);
+    const description = htmlToText(str(r.descriptionText) || str(r.jobDescription) || str(r.description), 100000);
+    const sourceUrl = source === "linkedin" ? url(r.link) || url(r.jobUrl) || url(r.url) : source === "indeed" ? url(r.viewJobLink, "https://ar.indeed.com") : url(r.url);
     const applyUrl = source === "indeed" ? url(r.originalApplyUrl) || sourceUrl : url(r.applyUrl) || sourceUrl;
-    const publishedAt = date(r.postedAt ?? r.pubDate ?? r.postedDate);
+    // En LinkedIn el id sale del enlace: así coinciden los avisos que traen Actors distintos.
+    const id = (source === "linkedin" && linkedinJobId(sourceUrl)) || rawId;
+    const publishedAt = date(r.postedAt ?? r.pubDate ?? r.postedDate ?? r.publishedAt);
     const expiresAt = date(r.expirationDate);
     if (!id || !title || !company || !sourceUrl || !applyUrl) { reject("campos_obligatorios"); continue; }
     if (description.length < 300) { reject("descripcion_corta"); continue; }
@@ -57,7 +75,7 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
     if (seen.has(id)) { reject("duplicado"); continue; }
     seen.add(id);
     // No convertimos salario “a convenir”, números sospechosos o 0 en una promesa salarial.
-    const salaryText = typeof r.salary === "string" ? str(r.salary) : "";
+    const salaryText = str(r.salary) || str(r.salaryInfo) || (Array.isArray(r.salaryInfo) ? r.salaryInfo.map(str).filter(Boolean).join(" - ") : "");
     const salary = /[1-9]\d/.test(salaryText) ? { value: { min: null, max: null, currency: "", period: "desconocido" as const, text: salaryText }, from: "fuente" as const } : null;
     // Logo de la empresa si el Actor lo trae (sólo https; nunca fotos de personas).
     const logo = [r.companyLogo, r.companyLogoUrl, r.logo, r["companyDetails.logoUrl"], obj(r.companyDetails).logoUrl].map((v) => url(v)).find((u) => u.startsWith("https://"));
@@ -69,15 +87,17 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
       locations: location ? [location] : [], countries: ["AR"], regionText: [],
       workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null,
       employmentType: null, salary, publishedAt, updatedAt: date(r.updatedAt), expiresAt,
-      employmentHint: str(r.employmentType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
-      seniorityHint: str(r.seniorityLevel),
+      employmentHint: str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
+      seniorityHint: str(r.seniorityLevel) || str(r.experienceLevel),
     });
   }
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50) {
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious") {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
+  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location: "Argentina", datePosted: "r604800", limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location: "Argentina", publishedAt: "r604800", maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
   return { keyword, countryCode: "ar", maxJobs: limit, proxyConfiguration: { useApifyProxy: false } };
@@ -118,11 +138,13 @@ export const APIFY_KEYWORDS: Record<ApifyJobSource, string[]> = {
   indeed: ["desarrollador", "data analyst", "analista financiero", "marketing", "analista contable", "product manager"],
 };
 
+const rowPrice = (source: ApifyJobSource, actor: LinkedinActor) => (source === "linkedin" ? LINKEDIN_ACTORS[actor].pricePerRow : APIFY_PRICE_PER_ROW[source]);
+
 /** Peor caso de una corrida: inicio + todas las filas pedidas. */
-export const apifyRunCeiling = (source: ApifyJobSource, rows: number) => APIFY_START_USD + rows * APIFY_PRICE_PER_ROW[source];
+export const apifyRunCeiling = (source: ApifyJobSource, rows: number, actor: LinkedinActor = "curious") => APIFY_START_USD + rows * rowPrice(source, actor);
 
 /** Tope de la próxima corrida dentro del presupuesto acumulado; 0 = no correr. */
-export function apifyNextCap(source: ApifyJobSource, rows: number, spentUsd: number, budgetUsd: number): number {
-  const ceiling = apifyRunCeiling(source, rows);
+export function apifyNextCap(source: ApifyJobSource, rows: number, spentUsd: number, budgetUsd: number, actor: LinkedinActor = "curious"): number {
+  const ceiling = apifyRunCeiling(source, rows, actor);
   return spentUsd + ceiling <= budgetUsd + 1e-9 ? Math.round(ceiling * 1000) / 1000 : 0;
 }

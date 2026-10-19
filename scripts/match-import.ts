@@ -12,7 +12,7 @@
  */
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, normalizeApifyJobs, type ApifyJobSource } from "../src/lib/match/apify";
+import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
 import { filterImported } from "../src/lib/match/import-filter";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
@@ -73,7 +73,7 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious"): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -81,19 +81,23 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
   if (useAccount) log(`Gasto real de Apify este mes: US$${spent.toFixed(3)} (tope US$${budgetUsd}).`);
   for (const source of sources) {
     const config = APIFY_JOBS[source];
+    // LinkedIn puede ir por un Actor alternativo más barato (mismo aviso, mismo id).
+    const alt = source === "linkedin" && linkedinActor !== "curious";
+    const actorName = source === "linkedin" ? LINKEDIN_ACTORS[linkedinActor].actor : config.actor;
+    const wanted: readonly string[] = alt ? LINKEDIN_ALT_FIELDS : config.fields;
     for (const keyword of (custom.length ? custom : APIFY_KEYWORDS[source]).slice(0, keywordsPerSource)) {
-      const cap = apifyNextCap(source, rows, spent, budgetUsd);
+      const cap = apifyNextCap(source, rows, spent, budgetUsd, linkedinActor);
       if (!cap) {
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 200);
-      const params = { actor: config.actor, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor);
+      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
       try {
-        const actor = config.actor.replace("/", "~");
-        const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=300&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
+        const actor = actorName.replace("/", "~");
+        const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=600&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
         let run = started.data ?? {};
-        for (let i = 0; i < 8 && !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(String(run.status)); i++) {
+        for (let i = 0; i < 12 && !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(String(run.status)); i++) {
           run = (await apifyFetch(`https://api.apify.com/v2/actor-runs/${run.id}?waitForFinish=60`, token)).data ?? {};
         }
         const usage = typeof run.usageTotalUsd === "number" ? run.usageTotalUsd : 0;
@@ -105,7 +109,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
           continue;
         }
         // La API de datasets sólo filtra campos de primer nivel: "companyDetails.name" se pide como "companyDetails".
-        const fields = [...new Set(config.fields.map((f) => f.split(".")[0]))].join(",");
+        const fields = [...new Set(wanted.map((f) => f.split(".")[0]))].join(",");
         const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?clean=true&format=json&limit=${rows}&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
         const list = Array.isArray(items) ? items.slice(0, rows) : [];
         // Costo conservador: uso de plataforma + precio por fila (puede sobreestimar, nunca subestimar).
@@ -144,12 +148,14 @@ async function main() {
   const queryIds = queryArg.flatMap((id) => (id === "mensual" ? SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p))).map((q) => q.id) : [id]));
   const serpPlan = { queries: SERP_QUERIES.filter((q) => queryIds.includes(q.id)), maxSearches: num("max-searches", 12), reserve: num("reserve", 20) };
   const apifySources = csv("sources", ["linkedin"]).filter((s): s is ApifyJobSource => Object.hasOwn(APIFY_JOBS, s));
-  const apifyRows = Math.min(200, Math.max(1, num("rows", 100)));
+  const apifyRows = Math.min(500, Math.max(1, num("rows", 100)));
+  const linkedinActor = (arg("actor") ?? "curious") as LinkedinActor;
+  if (!Object.hasOwn(LINKEDIN_ACTORS, linkedinActor)) throw new Error("--actor debe ser curious, valig o cheap.");
   const apifyBudget = num("budget-usd", 0);
   const apifySpent = ledger.entries.filter((e) => e.provider === "apify").reduce((a, e) => a + (e.consumed ?? 0), 0);
 
   if (mode === "plan") {
-    const plan = provider === "fantastic" ? fantasticPlan : provider === "serpapi" ? serpPlan : { sources: apifySources, rows: apifyRows, keywords: APIFY_KEYWORDS, budgetUsd: apifyBudget, spentUsd: apifySpent };
+    const plan = provider === "fantastic" ? fantasticPlan : provider === "serpapi" ? serpPlan : { sources: apifySources, rows: apifyRows, linkedinActor: LINKEDIN_ACTORS[linkedinActor].actor, keywords: APIFY_KEYWORDS, budgetUsd: apifyBudget, spentUsd: apifySpent };
     log(JSON.stringify({ mode, provider, plan }, null, 2));
     return;
   }
@@ -182,7 +188,7 @@ async function main() {
     if (!(apifyBudget > 0 && apifyBudget <= 5)) throw new Error("Indicá --budget-usd entre 0 y 5 (presupuesto aprobado por el dueño).");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account");
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor);
   }
 
   // Sólo áreas profesionales (import-filter.ts): lo demás se cuenta como rechazo y no entra.
