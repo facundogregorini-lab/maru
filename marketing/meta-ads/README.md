@@ -27,3 +27,5 @@ Cada anuncio usa la versión `feed` (1080×1350) para feed y la `story` (1080×1
 | Todo en uno | `maru-05-todo-*.png` | `/` | Matches, CV, carta, video y entrevista: preparás cada postulación con tu experiencia real. Empezá gratis, sin tarjeta. | Buscá trabajo con Maru | Registrarte |
 
 Las piezas usan las ilustraciones de producto del sitio ("ejemplo ilustrativo"): datos ficticios, sin promesas de resultados.
+
+Propuesta de mejora de creativos (19/10/2026): [PROPUESTA-CREATIVOS.md](PROPUESTA-CREATIVOS.md).
