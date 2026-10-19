@@ -112,6 +112,7 @@ Detalle en `docs/TRACKING.md` → "Píxel de Meta".
 - **Hecho (18/10, borrador en pausa):** 5 anuncios nuevos con creativo feed (1080×1350) + story (1080×1920) por ubicación: Match, CV, Carta, Video y Todo en uno (botón Registrarte). Sin cuenta de Instagram propia: Meta usa la página de Facebook (identidad 17841412257155092); no se usa templo.ninja. Los 4 anuncios anteriores, sin imagen, quedaron borrados en el borrador.
 - **Píxel:** el código ya estaba en `main` (PR #98 y #100), pero esos deploys fallaron por el tope del plan gratis de Vercel ("Deployment rate limited"). El merge de la PR #101 (`fa11887`, que lo incluye) deployó bien el 18/10 a las 02:54 UTC. **Falta:** confirmar en Administrador de eventos → Maru Coach → Probar eventos que llega `PageView` desde `www.marucoach.com`, y después publicar la campaña (ver arriba los dos anuncios de Templo Ninja con error en el mismo borrador).
 - **Falta:** reel de uso de la plataforma (conjunto 2).
+- **Propuesta de creativos (19/10):** `marketing/meta-ads/PROPUESTA-CREATIVOS.md`. Datos al 19/10: 2.373 ARS, 879 impresiones, 26 clics, 0 límites alcanzados; Meta puso el 82% en Match y Carta/Video no salieron; Reels 0 clics. Propone 6 ángulos × 4 formatos × 3 personas, tanda 1 de 4 piezas, optimizar por activación, sacar Audience Network y guardar `utm_content` en la activación. **Falta:** que el dueño apruebe los cambios de campaña y producir las piezas.
 
 ## Calidad de avisos: plan en curso (desde 17/10/2026)
 
