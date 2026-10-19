@@ -5558,6 +5558,526 @@
         "spentUsd": 5.681,
         "budgetUsd": 7
       }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista financiero",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "rcABgPmggnBZ3H9lQ",
+        "datasetId": "SU3wwBkJKxRGqtnoD"
+      },
+      "rows": 300,
+      "consumed": 0.2446,
+      "quota": {
+        "usageTotalUsd": 0.10458,
+        "spentUsd": 3.625,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "planeamiento financiero",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "FefZbmIlLW4vtdI9c",
+        "datasetId": "d6d7bBpukvELe2EgQ"
+      },
+      "rows": 300,
+      "consumed": 0.2442,
+      "quota": {
+        "usageTotalUsd": 0.10422000000000001,
+        "spentUsd": 3.869,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "controller",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "j2Oe8hm9WhwAEvagx",
+        "datasetId": "Zc4KQ1dmOwBRTx3xw"
+      },
+      "rows": 300,
+      "consumed": 0.2439,
+      "quota": {
+        "usageTotalUsd": 0.10386000000000001,
+        "spentUsd": 4.113,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "tesoreria",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "etpppFkCZm6uSjn6L",
+        "datasetId": "2Fapk7p0p5JIAaWaA"
+      },
+      "rows": 300,
+      "consumed": 0.2424,
+      "quota": {
+        "usageTotalUsd": 0.10242000000000001,
+        "spentUsd": 4.355,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "auditoria",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "eZ7H8bbC9G0uDrnPN",
+        "datasetId": "VxQYdop1c23sl0yj9"
+      },
+      "rows": 300,
+      "consumed": 0.2449,
+      "quota": {
+        "usageTotalUsd": 0.10494,
+        "spentUsd": 4.6,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de impuestos",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "g4TM6vtaKKcta86Ua",
+        "datasetId": "BJONkDti8Vvj16Jsu"
+      },
+      "rows": 300,
+      "consumed": 0.2424,
+      "quota": {
+        "usageTotalUsd": 0.10242000000000001,
+        "spentUsd": 4.843,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista contable",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "9FDXU7Bk7EnnGsrsn",
+        "datasetId": "2qthLXisN6OL0SB5B"
+      },
+      "rows": 300,
+      "consumed": 0.2428,
+      "quota": {
+        "usageTotalUsd": 0.10278000000000001,
+        "spentUsd": 5.086,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "contador",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "wMGiriACoyoxTEuTI",
+        "datasetId": "NdAcePBGiLeK0kxCz"
+      },
+      "rows": 300,
+      "consumed": 0.2428,
+      "quota": {
+        "usageTotalUsd": 0.10278000000000001,
+        "spentUsd": 5.328,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "riesgo crediticio",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "6ccSksUieDqxAxsNp",
+        "datasetId": "H9wqBiNfNlkyeSxJf"
+      },
+      "rows": 247,
+      "consumed": 0.2022,
+      "quota": {
+        "usageTotalUsd": 0.08694,
+        "spentUsd": 5.531,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de inversiones",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "a6A2E7EFYwz6wF2eJ",
+        "datasetId": "5lHZsWpoWRDtL8Tuj"
+      },
+      "rows": 164,
+      "consumed": 0.1271,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 5.658,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "account executive",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "0I0RkV6N2kARprDPQ",
+        "datasetId": "52Pq5xZevC0WEIE6v"
+      },
+      "rows": 300,
+      "consumed": 0.2478,
+      "quota": {
+        "usageTotalUsd": 0.10782,
+        "spentUsd": 5.905,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "business development",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "VqijNn2zGjYd6xODx",
+        "datasetId": "6P9nmMassjiogsxLT"
+      },
+      "rows": 300,
+      "consumed": 0.2442,
+      "quota": {
+        "usageTotalUsd": 0.10422000000000001,
+        "spentUsd": 6.15,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "key account manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "alMtMdkcnikec0GOj",
+        "datasetId": "XgJysw4E9rc7LZFhO"
+      },
+      "rows": 300,
+      "consumed": 0.2442,
+      "quota": {
+        "usageTotalUsd": 0.10422000000000001,
+        "spentUsd": 6.394,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "customer success manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "gAqNP6gVoSXklvCpa",
+        "datasetId": "7aqN25RTpemeF1qcX"
+      },
+      "rows": 300,
+      "consumed": 0.237,
+      "quota": {
+        "usageTotalUsd": 0.09702000000000001,
+        "spentUsd": 6.631,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "sales development representative",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "DmUnebLVm2YMYEnqp",
+        "datasetId": "kGwBnGKBou8pr2CXp"
+      },
+      "rows": 300,
+      "consumed": 0.2439,
+      "quota": {
+        "usageTotalUsd": 0.10386000000000001,
+        "spentUsd": 6.875,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "talent acquisition",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "4fZFP117hirDAOaDt",
+        "datasetId": "6WIdTrerJc1jZxvJO"
+      },
+      "rows": 239,
+      "consumed": 0.1949,
+      "quota": {
+        "usageTotalUsd": 0.08334,
+        "spentUsd": 7.07,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "hr business partner",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "afAE8P7ZzFIF5mQvb",
+        "datasetId": "sA0gCLwYLswXn5JZM"
+      },
+      "rows": 193,
+      "consumed": 0.1558,
+      "quota": {
+        "usageTotalUsd": 0.06570000000000001,
+        "spentUsd": 7.225,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de recursos humanos",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "6JJ5Ro8SKj3vpMNhY",
+        "datasetId": "6VctUWx3psMhy9GPb"
+      },
+      "rows": 290,
+      "consumed": 0.2295,
+      "quota": {
+        "usageTotalUsd": 0.09414,
+        "spentUsd": 7.455,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compensaciones y beneficios",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "w4EsOzIrlfa8g132f",
+        "datasetId": "saFP4SDaJWjqL76TP"
+      },
+      "rows": 178,
+      "consumed": 0.1412,
+      "quota": {
+        "usageTotalUsd": 0.058140000000000004,
+        "spentUsd": 7.596,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "THbxS0gmT7NYdjpeN",
+        "datasetId": "cKkyh9jvHWjcn2TdE"
+      },
+      "rows": 135,
+      "consumed": 0.1067,
+      "quota": {
+        "usageTotalUsd": 0.04374,
+        "spentUsd": 7.703,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compliance",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "M9YewSEhez8pnZ0dZ",
+        "datasetId": "jD89R0HjsnfbftjZK"
+      },
+      "rows": 300,
+      "consumed": 0.2449,
+      "quota": {
+        "usageTotalUsd": 0.10494,
+        "spentUsd": 7.948,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "project manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "ivWDefNa9AKmVunAa",
+        "datasetId": "qOF0kaILR8D1r9vmF"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 8.189,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "business analyst",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "1Uw9fHZpbrmRZ60xm",
+        "datasetId": "qRJFQmNozcVmHVVSP"
+      },
+      "rows": 270,
+      "consumed": 0.2205,
+      "quota": {
+        "usageTotalUsd": 0.0945,
+        "spentUsd": 8.41,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de procesos",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "a2yWj7aO0AddfD3wk",
+        "datasetId": "iTKVUyq10Mr7Zw25h"
+      },
+      "rows": 300,
+      "consumed": 0.2453,
+      "quota": {
+        "usageTotalUsd": 0.1053,
+        "spentUsd": 8.655,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "pmo",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "3aIiYwfWLHNUAYop4",
+        "datasetId": "qZUaxtM42FHEaWJyo"
+      },
+      "rows": 300,
+      "consumed": 0.2417,
+      "quota": {
+        "usageTotalUsd": 0.1017,
+        "spentUsd": 8.897,
+        "budgetUsd": 10.5
+      }
+    },
+    {
+      "at": "2026-10-19T05:24:26.711Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "consultor de negocios",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "runId": "Ih2OPhG49qV3hBLQx",
+        "datasetId": "fS6JGhDgN5WuQADFh"
+      },
+      "rows": 300,
+      "consumed": 0.2449,
+      "quota": {
+        "usageTotalUsd": 0.10494,
+        "spentUsd": 9.142,
+        "budgetUsd": 10.5
+      }
     }
   ]
 }
