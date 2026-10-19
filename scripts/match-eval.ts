@@ -26,9 +26,12 @@ async function main() {
   const out = [`# Evaluación de /match\n\nInventario del ${inv.generatedAt}. Perfiles ficticios de \`tests/match-eval-cases.ts\`. ${ia ? `Con re-evaluación por IA (${rerankModel()}).` : "Sólo la etapa por reglas."}`];
   for (const c of EVAL_CASES) {
     const ranked = rankOpportunities({ opportunities: inv.opportunities, postings, profile: c.profile, prefs: c.prefs, interactions: { saved: [], discarded: [] }, limit: 200, now });
-    const r = ia ? await rerank({ result: ranked, profile: c.profile, prefs: c.prefs, opportunities, postings }) : ranked;
+    const t0 = Date.now();
+    const re = ia ? await rerank({ result: ranked, profile: c.profile, prefs: c.prefs, opportunities, postings }) : null;
+    const r = re ?? ranked;
+    const stats = re ? ` · IA: ${re.ia.evaluated} evaluadas, ${re.ia.failed} fallidas, ${((Date.now() - t0) / 1000).toFixed(1)} s` : "";
     r.eligible = r.eligible.slice(0, 20);
-    out.push(`## ${c.name}\n\nPara vos: ${r.counts.eligible} · Por confirmar: ${r.counts.pending}\n\n### Para vos (top 20)\n\n${table(r.eligible)}\n\n### Por confirmar (top 10)\n\n${table(r.pending.slice(0, 10))}`);
+    out.push(`## ${c.name}\n\nPara vos: ${r.counts.eligible} · Por confirmar: ${r.counts.pending}${stats}\n\n### Para vos (top 20)\n\n${table(r.eligible)}\n\n### Por confirmar (top 10)\n\n${table(r.pending.slice(0, 10))}`);
   }
   const text = out.join("\n\n") + "\n";
   if (file) await writeFile(file, text);
