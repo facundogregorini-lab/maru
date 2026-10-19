@@ -1,13 +1,14 @@
-import { readFile, stat } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Directory } from "./directory";
 import { groupOpportunities } from "./group";
 import { emptyInventory, opportunitiesOf } from "./inventory";
+import { inventoryMtime, readInventoryFile } from "./inventory-file";
 import { withCompanyLogos } from "./logos";
 import type { Inventory, StoredPosting } from "./types";
 
 /**
- * Lee el inventario compartido (data/match/inventory.json) del servidor.
+ * Lee el inventario compartido (data/match/inventory.json + inventory-imported.json, ver inventory-file.ts) del servidor.
  * Se cachea en memoria y se recarga si cambió el archivo. Nunca contiene datos de usuarios.
  *
  * Almacenamiento: hoy Maru no tiene base de datos, así que el inventario es un archivo versionado
@@ -22,14 +23,12 @@ type Loaded = { inv: Inventory; postings: Map<string, StoredPosting>; alias: Map
 let cache: Loaded | null = null;
 
 export async function loadInventory(file = process.env.MATCH_INVENTORY_PATH ?? path.join(DATA_DIR, "inventory.json")): Promise<Loaded> {
-  let mtime = 0;
-  try {
-    mtime = (await stat(file)).mtimeMs;
-  } catch {
-    return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
-  }
+  const mtime = await inventoryMtime(file);
+  if (!mtime) return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
   if (cache && cache.mtime === mtime) return cache;
-  const read = { ...emptyInventory("real"), ...(JSON.parse(await readFile(file, "utf8")) as Inventory) };
+  const stored = await readInventoryFile(file);
+  if (!stored) return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
+  const read = { ...emptyInventory("real"), ...stored };
   const raw = { ...read, postings: withCompanyLogos(read.postings) };
   const { opportunities, alias } = groupOpportunities(opportunitiesOf(raw));
   const inv = { ...raw, opportunities };

@@ -14,15 +14,16 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { groupOpportunities } from "../src/lib/match/group";
 import { opportunitiesOf } from "../src/lib/match/inventory";
+import { readInventoryFileSync } from "../src/lib/match/inventory-file";
 import { isConsultora, isGenericCompany, isInferred } from "../src/lib/match/labels";
 import { ageDays, HIDE_AFTER_DAYS, STALE_AFTER_DAYS } from "../src/lib/match/ranking";
-import type { Inventory, RoleFamily, StoredPosting } from "../src/lib/match/types";
+import type { RoleFamily, StoredPosting } from "../src/lib/match/types";
 
 const arg = (name: string) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
 const apifyRealUsd = arg("apify-real-usd") ? Number(arg("apify-real-usd")) : null;
 
 const DATA = path.resolve("data/match");
-const inv = JSON.parse(readFileSync(path.join(DATA, "inventory.json"), "utf8")) as Inventory;
+const inv = readInventoryFileSync(path.join(DATA, "inventory.json"));
 const { entries: ledger } = JSON.parse(readFileSync(path.join(DATA, "providers-ledger.json"), "utf8")) as {
   entries: { provider: string; call: string; params: Record<string, string>; rows: number; consumed: number | null }[];
 };

@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     // Inventario compartido de vacantes (lo genera la sincronización programada).
     "/api/match/**": ["./data/match/*.json"],
-    "/busquedas": ["./data/match/inventory.json"],
-    "/busquedas/[id]": ["./data/match/inventory.json"],
+    "/busquedas": ["./data/match/inventory*.json"],
+    "/busquedas/[id]": ["./data/match/inventory*.json"],
     // La home lee los números del inventario al regenerarse (ISR).
-    "/": ["./data/match/inventory.json"],
-    "/match": ["./data/match/inventory.json"],
+    "/": ["./data/match/inventory*.json"],
+    "/match": ["./data/match/inventory*.json"],
     "/api/export/pdf": [
       // Chromium comprimido: nadie lo importa, así que el tracing no lo detecta solo.
       // Sin esto, chromium.executablePath() falla en Vercel ("bin does not exist").
