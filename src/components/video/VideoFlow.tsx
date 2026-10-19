@@ -11,6 +11,7 @@ import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post 
 import VoiceButton from "../VoiceButton";
 import Recorder from "./Recorder";
 import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
+import { entryHeading, useInAppEntry } from "../product/useInAppEntry";
 
 type Stage = "inicio" | "escribiendo" | "guion" | "estudio";
 const SESSION_KEY = "maru:video:v1";
@@ -40,6 +41,8 @@ type Session = { job: ReturnType<ReturnType<typeof useJobInput>["snapshot"]>; mo
 const words = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);
 
 export default function VideoFlow() {
+  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
+  const entry = useInAppEntry("video");
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
   const job = useJobInput("video");
@@ -115,8 +118,8 @@ export default function VideoFlow() {
 
       {stage === "inicio" && (
         <>
-          <ProductHero id="video" />
-          <ToolHeading />
+          {!entry.inApp && <ProductHero id="video" />}
+          <ToolHeading {...entryHeading(entry, "Tu video para")} />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="¿Para qué es el video?" hint="Una búsqueda concreta, o una presentación general para el rol al que apuntás.">
               <JobField input={job} generalLabel="Presentación general" />
@@ -160,7 +163,7 @@ export default function VideoFlow() {
               {!canWrite && <ul aria-live="polite" className="max-w-xl space-y-1 text-sm text-muted">{missing.map((message) => <li key={message}>{message}</li>)}</ul>}
             </div>
           </div>
-          <ProductMore id="video" />
+          {!entry.inApp && <ProductMore id="video" />}
         </>
       )}
 

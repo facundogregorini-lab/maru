@@ -31,7 +31,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <UserMenu />
             <Link
-              href="/match"
+              href="/match#empezar"
               className="press inline-flex h-7 items-center rounded-2xl bg-ink px-3.5 text-sm font-bold uppercase text-white sm:h-9 sm:min-w-[120px] sm:justify-center sm:rounded-[22px] sm:px-5"
             >
               <span className="sm:hidden">Empezar</span>

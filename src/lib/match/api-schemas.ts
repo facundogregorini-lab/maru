@@ -127,6 +127,8 @@ export const RankingRequestSchema = z.object({
   external: z.array(ExternalJobSchema).max(30).optional(),
   /** Cuántas mostrar por lista ("Ver más" suma de a 40). */
   limit: z.number().int().min(10).max(400).optional(),
+  /** false: sólo el orden por reglas (rápido). La web lo pide primero y después pide el afinado con IA. */
+  ia: z.boolean().optional(),
 });
 
 export type ExternalJob = z.infer<typeof ExternalJobSchema>;

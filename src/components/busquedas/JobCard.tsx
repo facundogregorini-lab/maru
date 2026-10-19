@@ -101,7 +101,7 @@ export default function JobCard({ j }: { j: JobResult }) {
         </div>
       </div>
       <Link
-        href="/match"
+        href="/match#empezar"
         className="m-1 hidden w-[164px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 text-white sm:flex"
         aria-label="Ver tu compatibilidad con esta búsqueda: subí tu CV"
       >

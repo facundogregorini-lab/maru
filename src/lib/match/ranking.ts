@@ -711,7 +711,9 @@ export function rankOpportunities(input: RankInput): RankOutput {
         if (p.sourceId === "usuario") return { name: "Agregada por vos", url: p.sourceUrl, applyUrl: p.applyUrl, required: false, kind: "usuario" };
         const s = sourceById(p.sourceId);
         return { name: s?.name ?? p.sourceId, url: p.sourceUrl, applyUrl: p.applyUrl, attribution: p.attribution, required: p.linkRequired, kind: s?.kind ?? "portal" };
-      });
+      })
+      // El mismo aviso de LinkedIn puede llegar por dos proveedores (Fantastic y Apify): se muestra una vez.
+      .filter((s, i, all) => all.findIndex((x) => x.url === s.url) === i);
     const logoUrl = o.postingKeys.map((k) => postings.get(k)?.companyLogo).find((u): u is string => !!u?.startsWith("https://"));
     const external = sources.length > 0 && sources.every((s) => s.kind === "usuario");
     const viaAts = sources.some((s) => s.kind === "ats");

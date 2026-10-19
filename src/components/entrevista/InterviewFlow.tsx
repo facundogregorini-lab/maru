@@ -12,6 +12,7 @@ import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../u
 import Call from "./Call";
 import Report from "./Report";
 import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
+import { entryHeading, useInAppEntry } from "../product/useInAppEntry";
 
 type Stage = "inicio" | "preparando" | "llamada" | "evaluando" | "informe";
 const SESSION_KEY = "maru:entrevista:v1";
@@ -47,6 +48,8 @@ type Session = {
 };
 
 export default function InterviewFlow() {
+  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
+  const entry = useInAppEntry("entrevista");
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
   const job = useJobInput("entrevista");
@@ -154,8 +157,8 @@ export default function InterviewFlow() {
 
       {stage === "inicio" && (
         <>
-          <ProductHero id="entrevista" />
-          <ToolHeading />
+          {!entry.inApp && <ProductHero id="entrevista" />}
+          <ToolHeading {...entryHeading(entry, "Tu entrevista para")} />
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="¿Para qué entrevista?" hint="Con la búsqueda, las preguntas apuntan a lo que piden. Sin búsqueda, al rol en general.">
               <JobField input={job} generalLabel="Un rol en general" />
@@ -194,7 +197,7 @@ export default function InterviewFlow() {
               {!canStart && <p className="text-xs text-muted">{[job.issue, cv.issue].filter(Boolean).join(" ")}</p>}
             </div>
           </div>
-          <ProductMore id="entrevista" />
+          {!entry.inApp && <ProductMore id="entrevista" />}
         </>
       )}
 

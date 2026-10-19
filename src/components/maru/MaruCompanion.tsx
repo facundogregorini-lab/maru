@@ -13,6 +13,7 @@ import {
   PLAN_PRICE_TEXT,
   type GuideState,
 } from "./guide";
+import { useMaruAway } from "./MaruWorking";
 import { MaruDesk, MaruHead } from "./PixelMaru";
 import type { DeskFrame } from "./sprite";
 
@@ -35,6 +36,8 @@ export default function MaruCompanion() {
   const [mode, setModeState] = useState<Mode>("work");
   const [client, setClient] = useState(false);
   const [ready, setReady] = useState(false);
+  /** Mientras Maru trabaja en el centro de la pantalla (MaruWorking), el rincón queda vacío. */
+  const away = useMaruAway();
   const hopEl = useRef<HTMLSpanElement>(null);
   /** El panel toma el foco sólo si lo abrió la persona (no al cargar la página). */
   const focusPanel = useRef(false);
@@ -228,7 +231,11 @@ export default function MaruCompanion() {
   };
 
   return (
-    <div ref={dock} className="maru-dock pointer-events-none fixed bottom-3 right-3 z-50 flex flex-col items-end print:hidden sm:bottom-4 sm:right-5">
+    <div
+      ref={dock}
+      aria-hidden={away || undefined}
+      className={`maru-dock pointer-events-none fixed bottom-3 right-3 z-50 flex flex-col items-end transition-[opacity,transform] duration-500 print:hidden sm:bottom-4 sm:right-5 ${away ? "invisible translate-y-3 opacity-0" : ""}`}
+    >
       {mode === "ask" && (
         <Ask
           onYes={() => open(0)}

@@ -20,6 +20,7 @@ import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post 
 import VoiceButton from "../VoiceButton";
 import LetterPaper, { type Rewrite } from "./LetterPaper";
 import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
+import { entryHeading, useInAppEntry } from "../product/useInAppEntry";
 
 type Stage = "inicio" | "escribiendo" | "resultado";
 type Modo = "busqueda" | "espontanea";
@@ -59,6 +60,8 @@ type Session = {
 };
 
 export default function CartaFlow() {
+  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
+  const entry = useInAppEntry("carta");
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
 
@@ -201,8 +204,8 @@ export default function CartaFlow() {
 
       {stage === "inicio" && (
         <>
-          <ProductHero id="carta" />
-          <ToolHeading />
+          {!entry.inApp && <ProductHero id="carta" />}
+          <ToolHeading {...entryHeading(entry, "Tu carta para")} />
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="La búsqueda" hint="Pegá el link de la publicación, o escribile a una empresa aunque no haya una búsqueda abierta.">
@@ -306,7 +309,7 @@ export default function CartaFlow() {
               {!canWrite && <p className="text-xs text-muted">{[jobIssue, cv.issue, !motivacion.trim() ? "Contanos qué querés transmitir en la carta." : null].filter(Boolean).join(" ")}</p>}
             </div>
           </div>
-          <ProductMore id="carta" />
+          {!entry.inApp && <ProductMore id="carta" />}
         </>
       )}
 
@@ -559,11 +562,11 @@ function Result({
       )}
 
       <section className="mt-8 grid gap-4 sm:grid-cols-2">
-        <Link href="/cv" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+        <Link href="/cv#empezar" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">Completá el set</p>
           <p className="mt-2 font-display text-xl">Creá tu CV con el mismo diseño →</p>
         </Link>
-        <Link href="/postulacion" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
+        <Link href="/postulacion#empezar" className="rounded-3xl border border-line bg-paper p-6 transition hover:border-brand">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand">¿Hay formulario?</p>
           <p className="mt-2 font-display text-xl">Preparate con el coach de postulación →</p>
         </Link>

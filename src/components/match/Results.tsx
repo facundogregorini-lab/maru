@@ -11,12 +11,14 @@ import { MIN_SCORE, roleTokens, type Filters, type RankedItem, type RankOutput }
 import { upsertTracked, type TrackInput } from "@/lib/tracker";
 import type { DiscardReason, Interactions, MatchPrefs, MatchProfile, RoleFamily, Seniority, Workplace } from "@/lib/match/types";
 import CompanyTile from "../busquedas/CompanyTile";
+import MaruWorking, { WorkingDots } from "../maru/MaruWorking";
+import { MaruHead } from "../maru/PixelMaru";
 import { ErrorBanner, inputClass, post } from "../ui";
 import { MultiChips } from "./fields";
 import CompanyName from "@/components/busquedas/CompanyName";
 import { displayCompany } from "@/lib/match/labels";
 
-type RankingResponse = RankOutput & { inventory: { generatedAt: string | null; open: number } };
+type RankingResponse = RankOutput & { ia?: { disponible: boolean; aplicada: boolean }; inventory: { generatedAt: string | null; open: number } };
 type Tab = "elegibles" | "pendientes" | "guardadas";
 const PAGE = 40;
 
@@ -65,17 +67,40 @@ export default function Results({
   const [showFilters, setShowFilters] = useState(false);
   const [adding, setAdding] = useState(false);
   const [limit, setLimit] = useState(PAGE);
+  const [refining, setRefining] = useState(false);
   const seq = useRef(0);
+  /** La búsqueda (perfil, preferencias, filtros) que ya quedó afinada con IA. */
+  const refinedKey = useRef("");
 
+  // Primero el orden por reglas (segundos) y después el afinado con IA, que puede tardar casi un minuto.
+  // Si sólo cambió guardar, descartar o "Ver más", se pide directo con IA: usa lo que ya evaluó.
   const load = useCallback(async () => {
     const n = ++seq.current;
+    const key = JSON.stringify({ profile, prefs, filters, external });
+    const body = { profile, prefs, interactions, filters, external, limit };
+    const quick = refinedKey.current !== key;
     setLoading(true);
+    setRefining(false);
     setError("");
     try {
-      const res = await post<RankingResponse>("/api/match/ranking", { profile, prefs, interactions, filters, external, limit });
+      const res = await post<RankingResponse>("/api/match/ranking", quick ? { ...body, ia: false } : body);
       if (n !== seq.current) return;
       setData(res);
+      setLoading(false);
+      if (!quick) return;
       track("match_ranking_visto", { resultados: res.counts.eligible, pendientes: res.counts.pending, filtros: Object.keys(filters).length });
+      if (!res.ia?.disponible) return;
+      setRefining(true);
+      try {
+        const refined = await post<RankingResponse>("/api/match/ranking", body);
+        if (n !== seq.current) return;
+        setData(refined);
+        refinedKey.current = key;
+      } catch {
+        // Sin el afinado queda el orden por reglas, que ya se ve.
+      } finally {
+        if (n === seq.current) setRefining(false);
+      }
     } catch (e) {
       if (n === seq.current) setError((e as Error).message);
     } finally {
@@ -176,7 +201,24 @@ export default function Results({
             Reintentar
           </button>
         )}
-        {loading && !data && <Skeleton />}
+        {loading && !data && (
+          <MaruWorking
+            title="Buscando oportunidades para vos"
+            steps={["Leyendo las búsquedas abiertas", "Comparando cada aviso con tu experiencia", "Revisando requisitos, nivel y modalidad", "Ordenando las que más encajan"]}
+          />
+        )}
+        {refining && data && (
+          <p className="mb-4 flex items-start gap-3 rounded-2xl bg-brand-soft px-4 py-3 text-sm leading-relaxed text-ink">
+            <MaruHead size={22} className="mt-0.5 shrink-0" />
+            <span>
+              <strong className="font-semibold">
+                Maru está afinando el orden con IA
+                <WorkingDots />
+              </strong>{" "}
+              <span className="text-muted">Puede tardar hasta un minuto. Mientras tanto ya podés mirar las búsquedas.</span>
+            </span>
+          </p>
+        )}
         {data && !data.inventory.generatedAt && tab !== "guardadas" && !external.length && <EmptyInventory />}
         {data && (data.inventory.generatedAt || external.length > 0 || tab === "guardadas") && list.length === 0 && !loading && (
           <EmptyResults tab={tab} hasFilters={hasActiveFilters} pending={data.counts.pending} onShowPending={() => setTab("pendientes")} onClearFilters={() => setFilters({})} />
@@ -365,7 +407,7 @@ function JobCard({
             <dt className="text-muted">Fuente:</dt>
             <dd className="min-w-0">
               {item.sources.map((s, i) => (
-                <span key={s.url}>
+                <span key={`${s.url}-${i}`}>
                   {i > 0 && " · "}
                   {s.kind === "usuario" ? (
                     "Agregada por vos"
@@ -597,16 +639,6 @@ function AddExternal({ onClose, onAdd }: { onClose: () => void; onAdd: (j: Exter
 }
 
 /* ---------- estados ---------- */
-
-function Skeleton() {
-  return (
-    <div className="space-y-4" aria-busy aria-label="Buscando oportunidades">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="h-48 animate-pulse rounded-3xl bg-sand" />
-      ))}
-    </div>
-  );
-}
 
 function EmptyInventory() {
   return (
