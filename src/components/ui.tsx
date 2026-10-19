@@ -87,6 +87,8 @@ export async function post<T>(url: string, body: unknown): Promise<T> {
   if (!res.ok) {
     // Si el cupo gratis frenó la acción, se abren los planes (PaywallHost). El mensaje de error sigue igual.
     notifyPlanLimit(url, res.status, data.code);
+    // Para los funnels: en qué ruta y con qué código se corta (AUTH_REQUIRED, PLAN_LIMIT, CV_UNREADABLE…).
+    capture("herramienta_error", { ruta: url, codigo: typeof data.code === "string" ? data.code : String(res.status) });
     throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
   }
   const herramienta = herramientaDeResultado(url);

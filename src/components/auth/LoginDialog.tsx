@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { capture } from "@/lib/tracking/posthog";
 import { MaruHead } from "../maru/PixelMaru";
 import { useAuth } from "./AuthProvider";
 
@@ -15,6 +16,8 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
   const [error, setError] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // Para el funnel: si se cierra sin haber ingresado, es un abandono del login.
+  const loggedIn = useRef(false);
 
   useEffect(() => {
     const d = dialogRef.current;
@@ -22,16 +25,21 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
     if (open && !d.open) {
       setWithGoogle(false);
       setError("");
+      loggedIn.current = false;
+      capture("login_pedido", { motivo: reason });
       d.showModal();
       setTimeout(() => buttonRef.current?.focus(), 50);
     }
     if (!open && d.open) d.close();
-  }, [open]);
+  }, [open, reason]);
 
   useEffect(() => {
     if (!open || !withGoogle) return;
     const check = async () => {
-      if (await refresh()) onLoggedIn();
+      if (loggedIn.current || !(await refresh())) return;
+      loggedIn.current = true;
+      capture("login_ok", { via: "ventana" });
+      onLoggedIn();
     };
     const id = setInterval(check, 3000);
     let channel: BroadcastChannel | null = null;
@@ -40,6 +48,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
       channel.onmessage = (e) => {
         if (e.data === "ok") void check();
         else if (e.data === "error") {
+          capture("login_error", { via: "ventana" });
           setWithGoogle(false);
           setError("No pudimos ingresar con Google. Probá de nuevo.");
         }
@@ -57,6 +66,7 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
     setError("");
     const next = encodeURIComponent(window.location.pathname);
     const w = window.open(`/api/auth/google?popup=1&next=${next}`, "maru-google", "popup,width=500,height=650");
+    capture("login_google", { ventana: w ? "aparte" : "misma_pestana" });
     // Si el navegador bloquea la ventana, vamos a Google en esta misma pestaña (y volvemos a esta página).
     if (!w) return void window.location.assign(`/api/auth/google?next=${next}`);
     setWithGoogle(true);
@@ -65,7 +75,10 @@ export default function LoginDialog({ open, reason, onClose, onLoggedIn }: { ope
   return (
     <dialog
       ref={dialogRef}
-      onClose={onClose}
+      onClose={() => {
+        if (!loggedIn.current) capture("login_cerrado", { motivo: reason, con_google: withGoogle });
+        onClose();
+      }}
       onClick={(e) => e.target === dialogRef.current && onClose()}
       className="m-auto w-[calc(100%-32px)] max-w-[860px] overflow-hidden rounded-[28px] bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/40 backdrop:backdrop-blur-[2px]"
       aria-labelledby="login-title"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { capture, initPostHog } from "@/lib/tracking/posthog";
 import { useAuth } from "./AuthProvider";
 
 /** Aviso al volver de Google (?ingreso=ok | google-error), en cualquier página. */
@@ -12,6 +13,10 @@ export default function LoginNotice() {
     const url = new URL(window.location.href);
     const ingreso = url.searchParams.get("ingreso");
     if (ingreso !== "ok" && ingreso !== "google-error") return;
+    // Vuelta de Google en la misma pestaña (cuando el navegador bloqueó la ventana aparte).
+    // Puede correr antes que PostHogPageviews: se inicia acá (es idempotente).
+    initPostHog();
+    capture(ingreso === "ok" ? "login_ok" : "login_error", { via: "redireccion" });
     setNotice(ingreso);
     url.searchParams.delete("ingreso");
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
