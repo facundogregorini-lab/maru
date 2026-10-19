@@ -19,6 +19,11 @@ Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/com
 | `busqueda_aviso_original`, `busqueda_preparar` | Abrir el aviso original o llevar la búsqueda a una herramienta | `destino` |
 | `seguimiento_estado` | Cambiar el estado de una postulación en el tablero | `estado` |
 | `extension_descarga` | Clic en el `.zip` de la extensión | — |
+| `herramienta_error` | Una llamada de `post()` volvió con error (desde el 19/10/2026) | `ruta` (p. ej. `/api/cv/analyze`), `codigo` (`AUTH_REQUIRED`, `PLAN_LIMIT`, `CV_UNREADABLE`… o el HTTP) |
+| `login_pedido` | Se abre el diálogo de ingreso | `motivo` (texto fijo del código: "descargar tu CV", "entrar a Maru"…) |
+| `login_google` | Toca "Continuar con Google" | `ventana`: `aparte` o `misma_pestana` (el navegador bloqueó la ventana) |
+| `login_ok` / `login_error` | Ingresó / Google devolvió error | `via`: `ventana` o `redireccion` |
+| `login_cerrado` | Cerró el diálogo sin ingresar | `motivo`, `con_google` (si había tocado el botón) |
 
 Funnel general: `$pageview` → `activacion` → `limite_planes_visto` → `plan_click` ("click en pagar": elige un plan y va a Mercado Pago) → `compra_confirmada`. Por herramienta: `$pageview` → `seccion_vista` → resultado → activación de esa herramienta (en Postulación y CV la activación se separa por `seccion`, porque las dos usan el mismo editor). `seccion_vista` existe porque una misma visita no puede contar para dos pasos del funnel: así, quien entra directo a `/cv` desde un anuncio completa los dos primeros pasos.
 

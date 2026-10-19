@@ -1,5 +1,12 @@
 # Estado y próximos pasos de Maru
 
+## Ingreso desde las herramientas y eventos de login (19/10/2026)
+
+- **Problema:** en PostHog, el 18 y el 19/10, 19 personas de Google Search abrieron /cv y una sola llegó al CV. Analizar, generar o preparar exige ingresar (`planGuard` → 401 `AUTH_REQUIRED`), pero la pantalla sólo mostraba «Ingresá con tu email desde el menú para continuar.», sin abrir el ingreso.
+- **Arreglo (aprobado por el dueño):** `post()` (src/components/ui.tsx), ante `AUTH_REQUIRED`, pide el ingreso (`src/lib/loginRequest.ts`); `LoginHost` (en el layout) abre el diálogo de Google y, al ingresar, la misma llamada se repite sola. Si cierra el diálogo: «Ingresá con Google para seguir. Lo que cargaste sigue acá.». Pedidos simultáneos comparten un diálogo. El texto del servidor pasa a «Ingresá con Google para continuar.».
+- **Medición:** `login_pedido`, `login_google`, `login_ok`, `login_error`, `login_cerrado` y `herramienta_error` (ruta y código). Detalle en [TRACKING.md](TRACKING.md).
+- **Falta:** probarlo en producción con una cuenta sin sesión (en local el cobro está apagado y no se pide ingreso) y, en unos días, comparar en PostHog `seccion_vista` → `login_pedido` → `login_ok` → `herramienta_resultado` en /cv por origen. Las herramientas que llaman a `fetch` directo (turnos de entrevista, feedback de video) siguen con el mensaje.
+
 ## Match: nivel, salario y función, con re-evaluación por IA (plan en curso, desde 19/10/2026)
 
 Pedido del dueño: /match mostraba Video Editors, analistas y avisos de USD 1.500–5.500 a un líder de growth que filtró Manager/Director/VP y USD 7.000. Decisiones del dueño (19/10): sumar una segunda etapa con IA (Haiku) sólo sobre los avisos que pasan los filtros; la IA normaliza moneda y período, define la moneda cuando falta e infiere el salario no publicado con menos peso; se pueden cambiar los textos de salario e indispensables del formulario.
