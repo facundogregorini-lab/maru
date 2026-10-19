@@ -10,6 +10,8 @@
 - Saldo de Apify al 19/10 (consulta gratis): plan gratis, US$4,56 usados de US$5 en octubre. Se renueva el 1/11.
 - **Prueba hecha (19/10, crédito gratis de octubre):** valig trae descripción completa en el 100% de los avisos y el 92% pasa el filtro. Costo real: US$0,41 cada 1.000 filas. Detalle en IMPORTACIONES. No hizo falta probar cheap_scraper.
 - **Compra aprobada por el dueño (19/10):** 10.000 avisos, tope US$29, compra única. El dueño tiene que pasar la cuenta de Apify a Starter y cancelar la renovación. El código ya acepta el tope y `--date-posted=month`.
+- Guardado por tanda: cada búsqueda paga se guarda en disco apenas termina, y el paso de importar corta a los 135 min para que siempre quede tiempo de commitear (ver IMPORTACIONES).
+- Plan Starter activado por el dueño el 19/10. Saldo: US$0,08 usados de US$19 de tope mensual. Tanda 1 lanzada (14 búsquedas de tecnología y datos × 500, tope US$3,20).
 - (Histórico) prueba de hasta US$1 (pendiente de OK del dueño) con 2 o 3 actores de LinkedIn más baratos que el actual (US$2 cada 1.000). Hay que medir cuántos traen descripción completa, cuántos son nuevos y cuántos pasan el filtro. Ojo: la cuenta de Apify usó US$4,56 de US$5 en octubre. Si está en el plan gratis, para gastar más hay que pasar a Starter (US$29 por mes, que vuelven como saldo; cancelarlo después de la compra) o esperar al 1/11.
 - **Paso 3:** compra en tandas de US$5 con tope total aprobado, frenando si bajan los avisos nuevos que pasan el filtro.
 

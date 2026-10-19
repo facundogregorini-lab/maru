@@ -55,6 +55,8 @@ jobs:
             if [ -n "${!k}" ]; then echo "$k: cargado"; else echo "$k: falta"; fi
           done
       - name: Importar
+        # Antes que el tope del job: así siempre queda tiempo para guardar lo que ya se pagó.
+        timeout-minutes: 135
         env:
           FANTASTIC_JOBS: ${{ secrets.FANTASTIC_JOBS }}
           SERP_API: ${{ secrets.SERP_API }}

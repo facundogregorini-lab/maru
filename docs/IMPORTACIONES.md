@@ -86,6 +86,10 @@ El dueño aprobó una compra única de hasta **US$29** en Apify (plan Starter, u
 
 Prueba del 19/10 con `--actor=valig` (2 búsquedas × 100 filas, crédito gratis de octubre): 200 filas, todas con descripción completa y en Argentina. Pasaron el filtro 185; los otros 15 quedaron `fuera_de_area`. Hubo 66 avisos nuevos y 103 que ya estaban: «data analyst» y «analista financiero» ya se habían buscado antes. Gasto real: US$0,082, unos US$0,41 cada 1.000 filas.
 
+## Guardado por tanda (desde el 19/10/2026)
+
+Hubo una corrida de Google Jobs (17/10) cuyas búsquedas se perdieron por un conflicto al guardar (#51). Para la compra paga, Apify escribe `inventory.json` y el ledger en disco después de **cada** búsqueda, no sólo al final. El paso "Importar" tiene un tope de 135 minutos, menor que el del job (150). Así, si una búsqueda cuelga o el job se corta, el paso "Guardar inventario y consumo" (`always()`) commitea lo ya pagado. Probado con una Apify simulada que cuelga en la segunda búsqueda: la primera quedó guardada, sin duplicar avisos ni filas del ledger. Además, el workflow comparte el grupo de concurrencia con la sync diaria, así que nunca escriben el inventario a la vez. Los datasets de cada corrida quedan en Apify (el `runId` está en el ledger) por si hubiera que recuperarlos.
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.
