@@ -107,6 +107,10 @@ Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Lo
 - **Duplicados:** 328 de las 1.335 oportunidades con LinkedIn ya se agrupan con el mismo puesto de otra fuente (Fantastic, Greenhouse, SuccessFactors, Workday, Lever, Ashby): no aparecen dos veces.
 - **Vigencia:** la revisión diaria de importados reconoce el «No longer accepting applications» de LinkedIn.
 
+## Puestos de LinkedIn para Latinoamérica (desde el 19/10/2026)
+
+Con `--location=latam` (sólo con `--actor=valig` o `cheap`), la búsqueda de LinkedIn usa «Latin America» en lugar de «Argentina». Son, sobre todo, puestos remotos de tecnología, producto y marketing que contratan en toda la región. Esos avisos se guardan sin fijar el país en AR, y `eligibility.ts` decide con la región y la descripción: «Latin America» es elegible salvo que el aviso pida vivir o tener permiso de trabajo en EE. UU. Se siguen rechazando las ubicaciones de otro país («Mexico City, Mexico»).
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.

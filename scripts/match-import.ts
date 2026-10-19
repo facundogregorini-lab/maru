@@ -74,7 +74,7 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina"): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -92,7 +92,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window);
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location);
       const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
       try {
         const actor = actorName.replace("/", "~");
@@ -269,9 +269,13 @@ async function main() {
     if (!(apifyBudget > 0 && apifyBudget <= 35)) throw new Error("Indicá --budget-usd entre 0 y 35 (presupuesto aprobado por el dueño).");
     const window = arg("date-posted") ?? "week";
     if (window !== "week" && window !== "month") throw new Error("--date-posted debe ser week o month.");
+    // --location=latam busca puestos de LinkedIn para Latinoamérica (casi siempre remotos), sólo con los Actors alternativos.
+    const where = arg("location") ?? "argentina";
+    if (where !== "argentina" && where !== "latam") throw new Error("--location debe ser argentina o latam.");
+    if (where === "latam" && linkedinActor === "curious") throw new Error("--location=latam sólo con --actor=valig o cheap.");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined));
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina");
   }
 
   const inv = await persist(result, ledger.entries, nowIso, progress, true);

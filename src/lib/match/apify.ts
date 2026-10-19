@@ -22,6 +22,8 @@ export type LinkedinActor = keyof typeof LINKEDIN_ACTORS;
 export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionHtml", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
 /** Títulos que los Actors pueden descartar antes de cobrar la fila (el filtro fino es import-filter.ts). */
 export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cadete", "cajero", "repositor", "mozo", "vigilador", "mostrador", "promotor", "telemarketer", "call center"];
+/** Ubicaciones de LinkedIn que abarcan a la Argentina sin nombrarla: la elegibilidad decide con el texto del aviso. */
+const LATAM_LOCATION = /\b(latin america|latam|latinoam[eé]rica|am[eé]rica latina|south america|sudam[eé]rica)\b/i;
 export const linkedinJobId = (link: string) => /\/jobs\/view\/(?:[^/?#]*-)?(\d{6,})/.exec(link)?.[1] ?? "";
 const str = (v: unknown) => typeof v === "string" ? v.trim() : "";
 const obj = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
@@ -72,7 +74,8 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
     if (source === "indeed" && country.toUpperCase() !== "AR") { reject("pais_no_confirmado"); continue; }
     // LinkedIn devuelve el país en cada ubicación; Computrabajo AR lo identifica por el host.
     const location = str(r.formattedLocation) || str(r.location);
-    if (source === "linkedin" && !/argentina|buenos aires/i.test(location)) { reject("pais_no_confirmado"); continue; }
+    const latam = source === "linkedin" && !/argentina|buenos aires/i.test(location) && LATAM_LOCATION.test(location);
+    if (source === "linkedin" && !/argentina|buenos aires/i.test(location) && !latam) { reject("pais_no_confirmado"); continue; }
     if (source === "computrabajo" && new URL(sourceUrl).hostname !== "ar.computrabajo.com") { reject("pais_no_confirmado"); continue; }
     if (seen.has(id)) { reject("duplicado"); continue; }
     seen.add(id);
@@ -86,7 +89,8 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
       sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, externalId: id, title, company,
       sourceUrl, applyUrl, linkRequired: true, attribution: `Publicado en ${APIFY_JOBS[source].name} · vía Apify`,
       descriptionText: description.slice(0, 12000), descriptionComplete: description.length <= 12000,
-      locations: location ? [location] : [], countries: ["AR"], regionText: [],
+      // "Latin America" no es un país: sin "AR" fijo, eligibility.ts mira la región y la descripción (p. ej. "US only").
+      locations: location ? [location] : [], countries: latam ? [] : ["AR"], regionText: [],
       workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null,
       employmentType: null, salary, publishedAt, updatedAt: date(r.updatedAt), expiresAt,
       employmentHint: str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
@@ -96,12 +100,12 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week") {
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina") {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
   // Antigüedad máxima del aviso en los Actors alternativos: una semana (default) o un mes.
   const age = window === "month" ? "r2592000" : "r604800";
-  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location: "Argentina", datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
-  if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location: "Argentina", publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location, datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location, publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
   return { keyword, countryCode: "ar", maxJobs: limit, proxyConfiguration: { useApifyProxy: false } };
