@@ -4958,6 +4958,226 @@
         "spentUsd": 4.751,
         "budgetUsd": 5
       }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "desarrollador backend",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "Mc7yy54y4MVW6IoLb",
+        "datasetId": "rmzXmuO9ZrOQdnNJn"
+      },
+      "rows": 500,
+      "consumed": 0.3901,
+      "quota": {
+        "usageTotalUsd": 0.17010000000000003,
+        "spentUsd": 0.472,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "desarrollador frontend",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "hsMxWAq3vsEGT7Oeg",
+        "datasetId": "9k2RpbagCx8QWPNk6"
+      },
+      "rows": 162,
+      "consumed": 0.1262,
+      "quota": {
+        "usageTotalUsd": 0.054900000000000004,
+        "spentUsd": 0.598,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "full stack developer",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "lDecS0drCMNR5LezL",
+        "datasetId": "XVrTezQbIjS60jnVU"
+      },
+      "rows": 406,
+      "consumed": 0.3199,
+      "quota": {
+        "usageTotalUsd": 0.1413,
+        "spentUsd": 0.918,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "software engineer",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "ywIJTqjGXexLk60D9",
+        "datasetId": "cRHAkG8YXKSOCN09K"
+      },
+      "rows": 500,
+      "consumed": 0.3937,
+      "quota": {
+        "usageTotalUsd": 0.17370000000000002,
+        "spentUsd": 1.312,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "qa automation",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "02B8KprwqVzC3xCgf",
+        "datasetId": "yY5UlW80pp034RWTB"
+      },
+      "rows": 190,
+      "consumed": 0.1457,
+      "quota": {
+        "usageTotalUsd": 0.0621,
+        "spentUsd": 1.458,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "devops engineer",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "HKpO2d5bxzFh3cCHK",
+        "datasetId": "9V93QdOic5Ug28CnM"
+      },
+      "rows": 500,
+      "consumed": 0.3937,
+      "quota": {
+        "usageTotalUsd": 0.17370000000000002,
+        "spentUsd": 1.851,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "cloud engineer",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "xkiVgf0FDsce950l2",
+        "datasetId": "T7wVcB3hWWSDd7wbY"
+      },
+      "rows": 489,
+      "consumed": 0.3817,
+      "quota": {
+        "usageTotalUsd": 0.1665,
+        "spentUsd": 2.233,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "mobile developer",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "q76Cdf3rD4gwkTpGw",
+        "datasetId": "DXInJMeGdgYcURag5"
+      },
+      "rows": 131,
+      "consumed": 0.1017,
+      "quota": {
+        "usageTotalUsd": 0.0441,
+        "spentUsd": 2.335,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ciberseguridad",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "U5umen9PAZKRAtjkX",
+        "datasetId": "qBVgBGEDf5PNlqU3d"
+      },
+      "rows": 194,
+      "consumed": 0.1511,
+      "quota": {
+        "usageTotalUsd": 0.06570000000000001,
+        "spentUsd": 2.486,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista funcional",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "g3KlQmEgPBT0mKZgi",
+        "datasetId": "RAocdNpHPdDLRWMc2"
+      },
+      "rows": 497,
+      "consumed": 0.392,
+      "quota": {
+        "usageTotalUsd": 0.17334000000000002,
+        "spentUsd": 2.878,
+        "budgetUsd": 3.2
+      }
+    },
+    {
+      "at": "2026-10-19T03:51:15.792Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "consultor sap",
+        "rows": "500",
+        "maxTotalChargeUsd": "0.22",
+        "runId": "1iDJfD8PB95ogdraL",
+        "datasetId": "pQPVhvrI0eD9QRzgp"
+      },
+      "rows": 254,
+      "consumed": 0.1987,
+      "quota": {
+        "usageTotalUsd": 0.08694,
+        "spentUsd": 3.077,
+        "budgetUsd": 3.2
+      }
     }
   ]
 }
