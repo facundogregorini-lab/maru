@@ -48,7 +48,7 @@ function date(value: unknown): string | null {
 }
 
 /** Solo datos del aviso. Nunca importamos perfiles de reclutadores, fotos, edades ni contactos. */
-export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now: string) {
+export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now: string, opts: { remote?: boolean } = {}) {
   const postings: NormalizedPosting[] = [];
   const rejected: Record<string, number> = {};
   const seen = new Set<string>();
@@ -91,7 +91,8 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
       descriptionText: description.slice(0, 12000), descriptionComplete: description.length <= 12000,
       // "Latin America" no es un país: sin "AR" fijo, eligibility.ts mira la región y la descripción (p. ej. "US only").
       locations: location ? [location] : [], countries: latam ? [] : ["AR"], regionText: [],
-      workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null,
+      // Con el filtro de remotos de LinkedIn (f_WT=2) la modalidad la declara quien publica el aviso.
+      ...(opts.remote ? { workplace: { value: "remoto" as const, from: "fuente" as const, evidence: "LinkedIn: búsqueda de puestos remotos" }, remoteFlag: true } : { workplace: { value: "desconocido" as const, from: "fuente" as const }, remoteFlag: null }),
       employmentType: null, salary, publishedAt, updatedAt: date(r.updatedAt), expiresAt,
       employmentHint: str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
       seniorityHint: str(r.seniorityLevel) || str(r.experienceLevel),
@@ -100,11 +101,13 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina") {
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina", remote = false) {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
   // Antigüedad máxima del aviso en los Actors alternativos: una semana (default) o un mes.
   const age = window === "month" ? "r2592000" : "r604800";
-  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location, datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (remote && (source !== "linkedin" || actor !== "valig")) throw new Error("La búsqueda de remotos sólo está probada con LinkedIn vía valig.");
+  // f_WT=2 es el filtro «Remoto» de la búsqueda de LinkedIn.
+  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location, datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE, ...(remote ? { urlParam: [{ key: "f_WT", value: "2" }] } : {}) };
   if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location, publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };

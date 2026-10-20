@@ -69,6 +69,14 @@ describe("piloto de avisos Apify", () => {
     expect(apifyNextCap("linkedin", 500, 0, 5, "valig")).toBeCloseTo(0.22);
     expect(apifyNextCap("linkedin", 500, 0, 5)).toBeCloseTo(1.02);
   });
+  it("busca sólo remotos de LinkedIn con el filtro f_WT=2 y los marca remotos desde la fuente", () => {
+    expect(apifyJobInput("linkedin", "seo", 100, 500, "valig", "month", "Argentina", true)).toMatchObject({ location: "Argentina", urlParam: [{ key: "f_WT", value: "2" }] });
+    expect(apifyJobInput("linkedin", "seo", 100, 500, "valig")).not.toHaveProperty("urlParam");
+    expect(() => apifyJobInput("linkedin", "seo", 100, 500, "cheap", "month", "Argentina", true)).toThrow();
+    const row = { id: "4480000009", title: "SEO Specialist", companyName: "Empresa", url: "https://www.linkedin.com/jobs/view/4480000009/", location: "Argentina", descriptionHtml: `<p>${description}</p>` };
+    expect(normalizeApifyJobs("linkedin", [row], now, { remote: true }).postings[0]).toMatchObject({ workplace: { value: "remoto", from: "fuente" }, remoteFlag: true });
+    expect(normalizeApifyJobs("linkedin", [row], now).postings[0].workplace.value).toBe("desconocido");
+  });
   it("usa los límites de cada Actor y restringe el piloto", () => {
     expect(apifyJobInput("linkedin", "analista", 50)).toMatchObject({ limitPerSource: 50, scrapeCompany: false, location: "Argentina" });
     expect(apifyJobInput("indeed", "analista", 50)).toMatchObject({ count: 50, country: "ar" });
