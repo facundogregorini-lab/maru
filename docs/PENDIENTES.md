@@ -1,5 +1,11 @@
 # Estado y próximos pasos de Maru
 
+## Session replay de PostHog (20/10/2026)
+
+- **Pedido del dueño:** grabar todas las sesiones (los eventos llegaban con `$recording_status = "disabled"`).
+- **Hecho:** en `src/lib/tracking/posthog.ts`, `disable_session_recording: false` y `session_recording: { maskAllInputs: true, maskTextSelector: "*" }`: no se graban los campos de formulario ni el texto en pantalla. Sigue activo sólo en los dominios de producción.
+- **Falta:** confirmar en PostHog que *Settings → Session replay → Record user sessions* esté prendido. Actualizar la política de privacidad (`src/app/privacidad/page.tsx`, «No grabamos tu pantalla ni registramos tus clics») y `docs/TRACKING.md`, que dicen que no hay grabación: decisión pendiente del dueño.
+
 ## Ingreso desde las herramientas y eventos de login (19/10/2026)
 
 - **Problema:** en PostHog, el 18 y el 19/10, 19 personas de Google Search abrieron /cv y una sola llegó al CV. Analizar, generar o preparar exige ingresar (`planGuard` → 401 `AUTH_REQUIRED`), pero la pantalla sólo mostraba «Ingresá con tu email desde el menú para continuar.», sin abrir el ingreso.
