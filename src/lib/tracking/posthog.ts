@@ -1,7 +1,7 @@
 /**
  * Funnels de producto en PostHog (navegador). Sólo eventos con nombre y valores de una lista cerrada, como
- * Vercel Analytics: sin autocaptura de clics, sin grabación de sesiones y sin identificar a la persona
- * (nunca viaja el email). Las visitas y los eventos de un mismo navegador forman el funnel.
+ * Vercel Analytics: sin autocaptura de clics y sin identificar a la persona (nunca viaja el email). Graba las
+ * sesiones (session replay) con los campos de formulario enmascarados. Las visitas y los eventos de un mismo navegador forman el funnel.
  *
  * Sólo se activa con NEXT_PUBLIC_POSTHOG_KEY y en los dominios de producción (los mismos de Google Ads):
  * localhost y los previews de Vercel no ensucian los datos. Ver docs/TRACKING.md.
@@ -43,7 +43,8 @@ export function initPostHog(): boolean {
       capture_pageview: false, // la manda PostHogPageviews, antes de `seccion_vista`, para que el orden del funnel sea fijo
       capture_pageleave: false,
       autocapture: false,
-      disable_session_recording: true,
+      disable_session_recording: false,
+      session_recording: { maskAllInputs: true }, // lo que se escribe en formularios no se graba
       disable_surveys: true,
       person_profiles: "identified_only",
     });
