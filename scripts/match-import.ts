@@ -74,7 +74,7 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina"): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina", remote = false): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -92,8 +92,9 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location);
-      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location, remote);
+      // El ledger guarda si fue búsqueda de remotos: el refetch tiene que volver a marcarlos igual.
+      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap), ...(remote ? { workplace: "remote" } : {}) };
       try {
         const actor = actorName.replace("/", "~");
         const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=600&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
@@ -116,7 +117,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         // Costo conservador: uso de plataforma + precio por fila (puede sobreestimar, nunca subestimar).
         const cost = Math.round((usage + list.length * (cap / rows)) * 10000) / 10000;
         spent += cost;
-        const normalized = normalizeApifyJobs(source, list, nowIso);
+        const normalized = normalizeApifyJobs(source, list, nowIso, { remote });
         out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword });
         out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } });
         log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
@@ -154,7 +155,7 @@ async function refetchApify(token: string, entries: LedgerEntry[], since: string
     const fields = [...new Set(wanted.map((f) => f.split(".")[0]))].join(",");
     const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${e.params.datasetId}/items?clean=true&format=json&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
     const list = Array.isArray(items) ? items : [];
-    const normalized = normalizeApifyJobs("linkedin", list, e.at);
+    const normalized = normalizeApifyJobs("linkedin", list, e.at, { remote: e.params.workplace === "remote" });
     out.batches.push({ sourceId: "apify-linkedin", boardId: "apify:linkedin:ar", postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: e.params.keyword ?? "" });
     log(`↻ "${e.params.keyword}" (${e.at.slice(0, 16)}): ${list.length} filas, ${normalized.accepted} aceptadas.`);
     await onRun(out, e.at);
@@ -273,9 +274,13 @@ async function main() {
     const where = arg("location") ?? "argentina";
     if (where !== "argentina" && where !== "latam") throw new Error("--location debe ser argentina o latam.");
     if (where === "latam" && linkedinActor === "curious") throw new Error("--location=latam sólo con --actor=valig o cheap.");
+    // --workplace=remote: sólo puestos que LinkedIn marca como remotos (filtro f_WT=2, con valig).
+    const workplace = arg("workplace") ?? "any";
+    if (workplace !== "any" && workplace !== "remote") throw new Error("--workplace debe ser any o remote.");
+    if (workplace === "remote" && linkedinActor !== "valig") throw new Error("--workplace=remote sólo con --actor=valig.");
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina");
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina", workplace === "remote");
   }
 
   const inv = await persist(result, ledger.entries, nowIso, progress, true);

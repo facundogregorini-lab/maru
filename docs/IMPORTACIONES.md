@@ -166,3 +166,9 @@ Rechazos: 36 sólo ofrecían agregadores secundarios y 1 tenía descripción cor
 
 El workflow `match-providers` corre solo los días 2 y 17 de cada mes a las 10:07 UTC, después de la sync diaria: Google Jobs (plan gratuito de SerpApi) con la tanda `--queries=mensual`, que son las búsquedas `mk-…` (14 de marketing), `fz-…` (16 de finanzas) y `tj-…` (6 de tecnología junior), `--max-searches=36 --reserve=20`. Usa como máximo 72 de las 250 búsquedas del mes y nunca toca la reserva. Dos corridas por mes porque los avisos de Google Jobs vencen a los 21 días sin volver a verse. Se puede lanzar a mano igual que antes; a mano sigue empezando en modo "plan".
 
+
+## Remotos de tecnología y marketing (20/10/2026)
+
+El dueño pidió gastar el resto del saldo de Apify en trabajos remotos de marketing y tecnología. Al 20/10 la cuenta tenía US$9,76 usados de un límite mensual de US$19.
+
+`--workplace=remote` (sólo con `--actor=valig`) suma el filtro «Remoto» de la búsqueda de LinkedIn (`f_WT=2`) con ubicación Argentina. Son remotos que LinkedIn muestra a quien busca desde Argentina. Esos avisos entran con modalidad `remoto` declarada por la fuente. El ledger guarda `workplace: remote`, así el `refetch` los vuelve a marcar igual. En la compra del 19/10 casi todas las búsquedas de marketing y tecnología llegaron al tope de 300 filas: con el filtro de remotos aparecen avisos que entonces quedaron afuera.
