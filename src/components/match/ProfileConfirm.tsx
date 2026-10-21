@@ -1,8 +1,10 @@
 "use client";
 
 import type { MatchProfile } from "@/lib/match/types";
-import { PrimaryButton, StepCard, inputClass } from "../ui";
-import { Field, ListInput } from "./fields";
+import { parseSpokenNumber, replaceSpoken } from "@/lib/voice";
+import { PrimaryButton, StepCard } from "../ui";
+import { DictateField } from "../VoiceButton";
+import { Field, ListInput, dictateInputClass } from "./fields";
 
 /** Paso B: la persona confirma (y corrige) lo que Maru entendió de su CV. */
 export default function ProfileConfirm({
@@ -37,7 +39,9 @@ export function ProfileFields({ profile, setProfile }: { profile: MatchProfile; 
   return (
     <div className="space-y-6">
       <Field label="Tu titular profesional">
-        <input value={profile.headline} onChange={(e) => set("headline", e.target.value)} className={inputClass} placeholder="Ej.: Analista de datos con foco en fintech" />
+        <DictateField onText={(t, first) => set("headline", replaceSpoken(profile.headline, t, first))}>
+          <input value={profile.headline} onChange={(e) => set("headline", e.target.value)} className={dictateInputClass} placeholder="Ej.: Analista de datos con foco en fintech" />
+        </DictateField>
       </Field>
       <Field label="Tus cargos, del más reciente al más antiguo" hint="Uno por renglón.">
         <ListInput multiline value={profile.titles} onChange={(v) => set("titles", v)} label="Cargos" />
@@ -47,18 +51,28 @@ export function ProfileFields({ profile, setProfile }: { profile: MatchProfile; 
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Años de experiencia (aprox.)">
-          <input
-            type="number"
-            min={0}
-            max={60}
-            inputMode="numeric"
-            value={profile.yearsExperience ?? ""}
-            onChange={(e) => set("yearsExperience", e.target.value === "" ? null : Math.max(0, Math.min(60, Number(e.target.value))))}
-            className={inputClass}
-          />
+          <DictateField
+            onText={(t) => {
+              const n = parseSpokenNumber(t);
+              if (n === null) return false;
+              set("yearsExperience", Math.max(0, Math.min(60, n)));
+            }}
+          >
+            <input
+              type="number"
+              min={0}
+              max={60}
+              inputMode="numeric"
+              value={profile.yearsExperience ?? ""}
+              onChange={(e) => set("yearsExperience", e.target.value === "" ? null : Math.max(0, Math.min(60, Number(e.target.value))))}
+              className={dictateInputClass}
+            />
+          </DictateField>
         </Field>
         <Field label="Dónde vivís">
-          <input value={profile.location} onChange={(e) => set("location", e.target.value)} className={inputClass} placeholder="Ciudad, provincia" />
+          <DictateField onText={(t, first) => set("location", replaceSpoken(profile.location, t, first))}>
+            <input value={profile.location} onChange={(e) => set("location", e.target.value)} className={dictateInputClass} placeholder="Ciudad, provincia" />
+          </DictateField>
         </Field>
       </div>
     </div>
