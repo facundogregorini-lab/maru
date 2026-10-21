@@ -135,14 +135,16 @@ export async function cancel(email: string): Promise<void> {
   await change(email, (s) => ({ ...s, status: "cancelled", checkoutUrl: undefined }));
 }
 /** Reconsulta recursos con credenciales propias. Repetir una notificación no suma meses.
- * Devuelve el motivo si vio un pago aprobado que no acreditó (sin datos personales). */
-export async function processNotification(type: string, id: string): Promise<string | undefined> {
+ * Devuelve el motivo si vio un pago aprobado que no acreditó (sin datos personales).
+ * `note` recibe qué se hizo con la notificación, sin datos personales, para el registro del panel. */
+export async function processNotification(type: string, id: string, note: (what: string) => void = () => {}): Promise<string | undefined> {
   let invoice: Invoice | undefined;
   let sub: Preapproval;
   let payment: Payment | undefined;
   if (type === "payment") {
     const binding = (await getManyJson<{ subId: string }>([`maru:billing:payment:${id}`]))[0];
-    if (!binding) return;
+    // Normal si llega antes que el comprobante: ese aviso trae el mismo pago.
+    if (!binding) { note("pago sin suscripción vinculada todavía"); return; }
     payment = await mp<Payment>(`/v1/payments/${encodeURIComponent(id)}`);
     sub = await mp<Preapproval>(`/preapproval/${encodeURIComponent(binding.subId)}`);
   } else if (type === "subscription_authorized_payment") {
@@ -150,14 +152,14 @@ export async function processNotification(type: string, id: string): Promise<str
     sub = await mp<Preapproval>(`/preapproval/${encodeURIComponent(invoice.preapproval_id)}`);
   } else if (type === "subscription_preapproval") {
     sub = await mp<Preapproval>(`/preapproval/${encodeURIComponent(id)}`);
-  } else return;
-  if (!sub.external_reference || !/^[a-f0-9-]{36}$/i.test(sub.external_reference)) return;
+  } else { note(`tipo no usado: ${type.slice(0, 40) || "vacío"}`); return; }
+  if (!sub.external_reference || !/^[a-f0-9-]{36}$/i.test(sub.external_reference)) { note("suscripción sin referencia de Maru"); return; }
   const binding = (await getManyJson<{ email: string }>([`maru:billing:ref:${sub.external_reference}`]))[0];
-  if (!binding) return;
+  if (!binding) { note("referencia desconocida"); return; }
   const current = await readSubscription(binding.email);
-  if (!current || current.reference !== sub.external_reference) return;
+  if (!current || current.reference !== sub.external_reference) { note("la cuenta ya tiene otra suscripción"); return; }
   // Otra suscripción con la misma referencia (secreta, del servidor) sólo reemplaza a la guardada si quedó autorizada.
-  if (current.id && current.id !== sub.id && sub.status !== "authorized") return;
+  if (current.id && current.id !== sub.id && sub.status !== "authorized") { note(`otra suscripción con la misma referencia (${sub.status})`); return; }
   if (invoice?.payment?.id) payment = await mp<Payment>(`/v1/payments/${invoice.payment.id}`);
   if (payment) await setJson(`maru:billing:payment:${payment.id}`, { subId: sub.id });
   let skipped: string | undefined;
@@ -180,6 +182,7 @@ export async function processNotification(type: string, id: string): Promise<str
     if (s.paymentId === payment.id) return { ...next, paidThrough: 0 };
     return next;
   });
+  note(payment ? `suscripción ${sub.status}, pago ${payment.status}${skipped ? " sin acreditar" : ""}` : `suscripción ${sub.status}`);
   return skipped;
 }
 /** Fin del período pago: días exactos o el mismo día del mes siguiente (el último, si ese mes es más corto). */

@@ -7,6 +7,7 @@ import { FAMILY_LABEL, SENIORITY_LABEL } from "@/lib/match/labels";
 import type { coverageMetrics } from "@/lib/match/metrics";
 import { ErrorBanner, inputClass, post } from "../ui";
 
+import BillingDiagnostics from "./BillingDiagnostics";
 import ProviderPilot from "./ProviderPilot";
 
 type Metrics = ReturnType<typeof coverageMetrics>;
@@ -155,6 +156,7 @@ export default function AdminPanel() {
         </Section>
       )}
 
+      <BillingDiagnostics />
       <ProviderPilot />
       <AddCompany />
     </div>

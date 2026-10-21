@@ -27,6 +27,7 @@ function conn(): Conn | null {
 }
 
 const memory = new Map<string, string>();
+const lists = new Map<string, string[]>();
 const inMemory = () => !conn() && process.env.NODE_ENV !== "production";
 
 /** true si hay dónde guardar (Upstash, o la memoria en desarrollo). */
@@ -76,6 +77,17 @@ function runMemory([op, key, ...args]: Cmd): unknown {
       return [k, ...args.map(String)].map((x) => memory.get(x) ?? null);
     case "EXISTS":
       return memory.has(k) ? 1 : 0;
+    case "LPUSH": {
+      const list = lists.get(k) ?? [];
+      list.unshift(...args.map(String).reverse());
+      lists.set(k, list);
+      return list.length;
+    }
+    case "LTRIM":
+      lists.set(k, (lists.get(k) ?? []).slice(Number(args[0]), Number(args[1]) + 1));
+      return "OK";
+    case "LRANGE":
+      return (lists.get(k) ?? []).slice(Number(args[0]), Number(args[1]) + 1);
     default:
       throw new DbError(`Comando no soportado en memoria: ${op}`);
   }
@@ -122,8 +134,19 @@ export async function keyExists(key: string, now = Date.now()): Promise<boolean>
   return Number(result) > 0;
 }
 
+/** Agrega al comienzo de una lista y conserva sólo las últimas `max` entradas (registro de diagnóstico). */
+export async function pushRecent(key: string, value: unknown, max: number): Promise<void> {
+  await pipeline([["LPUSH", key, JSON.stringify(value)], ["LTRIM", key, 0, max - 1]]);
+}
+
+export async function readRecent<T>(key: string, max: number): Promise<T[]> {
+  const [raw] = await pipeline([["LRANGE", key, 0, max - 1]]);
+  return (raw as string[]).map((r) => JSON.parse(r) as T);
+}
+
 /** Para tests. */
 export function resetMemoryDb() {
+  lists.clear();
   memoryExpiry.clear();
   memory.clear();
 }

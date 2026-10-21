@@ -132,6 +132,41 @@ describe("suscripción validada en el servidor", () => {
     const res = await POST(new Request("https://maru.test/api/billing/webhook?data.id=123", { method: "POST", body: JSON.stringify({ type: "subscription_preapproval", data: { id: "123" } }) }));
     expect(res.status).toBe(401); expect(fixture.fetchMock).not.toHaveBeenCalled();
   });
+  it("registra para el panel qué pasó con cada notificación, sin datos personales", async () => {
+    const s = await setup(); const fixture = apiFixture();
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    const { POST } = await import("@/app/api/billing/webhook/route");
+    const signed = (id: string, type: string) => {
+      const stamp = String(Date.now());
+      const sig = createHmac("sha256", "test-secret").update(`id:${id};request-id:r1;ts:${stamp};`).digest("hex");
+      return new Request(`https://maru.test/api/billing/webhook?data.id=${id}&type=${type}`, { method: "POST", headers: { "x-request-id": "r1", "x-signature": `ts=${stamp},v1=${sig}` }, body: JSON.stringify({ type, data: { id } }) });
+    };
+    expect((await POST(signed("100", "subscription_authorized_payment"))).status).toBe(200);
+    expect(s.hasPaidAccess(await s.readSubscription("ana@example.com"))).toBe(true);
+    expect((await POST(signed("777", "payment"))).status).toBe(200);
+    const bad = new Request("https://maru.test/api/billing/webhook?data.id=5&type=payment", { method: "POST", headers: { "x-request-id": "r1", "x-signature": `ts=1,v1=${"0".repeat(64)}` }, body: "{}" });
+    expect((await POST(bad)).status).toBe(401);
+    const { readBillingEvents } = await import("@/lib/billing/log");
+    const events = await readBillingEvents();
+    expect(events.map((e) => [e.result, e.detail])).toEqual([
+      ["rechazada", expect.stringMatching(/la firma no coincide/)],
+      ["procesada", "pago sin suscripción vinculada todavía"],
+      ["procesada", "suscripción authorized, pago approved"],
+    ]);
+    expect(JSON.stringify(events)).not.toContain("ana@example.com");
+  });
+  it("muestra el diagnóstico del cobro sólo a administración y sin valores de claves", async () => {
+    await setup(); vi.stubEnv("ADMIN_EMAILS", "admin@example.com");
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ site_id: "MLA", email: "dueño@example.com" })));
+    const { GET } = await import("@/app/api/billing/admin/route");
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const as = (email: string) => new Request("https://maru.test/api/billing/admin", { headers: { cookie: `${SESSION_COOKIE}=${createSessionToken(email)}` } });
+    expect((await GET(as("ana@example.com"))).status).toBe(403);
+    const res = await GET(as("admin@example.com"));
+    const body = await res.json();
+    expect(body).toMatchObject({ ready: true, tokenKind: "formato desconocido", account: { ok: true, site: "MLA" }, events: [] });
+    expect(JSON.stringify(body)).not.toMatch(/test-token|test-secret|dueño/);
+  });
   it("aplica cuota gratis diaria por cuenta y categoría, y semanal para entrevistas", async () => {
     const s = await setup();
     const lunes = Date.parse("2026-10-12T15:00:00Z");
