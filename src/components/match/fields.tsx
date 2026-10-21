@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { capitalize, spokenList } from "@/lib/voice";
 import { inputClass } from "../ui";
+import { DictateField } from "../VoiceButton";
+
+/** Campo de texto con lugar para el micrófono de dictado (`DictateField`). */
+export const dictateInputClass = `${inputClass} pr-12!`;
 
 /** Piezas de formulario del match (mismo estilo que el resto de Maru). */
 
@@ -26,7 +31,7 @@ export function MultiChips<T extends string>({ value, options, onChange }: { val
   );
 }
 
-/** Lista editable como texto separado por comas (o renglones). Mantiene lo que la persona escribe. */
+/** Lista editable como texto separado por comas (o renglones). Mantiene lo que la persona escribe. Se puede dictar. */
 export function ListInput({
   value,
   onChange,
@@ -51,10 +56,21 @@ export function ListInput({
         .filter(Boolean),
     );
   };
-  return multiline ? (
-    <textarea aria-label={label} rows={4} value={draft} placeholder={placeholder} onChange={(e) => commit(e.target.value)} className={`${inputClass} text-sm`} />
-  ) : (
-    <input aria-label={label} value={draft} placeholder={placeholder} onChange={(e) => commit(e.target.value)} className={inputClass} />
+  // Lo dictado se suma como ítems nuevos: un renglón por frase, o separado por comas ("SQL, Python y Excel").
+  const dictate = (spoken: string) => {
+    const items = multiline ? [capitalize(spoken)].filter(Boolean) : spokenList(spoken);
+    if (!items.length) return;
+    const base = draft.replace(/[\s,;]+$/, "");
+    commit(base ? `${base}${sep}${items.join(sep)}` : items.join(sep));
+  };
+  return (
+    <DictateField onText={dictate} multiline={multiline}>
+      {multiline ? (
+        <textarea aria-label={label} rows={4} value={draft} placeholder={placeholder} onChange={(e) => commit(e.target.value)} className={`${dictateInputClass} text-sm`} />
+      ) : (
+        <input aria-label={label} value={draft} placeholder={placeholder} onChange={(e) => commit(e.target.value)} className={dictateInputClass} />
+      )}
+    </DictateField>
   );
 }
 

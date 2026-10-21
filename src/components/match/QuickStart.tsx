@@ -78,7 +78,7 @@ export default function QuickStart({
         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
           <span>
             <span className="block font-semibold leading-tight">Personalización avanzada (opcional)</span>
-            <span className="mt-1 block text-sm text-ink/70">Corregí tu perfil y contanos qué buscás: roles, modalidad, seniority, salario e indispensables.</span>
+            <span className="mt-1 block text-sm text-ink/70">Corregí tu perfil y contanos qué buscás: roles, modalidad, seniority, salario e indispensables. Podés escribir o dictar con el micrófono.</span>
           </span>
           <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#f2f4f5] transition group-open:rotate-180">
             <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">

@@ -2,8 +2,10 @@
 
 import { CONTRACT_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
 import type { EmploymentType, Hardable, MatchPrefs, MatchProfile, Seniority } from "@/lib/match/types";
+import { appendSpoken, parseSpokenNumber, replaceSpoken } from "@/lib/voice";
 import { Chips, PrimaryButton, StepCard, inputClass } from "../ui";
-import { Field, ListInput, MultiChips } from "./fields";
+import { DictateField } from "../VoiceButton";
+import { Field, ListInput, MultiChips, dictateInputClass } from "./fields";
 
 export const EMPTY_PREFS: MatchPrefs = {
   objetivo: "",
@@ -87,7 +89,9 @@ export function PrefsFields({
   return (
     <div className="space-y-7">
       <Field label="¿Qué te gustaría hacer?" hint="Contalo con tus palabras y sumá los roles que te interesan.">
-        <textarea rows={3} value={prefs.objetivo} onChange={(e) => set("objetivo", e.target.value)} className={inputClass} placeholder="Ej.: quiero liderar equipos de marketing de performance en una fintech" />
+        <DictateField multiline onText={(t) => set("objetivo", appendSpoken(prefs.objetivo, t))}>
+          <textarea rows={3} value={prefs.objetivo} onChange={(e) => set("objetivo", e.target.value)} className={dictateInputClass} placeholder="Ej.: quiero liderar equipos de marketing de performance en una fintech" />
+        </DictateField>
         <ListInput value={prefs.rolesDeseados} onChange={(v) => set("rolesDeseados", v)} label="Roles deseados" placeholder="Roles, separados por coma: Product Manager, Growth Lead…" />
       </Field>
 
@@ -109,8 +113,12 @@ export function PrefsFields({
 
       <Field label="¿Dónde vivís y dónde aceptarías trabajar?">
         <div className="grid gap-3 sm:grid-cols-2">
-          <input value={prefs.ciudad} onChange={(e) => set("ciudad", e.target.value)} className={inputClass} placeholder="Tu ciudad (ej.: Buenos Aires)" aria-label="Ciudad" />
-          <input value={prefs.pais} onChange={(e) => set("pais", e.target.value)} className={inputClass} placeholder="País" aria-label="País" />
+          <DictateField onText={(t, first) => set("ciudad", replaceSpoken(prefs.ciudad, t, first))}>
+            <input value={prefs.ciudad} onChange={(e) => set("ciudad", e.target.value)} className={dictateInputClass} placeholder="Tu ciudad (ej.: Buenos Aires)" aria-label="Ciudad" />
+          </DictateField>
+          <DictateField onText={(t, first) => set("pais", replaceSpoken(prefs.pais, t, first))}>
+            <input value={prefs.pais} onChange={(e) => set("pais", e.target.value)} className={dictateInputClass} placeholder="País" aria-label="País" />
+          </DictateField>
         </div>
         <ListInput value={prefs.otrosLugares} onChange={(v) => set("otrosLugares", v)} label="Otros lugares" placeholder="Otras ciudades donde irías presencial o híbrido (opcional)" />
         <ListInput
@@ -137,12 +145,17 @@ export function PrefsFields({
         <div className="space-y-2">
           {profile.languages.map((l, i) => (
             <div key={i} className="flex flex-wrap items-center gap-2">
-              <input
-                value={l.language}
-                onChange={(e) => setProfile({ ...profile, languages: profile.languages.map((x, j) => (j === i ? { ...x, language: e.target.value } : x)) })}
-                className={`${inputClass} max-w-[12rem]`}
-                aria-label="Idioma"
-              />
+              <DictateField
+                className="w-full max-w-[12rem]"
+                onText={(t, first) => setProfile({ ...profile, languages: profile.languages.map((x, j) => (j === i ? { ...x, language: replaceSpoken(x.language, t, first) } : x)) })}
+              >
+                <input
+                  value={l.language}
+                  onChange={(e) => setProfile({ ...profile, languages: profile.languages.map((x, j) => (j === i ? { ...x, language: e.target.value } : x)) })}
+                  className={dictateInputClass}
+                  aria-label="Idioma"
+                />
+              </DictateField>
               <select
                 value={LEVELS.includes(l.level) ? l.level : ""}
                 onChange={(e) => setProfile({ ...profile, languages: profile.languages.map((x, j) => (j === i ? { ...x, level: e.target.value } : x)) })}
@@ -171,16 +184,24 @@ export function PrefsFields({
 
       <Field label="¿Tenés una expectativa salarial?" hint="Opcional. No mostramos los avisos que publican un máximo menor. Si un aviso no informa salario, lo estimamos y te avisamos cuando parece menor.">
         <div className="grid gap-3 sm:grid-cols-4">
-          <input
-            type="number"
-            min={0}
-            inputMode="numeric"
-            value={sal.monto ?? ""}
-            onChange={(e) => set("salario", e.target.value === "" ? null : { ...sal, monto: Math.max(0, Number(e.target.value)) })}
-            className={inputClass}
-            placeholder="Monto"
-            aria-label="Monto"
-          />
+          <DictateField
+            onText={(t) => {
+              const n = parseSpokenNumber(t);
+              if (n === null) return false;
+              set("salario", { ...sal, monto: n });
+            }}
+          >
+            <input
+              type="number"
+              min={0}
+              inputMode="numeric"
+              value={sal.monto ?? ""}
+              onChange={(e) => set("salario", e.target.value === "" ? null : { ...sal, monto: Math.max(0, Number(e.target.value)) })}
+              className={dictateInputClass}
+              placeholder="Monto"
+              aria-label="Monto"
+            />
+          </DictateField>
           <select value={sal.moneda} onChange={(e) => set("salario", { ...sal, moneda: e.target.value as typeof sal.moneda })} className={inputClass} aria-label="Moneda">
             <option value="USD">USD</option>
             <option value="ARS">ARS</option>
