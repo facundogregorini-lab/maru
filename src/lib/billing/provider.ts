@@ -18,16 +18,21 @@ export async function mp<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (!res.ok) throw new Error(`Mercado Pago respondió ${res.status} en ${path.split("?")[0].replace(/\/[^/]*\d[^/]*/g, "/:id")}.`);
   return res.json() as Promise<T>;
 }
-export function validWebhook(req: Request, id: string): boolean {
+export const validWebhook = (req: Request, id: string): boolean => webhookProblem(req, id) === null;
+/** Por qué no vale la firma (null si vale), para el registro del panel. No incluye valores de las cabeceras. */
+export function webhookProblem(req: Request, id: string): string | null {
   const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
   const requestId = req.headers.get("x-request-id");
   const parts = Object.fromEntries((req.headers.get("x-signature") ?? "").split(",").map((p) => p.trim().split("=")));
-  if (!secret || !requestId || !parts.ts || !/^[a-f0-9]{64}$/i.test(parts.v1 ?? "")) return false;
+  if (!secret) return "falta MERCADOPAGO_WEBHOOK_SECRET";
+  if (!req.headers.get("x-signature")) return "sin x-signature (¿notificación IPN sin firma?)";
+  if (!requestId) return "sin x-request-id";
+  if (!parts.ts || !/^[a-f0-9]{64}$/i.test(parts.v1 ?? "")) return "x-signature con otro formato";
   const stamp = Number(parts.ts);
   // Mercado Pago reintenta durante días. Un reintento firmado sigue siendo válido:
   // se reconsulta el recurso actual y la acreditación es idempotente.
-  if (!Number.isSafeInteger(stamp) || stamp <= 0) return false;
+  if (!Number.isSafeInteger(stamp) || stamp <= 0) return "ts inválido";
   const manifest = `id:${id.toLowerCase()};request-id:${requestId};ts:${parts.ts};`;
   const expected = createHmac("sha256", secret).update(manifest).digest();
-  return timingSafeEqual(expected, Buffer.from(parts.v1, "hex"));
+  return timingSafeEqual(expected, Buffer.from(parts.v1, "hex")) ? null : "la firma no coincide (¿clave secreta de otra aplicación o de prueba?)";
 }

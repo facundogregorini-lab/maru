@@ -1,4 +1,5 @@
 import { billingJson, billingSession } from "@/lib/billing/http";
+import { recordBillingEvent } from "@/lib/billing/log";
 import { billingMissing, billingReady, hasPaidAccess, lastPayment, readSubscription, refreshSubscription, subscriptionPlan } from "@/lib/billing/server";
 import { billingEnabled } from "@/lib/plans";
 import { dbConfigured } from "@/lib/db";
@@ -19,10 +20,14 @@ export async function POST(req: Request) {
   const email = billingSession(req);
   if (!email) return billingJson({ error: "Ingresá con tu email.", code: "AUTH_REQUIRED" }, 401);
   if (!billingEnabled()) return GET(req);
-  try { await refreshSubscription(email); return GET(req); }
-  catch (err) {
+  try {
+    const sub = await refreshSubscription(email);
+    await recordBillingEvent({ source: "actualizar", type: "estado", result: hasPaidAccess(sub) ? "plan activo" : "sin pago acreditado", detail: `suscripción ${sub?.status ?? "inexistente"}` });
+    return GET(req);
+  } catch (err) {
     const detail = err instanceof Error ? err.message.slice(0, 200) : "error";
     console.error("[billing status]", detail);
+    await recordBillingEvent({ source: "actualizar", type: "estado", result: "error", detail });
     // El detalle viene de nuestros mensajes o del código HTTP de Mercado Pago: sin datos personales ni claves.
     return billingJson({ error: "No pudimos actualizar tu suscripción.", detail, code: "PLAN_UNAVAILABLE" }, 503);
   }
