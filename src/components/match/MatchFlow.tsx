@@ -17,13 +17,15 @@ import { useInAppEntry } from "../product/useInAppEntry";
 import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
 import PrefsForm, { EMPTY_PREFS } from "./PrefsForm";
 import ProfileConfirm from "./ProfileConfirm";
+import QuickStart, { trackQuickStart } from "./QuickStart";
 import Results from "./Results";
 
-type Stage = "cv" | "leyendo" | "confirmar" | "preferencias" | "resultados";
+/** `rapido`: perfil y preferencias en un paso, con lo opcional plegado. `confirmar` y `preferencias` quedan para editar desde los resultados. */
+type Stage = "cv" | "leyendo" | "rapido" | "confirmar" | "preferencias" | "resultados";
 
 const LOADING = ["Leyendo tu CV…", "Ordenando tu experiencia…", "Detectando tus habilidades…"];
 
-/** "Encontrá tu trabajo perfecto": CV → confirmar → preferencias → ranking. */
+/** "Encontrá tu trabajo perfecto": CV → lo que entendimos (con personalización avanzada plegada) → ranking. */
 export default function MatchFlow({ stats }: { stats?: Stat[] }) {
   // Desde otra pantalla de Maru (#empezar) se va directo al primer paso, sin la presentación.
   const entry = useInAppEntry();
@@ -41,7 +43,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
       skipSave.current = true;
       setState(s);
       if (s.profile && s.prefs) setStage("resultados");
-      else if (s.profile) setStage("preferencias");
+      else if (s.profile) setStage("rapido");
       else setStage("cv");
       setHydrated(true);
     };
@@ -79,7 +81,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
       }
       update({ profile: profileToMatch(profile) });
       track("match_cv_listo");
-      setStage("confirmar");
+      setStage("rapido");
     } catch (e) {
       const err = e as Error & { code?: string };
       setStage("cv");
@@ -118,7 +120,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
                 Seguir
               </PrimaryButton>
               {state.profile && (
-                <button type="button" onClick={() => setStage("confirmar")} className="text-sm text-muted underline underline-offset-4 hover:text-ink">
+                <button type="button" onClick={() => setStage(state.prefs ? "confirmar" : "rapido")} className="text-sm text-muted underline underline-offset-4 hover:text-ink">
                   Seguir con mi perfil anterior
                 </button>
               )}
@@ -128,7 +130,22 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
         </>
       )}
 
-      {stage === "leyendo" && <Loading messages={LOADING} />}
+      {stage === "leyendo" && <Loading messages={LOADING} expected={15} />}
+
+      {stage === "rapido" && state.profile && (
+        <QuickStart
+          profile={state.profile}
+          setProfile={(p: MatchProfile) => update({ profile: p })}
+          prefs={state.prefs ?? defaultPrefs(state.profile)}
+          setPrefs={(p: MatchPrefs) => update({ prefs: p })}
+          onBack={() => setStage("cv")}
+          onNext={(personalizacion) => {
+            trackQuickStart(personalizacion);
+            if (!state.prefs) update({ prefs: defaultPrefs(state.profile!) });
+            setStage("resultados");
+          }}
+        />
+      )}
 
       {stage === "confirmar" && state.profile && (
         <ProfileConfirm
@@ -137,7 +154,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
           onBack={() => setStage("cv")}
           onNext={() => {
             track("match_perfil_confirmado");
-            if (!state.prefs) update({ prefs: { ...EMPTY_PREFS, ciudad: guessCity(state.profile!.location) } });
+            if (!state.prefs) update({ prefs: defaultPrefs(state.profile!) });
             setStage(state.prefs ? "resultados" : "preferencias");
           }}
         />
@@ -145,13 +162,13 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
 
       {stage === "preferencias" && state.profile && (
         <PrefsForm
-          prefs={state.prefs ?? { ...EMPTY_PREFS, ciudad: guessCity(state.profile.location) }}
+          prefs={state.prefs ?? defaultPrefs(state.profile)}
           setPrefs={(p: MatchPrefs) => update({ prefs: p })}
           profile={state.profile}
           setProfile={(p) => update({ profile: p })}
           onBack={() => setStage("confirmar")}
           onNext={() => {
-            if (!state.prefs) update({ prefs: { ...EMPTY_PREFS, ciudad: guessCity(state.profile!.location) } });
+            if (!state.prefs) update({ prefs: defaultPrefs(state.profile!) });
             track("match_preferencias_listas");
             setStage("resultados");
           }}
@@ -186,4 +203,8 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
 
 function guessCity(location: string): string {
   return location.split(",")[0]?.trim() ?? "";
+}
+
+function defaultPrefs(profile: MatchProfile): MatchPrefs {
+  return { ...EMPTY_PREFS, ciudad: guessCity(profile.location) };
 }

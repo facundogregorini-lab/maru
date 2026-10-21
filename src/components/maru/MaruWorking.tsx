@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { estimatedProgress } from "@/lib/progress";
 import { MaruDesk } from "./PixelMaru";
 import type { DeskFrame } from "./sprite";
 
@@ -27,11 +28,23 @@ const DOTS = [".", "..", "...", "..", "."];
 /**
  * Pantalla de espera: Maru en el centro, tecleando en la compu, con puntos que avanzan y lo que
  * está haciendo en cada momento. Con "reducir movimiento" queda quieta y sólo cambia el texto.
+ * Con `expected` (segundos que suele tardar) muestra una barra de avance y el paso en curso sigue a la barra.
  */
-export default function MaruWorking({ title, steps, note, every = 2600 }: { title: string; steps: string[]; note?: string; every?: number }) {
+export default function MaruWorking({ title, steps, note, every = 2600, expected }: { title: string; steps: string[]; note?: string; every?: number; expected?: number }) {
   const svg = useRef<SVGSVGElement>(null);
   const [dot, setDot] = useState(0);
-  const [step, setStep] = useState(0);
+  const [timedStep, setStep] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const progress = expected ? estimatedProgress(elapsed, expected) : 0;
+  const step = expected ? Math.min(steps.length - 1, Math.floor(progress * steps.length)) : timedStep;
+  const late = !!expected && elapsed > expected * 1.3;
+
+  useEffect(() => {
+    if (!expected) return;
+    const started = Date.now();
+    const t = window.setInterval(() => setElapsed((Date.now() - started) / 1000), 500);
+    return () => clearInterval(t);
+  }, [expected]);
 
   // El Maru del rincón se esconde mientras esta trabaja en el centro.
   useEffect(() => {
@@ -94,8 +107,33 @@ export default function MaruWorking({ title, steps, note, every = 2600 }: { titl
           </span>
         </span>
       </p>
-      <p className="mt-2 min-h-5 text-sm text-muted">{steps[step]}</p>
-      {note && <p className="mt-4 max-w-sm text-xs leading-relaxed text-muted">{note}</p>}
+      {expected ? (
+        <div className="mt-5 w-full max-w-sm">
+          <div
+            role="progressbar"
+            aria-label="Avance estimado"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress * 100)}
+            className="h-2 overflow-hidden rounded-full bg-black/[0.08]"
+          >
+            <div className="h-full rounded-full bg-neon transition-[width] duration-500 ease-out" style={{ width: `${Math.max(4, progress * 100)}%` }} />
+          </div>
+          <p className="mt-3 min-h-5 text-sm">
+            <span className="text-muted">
+              Paso {step + 1} de {steps.length} ·{" "}
+            </span>
+            {steps[step]}
+          </p>
+        </div>
+      ) : (
+        <p className="mt-2 min-h-5 text-sm text-muted">{steps[step]}</p>
+      )}
+      {late ? (
+        <p className="mt-4 max-w-sm text-xs leading-relaxed text-muted">Está tardando un poco más de lo normal. Seguimos trabajando: no cierres esta página.</p>
+      ) : (
+        note && <p className="mt-4 max-w-sm text-xs leading-relaxed text-muted">{note}</p>
+      )}
     </div>
   );
 }

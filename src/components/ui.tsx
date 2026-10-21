@@ -37,10 +37,11 @@ export function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes
   );
 }
 
-export function Loading({ messages }: { messages: string[] }) {
+/** Espera de la IA. `expected`: segundos que suele tardar, para la barra de avance (estimada). */
+export function Loading({ messages, expected = 40 }: { messages: string[]; expected?: number }) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <MaruWorking title="Maru está trabajando" steps={messages} every={6000} note="Puede tardar un minuto. Vale la pena." />
+      <MaruWorking title="Maru está trabajando" steps={messages} expected={expected} note="Puede tardar un minuto. Vale la pena." />
     </div>
   );
 }
@@ -78,6 +79,7 @@ export function Chips<T extends string>({ value, options, onChange }: { value: T
 }
 
 export async function post<T>(url: string, body: unknown, retried = false): Promise<T> {
+  const started = Date.now();
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   if (res.status === 413) {
     throw Object.assign(new Error("Tu archivo es demasiado pesado para enviarlo. Exportalo más liviano (menos de 3 MB) o pegá tu experiencia."), {
@@ -99,6 +101,7 @@ export async function post<T>(url: string, body: unknown, retried = false): Prom
     throw Object.assign(new Error(data.error ?? "Algo salió mal."), { code: data.code as string | undefined });
   }
   const herramienta = herramientaDeResultado(url);
-  if (herramienta) capture("herramienta_resultado", { herramienta });
+  // `segundos`: cuánto esperó la persona (para calibrar la barra de avance de cada herramienta).
+  if (herramienta) capture("herramienta_resultado", { herramienta, segundos: Math.round((Date.now() - started) / 1000) });
   return data as T;
 }

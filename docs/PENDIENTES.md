@@ -1,5 +1,16 @@
 # Estado y próximos pasos de Maru
 
+## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
+
+Datos del dueño: en Crear tu CV entran 47 y descargan 5; en Postulación a medida entran 14 y reciben el resultado 4; en Match 14 de 65 llegan a ver las búsquedas. Propuesta de mejoras en la conversación del 21/10. El dueño aprobó estas tres:
+
+1. **Hecho (preguntas plegadas, CV y Postulación):** en el paso de preguntas (`src/components/Questions.tsx`) quedan arriba el resumen y el botón «Armar mi CV» / «Armar mi postulación». Los datos que faltan y las preguntas para destacar van plegados en «Personalización avanzada (opcional)». Se abren solos si ya había respuestas o al volver desde el resultado con «Ajustar respuestas». Evento `personalizacion_abierta` (`herramienta`) cuando la persona lo abre.
+2. **Hecho (espera con avance):** `MaruWorking` muestra una barra y «Paso N de M» que sigue a la barra (`src/lib/progress.ts`: ~80% a la duración esperada, nunca más de 95%; es una estimación, la IA no informa avance). Si tarda 1,3 veces lo esperado: «Está tardando un poco más de lo normal…». Duraciones supuestas: CV 30 s + 45 s, Postulación 35 s + 60 s, lectura del CV en Match 15 s, el resto 40 s. `herramienta_resultado` ahora manda `segundos` para calibrarlas con datos reales.
+3. **Hecho (Match en un paso):** después del CV, `QuickStart` (`src/components/match/QuickStart.tsx`) muestra lo que entendimos y «Ver mis búsquedas». Corregir el perfil y lo que busca (roles, modalidad, seniority, salario, indispensables) va plegado en «Personalización avanzada»; sin cargos ni habilidades se abre solo. Ya no hace falta escribir un objetivo o un rol para seguir: el ranking usa los cargos del CV. Al seguir se disparan `match_perfil_confirmado` y `match_preferencias_listas` (el funnel no se corta) con `personalizacion`: `abierta` o `cerrada`. «Mi perfil» y «Lo que busco» en los resultados siguen abriendo los pasos completos.
+- **No se hizo:** reutilizar el CV entre herramientas ya existía (`useCvInput` ofrece el perfil guardado). El aviso que no se puede leer ya abre el campo para pegar el texto (`JOB_FETCH_FAILED`); el dueño no vio fallas, así que no se tocó.
+- **Pendiente de decisión del dueño:** mostrar el resultado antes de pedir el ingreso (pedirlo al descargar), Google One Tap, mail para retomar y eventos por paso en /cv y /postulacion.
+- **Siguiente:** en una o dos semanas, comparar en PostHog el funnel de cada herramienta antes y después del 21/10, cuánto se abre la personalización y los `segundos` reales de cada espera.
+
 ## Ingreso desde las herramientas y eventos de login (19/10/2026)
 
 - **Problema:** en PostHog, el 18 y el 19/10, 19 personas de Google Search abrieron /cv y una sola llegó al CV. Analizar, generar o preparar exige ingresar (`planGuard` → 401 `AUTH_REQUIRED`), pero la pantalla sólo mostraba «Ingresá con tu email desde el menú para continuar.», sin abrir el ingreso.

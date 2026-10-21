@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import type { GapQuestion, Question } from "@/lib/schemas";
+import { capture } from "@/lib/tracking/posthog";
 import VoiceButton from "./VoiceButton";
 import { PrimaryButton } from "./ui";
 
@@ -8,8 +10,9 @@ type Answers = Record<string, string>;
 type SetAnswers = React.Dispatch<React.SetStateAction<Answers>>;
 
 /**
- * Paso de preguntas compartido: un resumen arriba (fortalezas / lo que falta),
- * datos faltantes del perfil y 3-5 preguntas cortas para destacar.
+ * Paso de preguntas compartido: un resumen arriba (fortalezas / lo que falta) y el botón para seguir.
+ * Los datos faltantes del perfil y las 3-5 preguntas para destacar van plegados en "Personalización avanzada":
+ * se abren solos si ya hay respuestas o si `openAdvanced` (volver desde el resultado para ajustarlas).
  */
 export default function Questions({
   kicker,
@@ -31,6 +34,8 @@ export default function Questions({
   backLabel,
   onNext,
   nextLabel,
+  herramienta,
+  openAdvanced = false,
 }: {
   kicker: string;
   title: string;
@@ -51,7 +56,13 @@ export default function Questions({
   backLabel: string;
   onNext: () => void;
   nextLabel: string;
+  /** Para el evento `personalizacion_abierta`. */
+  herramienta: "cv" | "postulacion";
+  openAdvanced?: boolean;
 }) {
+  const answered = [...Object.values(answers), ...Object.values(gapAnswers)].some((a) => a.trim());
+  const [advancedOpen, setAdvancedOpen] = useState(openAdvanced || answered);
+  const total = gaps.length + preguntas.length;
   const input =
     "mt-3 w-full rounded-xl border border-line bg-paper px-4 py-2.5 outline-none transition placeholder:text-muted/60 focus:border-brand focus:ring-4 focus:ring-brand-soft";
   return (
@@ -90,69 +101,101 @@ export default function Questions({
         </div>
       </section>
 
-      {gaps.length > 0 && (
-        <section>
-          <h2 className="font-display text-2xl tracking-tight">Datos que faltan</h2>
-          <p className="mt-1 text-sm text-muted">No están en tu perfil y no los vamos a inventar. Si no querés que figuren, dejalos vacíos.</p>
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            {gaps.map((g) => (
-              <div key={g.id} className={`rounded-3xl border border-line bg-paper/70 p-5 ${g.contexto ? "sm:col-span-2" : ""}`}>
-                <p className="font-medium">{g.pregunta}</p>
-                {g.contexto && <blockquote className="mt-2 rounded-xl bg-sand px-3 py-2 text-sm italic text-muted">“{g.contexto}”</blockquote>}
-                <input
-                  value={gapAnswers[g.id] ?? ""}
-                  onChange={(e) => setGapAnswers((a) => ({ ...a, [g.id]: e.target.value }))}
-                  placeholder={g.placeholder}
-                  className={input}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section>
-        <h2 className="font-display text-2xl tracking-tight">Para destacar</h2>
-        <p className="mt-1 max-w-3xl text-sm text-muted">{questionsHint}</p>
-        <div className="mt-5 space-y-4">
-          {preguntas.map((q, idx) => (
-            <div key={q.id} className="rounded-3xl border border-line bg-paper/70 p-5 sm:p-6">
-              <p className="font-medium">
-                <span className="mr-2 font-display text-brand">{idx + 1}.</span>
-                {q.pregunta}
-              </p>
-              <p className="mt-1 text-xs text-muted">{q.por_que}</p>
-              {q.opciones_sugeridas.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {q.opciones_sugeridas.map((o) => (
-                    <button
-                      key={o}
-                      type="button"
-                      onClick={() => setAnswers((a) => ({ ...a, [q.id]: o }))}
-                      className={`rounded-full border px-3 py-1.5 text-sm transition ${
-                        answers[q.id] === o ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"
-                      }`}
-                    >
-                      {o}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <input value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} placeholder="Tu respuesta…" className={input} />
-              <div className="mt-2">
-                <VoiceButton compact onText={(t) => setAnswers((a) => ({ ...a, [q.id]: a[q.id] ? `${a[q.id].trimEnd()} ${t}` : t }))} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <div className="flex flex-col-reverse items-center justify-center gap-3 sm:flex-row">
         <button type="button" onClick={onBack} className="px-5 py-3 text-sm text-muted hover:text-ink">
           {backLabel}
         </button>
         <PrimaryButton onClick={onNext}>{nextLabel}</PrimaryButton>
       </div>
+
+      {/* Las preguntas son opcionales: quedan plegadas para que el camino corto sea un solo clic. */}
+      {total > 0 && (
+        <details
+          open={advancedOpen}
+          onToggle={(e) => {
+            const open = (e.currentTarget as HTMLDetailsElement).open;
+            // Sólo cuenta la apertura de la persona (no la automática cuando ya había respuestas).
+            if (open && !advancedOpen) capture("personalizacion_abierta", { herramienta });
+            setAdvancedOpen(open);
+          }}
+          className="group rounded-[24px] bg-[#f2f4f5] p-5 sm:p-8"
+        >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+            <span>
+              <span className="block text-lg font-semibold leading-tight sm:text-xl">Personalización avanzada (opcional)</span>
+              <span className="mt-1 block text-sm text-ink/70">
+                {total === 1 ? "Una pregunta corta" : `${total} preguntas cortas`} para adaptar mejor {herramienta === "postulacion" ? "tu postulación" : "tu CV"}.
+              </span>
+            </span>
+            <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white transition group-open:rotate-180">
+              <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m4 6 4 4 4-4" />
+              </svg>
+            </span>
+          </summary>
+          <div className="mt-6 space-y-8">
+            {gaps.length > 0 && (
+              <section>
+                <h2 className="font-display text-2xl tracking-tight">Datos que faltan</h2>
+                <p className="mt-1 text-sm text-muted">No están en tu perfil y no los vamos a inventar. Si no querés que figuren, dejalos vacíos.</p>
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  {gaps.map((g) => (
+                    <div key={g.id} className={`rounded-3xl border border-line bg-paper/70 p-5 ${g.contexto ? "sm:col-span-2" : ""}`}>
+                      <p className="font-medium">{g.pregunta}</p>
+                      {g.contexto && <blockquote className="mt-2 rounded-xl bg-sand px-3 py-2 text-sm italic text-muted">“{g.contexto}”</blockquote>}
+                      <input
+                        value={gapAnswers[g.id] ?? ""}
+                        onChange={(e) => setGapAnswers((a) => ({ ...a, [g.id]: e.target.value }))}
+                        placeholder={g.placeholder}
+                        className={input}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <section>
+              <h2 className="font-display text-2xl tracking-tight">Para destacar</h2>
+              <p className="mt-1 max-w-3xl text-sm text-muted">{questionsHint}</p>
+              <div className="mt-5 space-y-4">
+                {preguntas.map((q, idx) => (
+                  <div key={q.id} className="rounded-3xl border border-line bg-paper/70 p-5 sm:p-6">
+                    <p className="font-medium">
+                      <span className="mr-2 font-display text-brand">{idx + 1}.</span>
+                      {q.pregunta}
+                    </p>
+                    <p className="mt-1 text-xs text-muted">{q.por_que}</p>
+                    {q.opciones_sugeridas.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {q.opciones_sugeridas.map((o) => (
+                          <button
+                            key={o}
+                            type="button"
+                            onClick={() => setAnswers((a) => ({ ...a, [q.id]: o }))}
+                            className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                              answers[q.id] === o ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"
+                            }`}
+                          >
+                            {o}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <input value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} placeholder="Tu respuesta…" className={input} />
+                    <div className="mt-2">
+                      <VoiceButton compact onText={(t) => setAnswers((a) => ({ ...a, [q.id]: a[q.id] ? `${a[q.id].trimEnd()} ${t}` : t }))} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+            <div className="flex justify-center">
+              <PrimaryButton onClick={onNext}>{nextLabel}</PrimaryButton>
+            </div>
+          </div>
+        </details>
+      )}
     </div>
   );
 }
