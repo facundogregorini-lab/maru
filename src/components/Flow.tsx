@@ -293,8 +293,8 @@ export default function Flow() {
         </>
       )}
 
-      {stage === "analizando" && <Loading messages={LOADING_ANALYZE} />}
-      {stage === "generando" && <Loading messages={LOADING_GENERATE} />}
+      {stage === "analizando" && <Loading messages={LOADING_ANALYZE} expected={35} />}
+      {stage === "generando" && <Loading messages={LOADING_GENERATE} expected={60} />}
 
       {stage === "preguntas" && analysis && (
         <Questions
@@ -306,6 +306,8 @@ export default function Flow() {
           preguntas={analysis.preguntas}
           questionsHint="Te recomendamos responder para adaptar mejor tu CV a esta vacante. Es opcional; con una línea por respuesta alcanza."
           nextLabel="Armar mi postulación"
+          herramienta="postulacion"
+          openAdvanced={!!doc}
           gaps={gaps}
           answers={answers}
           setAnswers={setAnswers}

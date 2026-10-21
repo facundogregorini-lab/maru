@@ -20,7 +20,7 @@ export type MatchEvent =
 
 type Props = Record<string, string | number | boolean>;
 
-const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros", "tramo", "lista"]);
+const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros", "tramo", "lista", "personalizacion"]);
 
 /** Tramo del % de match: alcanza para comparar guardados y postulaciones por afinidad sin mandar el aviso. */
 export function scoreBand(score: number): string {

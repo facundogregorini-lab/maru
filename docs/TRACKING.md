@@ -13,9 +13,10 @@ Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/com
 |---|---|---|
 | `$pageview` | Cada página (también al navegar sin recargar) | `seccion` si es una sección |
 | `seccion_vista` | Justo después de la visita a una sección (`postulacion`, `cv`, `carta`, `video`, `entrevista`, `match`, `busquedas`, `seguimiento`, `extension`, `precios`) | `seccion` |
-| `herramienta_resultado` | La IA devolvió el resultado principal (`post()` en `src/components/ui.tsx`): `/api/generate`, `/api/cv/generate`, `/api/carta`, `/api/video/guion`, `/api/entrevista/preparar`, `/api/match/ranking` | `herramienta` |
+| `herramienta_resultado` | La IA devolvió el resultado principal (`post()` en `src/components/ui.tsx`): `/api/generate`, `/api/cv/generate`, `/api/carta`, `/api/video/guion`, `/api/entrevista/preparar`, `/api/match/ranking` | `herramienta`, `segundos` (espera de esa llamada, desde el 21/10/2026) |
 | `activacion`, `limite_planes_visto`, `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` | Los mismos eventos de producto de abajo (`trackProduct`) | los mismos, más `seccion` |
-| `match_*` | Eventos del match (`src/lib/match/events.ts`) | los mismos |
+| `match_*` | Eventos del match (`src/lib/match/events.ts`) | los mismos; `match_perfil_confirmado` y `match_preferencias_listas` llevan `personalizacion` (`abierta`/`cerrada`) cuando vienen del paso rápido |
+| `personalizacion_abierta` | La persona abre «Personalización avanzada» en el paso de preguntas (desde el 21/10/2026) | `herramienta`: `cv` o `postulacion` |
 | `busqueda_aviso_original`, `busqueda_preparar` | Abrir el aviso original o llevar la búsqueda a una herramienta | `destino` |
 | `seguimiento_estado` | Cambiar el estado de una postulación en el tablero | `estado` |
 | `extension_descarga` | Clic en el `.zip` de la extensión | — |

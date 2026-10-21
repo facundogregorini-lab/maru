@@ -244,8 +244,8 @@ export default function CvBuilderFlow() {
         </>
       )}
 
-      {stage === "analizando" && <Loading messages={LOADING_ANALYZE} />}
-      {stage === "generando" && <Loading messages={LOADING_GENERATE} />}
+      {stage === "analizando" && <Loading messages={LOADING_ANALYZE} expected={30} />}
+      {stage === "generando" && <Loading messages={LOADING_GENERATE} expected={45} />}
 
       {stage === "preguntas" && analysis && (
         <Questions
@@ -259,6 +259,8 @@ export default function CvBuilderFlow() {
           emptyGaps="¡Tu perfil ya cubre lo importante!"
           preguntas={analysis.preguntas}
           nextLabel="Armar mi CV"
+          herramienta="cv"
+          openAdvanced={!!doc}
           gaps={gaps}
           answers={answers}
           setAnswers={setAnswers}
