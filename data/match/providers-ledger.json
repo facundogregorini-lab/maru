@@ -9855,6 +9855,72 @@
         "status": "FAILED"
       },
       "error": "Ejecución incompleta: no se importa."
+    },
+    {
+      "at": "2026-10-22T21:53:28.554Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "2CDnV8oAgcQbcbPuZ",
+        "datasetId": "mDBhQXh7Qu2Cp9Yu1"
+      },
+      "rows": 37,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.187,
+        "budgetUsd": 30
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-22T21:53:28.554Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ejecutivo comercial",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "pK8B12n1bAiPJupO3",
+        "datasetId": "jcWWUFULI1BqNuKUh"
+      },
+      "rows": 100,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.188,
+        "budgetUsd": 30
+      },
+      "created": 95
+    },
+    {
+      "at": "2026-10-22T21:53:28.554Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "hedXfthPEdKfTvqor",
+        "datasetId": "8hs0qnDJlTxxOY8PI"
+      },
+      "rows": 29,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.188,
+        "budgetUsd": 30
+      },
+      "created": 11
     }
   ]
 }
