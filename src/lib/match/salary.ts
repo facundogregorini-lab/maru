@@ -58,6 +58,36 @@ function plausible(s: Salary): boolean {
   return false;
 }
 
+/** "11.111", "1.111.111", "9.999": números de relleno que los portales muestran cuando el sueldo es "a convenir". */
+const isPlaceholder = (n: number) => n >= 1000 && /^(\d)\1+$/.test(String(Math.round(n)));
+
+/**
+ * Completa el salario que la fuente trae sólo como texto ("$18,000.00/yr - $24,000.00/yr", "$ 1.200.000,00 (Mensual)"):
+ * moneda por el formato del número, período y montos. Descarta los de relleno y los que no son un sueldo
+ * razonable, para no mostrar "$ 11.111" como si fuera el sueldo. Si el texto no se entiende, lo deja como está.
+ */
+export function cleanSalary(field: Field<Salary> | null): Field<Salary> | null {
+  if (!field) return null;
+  const s = field.value;
+  if ([s.min, s.max].some((n) => n && isPlaceholder(n))) return null;
+  if (s.currency && (s.min || s.max)) return field;
+  const text = s.text ?? "";
+  const nums = [...text.matchAll(/(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?|\d+(?:[.,]\d{1,2})?)\s?(k)?/gi)].map((m) => ({ raw: m[1], n: toNumber(m[1], m[2]) }));
+  const found = nums.filter((x): x is { raw: string; n: number } => x.n !== null);
+  if (!found.length) return field;
+  if (found.some((x) => isPlaceholder(x.n))) return null;
+  // Get on Board publica en dólares por mes (los avisos guardados antes de que el conector lo informara).
+  const gob = /get on board/i.test(text);
+  const currency = s.currency || (gob ? "USD" : "") || currencyOf(text, found[0].raw) || (/\$\s?\d+(?:[.,]\d+)?\s?k\b/i.test(text) ? "USD" : "") || (/\$\s?\d{1,4}(\.\d{2})?\s?(\/|per|an?\s)\s?(h|hour|hr)/i.test(text) ? "USD" : "");
+  if (!currency) return field;
+  const [a, b] = [found[0].n, found[1]?.n ?? null];
+  const p = gob ? "mes" : periodOf(text);
+  // Como en el texto del aviso: un monto en dólares de 20.000 o más sin período es anual.
+  const period: Salary["period"] = p === "semana" ? "desconocido" : p === "desconocido" && currency !== "ARS" && Math.max(a, b ?? 0) >= 20_000 ? "anio" : p;
+  const value: Salary = { min: s.min ?? a, max: s.max ?? (b !== null && b >= a ? b : null), currency, period, text };
+  return plausible(value) ? { ...field, value } : null;
+}
+
 export function salaryFromText(description: string): Field<Salary> | null {
   for (const m of description.matchAll(ANCHOR)) {
     const start = m.index ?? 0;

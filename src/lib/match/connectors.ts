@@ -543,7 +543,8 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
     department: a.category_name,
     salary:
       a.min_salary || a.max_salary
-        ? salary(a.min_salary, a.max_salary, "", "desconocido", `Rango publicado en Get on Board: ${[a.min_salary, a.max_salary].filter(Boolean).join(" – ")}`)
+        ? // Get on Board publica los rangos en dólares, brutos por mes.
+          salary(a.min_salary, a.max_salary, "USD", "mes", `Rango publicado en Get on Board: US$ ${[a.min_salary, a.max_salary].filter(Boolean).join(" – ")} por mes`)
         : null,
     publishedAt: iso(a.published_at),
     updatedAt: null,

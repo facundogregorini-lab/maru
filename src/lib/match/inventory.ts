@@ -1,7 +1,7 @@
 import { workplaceFromDescription } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
-import { salaryFromText } from "./salary";
+import { cleanSalary, salaryFromText } from "./salary";
 import { importRejection } from "./import-filter";
 import { INFERRED, isInferred } from "./labels";
 import { sourceById } from "./sources";
@@ -353,7 +353,9 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
     const sorted = [...group].sort((a, b) => a.firstSeenAt.localeCompare(b.firstSeenAt) || a.key.localeCompare(b.key));
     const primary = sorted.find((p) => sourceById(p.sourceId)?.kind === "ats" && p.status === "abierta") ?? sorted.find((p) => p.status === "abierta") ?? sorted[0];
     const open = group.filter((p) => p.status === "abierta");
-    const salaryPost = group.find((p) => p.salary && (p.salary.value.min || p.salary.value.max)) ?? group.find((p) => p.salary);
+    // El salario de la fuente, completado y sin números de relleno (cleanSalary).
+    const salaries = group.map((p) => cleanSalary(p.salary)).filter((s): s is NonNullable<typeof s> => s !== null);
+    const salaryPost = salaries.find((s) => s.value.min || s.value.max) ?? salaries[0];
     const verified = group.map((p) => p.lastVerifiedAt).filter(Boolean).sort().pop() ?? null;
     return {
       id: sha(`opp:${sorted[0].key}`, 14),
@@ -366,7 +368,7 @@ export function buildOpportunities(postings: StoredPosting[]): Opportunity[] {
       eligibility: combineEligibility(group.map((p) => p.eligibility)),
       extracted: primary.extracted,
       // Si ninguna fuente lo trae estructurado, el que el aviso publica en su texto.
-      salary: salaryPost?.salary ?? salaryFromText(primary.descriptionText),
+      salary: salaryPost ?? salaryFromText(primary.descriptionText),
       primaryKey: primary.key,
       descriptionComplete: group.some((p) => p.descriptionComplete),
       publishedAt: group.map((p) => p.publishedAt).filter(Boolean).sort()[0] ?? null,
