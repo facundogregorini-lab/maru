@@ -2,7 +2,7 @@ import { sessionEmail } from "../auth";
 import { FREE_LIMITS, type UsageKind } from "../plans";
 import { clientIp } from "../rateLimit";
 import { SITE_URL } from "../site";
-import { allowAnonymousUsage, allowUsage, billingReady, hasPaidPlan } from "./server";
+import { allowUsage, billingReady, hasPaidPlan, takeAnonymousUsage, takeUsage } from "./server";
 
 export const billingJson = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 export function billingSession(req: Request): string | null {
@@ -39,14 +39,19 @@ const INSTALL_ID = /^[A-Za-z0-9-]{16,64}$/;
  * cuenta por cuenta (y un plan pago usa el límite del plan); si no, por instalación de la extensión y por IP.
  * No exige ingresar: la extensión funciona sin cuenta.
  */
-export async function extensionGuard(req: Request): Promise<Response | null> {
-  if (!billingReady()) return null;
+export async function extensionGuard(req: Request): Promise<{ blocked: Response | null; remaining: number | null; limit: number }> {
+  const limit = FREE_LIMITS.autofill.limit;
+  if (!billingReady()) return { blocked: null, remaining: null, limit };
   let email: string | null = null;
   try { email = sessionEmail(req); } catch { email = null; }
   const install = req.headers.get("X-Maru-Install");
   try {
-    const ok = email ? await allowUsage(email, "autofill") : await allowAnonymousUsage(install && INSTALL_ID.test(install) ? install : null, clientIp(req.headers), "autofill");
-    if (ok) return null;
-    return billingJson({ error: `Usaste los ${FREE_LIMITS.autofill.limit} autocompletados gratis de hoy. Se renuevan a las 0 h; con un plan de Maru seguís ahora: ${SITE_URL}/precios`, code: "PLAN_LIMIT", upgradeUrl: `${SITE_URL}/precios` }, 429);
-  } catch { return billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503); }
+    const r = email ? await takeUsage(email, "autofill") : await takeAnonymousUsage(install && INSTALL_ID.test(install) ? install : null, clientIp(req.headers), "autofill");
+    if (r.ok) return { blocked: null, remaining: r.remaining, limit };
+    return {
+      blocked: billingJson({ error: `Usaste los ${limit} autocompletados gratis de hoy. Se renuevan a las 0 h.`, code: "PLAN_LIMIT", upgradeUrl: `${SITE_URL}/precios`, remaining: 0, limit }, 429),
+      remaining: 0,
+      limit,
+    };
+  } catch { return { blocked: billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503), remaining: null, limit }; }
 }

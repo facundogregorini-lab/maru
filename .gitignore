@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Python del checker editorial
 __pycache__/
+
+# paquete de la Chrome Web Store (npm run ext:pack)
+/dist

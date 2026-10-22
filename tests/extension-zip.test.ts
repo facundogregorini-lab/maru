@@ -22,3 +22,21 @@ describe("descarga de la extensión", () => {
     expect(String.fromCharCode(bytes[0], bytes[1])).toBe("PK");
   });
 });
+
+describe("paquete para la Chrome Web Store", () => {
+  it("no incluye el material de la ficha y deja el manifest en la raíz, sin localhost", async () => {
+    const zip = await JSZip.loadAsync(await buildExtensionZip(undefined, { store: true }));
+    const names = Object.keys(zip.files).filter((n) => !zip.files[n].dir);
+    expect(names).toContain("manifest.json");
+    expect(names.some((n) => n.startsWith("store/") || n === "STORE_LISTING.md")).toBe(false);
+    const manifest = JSON.parse(await zip.file("manifest.json")!.async("string"));
+    const matches = manifest.content_scripts.flatMap((c: { matches: string[] }) => c.matches);
+    expect(matches).toContain("https://www.marucoach.com/*");
+    expect(matches.some((m: string) => m.includes("localhost"))).toBe(false);
+    for (const f of ["bridge.js", "jobkey.js", "background.js", "content.js"]) expect(names).toContain(f);
+  });
+  it("el zip de descarga tampoco lleva la ficha", async () => {
+    const zip = await JSZip.loadAsync(await buildExtensionZip());
+    expect(Object.keys(zip.files).some((n) => n.includes("/store/") || n.endsWith("STORE_LISTING.md"))).toBe(false);
+  });
+});

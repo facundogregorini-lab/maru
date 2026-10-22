@@ -1,6 +1,6 @@
 // Popup: cargar el CV una vez (Maru lo lee con /api/profile), datos extra y botón para completar.
 
-const DEFAULT_SERVER = "https://maru-grego7.vercel.app";
+const DEFAULT_SERVER = "https://www.marucoach.com";
 const MAX_FILE_BYTES = 3 * 1024 * 1024; // igual que la web: Vercel acepta hasta 4,5 MB por request
 const MIN_TEXT_CHARS = 80;
 
@@ -38,16 +38,40 @@ async function checkUpdate() {
     if (!latest || compareVersions(current, latest) >= 0) return;
     const blocked = minimum && compareVersions(current, minimum) < 0;
     $("update-title").textContent = blocked ? "Actualizá Maru para seguir autocompletando" : "Hay una versión nueva de Maru";
-    $("update-text").textContent = `Tenés la ${current} y ya está la ${latest}. Bajala, descomprimila y reemplazá la carpeta en chrome://extensions: tu CV queda guardado.`;
-    $("update-link").href = downloadUrl;
+    if (fromStore) {
+      // Desde la Store, Chrome la actualiza sola: no hay zip que bajar.
+      $("update-text").textContent = `Tenés la ${current} y ya está la ${latest}. Chrome la actualiza sola en unas horas; tu CV queda guardado.`;
+      $("update-link").hidden = true;
+    } else {
+      $("update-text").textContent = `Tenés la ${current} y ya está la ${latest}. Bajala, descomprimila y reemplazá la carpeta en chrome://extensions: tu CV queda guardado.`;
+      $("update-link").href = downloadUrl;
+    }
     $("update").hidden = false;
   } catch {
     // Sin conexión: se vuelve a revisar la próxima vez que se abra.
   }
 }
 
+/** Instalada desde la Chrome Web Store: se actualiza sola y no muestra opciones de desarrollo. */
+const fromStore = !!chrome.runtime.getManifest().update_url;
+
+/** Cuántos autocompletados gratis quedan hoy (lo informa Maru en cada uso). */
+function renderQuota(quota) {
+  const today = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+  const el = $("quota");
+  if (!quota || quota.day !== today || typeof quota.remaining !== "number") {
+    el.hidden = true;
+    return;
+  }
+  el.textContent =
+    quota.remaining === 0 ? "Usaste los autocompletados gratis de hoy. Se renuevan a las 0 h." : quota.remaining === 1 ? "Te queda 1 uso hoy." : `Te quedan ${quota.remaining} usos hoy.`;
+  el.hidden = false;
+}
+
 async function render() {
-  const { profile, cv, extras, server } = await chrome.storage.local.get(["profile", "cv", "extras", "server"]);
+  const { profile, cv, extras, server, quota } = await chrome.storage.local.get(["profile", "cv", "extras", "server", "quota"]);
+  $("advanced").hidden = fromStore;
+  renderQuota(quota);
   $("server").value = server || "";
   $("setup").hidden = !!profile;
   $("ready").hidden = !profile;
@@ -152,17 +176,19 @@ $("fill").addEventListener("click", async () => {
   $("fill").disabled = false;
   if (!result) return status("Algo salió mal. Probá de nuevo.", true);
   status(result.error || result.summary, !!result.error);
+  const { quota } = await chrome.storage.local.get("quota");
+  renderQuota(quota);
   if (!result.error) {
     lastPage = result.page || null;
     dashboard(result);
   }
 });
 
-/** Abre el seguimiento de Maru con esta postulación agregada (la extensión no puede escribir en el sitio de Maru). */
+/** Guarda esta postulación en el seguimiento de la cuenta; sin sesión de Maru, abre el seguimiento con la postulación agregada. */
 $("track").addEventListener("click", async () => {
   if (!lastPage) return;
-  const q = new URLSearchParams({ add: lastPage.url, title: lastPage.title.slice(0, 200) });
-  await chrome.tabs.create({ url: `${await server()}/seguimiento?${q}` });
+  const result = await chrome.runtime.sendMessage({ type: "track", page: lastPage });
+  if (result && result.ok && !result.opened) status("Guardada en tu seguimiento como Postulada.");
 });
 
 /** Completitud: los campos que Maru completó (los "para revisar" incluidos) sobre esos más los obligatorios vacíos. */

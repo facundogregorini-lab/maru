@@ -1,5 +1,38 @@
 # Estado y próximos pasos de Maru
 
+## Extensión: cerrar la brecha con Jobright Autofill (plan en curso, desde 22/10/2026)
+
+Pedido del dueño, en tres fases con una PR por fase. Lo que no se negocia: nunca enviar el formulario, nunca completar demografía, consentimientos ni declaraciones juradas, nunca inventar datos, verde = copiado del CV y amarillo = redactado o deducido, y el CV queda en el navegador.
+
+**Fase 1 (extensión 0.4.0): hecha, en PR.**
+
+1. **Usar lo que la persona ya armó en Maru.** El dueño eligió un puente en el navegador, no un endpoint con datos en el servidor.
+   - Al terminar una postulación, la web la guarda en `maru:postulaciones:v1` (sólo en el navegador, hasta 10, por `jobKey`). Guarda el HTML del CV personalizado, la motivación y las respuestas sugeridas.
+   - `extension/bridge.js` corre sólo en marucoach.com y pasa esas postulaciones a `chrome.storage.local`.
+   - Al completar, `background.js` busca por `maruJobKey`: Greenhouse, Lever y Ashby por id del puesto; el resto, por host + path. Busca en la pestaña y en los frames.
+   - Si encuentra la postulación, pide el PDF a `/api/export/pdf` con la sesión. Maru lo imprime sin guardarlo y queda en caché. Lo adjunta como `CV - <Nombre> - <Empresa>.pdf`.
+   - Manda `postulacion` a `/api/autofill` (campo opcional), y `AUTOFILL_SYSTEM` prioriza esas respuestas en `texto_largo`.
+   - Si no hay postulación, el aviso ofrece «Personalizá tu CV para esta vacante» (`/postulacion?url=`).
+2. **Cupo y feedback.**
+   - `/api/autofill` devuelve `remaining` y `limit` (opcionales). El popup y el aviso muestran «Te quedan N usos hoy».
+   - Al agotarse, el link a planes aparece una sola vez por día.
+   - El ícono muestra «…», después la cantidad completada, y «!» en rojo si hay error.
+3. **Seguimiento al enviar.**
+   - Después de completar, `content.js` (`watch`, `confirmationShown`) mira, sin tocar nada, si la página confirma el envío. También se revisa al navegar, con `tabs.onUpdated`.
+   - Si lo confirma, el aviso dice «¿La enviaste? Guardala en tu seguimiento». Al tocarlo, `POST /api/tracking/application` la guarda con la sesión como «Postulada» en el documento de seguimiento que ya se sincroniza. Sin sesión, se abre `/seguimiento?add=`, como antes.
+4. **Chrome Web Store.**
+   - `npm run ext:pack` arma `dist/maru-extension-<v>-store.zip`: manifest en la raíz, sin localhost y sin la ficha. También controla íconos y capturas.
+   - `npm run ext:screenshots` regenera las capturas de 1280×800 en `extension/store/`.
+   - Desde la Store (con `update_url`), el popup oculta el campo servidor y no pide bajar el zip. Además manda `X-Maru-Source: store`, y el 426 adapta el texto.
+   - Los textos de la ficha, permisos y prácticas de datos están en `extension/STORE_LISTING.md`. `/privacidad` está actualizada.
+
+**Pendiente de la Fase 1:**
+- Probar en Chrome real que la cookie de sesión llega a `/api/export/pdf` y a `/api/tracking/application` desde la extensión, con el servidor igual al dominio donde se ingresa (marucoach.com).
+- `DEFAULT_SERVER` pasó a `https://www.marucoach.com`: es donde se ingresa, y la cookie de sesión tiene que ser de ese dominio. Quien cambió el servidor a mano en «Avanzado» sigue usando el suyo.
+- Publicar en la Store y cargar `NEXT_PUBLIC_EXTENSION_URL`.
+
+**Fase 2 (cobertura) y Fase 3 (más valor en el navegador): sin empezar.** El dueño pidió parar después de cada fase para revisar.
+
 ## Baja sencilla, garantía de 14 días y promo del primer mes (22/10/2026)
 
 Pedido del dueño. Decisiones: los $990 son **sólo el primer mes** (después $10.000), la devolución es **automática** y las confirmaciones son **sólo en pantalla** (sin proveedor de email por ahora). Detalle en `docs/COBROS.md`.

@@ -189,4 +189,19 @@ return 0`;
   const [wait] = await pipeline([["EVAL", script, 1, key, limit, windowMs]]);
   return Number(wait);
 }
+/** Como takeCounter, pero devuelve también cuántos usos lleva la ventana (para mostrar cuántos quedan). */
+export async function takeCounterCount(key: string, limit: number, windowMs: number, now = Date.now()): Promise<{ wait: number; count: number }> {
+  if (inMemory()) {
+    const wait = await takeCounter(key, limit, windowMs, now);
+    return { wait, count: counters.get(key)?.count ?? 0 };
+  }
+  const script = `local count = tonumber(redis.call('GET', KEYS[1]) or '0')
+if count >= tonumber(ARGV[1]) then return {math.max(1, math.ceil(redis.call('PTTL', KEYS[1]) / 1000)), count} end
+local next = redis.call('INCR', KEYS[1])
+if next == 1 then redis.call('PEXPIRE', KEYS[1], ARGV[2]) end
+return {0, next}`;
+  const [out] = await pipeline([["EVAL", script, 1, key, limit, windowMs]]);
+  const [wait, count] = Array.isArray(out) ? out.map(Number) : [Number(out), limit];
+  return { wait, count };
+}
 export function resetMemoryCounters() { counters.clear(); }

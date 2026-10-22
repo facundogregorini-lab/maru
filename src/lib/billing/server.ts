@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter } from "../db";
+import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter, takeCounterCount } from "../db";
 import { userId } from "../sync/server";
 import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, GUARANTEE_DAYS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
@@ -316,12 +316,27 @@ export const ANON_IP_FACTOR = 3;
  * Las claves se guardan como SHA-256, nunca la IP ni el identificador.
  */
 export async function allowAnonymousUsage(install: string | null, ip: string, kind: UsageKind, now = Date.now()): Promise<boolean> {
-  if (!billingReady()) return true;
+  return (await takeAnonymousUsage(install, ip, kind, now)).ok;
+}
+/** Igual que allowAnonymousUsage, con los usos que quedan en la ventana (null si no se puede saber). */
+export async function takeAnonymousUsage(install: string | null, ip: string, kind: UsageKind, now = Date.now()): Promise<{ ok: boolean; remaining: number | null; limit: number }> {
   const { limit, window } = FREE_LIMITS[kind];
+  if (!billingReady()) return { ok: true, remaining: null, limit };
   const ttl = (window === "semana" ? 8 : 2) * 86400_000;
   const hash = (v: string) => createHash("sha256").update(v).digest("hex");
   const slot = `${usageWindow(window, now)}:${kind}`;
-  if ((await takeCounter(`maru:usage:anon-ip:${hash(ip)}:${slot}`, limit * ANON_IP_FACTOR, ttl, now)) !== 0) return false;
-  if (!install) return true;
-  return (await takeCounter(`maru:usage:anon:${hash(install)}:${slot}`, limit, ttl, now)) === 0;
+  const byIp = await takeCounterCount(`maru:usage:anon-ip:${hash(ip)}:${slot}`, limit * ANON_IP_FACTOR, ttl, now);
+  if (byIp.wait !== 0) return { ok: false, remaining: 0, limit };
+  if (!install) return { ok: true, remaining: Math.max(0, Math.min(limit, limit * ANON_IP_FACTOR - byIp.count)), limit };
+  const own = await takeCounterCount(`maru:usage:anon:${hash(install)}:${slot}`, limit, ttl, now);
+  return { ok: own.wait === 0, remaining: Math.max(0, limit - own.count), limit };
+}
+/** Cupo de una cuenta con los usos que quedan. Con plan pago no hay cupo visible: remaining null. */
+export async function takeUsage(email: string, kind: UsageKind, now = Date.now()): Promise<{ ok: boolean; remaining: number | null; limit: number }> {
+  const { limit, window } = FREE_LIMITS[kind];
+  if (!billingReady()) return { ok: true, remaining: null, limit };
+  if (await hasPaidPlan(email)) return { ok: await allowUsage(email, kind, now), remaining: null, limit };
+  const ttl = (window === "semana" ? 8 : 2) * 86400_000;
+  const r = await takeCounterCount(`maru:usage:${userId(email)}:${usageWindow(window, now)}:${kind}`, limit, ttl, now);
+  return { ok: r.wait === 0, remaining: Math.max(0, limit - r.count), limit };
 }

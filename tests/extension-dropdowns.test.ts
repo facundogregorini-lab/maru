@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { JSDOM, type DOMWindow } from "jsdom";
 import { afterEach, describe, expect, it } from "vitest";
+import { EXTENSION_VERSION } from "@/lib/extensionVersion";
 
 const content = readFileSync(new URL("../extension/content.js", import.meta.url), "utf8");
 const fixture = readFileSync(new URL("./fixtures/autofill/dropdowns.html", import.meta.url), "utf8");
@@ -77,7 +78,7 @@ describe("desplegables de la extensión", () => {
     const legacyWindow = win as DOMWindow & { __maru: Partial<Api> & { version?: string } };
     legacyWindow.__maru = { version: "0.3.0" };
     win.eval(content);
-    expect(legacyWindow.__maru.version).toBe("0.3.1");
+    expect(legacyWindow.__maru.version).toBe(EXTENSION_VERSION);
     expect((await legacyWindow.__maru.scan!()).fields).toHaveLength(1);
   });
   it("preserva selecciones previas, incluso cuando están en la primera opción", async () => {
