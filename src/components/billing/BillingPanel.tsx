@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import LoginDialog from "@/components/auth/LoginDialog";
-import { PLAN_ORDER, PLANS, type PlanId } from "@/lib/plans";
+import { PLAN_ORDER, PLANS, planDiscount, type PlanId } from "@/lib/plans";
 import { trackCheckoutCreated, trackCheckoutFailed, trackPlanClick, trackVerifiedPurchase, type VerifiedPayment } from "@/lib/tracking";
 
 type Status = { enabled: boolean; plan: string; tier: PlanId | null; status: string; paidThrough: number | null; lastPayment?: VerifiedPayment | null };
@@ -64,13 +64,16 @@ export default function BillingPanel() {
       {PLAN_ORDER.map((id) => {
         const plan = PLANS[id];
         const current = paid && status?.tier === id;
+        const discount = planDiscount(plan);
         return <article key={id} data-plan-card={id} className={`relative rounded-[24px] bg-white p-6 ${plan.badge ? "order-first border-2 border-ink md:order-none pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:pb-8" : "border border-line"}`}>
           {plan.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{plan.badge}</p>}
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-xl font-bold">{plan.nombre}</h3>
-            {plan.id === "trimestral" && <span className="rounded-full border border-ink px-2.5 py-0.5 text-xs font-semibold">Ahorrá 25%</span>}
+            {discount && <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-bold text-neon">-{discount}%</span>}
           </div>
-          <p className="mt-3 text-sm text-ink/60">{plan.monthlyText}</p>
+          <p className="mt-3 text-sm text-ink/60">
+            {plan.listPriceText ? <>Antes <s aria-label={`Precio regular ${plan.listPriceText}`}>{plan.listPriceText}</s> por mes</> : plan.monthlyText}
+          </p>
           <p className="mt-1 font-display text-4xl font-bold">{plan.priceText}<span className="ml-1 text-base font-medium">{plan.per}</span></p>
           <p className="mt-2 text-sm text-ink/70">{plan.note}</p>
           {current ? <p className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-brand-soft px-4 text-center text-sm font-bold">Tu plan actual</p>

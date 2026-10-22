@@ -13,8 +13,7 @@ import CvSourceField, { useCvInput } from "./CvSourceField";
 import Questions from "./Questions";
 import { Chips, ErrorBanner, Loading, PrimaryButton, StepCard, inputClass, post } from "./ui";
 import VoiceButton from "./VoiceButton";
-import { ProductHero, ProductMore, ToolHeading } from "./product/ProductLanding";
-import { useInAppEntry } from "./product/useInAppEntry";
+import { ToolHeading } from "./product/ProductLanding";
 
 type Stage = "inicio" | "analizando" | "preguntas" | "generando" | "resultado";
 const SESSION_KEY = "maru:cv:v1";
@@ -49,8 +48,6 @@ type Session = {
 };
 
 export default function CvBuilderFlow() {
-  // Desde otra pantalla de Maru (con la búsqueda cargada o a #empezar) se va directo al formulario.
-  const entry = useInAppEntry();
   const [stage, setStage] = useState<Stage>("inicio");
   const [error, setError] = useState("");
   const cv = useCvInput();
@@ -156,8 +153,8 @@ export default function CvBuilderFlow() {
 
       {stage === "inicio" && (
         <>
-          {!entry.inApp && <ProductHero id="cv" />}
-          <ToolHeading hint="Tu CV queda guardado sólo en este navegador." compact={entry.inApp} />
+          {/* La página arranca directo en la herramienta: sin landing comercial antes ni después. */}
+          <ToolHeading hint="Tu CV queda guardado sólo en este navegador." compact />
 
           <div className="mt-10 space-y-6">
             <StepCard n={1} title="Tu experiencia" hint="La usamos tal cual: cargos, fechas y estudios se copian de tu perfil, sin inventar nada.">
@@ -240,7 +237,6 @@ export default function CvBuilderFlow() {
               {!cv.ready && <p className="text-xs text-muted">{cv.issue}</p>}
             </div>
           </div>
-          {!entry.inApp && <ProductMore id="cv" />}
         </>
       )}
 

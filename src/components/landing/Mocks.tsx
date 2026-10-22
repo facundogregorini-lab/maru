@@ -141,6 +141,76 @@ export function CvMock({ bare = false }: { bare?: boolean }) {
   );
 }
 
+/** Extensión: el panel de Maru sobre un formulario de postulación, como el autocompletado de jobright. */
+export function AutofillMock({ bare = false }: { bare?: boolean }) {
+  const required = [
+    { label: "Nombre", done: true },
+    { label: "Teléfono", done: true },
+    { label: "Email", done: true },
+    { label: "Experiencia", done: false },
+  ];
+  return (
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo de la extensión">
+      <div className="relative mx-auto flex max-w-[460px] items-center">
+        {/* Formulario del ATS, atrás y a la izquierda. */}
+        <div aria-hidden className="absolute -left-2 top-1/2 hidden w-[200px] -translate-y-1/2 rounded-2xl bg-white/60 p-4 sm:block">
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => <span key={i} className="h-1.5 w-1.5 rounded-full bg-line" />)}
+          </div>
+          <div className="mt-4 h-8 w-8 rounded-lg border border-line" />
+          {["Nombre", "Teléfono", "Email", "Experiencia"].map((f) => (
+            <div key={f} className="mt-3">
+              <p className="text-[10px] text-muted">{f}</p>
+              <div className="mt-1 h-5 rounded-md bg-panel-back/70" />
+            </div>
+          ))}
+        </div>
+        {/* Panel de la extensión. */}
+        <div className="animate-float relative ml-auto w-full max-w-[340px] rounded-[20px] bg-white p-5 shadow-[var(--shadow-card)]">
+          <div className="flex items-center justify-between">
+            <p className="flex items-center gap-2 font-display text-lg font-bold">
+              <MaruHead size={24} />
+              Maru
+            </p>
+            <span aria-hidden className="grid h-7 w-7 place-items-center rounded-full bg-surface text-xs">›</span>
+          </div>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-ink font-display font-bold text-white">T</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold leading-5">Tucán</p>
+              <p className="text-xs text-muted">Fintech</p>
+            </div>
+            <span className="rounded-full border-2 border-forest px-2.5 py-0.5 font-display text-sm font-bold">
+              80<span className="text-[0.7em]">%</span>
+            </span>
+          </div>
+          <p className="mt-3 font-semibold underline underline-offset-2">Product Manager, Analytics</p>
+          <p className="mt-1 text-xs text-muted">hace 11 h · <strong className="text-ink">49 postulantes</strong></p>
+          <hr className="my-3 border-surface" />
+          <p className="rounded-xl bg-forest py-2.5 text-center text-lg font-semibold text-white">Autocompletar</p>
+          <p className="mt-1.5 text-center text-[11px] text-muted underline underline-offset-2">Te quedan 4 usos hoy</p>
+          <hr className="my-3 border-surface" />
+          <p className="text-sm font-semibold">
+            Completado <span className="font-normal">83%</span>
+          </p>
+          <div className="mt-1.5 h-1.5 rounded-full bg-panel-back">
+            <div className="h-full w-[83%] rounded-full bg-forest" />
+          </div>
+          <p className="mt-3 text-xs font-semibold">Obligatorios (10 de 12)</p>
+          <ul className="mt-1.5 space-y-1 text-xs">
+            {required.map((r) => (
+              <li key={r.label} className="flex items-center gap-2">
+                <span aria-hidden className={`grid h-4 w-4 place-items-center rounded-full text-[9px] ${r.done ? "bg-forest text-white" : "bg-surface text-muted"}`}>{r.done ? "✓" : "–"}</span>
+                {r.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </MockPanel>
+  );
+}
+
 /** Entrevista: chat con Maru. */
 export function ChatMock({ bare = false }: { bare?: boolean }) {
   return (

@@ -5,8 +5,8 @@ import { capitalize, spokenList } from "@/lib/voice";
 import { inputClass } from "../ui";
 import { DictateField } from "../VoiceButton";
 
-/** Campo de texto con lugar para el micrófono de dictado (`DictateField`). */
-export const dictateInputClass = `${inputClass} pr-12!`;
+/** Campo de texto que acompaña a `DictateField`. */
+export const dictateInputClass = inputClass;
 
 /** Piezas de formulario del match (mismo estilo que el resto de Maru). */
 

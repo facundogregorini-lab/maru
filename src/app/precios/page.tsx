@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import BillingPanel from "@/components/billing/BillingPanel";
 import { landingData } from "@/lib/landing";
-import { FREE_LIMITS } from "@/lib/plans";
+import { FREE_LIMITS, PLANS } from "@/lib/plans";
 
 export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Elegí tu plan de Maru: semanal, mensual o trimestral. CV a medida, cartas, entrevistas y videos sin esperar al día siguiente." };
 // Los números del inventario se regeneran cada hora, como en la home.
@@ -18,6 +18,7 @@ const FEATURES: { name: string; benefit: string; paid: string | true; free: stri
   { name: "Carta de presentación", benefit: "Una carta distinta para cada empresa", paid: "Ilimitado", free: free("carta"), strong: true },
   { name: "Entrená para tu entrevista", benefit: "Practicá con repreguntas, como en la real", paid: "Ilimitado", free: free("entrevista") },
   { name: "Video de presentación", benefit: "Guion a medida y teleprompter", paid: "Ilimitado", free: free("video") },
+  { name: "Extensión para Chrome", benefit: "Autocompletá postulaciones en Greenhouse, Lever y más", paid: "Ilimitado", free: free("autofill") },
   { name: "Respuesta más fuerte (STAR) en el informe", benefit: "Sabé cómo responder mejor cada pregunta", paid: true, free: false },
   { name: "Feedback de cámara en tu video", benefit: "Encuadre, luz, fondo y mirada en cada toma", paid: true, free: false },
   { name: "Descarga en Word", benefit: "Editá tu CV y tu carta donde quieras", paid: true, free: "Sólo PDF" },
@@ -37,7 +38,6 @@ export default async function PreciosPage() {
     "Filtros por modalidad, área y seniority",
     "Seguimiento de postulaciones",
     "Chat con Maru sobre las búsquedas",
-    "Extensión que completa postulaciones",
     "Perfil sincronizado entre dispositivos",
     "Descarga de CV y carta en PDF",
     "24 diseños de CV ATS-friendly",
@@ -87,7 +87,7 @@ export default async function PreciosPage() {
 
       <div className="mx-auto mt-12 max-w-3xl space-y-3">
         {[
-          ["¿Qué plan me conviene?", "Si tu búsqueda va a llevar más de un mes, el trimestral: sale $7.500 por mes. El semanal sirve para un empujón puntual, como preparar varias postulaciones o una entrevista esta semana."],
+          ["¿Qué plan me conviene?", `Mientras dure la promo de lanzamiento, el mensual: sale ${PLANS.mensual.priceText} por mes en lugar de ${PLANS.mensual.listPriceText}. El semanal sirve para un empujón puntual, como preparar varias postulaciones o una entrevista esta semana.`],
           ["¿Cómo se confirma el pago?", "Mercado Pago procesa la suscripción y nos confirma la acreditación. Volver a Maru desde el pago no activa por sí solo el plan. Si la confirmación tarda, usá Actualizar estado de mi pago."],
           ["¿Puedo cancelar o cambiar de plan?", "Sí. Cancelás la renovación desde esta página o desde tus suscripciones en Mercado Pago, y conservás el acceso hasta que termine el período pagado. Para cambiar de plan, cancelá la renovación y elegí el nuevo cuando termine."],
           ["¿Qué significa ilimitado?", "Que no contás pedidos: armás un CV, una carta o una práctica para cada búsqueda que te interese. Para cuidar el servicio hay un tope de uso razonable por día que una búsqueda normal no alcanza."],

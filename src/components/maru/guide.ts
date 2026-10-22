@@ -1,3 +1,4 @@
+import { PLANS } from "@/lib/plans";
 /**
  * El recorrido de Maru por los productos: breve, cálido y verdadero (sólo lo que Maru hace hoy).
  * Cada paso es un ítem del checklist; se tilda al pasarlo o al visitar su página.
@@ -80,9 +81,9 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
   },
 ];
 
-/** La oferta del final del recorrido: el plan trimestral, expresado por mes ($22.500 / 3) y por día (/ 90). */
-export const PLAN_PRICE_TEXT = "$7.500";
-export const PLAN_PER_DAY_TEXT = "$250";
+/** La oferta del final del recorrido: el mensual con la promo de lanzamiento, contra su precio regular. */
+export const PLAN_PRICE_TEXT = PLANS.mensual.priceText;
+export const PLAN_LIST_PRICE_TEXT = PLANS.mensual.listPriceText ?? "";
 
 export const GUIDE_KEY = "maru:guia:v1";
 

@@ -159,7 +159,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios salen de tu CV. Si un dato ayudaría pero falta, queda un [completar] resaltado."],
       ["¿Qué recibo al final?", "Tu CV adaptado a esa búsqueda, listo para descargar en PDF o copiar como texto, y una respuesta sugerida para cada campo del formulario."],
       ["¿Funciona con cualquier portal?", "Lee la mayoría de los links. Si un portal no deja leer la vacante, pegás el texto y listo."],
-      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $7.500 por mes. Consultá Planes." : "Sí. Para descargar tu CV ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $990 por mes con la promo de lanzamiento. Consultá Planes." : "Sí. Para descargar tu CV ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -225,7 +225,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Los diseños pasan los filtros ATS?", "Sí: los 24 son de una columna, con títulos estándar y texto seleccionable."],
       ["¿Puedo editarlo después?", "Sí. Tocás cualquier texto del CV y lo cambiás, y ajustás color, tipografía, espaciado y orden de secciones."],
       ["¿Maru inventa experiencia?", "No. Cargos, empresas, fechas y estudios se copian tal cual; si falta algo, te lo pregunta."],
-      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $7.500 por mes. Consultá Planes." : "Sí. Para descargarlo ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $990 por mes con la promo de lanzamiento. Consultá Planes." : "Sí. Para descargarlo ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -291,7 +291,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Puedo editar la carta?", "Sí: la editás directo, pedís que reescriba un párrafo o generás otra versión con otro tono o largo."],
       ["¿En qué idiomas?", "Elegís el idioma de la carta al armarla."],
       ["¿Inventa logros?", "No. Usa tu experiencia real y lo que vos le contás."],
-      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $7.500 por mes. Consultá Planes." : "Sí. Para descargarla o copiarla ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $990 por mes con la promo de lanzamiento. Consultá Planes." : "Sí. Para descargarla o copiarla ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
@@ -350,7 +350,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
       ["¿Qué necesito?", "Una compu con cámara y micrófono y un navegador actual."],
       ["¿Cuánto dura el video?", "Elegís 30, 60 o 90 segundos."],
       ["¿Puedo grabar varias tomas?", "Sí, y cada una tiene su feedback."],
-      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $7.500 por mes. Consultá Planes." : "Sí. Para descargar el video ingresás con tu email: te mandamos un link, sin contraseña."],
+      ["¿Es gratis?", BILLING_ENABLED ? "Tenés pedidos gratis cada día (entrevistas y videos, cada semana) y planes sin límite desde $990 por mes con la promo de lanzamiento. Consultá Planes." : "Sí. Para descargar el video ingresás con tu email: te mandamos un link, sin contraseña."],
     ],
   },
 
