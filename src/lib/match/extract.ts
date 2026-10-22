@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 16;
+export const EXTRACTION_VERSION = 17;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -208,6 +208,20 @@ const EXTRA_TITLE_RULES: [RoleFamily, RegExp][] = [
   ["logistica", /\b(subcontrat|comprador)/],
   ["diseno", /\b(head of art|art director|animation)/],
   ["operaciones", /\b(gerente general|general manager|gerente de gestion|strategic project|project lead)/],
+  // Auditoría del 22/10: 1.379 elegibles quedaban en "otros". El orden importa: la seguridad informática antes que
+  // "riesgo" y las finanzas antes que "IT Audit". Sin reglas de salud ni producción: esos avisos profesionales
+  // (ensayos clínicos, laboratorio) siguen en "otros", porque el filtro de importación deja afuera esas áreas.
+  ["software", /\b(sysadmin|arquitect|servicenow|dev\b|ingenier[oa]s? de redes|network engineer|it business|ciberseguridad|cybersecurity|cyber|seguridad informatica|seguridad de la informacion|information security|identity (and |& )?access|threat intelligence|incident response|malware|vulnerab|security (control|assessor|specialist)|cloud|sap\b|oracle|systems? administrator|administrador de sistemas|data center|it (analyst|service|support|manager|specialist|business partner)|trainee it|desarrollo it|analista funcional|functional analyst|analista tecnico funcional|technical (senior )?analyst|implementador de sistema|testing|bim\b|migration|edi\b|systems integration|po proxy|infrastructure|grc\b|technology (specialist|business))/],
+  ["finanzas", /\b(medios de pago|accounts? payable|fx\b|audit|auditoria|fp ?a\b|fpa\b|control de gestion|controlling|control presupuestario|presupuest|capex|sox\b|control interno|internal control|actuari|seguros?\b|insurance|perdida esperada|mercado de capitales|wealth|margin analyst|product control|trading|titulos|aml\b|kyc\b|lavado de dinero|deals?\b|payments?\b|pagos|adquiren|collections|banking|banca|inversion|investment|riesgos?\b|risk)/],
+  ["legal", /\b(contracts? (specialist|manager|negotiation|advisor)|contract negotiation|contratos|contractual|regulatory|asuntos regulatorios|filings|immigration)/],
+  ["datos", /\b(big data|data (specialist|integration|governance|management|quality|lead)|datos maestros|master data|reportes|reporting)/],
+  ["marketing", /\b(generacion de demanda|demand generation|lead generat|jefe de producto|medios|media (manager|specialist|planner|buyer)|paid (search|advertising)|ads specialist|meta ads|campaign|campaing|influencer|e ?commerce|dtc\b|marketplace|category management|market access|conversion rate|search engine|creative|illustrat|lanzamiento|propuesta de valor|events?\b|eventos|analista digital)/],
+  ["ventas", /\b(channel manager|alliance|relationship manager|client lead|commercial manager|sucursal|wholesale|franquicia|preventa|presales|pre sales|tender|quotation|rfp\b|proposal|business solutions|customer relationship|customer engagement|planes de ahorro|hunter|desarrollo de negocio)/],
+  ["rrhh", /\b(rh\b|staffing|benefits|compensation|desarrollo y formacion|formacion|learning|resource management|wfm\b|workforce)/],
+  ["logistica", /\b(importaci|exportaci|import ?export|sourcing|commodity|trafico|material master|hazardous materials|aduana)/],
+  ["operaciones", /\b(gestion operativa|excelencia operativa|confiabilidad|reliability|oficina tecnica|traceability|transformation|proyectos?\b|projects?\b|program lead|planing|s ?op\b|demanda|demand|back office|hse\b|she\b|medio ambiente|environmental|seguridad operativa)/],
+  ["consultoria", /\b(consulting|parthenon)/],
+  ["administracion", /\b(documentacion|document specialist|archiving)/],
 ];
 
 /** Áreas que informan algunas fuentes ("Technology & Product", "Risk", "Global Languages Services"). */

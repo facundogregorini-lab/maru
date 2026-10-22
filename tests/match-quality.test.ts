@@ -115,9 +115,30 @@ describe("área cuando el título no alcanza", () => {
     expect(familyOf("Session Director", undefined, "Help us improve AI models by recording sessions for AI training projects.")).toMatchObject({ value: "entrenamiento_ia", from: "descripcion" });
   });
 
+  it.each([
+    ["Analista Sr FP&A", "finanzas"],
+    ["Analista de Control de Gestión", "finanzas"],
+    ["IT External Audit - Manager", "finanzas"],
+    ["Lider de Medios de Pago", "finanzas"],
+    ["Analista de RH (Caba)", "rrhh"],
+    ["Compensation Analyst II", "rrhh"],
+    ["Especialista Cloud", "software"],
+    ["Analista de Seguridad Informática", "software"],
+    ["Ingeniero/a de Redes SR", "software"],
+    ["Analista Funcional SSR/SR", "software"],
+    ["Analista de Medios Digitales", "marketing"],
+    ["Generación de demanda / Lead Generator", "marketing"],
+    ["Gerente de Sucursal / Tucumán.", "ventas"],
+    ["Contract Negotiation Specialist", "legal"],
+    ["Analista Ssr de Importaciones", "logistica"],
+    ["Gerente de Excelencia Operativa", "operaciones"],
+    ["Data Governance Lead", "datos"],
+    ["Analista de laboratorio", "otros"],
+  ])("títulos que en la auditoría del 22/10 caían en otros: %s", (title, family) => expect(familyOf(title).value).toBe(family));
+
   it("lo que el título ya clasifica no cambia, y lo que no se sabe queda en otros", () => {
     expect(familyOf("Analista contable", "Product").value).toBe("finanzas");
-    expect(familyOf("SAP Expert").value).toBe("otros");
+    expect(familyOf("Professional Services Associate").value).toBe("otros");
     expect(familyOf("Specialist", "Todos los departamentos").value).toBe("otros");
   });
 });
