@@ -9795,6 +9795,66 @@
         "budgetUsd": 30
       },
       "created": 1
+    },
+    {
+      "at": "2026-10-22T21:19:16.454Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "5V4w1bPbbmQ0WrTVm"
+      },
+      "rows": 0,
+      "consumed": 0.12,
+      "quota": {
+        "status": "FAILED"
+      },
+      "error": "Ejecución incompleta: no se importa."
+    },
+    {
+      "at": "2026-10-22T21:19:16.454Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de datos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "Tbd8LSpvPUaoix5a8",
+        "datasetId": "n80NBGVCb7nAhiPF4"
+      },
+      "rows": 10,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.296,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T21:19:16.454Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ejecutivo de cuentas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "68i4gADlsaDWnt0e2"
+      },
+      "rows": 0,
+      "consumed": 0.12,
+      "quota": {
+        "status": "FAILED"
+      },
+      "error": "Ejecución incompleta: no se importa."
     }
   ]
 }
