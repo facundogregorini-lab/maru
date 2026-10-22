@@ -1,11 +1,13 @@
-// Coordina el autocompletado: lee los campos de todos los frames de la pestaña,
+// Coordina el autocompletado: lee los campos de los frames de la pestaña,
 // le pide a Maru qué poner en cada uno y los completa. Nunca envía el formulario.
+// Permisos: sólo la pestaña donde la persona abre Maru (activeTab, con el clic en el ícono o Alt+Shift+M)
+// y, si el formulario está embebido desde un ATS, ese dominio, con permiso pedido en el momento.
 
-importScripts("jobkey.js");
+importScripts("jobkey.js", "ats.js");
 
 const DEFAULT_SERVER = "https://www.marucoach.com";
 /** Sitios de Maru: sólo desde ahí el puente (bridge.js) puede pasar postulaciones a la extensión. */
-const MARU_ORIGINS = /^(https:\/\/(www\.)?marucoach\.com|https:\/\/maru-grego7\.vercel\.app|http:\/\/localhost(:\d+)?)$/;
+const MARU_ORIGINS = /^(https:\/\/(www\.)?marucoach\.com|http:\/\/localhost(:\d+)?)$/;
 
 /** Error para mostrarle a la persona, con botones opcionales para el aviso (por ejemplo, "Ver planes"). */
 class UserError extends Error {
@@ -35,8 +37,44 @@ async function settings() {
 /** Corre `func` en los frames de la pestaña (en el mundo aislado de la extensión, donde vive window.__maru). */
 async function run(tabId, func, args = [], frameIds) {
   const target = frameIds ? { tabId, frameIds } : { tabId, allFrames: true };
-  const results = await chrome.scripting.executeScript({ target, func, args });
+  let results;
+  try {
+    results = await chrome.scripting.executeScript({ target, func, args });
+  } catch (err) {
+    // Con activeTab, un iframe de otro dominio sin permiso no admite scripts: se sigue con la página principal.
+    if (frameIds) throw err;
+    results = await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, func, args });
+  }
   return results.filter((r) => r && r.result !== undefined && r.result !== null);
+}
+
+/** Inyecta content.js donde hay acceso: la pestaña (activeTab) y los iframes de ATS ya autorizados. */
+async function inject(tabId) {
+  try {
+    await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, files: ["content.js"] });
+  } catch {
+    await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, files: ["content.js"] });
+  }
+}
+
+/**
+ * Dominios de ATS embebidos en la página (iframes) para los que todavía no hay permiso.
+ * Se leen desde la página principal, a la que sí hay acceso.
+ */
+async function missingAtsPermissions(tabId) {
+  const [frame] = await run(tabId, () => [...document.querySelectorAll("iframe[src]")].map((f) => f.src).slice(0, 50), [], [0]).catch(() => []);
+  const domains = new Set();
+  for (const src of (frame && frame.result) || []) {
+    try {
+      const d = self.MARU_ATS.atsDomain(new URL(src).hostname);
+      if (d) domains.add(d);
+    } catch {
+      // src inválido: se ignora
+    }
+  }
+  const missing = [];
+  for (const d of domains) if (!(await chrome.permissions.contains({ origins: [self.MARU_ATS.atsPattern(d)] }))) missing.push(d);
+  return missing;
 }
 
 const toast = (tabId, message, opts) =>
@@ -63,17 +101,13 @@ const badge = {
   },
 };
 
-/** Sitios de postulación que suelen ir en un iframe dentro de la página de la empresa. */
-const ATS_FRAME = /(^|\.)(greenhouse\.io|lever\.co|ashbyhq\.com|workable\.com|myworkdayjobs\.com|workday\.com|smartrecruiters\.com|teamtailor\.com|bamboohr\.com|recruitee\.com|jobvite\.com|icims\.com|successfactors\.(com|eu)|hiringroom\.com|breezy\.hr|personio\.(de|com)|gupy\.io|pinpointhq\.com|jazzhr\.com|applytojob\.com|bumeran\.com\.ar|zonajobs\.com\.ar|computrabajo\.com)$/;
-
 /** Campos que sólo tiene un formulario de postulación (un widget de newsletter o de chat no los pide). */
 const APPLY_WORDS = /cv|curr[ií]cul|resum[eé]|portfolio|portafolio|linkedin|github|postula|apply|application|experiencia|experience|cover letter|carta|pretensi|salar|disponibilidad|notice/i;
 
 /** Nombre corto del ATS para el seguimiento (sin datos personales). */
 function atsOf(url) {
   try {
-    const m = new URL(url).hostname.match(ATS_FRAME);
-    return m ? m[2].split(".")[0] : "";
+    return self.MARU_ATS.atsDomain(new URL(url).hostname).split(".")[0];
   } catch {
     return "";
   }
@@ -87,7 +121,7 @@ function ownFrame(result, topOrigin) {
   const origin = result.origin;
   if (!origin || origin === topOrigin) return true;
   try {
-    if (ATS_FRAME.test(new URL(origin).hostname)) return true;
+    if (self.MARU_ATS.atsDomain(new URL(origin).hostname)) return true;
   } catch {
     return false;
   }
@@ -167,7 +201,8 @@ async function fillTab(tab) {
   if (!profile) throw new UserError("Primero cargá tu CV: tocá el ícono de Maru en la barra de Chrome.");
 
   const tabId = tab.id;
-  await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, files: ["content.js"] });
+  await inject(tabId);
+  const blocked = await missingAtsPermissions(tabId);
   progress("Leyendo el formulario…");
   await toast(tabId, "Maru está leyendo el formulario…", { sticky: true });
 
@@ -179,6 +214,7 @@ async function fillTab(tab) {
     for (const f of result.fields) fields.push({ ...f, id: `${frameId}:${f.id}` });
   }
   if (!fields.length) {
+    if (blocked.length) throw new UserError(blockedMessage(blocked));
     throw new UserError("No encontramos campos vacíos para completar. Si el formulario aparece al tocar “Postularme”, abrilo y probá de nuevo.");
   }
   const top = (scans.find((s) => s.frameId === 0) || {}).result || { title: "", text: "" };
@@ -263,6 +299,7 @@ async function fillTab(tab) {
   const lines = [summarize(total)];
   if (tailored) lines.unshift(`Usamos tu CV personalizado para ${post.company || "esta vacante"}.`);
   else if (post) lines.unshift("Usamos lo que preparaste en Maru para esta vacante. Para adjuntar tu CV personalizado, ingresá en Maru en este Chrome.");
+  if (blocked.length) lines.push(`Una parte del formulario está dentro de ${blocked.join(", ")}: para completarla, tocá el ícono de Maru y aceptá el permiso.`);
   const quota = quotaLine(data);
   if (quota) lines.push(quota);
   // Hay una versión nueva: se avisa en el resumen y en el popup (desde la Store, Chrome la actualiza sola).
@@ -279,6 +316,11 @@ async function fillTab(tab) {
   await run(tabId, () => window.__maru.watch(), [], [0]).catch(() => {});
 
   return { ...total, summary, tailored, company: post ? post.company : "", page, remaining: data.remaining, limit: data.limit };
+}
+
+/** El formulario está embebido desde un ATS sin permiso: el permiso se pide desde el popup (necesita el clic). */
+function blockedMessage(domains) {
+  return `El formulario está dentro de ${domains.join(", ")}. Tocá el ícono de Maru, después «Completar esta postulación» y aceptá el permiso para ese sitio.`;
 }
 
 function summarize({ completados, revisar, pendientes }) {
@@ -354,19 +396,8 @@ async function trackApplication(tabId, page, extra = {}) {
   return { ok: true, opened: true };
 }
 
-// Después de una navegación (la confirmación suele ser otra página), se vuelve a mirar.
-chrome.tabs.onUpdated.addListener(async (tabId, info) => {
-  if (info.status !== "complete") return;
-  const k = `track:${tabId}`;
-  const { [k]: pending } = await chrome.storage.session.get(k);
-  if (!pending || pending.asked) return;
-  try {
-    await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, files: ["content.js"] });
-    await run(tabId, () => window.__maru.watch(), [], [0]);
-  } catch {
-    // páginas donde no se puede inyectar (chrome://, la Store): nada que hacer
-  }
-});
+// Con activeTab no se puede volver a inyectar después de navegar: la confirmación se detecta en la misma
+// página (watch). Si el envío lleva a otra página, queda el botón «Guardar en mi seguimiento» del popup.
 chrome.tabs.onRemoved.addListener((tabId) => {
   chrome.storage.session.remove(`track:${tabId}`).catch(() => {});
 });
@@ -402,6 +433,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (sender.id !== chrome.runtime.id || !MARU_ORIGINS.test(origin)) return;
     chrome.storage.local.set({ postulaciones: cleanPostulaciones(msg.list) });
     return;
+  }
+  if (msg.type === "ats-permissions" && typeof msg.tabId === "number") {
+    // El popup pregunta al abrirse qué dominios de ATS embebidos faltan autorizar en esta pestaña.
+    missingAtsPermissions(msg.tabId).then(sendResponse, () => sendResponse([]));
+    return true;
   }
   if (msg.type === "submitted" && sender.tab && sender.tab.id) {
     offerTracking(sender.tab.id);

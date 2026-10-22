@@ -35,9 +35,11 @@ export async function buildExtensionZip(dir = EXTENSION_DIR, { store = false }: 
   return zip.generateAsync({ type: "uint8array", compression: "DEFLATE" });
 }
 
-/** Manifest de la Store: sin localhost en el puente con el sitio de Maru. */
+/** Manifest de la Store: sin localhost (sólo sirve para desarrollar) en permisos ni en el puente con el sitio de Maru. */
 export function storeManifest(raw: string): string {
-  const manifest = JSON.parse(raw) as { content_scripts?: { matches: string[] }[] };
-  for (const cs of manifest.content_scripts ?? []) cs.matches = cs.matches.filter((m) => !m.startsWith("http://localhost"));
+  const manifest = JSON.parse(raw) as { host_permissions?: string[]; content_scripts?: { matches: string[] }[] };
+  const dev = (m: string) => m.startsWith("http://localhost");
+  if (manifest.host_permissions) manifest.host_permissions = manifest.host_permissions.filter((m) => !dev(m));
+  for (const cs of manifest.content_scripts ?? []) cs.matches = cs.matches.filter((m) => !dev(m));
   return `${JSON.stringify(manifest, null, 2)}\n`;
 }

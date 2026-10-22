@@ -1,5 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -147,9 +147,16 @@ async function startServer() {
   port = (server.address() as AddressInfo).port;
 }
 
-async function startChrome() {
+/** grantFrame: el iframe de otro origen (127.0.0.1) queda autorizado, como si la persona hubiera aceptado el permiso del ATS. */
+async function startChrome(grantFrame = true) {
   userDataDir = mkdtempSync(path.join(tmpdir(), "maru-ext-"));
-  const ext = path.join(ROOT, "extension");
+  // Copia de la extensión con 127.0.0.1 autorizado: es lo que queda cuando la persona acepta el permiso
+  // opcional del ATS embebido (el iframe de esta prueba hace de Greenhouse). El resto usa el manifest real.
+  const ext = path.join(userDataDir, "extension");
+  cpSync(path.join(ROOT, "extension"), ext, { recursive: true });
+  const manifest = JSON.parse(readFileSync(path.join(ext, "manifest.json"), "utf8"));
+  if (grantFrame) manifest.host_permissions.push("http://127.0.0.1/*");
+  writeFileSync(path.join(ext, "manifest.json"), JSON.stringify(manifest));
   chrome = spawn(CHROME, [
     "--headless=new",
     "--no-sandbox",
@@ -372,4 +379,40 @@ describe.skipIf(!run)("extensión de Chrome", () => {
     expect(autofillRequests).toHaveLength(0);
     await page.close();
   });
+});
+
+describe.skipIf(!run)("extensión de Chrome sin permiso para el iframe (sólo activeTab)", () => {
+  beforeAll(async () => {
+    await startServer();
+    await startChrome(false);
+    await inWorker(`chrome.storage.local.set({ profile: ${JSON.stringify(profile)} })`);
+  }, 60_000);
+
+  afterAll(async () => {
+    await browser?.disconnect();
+    if (chrome && chrome.exitCode === null) {
+      const exited = new Promise((resolve) => chrome.once("exit", resolve));
+      chrome.kill("SIGKILL");
+      await exited;
+    }
+    server?.close();
+    try {
+      if (userDataDir) rmSync(userDataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (err) {
+      console.warn("No se pudo borrar el perfil temporal de Chromium:", err);
+    }
+  });
+
+  it("completa la página y deja sin tocar el iframe de otro dominio, sin fallar", async () => {
+    autofillRequests.length = 0;
+    const { page, result } = await fill(`http://localhost:${port}/form`);
+    expect(result.error).toBeUndefined();
+    const [{ fields }] = autofillRequests;
+    // Sólo campos de la página principal (frame 0): el iframe de 127.0.0.1 no es accesible.
+    expect(fields.every((f) => f.id.startsWith("0:"))).toBe(true);
+    expect(await page.$eval("#first", (el) => (el as HTMLInputElement).value)).toBe("Ana");
+    const frame = page.frames().find((f) => f.url().includes("127.0.0.1"));
+    expect(await frame!.$eval("input", (el) => (el as HTMLInputElement).value)).toBe("");
+    await page.close();
+  }, 30_000);
 });
