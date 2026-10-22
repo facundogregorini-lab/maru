@@ -8427,6 +8427,1374 @@
         "budgetUsd": 18
       },
       "created": 10
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de cuentas por cobrar",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7116",
+        "runId": "cDBNe13Be8QzYQOCd",
+        "datasetId": "rTJPLHlqL0OZmseUi"
+      },
+      "rows": 55,
+      "consumed": 0.0207,
+      "quota": {
+        "usageTotalUsd": 0.020700000000000003,
+        "spentUsd": 11.308,
+        "budgetUsd": 30
+      },
+      "created": 23
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "tesorero",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7116",
+        "runId": "QnWahB0OPbcCSxn85",
+        "datasetId": "7JkmpBDTzBFvEP37y"
+      },
+      "rows": 62,
+      "consumed": 0.0232,
+      "quota": {
+        "usageTotalUsd": 0.023220000000000005,
+        "spentUsd": 11.331,
+        "budgetUsd": 30
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de tesoreria",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7116",
+        "runId": "JGY39SmRYKJKrLqaX",
+        "datasetId": "LA2yhYqN2jSeJ49JP"
+      },
+      "rows": 47,
+      "consumed": 0.0175,
+      "quota": {
+        "usageTotalUsd": 0.017460000000000003,
+        "spentUsd": 11.349,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "contador publico",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7116",
+        "runId": "BrUGnPRxJiJtQohmo",
+        "datasetId": "9WtODHXOraq12Uw8u"
+      },
+      "rows": 81,
+      "consumed": 0.0293,
+      "quota": {
+        "usageTotalUsd": 0.029340000000000005,
+        "spentUsd": 11.378,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de presupuesto",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7116",
+        "runId": "xa6IuuyWMNzvTBQls",
+        "datasetId": "kjoSuQfLgwMOEJtp8"
+      },
+      "rows": 69,
+      "consumed": 0.0247,
+      "quota": {
+        "usageTotalUsd": 0.02466,
+        "spentUsd": 11.403,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de control de gestion",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7309",
+        "runId": "P16hykFHsGNSAS3Hu",
+        "datasetId": "9753IyfGzAlCaUm0g"
+      },
+      "rows": 64,
+      "consumed": 0.0225,
+      "quota": {
+        "usageTotalUsd": 0.022500000000000003,
+        "spentUsd": 11.425,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jefe de contabilidad",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7309",
+        "runId": "BbGHZf0D4rTHTb0kT",
+        "datasetId": "zMwbuR6uKxvtkhJ0q"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 11.426,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "gerente financiero",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7309",
+        "runId": "LlUsTnF4WS3hNKLNW",
+        "datasetId": "fDUCVhtEbLIHIhRll"
+      },
+      "rows": 35,
+      "consumed": 0.0131,
+      "quota": {
+        "usageTotalUsd": 0.01314,
+        "spentUsd": 11.439,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de facturacion",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7309",
+        "runId": "JjA9MIV5BoyPasNmN",
+        "datasetId": "xfdV1hlo5l4yz3ifQ"
+      },
+      "rows": 37,
+      "consumed": 0.0139,
+      "quota": {
+        "usageTotalUsd": 0.01386,
+        "spentUsd": 11.453,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "auditor interno",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7309",
+        "runId": "n7gDiaDo1co4Cq3P3",
+        "datasetId": "POUAbVJSaOd4dQ4F2"
+      },
+      "rows": 60,
+      "consumed": 0.0221,
+      "quota": {
+        "usageTotalUsd": 0.022140000000000003,
+        "spentUsd": 11.475,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de riesgos",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7477",
+        "runId": "Sz6dxoFzd2alogyyI",
+        "datasetId": "bCBj5ftdVYxipSkMs"
+      },
+      "rows": 85,
+      "consumed": 0.0304,
+      "quota": {
+        "usageTotalUsd": 0.030420000000000003,
+        "spentUsd": 11.506,
+        "budgetUsd": 30
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de fraude",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7477",
+        "runId": "M33n4NSnec1NuW3ar",
+        "datasetId": "Tpp5drj4iXhtS0FMJ"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 11.507,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "prevencion de lavado",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7477",
+        "runId": "M9zO6UcDpLr25ZSOi",
+        "datasetId": "m5bIM4ei0sJ2x5cxZ"
+      },
+      "rows": 108,
+      "consumed": 0.0394,
+      "quota": {
+        "usageTotalUsd": 0.039420000000000004,
+        "spentUsd": 11.546,
+        "budgetUsd": 30
+      },
+      "created": 24
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "oficial de cumplimiento",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7477",
+        "runId": "7zgPmvTYyeaXO93nt",
+        "datasetId": "MXzcOjuyRfOMM39yp"
+      },
+      "rows": 58,
+      "consumed": 0.0207,
+      "quota": {
+        "usageTotalUsd": 0.020700000000000003,
+        "spentUsd": 11.567,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista actuarial",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7477",
+        "runId": "1ecfvFoXcTPHMgw7M",
+        "datasetId": "NO3LPLTi5hl6Aesu2"
+      },
+      "rows": 7,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 11.57,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "finanzas corporativas",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7674",
+        "runId": "dpRJvpLdElD5TjR3s",
+        "datasetId": "JR2IzJ1ee1RiI2ke7"
+      },
+      "rows": 3,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 11.572,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "fusiones y adquisiciones",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7674",
+        "runId": "cCEW2xXxm1kqasbI4",
+        "datasetId": "i8ANfIFrNxbVXZ2iM"
+      },
+      "rows": 9,
+      "consumed": 0.0041,
+      "quota": {
+        "usageTotalUsd": 0.0041400000000000005,
+        "spentUsd": 11.576,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "asistente contable",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7674",
+        "runId": "bZ5fhE21UAq7UAK0x",
+        "datasetId": "dv4Ndd1HPe43sUYzL"
+      },
+      "rows": 3,
+      "consumed": 0.002,
+      "quota": {
+        "usageTotalUsd": 0.00198,
+        "spentUsd": 11.578,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "auxiliar administrativo",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7674",
+        "runId": "lDDpyva6BR2tfreW8",
+        "datasetId": "Um6f44RAQhBqygE1h"
+      },
+      "rows": 29,
+      "consumed": 0.0113,
+      "quota": {
+        "usageTotalUsd": 0.011340000000000001,
+        "spentUsd": 11.589,
+        "budgetUsd": 30
+      },
+      "created": 13
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "secretaria ejecutiva",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7674",
+        "runId": "tsYI8xCGiBCZWjztE",
+        "datasetId": "qy5qGhcJeyxWKlWRv"
+      },
+      "rows": 12,
+      "consumed": 0.0052,
+      "quota": {
+        "usageTotalUsd": 0.00522,
+        "spentUsd": 11.595,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "asistente de direccion",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7714",
+        "runId": "9lW6Ba5r2niGxSQeT",
+        "datasetId": "0QicSGlpVBzpAdOkj"
+      },
+      "rows": 170,
+      "consumed": 0.061,
+      "quota": {
+        "usageTotalUsd": 0.061020000000000005,
+        "spentUsd": 11.656,
+        "budgetUsd": 30
+      },
+      "created": 27
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de gestion",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7714",
+        "runId": "xczQyh5VmSo23KnAK",
+        "datasetId": "O31UjUVoxp2GNR1qm"
+      },
+      "rows": 20,
+      "consumed": 0.0074,
+      "quota": {
+        "usageTotalUsd": 0.00738,
+        "spentUsd": 11.663,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "generalista de recursos humanos",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7714",
+        "runId": "nhK7YZWILcbq6QTut",
+        "datasetId": "ZkRMfOqs5IpnjXgVR"
+      },
+      "rows": 17,
+      "consumed": 0.0059,
+      "quota": {
+        "usageTotalUsd": 0.00594,
+        "spentUsd": 11.669,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de nomina",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7714",
+        "runId": "f3FGgxApcpeIM2D6j",
+        "datasetId": "c9t2fCTLlgtij34CP"
+      },
+      "rows": 6,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 11.672,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "reclutador it",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7714",
+        "runId": "FnkepHYlr4GgQrNkY",
+        "datasetId": "PavNoUDaAmbJtIPnz"
+      },
+      "rows": 12,
+      "consumed": 0.0049,
+      "quota": {
+        "usageTotalUsd": 0.00486,
+        "spentUsd": 11.677,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "clima y cultura",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7919",
+        "runId": "sfu3dqpsZdlqyB9H1",
+        "datasetId": "GA2FPTPypymQFn5Ft"
+      },
+      "rows": 42,
+      "consumed": 0.0157,
+      "quota": {
+        "usageTotalUsd": 0.01566,
+        "spentUsd": 11.693,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "desarrollo organizacional",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7919",
+        "runId": "BodnuWzPY8v89LPZI",
+        "datasetId": "yjK7uDihLuRpg02j1"
+      },
+      "rows": 37,
+      "consumed": 0.0142,
+      "quota": {
+        "usageTotalUsd": 0.01422,
+        "spentUsd": 11.707,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "people analytics",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7919",
+        "runId": "xbxaSzbYQCDu2oMdM",
+        "datasetId": "W7w0ZESHmd9CseLUM"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 11.708,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "employer branding",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7919",
+        "runId": "cf8pBzthcA6y0nmjz",
+        "datasetId": "W3UVPKb4T9KkqvZQD"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 11.709,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ejecutivo comercial",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "7919",
+        "runId": "bh8KZ9V6cz9sB3rZW",
+        "datasetId": "xPTZ16hKKdpLU80Wi"
+      },
+      "rows": 158,
+      "consumed": 0.0553,
+      "quota": {
+        "usageTotalUsd": 0.055260000000000004,
+        "spentUsd": 11.765,
+        "budgetUsd": 30
+      },
+      "created": 68
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "representante de ventas",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8150",
+        "runId": "nTQJ6ywsHp9CbHGBb",
+        "datasetId": "Ji8FHZQwJB82fV1b5"
+      },
+      "rows": 22,
+      "consumed": 0.0088,
+      "quota": {
+        "usageTotalUsd": 0.00882,
+        "spentUsd": 11.773,
+        "budgetUsd": 30
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "gerente comercial",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8150",
+        "runId": "n4VjORwFnFMJl643n",
+        "datasetId": "r31CC53VEzJjrAHQf"
+      },
+      "rows": 0,
+      "consumed": 0.1,
+      "quota": {},
+      "error": "Apify respondió HTTP 502."
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "inside sales",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8150",
+        "runId": "RQahdOexXVQnjOzNS",
+        "datasetId": "TLGj5SgLnraeWtygw"
+      },
+      "rows": 0,
+      "consumed": 0.1,
+      "quota": {},
+      "error": "Apify respondió HTTP 502."
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "account manager",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8150",
+        "runId": "LSSSdQgmTQpwenFKs",
+        "datasetId": "VGLYf8l0dy1i8gbXe"
+      },
+      "rows": 26,
+      "consumed": 0.0103,
+      "quota": {
+        "usageTotalUsd": 0.01026,
+        "spentUsd": 11.984,
+        "budgetUsd": 30
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ventas corporativas",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8150",
+        "runId": "8SdDdQEcTnVeXNJUB",
+        "datasetId": "uxbTYDefuteLi7KWj"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 11.985,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "preventa",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8199",
+        "runId": "XrXFtqdM6QiFfH6u9",
+        "datasetId": "pQGkTZXHb2PIG0M54"
+      },
+      "rows": 48,
+      "consumed": 0.0182,
+      "quota": {
+        "usageTotalUsd": 0.01818,
+        "spentUsd": 12.003,
+        "budgetUsd": 30
+      },
+      "created": 23
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ingeniero de ventas",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8199",
+        "runId": "ZzJAa3HiXpXywA9u2",
+        "datasetId": "ZB26ACpixomaPDFFX"
+      },
+      "rows": 61,
+      "consumed": 0.0221,
+      "quota": {
+        "usageTotalUsd": 0.022140000000000003,
+        "spentUsd": 12.025,
+        "budgetUsd": 30
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "desarrollo de negocios",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8199",
+        "runId": "hU0Ux9uhIIA1u3Bj9",
+        "datasetId": "0pjbLpISN6wM6XTtj"
+      },
+      "rows": 12,
+      "consumed": 0.0049,
+      "quota": {
+        "usageTotalUsd": 0.00486,
+        "spentUsd": 12.03,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de marketing digital",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8199",
+        "runId": "6lZ4g2g8jOnvTtAgs",
+        "datasetId": "xlDOeddhkMenU1r42"
+      },
+      "rows": 0,
+      "consumed": 0.1,
+      "quota": {},
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "coordinador de marketing",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8199",
+        "runId": "6Y7b1zmz32aEUshH1",
+        "datasetId": "dTm7Tcjli4AfiQt1N"
+      },
+      "rows": 61,
+      "consumed": 0.0229,
+      "quota": {
+        "usageTotalUsd": 0.022860000000000002,
+        "spentUsd": 12.153,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jefe de marketing",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8331",
+        "runId": "aTcSqcBCrboY7igc9",
+        "datasetId": "vLZnPtMlW6O04fnFe"
+      },
+      "rows": 4,
+      "consumed": 0.002,
+      "quota": {
+        "usageTotalUsd": 0.00198,
+        "spentUsd": 12.155,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de growth",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8331",
+        "runId": "6ZHv3mcjrDO5T55D2",
+        "datasetId": "S9Io4F8KWmqq5EafH"
+      },
+      "rows": 6,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 12.158,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "paid media",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8331",
+        "runId": "3gjV87EFLytYfSUmf",
+        "datasetId": "hxGJJL6UoGzYbNmDh"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 12.161,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "content creator",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8331",
+        "runId": "3A9TCB0DnqXAnqElr",
+        "datasetId": "qNgQChnTdEnTiTVjR"
+      },
+      "rows": 36,
+      "consumed": 0.0139,
+      "quota": {
+        "usageTotalUsd": 0.01386,
+        "spentUsd": 12.175,
+        "budgetUsd": 30
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "investigacion de mercado",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8331",
+        "runId": "gMFYyEx983kWX66ef",
+        "datasetId": "BglFYCCFLywmV8hvD"
+      },
+      "rows": 42,
+      "consumed": 0.0149,
+      "quota": {
+        "usageTotalUsd": 0.01494,
+        "spentUsd": 12.19,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "customer insights",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8408",
+        "runId": "anSchjZl0JWQRhQlt",
+        "datasetId": "GcaK4A8fYHHoM6EKe"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 12.192,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado corporativo",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8408",
+        "runId": "pAf4cOXXVK9pBxaOy",
+        "datasetId": "3gkuUYKUxV6dh75x9"
+      },
+      "rows": 3,
+      "consumed": 0.002,
+      "quota": {
+        "usageTotalUsd": 0.00198,
+        "spentUsd": 12.194,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado laboral",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8408",
+        "runId": "osXQHC19Z6JmPo0a8",
+        "datasetId": "akGzTnQwRFSmbyEPC"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 12.196,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "asesor legal",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8408",
+        "runId": "uS0CtgGIS8CD1teTN",
+        "datasetId": "DkwvQaLJF8twfZWko"
+      },
+      "rows": 13,
+      "consumed": 0.0056,
+      "quota": {
+        "usageTotalUsd": 0.00558,
+        "spentUsd": 12.202,
+        "budgetUsd": 30
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "paralegal",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8408",
+        "runId": "0kyf16AMWBBh0Zydc",
+        "datasetId": "A1phMpdJRaSSlclkv"
+      },
+      "rows": 16,
+      "consumed": 0.0067,
+      "quota": {
+        "usageTotalUsd": 0.00666,
+        "spentUsd": 12.208,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista legal",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8432",
+        "runId": "QACRhCrJg7MrGc8ac",
+        "datasetId": "xnnfODWVizIOTpm8e"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 12.209,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado tributario",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8432",
+        "runId": "FT96ZQQk0hmPXAJeN",
+        "datasetId": "nhCq7mx9skJ0Yav76"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 12.21,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jefe de operaciones",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8432",
+        "runId": "9KnbOKqwv8g5zwaO6",
+        "datasetId": "FITvIhSBy7iYZnc2U"
+      },
+      "rows": 198,
+      "consumed": 0.0704,
+      "quota": {
+        "usageTotalUsd": 0.07038,
+        "spentUsd": 12.281,
+        "budgetUsd": 30
+      },
+      "created": 30
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "coordinador de operaciones",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8432",
+        "runId": "QkkOwECdO0juPzBaw",
+        "datasetId": "rz24u5QBD0Hefbnc3"
+      },
+      "rows": 160,
+      "consumed": 0.0578,
+      "quota": {
+        "usageTotalUsd": 0.057780000000000005,
+        "spentUsd": 12.338,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "mejora continua",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8432",
+        "runId": "TiwxMTjMfkGSFzV8G",
+        "datasetId": "zGfWfHmpoFzSfBYse"
+      },
+      "rows": 87,
+      "consumed": 0.0315,
+      "quota": {
+        "usageTotalUsd": 0.0315,
+        "spentUsd": 12.37,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "six sigma",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8708",
+        "runId": "FSAz9wcBxehgTqpoN",
+        "datasetId": "viazehf7iqP5fXcVB"
+      },
+      "rows": 17,
+      "consumed": 0.007,
+      "quota": {
+        "usageTotalUsd": 0.00702,
+        "spentUsd": 12.377,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jefe de compras",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8708",
+        "runId": "pBsIap2Keg8xbaqit",
+        "datasetId": "E3OoIlcmR6IdXS0r6"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 12.378,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de abastecimiento",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8708",
+        "runId": "y52TfKBMOFXWz7MGf",
+        "datasetId": "nbe9zXU7TuvBHbxrH"
+      },
+      "rows": 22,
+      "consumed": 0.0088,
+      "quota": {
+        "usageTotalUsd": 0.00882,
+        "spentUsd": 12.387,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "planificador de produccion",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8708",
+        "runId": "usqBx4UagqN077PDR",
+        "datasetId": "gY0xWNB0sAxhCASM3"
+      },
+      "rows": 8,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 12.391,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T19:21:33.339Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de inventarios",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "8708",
+        "runId": "2BNkgoms460HFSPUd",
+        "datasetId": "KUgfgb1HPIqGiwsbv"
+      },
+      "rows": 50,
+      "consumed": 0.0182,
+      "quota": {
+        "usageTotalUsd": 0.01818,
+        "spentUsd": 12.409,
+        "budgetUsd": 30
+      },
+      "created": 1
     }
   ]
 }
