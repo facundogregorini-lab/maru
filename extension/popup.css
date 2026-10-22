@@ -83,3 +83,7 @@ kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; backgro
 .dot.ok { background: #1c8c4c; }
 .dot.warn { background: #d49a1c; }
 .dot.todo { background: #c5cad1; }
+
+/* Aviso de versión nueva. */
+.update { display: flex; flex-direction: column; gap: 4px; border-radius: 10px; background: #fff4d6; padding: 10px 12px; }
+.update a { color: #136c39; font-weight: 700; }

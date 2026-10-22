@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { EXTENSION_VERSION } from "@/lib/extensionVersion";
 import { autofillBlocks, matchOption, normalizeAnswers } from "@/lib/autofill";
 import type { AutofillField, AutofillRequest, Profile } from "@/lib/schemas";
 
@@ -48,7 +49,9 @@ const body: AutofillRequest = {
   fields,
 };
 
-const req = (b: unknown) => new Request("http://test/api/autofill", { method: "POST", body: JSON.stringify(b) });
+// La extensión manda su versión; sin ella la ruta pide actualizar.
+const headers = { "X-Maru-Version": EXTENSION_VERSION };
+const req = (b: unknown) => new Request("http://test/api/autofill", { method: "POST", headers, body: JSON.stringify(b) });
 
 beforeEach(() => askStructured.mockReset());
 
@@ -184,7 +187,7 @@ describe("/api/autofill", () => {
 
   it("rechaza un pedido sin campos o sin perfil, sin llamar a la IA", async () => {
     for (const bad of [{ ...body, fields: [] }, { ...body, profile: undefined }, "no es json"]) {
-      const res = await POST(typeof bad === "string" ? new Request("http://test", { method: "POST", body: bad }) : req(bad));
+      const res = await POST(typeof bad === "string" ? new Request("http://test", { method: "POST", headers, body: bad }) : req(bad));
       expect(res.status).toBe(400);
       expect((await res.json()).code).toBe("BAD_REQUEST");
     }

@@ -17,6 +17,35 @@ async function server() {
   return (server || DEFAULT_SERVER).replace(/\/+$/, "");
 }
 
+/** Compara versiones "x.y.z": negativo si a < b. */
+function compareVersions(a, b) {
+  const pa = a.split(".").map((n) => parseInt(n, 10) || 0);
+  const pb = b.split(".").map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d;
+  }
+  return 0;
+}
+
+/** Avisa si hay una versión nueva. Si no hay conexión, no muestra nada. */
+async function checkUpdate() {
+  const current = chrome.runtime.getManifest().version;
+  try {
+    const res = await fetch(`${await server()}/api/extension/version`);
+    if (!res.ok) return;
+    const { latest, minimum, downloadUrl } = await res.json();
+    if (!latest || compareVersions(current, latest) >= 0) return;
+    const blocked = minimum && compareVersions(current, minimum) < 0;
+    $("update-title").textContent = blocked ? "Actualizá Maru para seguir autocompletando" : "Hay una versión nueva de Maru";
+    $("update-text").textContent = `Tenés la ${current} y ya está la ${latest}. Bajala, descomprimila y reemplazá la carpeta en chrome://extensions: tu CV queda guardado.`;
+    $("update-link").href = downloadUrl;
+    $("update").hidden = false;
+  } catch {
+    // Sin conexión: se vuelve a revisar la próxima vez que se abra.
+  }
+}
+
 async function render() {
   const { profile, cv, extras, server } = await chrome.storage.local.get(["profile", "cv", "extras", "server"]);
   $("server").value = server || "";
@@ -150,3 +179,4 @@ function dashboard({ completados = 0, revisar = 0, pendientes = 0 }) {
 }
 
 render();
+checkUpdate();

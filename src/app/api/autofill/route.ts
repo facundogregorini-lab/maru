@@ -1,5 +1,7 @@
 import { autofillBlocks, normalizeAnswers } from "@/lib/autofill";
 import { extensionGuard } from "@/lib/billing/http";
+import { EXTENSION_VERSION, extensionOutdated, extensionUpdateAvailable } from "@/lib/extensionVersion";
+import { SITE_URL } from "@/lib/site";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { AUTOFILL_SYSTEM } from "@/lib/prompts";
 import { AutofillAnswerSchema, AutofillRequestSchema } from "@/lib/schemas";
@@ -9,6 +11,14 @@ export const maxDuration = 120;
 /** La extensión de Chrome manda los campos del formulario abierto y recibe qué poner en cada uno. */
 export async function POST(req: Request) {
   try {
+    // Una extensión vieja sólo sabe mostrar el error: así le llega el aviso de actualizar.
+    const version = req.headers.get("X-Maru-Version");
+    if (extensionOutdated(version)) {
+      return Response.json(
+        { error: `Tu extensión de Maru está desactualizada. Bajá la versión ${EXTENSION_VERSION} en ${SITE_URL}/extension y reemplazá la carpeta en chrome://extensions.`, code: "EXTENSION_OUTDATED", updateUrl: `${SITE_URL}/extension` },
+        { status: 426 },
+      );
+    }
     const parsed = AutofillRequestSchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) {
       throw new UserFacingError("No pudimos leer el formulario. Recargá la página y probá de nuevo.", "BAD_REQUEST");
@@ -27,7 +37,8 @@ export async function POST(req: Request) {
       schema: AutofillAnswerSchema,
       effort: "low",
     });
-    return Response.json({ answers: normalizeAnswers(body.fields, campos, !!body.hasCv) });
+    const update = extensionUpdateAvailable(version) ? { latest: EXTENSION_VERSION, url: `${SITE_URL}/extension` } : undefined;
+    return Response.json({ answers: normalizeAnswers(body.fields, campos, !!body.hasCv), ...(update ? { update } : {}) });
   } catch (err) {
     return errorResponse(err);
   }

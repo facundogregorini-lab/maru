@@ -69,6 +69,7 @@ export default function BillingPanel() {
           {plan.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{plan.badge}</p>}
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-xl font-bold">{plan.nombre}</h3>
+            {plan.id === "trimestral" && <span className="rounded-full border border-ink px-2.5 py-0.5 text-xs font-semibold">Ahorrá 25%</span>}
             {discount && <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-bold text-neon">-{discount}%</span>}
           </div>
           <p className="mt-3 text-sm text-ink/60">
