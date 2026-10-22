@@ -100,11 +100,24 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   return { postings, rejected, received: rows.length, accepted: postings.length };
 }
 
-export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina") {
+/**
+ * Opciones de valig: `remote` agrega el filtro de LinkedIn «Remoto» (f_WT=2) y `skipJobIds` le pasa los avisos
+ * de LinkedIn que ya tenemos para que no los devuelva (no se pagan filas repetidas).
+ */
+export type LinkedinSearchExtras = { remote?: boolean; skipJobIds?: string[] };
+
+export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina", extras: LinkedinSearchExtras = {}) {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
+  if ((extras.remote || extras.skipJobIds?.length) && !(source === "linkedin" && actor === "valig")) throw new Error("El filtro remoto y la lista de avisos a saltear sólo existen en LinkedIn con --actor=valig.");
   // Antigüedad máxima del aviso en los Actors alternativos: una semana (default) o un mes.
   const age = window === "month" ? "r2592000" : "r604800";
-  if (source === "linkedin" && actor === "valig") return { keywords: keyword, location, datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE };
+  if (source === "linkedin" && actor === "valig") {
+    return {
+      keywords: keyword, location, datePosted: age, limit, titleExclude: LINKEDIN_TITLE_EXCLUDE,
+      ...(extras.remote ? { urlParam: [{ key: "f_WT", value: "2" }] } : {}),
+      ...(extras.skipJobIds?.length ? { skipJobId: extras.skipJobIds } : {}),
+    };
+  }
   if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location, publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
@@ -155,4 +168,40 @@ export const apifyRunCeiling = (source: ApifyJobSource, rows: number, actor: Lin
 export function apifyNextCap(source: ApifyJobSource, rows: number, spentUsd: number, budgetUsd: number, actor: LinkedinActor = "curious"): number {
   const ceiling = apifyRunCeiling(source, rows, actor);
   return spentUsd + ceiling <= budgetUsd + 1e-9 ? Math.round(ceiling * 1000) / 1000 : 0;
+}
+
+/** Ids de LinkedIn que ya están en el inventario, vengan de Apify o de otra fuente con enlace a LinkedIn (Fantastic). */
+export function knownLinkedinIds(postings: { sourceId: string; externalId: string; sourceUrl: string; applyUrl: string }[]): string[] {
+  const ids = new Set<string>();
+  for (const p of postings) {
+    const id = p.sourceId === "apify-linkedin" ? p.externalId : linkedinJobId(p.sourceUrl) || linkedinJobId(p.applyUrl);
+    if (/^\d{6,}$/.test(id)) ids.add(id);
+  }
+  return [...ids].sort();
+}
+
+/** Lo mínimo del ledger que hace falta para no repetir búsquedas (providers.ts LedgerEntry). */
+type SearchLog = { at: string; provider: string; call: string; params: Record<string, string>; rows: number; created?: number };
+/** Una búsqueda que trajo menos de esta proporción de avisos nuevos no se repite en el mes. */
+export const MIN_NEW_SHARE = 0.3;
+const searchId = (actor: string, keyword: string, location: string, remote: boolean) => [actor, keyword.trim().toLowerCase(), location.toLowerCase(), remote ? "remoto" : ""].join("|");
+
+/**
+ * Motivo para no pagar otra vez una búsqueda (mismo Actor, palabra, ubicación y filtro remoto), o null:
+ * - se corrió hace menos de 7 días: traería casi lo mismo;
+ * - en los últimos 30 días trajo menos de MIN_NEW_SHARE de avisos nuevos: está agotada.
+ * Las corridas viejas no guardaban ubicación: se toman como Argentina.
+ */
+export function apifyRepeatReason(entries: SearchLog[], actor: string, keyword: string, location: string, remote: boolean, now: string): string | null {
+  const id = searchId(actor, keyword, location, remote);
+  const past = entries.filter((e) => e.provider === "apify" && e.call === "run" && e.rows > 0 && e.params.actor && searchId(e.params.actor, e.params.keyword ?? "", e.params.location ?? "Argentina", e.params.remote === "1") === id);
+  const days = (at: string) => (Date.parse(now) - Date.parse(at)) / 86_400_000;
+  const recent = past.filter((e) => days(e.at) < 7);
+  if (recent.length) {
+    const n = Math.floor(days(recent[recent.length - 1].at));
+    return n ? `se buscó hace ${n} ${n === 1 ? "día" : "días"}` : "se buscó hoy";
+  }
+  const poor = past.find((e) => days(e.at) < 30 && typeof e.created === "number" && e.created / e.rows < MIN_NEW_SHARE);
+  if (poor) return `agotada: el ${poor.at.slice(0, 10)} trajo ${poor.created} nuevos de ${poor.rows} filas`;
+  return null;
 }

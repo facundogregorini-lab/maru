@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { groupOpportunities } from "@/lib/match/group";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage } from "@/lib/match/inventory";
-import { importedFileOf, readInventoryFile, readInventoryFileSync, writeInventoryFile } from "@/lib/match/inventory-file";
+import { importedFileOf, inventoryMtime, readInventoryFile, readInventoryFileSync, writeInventoryFile } from "@/lib/match/inventory-file";
 import { loadInventory, resetInventoryCache } from "@/lib/match/load";
 import { normalizeFantastic } from "@/lib/match/providers";
 
@@ -49,6 +49,25 @@ describe("almacenamiento compacto del inventario", () => {
     resetInventoryCache();
     expect((await loadInventory(file)).postings.size).toBe(3);
     resetInventoryCache();
+  });
+
+  it("parte los importados en varios archivos sin pasarse del tamaño y borra las partes que sobran", async () => {
+    const inv = emptyInventory("real");
+    const { postings } = normalizeFantastic(["a", "b", "c", "d", "e"].map((id) => row(id)), "fantastic_ats", "t", Date.parse("2026-10-16T00:00:00Z"));
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings, complete: false }, "2026-10-16T00:00:00.000Z");
+    const file = path.join(mkdtempSync(path.join(tmpdir(), "maru-inv-")), "inventory.json");
+    const one = Buffer.byteLength(JSON.stringify(forStorage(inv).postings[0])) + 1;
+    await writeInventoryFile(file, forStorage(inv), one * 2 + 10);
+    const sizes = [1, 2, 3].map((n) => JSON.parse(readFileSync(importedFileOf(file, n), "utf8")).postings.length);
+    expect(sizes).toEqual([2, 2, 1]);
+    expect(existsSync(importedFileOf(file, 4))).toBe(false);
+    expect((await readInventoryFile(file))!.postings.map((p) => p.externalId)).toEqual(postings.map((p) => p.externalId));
+    expect(readInventoryFileSync(file).postings).toHaveLength(5);
+    expect(await inventoryMtime(file)).toBeGreaterThan(0);
+    // Con menos avisos, las partes que ya no hacen falta se borran.
+    await writeInventoryFile(file, forStorage({ ...inv, postings: inv.postings.slice(0, 1) }), one * 2 + 10);
+    expect([1, 2, 3].map((n) => existsSync(importedFileOf(file, n)))).toEqual([true, false, false]);
+    expect((await readInventoryFile(file))!.postings).toHaveLength(1);
   });
 
   it("lee un inventario viejo de un solo archivo y no duplica si un aviso está en los dos", async () => {

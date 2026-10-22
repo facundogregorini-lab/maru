@@ -207,10 +207,24 @@ function close(p: StoredPosting, now: string, reason: string) {
 
 const daysSince = (a: string, now: string) => (new Date(now).getTime() - new Date(a).getTime()) / 86_400_000;
 
+/** Un importado que la revisión de vigencia (liveness.ts) ve publicado sigue abierto hasta esta antigüedad. */
+export const LIVE_MAX_DAYS = 60;
+
+/**
+ * Última vez que sabemos que el aviso seguía publicado: la última importación que lo trajo o, si es más nueva,
+ * la última revisión de su página original que lo vio publicado (sólo hasta LIVE_MAX_DAYS desde que se publicó).
+ * Así una compra no vence entera a los 30 días aunque los avisos sigan abiertos en la fuente.
+ */
+export function lastKnownAlive(p: StoredPosting, now: string): string {
+  const live = p.lastLiveResult === "abierta" ? p.lastLiveCheckAt : undefined;
+  if (!live || live <= p.lastSeenAt || daysSince(p.publishedAt ?? p.firstSeenAt, now) > LIVE_MAX_DAYS) return p.lastSeenAt;
+  return live;
+}
+
 /**
  * Avisos importados de proveedores con cuota (no los consulta la sync diaria): se cierran por el
  * vencimiento informado, si quedan fuera de las áreas que importamos (import-filter.ts) o si pasan
- * `staleDays` sin volver a verse. Así el catálogo no arrastra
+ * `staleDays` sin volver a verse ni a confirmarse publicados (lastKnownAlive). Así el catálogo no arrastra
  * avisos viejos cuando se termina el saldo de un proveedor.
  */
 export function expireImported(inv: Inventory, now: string): number {
@@ -220,7 +234,7 @@ export function expireImported(inv: Inventory, now: string): number {
     if (!source?.imported || p.status !== "abierta") continue;
     if (p.expiresAt && Date.parse(p.expiresAt) < Date.parse(now)) close(p, now, "Venció según la fuente");
     else if (importRejection(p.title, p.extracted.family.value)) close(p, now, "Fuera de las áreas que importamos");
-    else if (daysSince(p.lastSeenAt, now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
+    else if (daysSince(lastKnownAlive(p, now), now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
     else continue;
     closed++;
   }

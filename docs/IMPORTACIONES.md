@@ -96,7 +96,7 @@ Después de la tanda 1, `inventory.json` llegó a 52,6 MB. GitHub avisa desde 50
 - `inventory.json`: bolsas de empleadores y metadatos, 37 MB al migrar.
 - `inventory-imported.json`: avisos de Apify, Google Jobs y Fantastic, 18 MB al migrar.
 
-Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Si `inventory-imported.json` se acerca a 90 MB, hay que partirlo por fuente.
+Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Desde el 22/10 los importados se parten solos en archivos de hasta 40 MB.
 
 ## Calidad de los avisos de LinkedIn vía valig (19/10/2026)
 
@@ -124,6 +124,14 @@ Con `--location=latam` (sólo con `--actor=valig` o `cheap`), la búsqueda de Li
 | **Total** | | **26.784** | **4.651** |
 
 Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, conviene buscar con palabras nuevas, porque las de esta compra ya están agotadas para el último mes.
+
+## Sin repetidos y sin vencimientos en masa (desde el 22/10/2026)
+
+- **Ids que ya tenemos:** con `--actor=valig`, cada búsqueda le pasa al Actor (`skipJobId`) todos los ids de LinkedIn del inventario, incluidos los que llegaron por Fantastic, y los de las búsquedas anteriores de la misma corrida. valig no los devuelve, así que no se cobran.
+- **Búsquedas que no se repiten:** la misma búsqueda (Actor, palabra, ubicación y filtro remoto) se saltea si se corrió hace menos de 7 días, o si en los últimos 30 días trajo menos del 30% de avisos nuevos. El ledger guarda `created` (nuevos) por búsqueda desde el 22/10. Las corridas anteriores no lo tienen y sólo cuenta la regla de los 7 días.
+- **Remoto:** `--remote=1` (sólo valig) usa el filtro «Remoto» de LinkedIn. Ejemplo: `provider=apify mode=run args=--actor=valig --remote=1 --rows=100 --keywords=software_engineer,account_executive --budget-usd=<gasto del mes + tope> --budget-source=account`.
+- **Vigencia:** un importado que la revisión diaria ve publicado no vence a los 30 días sin volver a importarse: cuenta desde la última revisión que lo vio publicado, hasta 60 días desde la publicación. Así una compra no se pierde entera al mes.
+- **Tamaño:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `inventory-imported-2.json`…).
 
 ## Próximas corridas recomendadas
 
