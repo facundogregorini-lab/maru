@@ -144,6 +144,8 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
     const prev = byKey.get(key);
     // Los conectores leen el detalle de a tandas: si esta vez vino sin descripción, se conserva la ya leída.
     if (prev && !p.descriptionComplete && prev.descriptionComplete) p = { ...p, descriptionText: prev.descriptionText, descriptionComplete: true };
+    // Get on Board: los países de un remoto salen de la página del aviso, que se lee de a tandas; se conservan.
+    if (prev && p.sourceId === "getonbrd" && p.workplace.value === "remoto" && !p.countries.length && prev.countries.length) p = { ...p, countries: prev.countries };
     const hash = contentHash(p);
     if (!prev) {
       const a = analyze(p);

@@ -554,6 +554,19 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
   };
 }
 
+/** Páginas de avisos de Get on Board que se leen por sincronización para saber desde qué países aceptan. */
+const GOB_MAX_PAGES = 80;
+
+/**
+ * Países que acepta un aviso remoto de Get on Board, según su página pública (schema.org
+ * applicantLocationRequirements). La API sólo da "Remote" y unos ids de sitio que no son los países (22/10:
+ * en 7 de 24 avisos la página aceptaba Argentina aunque el id de Argentina no estaba).
+ */
+export function gobApplicantCountries(html: string): string[] {
+  const names = [...html.matchAll(/itemprop="applicantLocationRequirements"[^>]*>\s*<meta content="([^"]+)" itemprop="name"/g)].map((m) => decodeEntities(m[1]).replace(/\s*\(.*\)$/, ""));
+  return [...new Set(names.map((n) => countryIso(n)).filter((c): c is string => !!c))];
+}
+
 export async function fetchGetonbrd(board: Board, opts?: RetryOptions & { perPage?: number; maxPagesPerCategory?: number; sleep?: (ms: number) => Promise<void> }): Promise<BoardFetch> {
   const base = "https://www.getonbrd.com/api/v0";
   const cats = await fetchJson<{ data?: { id: string }[] }>(`${base}/categories?per_page=100`, opts);
@@ -578,6 +591,15 @@ export async function fetchGetonbrd(board: Board, opts?: RetryOptions & { perPag
       if (page === maxPages) complete = false;
       await pause(1000);
     }
+  }
+  // Remotos sin país: los países salen de la página del aviso, de a tandas (applyBoard conserva los ya leídos).
+  const remoteNoCountry = [...out.values()].filter((p) => p.workplace.value === "remoto" && !p.countries.length && !p.remoteGlobal);
+  for (const [i, p] of remoteNoCountry.entries()) {
+    if (!inDetailWindow(i, remoteNoCountry.length, GOB_MAX_PAGES)) continue;
+    const html = await fetchText(p.sourceUrl, opts).catch(() => null);
+    const countries = html ? gobApplicantCountries(html) : [];
+    if (countries.length) p.countries = countries;
+    await pause(500);
   }
   return { postings: [...out.values()], complete, received };
 }
