@@ -137,6 +137,16 @@ Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, con
 - **Vigencia:** un importado que la revisión diaria ve publicado no vence a los 30 días sin volver a importarse: cuenta desde la última revisión que lo vio publicado, hasta 60 días desde la publicación. Así una compra no se pierde entera al mes.
 - **Tamaño:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `inventory-imported-2.json`…).
 
+## Empleadores descubiertos en los avisos comprados (desde el 22/10/2026)
+
+`match-discover` (Actions, a mano) toma las empresas de los avisos importados abiertos que se pueden pedir desde la Argentina y son de las áreas que importamos, y busca si tienen bolsa pública:
+
+- **Qué empresas mira:** las que tienen al menos 2 de esos avisos, de la que tiene más a la que tiene menos. Deja afuera consultoras de selección, portales y bolsas de terceros.
+- **Cómo busca la bolsa:** prueba Greenhouse, Lever y Ashby con el nombre junto y con guiones. Con la primera palabra sola prueba sólo en Greenhouse, que informa el nombre de la empresa y se puede verificar.
+- **Cuándo la suma:** si la bolsa tiene al menos `min_eligible` (default 3) avisos elegibles de las áreas. Con `apply=1` la agrega a `companies.json`.
+
+Desde ahí la sync diaria trae todos los avisos de esa empresa, gratis, completos y al día, aunque no se vuelva a comprar nada. Sólo hace GET a APIs públicas, sin claves (`scripts/match-discover.ts`, `src/lib/match/discover.ts`).
+
 ## Próximas corridas recomendadas
 
 1. **Fantastic:** no hay más corridas posibles sin plan pago, y el pago está descartado.

@@ -1,0 +1,58 @@
+# Busca bolsas públicas (Greenhouse, Lever, Ashby) de las empresas que aparecen en los avisos comprados
+# y suma al directorio las que tienen avisos de calidad para la Argentina. La sync diaria los trae gratis.
+# Sólo GET a APIs públicas, sin secretos. Se lanza a mano desde Actions.
+name: match-discover
+
+on:
+  workflow_dispatch:
+    inputs:
+      top:
+        description: "Cuántas empresas revisar (las que más avisos tienen)"
+        required: false
+        default: "150"
+      min_eligible:
+        description: "Avisos elegibles de las áreas que necesita una bolsa para sumarse"
+        required: false
+        default: "3"
+      apply:
+        description: "1 = agregar al directorio y commitear; 0 = sólo informar"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: match-discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Buscar bolsas
+        env:
+          TOP: ${{ github.event.inputs.top }}
+          MIN: ${{ github.event.inputs.min_eligible }}
+          APPLY: ${{ github.event.inputs.apply }}
+        run: |
+          [[ "$TOP" =~ ^[0-9]+$ && "$MIN" =~ ^[0-9]+$ && "$APPLY" =~ ^[01]$ ]] || { echo "inputs inválidos"; exit 1; }
+          npx --yes tsx@4 scripts/match-discover.ts --top="$TOP" --min-eligible="$MIN" --apply="$APPLY"
+      - name: Guardar directorio
+        if: ${{ github.event.inputs.apply == '1' }}
+        run: |
+          git config user.name "maru-match-bot"
+          git config user.email "maru-match-bot@users.noreply.github.com"
+          git add data/match/companies.json
+          if git diff --cached --quiet; then
+            echo "Sin empresas nuevas."
+            exit 0
+          fi
+          git commit -m "chore(match): empresas descubiertas en los avisos comprados"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
