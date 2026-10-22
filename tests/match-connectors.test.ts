@@ -7,9 +7,11 @@ import {
   fetchJobicy,
   fetchLever,
   fetchRemotive,
+  gobApplicantCountries,
   parseBoardUrl,
 } from "@/lib/match/connectors";
 import { classifyEligibility } from "@/lib/match/eligibility";
+import { applyBoard, emptyInventory } from "@/lib/match/inventory";
 import { extract, familyFromTitle, seniorityFromTitle } from "@/lib/match/extract";
 import { fetchJson } from "@/lib/match/http";
 import { htmlToText } from "@/lib/match/text";
@@ -67,6 +69,23 @@ describe("conectores", () => {
     expect(r.postings[0].countries).toEqual(["AR", "CL"]);
     expect(r.postings[0].company).toBe("Acme Sur");
     expect(r.postings[0].descriptionText).toContain("Deseable:");
+  });
+
+  it("Get on Board: países de un remoto según la página del aviso", () => {
+    const country = (n: string) => `<span itemprop="applicantLocationRequirements" itemscope itemtype="http://schema.org/Country"> <meta content="${n}" itemprop="name"> </span>`;
+    expect(gobApplicantCountries(["Chile", "Argentina", "Falkland Islands (Malvinas)", "Brasil"].map(country).join(""))).toEqual(["CL", "AR", "BR"]);
+    expect(gobApplicantCountries(["Colombia", "Mexico", "Costa Rica"].map(country).join(""))).not.toContain("AR");
+    expect(gobApplicantCountries("<h1>Sin datos</h1>")).toEqual([]);
+  });
+
+  it("Get on Board: conserva los países ya leídos de la página cuando la sync no la vuelve a leer", () => {
+    const base = normalizeGetonbrd(fixture<{ jobs: { data: Parameters<typeof normalizeGetonbrd>[0][] } }>("getonbrd.json").jobs.data[0], BOARDS.getonbrd);
+    const remote = { ...base, workplace: { value: "remoto" as const, from: "fuente" as const }, countries: [] as string[] };
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, base.boardId, "getonbrd", { postings: [{ ...remote, countries: ["AR", "CL"] }], complete: true }, "2026-10-22T00:00:00.000Z");
+    applyBoard(inv, base.boardId, "getonbrd", { postings: [remote], complete: true }, "2026-10-23T00:00:00.000Z");
+    expect(inv.postings[0].countries).toEqual(["AR", "CL"]);
+    expect(inv.postings[0].eligibility.status).toBe("elegible");
   });
 
   it("detecta ATS y slug desde URLs de bolsas y avisos", () => {
