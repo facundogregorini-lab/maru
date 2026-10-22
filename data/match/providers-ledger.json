@@ -13000,6 +13000,696 @@
         "usageTotalUsd": 0.0235
       },
       "created": 10
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "software engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "7527",
+        "runId": "Rkw3eRtXiECTiV344",
+        "datasetId": "aCx8qH5dnRGynKG8n"
+      },
+      "rows": 150,
+      "consumed": 0.0513,
+      "quota": {
+        "usageTotalUsd": 0.0513,
+        "spentUsd": 21.135,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "senior software engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "7527",
+        "runId": "xyR3ZhZEgE0XZvPv8",
+        "datasetId": "XIalcB8JeN0Q77Sss"
+      },
+      "rows": 150,
+      "consumed": 0.0484,
+      "quota": {
+        "usageTotalUsd": 0.04842,
+        "spentUsd": 21.183,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "backend engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "7527",
+        "runId": "DmaGVSu1ufadSWmSX",
+        "datasetId": "8TGQZ2ijQqXbWsTiX"
+      },
+      "rows": 150,
+      "consumed": 0.0481,
+      "quota": {
+        "usageTotalUsd": 0.04806,
+        "spentUsd": 21.231,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "frontend engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "7527",
+        "runId": "8XWP8Nk4hvfDZlyMd",
+        "datasetId": "1U8zJ6iunMp3Yu0qi"
+      },
+      "rows": 150,
+      "consumed": 0.0506,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 21.282,
+        "budgetUsd": 34
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "full stack engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "7527",
+        "runId": "jqknTcpBUYnjolalF",
+        "datasetId": "syEwpSUQLqCzLbZsL"
+      },
+      "rows": 150,
+      "consumed": 0.0531,
+      "quota": {
+        "usageTotalUsd": 0.0531,
+        "spentUsd": 21.335,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "react developer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8170",
+        "runId": "XxHkfeu2pXNGMpWv9",
+        "datasetId": "2fB1E42hTWd0oNmep"
+      },
+      "rows": 150,
+      "consumed": 0.0506,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 21.386,
+        "budgetUsd": 34
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "node developer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8170",
+        "runId": "r1xEHFJRixbPCJmcP",
+        "datasetId": "BbBwrxZcP4eLWy4ov"
+      },
+      "rows": 150,
+      "consumed": 0.0491,
+      "quota": {
+        "usageTotalUsd": 0.04914,
+        "spentUsd": 21.435,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "python developer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8170",
+        "runId": "C8OD3z9KW0SdqMjwX",
+        "datasetId": "4La6hFYyY9FjhIAXm"
+      },
+      "rows": 150,
+      "consumed": 0.0513,
+      "quota": {
+        "usageTotalUsd": 0.0513,
+        "spentUsd": 21.486,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "java developer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8170",
+        "runId": "5b5nX4STqHmhqbqq5",
+        "datasetId": "cj9pLk6hdJJ92kL45"
+      },
+      "rows": 150,
+      "consumed": 0.0527,
+      "quota": {
+        "usageTotalUsd": 0.05274,
+        "spentUsd": 21.539,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "devops engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8170",
+        "runId": "680j1YQczMKO6n1wR",
+        "datasetId": "RYrEoQyUkwTr9pYPM"
+      },
+      "rows": 150,
+      "consumed": 0.0488,
+      "quota": {
+        "usageTotalUsd": 0.048780000000000004,
+        "spentUsd": 21.588,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8918",
+        "runId": "FgBcRx4xjgGZs46F7",
+        "datasetId": "eRRdaMbpQiJ7Rpklc"
+      },
+      "rows": 150,
+      "consumed": 0.0502,
+      "quota": {
+        "usageTotalUsd": 0.05022,
+        "spentUsd": 21.638,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data analyst",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8918",
+        "runId": "44qFFw7S7GUzeSY4q",
+        "datasetId": "aH4G3Ea9Vq9yptlG8"
+      },
+      "rows": 150,
+      "consumed": 0.0488,
+      "quota": {
+        "usageTotalUsd": 0.048780000000000004,
+        "spentUsd": 21.687,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data scientist",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8918",
+        "runId": "i6HhzJRJVI0tcLSno",
+        "datasetId": "QLoQDZzc2zAhHxYWR"
+      },
+      "rows": 150,
+      "consumed": 0.0527,
+      "quota": {
+        "usageTotalUsd": 0.05274,
+        "spentUsd": 21.739,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "machine learning engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8918",
+        "runId": "BW7suS66h10Xgj7xG",
+        "datasetId": "5QwtU8REHVicL5CB2"
+      },
+      "rows": 150,
+      "consumed": 0.0502,
+      "quota": {
+        "usageTotalUsd": 0.05022,
+        "spentUsd": 21.789,
+        "budgetUsd": 34
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "qa engineer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "8918",
+        "runId": "Hwgny5eWaWB3diWB3",
+        "datasetId": "kNLGf3jSdIdz5uchV"
+      },
+      "rows": 150,
+      "consumed": 0.0506,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 21.84,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product manager",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "9668",
+        "runId": "tXMzuwPdklmppmnKn",
+        "datasetId": "JQpgMWP5IUbdhLj1x"
+      },
+      "rows": 150,
+      "consumed": 0.0506,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 21.891,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product designer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "9668",
+        "runId": "ewXwcq7vEBbkIIMZw",
+        "datasetId": "o9Vvdiq4AZzYgabZa"
+      },
+      "rows": 150,
+      "consumed": 0.0499,
+      "quota": {
+        "usageTotalUsd": 0.04986,
+        "spentUsd": 21.941,
+        "budgetUsd": 34
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ux designer",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "9668",
+        "runId": "NTBxAmwCfmjrqu1Hm",
+        "datasetId": "Ze8gPHzqDVlqY8B4G"
+      },
+      "rows": 150,
+      "consumed": 0.0542,
+      "quota": {
+        "usageTotalUsd": 0.05418,
+        "spentUsd": 21.995,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing manager",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "9668",
+        "runId": "IaWnYdWmOd1cCAcay",
+        "datasetId": "vFcHdncTWziTtVTzO"
+      },
+      "rows": 150,
+      "consumed": 0.0513,
+      "quota": {
+        "usageTotalUsd": 0.0513,
+        "spentUsd": 22.046,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "performance marketing",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "9668",
+        "runId": "9dgMmlaoyH8JoYRia",
+        "datasetId": "EfIvn1LhYK8jAnt8G"
+      },
+      "rows": 150,
+      "consumed": 0.0495,
+      "quota": {
+        "usageTotalUsd": 0.0495,
+        "spentUsd": 22.096,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "growth marketing",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "10315",
+        "runId": "e6bFr7l3XGlh3eY5a",
+        "datasetId": "3FfttcDuMhdWwbg5Q"
+      },
+      "rows": 150,
+      "consumed": 0.0524,
+      "quota": {
+        "usageTotalUsd": 0.05238,
+        "spentUsd": 22.148,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "content marketing",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "10315",
+        "runId": "NbGGzkOah6Vlb4GR2",
+        "datasetId": "0NE9NFXoViIEA3vLy"
+      },
+      "rows": 150,
+      "consumed": 0.0488,
+      "quota": {
+        "usageTotalUsd": 0.048780000000000004,
+        "spentUsd": 22.197,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "seo specialist",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "10315",
+        "runId": "2ERDhegJMc1d4xtvu",
+        "datasetId": "d0qZqwDxD5lOYyXSO"
+      },
+      "rows": 150,
+      "consumed": 0.0499,
+      "quota": {
+        "usageTotalUsd": 0.04986,
+        "spentUsd": 22.247,
+        "budgetUsd": 34
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "social media manager",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "10315",
+        "runId": "3WsNcIEEZw7uPgldA",
+        "datasetId": "mc6RiOSbCoEbuOIWa"
+      },
+      "rows": 150,
+      "consumed": 0.0499,
+      "quota": {
+        "usageTotalUsd": 0.04986,
+        "spentUsd": 22.297,
+        "budgetUsd": 34
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "account executive",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "10315",
+        "runId": "zF7fJdgnNgbhDNZsJ",
+        "datasetId": "GvHa4HK6MyuoOwVLE"
+      },
+      "rows": 150,
+      "consumed": 0.0502,
+      "quota": {
+        "usageTotalUsd": 0.05022,
+        "spentUsd": 22.347,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "sales development representative",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "11004",
+        "runId": "RbGcK1OA46MxjXpbK",
+        "datasetId": "8y4e9paaDnMV5xUPh"
+      },
+      "rows": 150,
+      "consumed": 0.0499,
+      "quota": {
+        "usageTotalUsd": 0.04986,
+        "spentUsd": 22.397,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "customer success manager",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "11004",
+        "runId": "2AdjdvwF2M1BqD8Dl",
+        "datasetId": "8cLyqLWZXbIj1qZL4"
+      },
+      "rows": 150,
+      "consumed": 0.0488,
+      "quota": {
+        "usageTotalUsd": 0.048780000000000004,
+        "spentUsd": 22.445,
+        "budgetUsd": 34
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "recruiter",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "11004",
+        "runId": "HkfhWVdxUc9Uy0qQZ",
+        "datasetId": "klckdRpPQNQKql7lf"
+      },
+      "rows": 150,
+      "consumed": 0.0477,
+      "quota": {
+        "usageTotalUsd": 0.0477,
+        "spentUsd": 22.493,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "financial analyst",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "11004",
+        "runId": "78i2c9gHI4AECqOwF",
+        "datasetId": "C1IlUptKNDdqHkwvN"
+      },
+      "rows": 150,
+      "consumed": 0.0506,
+      "quota": {
+        "usageTotalUsd": 0.05058,
+        "spentUsd": 22.544,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:23:07.674Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "project manager",
+        "rows": "150",
+        "maxTotalChargeUsd": "0.08",
+        "location": "Latin America",
+        "skipJobIds": "11004",
+        "runId": "BeLQzEWTEP2fpp2g9",
+        "datasetId": "jE89ifQdncPIIna0g"
+      },
+      "rows": 150,
+      "consumed": 0.0542,
+      "quota": {
+        "usageTotalUsd": 0.05418,
+        "spentUsd": 22.598,
+        "budgetUsd": 34
+      },
+      "created": 1
     }
   ]
 }
