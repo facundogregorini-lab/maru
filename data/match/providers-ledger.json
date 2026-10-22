@@ -7559,6 +7559,230 @@
       "consumed": 0.14,
       "quota": {},
       "error": "The operation was aborted due to timeout"
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote software engineer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6390",
+        "runId": "IfhF6ommhEFl51UEq",
+        "datasetId": "dN2AoTsetH8gbl4fx"
+      },
+      "rows": 6,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 10.639,
+        "budgetUsd": 18
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote frontend developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6390",
+        "runId": "AR5ZrE2XfeuqMdiqv",
+        "datasetId": "DKDEbKkuh5mrS1fUv"
+      },
+      "rows": 44,
+      "consumed": 0.0164,
+      "quota": {
+        "usageTotalUsd": 0.016380000000000002,
+        "spentUsd": 10.655,
+        "budgetUsd": 18
+      },
+      "created": 29
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote backend developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6390",
+        "runId": "yFaxLHYsdGpIqiWAm",
+        "datasetId": "YKTaWvA3vQdWlBtpa"
+      },
+      "rows": 130,
+      "consumed": 0.0455,
+      "quota": {
+        "usageTotalUsd": 0.045540000000000004,
+        "spentUsd": 10.701,
+        "budgetUsd": 18
+      },
+      "created": 56
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote full stack developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6390",
+        "runId": "UkVBE8Fh8eTjaXezz",
+        "datasetId": "pgcntOt9qpleYDFRk"
+      },
+      "rows": 116,
+      "consumed": 0.0416,
+      "quota": {
+        "usageTotalUsd": 0.04158,
+        "spentUsd": 10.743,
+        "budgetUsd": 18
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote react developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6390",
+        "runId": "UofVCq115xJzsnyqh",
+        "datasetId": "ImEQSLWzS58Rjb9wO"
+      },
+      "rows": 19,
+      "consumed": 0.0077,
+      "quota": {
+        "usageTotalUsd": 0.00774,
+        "spentUsd": 10.75,
+        "budgetUsd": 18
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote python developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6544",
+        "runId": "OdR1ke7p8EwvUHmyx",
+        "datasetId": "TpHT0L0rQtz9WBRFD"
+      },
+      "rows": 50,
+      "consumed": 0.0189,
+      "quota": {
+        "usageTotalUsd": 0.018900000000000004,
+        "spentUsd": 10.769,
+        "budgetUsd": 18
+      },
+      "created": 29
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote node developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6544",
+        "runId": "Q7tXYHFWofnnOz0zU",
+        "datasetId": "c1umhusbvARTfzhFW"
+      },
+      "rows": 7,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 10.772,
+        "budgetUsd": 18
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote java developer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6544",
+        "runId": "hAgQ2pAifFTF5BjP5",
+        "datasetId": "4J4GDH6GVHbbgQ8Vq"
+      },
+      "rows": 7,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 10.776,
+        "budgetUsd": 18
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote devops engineer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6544",
+        "runId": "Gg2ZcAtUm0o0vlVcx",
+        "datasetId": "ZK56Bkdlr57XSnd27"
+      },
+      "rows": 48,
+      "consumed": 0.0182,
+      "quota": {
+        "usageTotalUsd": 0.01818,
+        "spentUsd": 10.794,
+        "budgetUsd": 18
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-22T14:17:08.395Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote qa engineer",
+        "rows": "200",
+        "maxTotalChargeUsd": "0.1",
+        "location": "Argentina",
+        "skipJobIds": "6544"
+      },
+      "rows": 0,
+      "consumed": 0.1,
+      "quota": {},
+      "error": "Apify respondió HTTP 502."
     }
   ]
 }
