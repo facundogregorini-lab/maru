@@ -61,6 +61,24 @@ Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la líne
    - Se frenó por un corte de red en «marketing remoto», sin llegar a las 20 de tecnología. Ahora un error suelto no frena la tanda: se registra y sigue.
 4. **Pedido del dueño (22/10):** gastar US$10 más con pago por uso, con más peso en marketing, tecnología, remotos y USD. La cuenta tiene un tope mensual de US$19. Para pasarlo, el dueño tiene que subir el límite de uso en Apify (Settings → Usage & billing) a unos US$29: el Starter más US$10. Hecho en código: búsquedas en paralelo (`--parallel`), costo real por búsqueda y tiempo máximo según las filas. Remoto: palabras con «remote» o «remoto», porque el filtro no anda.
 - **Fuentes gratis a la par (pedido del dueño 22/10, «de calidad, no llenar por llenar»):** `match-discover` busca la bolsa pública (Greenhouse, Lever, Ashby) de las empresas de los avisos comprados. Suma las que tienen al menos 3 avisos que se pueden pedir desde la Argentina y son de las áreas que importamos, sin consultoras ni portales. Se descartaron por ahora RemoteOK, We Work Remotely y Working Nomads: casi todo es de EE. UU. y sumaría peso sin avisos que se puedan pedir desde la Argentina. Himalayas sigue bloqueado por sus términos.
+- **Tanda 3 de tecnología, marketing y remoto (22/10, 14:17–15:40 UTC):** 38 búsquedas y +548 avisos nuevos (144 + 404).
+  - Rindieron «analista qa», «administrador de sistemas», «ejecutivo de cuentas», «remote backend/full stack developer» y «remote devops».
+  - Las de «remote …» de marketing y las de nicho («analista programador», «media planner») traen menos de 20 filas.
+  - La relectura gratis de las corridas del día con el filtro nuevo sumó +178.
+- **Resultado del 22/10:**
+
+  | | Antes (21/10) | Después |
+  | --- | ---: | ---: |
+  | Elegibles desde Argentina | 9.010 | 10.807 |
+  | Remotos elegibles | 2.014 | 2.242 |
+  | Abiertos | 19.128 | 21.194 |
+
+  - Por área: tecnología +371, ventas +332, operaciones +163, logística profesional +129, finanzas +113, marketing +112, administración +73.
+  - Apify gastó en el mes US$11,3 reales de un tope de US$35. Lo de hoy costó unos US$1,8.
+  - El inventario pesa ~90 MB (+7 MB). A eso se suman los empleadores nuevos del directorio cuando corra la sync:
+    - 27 por `match-discover`;
+    - YPF, Swiss Medical, Sancor y Mirgor (SuccessFactors en mosaico, #147).
+  - Conclusión: la oferta de LinkedIn Argentina se agota rápido. Con la plata no alcanza: rinden más las palabras nuevas, la relectura y el directorio gratis.
 5. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
 
 ## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
