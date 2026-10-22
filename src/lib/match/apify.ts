@@ -21,6 +21,12 @@ export const LINKEDIN_ACTORS = {
 } as const;
 export type LinkedinActor = keyof typeof LINKEDIN_ACTORS;
 /** Campos posibles de los Actors alternativos: sólo datos del aviso, nunca de quien lo publicó. */
+/** Fuente de un Actor conocido (`alt`: LinkedIn por un Actor que no es curious_coder), o null si no es nuestro. */
+export function apifySourceOfActor(actor: string): { source: ApifyJobSource; alt: boolean } | null {
+  if (Object.values(LINKEDIN_ACTORS).some((a) => a.actor === actor)) return { source: "linkedin", alt: actor !== LINKEDIN_ACTORS.curious.actor };
+  const source = (Object.keys(APIFY_JOBS) as ApifyJobSource[]).find((s) => APIFY_JOBS[s].actor === actor);
+  return source ? { source, alt: false } : null;
+}
 export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionHtml", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
 /** Títulos que los Actors pueden descartar antes de cobrar la fila (el filtro fino es import-filter.ts). */
 export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cadete", "cajero", "repositor", "mozo", "vigilador", "mostrador", "promotor", "telemarketer", "call center"];

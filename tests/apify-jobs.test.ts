@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apifyJobInput, apifyNextCap, apifyRepeatReason, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
+import { apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
 import { analyzeStandalone } from "@/lib/match/inventory";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
@@ -104,5 +104,15 @@ describe("piloto de avisos Apify", () => {
     expect(apifyJobInput("computrabajo", "analista", 50)).toMatchObject({ maxJobs: 50, countryCode: "ar" });
     expect(() => apifyJobInput("linkedin", "", 0)).toThrow();
     expect(() => apifyJobInput("linkedin", "", 100)).toThrow();
+  });
+});
+
+describe("apifySourceOfActor", () => {
+  it("reconoce los Actors que usamos y su fuente", () => {
+    expect(apifySourceOfActor("valig/linkedin-jobs-scraper")).toEqual({ source: "linkedin", alt: true });
+    expect(apifySourceOfActor("curious_coder/linkedin-jobs-scraper")).toEqual({ source: "linkedin", alt: false });
+    expect(apifySourceOfActor("blackfalcondata/bumeran-scraper")).toEqual({ source: "bumeran", alt: false });
+    expect(apifySourceOfActor("shahidirfan/Computrabajo-Jobs-Scraper")).toEqual({ source: "computrabajo", alt: false });
+    expect(apifySourceOfActor("otro/actor")).toBeNull();
   });
 });
