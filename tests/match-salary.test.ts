@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { salaryFromText } from "@/lib/match/salary";
+import { cleanSalary, salaryFromText } from "@/lib/match/salary";
 
 const v = (t: string) => salaryFromText(t)?.value ?? null;
 
@@ -32,5 +32,23 @@ describe("salario publicado en el texto del aviso", () => {
     const s = salaryFromText("Beneficios varios.\nSueldo: A partir de $900.000,00 al mes")!;
     expect(s.from).toBe("descripcion");
     expect(s.evidence).toMatch(/900\.000/);
+  });
+});
+
+describe("cleanSalary: salario que la fuente trae sólo como texto", () => {
+  const f = (text: string, currency = "") => cleanSalary({ value: { min: null, max: null, currency, period: "desconocido", text }, from: "fuente" })?.value ?? null;
+  it("deduce moneda, período y montos por el formato", () => {
+    expect(f("$18,000.00/yr - $24,000.00/yr")).toMatchObject({ currency: "USD", period: "anio", min: 18000, max: 24000 });
+    expect(f("$90.00/hr - $170.00/hr")).toMatchObject({ currency: "USD", period: "hora", min: 90, max: 170 });
+    expect(f("OTE $25k - $35k")).toMatchObject({ currency: "USD", period: "anio", min: 25000, max: 35000 });
+    expect(f("$ 1.200.000,00 (Mensual)")).toMatchObject({ currency: "ARS", period: "mes", min: 1200000 });
+    expect(f("Rango publicado en Get on Board: 2500 – 3750")).toMatchObject({ currency: "USD", period: "mes", min: 2500, max: 3750 });
+  });
+  it("descarta números de relleno y sueldos imposibles", () => {
+    for (const t of ["$ 11.111,00 (Mensual)", "$ 1.111.111,00 (Mensual) + Comisiones", "$ 9.999,00 (Mensual)", "$ 10.000,00 (Mensual)"]) expect(f(t)).toBeNull();
+  });
+  it("si no lo entiende, lo deja como vino", () => {
+    expect(f("A convenir")).toMatchObject({ currency: "", text: "A convenir" });
+    expect(f("$1000 per task")).toMatchObject({ currency: "", text: "$1000 per task" });
   });
 });
