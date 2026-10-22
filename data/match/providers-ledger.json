@@ -6778,6 +6778,126 @@
         "spentUsd": 12.438,
         "budgetUsd": 16
       }
+    },
+    {
+      "at": "2026-10-22T11:35:13.301Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "software engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "remote": "1",
+        "skipJobIds": "5322",
+        "runId": "fMI3NMBEtbYrh4pd2",
+        "datasetId": "1JJh5LArEVJgQByhh"
+      },
+      "rows": 100,
+      "consumed": 0.0965,
+      "quota": {
+        "usageTotalUsd": 0.03654,
+        "spentUsd": 9.859,
+        "budgetUsd": 10.25
+      },
+      "created": 86
+    },
+    {
+      "at": "2026-10-22T11:35:13.301Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "remote": "1",
+        "skipJobIds": "5422",
+        "runId": "D0LWptXtedXxiPVpS",
+        "datasetId": "UFZB6XJ16f0WHzEbE"
+      },
+      "rows": 100,
+      "consumed": 0.0965,
+      "quota": {
+        "usageTotalUsd": 0.03654,
+        "spentUsd": 9.955,
+        "budgetUsd": 10.25
+      },
+      "created": 67
+    },
+    {
+      "at": "2026-10-22T11:35:13.301Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "remote": "1",
+        "skipJobIds": "5522",
+        "runId": "wngiLTvYSvtMGpBkp",
+        "datasetId": "4Ao7MiekkctJmah2A"
+      },
+      "rows": 100,
+      "consumed": 0.094,
+      "quota": {
+        "usageTotalUsd": 0.03402,
+        "spentUsd": 10.049,
+        "budgetUsd": 10.25
+      },
+      "created": 58
+    },
+    {
+      "at": "2026-10-22T11:35:13.301Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "sales development representative",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "remote": "1",
+        "skipJobIds": "5622",
+        "runId": "YUKUsTRBBUUTBGXIV",
+        "datasetId": "xsPaWaB6bHYDzrP2n"
+      },
+      "rows": 100,
+      "consumed": 0.0951,
+      "quota": {
+        "usageTotalUsd": 0.0351,
+        "spentUsd": 10.145,
+        "budgetUsd": 10.25
+      },
+      "created": 83
+    },
+    {
+      "at": "2026-10-22T11:35:13.301Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "account executive",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "remote": "1",
+        "skipJobIds": "5722",
+        "runId": "bwy7HlyPE2P7oJHuO",
+        "datasetId": "0RsIdseDg52ifNQkR"
+      },
+      "rows": 100,
+      "consumed": 0.0947,
+      "quota": {
+        "usageTotalUsd": 0.03474,
+        "spentUsd": 10.239,
+        "budgetUsd": 10.25
+      },
+      "created": 79
     }
   ]
 }
