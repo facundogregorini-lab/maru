@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import BillingPanel from "@/components/billing/BillingPanel";
 import { landingData } from "@/lib/landing";
-import { FREE_LIMITS, PLANS } from "@/lib/plans";
+import { FREE_LIMITS, GUARANTEE_DAYS, GUARANTEE_TEXT, PLANS, WITHDRAWAL_DAYS } from "@/lib/plans";
 
 export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Elegí tu plan de Maru: semanal, mensual o trimestral. CV a medida, cartas, entrevistas y videos sin esperar al día siguiente." };
 // Los números del inventario se regeneran cada hora, como en la home.
@@ -85,11 +85,31 @@ export default async function PreciosPage() {
         </ul>
       </div>
 
+      <section id="como-cancelar" aria-labelledby="cancelar-t" className="mx-auto mt-12 max-w-3xl scroll-mt-24">
+        <h2 id="cancelar-t" className="text-center text-2xl font-bold">Cómo cancelar</h2>
+        <p className="mt-2 text-center text-ink/70">Sin permanencia ni cargos por baja. Así es el recorrido, de punta a punta.</p>
+        <ol className="mt-6 space-y-3">
+          {[
+            ["Antes de pagar", "Ves cuánto se cobra hoy, cuánto se renueva y cada cuánto."],
+            ["Mi suscripción", "En esta página, con tu cuenta, está el botón Cancelar suscripción. También lo encontrás en el Botón de baja, al pie de cada página."],
+            ["Confirmación", "Una sola confirmación. El motivo es opcional. Sin llamadas ni WhatsApp."],
+            ["Después", "La renovación queda desactivada y ves en pantalla el número de solicitud y la fecha hasta la que conservás el acceso."],
+          ].map(([title, body], i) => <li key={title} className="flex gap-4 rounded-2xl bg-[#f2f4f5] px-5 py-4">
+            <span aria-hidden className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-neon font-bold">{i + 1}</span>
+            <span><strong>{title}.</strong> <span className="text-ink/75">{body}</span></span>
+          </li>)}
+        </ol>
+        <p className="mt-3 text-center text-xs text-ink/60">La baja corta los próximos cobros y no devuelve el período en curso. Para la devolución, mirá la garantía de {GUARANTEE_DAYS} días. <Link href="/baja" className="underline">Botón de baja</Link> · <Link href="/arrepentimiento" className="underline">Botón de arrepentimiento</Link></p>
+      </section>
+
       <div className="mx-auto mt-12 max-w-3xl space-y-3">
         {[
-          ["¿Qué plan me conviene?", `Mientras dure la promo de lanzamiento, el mensual: sale ${PLANS.mensual.priceText} por mes en lugar de ${PLANS.mensual.listPriceText}. El semanal sirve para un empujón puntual, como preparar varias postulaciones o una entrevista esta semana.`],
+          ["¿Qué plan me conviene?", `Mientras dure la promo de lanzamiento, el mensual: el primer mes sale ${PLANS.mensual.intro?.priceText} y después ${PLANS.mensual.priceText} por mes. Si tu búsqueda va a llevar más tiempo, el trimestral sale $7.500 por mes. El semanal sirve para un empujón puntual.`],
+          ["¿Los $990 son sólo el primer mes?", `Sí. El primer mes del plan mensual sale ${PLANS.mensual.intro?.priceText}; desde el segundo mes se renueva a ${PLANS.mensual.priceText} por mes. Antes de pagar ves cuánto se cobra hoy y cuánto en cada renovación. Podés cancelar antes de que se renueve.`],
           ["¿Cómo se confirma el pago?", "Mercado Pago procesa la suscripción y nos confirma la acreditación. Volver a Maru desde el pago no activa por sí solo el plan. Si la confirmación tarda, usá Actualizar estado de mi pago."],
-          ["¿Puedo cancelar o cambiar de plan?", "Sí. Cancelás la renovación desde esta página o desde tus suscripciones en Mercado Pago, y conservás el acceso hasta que termine el período pagado. Para cambiar de plan, cancelá la renovación y elegí el nuevo cuando termine."],
+          ["¿Puedo cancelar o cambiar de plan?", "Sí, sin permanencia ni cargos por baja. Cancelás desde Mi suscripción, en esta página, con una sola confirmación. No se te cobra más y conservás el acceso hasta que termine el período pagado. Para cambiar de plan, cancelá la renovación y elegí el nuevo cuando termine."],
+          [`¿Cómo funciona la garantía de ${GUARANTEE_DAYS} días?`, `${GUARANTEE_TEXT} Vale aunque hayas armado y descargado CVs, en tu primera contratación. No tenés que explicar por qué. La pedís desde Mi suscripción: la procesamos en el momento y cancelamos las renovaciones. La acreditación depende de tu medio de pago y de tu banco. No es una prueba gratis: hay un cobro inicial.`],
+          ["¿Y el derecho de arrepentimiento?", `Es tu derecho legal, aparte de la garantía: podés arrepentirte dentro de los ${WITHDRAWAL_DAYS} días corridos de contratar desde el Botón de arrepentimiento, al pie de cada página.`],
           ["¿Qué significa ilimitado?", "Que no contás pedidos: armás un CV, una carta o una práctica para cada búsqueda que te interese. Para cuidar el servicio hay un tope de uso razonable por día que una búsqueda normal no alcanza."],
           ["¿Qué pasa con mis datos?", "Sin cuenta, quedan en tu navegador. Al ingresar, perfil, preferencias y seguimiento se guardan también en tu cuenta. Los documentos que generás siguen en el navegador."],
           ["¿Maru me garantiza un trabajo?", "No. Maru te ayuda a preparar mejor cada postulación y cada entrevista; las decisiones son de cada empresa."],

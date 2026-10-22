@@ -67,6 +67,8 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
                 { href: "/precios", label: "Planes y precios" },
                 { href: "/terminos", label: "Términos y condiciones" },
                 { href: "/privacidad", label: "Privacidad" },
+                { href: "/baja", label: "Botón de baja" },
+                { href: "/arrepentimiento", label: "Botón de arrepentimiento" },
               ]}
             />
             <div>

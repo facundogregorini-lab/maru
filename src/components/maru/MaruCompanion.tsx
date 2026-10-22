@@ -9,7 +9,7 @@ import {
   GUIDE_KEY,
   GUIDE_STEPS,
   NEW_GUIDE,
-  PLAN_LIST_PRICE_TEXT,
+  PLAN_REGULAR_PRICE_TEXT,
   PLAN_PRICE_TEXT,
   type GuideState,
 } from "./guide";
@@ -474,9 +474,9 @@ function Offer({ client, sawAll, onFinish }: { client: boolean; sawAll: boolean;
       <div className="mt-3 rounded-2xl bg-ink px-4 py-4 text-center text-white">
         <p className="font-display text-[40px] font-extrabold leading-none tracking-tight">
           {PLAN_PRICE_TEXT}
-          <span className="ml-1 text-base font-semibold text-white/70">/mes</span>
+          <span className="ml-1 text-base font-semibold text-white/70">el primer mes</span>
         </p>
-        <p className="mt-1.5 text-xs text-neon">Promo de lanzamiento: antes <s>{PLAN_LIST_PRICE_TEXT}</s>, en pesos.</p>
+        <p className="mt-1.5 text-xs text-neon">Promo de lanzamiento. Después, {PLAN_REGULAR_PRICE_TEXT} por mes. Sin permanencia.</p>
       </div>
       <ul className="mt-3 space-y-1.5">
         {perks.map((p, i) => (

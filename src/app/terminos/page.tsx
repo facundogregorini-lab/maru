@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TerminosPage() {
   return (
-    <LegalPage title="Términos y condiciones" updated="16 de octubre de 2026">
+    <LegalPage title="Términos y condiciones" updated="22 de octubre de 2026">
       <p>Al usar Maru Coach aceptás estos términos. Los escribimos en simple para que se entiendan.</p>
 
       <h2>Qué es Maru</h2>
@@ -37,9 +37,26 @@ export default function TerminosPage() {
 
       <h2>Plan pago</h2>
       <p>
-        Maru puede ofrecer un plan pago con suscripción mensual. El precio, lo que incluye, la renovación y cómo darlo de baja se informan antes de pagar. Podés arrepentirte de la compra dentro de los 10 días
-        corridos, como establece la Ley 24.240 de Defensa del Consumidor.
+        Maru ofrece planes pagos con renovación automática por Mercado Pago. Antes de pagar se informa cuánto se cobra hoy, cuánto en cada renovación y con qué frecuencia. Con la promo de lanzamiento, el
+        primer mes del plan mensual sale $990 y desde el segundo mes se renueva a $10.000 por mes.
       </p>
+      <ul>
+        <li>
+          <strong>Baja sin permanencia.</strong> Cancelás online cuando quieras, sin cargos por baja, desde Mi suscripción en{" "}
+          <Link href="/precios#mi-plan" className="underline underline-offset-4">Planes</Link> o desde el{" "}
+          <Link href="/baja" className="underline underline-offset-4">Botón de baja</Link>. La baja detiene los próximos cobros y conservás el acceso hasta que termine el período pagado; no devuelve ese período.
+        </li>
+        <li>
+          <strong>Garantía de 14 días.</strong> En tu primera contratación, podés pedir la devolución del 100% de tu primer pago dentro de los 14 días corridos desde ese pago, aunque hayas usado Maru y sin
+          explicar el motivo. La devolución cancela las renovaciones y termina el acceso del período devuelto. La procesamos en el momento; la acreditación depende de tu medio de pago y de tu banco. Esta garantía
+          es voluntaria y no limita tus derechos legales.
+        </li>
+        <li>
+          <strong>Derecho de arrepentimiento.</strong> Podés arrepentirte dentro de los 10 días corridos desde la contratación, como establece la Ley 24.240 de Defensa del Consumidor, desde el{" "}
+          <Link href="/arrepentimiento" className="underline underline-offset-4">Botón de arrepentimiento</Link>.
+        </li>
+        <li>Cada baja, devolución o arrepentimiento recibe un número de solicitud, que se muestra en pantalla en el momento. Te pedimos ingresar con la cuenta que pagó para confirmar que sos vos.</li>
+      </ul>
 
       <h2>Cambios y disponibilidad</h2>
       <p>Podemos mejorar, cambiar o discontinuar funciones. Si cambian estos términos de forma importante, lo avisamos en el sitio.</p>
