@@ -7335,6 +7335,230 @@
         "budgetUsd": 12
       },
       "created": 10
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote marketing manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "b4qvda7hksESzGBrf",
+        "datasetId": "GLGUWzqec4c8i6XnV"
+      },
+      "rows": 45,
+      "consumed": 0.016,
+      "quota": {
+        "usageTotalUsd": 0.016020000000000003,
+        "spentUsd": 10.499,
+        "budgetUsd": 16
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote growth marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "09v9Kbm2oVZ13303C",
+        "datasetId": "qjL4T8fF81acZ6nCD"
+      },
+      "rows": 74,
+      "consumed": 0.0265,
+      "quota": {
+        "usageTotalUsd": 0.026460000000000004,
+        "spentUsd": 10.525,
+        "budgetUsd": 16
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote performance marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "3cJvcTcl8gbvv8hG6",
+        "datasetId": "mbseH8qBqJXbmLfzZ"
+      },
+      "rows": 69,
+      "consumed": 0.025,
+      "quota": {
+        "usageTotalUsd": 0.025020000000000004,
+        "spentUsd": 10.55,
+        "budgetUsd": 16
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote content marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "lCdHPVKwwmFmssx7R",
+        "datasetId": "Hv1i5cSwhnvLunJ9E"
+      },
+      "rows": 66,
+      "consumed": 0.0203,
+      "quota": {
+        "usageTotalUsd": 0.020340000000000004,
+        "spentUsd": 10.571,
+        "budgetUsd": 16
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote seo specialist",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "G78lsABHnaIPOSLqq",
+        "datasetId": "AcUU4DuEaxqFCMYXb"
+      },
+      "rows": 30,
+      "consumed": 0.0085,
+      "quota": {
+        "usageTotalUsd": 0.00846,
+        "spentUsd": 10.579,
+        "budgetUsd": 16
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote social media manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "EmIHEnQISqkcqeLrj",
+        "datasetId": "8jeDGsp9xdRPQJKHB"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 10.58,
+        "budgetUsd": 16
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote paid media",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "L7Cyt9UpWgaaV9YHZ",
+        "datasetId": "mk3tDa54e1pBFq0hi"
+      },
+      "rows": 8,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 10.583,
+        "budgetUsd": 16
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote email marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "gEIpSKlXc6yRrIgdT",
+        "datasetId": "d9Lbz6469rPhubGoz"
+      },
+      "rows": 17,
+      "consumed": 0.0063,
+      "quota": {
+        "usageTotalUsd": 0.0063,
+        "spentUsd": 10.59,
+        "budgetUsd": 16
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote product marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "UbNg6jSLHZMTYPtjX",
+        "datasetId": "zBLPGjFGu7BJ51e6w"
+      },
+      "rows": 28,
+      "consumed": 0.0092,
+      "quota": {
+        "usageTotalUsd": 0.00918,
+        "spentUsd": 10.599,
+        "budgetUsd": 16
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing remoto",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {},
+      "error": "The operation was aborted due to timeout"
     }
   ]
 }
