@@ -66,6 +66,18 @@ async function apifyFetch(url: string, token: string, init?: RequestInit) {
   return (await res.json()) as { data?: Record<string, unknown> } & unknown[];
 }
 
+/** Últimas líneas del log de una corrida (para entender por qué falló), sin claves ni datos de contacto. */
+async function apifyLogTail(runId: string, token: string, chars = 1200): Promise<string> {
+  try {
+    const res = await fetch(`https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}/log`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(30_000) });
+    if (!res.ok) return `(sin log: HTTP ${res.status})`;
+    const text = (await res.text()).slice(-chars);
+    return redact(text).replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, "[email]").replace(/\+?\d[\d\s-]{7,}\d/g, "[número]");
+  } catch {
+    return "(sin log)";
+  }
+}
+
 /** Gasto real del mes según Apify (incluye todo lo que corrió la cuenta este mes). */
 async function apifyMonthlyUsage(token: string): Promise<number> {
   const d = ((await apifyFetch("https://api.apify.com/v2/users/me/limits", token)).data ?? {}) as Record<string, Record<string, unknown>>;
@@ -156,6 +168,7 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
           spent += Math.max(usage, cap);
           out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id ?? "") }, rows: 0, consumed: Math.max(usage, cap), quota: { status: String(run.status ?? "desconocido") }, error: "Ejecución incompleta: no se importa." });
           log(`✗ ${source} "${keyword}": ${run.status}.`);
+          if (run.id) log(`  log de Apify: ${(await apifyLogTail(String(run.id), token)).replace(/\s*\n\s*/g, " | ")}`);
           continue;
         }
         try {
