@@ -1004,22 +1004,56 @@ export function successFactorsSite(slug: string | undefined): { host: string; pr
 
 const sfText = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 
-/** Filas de la página de búsqueda (marcado estándar de los sitios de SuccessFactors: tr.data-row, a.jobTitle-link, span.jobLocation). */
-export function parseSuccessFactorsSearch(html: string): { rows: { title: string; path: string; location: string }[]; total: number | null } {
-  const rows: { title: string; path: string; location: string }[] = [];
-  for (const tr of html.match(/<tr[^>]*class="[^"]*data-row[^"]*"[\s\S]*?<\/tr>/gi) ?? []) {
-    const a = tr.match(/<a[^>]*href="([^"]+)"[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*>([\s\S]*?)<\/a>|<a[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
-    if (!a) continue;
-    const path = decodeEntities(a[1] ?? a[3]);
-    const title = sfText(a[2] ?? a[4]);
-    const loc = tr.match(/<span[^>]*class="[^"]*jobLocation[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
-    if (title && path.startsWith("/")) rows.push({ title, path, location: loc ? sfText(loc[1]) : "" });
-  }
-  const total = html.match(/paginationLabel[\s\S]*?<b>[^<]*<\/b>[\s\S]*?<b>\s*([\d.,]+)\s*<\/b>/i);
-  return { rows: [...new Map(rows.map((r) => [r.path, r])).values()], total: total ? Number(total[1].replace(/[.,]/g, "")) : null };
+type SfRow = { title: string; path: string; location: string };
+
+/** Primer enlace al aviso de un bloque (a.jobTitle-link, con el href antes o después de la clase). */
+function sfLink(block: string): { title: string; path: string } | null {
+  const a = block.match(/<a[^>]*href="([^"]+)"[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*>([\s\S]*?)<\/a>|<a[^>]*class="[^"]*jobTitle-link[^"]*"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+  return a ? { path: decodeEntities(a[1] ?? a[3]), title: sfText(a[2] ?? a[4]) } : null;
 }
 
-export function normalizeSuccessFactors(row: { title: string; path: string; location: string }, detailHtml: string | null, board: Board): NormalizedPosting {
+// Etiquetas con que las empresas nombran el campo de ubicación en el mosaico (YPF lo publica como "customfield3").
+const SF_LOCATION_LABEL = /^(ubicaci[oó]n|localizaci[oó]n|localidad|location)\b/i;
+
+/**
+ * Filas de la página de búsqueda. Hay dos plantillas:
+ * - la tabla clásica (tr.data-row, a.jobTitle-link, span.jobLocation y el total en .paginationLabel);
+ * - el mosaico del "career site builder" (li.job-tile, con el aviso repetido para escritorio, tablet y celular,
+ *   campos que cada empresa elige mostrar y el total en #tile-search-results-label). Algunos sitios paginan de a 5.
+ */
+export function parseSuccessFactorsSearch(html: string): { rows: SfRow[]; total: number | null; perPage: number | null } {
+  const rows: SfRow[] = [];
+  for (const tr of html.match(/<tr[^>]*class="[^"]*data-row[^"]*"[\s\S]*?<\/tr>/gi) ?? []) {
+    const a = sfLink(tr);
+    if (!a) continue;
+    const loc = tr.match(/<span[^>]*class="[^"]*jobLocation[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+    if (a.title && a.path.startsWith("/")) rows.push({ ...a, location: loc ? sfText(loc[1]) : "" });
+  }
+  // Sin tabla: probamos con el mosaico. Cada trozo va desde un li.job-tile hasta el siguiente.
+  if (!rows.length) {
+    for (const tile of html.split(/<li[^>]*class="[^"]*\bjob-tile\b/i).slice(1)) {
+      const a = sfLink(tile);
+      if (!a) continue;
+      let location = "";
+      // Tomamos sólo la versión de escritorio de cada campo: las de tablet y celular repiten lo mismo.
+      for (const f of tile.matchAll(/<div[^>]*id="job-\d+-desktop-section-([\w-]+)"[^>]*>\s*<span[^>]*>([\s\S]*?)<\/span>\s*<div[^>]*>([\s\S]*?)<\/div>/gi)) {
+        if (f[1] === "location" || SF_LOCATION_LABEL.test(sfText(f[2]))) {
+          location = sfText(f[3]);
+          break;
+        }
+      }
+      if (a.title && a.path.startsWith("/")) rows.push({ ...a, location });
+    }
+  }
+  const table = html.match(/paginationLabel[\s\S]*?<b>[^<]*<\/b>[\s\S]*?<b>\s*([\d.,]+)\s*<\/b>/i)?.[1];
+  // "Mostrando 1 a 25 de 51 puestos": el total es el último número.
+  const tile = html.match(/id="tile-search-results-label"[^>]*>([^<]*)</i)?.[1].match(/\d[\d.,]*/g)?.pop();
+  const total = table ?? tile;
+  const perPage = Number(html.match(/data-per-page="(\d+)"/i)?.[1]) || null;
+  return { rows: [...new Map(rows.map((r) => [r.path, r])).values()], total: total ? Number(total.replace(/[.,]/g, "")) : null, perPage };
+}
+
+export function normalizeSuccessFactors(row: SfRow, detailHtml: string | null, board: Board): NormalizedPosting {
   const { host } = successFactorsSite(board.slug);
   const url = `https://${host}${row.path}`;
   // La descripción suele tener etiquetas anidadas: tomamos desde su apertura hasta el bloque de postulación o el pie.
@@ -1036,7 +1070,8 @@ export function normalizeSuccessFactors(row: { title: string; path: string; loca
     .filter((x) => x && !/^\d{3,}$/.test(x) && !/^[A-Z]$/.test(x))
     .map((x) => (x === "AR" ? "Argentina" : x))
     .join(", ");
-  const country = countryIso(location.split(",").pop()) ?? (/\b(AR|Argentina)\b/.test(row.location) ? "AR" : null);
+  // Algunos mosaicos no muestran la ubicación: como la búsqueda ya viene filtrada por Argentina, sin dato la damos por argentina.
+  const country = !location ? "AR" : (countryIso(location.split(",").pop()) ?? (/\b(AR|Argentina)\b/.test(row.location) ? "AR" : null));
   const workplace = wp(workplaceFromText(`${row.title} ${location}`), "fuente");
   const id = row.path.match(/\/(\d{6,})\/?$/)?.[1] ?? row.path;
   return {
@@ -1066,24 +1101,32 @@ export function normalizeSuccessFactors(row: { title: string; path: string; loca
 
 /**
  * Los sitios de empleo de SuccessFactors no tienen API pública: leemos la misma página de búsqueda que ve
- * cualquier persona, filtrada por Argentina, de a 25 y en serie, y el detalle de hasta 40 avisos.
+ * cualquier persona, filtrada por Argentina, en serie (de a 25, o de a lo que pagine el sitio), y el detalle de hasta 40 avisos.
  * Si la página no tiene el marcado esperado, falla (no se toma como "sin avisos", para no cerrar nada por error).
  */
 export async function fetchSuccessFactors(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
   const { host, prefix } = successFactorsSite(board.slug);
-  const rows: { title: string; path: string; location: string }[] = [];
+  const byPath = new Map<string, SfRow>();
+  // El tope se cuenta en avisos (8 páginas de 25), así un sitio que pagina de a 5 llega a lo mismo.
+  const maxRows = (opts?.maxPages ?? 8) * SF_PAGE;
   let complete = false;
-  for (let page = 0; page < (opts?.maxPages ?? 8); page++) {
-    const html = await fetchText(`https://${host}${prefix}/search/?q=&locationsearch=Argentina&startrow=${page * SF_PAGE}`, opts);
-    const { rows: got, total } = parseSuccessFactorsSearch(html);
+  for (let start = 0; byPath.size < maxRows; ) {
+    const html = await fetchText(`https://${host}${prefix}/search/?q=&locationsearch=Argentina&startrow=${start}`, opts);
+    const { rows: got, total, perPage } = parseSuccessFactorsSearch(html);
     // Sin filas y sin el aviso explícito de "sin resultados": el formato cambió y no lo tomamos como bolsa vacía.
-    if (!got.length && page === 0 && !/no ?results|no se encontraron|nenhum resultado|sin resultados/i.test(html)) throw new Error("La página de búsqueda de SuccessFactors no tiene el formato esperado");
-    rows.push(...got);
-    if (got.length < SF_PAGE || (total !== null && rows.length >= total)) {
+    if (!got.length && start === 0 && !/no ?results|no se encontraron|nenhum resultado|sin resultados/i.test(html)) throw new Error("La página de búsqueda de SuccessFactors no tiene el formato esperado");
+    const before = byPath.size;
+    for (const r of got) if (!byPath.has(r.path)) byPath.set(r.path, r);
+    const size = perPage ?? SF_PAGE;
+    if (got.length < size || (total !== null && byPath.size >= total)) {
       complete = true;
       break;
     }
+    // Si la página siguiente repite lo ya leído, el sitio no respeta startrow: cortamos sin dar la lectura por completa.
+    if (byPath.size === before) break;
+    start += size;
   }
+  const rows = [...byPath.values()];
   const postings: NormalizedPosting[] = [];
   for (const [i, row] of rows.entries()) {
     const detail = inDetailWindow(i, rows.length, SF_MAX_DETAILS) ? await fetchText(`https://${host}${row.path}`, opts).catch(() => null) : null;

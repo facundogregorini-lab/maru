@@ -126,7 +126,7 @@ describe("SuccessFactors (página de búsqueda)", () => {
     expect(successFactorsSite("careers.ey.com~ey")).toEqual({ host: "careers.ey.com", prefix: "/ey" });
     expect(() => successFactorsSite("careers.ey.com/../x")).toThrow(/inválido/);
     const parsed = parseSuccessFactorsSearch(search([row(1440520500, "Analista de Costos &amp; Presupuesto")], 1));
-    expect(parsed).toEqual({ total: 1, rows: [{ title: "Analista de Costos & Presupuesto", path: "/ey/job/Buenos-Aires-1440520500/1440520500/", location: "Buenos Aires, AR" }] });
+    expect(parsed).toEqual({ total: 1, perPage: null, rows: [{ title: "Analista de Costos & Presupuesto", path: "/ey/job/Buenos-Aires-1440520500/1440520500/", location: "Buenos Aires, AR" }] });
   });
 
   it("busca Argentina, lee el detalle y normaliza", async () => {
@@ -147,6 +147,80 @@ describe("SuccessFactors (página de búsqueda)", () => {
     await expect(fetchSuccessFactors(board, { fetchImpl, retries: 0 })).rejects.toThrow(/formato/);
     const empty = (async () => new Response("<html><body>No results found</body></html>")) as unknown as typeof fetch;
     await expect(fetchSuccessFactors(board, { fetchImpl: empty, retries: 0 })).resolves.toMatchObject({ received: 0 });
+  });
+});
+
+describe("SuccessFactors con mosaico (li.job-tile)", () => {
+  const board: Board = { sourceId: "successfactors", boardId: "successfactors:empleos.ejemplo.com.ar", slug: "empleos.ejemplo.com.ar", company: "Ejemplo SA" };
+  // Campo de un mosaico, como lo arma el sitio: id con la versión (desktop, tablet, mobile), etiqueta y valor.
+  const field = (id: number, view: string, name: string, label: string, value: string) =>
+    `<div id="job-${id}-${view}-section-${name}" data-focus-tile=".job-id-${id}" class="section-field ${name}"><span id="job-${id}-${view}-section-${name}-label" class="section-label">${label}</span><div id="job-${id}-${view}-section-${name}-value">${value}\n</div></div>`;
+  const link = (id: number, title: string) =>
+    `<div class="tiletitle"><span class="sr-only">Título</span><span class="col-md-12 section-title title" role="heading" aria-level="2"><a class="jobTitle-link fontcolor1" data-focus-tile=".job-id-${id}" href="/job/Ciudad-Puesto-${id}/${id}/">\n  ${title}\n</a></span></div>`;
+  // El mismo aviso aparece tres veces (escritorio, tablet y celular); los campos extra los elige cada empresa.
+  const tile = (id: number, title: string, fields: [string, string, string][] = []) =>
+    `<li class="job-tile job-id-${id} job-row-index-1" data-url="/job/Ciudad-Puesto-${id}/${id}/"><div class="job-tile-cell"><div class="row job job-row">` +
+    ["desktop", "tablet", "mobile"].map((view) => `<div class="sub-section sub-section-${view}"><div class="oneline">${link(id, title)}</div><div class="oneline">${fields.map(([n, l, v]) => field(id, view, n, l, v)).join("")}</div></div>`).join("") +
+    `</div></div></li>`;
+  const search = (tiles: string[], from: number, total: number, perPage = 25) =>
+    `<html><body><div role="region"><span id="tile-search-results-label">Mostrando ${from} a ${from + tiles.length - 1} de ${total} puestos</span><label id="searchresultslabel" class="sr-only">Resultados</label><ul id="job-tile-list" class="container job-list" data-per-page="${perPage}" data-record-returned="${tiles.length}">${tiles.join("")}</ul></div><footer><a href="/content/Privacidad/">Privacidad</a></footer></body></html>`;
+  const detail = `<html><body><div class="jobDisplayShell" itemscope="itemscope" itemtype="http://schema.org/JobPosting"><span itemprop="jobLocation"><span itemprop="address"><meta itemprop="addressCountry" content="AR"></span></span><meta itemprop="datePosted" content="Thu Oct 15 00:00:00 UTC 2026"><div class="job"><span itemprop="description" class="jobdescription">${desc}</span></div></div><footer>pie</footer></body></html>`;
+
+  it("lee título, enlace, ubicación (con la etiqueta que use la empresa), total y tamaño de página", () => {
+    const html = search(
+      [
+        tile(1440000001, "Analista de Costos &amp; Presupuesto", [["customfield1", "Id de vacante", "121744"], ["customfield3", "Ubicación", "CAPITAL FEDERAL"]]),
+        tile(1440000002, "Asesor/a Comercial | Bahía Blanca", [["location", "Ubicación", "Bahía Blanca"], ["customfield1", "Modalidad de Trabajo", "Híbrido"]]),
+        tile(1440000003, "Pasante de Administración"),
+      ],
+      1,
+      51,
+    );
+    expect(parseSuccessFactorsSearch(html)).toEqual({
+      total: 51,
+      perPage: 25,
+      rows: [
+        { title: "Analista de Costos & Presupuesto", path: "/job/Ciudad-Puesto-1440000001/1440000001/", location: "CAPITAL FEDERAL" },
+        { title: "Asesor/a Comercial | Bahía Blanca", path: "/job/Ciudad-Puesto-1440000002/1440000002/", location: "Bahía Blanca" },
+        { title: "Pasante de Administración", path: "/job/Ciudad-Puesto-1440000003/1440000003/", location: "" },
+      ],
+    });
+  });
+
+  it("pagina con el tamaño del sitio (de a 5), lee el detalle y da por argentinos los avisos sin ubicación", async () => {
+    const calls: string[] = [];
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => 1439000000 + n);
+    const fetchImpl = (async (url: RequestInfo | URL) => {
+      calls.push(String(url));
+      if (!String(url).includes("/search/")) return new Response(detail);
+      const start = Number(new URL(String(url)).searchParams.get("startrow"));
+      return new Response(search(ids.slice(start, start + 5).map((id) => tile(id, `Puesto ${id}`)), start + 1, ids.length, 5));
+    }) as typeof fetch;
+    const res = await fetchSuccessFactors(board, { fetchImpl, retries: 0 });
+    expect(calls.filter((c) => c.includes("/search/"))).toEqual([
+      "https://empleos.ejemplo.com.ar/search/?q=&locationsearch=Argentina&startrow=0",
+      "https://empleos.ejemplo.com.ar/search/?q=&locationsearch=Argentina&startrow=5",
+    ]);
+    expect(res).toMatchObject({ complete: true, received: 8 });
+    expect(res.postings[0]).toMatchObject({ externalId: "1439000001", company: "Ejemplo SA", countries: ["AR"], locations: [], sourceUrl: "https://empleos.ejemplo.com.ar/job/Ciudad-Puesto-1439000001/1439000001/", publishedAt: "2026-10-15T00:00:00.000Z" });
+    expect(res.postings[0].descriptionText).toContain("conciliaciones");
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, board.boardId, "successfactors", { postings: res.postings, complete: true }, "2026-10-17T00:00:00.000Z");
+    expect(inv.postings[0].eligibility.status).toBe("elegible");
+  });
+
+  it("si el sitio ignora startrow y repite la primera página, corta sin dar la lectura por completa", async () => {
+    const page = search([1, 2, 3, 4, 5].map((n) => tile(1438000000 + n, `Puesto ${n}`)), 1, 40, 5);
+    const fetchImpl = (async () => new Response(page)) as unknown as typeof fetch;
+    const res = await fetchSuccessFactors(board, { fetchImpl, retries: 0 });
+    expect(res).toMatchObject({ complete: false, received: 5 });
+  });
+
+  it("un mosaico sin enlaces a avisos sigue fallando en vez de vaciar la bolsa; el aviso de sin resultados no", async () => {
+    const fetchImpl = (async () => new Response(`<html><body><ul id="job-tile-list" data-per-page="25"><li class="job-tile"><div>Sin enlace</div></li></ul></body></html>`)) as unknown as typeof fetch;
+    await expect(fetchSuccessFactors(board, { fetchImpl, retries: 0 })).rejects.toThrow(/formato/);
+    const empty = (async () => new Response(`<html><body><div id="noresults" class="alert alert-block"><div id="attention"><label>En este momento, no hay ninguna vacante acorde a sus preferencias.</label></div></div></body></html>`)) as unknown as typeof fetch;
+    await expect(fetchSuccessFactors(board, { fetchImpl: empty, retries: 0 })).resolves.toMatchObject({ received: 0, complete: true });
   });
 });
 
