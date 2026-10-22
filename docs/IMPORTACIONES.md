@@ -137,6 +137,17 @@ Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, con
 - **Vigencia:** un importado que la revisión diaria ve publicado no vence a los 30 días sin volver a importarse: cuenta desde la última revisión que lo vio publicado, hasta 60 días desde la publicación. Así una compra no se pierde entera al mes.
 - **Tamaño:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `inventory-imported-2.json`…).
 
+## Bumeran vía Apify (desde el 22/10/2026)
+
+Fuente nueva `apify-bumeran` (bolsa `apify:bumeran:ar`, «Publicado en Bumeran · vía Apify»), con el Actor `blackfalcondata/bumeran-scraper`. Se revisó su esquema con `match-probe` el 22/10; todavía no se corrió.
+
+- **Precio:** US$0,001 por aviso (US$1 cada 1.000) más US$0,0005 por GB de memoria al iniciar. El uso de plataforma y el proxy están incluidos. El tope por búsqueda se calcula como las otras fuentes: inicio estimado US$0,02 + filas × 0,001.
+- **Qué pide:** `country: "AR"` (sólo bumeran.com.ar), la palabra en `query`, `sort: "RECIENTES"`, `maxResults` = `--rows`, descripción completa en HTML (`includeDetails`, `descriptionFormat: "html"`, sin recorte).
+- **Sin filtro de fecha:** el Actor no tiene uno, así que `--date-posted` no cambia nada. Se piden los más recientes primero y se descartan los de más de 30 días o vencidos. Bumeran sólo trae avisos que tienen todas las palabras: conviene usar búsquedas cortas en español.
+- **Repetidos:** no acepta una lista de ids para saltear. Usa su modo incremental con una clave por palabra (`stateKey: maru-ar-<palabra>`): si se repite una búsqueda, sólo devuelve y cobra los avisos nuevos o cambiados. Además siguen la regla de no repetir (7 días o agotada) y la deduplicación del inventario.
+- **Datos:** el id es el número del aviso (`jobKey`, el mismo que cierra el enlace). Se usan modalidad (`workModality`), salario si viene (`salaryText`, `salaryMin`/`salaryMax`), seniority, jornada y contrato, y el área como pista. Nunca se piden los contactos, emails, teléfonos ni redes que el Actor saca de la descripción.
+- **Cómo se corre:** `provider=apify mode=run args=--sources=bumeran --rows=100 --keywords=analista_contable,analista_de_datos,ejecutivo_de_cuentas --parallel=3 --budget-usd=<gasto del mes + 0.40> --budget-source=account`. Sin `--keywords` usa las 42 búsquedas generalistas de `APIFY_KEYWORDS.bumeran`: administración, finanzas, RR. HH., legal, ventas B2B, marketing, compras, datos, tecnología, atención al cliente y jóvenes profesionales. Con `--keywords-per-source` se elige cuántas.
+
 ## Empleadores descubiertos en los avisos comprados (desde el 22/10/2026)
 
 `match-discover` (Actions, a mano) toma las empresas de los avisos importados abiertos que se pueden pedir desde la Argentina y son de las áreas que importamos, y busca si tienen bolsa pública:

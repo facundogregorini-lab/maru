@@ -3,10 +3,18 @@ import { pilotJobs, runProviderPilot } from "@/lib/match/provider-pilot";
 import { POST } from "@/app/api/match/admin/proveedores/route";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
 import { resetMemoryCounters } from "@/lib/db";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { emptyInventory } from "@/lib/match/inventory";
+import { resetInventoryCache } from "@/lib/match/load";
+// La ruta del panel lee el inventario para marcar duplicados: usamos uno vacío y no el real (~90 MB), que tarda en cargarse.
+const inventoryPath = path.join(mkdtempSync(path.join(tmpdir(), "maru-pilot-")), "inventory.json");
+writeFileSync(inventoryPath, JSON.stringify(emptyInventory("real")));
 const description = "Buscamos analista de datos para desarrollar reportes comerciales con SQL. ".repeat(8);
 const job = { id: 1, title: "Analista", organization: "Empresa", url: "https://jobs.example.com/1", countries_derived: ["Argentina"], locations_derived: ["Buenos Aires, Argentina"], description_text: description };
 const json = (body: unknown, headers?: Record<string, string>) => new Response(JSON.stringify(body), { headers });
-beforeEach(() => { vi.stubEnv("FANTASTIC_JOBS", "secret-fantastic"); vi.stubEnv("SERP_API", "secret-serp"); vi.stubEnv("AUTH_SECRET", "x".repeat(40)); vi.stubEnv("ADMIN_EMAILS", "admin@example.com"); resetMemoryCounters(); });
+beforeEach(() => { vi.stubEnv("FANTASTIC_JOBS", "secret-fantastic"); vi.stubEnv("SERP_API", "secret-serp"); vi.stubEnv("AUTH_SECRET", "x".repeat(40)); vi.stubEnv("ADMIN_EMAILS", "admin@example.com"); vi.stubEnv("MATCH_INVENTORY_PATH", inventoryPath); resetInventoryCache(); resetMemoryCounters(); });
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 describe("pruebas privadas de proveedores", () => {
   it("rechaza anónimos, cuentas sin permisos y CSRF antes de consultar o consumir cuota", async () => {

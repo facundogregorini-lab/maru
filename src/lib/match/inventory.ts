@@ -72,11 +72,11 @@ export function withWorkplace(p: NormalizedPosting): NormalizedPosting {
 }
 
 /**
- * En los portales locales (Computrabajo, Indeed, LinkedIn, Google Jobs) un aviso con ciudad que no habla
+ * En los portales locales (Computrabajo, Indeed, LinkedIn, Bumeran, Google Jobs) un aviso con ciudad que no habla
  * de remoto ni de híbrido casi siempre es presencial. Se marca como inferido para mostrarlo así y no
  * usarlo como dato firme. Devuelve la ciudad usada, o null si no se puede inferir.
  */
-const INFER_SOURCES = new Set(["serpapi", "apify-computrabajo", "apify-indeed", "apify-linkedin"]);
+const INFER_SOURCES = new Set(["serpapi", "apify-computrabajo", "apify-indeed", "apify-linkedin", "apify-bumeran"]);
 const NOT_A_PLACE = /^\s*(argentina|remote|remoto|latam|latin america|america latina|anywhere|worldwide|desde (tu |su )?casa|home office|teletrabajo)\b/;
 const MENTIONS_REMOTE = /\b(remot[oa]s?|remote(ly)?|hibrid[oa]s?|hybrid|teletrabajo|home ?office|work(ing)? from home|wfh|a distancia|desde (tu |su )?casa|mixt[oa]|virtual)\b/;
 function inferPresencial(p: NormalizedPosting): string | null {
