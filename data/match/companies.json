@@ -1642,6 +1642,136 @@
       "evidence": "https://job-boards.greenhouse.io/devrev",
       "addedAt": "2026-10-22",
       "status": "candidata"
+    },
+    {
+      "name": "BriteCore",
+      "sourceId": "lever",
+      "slug": "britecore",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.lever.co/britecore",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "CookUnity",
+      "sourceId": "greenhouse",
+      "slug": "cookunity",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/cookunity",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Domino Data Lab",
+      "sourceId": "greenhouse",
+      "slug": "dominodatalab",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/dominodatalab",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "ElevenLabs",
+      "sourceId": "ashby",
+      "slug": "elevenlabs",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/elevenlabs",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Kiwi",
+      "sourceId": "ashby",
+      "slug": "kiwi",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/kiwi",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Mural",
+      "sourceId": "ashby",
+      "slug": "mural",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/mural",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Superside",
+      "sourceId": "lever",
+      "slug": "superside",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.lever.co/superside",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Amperity",
+      "sourceId": "greenhouse",
+      "slug": "amperity",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/amperity",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Capchase",
+      "sourceId": "ashby",
+      "slug": "capchase",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/capchase",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Jampp",
+      "sourceId": "greenhouse",
+      "slug": "jampp",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/jampp",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Payoneer",
+      "sourceId": "greenhouse",
+      "slug": "payoneer",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/payoneer",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "redbee",
+      "sourceId": "lever",
+      "slug": "redbee",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.lever.co/redbee",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Clipboard",
+      "sourceId": "ashby",
+      "slug": "clipboard",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/clipboard",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
     }
   ]
 }
