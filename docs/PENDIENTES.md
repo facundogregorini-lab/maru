@@ -26,7 +26,9 @@ Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la líne
    - **USD:** 29 de 373 (8%) mencionan dólares.
    - **Velocidad:** unos 5 minutos cada 100 filas con 5.300 ids para saltear.
    - **Empresas:** Mercado Libre, PedidosYa, Globant, Webflow, ESPN, Kraken, Accenture, intive, entre otras.
-3. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
+3. **Tanda 1 generalista (22/10, 12:10 UTC, en curso):** 20 búsquedas en español de 100 filas. Cubren administración, finanzas operativas, RRHH, datos, marketing, producto y diseño, operaciones, legal y trainee, las áreas con menos oferta para el público principal. Resultado: pendiente.
+4. **Pedido del dueño (22/10):** gastar US$10 más con pago por uso, con más peso en marketing, tecnología, remotos y USD. La cuenta tiene un tope mensual de US$19. Para pasarlo, el dueño tiene que subir el límite de uso en Apify (Settings → Usage & billing) a unos US$29: el Starter más US$10. Hecho en código: búsquedas en paralelo (`--parallel`), costo real por búsqueda y tiempo máximo según las filas. Remoto: palabras con «remote» o «remoto», porque el filtro no anda.
+5. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
 
 ## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
 
