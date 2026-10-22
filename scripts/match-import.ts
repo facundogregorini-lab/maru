@@ -78,12 +78,12 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
  * `history`: el ledger anterior, para no repetir búsquedas recientes o agotadas (apifyRepeatReason).
  * `skipJobIds`: avisos de LinkedIn que ya tenemos; valig no los devuelve y no se pagan. Se suman los de cada búsqueda.
  */
-type ApifyOptions = { remote: boolean; history: LedgerEntry[]; skipJobIds: Set<string> };
+type ApifyOptions = { remote: boolean; history: LedgerEntry[]; skipJobIds: Set<string>; parallel: number };
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina", opts: ApifyOptions = { remote: false, history: [], skipJobIds: new Set() }): Promise<ImportResult> {
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina", opts: ApifyOptions = { remote: false, history: [], skipJobIds: new Set(), parallel: 1 }): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
-  // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
-  // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
+  // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger viejo,
+  // que estimaba de más); lo que se corre en esta ejecución se suma con el uso que informa Apify por corrida.
   let spent = useAccount ? await apifyMonthlyUsage(token) : spentBefore;
   if (useAccount) log(`Gasto real de Apify este mes: US$${spent.toFixed(3)} (tope US$${budgetUsd}).`);
   for (const source of sources) {
@@ -92,60 +92,97 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
     const alt = source === "linkedin" && linkedinActor !== "curious";
     const actorName = source === "linkedin" ? LINKEDIN_ACTORS[linkedinActor].actor : config.actor;
     const wanted: readonly string[] = alt ? LINKEDIN_ALT_FIELDS : config.fields;
-    for (const keyword of (custom.length ? custom : APIFY_KEYWORDS[source]).slice(0, keywordsPerSource)) {
-      const cap = apifyNextCap(source, rows, spent, budgetUsd, linkedinActor);
-      if (!cap) {
-        out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
+    const pending = [...new Set((custom.length ? custom : APIFY_KEYWORDS[source]).slice(0, keywordsPerSource))].filter((keyword) => {
+      const repeat = apifyRepeatReason(opts.history, actorName, keyword, location, opts.remote, nowIso);
+      if (repeat) log(`↷ ${source} "${keyword}": no se repite (${repeat}).`);
+      return !repeat;
+    });
+    // De a `parallel` búsquedas a la vez: cada una tarda ~5 min y Apify las corre en paralelo. Antes de lanzar un grupo
+    // se reserva el peor caso de cada una, así el grupo entero nunca se pasa del presupuesto.
+    for (let i = 0; i < pending.length; i += opts.parallel) {
+      const group: { keyword: string; cap: number }[] = [];
+      let reserved = 0;
+      let budgetHit = false;
+      for (const keyword of pending.slice(i, i + opts.parallel)) {
+        const cap = apifyNextCap(source, rows, spent + reserved, budgetUsd, linkedinActor);
+        if (!cap) {
+          budgetHit = true;
+          break;
+        }
+        reserved += cap;
+        group.push({ keyword, cap });
+      }
+      const budgetStop = () => `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
+      if (!group.length) {
+        out.stopped = budgetStop();
         return out;
       }
-      const repeat = apifyRepeatReason([...opts.history, ...out.ledger], actorName, keyword, location, opts.remote, nowIso);
-      if (repeat) {
-        log(`↷ ${source} "${keyword}": no se repite (${repeat}).`);
-        continue;
-      }
       const skip = source === "linkedin" && linkedinActor === "valig" ? [...opts.skipJobIds] : [];
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location, { remote: opts.remote, skipJobIds: skip });
-      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap), location, ...(opts.remote ? { remote: "1" } : {}), ...(skip.length ? { skipJobIds: String(skip.length) } : {}) };
-      try {
-        const actor = actorName.replace("/", "~");
-        const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=600&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
-        let run = started.data ?? {};
-        for (let i = 0; i < 12 && !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(String(run.status)); i++) {
-          run = (await apifyFetch(`https://api.apify.com/v2/actor-runs/${run.id}?waitForFinish=60`, token)).data ?? {};
+      const runs = await Promise.all(
+        group.map(async ({ keyword, cap }) => {
+          const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location, { remote: opts.remote, skipJobIds: skip });
+          const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap), location, ...(opts.remote ? { remote: "1" } : {}), ...(skip.length ? { skipJobIds: String(skip.length) } : {}) };
+          try {
+            const actor = actorName.replace("/", "~");
+            // ~5 min cada 100 filas con valig: el tiempo máximo crece con las filas (10 min como mínimo).
+            const timeout = Math.max(600, rows * 6);
+            const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=${timeout}&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
+            let run = started.data ?? {};
+            for (let n = 0; n < timeout / 60 + 2 && !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(String(run.status)); n++) {
+              run = (await apifyFetch(`https://api.apify.com/v2/actor-runs/${run.id}?waitForFinish=60`, token)).data ?? {};
+            }
+            return { keyword, cap, params, run, error: null as Error | null };
+          } catch (e) {
+            return { keyword, cap, params, run: {} as Record<string, unknown>, error: e as Error };
+          }
+        }),
+      );
+      for (const { keyword, cap, params, run, error } of runs) {
+        if (error) {
+          spent += cap;
+          out.ledger.push({ at: nowIso, provider: "apify", call: "run", params, rows: 0, consumed: cap, quota: {}, error: redact(error.message) });
+          out.stopped = `${source} "${keyword}": ${redact(error.message)}`;
+          continue;
         }
         const usage = typeof run.usageTotalUsd === "number" ? run.usageTotalUsd : 0;
-        if (run.status !== "SUCCEEDED") {
+        // Si se cortó por tiempo, las filas que alcanzó a guardar ya se pagaron: se importan igual.
+        if (run.status !== "SUCCEEDED" && !(run.status === "TIMED-OUT" && run.defaultDatasetId)) {
           // Lo que haya costado igual cuenta, aunque no importemos nada.
           spent += Math.max(usage, cap);
           out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id ?? "") }, rows: 0, consumed: Math.max(usage, cap), quota: { status: String(run.status ?? "desconocido") }, error: "Ejecución incompleta: no se importa." });
           log(`✗ ${source} "${keyword}": ${run.status}.`);
           continue;
         }
-        // La API de datasets sólo filtra campos de primer nivel: "companyDetails.name" se pide como "companyDetails".
-        const fields = [...new Set(wanted.map((f) => f.split(".")[0]))].join(",");
-        const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?clean=true&format=json&limit=${rows}&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
-        const list = Array.isArray(items) ? items.slice(0, rows) : [];
-        // Costo conservador: uso de plataforma + precio por fila (puede sobreestimar, nunca subestimar).
-        const cost = Math.round((usage + list.length * (cap / rows)) * 10000) / 10000;
-        spent += cost;
-        const normalized = normalizeApifyJobs(source, list, nowIso);
-        const entry: LedgerEntry = { at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } };
-        out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword, entry });
-        out.ledger.push(entry);
-        // También los que se rechazaron (otro país, fuera de área): las búsquedas siguientes de esta corrida no los vuelven a cobrar.
-        if (source === "linkedin") for (const id of knownLinkedinIds(list.map((r) => ({ sourceId: "", externalId: "", sourceUrl: String(Object(r).link ?? Object(r).url ?? Object(r).jobUrl ?? ""), applyUrl: "" })))) opts.skipJobIds.add(id);
-        if (source === "linkedin") for (const p of normalized.postings) opts.skipJobIds.add(p.externalId);
-        // Lo pagado se guarda en disco enseguida: si el job se corta después, no se pierde. Ahí se anota entry.created.
-        await onRun?.(out);
-        log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ${entry.created ?? "?"} nuevas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
-        // Diagnóstico sin datos del aviso: si nada pasa, sólo los nombres de campo que llegaron.
-        if (list.length && !normalized.accepted) log(`  campos recibidos: ${Object.keys(Object(list[0])).sort().join(", ")} · rechazos ${JSON.stringify(normalized.rejected)}`);
-      } catch (e) {
-        spent += cap;
-        out.ledger.push({ at: nowIso, provider: "apify", call: "run", params, rows: 0, consumed: cap, quota: {}, error: redact((e as Error).message) });
-        out.stopped = `${source} "${keyword}": ${redact((e as Error).message)}`;
-        return out;
+        try {
+          // La API de datasets sólo filtra campos de primer nivel: "companyDetails.name" se pide como "companyDetails".
+          const fields = [...new Set(wanted.map((f) => f.split(".")[0]))].join(",");
+          const items = (await apifyFetch(`https://api.apify.com/v2/datasets/${run.defaultDatasetId}/items?clean=true&format=json&limit=${rows}&fields=${encodeURIComponent(fields)}`, token)) as unknown as unknown[];
+          const list = Array.isArray(items) ? items.slice(0, rows) : [];
+          // usageTotalUsd ya incluye las filas cobradas (coincide con el gasto de la cuenta: prueba del 22/10).
+          // Si Apify no lo informa, se cuenta el tope de la corrida.
+          const cost = Math.round((usage > 0 ? usage : cap) * 10000) / 10000;
+          spent += cost;
+          const normalized = normalizeApifyJobs(source, list, nowIso);
+          const entry: LedgerEntry = { at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } };
+          out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword, entry });
+          out.ledger.push(entry);
+          // También los que se rechazaron (otro país, fuera de área): las búsquedas siguientes de esta corrida no los vuelven a cobrar.
+          if (source === "linkedin") for (const id of knownLinkedinIds(list.map((r) => ({ sourceId: "", externalId: "", sourceUrl: String(Object(r).link ?? Object(r).url ?? Object(r).jobUrl ?? ""), applyUrl: "" })))) opts.skipJobIds.add(id);
+          if (source === "linkedin") for (const p of normalized.postings) opts.skipJobIds.add(p.externalId);
+          // Lo pagado se guarda en disco enseguida: si el job se corta después, no se pierde. Ahí se anota entry.created.
+          await onRun?.(out);
+          log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ${entry.created ?? "?"} nuevas, US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
+          // Diagnóstico sin datos del aviso: si nada pasa, sólo los nombres de campo que llegaron.
+          if (list.length && !normalized.accepted) log(`  campos recibidos: ${Object.keys(Object(list[0])).sort().join(", ")} · rechazos ${JSON.stringify(normalized.rejected)}`);
+        } catch (e) {
+          // La corrida ya se pagó: queda en el ledger con su dataset para releerla con --mode=refetch.
+          spent += Math.max(usage, cap);
+          out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: 0, consumed: Math.max(usage, cap), quota: {}, error: redact((e as Error).message) });
+          out.stopped = `${source} "${keyword}": ${redact((e as Error).message)}`;
+        }
       }
+      if (!out.stopped && budgetHit) out.stopped = budgetStop();
+      if (out.stopped) return out;
     }
   }
   return out;
@@ -291,7 +328,7 @@ async function main() {
     if (skipJobIds.size) log(`Avisos de LinkedIn que ya tenemos (no se piden): ${skipJobIds.size}.`);
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina", { remote, history: ledger.entries, skipJobIds });
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina", { remote, history: ledger.entries, skipJobIds, parallel: Math.min(5, Math.max(1, Math.floor(num("parallel", 1)))) });
   }
 
   const inv = await persist(result, ledger.entries, nowIso, progress, true);
