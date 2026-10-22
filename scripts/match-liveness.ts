@@ -1,7 +1,7 @@
 /**
  * Mira la página original de los avisos importados y cierra los que ya no existen (src/lib/match/liveness.ts).
  *
- *   npx --yes tsx@4 scripts/match-liveness.ts --max=400 --budget-min=8
+ *   npx --yes tsx@4 scripts/match-liveness.ts --max=1500 --budget-min=15
  *
  * Lo corre el workflow match-sync después de la sincronización. Sólo GET públicos, sin claves.
  */
@@ -23,7 +23,7 @@ async function main() {
   const inv = { ...emptyInventory("real"), ...((await readInventoryFile(INV)) as Inventory) };
   if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
   const stats = await checkImportedLiveness(inv, new Date().toISOString(), {
-    max: Number.isFinite(max) ? Math.min(max, 500) : 150,
+    max: Number.isFinite(max) ? Math.min(max, 2000) : 150,
     budgetMs: (Number.isFinite(budgetMin) && budgetMin > 0 ? budgetMin : 8) * 60_000,
     log: (m) => console.log(m),
   });

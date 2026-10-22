@@ -74,6 +74,33 @@ describe("vigencia de avisos importados", () => {
     expect(n).toBe(0);
   });
 
+  it("detecta los avisos cerrados de LinkedIn en español", async () => {
+    const page = '<section><figure><figcaption class="closed-job__flavor--closed">Ya no se aceptan solicitudes</figcaption></figure></section>';
+    expect(await liveStatus(new Response(page))).toMatchObject({ status: "cerrada" });
+  });
+
+  it("revisa varias fuentes a la vez, pero de a un pedido por fuente", async () => {
+    const inv = inventory();
+    // Otra fuente importada con dos avisos.
+    for (const id of ["e", "f"]) inv.postings.push({ ...inv.postings[0], key: `apify:${id}`, externalId: id, sourceId: "apify-linkedin", boardId: "apify:linkedin:ar", sourceUrl: `https://other.example.com/${id}` });
+    const inFlight = new Map<string, number>();
+    let maxPerHost = 0;
+    let maxTotal = 0;
+    const fetchImpl = (async (input: RequestInfo | URL) => {
+      const host = new URL(String(input)).host;
+      inFlight.set(host, (inFlight.get(host) ?? 0) + 1);
+      maxPerHost = Math.max(maxPerHost, inFlight.get(host)!);
+      maxTotal = Math.max(maxTotal, [...inFlight.values()].reduce((a, b) => a + b, 0));
+      await new Promise((r) => setTimeout(r, 5));
+      inFlight.set(host, inFlight.get(host)! - 1);
+      return new Response("<h1>Analista</h1>");
+    }) as typeof fetch;
+    const stats = await checkImportedLiveness(inv, NOW, { fetchImpl, resolve: publicDns, pauseMs: 0 });
+    expect(stats.checked).toBe(6);
+    expect(maxPerHost).toBe(1);
+    expect(maxTotal).toBe(2);
+  });
+
   it("turna entre fuentes para que una grande no se lleve todos los pedidos", () => {
     const items = [..."abcdef"].map((x) => ({ sourceId: "grande", x })).concat([{ sourceId: "chica", x: "1" }, { sourceId: "chica", x: "2" }]);
     expect(roundRobin(items, 5).map((i) => i.x)).toEqual(["a", "1", "b", "2", "c"]);
