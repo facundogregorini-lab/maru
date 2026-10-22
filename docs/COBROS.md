@@ -10,11 +10,11 @@ Implementación preparada en la rama `codex/cuentas-sync-y-planes`. El cobro que
 
   | Plan | Cobro | Frecuencia en Mercado Pago | Equivale a |
   |---|---|---|---|
+  | Mensual (destacado, promo de lanzamiento) | $990 el primer mes; luego $10.000 | cada 1 mes | $10.000/mes |
+  | Trimestral | $22.500 | cada 3 meses | $7.500/mes |
   | Semanal | $4.500 | cada 7 días | ≈ $19.500/mes |
-  | Mensual | $10.000 | cada 1 mes | $10.000/mes |
-  | Trimestral (destacado) | $22.500 | cada 3 meses | $7.500/mes |
 
-  No se muestran precios tachados: el ancla es el equivalente mensual de cada plan, para no anunciar un "precio anterior" que nunca se cobró.
+  Promo del primer período (`intro` en `plans.ts`): la suscripción se crea por $990 y, al acreditarse el primer pago, Maru le hace `PUT /preapproval/{id}` con `auto_recurring.transaction_amount` = $10.000 (`applyRenewalPrice`). Si ese paso falla, se reintenta en la próxima notificación o con «Actualizar estado»; queda en el registro del panel. Se acreditan los dos importes ($990 y $10.000). Antes de pagar, cada tarjeta dice cuánto se cobra hoy y cuánto en cada renovación (`chargeTerms`).
 - Gratis: 1 CV por día (a medida o general), 1 carta por día, 1 práctica de entrevista y 1 guion de video por semana. Plan pago: "ilimitado" con uso razonable de 25 pedidos principales por día, combinados (`PAID_DAILY_LIMIT`).
 - Exclusivo del plan pago (recortado en el servidor): la respuesta sugerida STAR del informe de entrevista, el feedback de cámara del video (sin plan no se envían fotogramas a la IA) y la descarga en Word (402 `PLAN_FEATURE`; el PDF sigue gratis). La IA igual redacta la respuesta STAR: medir si conviene un prompt aparte para el plan gratis.
 - Las cuotas cuentan solicitudes principales admitidas, incluso si la IA luego falla. Los días se cuentan en hora de Argentina (UTC-3) y las semanas, de lunes a domingo. Análisis, repreguntas y reescrituras no consumen ese contador mensual; sí tienen protección por IP compartida en Redis.
@@ -25,6 +25,14 @@ Implementación preparada en la rama `codex/cuentas-sync-y-planes`. El cobro que
 - `POST /api/billing/status` recupera comprobantes recientes (hasta 50 resultados; verifica los 3 últimos con pago) para conciliar una confirmación demorada. El estado se consulta en `/precios`.
 - Diagnóstico en el panel (`/match/admin`, sección "Cobros con Mercado Pago", sólo `ADMIN_EMAILS`): dice si el cobro está habilitado y qué falta, si la credencial es productiva (`APP_USR-`) o de prueba (`TEST-`), si Mercado Pago responde (`/users/me`, sólo el sitio) y las últimas 30 notificaciones y "Actualizar estado" (`maru:billing:log`): tipo, resultado y motivo, sin emails ni importes. Un webhook rechazado dice por qué (sin firma, clave que no coincide, sin `data.id`). Si se pagó y no aparece ninguna notificación, Mercado Pago no está avisando a `/api/billing/webhook`.
 - Redis: `maru:billing:<hash>`, referencias `maru:billing:ref:<uuid>`, pagos `maru:billing:payment:<id>` y contadores `maru:usage:<hash>:d<AAAA-MM-DD>:<tipo>` (diarios) o `:s<lunes>:<tipo>` (semanales) con TTL. Nunca se guardan datos de tarjeta.
+
+## Baja, garantía y arrepentimiento
+
+- **Baja** (`POST /api/billing/cancel`, motivo opcional de una lista fija): cancela la suscripción en Mercado Pago, conserva el acceso hasta `paidThrough` y devuelve un número `BAJA-XXXXXXXX` que se muestra en pantalla. No devuelve el período en curso.
+- **Garantía de 14 días** (`POST /api/billing/refund`): 100% del primer pago, aunque se haya usado Maru, sólo en la primera contratación de la cuenta (`maru:billing:guarantee:<hash>`; volver a contratar después de haber pagado la marca como usada). Es automática: cancela la suscripción y pide `POST /v1/payments/{primer pago}/refunds` (reembolso total, con `X-Idempotency-Key` por pago). Si no hubo renovaciones, corta el acceso. Número `DEV-XXXXXXXX`.
+- **Arrepentimiento** (Ley 24.240, 10 días desde el primer pago): misma acción cuando ya no corre la garantía (por ejemplo, en una recontratación).
+- Accesos públicos: `/baja` y `/arrepentimiento`, en el pie de todas las páginas. Piden ingresar con la cuenta que pagó y muestran el número de solicitud al instante. «Mi suscripción» está en `/precios#mi-plan` (link en el menú de la cuenta).
+- **Sin emails propios:** la confirmación es en pantalla y en «Mi suscripción». El número queda guardado en la suscripción (`cancelRequest`, `refund`).
 
 ## Configuración del dueño
 

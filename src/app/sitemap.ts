@@ -5,7 +5,7 @@ import { loadInventory } from "@/lib/match/load";
 // Se regenera cada hora, como el inventario.
 export const revalidate = 3600;
 
-const PAGES = ["", "/match", "/busquedas", "/postulacion", "/cv", "/carta", "/video", "/entrevista", "/extension", "/seguimiento", "/terminos", "/privacidad", "/precios", "/seguimiento/guia"];
+const PAGES = ["", "/match", "/busquedas", "/postulacion", "/cv", "/carta", "/video", "/entrevista", "/extension", "/seguimiento", "/terminos", "/privacidad", "/precios", "/baja", "/arrepentimiento", "/seguimiento/guia"];
 
 /** Las páginas del sitio y cada búsqueda abierta (las búsquedas son lo que más se encuentra desde Google). */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

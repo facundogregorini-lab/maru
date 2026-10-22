@@ -1,5 +1,18 @@
 # Estado y próximos pasos de Maru
 
+## Baja sencilla, garantía de 14 días y promo del primer mes (22/10/2026)
+
+Pedido del dueño. Decisiones: los $990 son **sólo el primer mes** (después $10.000), la devolución es **automática** y las confirmaciones son **sólo en pantalla** (sin proveedor de email por ahora). Detalle en `docs/COBROS.md`.
+
+1. **Promo:** el mensual se crea por $990 y pasa a $10.000 en Mercado Pago al acreditarse el primer pago (`applyRenewalPrice`). Cada tarjeta dice «Hoy pagás… Desde el segundo período se renueva…».
+2. **/precios:** el mensual va solo y destacado. Trimestral y semanal quedan en «Otros planes». Bajo el botón: «Sin permanencia…», la garantía y «Cómo cancelar» (sección con el recorrido). El aviso de límite usa el mismo panel.
+3. **Mi suscripción** (`SubscriptionManager`): «Cancelar suscripción» y «Pedir devolución» con una sola confirmación, motivo opcional y número de solicitud (`BAJA-…`, `DEV-…`). Link «Mi suscripción» en el menú de la cuenta.
+4. **Accesos públicos:** `/baja` y `/arrepentimiento` en el pie. Términos actualizados.
+5. **Pendiente antes de cobrar:**
+   - Probar en el entorno de prueba de Mercado Pago: el `PUT` que pasa la suscripción a $10.000 y el reembolso total (`/v1/payments/{id}/refunds`).
+   - Si se quiere confirmación por email, sumar un proveedor (por ejemplo, Resend) y la clave en Vercel.
+   - Revisión legal de los textos de baja, garantía y arrepentimiento.
+
 ## Ajustes de home, CV, match y precios (22/10/2026)
 
 Pedido del dueño, todo en una PR:

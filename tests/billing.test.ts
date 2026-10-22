@@ -16,6 +16,8 @@ function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boole
   let reference = "";
   let status = "pending";
   let paymentStatus = "approved";
+  let renewalAmount: number | null = null;
+  let refunds = 0;
   const approvedAt = new Date().toISOString();
   const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
     const path = new URL(String(url)).pathname;
@@ -24,9 +26,12 @@ function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boole
       return Response.json({ id: "sub1", external_reference: reference, status, init_point: "https://www.mercadopago.com.ar/subscriptions/checkout?id=sub1" });
     }
     if (path === "/preapproval/sub1") {
-      if (init?.method === "PUT") status = "cancelled";
+      const body = init?.method === "PUT" ? JSON.parse(String(init.body)) : {};
+      if (body.status === "cancelled") status = "cancelled";
+      if (body.auto_recurring) renewalAmount = body.auto_recurring.transaction_amount;
       return Response.json({ id: "sub1", external_reference: reference, status });
     }
+    if (path === "/v1/payments/200/refunds" && init?.method === "POST") { refunds++; paymentStatus = "refunded"; return Response.json({ id: 900, status: "approved" }); }
     if (path === "/preapproval/search") {
       if (opts.searchFails) return Response.json({}, { status: 400 });
       return Response.json({ results: opts.other ? [{ id: "sub2", external_reference: reference, status: "authorized" }, { id: "x9", external_reference: "otra", status: "authorized" }] : [] });
@@ -45,7 +50,7 @@ function apiFixture(amount = 10000, opts: { other?: boolean; searchFails?: boole
     throw new Error(`Unexpected provider request: ${path}`);
   });
   vi.stubGlobal("fetch", fetchMock);
-  return { fetchMock, authorize: () => { status = "authorized"; }, refund: () => { paymentStatus = "refunded"; } };
+  return { fetchMock, authorize: () => { status = "authorized"; }, refund: () => { paymentStatus = "refunded"; }, renewalAmount: () => renewalAmount, refunds: () => refunds };
 }
 describe("suscripción validada en el servidor", () => {
   it("exige login y no contrata si el modo pago está apagado", async () => {
@@ -151,7 +156,8 @@ describe("suscripción validada en el servidor", () => {
     expect(events.map((e) => [e.result, e.detail])).toEqual([
       ["rechazada", expect.stringMatching(/la firma no coincide/)],
       ["procesada", "pago sin suscripción vinculada todavía"],
-      ["procesada", "suscripción authorized, pago approved"],
+      // Con la promo del mensual, el primer pago también pasa la renovación al precio regular.
+      ["procesada", "renovación pasada al precio regular · suscripción authorized, pago approved"],
     ]);
     expect(JSON.stringify(events)).not.toContain("ana@example.com");
   });
@@ -282,11 +288,67 @@ describe("extensión y promo de lanzamiento", () => {
     expect((await res!.json()).code).toBe("PLAN_LIMIT");
   });
 
-  it("muestra el descuento del mensual y sigue acreditando suscripciones al precio regular", async () => {
-    const { PLANS, planDiscount, acceptedAmounts } = await import("@/lib/plans");
-    expect(PLANS.mensual.price).toBe(990);
+  it("la promo es sólo el primer mes: se cobra $990 y la suscripción pasa a $10.000 al acreditarse", async () => {
+    const { PLANS, planDiscount, acceptedAmounts, chargeTerms } = await import("@/lib/plans");
+    expect(PLANS.mensual.price).toBe(10000);
     expect(planDiscount(PLANS.mensual)).toBe(90);
     expect(acceptedAmounts(PLANS.mensual)).toEqual([990, 10000]);
     expect(planDiscount(PLANS.trimestral)).toBeNull();
+    expect(chargeTerms(PLANS.mensual)).toBe("Hoy pagás $990. Desde el segundo período se renueva cada mes a $10.000.");
+    const s = await setup(); const fixture = apiFixture(990);
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    const created = fixture.fetchMock.mock.calls.find(([url, init]) => String(url).endsWith("/preapproval") && init?.method === "POST");
+    expect(JSON.parse(String(created?.[1]?.body)).auto_recurring.transaction_amount).toBe(990);
+    await s.processNotification("subscription_authorized_payment", "100");
+    const sub = await s.readSubscription("ana@example.com");
+    expect(s.hasPaidAccess(sub)).toBe(true);
+    expect(fixture.renewalAmount()).toBe(10000);
+    expect(sub?.renewalPriceSet).toBe(true);
+    expect(sub?.paymentAmount).toBe(990);
+    expect(s.lastPayment(sub)?.amount).toBe(990);
+  });
+
+  it("la baja corta la renovación, conserva el acceso y devuelve un número de solicitud", async () => {
+    const s = await setup(); const fixture = apiFixture(990);
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    const out = await s.cancel("ana@example.com", "precio");
+    expect(out.requestId).toMatch(/^BAJA-[A-F0-9]{8}$/);
+    const sub = await s.readSubscription("ana@example.com");
+    expect(sub?.status).toBe("cancelled");
+    expect(s.hasPaidAccess(sub)).toBe(true);
+    expect(out.paidThrough).toBe(sub?.paidThrough);
+    // Repetir la baja devuelve el mismo número.
+    expect((await s.cancel("ana@example.com")).requestId).toBe(out.requestId);
+  });
+
+  it("la garantía devuelve el 100% del primer pago una sola vez, aunque se haya usado Maru", async () => {
+    const s = await setup(); const fixture = apiFixture(990);
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    const option = await s.readRefundOption("ana@example.com");
+    expect(option).toMatchObject({ kind: "garantia", amount: 990 });
+    const out = await s.requestRefund("ana@example.com");
+    expect(out).toMatchObject({ kind: "garantia", amount: 990 });
+    expect(out.requestId).toMatch(/^DEV-/);
+    expect(fixture.refunds()).toBe(1);
+    const sub = await s.readSubscription("ana@example.com");
+    expect(sub?.status).toBe("cancelled");
+    expect(s.hasPaidAccess(sub)).toBe(false);
+    // Pedirla de nuevo no genera otro reembolso.
+    expect((await s.requestRefund("ana@example.com")).requestId).toBe(out.requestId);
+    expect(fixture.refunds()).toBe(1);
+  });
+
+  it("calcula los plazos de garantía (14 días) y arrepentimiento (10 días)", async () => {
+    const s = await setup();
+    const day = 86400_000;
+    const paidAt = Date.parse("2026-10-01T12:00:00Z");
+    const sub = { id: "sub1", reference: "r", status: "authorized", plan: "mensual" as const, firstPaymentId: 1, paymentId: 1, firstPaymentAt: paidAt, paymentAmount: 990, updatedAt: 0 };
+    expect(s.refundOption(sub, false, paidAt + 13 * day)?.kind).toBe("garantia");
+    expect(s.refundOption(sub, false, paidAt + 15 * day)).toBeNull();
+    expect(s.refundOption(sub, true, paidAt + 9 * day)?.kind).toBe("arrepentimiento");
+    expect(s.refundOption(sub, true, paidAt + 11 * day)).toBeNull();
+    expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 990 } }, false, paidAt + day)).toBeNull();
   });
 });

@@ -81,9 +81,9 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
   },
 ];
 
-/** La oferta del final del recorrido: el mensual con la promo de lanzamiento, contra su precio regular. */
-export const PLAN_PRICE_TEXT = PLANS.mensual.priceText;
-export const PLAN_LIST_PRICE_TEXT = PLANS.mensual.listPriceText ?? "";
+/** La oferta del final del recorrido: el primer mes del mensual con la promo de lanzamiento y su precio regular. */
+export const PLAN_PRICE_TEXT = PLANS.mensual.intro?.priceText ?? PLANS.mensual.priceText;
+export const PLAN_REGULAR_PRICE_TEXT = PLANS.mensual.priceText;
 
 export const GUIDE_KEY = "maru:guia:v1";
 

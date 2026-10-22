@@ -1,8 +1,9 @@
 import { createHash, randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter } from "../db";
 import { userId } from "../sync/server";
-import { acceptedAmounts, billingEnabled, billingFlagState, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
+import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, GUARANTEE_DAYS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
+import { recordBillingEvent } from "./log";
 import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
 
 /**
@@ -10,8 +11,19 @@ import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
  * `firstPaymentId`: el primer pago acreditado de la suscripción (los siguientes son renovaciones). Falta en
  * suscripciones que ya tenían un pago antes de guardarlo; esas no se informan como primera compra.
  * `paymentLive`: false si Mercado Pago marcó el último pago como de prueba (no se mide como compra).
+ * `firstPaymentAt`: cuándo se acreditó el primer pago (cuenta los días de garantía y de arrepentimiento).
+ * `paymentAmount`: importe del último pago acreditado (con promo, el primero es menor que las renovaciones).
+ * `renewalPriceSet`: con promo de primer período, ya se pasó la suscripción al precio regular en Mercado Pago.
+ * `cancelRequest` / `refund`: comprobantes de baja y de devolución, con el número que se le muestra a la persona.
  */
-export type Subscription = { id: string; reference: string; status: string; plan?: PlanId; checkoutUrl?: string; paidThrough?: number; paymentId?: number; paymentAt?: number; firstPaymentId?: number; paymentLive?: boolean; updatedAt: number };
+export type Subscription = {
+  id: string; reference: string; status: string; plan?: PlanId; checkoutUrl?: string; paidThrough?: number; paymentId?: number; paymentAt?: number;
+  firstPaymentId?: number; firstPaymentAt?: number; paymentAmount?: number; paymentLive?: boolean; renewalPriceSet?: boolean;
+  cancelRequest?: { id: string; at: number }; refund?: { id: string; at: number; kind: RefundKind; paymentId: number; amount: number };
+  updatedAt: number;
+};
+/** garantia: la de satisfacción de Maru (14 días, primera contratación). arrepentimiento: el derecho legal (10 días). */
+export type RefundKind = "garantia" | "arrepentimiento";
 const key = (email: string) => `maru:billing:${userId(email)}`;
 export const billingReady = () => billingEnabled() && dbConfigured() && !!process.env.MERCADOPAGO_ACCESS_TOKEN && !!process.env.MERCADOPAGO_WEBHOOK_SECRET;
 /** Qué falta para cobrar, sólo con nombres (nunca valores), para diagnosticar desde /api/billing/status. */
@@ -44,7 +56,7 @@ export const checkoutId = (reference: string) => createHash("sha256").update(`ma
 export function lastPayment(sub: Subscription | null): { id: string; amount: number; currency: "ARS"; first: boolean; at: number; plan: PlanId } | null {
   if (!sub?.paymentId || !sub.paymentAt || sub.paymentLive === false || !hasPaidAccess(sub)) return null;
   const plan = subscriptionPlan(sub);
-  return { id: String(sub.paymentId), amount: PLANS[plan].price, currency: "ARS", first: sub.firstPaymentId === sub.paymentId, at: sub.paymentAt, plan };
+  return { id: String(sub.paymentId), amount: sub.paymentAmount ?? PLANS[plan].price, currency: "ARS", first: sub.firstPaymentId === sub.paymentId, at: sub.paymentAt, plan };
 }
 
 export async function checkout(email: string, planId: PlanId): Promise<string> {
@@ -62,6 +74,8 @@ export async function startCheckout(email: string, planId: PlanId): Promise<{ ur
   }
   if (prev?.status === "authorized") throw new Error("Ya tenés una suscripción autorizada. Estamos esperando la confirmación del pago.");
   if (prev?.status === "creating" && Date.now() - prev.updatedAt < 120_000) throw new Error("Tu pago se está preparando. Probá en un momento.");
+  // La garantía es para la primera contratación: quien ya pagó una suscripción antes no la vuelve a tener.
+  if (prev?.firstPaymentId) await setJson(guaranteeKey(email), { at: Date.now(), recontratacion: true });
   // Un reintento reutiliza la referencia (clave de idempotencia), así que conserva también su plan.
   const retry = prev?.status === "creating";
   const reference = retry ? prev.reference : randomUUID();
@@ -73,7 +87,7 @@ export async function startCheckout(email: string, planId: PlanId): Promise<{ ur
   const sub = await mp<Preapproval>("/preapproval", {
     method: "POST",
     headers: { "X-Idempotency-Key": reference },
-    body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: plan.price, currency_id: "ARS" } }),
+    body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: firstCharge(plan), currency_id: "ARS" } }),
   });
   if (!sub.id || !sub.init_point || !/^https:\/\/([a-z0-9-]+\.)?mercadopago\.com(\.ar)?\//i.test(sub.init_point)) throw new Error("Mercado Pago no devolvió un link de pago válido.");
   await change(email, (current) => ({ ...current, id: sub.id, status: sub.status, checkoutUrl: sub.init_point }));
@@ -127,12 +141,91 @@ export async function refreshSubscription(email: string): Promise<Subscription |
   }
   return next;
 }
-export async function cancel(email: string): Promise<void> {
+/**
+ * Promo de primer período: después del primer pago acreditado, la suscripción pasa al precio regular en Mercado Pago.
+ * Si falla, queda para la próxima notificación o "Actualizar estado" (nunca se cobra de más: el monto sólo sube una vez).
+ */
+async function applyRenewalPrice(email: string, note: (what: string) => void): Promise<void> {
+  const s = await readSubscription(email);
+  if (!s?.id || !s.firstPaymentId || s.renewalPriceSet || s.status === "cancelled" || s.refund) return;
+  const plan = PLANS[subscriptionPlan(s)];
+  if (!plan.intro) return;
+  try {
+    await mp<Preapproval>(`/preapproval/${encodeURIComponent(s.id)}`, { method: "PUT", body: JSON.stringify({ auto_recurring: { transaction_amount: plan.price, currency_id: "ARS" } }) });
+    await change(email, (cur) => (cur.id === s.id ? { ...cur, renewalPriceSet: true } : cur));
+    note("renovación pasada al precio regular");
+  } catch (err) {
+    note(`no se pudo pasar la renovación al precio regular: ${err instanceof Error ? err.message.slice(0, 80) : "error"}`);
+  }
+}
+
+/** Número de solicitud que se le muestra a la persona (baja, devolución, arrepentimiento). */
+const requestId = (prefix: string) => `${prefix}-${randomUUID().replace(/-/g, "").slice(0, 8).toUpperCase()}`;
+const guaranteeKey = (email: string) => `maru:billing:guarantee:${userId(email)}`;
+
+/** Baja: corta las renovaciones y conserva el acceso hasta el fin del período pago. No devuelve el período en curso. */
+export async function cancel(email: string, reason?: string): Promise<{ requestId: string; paidThrough: number | null }> {
   const current = await readSubscription(email);
   if (!current?.id || !billingReady()) throw new Error("No encontramos una suscripción para cancelar.");
+  if (current.status === "cancelled" && current.cancelRequest) return { requestId: current.cancelRequest.id, paidThrough: current.paidThrough ?? null };
   const result = await mp<Preapproval>(`/preapproval/${encodeURIComponent(current.id)}`, { method: "PUT", body: JSON.stringify({ status: "cancelled" }) });
   if (result.status !== "cancelled") throw new Error("No pudimos confirmar la cancelación.");
-  await change(email, (s) => ({ ...s, status: "cancelled", checkoutUrl: undefined }));
+  const id = requestId("BAJA");
+  const next = await change(email, (s) => ({ ...s, status: "cancelled", checkoutUrl: undefined, cancelRequest: s.cancelRequest ?? { id, at: Date.now() } }));
+  await recordBillingEvent({ source: "actualizar", type: "baja", result: "renovación cancelada", detail: reason ? `motivo: ${reason}` : undefined });
+  return { requestId: next.cancelRequest?.id ?? id, paidThrough: next.paidThrough ?? null };
+}
+
+/**
+ * Qué devolución puede pedir hoy, sobre el primer pago de la suscripción:
+ * la garantía de 14 días (una vez por cuenta) o, si ya la usó, el arrepentimiento legal de 10 días.
+ */
+export function refundOption(sub: Subscription | null, guaranteeUsed: boolean, now = Date.now()): { kind: RefundKind; until: number; amount: number } | null {
+  if (!sub?.firstPaymentId || !sub.firstPaymentAt || sub.refund || sub.paymentLive === false) return null;
+  const amount = sub.paymentId === sub.firstPaymentId ? sub.paymentAmount ?? firstCharge(PLANS[subscriptionPlan(sub)]) : firstCharge(PLANS[subscriptionPlan(sub)]);
+  const guaranteeUntil = sub.firstPaymentAt + GUARANTEE_DAYS * 86400_000;
+  if (!guaranteeUsed && now <= guaranteeUntil) return { kind: "garantia", until: guaranteeUntil, amount };
+  const withdrawalUntil = sub.firstPaymentAt + WITHDRAWAL_DAYS * 86400_000;
+  if (now <= withdrawalUntil) return { kind: "arrepentimiento", until: withdrawalUntil, amount };
+  return null;
+}
+export async function readRefundOption(email: string, sub?: Subscription | null) {
+  const current = sub === undefined ? await readSubscription(email) : sub;
+  if (!current?.firstPaymentId) return null;
+  const used = (await getManyJson<{ at: number }>([guaranteeKey(email)]))[0];
+  return refundOption(current, !!used);
+}
+
+/**
+ * Devolución automática del 100% del primer pago: cancela las renovaciones y pide el reembolso a Mercado Pago.
+ * El acceso termina si ese pago era el período vigente; si ya hubo una renovación, se conserva lo pagado aparte.
+ */
+export async function requestRefund(email: string, reason?: string): Promise<{ requestId: string; kind: RefundKind; amount: number }> {
+  if (!billingReady()) throw new Error("Los planes no están habilitados.");
+  const sub = await readSubscription(email);
+  if (sub?.refund) return { requestId: sub.refund.id, kind: sub.refund.kind, amount: sub.refund.amount };
+  const option = await readRefundOption(email, sub);
+  if (!sub || !option || !sub.firstPaymentId) throw new Error(`La devolución se puede pedir dentro de los ${GUARANTEE_DAYS} días del primer pago.`);
+  const id = requestId("DEV");
+  if (sub.status !== "cancelled") {
+    const result = await mp<Preapproval>(`/preapproval/${encodeURIComponent(sub.id)}`, { method: "PUT", body: JSON.stringify({ status: "cancelled" }) });
+    if (result.status !== "cancelled") throw new Error("No pudimos cancelar la renovación. Probá de nuevo en un momento.");
+  }
+  // La clave de idempotencia es el pago: repetir el pedido no genera un segundo reembolso.
+  await mp(`/v1/payments/${encodeURIComponent(String(sub.firstPaymentId))}/refunds`, { method: "POST", headers: { "X-Idempotency-Key": `maru-refund-${sub.firstPaymentId}` }, body: "{}" });
+  if (option.kind === "garantia") await setJson(guaranteeKey(email), { at: Date.now() });
+  const firstPaymentId = sub.firstPaymentId;
+  const next = await change(email, (s) => ({
+    ...s,
+    status: "cancelled",
+    checkoutUrl: undefined,
+    cancelRequest: s.cancelRequest ?? { id, at: Date.now() },
+    refund: s.refund ?? { id, at: Date.now(), kind: option.kind, paymentId: firstPaymentId, amount: option.amount },
+    // Sin renovaciones posteriores, el período devuelto era el vigente: se corta el acceso.
+    ...(s.paymentId === firstPaymentId ? { paidThrough: 0 } : {}),
+  }));
+  await recordBillingEvent({ source: "actualizar", type: option.kind === "garantia" ? "garantía" : "arrepentimiento", result: "reembolso pedido", detail: reason ? `motivo: ${reason}` : undefined });
+  return { requestId: next.refund?.id ?? id, kind: option.kind, amount: option.amount };
 }
 /** Reconsulta recursos con credenciales propias. Repetir una notificación no suma meses.
  * Devuelve el motivo si vio un pago aprobado que no acreditó (sin datos personales).
@@ -177,11 +270,13 @@ export async function processNotification(type: string, id: string, note: (what:
       if (at < (s.paymentAt ?? 0)) return next;
       // El primer pago acreditado de la suscripción queda guardado: los siguientes son renovaciones.
       const firstPaymentId = s.firstPaymentId ?? (s.paymentId ? undefined : payment.id);
-      return { ...next, paymentId: payment.id, paymentAt: at, paidThrough: periodEnd(at, plan.frequency, plan.frequencyType), paymentLive: payment.live_mode !== false, ...(firstPaymentId ? { firstPaymentId } : {}) };
+      const firstPaymentAt = s.firstPaymentAt ?? (firstPaymentId === payment.id ? at : undefined);
+      return { ...next, paymentId: payment.id, paymentAt: at, paymentAmount: payment.transaction_amount, paidThrough: periodEnd(at, plan.frequency, plan.frequencyType), paymentLive: payment.live_mode !== false, ...(firstPaymentId ? { firstPaymentId } : {}), ...(firstPaymentAt ? { firstPaymentAt } : {}) };
     }
     if (s.paymentId === payment.id) return { ...next, paidThrough: 0 };
     return next;
   });
+  await applyRenewalPrice(binding.email, note);
   note(payment ? `suscripción ${sub.status}, pago ${payment.status}${skipped ? " sin acreditar" : ""}` : `suscripción ${sub.status}`);
   return skipped;
 }

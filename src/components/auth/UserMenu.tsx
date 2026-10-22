@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import LoginDialog from "./LoginDialog";
 
-/** Header: "Ingresar" sin sesión; email y "Salir" con sesión. */
+/** Header: "Ingresar" sin sesión; email, "Mi suscripción" y "Salir" con sesión. */
 export default function UserMenu() {
   const { email, logout } = useAuth();
   const [open, setOpen] = useState(false);
@@ -34,6 +35,9 @@ export default function UserMenu() {
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-sage-soft font-medium text-sage sm:hidden" aria-label={email}>
         {email[0]?.toUpperCase()}
       </span>
+      <Link href="/precios#mi-plan" className="shrink-0 text-xs text-muted underline-offset-4 hover:text-brand hover:underline">
+        Mi suscripción
+      </Link>
       <button type="button" onClick={logout} className="shrink-0 rounded-full border border-line px-3 py-1.5 text-xs text-muted transition hover:border-brand hover:text-brand">
         Salir
       </button>

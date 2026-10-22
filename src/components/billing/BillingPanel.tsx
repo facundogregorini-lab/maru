@@ -3,11 +3,12 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import LoginDialog from "@/components/auth/LoginDialog";
-import { PLAN_ORDER, PLANS, planDiscount, type PlanId } from "@/lib/plans";
+import { chargeTerms, firstChargeText, GUARANTEE_TEXT, NO_LOCK_IN_TEXT, PLAN_ORDER, PLANS, planDiscount, type Plan, type PlanId } from "@/lib/plans";
+import SubscriptionManager, { type ManagedStatus } from "./SubscriptionManager";
 import { trackCheckoutCreated, trackCheckoutFailed, trackPlanClick, trackVerifiedPurchase, type VerifiedPayment } from "@/lib/tracking";
 
-type Status = { enabled: boolean; plan: string; tier: PlanId | null; status: string; paidThrough: number | null; lastPayment?: VerifiedPayment | null };
-/** Las tres tarjetas de planes pagos y el estado de la suscripción de la cuenta. */
+type Status = ManagedStatus & { enabled: boolean; lastPayment?: VerifiedPayment | null };
+/** El mensual en promo destacado, los otros planes en segundo plano y "Mi suscripción" de la cuenta. */
 export default function BillingPanel() {
   const { email } = useAuth();
   const [status, setStatus] = useState<Status | null>(null);
@@ -35,7 +36,8 @@ export default function BillingPanel() {
   }, [email]);
   async function act(action: PlanId | "cancel" | "status") {
     if (!email) { setLogin(true); return; }
-    if (action === "cancel" && !window.confirm("¿Cancelar la renovación de tu plan? Conservás el acceso hasta que termine el período pagado.")) return;
+    // La baja de un pago iniciado sin terminar sigue acá; la de un plan activo, en "Mi suscripción".
+    if (action === "cancel" && !window.confirm("¿Cancelar el pago iniciado? No se te cobra nada.")) return;
     setBusy(action); setError("");
     try {
       if (action === "status") await read(true);
@@ -59,42 +61,58 @@ export default function BillingPanel() {
   }
   const paid = status?.plan === "maru";
   const pending = !paid && (status?.status === "authorized" || status?.status === "pending");
+  const [featured, ...others] = PLAN_ORDER.map((id) => PLANS[id]);
+  const button = (plan: Plan, strong: boolean) => {
+    const current = paid && status?.tier === plan.id;
+    if (current) return <p className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-brand-soft px-4 text-center text-sm font-bold">Tu plan actual</p>;
+    return <button disabled={!!busy || !status?.enabled || pending || paid} onClick={() => void act(plan.id)} className={`press mt-5 min-h-12 w-full rounded-full px-6 py-3 font-bold uppercase disabled:cursor-default disabled:opacity-60 ${strong ? "bg-neon text-ink" : "border border-ink bg-white text-ink"}`}>
+      {busy === plan.id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : "Elegir plan"}
+    </button>;
+  };
+  const discount = planDiscount(featured);
   return <div>
-    <div className="grid gap-5 md:grid-cols-3 md:items-end">
-      {PLAN_ORDER.map((id) => {
-        const plan = PLANS[id];
-        const current = paid && status?.tier === id;
-        const discount = planDiscount(plan);
-        return <article key={id} data-plan-card={id} className={`relative rounded-[24px] bg-white p-6 ${plan.badge ? "order-first border-2 border-ink md:order-none pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] md:pb-8" : "border border-line"}`}>
-          {plan.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{plan.badge}</p>}
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-xl font-bold">{plan.nombre}</h3>
-            {plan.id === "trimestral" && <span className="rounded-full border border-ink px-2.5 py-0.5 text-xs font-semibold">Ahorrá 25%</span>}
-            {discount && <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-bold text-neon">-{discount}%</span>}
-          </div>
-          <p className="mt-3 text-sm text-ink/60">
-            {plan.listPriceText ? <>Antes <s aria-label={`Precio regular ${plan.listPriceText}`}>{plan.listPriceText}</s> por mes</> : plan.monthlyText}
-          </p>
-          <p className="mt-1 font-display text-4xl font-bold">{plan.priceText}<span className="ml-1 text-base font-medium">{plan.per}</span></p>
-          <p className="mt-2 text-sm text-ink/70">{plan.note}</p>
-          {current ? <p className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-brand-soft px-4 text-center text-sm font-bold">Tu plan actual</p>
-            : <button disabled={!!busy || !status?.enabled || pending || paid} onClick={() => void act(id)} className={`press mt-5 min-h-12 w-full rounded-full px-6 py-3 font-bold uppercase disabled:cursor-default disabled:opacity-60 ${plan.badge ? "bg-neon text-ink" : "bg-ink text-white"}`}>
-              {busy === id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : "Elegir plan"}
-            </button>}
-        </article>;
-      })}
+    {/* El mensual en promo, solo y destacado: precio de hoy, renovación, baja y garantía junto al botón. */}
+    <article data-plan-card={featured.id} className="relative mx-auto max-w-xl rounded-[24px] border-2 border-ink bg-white p-6 pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:p-8 sm:pt-12">
+      {featured.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{featured.badge}</p>}
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-2xl font-bold">{featured.nombre}</h3>
+        {discount && <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-bold text-neon">-{discount}% el primer mes</span>}
+      </div>
+      <p className="mt-3 font-display text-5xl font-bold">{firstChargeText(featured)}<span className="ml-1 text-base font-medium">{featured.intro ? "el primer mes" : featured.per}</span></p>
+      {featured.intro && <p className="mt-1 text-sm">Después, {featured.priceText} por mes <span className="text-ink/60">(precio regular)</span>.</p>}
+      <p className="mt-3 rounded-xl bg-sand px-3 py-2 text-sm">{chargeTerms(featured)}</p>
+      {button(featured, true)}
+      <ul className="mt-4 space-y-1.5 text-sm">
+        <li className="flex gap-2"><span aria-hidden className="font-bold text-brand">✓</span><span>{NO_LOCK_IN_TEXT}</span></li>
+        <li className="flex gap-2"><span aria-hidden className="font-bold text-brand">✓</span><span><strong>Garantía de 14 días.</strong> {GUARANTEE_TEXT}</span></li>
+      </ul>
+      <p className="mt-3 text-sm"><Link href="/precios#como-cancelar" className="font-semibold underline underline-offset-4">Cómo cancelar</Link></p>
+    </article>
+
+    {/* Los otros planes, en segundo plano durante la promo. */}
+    <p className="mt-8 text-center text-sm font-semibold text-ink/60">Otros planes</p>
+    <div className="mx-auto mt-3 grid max-w-3xl gap-4 sm:grid-cols-2">
+      {others.map((plan) => <article key={plan.id} data-plan-card={plan.id} className="rounded-[20px] border border-line bg-white p-5">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-bold">{plan.nombre}</h3>
+          {plan.id === "trimestral" && <span className="rounded-full border border-ink px-2 py-0.5 text-[11px] font-semibold">Ahorrá 25%</span>}
+        </div>
+        <p className="mt-1 text-2xl font-bold">{plan.priceText}<span className="ml-1 text-sm font-medium">{plan.per}</span></p>
+        <p className="text-xs text-ink/60">{plan.monthlyText} · {plan.note}</p>
+        <p className="mt-2 text-xs text-ink/70">{chargeTerms(plan)}</p>
+        {button(plan, false)}
+      </article>)}
     </div>
+
     <div className="mx-auto mt-5 max-w-2xl text-center">
       {error && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-      {paid && <>
-        <p className="font-semibold">Tu plan {status.tier ? PLANS[status.tier].nombre.toLowerCase() : ""} está activo hasta el {status.paidThrough && new Date(status.paidThrough).toLocaleDateString("es-AR")}.</p>
-        {status.status === "cancelled" ? <p className="mt-2 text-sm">La renovación está cancelada.</p> : <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm font-semibold disabled:opacity-50">Cancelar renovación</button>}
-      </>}
       {status && !status.enabled && <p className="rounded-2xl bg-sand p-4 text-sm leading-relaxed">Los planes todavía no están a la venta: hoy podés usar todas las herramientas gratis.</p>}
-      {pending && <>
-        <p className="text-sm">{status?.status === "authorized" ? "Estamos esperando que Mercado Pago confirme tu pago." : "Tenés un pago iniciado sin terminar."}</p>
-        <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm disabled:opacity-50">Cancelar suscripción pendiente</button>
+      {email && status && (paid || status.cancelRequest || status.refund || status.status === "authorized") && <div className="mt-4"><SubscriptionManager email={email} status={status} onChanged={() => read()} /></div>}
+      {pending && status?.status === "pending" && <>
+        <p className="text-sm">Tenés un pago iniciado sin terminar.</p>
+        <button disabled={!!busy} onClick={() => void act("cancel")} className="mt-3 min-h-11 rounded-full border border-ink px-5 py-2 text-sm disabled:opacity-50">Cancelar pago pendiente</button>
       </>}
+      {pending && status?.status === "authorized" && <p className="mt-3 text-sm">Estamos esperando que Mercado Pago confirme tu pago.</p>}
       {email && status?.enabled && <button disabled={!!busy} onClick={() => void act("status")} className="mt-2 block min-h-11 w-full rounded-full py-2 text-sm underline underline-offset-4 disabled:opacity-50">Actualizar estado de mi pago</button>}
       <p className="mt-3 text-xs leading-relaxed text-ink/70">Precios en pesos argentinos, con renovación automática por Mercado Pago. Al contratar aceptás los <Link href="/terminos" className="underline">términos</Link> y la <Link href="/privacidad" className="underline">política de privacidad</Link>. El acceso se confirma cuando Mercado Pago acredita el pago.</p>
     </div>
