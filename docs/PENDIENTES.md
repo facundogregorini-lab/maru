@@ -134,6 +134,12 @@ Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la líne
   - Elegibles para Argentina: 11.826 antes de Bumeran → 13.982 (ayer: 9.010). Remotos elegibles: 2.673.
   - Gasto de Apify del mes: ~US$27 de US$35. Inventario: 105 MB.
   - **Siguiente:** la reserva de ~US$8 rinde más como refresco en 10 a 14 días que hoy. Bumeran en modo incremental sólo cobra lo nuevo, y lo de hoy vence a los 30 días. Repetir las búsquedas de Bumeran y Computrabajo de hoy (el ledger evita repetirlas antes de 7 días).
+- **Auditoría del catálogo (22/10, noche):** duplicados bien resueltos (12.808 oportunidades elegibles → 11.123 tarjetas; sólo 22 tarjetas repetidas, avisos confidenciales distintos). Plan de mejoras, en orden:
+  1. **Áreas (hecho en este PR):** 1.379 elegibles caían en «otros» (FP&A, control de gestión, RH, cloud, seguridad informática, medios, sucursal, contratos…). Con reglas nuevas del título quedan 750. `EXTRACTION_VERSION` 17 re-analiza lo guardado en la próxima sync. Sin reglas de salud ni producción, para que el filtro de importación no cierre los 58 avisos profesionales de esas áreas (ensayos clínicos, laboratorio).
+  2. **Moneda del salario:** 628 de 1.184 salarios sin moneda, casi todos en dólares (Get on Board, rangos «$35k–$52k», «$50/hour»). Inferirla duplica los avisos que muestran pago en USD (513 hoy).
+  3. **Vigencia:** 8.515 de 10.951 importados elegibles nunca se revisaron (400 por día). Subir a ~1.500 por día y comprobar que se detectan los avisos cerrados de LinkedIn.
+  4. **SuccessFactors:** 39% sin fecha, 31% con descripción corta y 82% sin modalidad. Leer la página de cada aviso.
+  5. **Menores:** 2.233 cerrados guardados (7,7 MB) y 2.170 ubicaciones ambiguas («Buenos Aires, Argentina»).
 5. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
 
 ## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
