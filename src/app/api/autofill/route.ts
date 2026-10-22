@@ -1,4 +1,5 @@
 import { autofillBlocks, normalizeAnswers } from "@/lib/autofill";
+import { extensionGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, errorResponse } from "@/lib/claude";
 import { AUTOFILL_SYSTEM } from "@/lib/prompts";
 import { AutofillAnswerSchema, AutofillRequestSchema } from "@/lib/schemas";
@@ -13,6 +14,9 @@ export async function POST(req: Request) {
       throw new UserFacingError("No pudimos leer el formulario. Recargá la página y probá de nuevo.", "BAD_REQUEST");
     }
     const body = parsed.data;
+    // El cupo se descuenta recién con un formulario válido: un pedido roto no gasta un uso.
+    const limit = await extensionGuard(req);
+    if (limit) return limit;
     const { campos } = await askStructured({
       editorialPaths: (draft) => draft.campos.flatMap((campo, i) => [
         `campos.${i}.nota`,

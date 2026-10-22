@@ -255,3 +255,38 @@ describe("suscripción validada en el servidor", () => {
     expect(s.billingMissing()[0]).toBe("NEXT_PUBLIC_BILLING_ENABLED (no es true)");
   });
 });
+
+describe("extensión y promo de lanzamiento", () => {
+  it("da 4 autocompletados gratis por día por instalación, con tope por IP", async () => {
+    const s = await setup();
+    const lunes = Date.parse("2026-10-19T15:00:00Z");
+    for (let i = 0; i < 4; i++) expect(await s.allowAnonymousUsage("instalacion-aaaaaaaa", "1.1.1.1", "autofill", lunes)).toBe(true);
+    expect(await s.allowAnonymousUsage("instalacion-aaaaaaaa", "1.1.1.1", "autofill", lunes)).toBe(false);
+    // Reinstalar suma una instalación nueva, pero la IP tiene su propio tope (3 veces el cupo).
+    // La IP ya lleva 5 pedidos (el quinto cuenta aunque la instalación no tenga cupo): quedan 7 de 12.
+    for (let i = 0; i < 7; i++) expect(await s.allowAnonymousUsage(`otra-instalacion-${i}xxxx`, "1.1.1.1", "autofill", lunes)).toBe(true);
+    expect(await s.allowAnonymousUsage("otra-instalacion-final", "1.1.1.1", "autofill", lunes)).toBe(false);
+    expect(await s.allowAnonymousUsage("nueva-instalacion-zz", "2.2.2.2", "autofill", lunes)).toBe(true);
+    // Al día siguiente se renueva.
+    expect(await s.allowAnonymousUsage("instalacion-aaaaaaaa", "1.1.1.1", "autofill", lunes + 86400_000)).toBe(true);
+  });
+
+  it("el autocompletado responde 429 al pasar el cupo gratis", async () => {
+    await setup();
+    vi.stubGlobal("fetch", vi.fn());
+    const { extensionGuard } = await import("@/lib/billing/http");
+    const req = () => new Request("https://maru.test/api/autofill", { method: "POST", headers: { "X-Maru-Install": "instalacion-bbbbbbbb", "x-forwarded-for": "3.3.3.3" } });
+    for (let i = 0; i < 4; i++) expect(await extensionGuard(req())).toBeNull();
+    const res = await extensionGuard(req());
+    expect(res?.status).toBe(429);
+    expect((await res!.json()).code).toBe("PLAN_LIMIT");
+  });
+
+  it("muestra el descuento del mensual y sigue acreditando suscripciones al precio regular", async () => {
+    const { PLANS, planDiscount, acceptedAmounts } = await import("@/lib/plans");
+    expect(PLANS.mensual.price).toBe(990);
+    expect(planDiscount(PLANS.mensual)).toBe(90);
+    expect(acceptedAmounts(PLANS.mensual)).toEqual([990, 10000]);
+    expect(planDiscount(PLANS.trimestral)).toBeNull();
+  });
+});

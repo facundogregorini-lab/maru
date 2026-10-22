@@ -1,6 +1,8 @@
 import { sessionEmail } from "../auth";
-import type { UsageKind } from "../plans";
-import { allowUsage, billingReady, hasPaidPlan } from "./server";
+import { FREE_LIMITS, type UsageKind } from "../plans";
+import { clientIp } from "../rateLimit";
+import { SITE_URL } from "../site";
+import { allowAnonymousUsage, allowUsage, billingReady, hasPaidPlan } from "./server";
 
 export const billingJson = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 export function billingSession(req: Request): string | null {
@@ -29,4 +31,22 @@ export async function paidFeatures(req: Request): Promise<boolean> {
   const email = billingSession(req);
   if (!email) return false;
   try { return await hasPaidPlan(email); } catch { return false; }
+}
+
+const INSTALL_ID = /^[A-Za-z0-9-]{16,64}$/;
+/**
+ * Cupo de la extensión de Chrome: 4 autocompletados por día en el plan gratis. Si Chrome manda la sesión de Maru,
+ * cuenta por cuenta (y un plan pago usa el límite del plan); si no, por instalación de la extensión y por IP.
+ * No exige ingresar: la extensión funciona sin cuenta.
+ */
+export async function extensionGuard(req: Request): Promise<Response | null> {
+  if (!billingReady()) return null;
+  let email: string | null = null;
+  try { email = sessionEmail(req); } catch { email = null; }
+  const install = req.headers.get("X-Maru-Install");
+  try {
+    const ok = email ? await allowUsage(email, "autofill") : await allowAnonymousUsage(install && INSTALL_ID.test(install) ? install : null, clientIp(req.headers), "autofill");
+    if (ok) return null;
+    return billingJson({ error: `Usaste los ${FREE_LIMITS.autofill.limit} autocompletados gratis de hoy. Se renuevan a las 0 h; con un plan de Maru seguís ahora: ${SITE_URL}/precios`, code: "PLAN_LIMIT", upgradeUrl: `${SITE_URL}/precios` }, 429);
+  } catch { return billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503); }
 }

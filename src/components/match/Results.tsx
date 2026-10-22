@@ -143,7 +143,7 @@ export default function Results({
           {data && (
             <p className="mt-2 text-sm text-muted">
               {data.inventory.generatedAt
-                ? `Revisamos ${data.inventory.open.toLocaleString("es-AR")} búsquedas abiertas de fuentes públicas (actualizado el ${fmtDate(data.inventory.generatedAt)}). No es todo el mercado: es lo que podemos leer gratis y con permiso.`
+                ? `Revisamos ${data.inventory.open.toLocaleString("es-AR")} búsquedas abiertas (actualizado el ${fmtDate(data.inventory.generatedAt)}).`
                 : "Todavía no hay búsquedas cargadas en el inventario."}
             </p>
           )}
@@ -401,7 +401,7 @@ function JobCard({
           {item.publishedAt || item.postedLabel ? (
             <div className="flex gap-2">
               <dt className="text-muted">Publicada:</dt>
-              <dd>{item.publishedAt ? fmtDate(item.publishedAt) : `${item.postedLabel} (según Google, al verla)`}</dd>
+              <dd>{item.publishedAt ? fmtDate(item.publishedAt) : item.postedLabel}</dd>
             </div>
           ) : (
             <div className="flex gap-2" title="La fuente no informa cuándo se publicó.">
@@ -412,23 +412,6 @@ function JobCard({
           <div className="flex gap-2">
             <dt className="text-muted">{item.reviewedLabel}:</dt>
             <dd>{fmtDate(item.reviewedAt)}</dd>
-          </div>
-          <div className="flex gap-2 sm:col-span-2">
-            <dt className="text-muted">Fuente:</dt>
-            <dd className="min-w-0">
-              {item.sources.map((s, i) => (
-                <span key={`${s.url}-${i}`}>
-                  {i > 0 && " · "}
-                  {s.kind === "usuario" ? (
-                    "Agregada por vos"
-                  ) : (
-                    <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" onClick={() => track("match_ver_busqueda", { ...itemProps(item), fuente: s.kind })} className="underline decoration-line underline-offset-4 hover:text-brand">
-                      {s.attribution ?? s.name.replace(/ (Job Board API|Postings API|Public Job Posting API)$/, "")}
-                    </a>
-                  )}
-                </span>
-              ))}
-            </dd>
           </div>
         </dl>
 
@@ -673,7 +656,7 @@ function EmptyInventory() {
     <div className="rounded-3xl border border-line bg-paper p-8 text-center">
       <p className="font-display text-2xl">Estamos cargando las primeras búsquedas</p>
       <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted">
-        El inventario se actualiza una vez por día desde fuentes públicas y gratuitas. Mientras tanto, tu perfil y lo que buscás quedan guardados en este navegador, y podés agregar una búsqueda que ya
+        El inventario se actualiza una vez por día desde sitios de empleo. Mientras tanto, tu perfil y lo que buscás quedan guardados en este navegador, y podés agregar una búsqueda que ya
         tengas para ver qué tan compatible es.
       </p>
     </div>

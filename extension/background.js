@@ -5,6 +5,15 @@ const DEFAULT_SERVER = "https://maru-grego7.vercel.app";
 
 class UserError extends Error {}
 
+/** Identificador al azar de esta instalación: sólo sirve para contar los usos gratis del día. */
+async function installId() {
+  const { installId: saved } = await chrome.storage.local.get("installId");
+  if (saved) return saved;
+  const id = crypto.randomUUID();
+  await chrome.storage.local.set({ installId: id });
+  return id;
+}
+
 async function settings() {
   const data = await chrome.storage.local.get(["profile", "cv", "extras", "server"]);
   return { ...data, server: (data.server || DEFAULT_SERVER).replace(/\/+$/, "") };
@@ -75,7 +84,9 @@ async function fillTab(tab) {
   try {
     res = await fetch(`${server}/api/autofill`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      // Con la sesión de Maru abierta en Chrome, el cupo se cuenta en tu cuenta (y respeta tu plan).
+      credentials: "include",
+      headers: { "content-type": "application/json", "X-Maru-Install": await installId() },
       body: JSON.stringify({
         profile,
         extras: (extras || "").slice(0, 4000),

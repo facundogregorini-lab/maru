@@ -89,7 +89,13 @@ export function useDictation(onText: (text: string, first: boolean) => boolean |
 /** Dictado por voz: transcribe en vivo y entrega cada frase terminada. */
 /** `compact`: botón chico para respuestas cortas; si el navegador no dicta, no muestra nada. */
 export default function VoiceButton({ onText, lang = "es-AR", compact = false, label }: { onText: (text: string) => void; lang?: string; compact?: boolean; label?: string }) {
-  const { supported, listening, interim, error, start, stop } = useDictation((t) => onText(t), lang);
+  const dictation = useDictation((t) => onText(t), lang);
+  return <VoiceControl dictation={dictation} compact={compact} label={label} />;
+}
+
+/** Botón y estado del dictado, con el diseño de la personalización del CV ("Contalo en un audio"). */
+function VoiceControl({ dictation, compact, label }: { dictation: ReturnType<typeof useDictation>; compact: boolean; label?: string }) {
+  const { supported, listening, interim, error, start, stop } = dictation;
 
   if (!supported) {
     if (compact) return null;
@@ -118,8 +124,8 @@ export default function VoiceButton({ onText, lang = "es-AR", compact = false, l
 }
 
 /**
- * Campo con micrófono adentro (a la derecha): tocás, hablás y lo dictado entra en el campo. El campo hijo
- * necesita lugar a la derecha (`pr-12!`). Si el navegador no dicta, queda el campo solo.
+ * Campo con dictado: debajo va el mismo botón que en la personalización del CV. En campos de varias líneas es
+ * "Contalo en un audio"; en los de una línea, la versión chica "Dictar". Si el navegador no dicta, queda el campo solo.
  */
 export function DictateField({
   onText,
@@ -134,32 +140,15 @@ export function DictateField({
   className?: string;
   children: React.ReactNode;
 }) {
-  const { supported, listening, interim, error, start, stop } = useDictation(onText, lang);
+  const dictation = useDictation(onText, lang);
   return (
     <div className={className}>
-      <div className="relative">
-        {children}
-        {supported && (
-          <button
-            type="button"
-            onClick={listening ? stop : start}
-            aria-pressed={listening}
-            aria-label={listening ? "Terminar de dictar" : "Dictar por voz"}
-            title={listening ? "Terminar de dictar" : "Dictar por voz"}
-            className={`absolute right-2 grid h-9 w-9 place-items-center rounded-full transition ${multiline ? "top-2" : "top-1/2 -translate-y-1/2"} ${
-              listening ? "bg-ink text-neon" : "text-ink/60 hover:bg-black/[0.05] hover:text-ink"
-            }`}
-          >
-            {listening && <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-ink/25" />}
-            <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <rect x="5.5" y="1.5" width="5" height="8" rx="2.5" />
-              <path d="M3 7.5a5 5 0 0 0 10 0M8 12.5v2" />
-            </svg>
-          </button>
-        )}
-      </div>
-      {listening && <p className="mt-1.5 text-xs italic text-muted">{interim || "Te escuchamos…"}</p>}
-      {error && <p className="mt-1.5 text-xs text-danger-dark">{error}</p>}
+      {children}
+      {dictation.supported && (
+        <div className="mt-2">
+          <VoiceControl dictation={dictation} compact={!multiline} />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import CompanyTile from "@/components/busquedas/CompanyTile";
-import JobSearchBar from "@/components/busquedas/JobSearchBar";
 import CtaScene from "@/components/landing/CtaScene";
 import Faq from "@/components/landing/Faq";
 import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
 import Laurels from "@/components/landing/Laurels";
-import { ChatMock, CvMock, MatchMock, VideoMock } from "@/components/landing/Mocks";
+import { AutofillMock, CvMock, MatchMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
@@ -16,6 +15,8 @@ import { displayCompany } from "@/lib/match/labels";
 // Las cifras se regeneran cada hora y cuentan el mismo catálogo visible en Búsquedas.
 export const revalidate = 3600;
 const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
+// Si la extensión ya está publicada en la tienda de Chrome, se va ahí; si no, se baja el zip.
+const EXTENSION_ZIP_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension/maru-extension.zip";
 
 export default async function Home() {
   const data = await landingData();
@@ -118,17 +119,6 @@ export default async function Home() {
         </section>
       )}
 
-      <section aria-labelledby="hub-t" className="mt-14 sm:mt-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 id="hub-t" className="font-display text-3xl font-bold sm:text-4xl">Explorá las búsquedas</h2>
-            <p className="mt-2 text-ink/70">Podés empezar por un puesto o una empresa, sin subir tu CV.</p>
-          </div>
-          <Link href="/busquedas" className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">Ver todas las búsquedas →</Link>
-        </div>
-        <div className="mt-6"><JobSearchBar /></div>
-      </section>
-
       {/* Pasos: tarjetas blancas sobre panel gris con la esquina superior izquierda recta, como las secciones de jobright. */}
       <section id="como-funciona" aria-labelledby="pasos-t" className="mt-16 scroll-mt-24 rounded-[0_40px_40px_40px] bg-surface p-6 sm:mt-20 sm:rounded-[0_80px_80px_80px] sm:p-12 lg:p-[72px]">
         <span className="inline-block rounded-full bg-mint px-3 py-1.5 text-sm font-semibold">Cómo funciona</span>
@@ -156,8 +146,15 @@ export default async function Home() {
         <div className="mt-10 space-y-16 sm:mt-14 sm:space-y-24">
           <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match#empezar" visual={<MatchMock />} />
           <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion#empezar" visual={<CvMock />} />
-          <Feature title="Practicá tu entrevista" body="Respondé por voz o por escrito. Maru hace repreguntas y al final te muestra qué funcionó y qué podés mejorar." cta="Practicar una entrevista" href="/entrevista#empezar" visual={<ChatMock />} />
-          <Feature title="Grabá tu presentación" body="Armá un guion con tu experiencia y leelo en el teleprompter mientras grabás. El feedback de cámara está incluido en los planes pagos." cta="Preparar mi video" href="/video#empezar" visual={<VideoMock />} />
+          <Feature
+            title="Aplicá en 1 click"
+            body="Con la extensión para Chrome, Maru completa los formularios de Greenhouse, Lever y otros portales con los datos de tu perfil. Te ahorrás la carga repetida y revisás todo antes de enviar."
+            cta="Descargar la extensión"
+            href={EXTENSION_ZIP_URL}
+            download={!process.env.NEXT_PUBLIC_EXTENSION_URL}
+            secondary={{ label: "Ver cómo instalarla", href: "/extension" }}
+            visual={<AutofillMock />}
+          />
         </div>
         <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -186,12 +183,15 @@ export default async function Home() {
   );
 }
 
-function Feature({ title, body, cta, href, visual }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode }) {
+function Feature({ title, body, cta, href, visual, download = false, secondary }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; download?: boolean; secondary?: { label: string; href: string } }) {
+  const ctaClass = "press mt-8 inline-flex h-12 min-w-[256px] items-center justify-center rounded-[28px] bg-ink px-6 text-lg font-medium text-white sm:text-xl";
   return <article className="grid items-center gap-8 lg:grid-cols-[384px_minmax(0,1fr)] lg:gap-20">
     <div className="text-center lg:text-left">
       <h3 className="font-display text-[32px] font-semibold leading-[1.05] sm:text-5xl">{title}</h3>
       <p className="mt-4 text-base leading-6 sm:text-lg">{body}</p>
-      <Link href={href} className="press mt-8 inline-flex h-12 min-w-[256px] items-center justify-center rounded-[28px] bg-ink px-6 text-lg font-medium text-white sm:text-xl">{cta}</Link>
+      {/* El zip se descarga directo: con <a download> el navegador no intenta navegar a la ruta. */}
+      {download ? <a href={href} download className={ctaClass}>{cta}</a> : <Link href={href} className={ctaClass}>{cta}</Link>}
+      {secondary && <p className="mt-3"><Link href={secondary.href} className="inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4">{secondary.label} →</Link></p>}
     </div>
     <div className="min-w-0">{visual}</div>
   </article>;

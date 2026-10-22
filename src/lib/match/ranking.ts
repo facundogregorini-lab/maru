@@ -750,7 +750,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       salary: formatSalary(sal),
       sources,
       reviewedAt: o.lastVerifiedAt ?? o.lastSeenAt,
-      reviewedLabel: o.lastVerifiedAt ? "Revisado en el sitio del empleador" : "Visto por última vez en la fuente",
+      reviewedLabel: o.lastVerifiedAt ? "Revisada en el sitio del empleador" : "Vista por última vez",
       publishedAt: o.publishedAt,
       firstSeenAt: o.firstSeenAt,
       ...(!o.publishedAt && primary?.postedLabel ? { postedLabel: sanitizeDisplay(primary.postedLabel, 40) } : {}),

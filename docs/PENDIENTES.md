@@ -1,5 +1,18 @@
 # Estado y próximos pasos de Maru
 
+## Ajustes de home, CV, match y precios (22/10/2026)
+
+Pedido del dueño, todo en una PR:
+
+1. **Match:** se sacó la leyenda «No es todo el mercado…» y la fila «Fuente» de cada aviso (Apify, Fantastic y demás no le sirven al usuario). El aviso original sigue en «Ver aviso original ↗».
+2. **Dictado por voz:** `DictateField` (match) usa el mismo botón que la personalización del CV («Contalo en un audio»; versión chica «Dictar» en campos de una línea), debajo del campo en lugar del micrófono adentro.
+3. **Home:** fuera «Practicá tu entrevista», «Grabá tu presentación» y «Explorá las búsquedas». Nueva fila «Aplicá en 1 click» (tercera), con maqueta al estilo jobright (`AutofillMock`) y botón que baja el zip de la extensión (o va a la tienda si se define `NEXT_PUBLIC_EXTENSION_URL`).
+4. **/cv:** sólo la herramienta, de «Empezá ahora» a «Armar mi CV» (sin hero ni bloques comerciales).
+5. **Extensión, plan gratis:** 4 autocompletados por día (`FREE_LIMITS.autofill`). Corre sólo con el cobro activo (`billingReady`). Sin sesión cuenta por instalación (`X-Maru-Install`, versión 0.3.2) y aparte por IP (tope 12/día); con la sesión de Maru en Chrome cuenta por cuenta y un plan pago usa su límite.
+   - **Pendiente:** la extensión todavía no se vincula con la cuenta de forma explícita. Si la cookie no llega (por ejemplo, servidor `maru-grego7.vercel.app` y sesión en `marucoach.com`), un pago queda con el cupo gratis en la extensión. Hay que reinstalar la 0.3.2 para que mande el identificador.
+6. **Promo de lanzamiento:** mensual a $990 (antes $10.000, -90%), destacado en /precios. Los pagos de suscripciones viejas a $10.000 se siguen acreditando (`acceptedAmounts`).
+   - **Para revisar con el dueño:** con la promo, el trimestral ($7.500/mes) y el semanal ($4.500) salen más caros que el mensual. Se quitó «El más conveniente» y «Ahorrá 25%» del trimestral para no mostrar algo falso.
+
 ## Más avisos de Apify sin repetir errores (plan en curso, desde 22/10/2026)
 
 Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la línea de jobright: remoto desde Argentina para afuera (en USD), tecnología y marketing, más ventas en inglés, customer success, recruiting y finanzas para EE. UU. Aprobó el paso 1 (código, sin gastar) y el paso 2 (prueba de ~US$0,50). Falta definir si los US$20 incluyen lo que quede del Starter de octubre.

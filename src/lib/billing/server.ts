@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter } from "../db";
 import { userId } from "../sync/server";
-import { billingEnabled, billingFlagState, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
+import { acceptedAmounts, billingEnabled, billingFlagState, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
 
@@ -169,7 +169,7 @@ export async function processNotification(type: string, id: string, note: (what:
     if (!payment) return next; // Autorizar el débito no equivale a cobrarlo.
     const at = Date.parse(payment.date_approved);
     const plan = PLANS[subscriptionPlan(s)];
-    if (payment.transaction_amount !== plan.price || payment.currency_id !== "ARS" || !Number.isFinite(at) || at > Date.now() + 60_000) {
+    if (!acceptedAmounts(plan).includes(payment.transaction_amount) || payment.currency_id !== "ARS" || !Number.isFinite(at) || at > Date.now() + 60_000) {
       if (payment.status === "approved") skipped = `Pago aprobado sin acreditar: ${payment.transaction_amount} ${payment.currency_id} (plan ${plan.id}: ${plan.price} ARS), fecha ${Number.isFinite(at) ? "ok" : "inválida"}.`;
       return next;
     }
@@ -213,4 +213,20 @@ export async function allowUsage(email: string, kind: UsageKind, now = Date.now(
   const { limit, window } = paid ? { limit: PAID_DAILY_LIMIT, window: "dia" as const } : FREE_LIMITS[kind];
   const ttl = (window === "semana" ? 8 : 2) * 86400_000;
   return (await takeCounter(`maru:usage:${userId(email)}:${usageWindow(window, now)}:${paid ? "plan" : kind}`, limit, ttl, now)) === 0;
+}
+/** Tope por IP para el uso gratis sin cuenta: holgado para varias personas en una misma red, pero frena reinstalar la extensión para sumar usos. */
+export const ANON_IP_FACTOR = 3;
+/**
+ * Uso gratis sin cuenta (la extensión de Chrome): cuenta por instalación y, aparte, por IP.
+ * Las claves se guardan como SHA-256, nunca la IP ni el identificador.
+ */
+export async function allowAnonymousUsage(install: string | null, ip: string, kind: UsageKind, now = Date.now()): Promise<boolean> {
+  if (!billingReady()) return true;
+  const { limit, window } = FREE_LIMITS[kind];
+  const ttl = (window === "semana" ? 8 : 2) * 86400_000;
+  const hash = (v: string) => createHash("sha256").update(v).digest("hex");
+  const slot = `${usageWindow(window, now)}:${kind}`;
+  if ((await takeCounter(`maru:usage:anon-ip:${hash(ip)}:${slot}`, limit * ANON_IP_FACTOR, ttl, now)) !== 0) return false;
+  if (!install) return true;
+  return (await takeCounter(`maru:usage:anon:${hash(install)}:${slot}`, limit, ttl, now)) === 0;
 }
