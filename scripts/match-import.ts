@@ -118,30 +118,35 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         return out;
       }
       const skip = source === "linkedin" && linkedinActor === "valig" ? [...opts.skipJobIds] : [];
+      let failures = 0;
       const runs = await Promise.all(
         group.map(async ({ keyword, cap }) => {
           const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location, { remote: opts.remote, skipJobIds: skip });
           const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap), location, ...(opts.remote ? { remote: "1" } : {}), ...(skip.length ? { skipJobIds: String(skip.length) } : {}) };
+          let run: Record<string, unknown> = {};
           try {
             const actor = actorName.replace("/", "~");
             // ~5 min cada 100 filas con valig: el tiempo máximo crece con las filas (10 min como mínimo).
             const timeout = Math.max(600, rows * 6);
             const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=${timeout}&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
-            let run = started.data ?? {};
+            run = started.data ?? {};
             for (let n = 0; n < timeout / 60 + 2 && !["SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"].includes(String(run.status)); n++) {
               run = (await apifyFetch(`https://api.apify.com/v2/actor-runs/${run.id}?waitForFinish=60`, token)).data ?? {};
             }
             return { keyword, cap, params, run, error: null as Error | null };
           } catch (e) {
-            return { keyword, cap, params, run: {} as Record<string, unknown>, error: e as Error };
+            // Si la corrida llegó a empezar, queda su id en el ledger para buscarla en Apify.
+            return { keyword, cap, params, run, error: e as Error };
           }
         }),
       );
       for (const { keyword, cap, params, run, error } of runs) {
         if (error) {
+          // Un corte de red no frena la tanda: se cuenta el tope (puede haberse cobrado) y sigue la próxima.
           spent += cap;
-          out.ledger.push({ at: nowIso, provider: "apify", call: "run", params, rows: 0, consumed: cap, quota: {}, error: redact(error.message) });
-          out.stopped = `${source} "${keyword}": ${redact(error.message)}`;
+          failures++;
+          out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id ?? ""), datasetId: String(run.defaultDatasetId ?? "") }, rows: 0, consumed: cap, quota: {}, error: redact(error.message) });
+          log(`✗ ${source} "${keyword}": ${redact(error.message)}`);
           continue;
         }
         const usage = typeof run.usageTotalUsd === "number" ? run.usageTotalUsd : 0;
@@ -181,6 +186,8 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
           out.stopped = `${source} "${keyword}": ${redact((e as Error).message)}`;
         }
       }
+      // Si falló todo el grupo, algo anda mal con Apify o la red: se frena.
+      if (!out.stopped && failures === runs.length) out.stopped = `Fallaron las ${runs.length} búsquedas del grupo; se frena la corrida.`;
       if (!out.stopped && budgetHit) out.stopped = budgetStop();
       if (out.stopped) return out;
     }
