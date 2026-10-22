@@ -338,7 +338,8 @@ export const SERP_QUERIES: SerpQuery[] = [
 ];
 
 export type Rejections = Record<string, number>;
-export type ImportBatch = { sourceId: string; boardId: string; postings: NormalizedPosting[]; received: number; rejected: Rejections; query: string };
+/** `entry`: la línea del ledger de esta búsqueda, para anotarle cuántos avisos nuevos sumó al guardarla. */
+export type ImportBatch = { sourceId: string; boardId: string; postings: NormalizedPosting[]; received: number; rejected: Rejections; query: string; entry?: LedgerEntry };
 export type LedgerEntry = {
   at: string;
   provider: "fantastic" | "serpapi" | "apify";
@@ -348,6 +349,8 @@ export type LedgerEntry = {
   /** Créditos/búsquedas/US$ consumidos según el proveedor (null si no lo informó). */
   consumed: number | null;
   quota: Record<string, string | number | null>;
+  /** Avisos que no estaban en el inventario (Apify, desde el 22/10/2026): mide si conviene repetir la búsqueda. */
+  created?: number;
   error?: string;
 };
 export type Employer = { company: string; ats: string; host: string; supported?: { sourceId: "greenhouse" | "lever" | "ashby"; slug: string } };

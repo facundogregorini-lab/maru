@@ -26,9 +26,12 @@ const { groupOpportunities, opportunitiesOf } = await import(`data:text/javascri
 /** Números y búsquedas reales del inventario. */
 function inventoryData() {
   const inv = JSON.parse(readFileSync(path.join(ROOT, "data", "match", "inventory.json"), "utf8"));
-  // Los avisos importados van en un archivo aparte (src/lib/match/inventory-file.ts).
-  const importedFile = path.join(ROOT, "data", "match", "inventory-imported.json");
-  if (existsSync(importedFile)) inv.postings.push(...JSON.parse(readFileSync(importedFile, "utf8")).postings);
+  // Los avisos importados van en archivos aparte: inventory-imported.json, -2, -3… (src/lib/match/inventory-file.ts).
+  for (let n = 1; ; n++) {
+    const importedFile = path.join(ROOT, "data", "match", n === 1 ? "inventory-imported.json" : `inventory-imported-${n}.json`);
+    if (!existsSync(importedFile)) break;
+    inv.postings.push(...JSON.parse(readFileSync(importedFile, "utf8")).postings);
+  }
   const open = groupOpportunities(opportunitiesOf(inv)).opportunities.filter((o) => o.status === "abierta");
   const eligible = open.filter((o) => o.eligibility?.status === "elegible");
   // Búsquedas publicadas por día en los últimos 7 días completos (el día en curso queda afuera).

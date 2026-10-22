@@ -1,5 +1,17 @@
 # Estado y próximos pasos de Maru
 
+## Más avisos de Apify sin repetir errores (plan en curso, desde 22/10/2026)
+
+Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la línea de jobright: remoto desde Argentina para afuera (en USD), tecnología y marketing, más ventas en inglés, customer success, recruiting y finanzas para EE. UU. Aprobó el paso 1 (código, sin gastar) y el paso 2 (prueba de ~US$0,50). Falta definir si los US$20 incluyen lo que quede del Starter de octubre.
+
+1. **Hecho (paso 1, sin gastar):**
+   - **Que no se pierdan:** los 5.063 avisos de LinkedIn de la compra del 19/10 iban a vencer juntos cerca del 18/11 (30 días sin volver a verse), aunque siguieran publicados. Ahora, si la revisión diaria de vigencia (`liveness.ts`) ve la página publicada, el aviso sigue abierto 30 días más desde esa revisión, hasta 60 días desde que se publicó (`lastKnownAlive` en `inventory.ts`).
+   - **Que entren en GitHub:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `-2`, `-3`…; `inventory-file.ts`). Antes era un archivo de 39,7 MB y 10.000 avisos más lo habrían llevado cerca de 90 MB. Los workflows commitean todas las partes (`git add -A -- "data/match/inventory*.json"`).
+   - **No pagar repetidos:** con `--actor=valig`, la búsqueda le pasa al Actor los ids de LinkedIn que ya tenemos (`skipJobId`, 5.322 al 22/10) y no los devuelve. Cada línea del ledger de Apify anota `created` (avisos nuevos) y la ubicación. Una búsqueda igual (Actor, palabra, ubicación y filtro remoto) no se repite si se corrió hace menos de 7 días o si en los últimos 30 trajo menos del 30% de nuevos (`apifyRepeatReason`).
+   - **Remoto:** `--remote=1` (sólo valig) agrega el filtro «Remoto» de LinkedIn (`f_WT=2`). Se confirmó en el esquema del Actor que acepta `urlParam` y `skipJobId` (consulta con `match-probe`).
+2. **Paso 2 (prueba de ~US$0,50):** 8 búsquedas remotas en inglés × 100 filas (tecnología, datos, marketing, SDR, account executive, customer success, recruiting y contabilidad). Medir: filas cobradas, nuevos, elegibles, remotos y con salario en USD. Resultado: pendiente.
+3. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
+
 ## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
 
 Datos del dueño: en Crear tu CV entran 47 y descargan 5; en Postulación a medida entran 14 y reciben el resultado 4; en Match 14 de 65 llegan a ver las búsquedas. Propuesta de mejoras en la conversación del 21/10. El dueño aprobó estas tres:

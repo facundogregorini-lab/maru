@@ -235,6 +235,20 @@ describe("inventario con importaciones parciales", () => {
     inv.opportunities = buildOpportunities(inv.postings);
     expect(inv.opportunities.every((o) => o.status === "cerrada")).toBe(true);
   });
+  it("si la revisión de vigencia lo ve publicado no vence a los 30 días, salvo que tenga más de 60", () => {
+    const inv = emptyInventory("fixture");
+    const batch = normalizeFantastic([fantasticRow, { ...fantasticRow, id: "8" }, { ...fantasticRow, id: "9" }], "fantastic_ats", "G1", T);
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: batch.postings, complete: false }, NOW);
+    const [visto, sinDato, viejo] = inv.postings;
+    Object.assign(visto, { publishedAt: "2026-10-10T00:00:00.000Z", lastLiveCheckAt: "2026-11-10T12:00:00.000Z", lastLiveResult: "abierta" });
+    Object.assign(sinDato, { publishedAt: "2026-10-10T00:00:00.000Z", lastLiveCheckAt: "2026-11-10T12:00:00.000Z", lastLiveResult: "desconocido" });
+    Object.assign(viejo, { publishedAt: "2026-08-01T00:00:00.000Z", lastLiveCheckAt: "2026-11-10T12:00:00.000Z", lastLiveResult: "abierta" });
+    expect(expireImported(inv, "2026-11-20T12:00:00.000Z")).toBe(2);
+    expect(visto.status).toBe("abierta");
+    expect([sinDato.status, viejo.status]).toEqual(["cerrada", "cerrada"]);
+    // A los 30 días de la última revisión que lo vio publicado, vence igual.
+    expect(expireImported(inv, "2026-12-11T12:00:00.000Z")).toBe(1);
+  });
   it("la modalidad sale del texto sólo si está declarada, y los importados se re-analizan sin volver a descargarlos", () => {
     expect(workplaceFromDescription("Modalidad de trabajo: Presencial en Retiro.")?.value).toBe("presencial");
     expect(workplaceFromDescription("Modalidad híbrida de trabajo, 3 días en oficina.")?.value).toBe("hibrido");

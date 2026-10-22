@@ -12,13 +12,13 @@
  */
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
+import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, apifyRepeatReason, knownLinkedinIds, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
 import { filterImported } from "../src/lib/match/import-filter";
 import { readInventoryFile, writeInventoryFile } from "../src/lib/match/inventory-file";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
 import { fantasticQuota, request, serpAccount } from "../src/lib/match/provider-pilot";
 import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, runFantastic, runSerp, SERP_QUERIES, type Employer, type ImportBatch, type ImportResult, type LedgerEntry } from "../src/lib/match/providers";
-import type { BoardSyncResult, Inventory, NormalizedPosting } from "../src/lib/match/types";
+import type { BoardSyncResult, Inventory } from "../src/lib/match/types";
 
 const DATA = path.join(process.cwd(), "data", "match");
 const INV = path.join(DATA, "inventory.json");
@@ -74,7 +74,13 @@ async function apifyMonthlyUsage(token: string): Promise<number> {
   return usage;
 }
 
-async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina"): Promise<ImportResult> {
+/**
+ * `history`: el ledger anterior, para no repetir búsquedas recientes o agotadas (apifyRepeatReason).
+ * `skipJobIds`: avisos de LinkedIn que ya tenemos; valig no los devuelve y no se pagan. Se suman los de cada búsqueda.
+ */
+type ApifyOptions = { remote: boolean; history: LedgerEntry[]; skipJobIds: Set<string> };
+
+async function runApify(token: string, sources: ApifyJobSource[], rows: number, budgetUsd: number, spentBefore: number, keywordsPerSource: number, nowIso: string, custom: string[] = [], useAccount = false, linkedinActor: LinkedinActor = "curious", window: "week" | "month" = "week", onRun?: (partial: ImportResult) => Promise<void>, location = "Argentina", opts: ApifyOptions = { remote: false, history: [], skipJobIds: new Set() }): Promise<ImportResult> {
   const out: ImportResult = { batches: [], ledger: [], employers: [], stopped: null };
   // Con --budget-source=account el punto de partida es el gasto real del mes (más exacto que el ledger,
   // que estima de más); lo que se corre en esta ejecución se suma con la estimación conservadora.
@@ -92,8 +98,14 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         out.stopped = `Presupuesto Apify: gastado ~US$${spent.toFixed(3)} de US$${budgetUsd}; la próxima corrida podría pasarse.`;
         return out;
       }
-      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location);
-      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap) };
+      const repeat = apifyRepeatReason([...opts.history, ...out.ledger], actorName, keyword, location, opts.remote, nowIso);
+      if (repeat) {
+        log(`↷ ${source} "${keyword}": no se repite (${repeat}).`);
+        continue;
+      }
+      const skip = source === "linkedin" && linkedinActor === "valig" ? [...opts.skipJobIds] : [];
+      const input = apifyJobInput(source, keyword, rows, 500, linkedinActor, window, location, { remote: opts.remote, skipJobIds: skip });
+      const params = { actor: actorName, keyword, rows: String(rows), maxTotalChargeUsd: String(cap), location, ...(opts.remote ? { remote: "1" } : {}), ...(skip.length ? { skipJobIds: String(skip.length) } : {}) };
       try {
         const actor = actorName.replace("/", "~");
         const started = await apifyFetch(`https://api.apify.com/v2/acts/${actor}/runs?maxItems=${rows}&maxTotalChargeUsd=${cap}&timeout=600&waitForFinish=60`, token, { method: "POST", body: JSON.stringify(input) });
@@ -117,11 +129,15 @@ async function runApify(token: string, sources: ApifyJobSource[], rows: number, 
         const cost = Math.round((usage + list.length * (cap / rows)) * 10000) / 10000;
         spent += cost;
         const normalized = normalizeApifyJobs(source, list, nowIso);
-        out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword });
-        out.ledger.push({ at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } });
-        log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
-        // Lo pagado se guarda en disco enseguida: si el job se corta después, no se pierde.
+        const entry: LedgerEntry = { at: nowIso, provider: "apify", call: "run", params: { ...params, runId: String(run.id), datasetId: String(run.defaultDatasetId) }, rows: list.length, consumed: cost, quota: { usageTotalUsd: usage, spentUsd: Math.round(spent * 1000) / 1000, budgetUsd } };
+        out.batches.push({ sourceId: `apify-${source}`, boardId: `apify:${source}:ar`, postings: normalized.postings, received: list.length, rejected: normalized.rejected, query: keyword, entry });
+        out.ledger.push(entry);
+        // También los que se rechazaron (otro país, fuera de área): las búsquedas siguientes de esta corrida no los vuelven a cobrar.
+        if (source === "linkedin") for (const id of knownLinkedinIds(list.map((r) => ({ sourceId: "", externalId: "", sourceUrl: String(Object(r).link ?? Object(r).url ?? Object(r).jobUrl ?? ""), applyUrl: "" })))) opts.skipJobIds.add(id);
+        if (source === "linkedin") for (const p of normalized.postings) opts.skipJobIds.add(p.externalId);
+        // Lo pagado se guarda en disco enseguida: si el job se corta después, no se pierde. Ahí se anota entry.created.
         await onRun?.(out);
+        log(`✓ ${source} "${keyword}": ${list.length} filas, ${normalized.accepted} aceptadas, ${entry.created ?? "?"} nuevas, ~US$${cost.toFixed(3)} (acumulado ~US$${spent.toFixed(3)}).`);
         // Diagnóstico sin datos del aviso: si nada pasa, sólo los nombres de campo que llegaron.
         if (list.length && !normalized.accepted) log(`  campos recibidos: ${Object.keys(Object(list[0])).sort().join(", ")} · rechazos ${JSON.stringify(normalized.rejected)}`);
       } catch (e) {
@@ -183,22 +199,17 @@ async function persist(result: ImportResult, ledgerBase: LedgerEntry[], nowIso: 
   }
   const inv = (await readInventoryFile(INV)) ?? emptyInventory("real");
   if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
-  const byBoard = new Map<string, { sourceId: string; postings: NormalizedPosting[]; received: number }>();
+  // Lote por lote (una búsqueda cada uno): así cada línea del ledger sabe cuántos avisos nuevos trajo.
   for (const b of pending) {
-    const acc = byBoard.get(b.boardId) ?? { sourceId: b.sourceId, postings: [], received: 0 };
-    acc.postings.push(...b.postings);
-    acc.received += b.received;
-    byBoard.set(b.boardId, acc);
-  }
-  for (const [boardId, b] of byBoard) {
-    const s = applyBoard(inv, boardId, b.sourceId, { postings: b.postings, complete: false }, nowIso);
+    const s = applyBoard(inv, b.boardId, b.sourceId, { postings: b.postings, complete: false }, nowIso);
+    if (b.entry) b.entry.created = s.created;
     for (const k of Object.keys(p.totals) as (keyof Progress["totals"])[]) p.totals[k] += s[k];
-    const received = (p.boards.get(boardId)?.received ?? 0) + b.received;
-    p.boards.set(boardId, { boardId, ok: true, complete: false, received, durationMs: 0 });
-    inv.boards[boardId] = { boardId, sourceId: b.sourceId, lastAttemptAt: nowIso, lastOkAt: nowIso, lastError: null, consecutiveFailures: 0, lastReceived: received };
-    log(`${boardId}: +${s.created} nuevos, ~${s.updated} actualizados, =${s.unchanged} sin cambios, ${s.closed} cerrados.`);
+    const received = (p.boards.get(b.boardId)?.received ?? 0) + b.received;
+    p.boards.set(b.boardId, { boardId: b.boardId, ok: true, complete: false, received, durationMs: 0 });
+    inv.boards[b.boardId] = { boardId: b.boardId, sourceId: b.sourceId, lastAttemptAt: nowIso, lastOkAt: nowIso, lastError: null, consecutiveFailures: 0, lastReceived: received };
+    log(`${b.boardId} "${b.query}": +${s.created} nuevos, ~${s.updated} actualizados, =${s.unchanged} sin cambios, ${s.closed} cerrados.`);
   }
-  if (byBoard.size || (final && p.boards.size)) {
+  if (pending.length || (final && p.boards.size)) {
     inv.opportunities = buildOpportunities(inv.postings);
     inv.generatedAt = nowIso;
     if (final) recordRun(inv, { startedAt: nowIso, finishedAt: new Date().toISOString(), mode: "incremental", boards: [...p.boards.values()], ...p.totals, errors: result.stopped ? 1 : 0 });
@@ -273,9 +284,14 @@ async function main() {
     const where = arg("location") ?? "argentina";
     if (where !== "argentina" && where !== "latam") throw new Error("--location debe ser argentina o latam.");
     if (where === "latam" && linkedinActor === "curious") throw new Error("--location=latam sólo con --actor=valig o cheap.");
+    // --remote=1: filtro «Remoto» de LinkedIn (sólo valig). Con valig, además, nunca se piden avisos que ya tenemos.
+    const remote = arg("remote") === "1";
+    if (remote && linkedinActor !== "valig") throw new Error("--remote=1 sólo con --actor=valig.");
+    const skipJobIds = new Set(linkedinActor === "valig" ? knownLinkedinIds(((await readInventoryFile(INV)) ?? emptyInventory("real")).postings) : []);
+    if (skipJobIds.size) log(`Avisos de LinkedIn que ya tenemos (no se piden): ${skipJobIds.size}.`);
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina");
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina", { remote, history: ledger.entries, skipJobIds });
   }
 
   const inv = await persist(result, ledger.entries, nowIso, progress, true);

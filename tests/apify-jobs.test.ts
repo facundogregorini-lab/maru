@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apifyJobInput, apifyNextCap, normalizeApifyJobs } from "@/lib/match/apify";
+import { apifyJobInput, apifyNextCap, apifyRepeatReason, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
 import { analyzeStandalone } from "@/lib/match/inventory";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
@@ -68,6 +68,35 @@ describe("piloto de avisos Apify", () => {
     expect(apifyJobInput("linkedin", "seo", 100, 500, "valig", "month")).toMatchObject({ datePosted: "r2592000" });
     expect(apifyNextCap("linkedin", 500, 0, 5, "valig")).toBeCloseTo(0.22);
     expect(apifyNextCap("linkedin", 500, 0, 5)).toBeCloseTo(1.02);
+  });
+  it("con valig pide sólo remotos y saltea los avisos que ya tenemos", () => {
+    const input = apifyJobInput("linkedin", "account executive", 100, 500, "valig", "week", "Argentina", { remote: true, skipJobIds: ["4480000001"] });
+    expect(input).toMatchObject({ urlParam: [{ key: "f_WT", value: "2" }], skipJobId: ["4480000001"] });
+    expect(apifyJobInput("linkedin", "seo", 100, 500, "valig")).not.toHaveProperty("skipJobId");
+    expect(() => apifyJobInput("linkedin", "seo", 100, 500, "cheap", "week", "Argentina", { remote: true })).toThrow();
+    const known = knownLinkedinIds([
+      { sourceId: "apify-linkedin", externalId: "4480000001", sourceUrl: "https://www.linkedin.com/jobs/view/4480000001/", applyUrl: "" },
+      { sourceId: "fantastic_jb", externalId: "x9", sourceUrl: "https://ar.linkedin.com/jobs/view/analista-at-acme-4480000002", applyUrl: "" },
+      { sourceId: "greenhouse", externalId: "77", sourceUrl: "https://boards.greenhouse.io/acme/jobs/77", applyUrl: "" },
+    ]);
+    expect(known).toEqual(["4480000001", "4480000002"]);
+  });
+  it("no repite búsquedas recientes ni agotadas", () => {
+    const actor = "valig/linkedin-jobs-scraper";
+    const log = (at: string, keyword: string, rows: number, created?: number, extra: Record<string, string> = {}) => ({ at, provider: "apify", call: "run", params: { actor, keyword, ...extra }, rows, created });
+    const now = "2026-10-22T12:00:00.000Z";
+    const entries = [
+      log("2026-10-19T07:00:00.000Z", "data analyst", 300),
+      log("2026-10-05T07:00:00.000Z", "seo", 300, 40),
+      log("2026-10-05T07:00:00.000Z", "controller", 300, 200),
+      log("2026-10-21T07:00:00.000Z", "recruiter", 100, 90, { location: "Argentina", remote: "1" }),
+    ];
+    expect(apifyRepeatReason(entries, actor, "Data Analyst", "Argentina", false, now)).toMatch(/hace 3 días/);
+    expect(apifyRepeatReason(entries, actor, "data analyst", "Argentina", true, now)).toBeNull();
+    expect(apifyRepeatReason(entries, actor, "seo", "Argentina", false, now)).toMatch(/agotada/);
+    expect(apifyRepeatReason(entries, actor, "controller", "Argentina", false, now)).toBeNull();
+    expect(apifyRepeatReason(entries, actor, "recruiter", "Argentina", true, now)).toMatch(/hace 1 día$/);
+    expect(apifyRepeatReason(entries, "cheap_scraper/linkedin-job-scraper", "data analyst", "Argentina", false, now)).toBeNull();
   });
   it("usa los límites de cada Actor y restringe el piloto", () => {
     expect(apifyJobInput("linkedin", "analista", 50)).toMatchObject({ limitPerSource: 50, scrapeCompany: false, location: "Argentina" });
