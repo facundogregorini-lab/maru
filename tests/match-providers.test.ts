@@ -203,6 +203,9 @@ describe("filtro de áreas para importaciones pagas", () => {
     ["Vendedor de Salón - Comodoro Rivadavia", "comercio", "puesto_no_buscado"], ["Asesor Comercial Vendedor Viajante", "ventas", "puesto_no_buscado"],
     ["Operador/a de Contact Center", "atencion_cliente", "puesto_no_buscado"], ["Cocinero", "gastronomia", "puesto_no_buscado"],
     ["Enfermero/a Profesional", "salud", "fuera_de_area"], ["Jefe de logística", "logistica", "fuera_de_area"], ["Profesor de inglés", "educacion", "fuera_de_area"],
+    ["Analista de Compras", "logistica", null], ["Supply Chain Analyst", "logistica", null], ["Analista de Comercio Exterior", "logistica", null],
+    ["Planificador de Demanda", "logistica", null], ["Operario de depósito", "logistica", "puesto_no_buscado"], ["Auxiliar de depósito", "logistica", "fuera_de_area"],
+    ["Programa Jóvenes Profesionales 2027", "otros", null], ["Trainee", "otros", null], ["Mystery shopper / comprador sorpresa", "logistica", "puesto_no_buscado"],
   ] as const)("%s → %s", (title, family, why) => expect(importRejection(title, family)).toBe(why));
 
   it("la importación descarta lo que no entra y la sync cierra lo que ya estaba, sin tocar las bolsas de empleadores", () => {
