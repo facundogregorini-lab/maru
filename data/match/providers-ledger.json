@@ -6898,6 +6898,667 @@
         "budgetUsd": 10.25
       },
       "created": 79
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "5695",
+        "runId": "k7L4KIVCeuJfA81Vq",
+        "datasetId": "xzc96uHR7m94iudyD"
+      },
+      "rows": 100,
+      "consumed": 0.0944,
+      "quota": {
+        "usageTotalUsd": 0.03438,
+        "spentUsd": 10.042,
+        "budgetUsd": 12
+      },
+      "created": 68
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "asistente administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "5795",
+        "runId": "dD9O9BCBgnP2st6Vt",
+        "datasetId": "m6RmXkilYvkc9Foyf"
+      },
+      "rows": 100,
+      "consumed": 0.0937,
+      "quota": {
+        "usageTotalUsd": 0.03366,
+        "spentUsd": 10.135,
+        "budgetUsd": 12
+      },
+      "created": 79
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "liquidacion de sueldos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "5895",
+        "runId": "DtguxSSVwhutRjjo4",
+        "datasetId": "AoDpPWeT33fvjXxt6"
+      },
+      "rows": 100,
+      "consumed": 0.0929,
+      "quota": {
+        "usageTotalUsd": 0.03294,
+        "spentUsd": 10.228,
+        "budgetUsd": 12
+      },
+      "created": 43
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "cuentas a pagar",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "5995",
+        "runId": "nJChv2uAa1h6IdpRp",
+        "datasetId": "qODTsXb9DcPTiJiyd"
+      },
+      "rows": 10,
+      "consumed": 0.0101,
+      "quota": {
+        "usageTotalUsd": 0.0041400000000000005,
+        "spentUsd": 10.238,
+        "budgetUsd": 12
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6005",
+        "runId": "Tvj3AbAXoArxqDbia",
+        "datasetId": "4KLc2LjzazdThMfHQ"
+      },
+      "rows": 100,
+      "consumed": 0.0937,
+      "quota": {
+        "usageTotalUsd": 0.03366,
+        "spentUsd": 10.332,
+        "budgetUsd": 12
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de costos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6105",
+        "runId": "J2j1IBhhAWPXxP6tW",
+        "datasetId": "dzI0Jjg91wLeWpmPD"
+      },
+      "rows": 60,
+      "consumed": 0.056,
+      "quota": {
+        "usageTotalUsd": 0.01998,
+        "spentUsd": 10.388,
+        "budgetUsd": 12
+      },
+      "created": 23
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de cobranzas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6165",
+        "runId": "Jmia0lugDkbNTtlA5",
+        "datasetId": "GYf81rJHMl9eJgxpC"
+      },
+      "rows": 54,
+      "consumed": 0.0527,
+      "quota": {
+        "usageTotalUsd": 0.020340000000000004,
+        "spentUsd": 10.441,
+        "budgetUsd": 12
+      },
+      "created": 40
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de creditos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6219",
+        "runId": "wtBZeZxyEsP7FXXfs",
+        "datasetId": "HJaU6MCj5WYn5F57U"
+      },
+      "rows": 19,
+      "consumed": 0.0177,
+      "quota": {
+        "usageTotalUsd": 0.0063,
+        "spentUsd": 10.459,
+        "budgetUsd": 12
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de seleccion",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6238",
+        "runId": "eZV9TMh7A9JQRj8jw",
+        "datasetId": "wU8P9InQVnjiqSRls"
+      },
+      "rows": 40,
+      "consumed": 0.0389,
+      "quota": {
+        "usageTotalUsd": 0.01494,
+        "spentUsd": 10.497,
+        "budgetUsd": 12
+      },
+      "created": 30
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de capacitacion",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6278",
+        "runId": "wmAIDUHLyZX4JIZmc",
+        "datasetId": "nMwPown3qE5b4pgdB"
+      },
+      "rows": 100,
+      "consumed": 0.0955,
+      "quota": {
+        "usageTotalUsd": 0.03546,
+        "spentUsd": 10.593,
+        "budgetUsd": 12
+      },
+      "created": 46
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6378",
+        "runId": "MLlitgX30hhObHr3P",
+        "datasetId": "EnNba5NG1h9uwbDzV"
+      },
+      "rows": 100,
+      "consumed": 0.0955,
+      "quota": {
+        "usageTotalUsd": 0.03546,
+        "spentUsd": 10.688,
+        "budgetUsd": 12
+      },
+      "created": 47
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de producto",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6478",
+        "runId": "unbafEziM4qhpo6KJ",
+        "datasetId": "Gysz4D17cO9gyBUag"
+      },
+      "rows": 100,
+      "consumed": 0.0958,
+      "quota": {
+        "usageTotalUsd": 0.03582,
+        "spentUsd": 10.784,
+        "budgetUsd": 12
+      },
+      "created": 64
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "power bi",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6578",
+        "runId": "zvWRvDysjnvkEuDsj",
+        "datasetId": "R6u258CGnTT2Vc4e7"
+      },
+      "rows": 100,
+      "consumed": 0.0965,
+      "quota": {
+        "usageTotalUsd": 0.03654,
+        "spentUsd": 10.881,
+        "budgetUsd": 12
+      },
+      "created": 58
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de planeamiento",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6678",
+        "runId": "odlMX6usHd2ryuGta",
+        "datasetId": "ilBXS5GyVkTR5VxRM"
+      },
+      "rows": 100,
+      "consumed": 0.0958,
+      "quota": {
+        "usageTotalUsd": 0.03582,
+        "spentUsd": 10.977,
+        "budgetUsd": 12
+      },
+      "created": 24
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de operaciones",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6777",
+        "runId": "bUawbhkg3ucgNJyUl",
+        "datasetId": "DGCgB634cfRZwp4N4"
+      },
+      "rows": 100,
+      "consumed": 0.0962,
+      "quota": {
+        "usageTotalUsd": 0.03618,
+        "spentUsd": 11.073,
+        "budgetUsd": 12
+      },
+      "created": 47
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "supply chain",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6877",
+        "runId": "BaYMasQxabwbacx7G",
+        "datasetId": "C8ByRRjdABOFr7hTT"
+      },
+      "rows": 100,
+      "consumed": 0.0965,
+      "quota": {
+        "usageTotalUsd": 0.03654,
+        "spentUsd": 11.169,
+        "budgetUsd": 12
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado junior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "6977",
+        "runId": "ruuJBLh58D3hAxoWF",
+        "datasetId": "eJeP6Fp2Y3tifHpZo"
+      },
+      "rows": 34,
+      "consumed": 0.0325,
+      "quota": {
+        "usageTotalUsd": 0.012060000000000001,
+        "spentUsd": 11.202,
+        "budgetUsd": 12
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "trainee",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7011",
+        "runId": "gnnu06YnR4irQ4yls",
+        "datasetId": "fPmbWa1Yngrd2Q4SP"
+      },
+      "rows": 89,
+      "consumed": 0.0853,
+      "quota": {
+        "usageTotalUsd": 0.03186,
+        "spentUsd": 11.287,
+        "budgetUsd": 12
+      },
+      "created": 16
+    },
+    {
+      "at": "2026-10-22T12:08:22.453Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jovenes profesionales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7100",
+        "runId": "IFxrhJvFmaYlT7dOS",
+        "datasetId": "96ygJDUqyXFV4jFnt"
+      },
+      "rows": 31,
+      "consumed": 0.0307,
+      "quota": {
+        "usageTotalUsd": 0.012060000000000001,
+        "spentUsd": 11.318,
+        "budgetUsd": 12
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote marketing manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "b4qvda7hksESzGBrf",
+        "datasetId": "GLGUWzqec4c8i6XnV"
+      },
+      "rows": 45,
+      "consumed": 0.016,
+      "quota": {
+        "usageTotalUsd": 0.016020000000000003,
+        "spentUsd": 10.499,
+        "budgetUsd": 16
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote growth marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "09v9Kbm2oVZ13303C",
+        "datasetId": "qjL4T8fF81acZ6nCD"
+      },
+      "rows": 74,
+      "consumed": 0.0265,
+      "quota": {
+        "usageTotalUsd": 0.026460000000000004,
+        "spentUsd": 10.525,
+        "budgetUsd": 16
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote performance marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "3cJvcTcl8gbvv8hG6",
+        "datasetId": "mbseH8qBqJXbmLfzZ"
+      },
+      "rows": 69,
+      "consumed": 0.025,
+      "quota": {
+        "usageTotalUsd": 0.025020000000000004,
+        "spentUsd": 10.55,
+        "budgetUsd": 16
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote content marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "lCdHPVKwwmFmssx7R",
+        "datasetId": "Hv1i5cSwhnvLunJ9E"
+      },
+      "rows": 66,
+      "consumed": 0.0203,
+      "quota": {
+        "usageTotalUsd": 0.020340000000000004,
+        "spentUsd": 10.571,
+        "budgetUsd": 16
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote seo specialist",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6344",
+        "runId": "G78lsABHnaIPOSLqq",
+        "datasetId": "AcUU4DuEaxqFCMYXb"
+      },
+      "rows": 30,
+      "consumed": 0.0085,
+      "quota": {
+        "usageTotalUsd": 0.00846,
+        "spentUsd": 10.579,
+        "budgetUsd": 16
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote social media manager",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "EmIHEnQISqkcqeLrj",
+        "datasetId": "8jeDGsp9xdRPQJKHB"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 10.58,
+        "budgetUsd": 16
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote paid media",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "L7Cyt9UpWgaaV9YHZ",
+        "datasetId": "mk3tDa54e1pBFq0hi"
+      },
+      "rows": 8,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 10.583,
+        "budgetUsd": 16
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote email marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "gEIpSKlXc6yRrIgdT",
+        "datasetId": "d9Lbz6469rPhubGoz"
+      },
+      "rows": 17,
+      "consumed": 0.0063,
+      "quota": {
+        "usageTotalUsd": 0.0063,
+        "spentUsd": 10.59,
+        "budgetUsd": 16
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote product marketing",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462",
+        "runId": "UbNg6jSLHZMTYPtjX",
+        "datasetId": "zBLPGjFGu7BJ51e6w"
+      },
+      "rows": 28,
+      "consumed": 0.0092,
+      "quota": {
+        "usageTotalUsd": 0.00918,
+        "spentUsd": 10.599,
+        "budgetUsd": 16
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T13:34:28.486Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing remoto",
+        "rows": "300",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "skipJobIds": "6462"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {},
+      "error": "The operation was aborted due to timeout"
     }
   ]
 }

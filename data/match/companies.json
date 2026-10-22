@@ -1512,6 +1512,136 @@
       "evidence": "https://satellogic.bamboohr.com/careers/list",
       "addedAt": "2026-10-18",
       "status": "candidata"
+    },
+    {
+      "name": "Canonical",
+      "sourceId": "greenhouse",
+      "slug": "canonical",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/canonical",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Monks",
+      "sourceId": "greenhouse",
+      "slug": "monks",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/monks",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Nortal",
+      "sourceId": "greenhouse",
+      "slug": "nortal",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/nortal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Arionkoder",
+      "sourceId": "greenhouse",
+      "slug": "arionkoder",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/arionkoder",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Brainlabs",
+      "sourceId": "greenhouse",
+      "slug": "brainlabs",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/brainlabs",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Cloudbeds",
+      "sourceId": "greenhouse",
+      "slug": "cloudbeds",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/cloudbeds",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "AppDirect",
+      "sourceId": "greenhouse",
+      "slug": "appdirect",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/appdirect",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Power Digital Marketing",
+      "sourceId": "greenhouse",
+      "slug": "powerdigitalmarketing",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/powerdigitalmarketing",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Skydropx LATAM",
+      "sourceId": "ashby",
+      "slug": "skydropx",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/skydropx",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "WPP Production",
+      "sourceId": "greenhouse",
+      "slug": "wppproduction",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/wppproduction",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "AlixPartners",
+      "sourceId": "greenhouse",
+      "slug": "alixpartners",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/alixpartners",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "ARQ",
+      "sourceId": "ashby",
+      "slug": "arq",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://jobs.ashbyhq.com/arq",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "DevRev",
+      "sourceId": "greenhouse",
+      "slug": "devrev",
+      "region": "us",
+      "sector": "",
+      "evidence": "https://job-boards.greenhouse.io/devrev",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
     }
   ]
 }
