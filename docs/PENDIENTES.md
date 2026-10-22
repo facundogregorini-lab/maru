@@ -9,7 +9,23 @@ Pedido del dueño: sumar avisos de calidad con hasta US$20 en Apify, en la líne
    - **Que entren en GitHub:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `-2`, `-3`…; `inventory-file.ts`). Antes era un archivo de 39,7 MB y 10.000 avisos más lo habrían llevado cerca de 90 MB. Los workflows commitean todas las partes (`git add -A -- "data/match/inventory*.json"`).
    - **No pagar repetidos:** con `--actor=valig`, la búsqueda le pasa al Actor los ids de LinkedIn que ya tenemos (`skipJobId`, 5.322 al 22/10) y no los devuelve. Cada línea del ledger de Apify anota `created` (avisos nuevos) y la ubicación. Una búsqueda igual (Actor, palabra, ubicación y filtro remoto) no se repite si se corrió hace menos de 7 días o si en los últimos 30 trajo menos del 30% de nuevos (`apifyRepeatReason`).
    - **Remoto:** `--remote=1` (sólo valig) agrega el filtro «Remoto» de LinkedIn (`f_WT=2`). Se confirmó en el esquema del Actor que acepta `urlParam` y `skipJobId` (consulta con `match-probe`).
-2. **Paso 2 (prueba de ~US$0,50):** 8 búsquedas remotas en inglés × 100 filas (tecnología, datos, marketing, SDR, account executive, customer success, recruiting y contabilidad). Medir: filas cobradas, nuevos, elegibles, remotos y con salario en USD. Resultado: pendiente.
+2. **Hecho (paso 2, prueba del 22/10, 11:35–12:00 UTC):** `--actor=valig --remote=1 --rows=100 --date-posted=month`, tope US$0,48 sobre el gasto del mes. Corrieron 5 de las 8 búsquedas: el ledger estima de más (uso real + precio de las filas pedidas), y por eso frenó antes de customer success, recruiter y accountant.
+
+   | Búsqueda | Filas | Nuevos |
+   | --- | ---: | ---: |
+   | software engineer | 100 | 86 |
+   | data analyst | 100 | 67 |
+   | marketing manager | 100 | 58 |
+   | sales development representative | 100 | 83 |
+   | account executive | 100 | 79 |
+   | **Total** | **500** | **373** |
+
+   - **Saltear los ids funciona:** 0 repetidos. Todo lo que pasó los filtros era nuevo, y los 373 se pueden pedir desde Argentina. Las 127 filas que no entraron se rechazaron: 106 fuera de las áreas, 12 de otro país y otras 9 por otros motivos. «Marketing manager» y «data analyst» perdieron más filas por el filtro de áreas: conviene revisar qué títulos descarta.
+   - **El filtro remoto NO funcionó:** sólo 49 quedaron remotos. El resto es presencial, híbrido o no lo dice, y 166 descripciones no mencionan remoto en ningún lado. valig parece ignorar `urlParam` `f_WT`. Para remoto hace falta otro camino: probar con `cheap_scraper`, que tiene `workType` (sin `skipJobId`), o con palabras como «remote».
+   - **Costo real:** US$0,185 según la cuenta (US$9,762 → US$9,947), unos US$0,0005 por aviso nuevo. Quedan ~US$9,05 del Starter hasta ~19/11.
+   - **USD:** 29 de 373 (8%) mencionan dólares.
+   - **Velocidad:** unos 5 minutos cada 100 filas con 5.300 ids para saltear.
+   - **Empresas:** Mercado Libre, PedidosYa, Globant, Webflow, ESPN, Kraken, Accenture, intive, entre otras.
 3. **Siguiente:** escalar sólo las búsquedas que rindan, en tandas de «última semana» separadas por 10–15 días, dentro del tope que defina el dueño. Ojo con el tamaño: unos 5 KB por aviso. Con más de ~15.000 avisos importados nuevos, revisar memoria y tamaño de las funciones de Vercel (hoy leen todo el inventario en cada instancia).
 
 ## Caída en CV, Postulación y Match (plan en curso, desde 21/10/2026)
