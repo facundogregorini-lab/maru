@@ -10779,6 +10779,1961 @@
         "budgetUsd": 30
       },
       "created": 11
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "community manager",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "8Ivl5d8uiL5YTsSDi",
+        "datasetId": "ge5R9lXsGneRTbUVW"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.39,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "social media",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "Skmh7njfPhuQDiFxA",
+        "datasetId": "qDyvVWJelh2sW2ehm"
+      },
+      "rows": 0,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.39,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "seo",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "8T8xEAu5o6FpqkVRm",
+        "datasetId": "XaydIa1dZXAJsKbZe"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.53,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "performance",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "I2bQueooujGPlAM6P",
+        "datasetId": "xLp9Nr6LEa7WKhfKp"
+      },
+      "rows": 0,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.531,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ecommerce",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "ZBTnb4IQrRoNx1RlE",
+        "datasetId": "XGFUdfITfEWgNwcIo"
+      },
+      "rows": 0,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.531,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "contenidos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "UbGQWvZCDUdgkkNsc",
+        "datasetId": "pAq6LwF343O5tbjBe"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.671,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "branding",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "CtMcr1c1AsDxIrTth",
+        "datasetId": "9eexGkgeu04QdN8VO"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.811,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "publicidad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "0EwpslThMZkMJLdvp",
+        "datasetId": "fdquuN8xrp8vtNrHb"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.951,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "product marketing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "Symy3v6alvt5GcMKh",
+        "datasetId": "WMh0hVNQfqQKhf4JS"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.091,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "medios digitales",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "DVB07CEnlp9XNrClN",
+        "datasetId": "3TumymvfcniYDS4rR"
+      },
+      "rows": 1,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.231,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "programador",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "hyhqwFc5ZiI8PQ6z4",
+        "datasetId": "8vhEKtLhUv6xautw7"
+      },
+      "rows": 78,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.232,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "frontend",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "VlVnYLT9AFTIccCcF",
+        "datasetId": "Pnar7r6RJnmyPFDaQ"
+      },
+      "rows": 5,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.232,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "backend",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "WIagjoa48iaaPkzdk",
+        "datasetId": "87hE4tF3BA6NY94up"
+      },
+      "rows": 15,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.233,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "full stack",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "zbPgL5lsr8sVGArIW",
+        "datasetId": "VgUhyUrOthSQKio1f"
+      },
+      "rows": 13,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.233,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "java",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "RHpi3Qz18zwTCIZAc",
+        "datasetId": "j1DwjCmiDlA5cgIWd"
+      },
+      "rows": 7,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.234,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "python",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "l3OU8slBrXJSlgyEk",
+        "datasetId": "7mqkMny3QkGke3ueM"
+      },
+      "rows": 9,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.374,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "qa",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "xVn4BcytjmJPfUJT4",
+        "datasetId": "SN0BctbrFODUk4Prv"
+      },
+      "rows": 16,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.514,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "tester",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "bCvuFWlq5UaVpP0G4",
+        "datasetId": "cGnyJhlHDO93txvfR"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.654,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "devops",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "8eYwRASZroThxfwvP",
+        "datasetId": "PDaUr7fOHZUmad2qg"
+      },
+      "rows": 13,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.794,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "data engineer",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "XDr9JtfqEGYDQnw3v",
+        "datasetId": "bR6DJIa8HLDMYc8Of"
+      },
+      "rows": 13,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 15.934,
+        "budgetUsd": 30
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "power bi",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "2AJXcSr7HbAzc7T35",
+        "datasetId": "a9jeFrQdKt0bisqiq"
+      },
+      "rows": 0,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.934,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "sap",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "t3DY3UVBMwzKRBSKe",
+        "datasetId": "SffM6rs03x4PWyFgE"
+      },
+      "rows": 16,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.935,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "salesforce",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "NAJxxCsoYzUB6tPNQ",
+        "datasetId": "oI1peRdhdu6d4qRue"
+      },
+      "rows": 10,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 15.935,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ux",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "M0NkdNbVmJZSq26ii",
+        "datasetId": "LrcB5vceV1OgPyeyL"
+      },
+      "rows": 4,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.075,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "product owner",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "kSw39xSJmWtCn8Wpr",
+        "datasetId": "16d4lC0Dp4d8KRHUf"
+      },
+      "rows": 3,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.215,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "scrum",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "YPRlLljmwsbrri5HC",
+        "datasetId": "1lHYmLFV3bqRMuLJM"
+      },
+      "rows": 4,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.216,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "infraestructura",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "jUdxdgWkadiXlAyKE",
+        "datasetId": "x6w6h2ZGsN1SSE0CJ"
+      },
+      "rows": 28,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.216,
+        "budgetUsd": 30
+      },
+      "created": 17
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "seguridad informatica",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "L9DabCIkiZZPPnTz2",
+        "datasetId": "LeQD23cPdVp3GWOIW"
+      },
+      "rows": 5,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.356,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "soporte it",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "r5lLtRe8PYKoOnupG",
+        "datasetId": "Cjmb2bw6Ea283j4k2"
+      },
+      "rows": 7,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.496,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de pricing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "jmDPYaOGYIEyd71xd",
+        "datasetId": "QbUnwde6eeFtsvDLF"
+      },
+      "rows": 3,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.636,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de riesgos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "tZIyCGpt8pNwBYfDX",
+        "datasetId": "f27T4aC6Wf76LSBcL"
+      },
+      "rows": 6,
+      "consumed": 0.14,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 16.776,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de logistica",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "dTTRSHSXIgMrLhod9",
+        "datasetId": "LB4UkeOl0PmiEHXr8"
+      },
+      "rows": 31,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.777,
+        "budgetUsd": 30
+      },
+      "created": 16
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ingeniero industrial",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "p0nuXBgZAu2Yo5HRc",
+        "datasetId": "6DtJxJclrlpiGoSfw"
+      },
+      "rows": 12,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.777,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de calidad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "iOiYO0H3AyeYDA6cd",
+        "datasetId": "XhoaPheqksABycqtQ"
+      },
+      "rows": 69,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.778,
+        "budgetUsd": 30
+      },
+      "created": 29
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "higiene y seguridad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "TyuTvtEveKGQs3PN0",
+        "datasetId": "48SFtF2xe234Aq7SH"
+      },
+      "rows": 31,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.778,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ejecutivo de ventas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "5oInixascHrg4PzA0",
+        "datasetId": "6f6MJYdARRAJV6QKp"
+      },
+      "rows": 120,
+      "consumed": 0.0455,
+      "quota": {
+        "usageTotalUsd": 0.0455,
+        "spentUsd": 16.824,
+        "budgetUsd": 30
+      },
+      "created": 13
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "cobranzas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "KQkfF0SgWubp2RkjF",
+        "datasetId": "sF2Joc61VEIZpeyI4"
+      },
+      "rows": 120,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.824,
+        "budgetUsd": 30
+      },
+      "created": 59
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "facturacion",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "EKgNwumZaekExCFVP",
+        "datasetId": "mrliwf5Z6KVKsJrL1"
+      },
+      "rows": 54,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.825,
+        "budgetUsd": 30
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de cuentas a cobrar",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "JB93FAGOaY5kyNx8k",
+        "datasetId": "QalNUvr22aLpvKjjF"
+      },
+      "rows": 2,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.825,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "seguros",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "LdTWO1g6d5YsHIMd9",
+        "datasetId": "kLbW2EG6V2dobK6vO"
+      },
+      "rows": 79,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 16.826,
+        "budgetUsd": 30
+      },
+      "created": 24
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "banca",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.14",
+        "location": "Argentina",
+        "runId": "w49Clrai2CyXKAY7r"
+      },
+      "rows": 0,
+      "consumed": 0.14,
+      "quota": {
+        "status": "FAILED"
+      },
+      "error": "Ejecución incompleta: no se importa."
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "community manager",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "VN8cidSy4DgW0FFYd",
+        "datasetId": "1wOTOhBAuGyCvxmmq"
+      },
+      "rows": 62,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 17.166,
+        "budgetUsd": 30
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "social media",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "SHUdjsRfJ0IbNe3c8",
+        "datasetId": "gkTWoTvvCYBBiE0Bh"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 17.167,
+        "budgetUsd": 30
+      },
+      "created": 27
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "seo",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "sJYaiZia2FkRCbed6",
+        "datasetId": "nhjzNDUj5rg3ESWgu"
+      },
+      "rows": 25,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 17.367,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "performance",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "lNv8hXAVh4N0OQqc8",
+        "datasetId": "4zrm45skhR41BfNWT"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 17.567,
+        "budgetUsd": 30
+      },
+      "created": 44
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ecommerce",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "TEHji95qL28ngtvtI",
+        "datasetId": "lHsd6Y4zeFmV4Yfwk"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 17.767,
+        "budgetUsd": 30
+      },
+      "created": 28
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contenidos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "lZdfAQa8aKbaLhj73",
+        "datasetId": "lnOrmcFqLQSVlSSHp"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 17.967,
+        "budgetUsd": 30
+      },
+      "created": 26
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "branding",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "syWGcRrBMMC8CbWY8",
+        "datasetId": "WWG4tpWs4LkC8Ik8y"
+      },
+      "rows": 47,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 18.167,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "publicidad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "KRJRCY4bPngjaQAkz",
+        "datasetId": "2h9E0FjbLbYXiFm4p"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 18.367,
+        "budgetUsd": 30
+      },
+      "created": 27
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de marketing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "DIbUj70lCqPYFTjr3",
+        "datasetId": "NEbJ6CREIvcG827yf"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.368,
+        "budgetUsd": 30
+      },
+      "created": 29
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "product marketing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "qdd7jkPQ2x2xBiDzV",
+        "datasetId": "sNNnYU6WMw4ghjIyW"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 18.568,
+        "budgetUsd": 30
+      },
+      "created": 28
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "medios digitales",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "oh4PTxVUx7ng2TWHj",
+        "datasetId": "Qc11WeKT4foAxAuUI"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.569,
+        "budgetUsd": 30
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "programador",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "lkkvlZmuFIvSvOYDN",
+        "datasetId": "2tELhJN8i2jmbj5Au"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.57,
+        "budgetUsd": 30
+      },
+      "created": 36
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "frontend",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "oxhcvU0EwqfGWN3MA",
+        "datasetId": "nWnfpgIWmUfzXcGnF"
+      },
+      "rows": 25,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.571,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "backend",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Om9mkOKYWtxin9hLi",
+        "datasetId": "ldT4w2VYLCT3QYTAz"
+      },
+      "rows": 45,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.572,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "full stack",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "4MCoCnhW9YnLDNmnv",
+        "datasetId": "uUEKDZISUhudIbh9F"
+      },
+      "rows": 26,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 18.573,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "java",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Tppf5KPxfINdQHkAi",
+        "datasetId": "QaL7uoAJfh7LtOcKH"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 18.773,
+        "budgetUsd": 30
+      },
+      "created": 21
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "python",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "MQjD46BWiaHbaTXBy",
+        "datasetId": "kWPOhnqOXqT3KtnMc"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 18.973,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "qa",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ca9sge128XyhNm5qA",
+        "datasetId": "CVcWEnqRdB5uiTAE2"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 19.173,
+        "budgetUsd": 30
+      },
+      "created": 30
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "tester",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ZCQfqHdcfjv7i8Jdp",
+        "datasetId": "pv1n2s35e0etEssAc"
+      },
+      "rows": 32,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 19.373,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "devops",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "JZdH1FkFcN8uEU984",
+        "datasetId": "GlZS61AIuOadwJ9fd"
+      },
+      "rows": 34,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 19.573,
+        "budgetUsd": 30
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "data engineer",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "h7zhzOHaRUs9wEtCo",
+        "datasetId": "iUWAQQWClXo3EMehY"
+      },
+      "rows": 11,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 19.773,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "power bi",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "THs9vhtMQgs8xDctR",
+        "datasetId": "dEb1qgytFsq9r4okM"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 19.973,
+        "budgetUsd": 30
+      },
+      "created": 25
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "sap",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "CfLtx45RaUzxlXA0N",
+        "datasetId": "dClfpY40J7l8cdngl"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 20.173,
+        "budgetUsd": 30
+      },
+      "created": 27
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "salesforce",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ySBovE0ZHlWCHrqQi",
+        "datasetId": "0ISYTfWCPgxoxzc1i"
+      },
+      "rows": 48,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 20.373,
+        "budgetUsd": 30
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ux",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "XRIa4dtkdUYLNOLQV",
+        "datasetId": "DTdB7Z8OF9EHlhbl6"
+      },
+      "rows": 20,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 20.573,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "product owner",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "CeoNYjjy1JdPI9oVO",
+        "datasetId": "LaRi5BYAWrbPdxq04"
+      },
+      "rows": 5,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 20.773,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "scrum",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "G3ZfowRUqECBOi8ji",
+        "datasetId": "ZbM20gJW8tGz7qYfv"
+      },
+      "rows": 22,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 20.973,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "infraestructura",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "dhpcH0Yzfxs60ssNS",
+        "datasetId": "L7qcum24RO8lTisc8"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 20.974,
+        "budgetUsd": 30
+      },
+      "created": 35
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "seguridad informatica",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "id9Pd8eKekdVsTSGr",
+        "datasetId": "1ciFHzXtnTopU3pce"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 20.975,
+        "budgetUsd": 30
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "soporte it",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Xqr90LyEdsIrLIhjI",
+        "datasetId": "ioWnFXtROlyTYnH94"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 20.976,
+        "budgetUsd": 30
+      },
+      "created": 26
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de pricing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "2BmxXAOjgcq66H1Mi",
+        "datasetId": "lqnU64kB8m7PFnwU5"
+      },
+      "rows": 9,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 21.176,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de riesgos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "6uj12eJTvM5iMFXRW",
+        "datasetId": "coVpUE7BdRHRWLyqv"
+      },
+      "rows": 77,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 21.376,
+        "budgetUsd": 30
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de logistica",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "UOZubzSfCdnWtTB2R",
+        "datasetId": "dME59lTBaBLZbnCef"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 21.576,
+        "budgetUsd": 30
+      },
+      "created": 40
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ingeniero industrial",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "tfFvMP5YqKHBm7OT9",
+        "datasetId": "uTyEFEGEnOr2YSklR"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 21.577,
+        "budgetUsd": 30
+      },
+      "created": 19
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de calidad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "z6cyHfbGYpIhZs0IF",
+        "datasetId": "q3iqflZ080CLQeXKl"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 21.578,
+        "budgetUsd": 30
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "higiene y seguridad",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Oe9Fl8qxJ45Pgea4n",
+        "datasetId": "F6IByCxBsJfEOGSAl"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 21.778,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ejecutivo de ventas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "pRliksD5oZg0rrWi7",
+        "datasetId": "tberPmIuKxmLu9OxK"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 21.978,
+        "budgetUsd": 30
+      },
+      "created": 52
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "cobranzas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "n9JXq6Uxa9laJhOI2",
+        "datasetId": "YkHXwKx3Pz6H56R61"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.178,
+        "budgetUsd": 30
+      },
+      "created": 46
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "facturacion",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "RG5Th8Xr8HOSjQk48",
+        "datasetId": "BwG10gqfdfHuAgKpR"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 22.179,
+        "budgetUsd": 30
+      },
+      "created": 33
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de cuentas a cobrar",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "bli6TGNtIetkwza5t",
+        "datasetId": "P6yaVtC35J759m4Lu"
+      },
+      "rows": 15,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.379,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "seguros",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "hiZgR1VASsMkDhfhg",
+        "datasetId": "jazAN3L8GWQ93mmZx"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.579,
+        "budgetUsd": 30
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "banca",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "P2tIuMU8yYqfLOMYO",
+        "datasetId": "zjdPnHYXXfAZodeIl"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.779,
+        "budgetUsd": 30
+      },
+      "created": 39
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista contable",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "NdLMeyoFaaGJLBIoo",
+        "datasetId": "q5BQ5pYR4TYRguNWe"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.979,
+        "budgetUsd": 30
+      },
+      "created": 17
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista financiero",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "TWG5U2FpYwMzZLfXq",
+        "datasetId": "O2P93bRDmEz3BOhbE"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.179,
+        "budgetUsd": 30
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de recursos humanos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "bTytUu4HAFkgbcquk",
+        "datasetId": "O9Mh3sa3fER4VpNH9"
+      },
+      "rows": 83,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.379,
+        "budgetUsd": 30
+      },
+      "created": 14
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "marketing digital",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "4AWP2D6j32Ha8g6IU",
+        "datasetId": "WrOuhoZs69nDFeIws"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.579,
+        "budgetUsd": 30
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de datos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "bKrd2OWE9FWr9O0e5",
+        "datasetId": "jP847gMhtghQvqsYt"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.779,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T22:03:21.109Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "desarrollador",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "JQhTPJbpoY7hDH8zk",
+        "datasetId": "xSwNC3AYu0rZIOue1"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.979,
+        "budgetUsd": 30
+      },
+      "created": 4
     }
   ]
 }
