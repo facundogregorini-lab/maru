@@ -13690,6 +13690,798 @@
         "budgetUsd": 34
       },
       "created": 1
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista administrativo",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "q9D1n8wmfFdOIJTZf",
+        "datasetId": "0eqtpBhcz81XmNiwz"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 22.933,
+        "budgetUsd": 34
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "QKi6cdE0rnQ8WeHFk",
+        "datasetId": "bs1KHVyTIeQKW3SGw"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.133,
+        "budgetUsd": 34
+      },
+      "created": 29
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de cuentas a pagar",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Kdsta05NL1YXSH7xb",
+        "datasetId": "sNU8iyZeuAKQYrCKm"
+      },
+      "rows": 28,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.333,
+        "budgetUsd": 34
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de impuestos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "SbxnJaPvVidEC7F9D",
+        "datasetId": "HpC2aAVpbFXdsHJem"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.533,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "tesoreria",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "nGsEUgskUUxCaKhE9",
+        "datasetId": "Elxfj3tJlIQCTGJtc"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 23.534,
+        "budgetUsd": 34
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "auditor",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ca6EUvgOfa0DmwUUy",
+        "datasetId": "pVnWn6lor6YlJ0cZC"
+      },
+      "rows": 103,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.734,
+        "budgetUsd": 34
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "controller",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ufaaJ9VD6MU0iKg53",
+        "datasetId": "nIOKuTaRyjNQZM8Iy"
+      },
+      "rows": 20,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 23.934,
+        "budgetUsd": 34
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de costos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "B9Nf9orz25wJCJxSw",
+        "datasetId": "sgSiakrgQVJabr5up"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 24.134,
+        "budgetUsd": 34
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de creditos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "ya88JfBfj61CS6UDX",
+        "datasetId": "gkJVAfflV53lb1MML"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 24.334,
+        "budgetUsd": 34
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "seleccion",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "53f8DE63ytVxIdezf",
+        "datasetId": "2hpFqWqZpwk8Epz6N"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 24.534,
+        "budgetUsd": 34
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "liquidacion de sueldos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "6sXq2qB8cnjrLUOhI",
+        "datasetId": "dJ84pD13Ocf8fDLS1"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.535,
+        "budgetUsd": 34
+      },
+      "created": 17
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "capacitacion",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "CuYzTDK2ubwt7YcPA",
+        "datasetId": "u443zNgmy3UlixchG"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.536,
+        "budgetUsd": 34
+      },
+      "created": 21
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "abogado",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "7CCgaJyLX8CRIuFbL",
+        "datasetId": "GPEHceJOuguhsuVgh"
+      },
+      "rows": 119,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.537,
+        "budgetUsd": 34
+      },
+      "created": 23
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "legales",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "OB8QaUBWFy5PozIrE",
+        "datasetId": "2KZ27KICrHDpPwjSI"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.538,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ejecutivo de cuentas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "i9zx6sfqdmlUEVMhU",
+        "datasetId": "8rzU8CDEw0G6E3ts0"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.539,
+        "budgetUsd": 34
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "key account",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "lqAkEUI7SsRiQWFe7",
+        "datasetId": "CK6bmRJRWHCo5TcQ1"
+      },
+      "rows": 10,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 24.739,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "desarrollo de negocios",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "kcYufckzcopeR6X5z",
+        "datasetId": "bJ3TX2PHth5Hzujb1"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.74,
+        "budgetUsd": 34
+      },
+      "created": 23
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ejecutivo comercial",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Rg7x6twwucSWGAH3A",
+        "datasetId": "sTL6hf9esV1S805jp"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.741,
+        "budgetUsd": 34
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "marketing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "kqAj8EfhMZbmctcqX",
+        "datasetId": "Xm55dXrMvh5v4p8pW"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.742,
+        "budgetUsd": 34
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "comunicacion",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "0uNP0xbJESAdCaYBV",
+        "datasetId": "VMW6iUcPGw0pXwPjL"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.743,
+        "budgetUsd": 34
+      },
+      "created": 17
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "trade marketing",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "mc5eZWrOiFlTWfsRh",
+        "datasetId": "xB8Bd4QzaQ7rTmKMy"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.744,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de compras",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "yfswPWHRgCYgFnQtk",
+        "datasetId": "389JOBlyHHxHptMhk"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 24.944,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "comprador",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "SahNUKGgyHOs5SK5C",
+        "datasetId": "uOS3J02PxTPtuoRJZ"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.945,
+        "budgetUsd": 34
+      },
+      "created": 24
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "comercio exterior",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "CTBzv0Fx1aSJg4liC",
+        "datasetId": "2HW8baxkMy4SvpqBM"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 24.946,
+        "budgetUsd": 34
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "supply chain",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "xfLSJZuSZ10YUandh",
+        "datasetId": "qNg6lM7oWfEyxAYgP"
+      },
+      "rows": 40,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 25.146,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "planeamiento",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "NTaKkgOcTBBjo4bCx",
+        "datasetId": "TiNiSss2exh6NOaJa"
+      },
+      "rows": 68,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 25.346,
+        "budgetUsd": 34
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de procesos",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "cZV8UbWkmD8CBHWTn",
+        "datasetId": "byjChqJ1OJVu53Oyr"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 25.546,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "project manager",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "HWhyKz20reNddIvfe",
+        "datasetId": "ms4UmWfeA6430ZScR"
+      },
+      "rows": 101,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 25.746,
+        "budgetUsd": 34
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "business intelligence",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "p1bPjSeXjvh9vUt0u",
+        "datasetId": "bpZnhJuWuXHzE1fZi"
+      },
+      "rows": 27,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 25.946,
+        "budgetUsd": 34
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista funcional",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "vfkvBbMMAbBaMat5T",
+        "datasetId": "hpgxeJxWGFiOm9VCI"
+      },
+      "rows": 100,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 26.146,
+        "budgetUsd": 34
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de sistemas",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "tvmNS4ZQZfPGUCbYn",
+        "datasetId": "MP1C7wgc6QX45cLdb"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 26.147,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de soporte",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "Na0RQlhlekU6I9HE3",
+        "datasetId": "bANlCZa4FRA7VkOuT"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 26.148,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista de atencion al cliente",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "8W6B1Vc3KV57Yx3Kp",
+        "datasetId": "5SldUNRYnwpLz3XBK"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 26.149,
+        "budgetUsd": 34
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "customer success",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "mTKwc05ErntJuhbCU",
+        "datasetId": "Yx75GpWGES3vTSEzZ"
+      },
+      "rows": 11,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 26.349,
+        "budgetUsd": 34
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "jovenes profesionales",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "eQ6M8qvdEGZeefNic",
+        "datasetId": "yF73DcXaLTyRHahrD"
+      },
+      "rows": 120,
+      "consumed": 0.001,
+      "quota": {
+        "usageTotalUsd": 0.001,
+        "spentUsd": 26.35,
+        "budgetUsd": 34
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T22:44:12.269Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "trainee",
+        "rows": "120",
+        "maxTotalChargeUsd": "0.2",
+        "location": "Argentina",
+        "runId": "eaicQOF2gP0DmROsT",
+        "datasetId": "igTrJEOKyOoRq2GVn"
+      },
+      "rows": 120,
+      "consumed": 0.2,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 26.55,
+        "budgetUsd": 34
+      },
+      "created": 7
     }
   ]
 }
