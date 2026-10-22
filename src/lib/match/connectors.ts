@@ -10,7 +10,7 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors" | "breezy" | "bamboohr";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors" | "breezy" | "bamboohr" | "hiringroom";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
@@ -1288,6 +1288,164 @@ export async function fetchBamboo(board: Board, opts?: RetryOptions): Promise<Bo
   return { postings, complete: true, received: data.result.length };
 }
 
+/* ---------- HiringRoom (portal público de empleo de cada empresa) ---------- */
+
+const HR_MAX_DETAILS = 40;
+const HR_ID = /^[a-f0-9]{24}$/;
+
+/** Aviso del portal nuevo de HiringRoom (JSON-LD `JobPosting` dentro de un `ItemList`). */
+export type HiringroomJsonPosting = {
+  title?: string;
+  hiringOrganization?: { name?: string };
+  jobLocation?: { address?: string | { addressLocality?: string; addressRegion?: string; addressCountry?: string } };
+  description?: string;
+  datePosted?: string;
+  validThrough?: string | null;
+  employmentType?: string;
+  url?: string;
+};
+
+/** Tarjeta del portal viejo (HTML armado en el servidor). */
+export type HiringroomCard = { id: string; title: string; location: string; area: string; employment: string; modality: string; seniority: string };
+
+export function hiringroomAccount(slug: string | undefined): string {
+  if (!slug || !/^[a-z0-9-]{2,60}$/i.test(slug)) throw new Error(`Cuenta de HiringRoom inválida: ${slug}`);
+  return slug.toLowerCase();
+}
+
+/**
+ * El id del aviso es un ObjectId de MongoDB: los primeros 8 hexadecimales son el segundo en que se dio de alta.
+ * En los avisos con `datePosted` coincidió con esa fecha o fue unos días anterior (se creó antes de publicarlo).
+ */
+export function hiringroomIdDate(id: string): string | null {
+  if (!HR_ID.test(id)) return null;
+  const s = parseInt(id.slice(0, 8), 16);
+  return s > 1_262_304_000 ? new Date(s * 1000).toISOString() : null; // posterior a 2010: si no, no es una fecha
+}
+
+const hrText = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+
+/** Portal nuevo: el listado viene como JSON-LD. Devuelve null si la página no lo tiene. */
+export function parseHiringroomJsonLd(html: string): { items: HiringroomJsonPosting[]; total: number | null } | null {
+  for (const m of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
+    let data: { "@type"?: string; numberOfItems?: number; itemListElement?: { item?: HiringroomJsonPosting & { "@type"?: string } }[] };
+    try {
+      data = JSON.parse(m[1]);
+    } catch {
+      continue;
+    }
+    if (data?.["@type"] !== "ItemList" || !Array.isArray(data.itemListElement)) continue;
+    const items = data.itemListElement.map((e) => e?.item).filter((i): i is HiringroomJsonPosting & { "@type"?: string } => i?.["@type"] === "JobPosting");
+    return { items, total: typeof data.numberOfItems === "number" ? data.numberOfItems : null };
+  }
+  return null;
+}
+
+/** Portal viejo: tarjetas `a[href=/jobs/get_vacancy/<id>]` y el rótulo "1-20 de 40 vacantes". Null si no tiene ese marcado. */
+export function parseHiringroomCards(html: string): { cards: HiringroomCard[]; total: number | null } | null {
+  const cards: HiringroomCard[] = [];
+  for (const m of html.matchAll(/<a href="\/jobs\/get_vacancy\/([a-f0-9]{24})"[^>]*>([\s\S]*?)<\/a>/g)) {
+    const body = m[2];
+    const title = hrText(body.match(/class="[^"]*name__vacancy[^"]*"[^>]*>([\s\S]*?)<\/h4>/)?.[1] ?? "");
+    if (!title) continue;
+    const after = (icon: string) => hrText(body.match(new RegExp(`<i class="[^"]*\\bhr-${icon}\\b[^"]*"[^>]*></i>([^<]*)<`))?.[1] ?? "");
+    cards.push({ id: m[1], title, location: after("Location-pin"), area: after("Work-area"), employment: after("Clock"), modality: after("Company") || after("Remote"), seniority: after("Campus") });
+  }
+  const label = html.match(/paginationtxt[^>]*>\s*\d+\s*-\s*\d+\s+de\s+(\d+)\s+vacantes/);
+  if (!cards.length && !label) return null;
+  return { cards: [...new Map(cards.map((c) => [c.id, c])).values()], total: label ? Number(label[1]) : null };
+}
+
+/** Descripción, requisitos y beneficios del aviso en el portal viejo (bloques `job-description-content`). */
+export function hiringroomDescription(html: string): string {
+  const parts = [...html.matchAll(/<div[^>]*class="[^"]*job-description-content[^"]*"[^>]*>([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+  return htmlToText(parts.join("<br><br>"), DESC_MAX);
+}
+
+function hiringroomWorkplace(modality: string, title: string, location: string): Field<Workplace> {
+  const t = fold(modality);
+  if (/hibrid/.test(t)) return wp("hibrido", "fuente", `modalidad: ${modality}`);
+  if (/remot/.test(t)) return wp("remoto", "fuente", `modalidad: ${modality}`);
+  if (/presencial/.test(t)) return wp("presencial", "fuente", `modalidad: ${modality}`);
+  return wp(workplaceFromText(`${title} ${location}`), "fuente");
+}
+
+export function normalizeHiringroom(
+  a: { id: string; title: string; location: string; description: string; modality?: string; employment?: string; seniority?: string; area?: string; datePosted?: string | null; validThrough?: string | null; company?: string },
+  board: Board,
+): NormalizedPosting {
+  const account = hiringroomAccount(board.slug);
+  const url = `https://${account}.hiringroom.com/jobs/get_vacancy/${a.id}`;
+  const workplace = hiringroomWorkplace(a.modality ?? "", a.title, a.location);
+  const countryName = a.location.split(",").pop()?.trim() ?? "";
+  const country = countryIso(countryName);
+  return {
+    sourceId: "hiringroom",
+    boardId: board.boardId,
+    externalId: a.id,
+    title: a.title,
+    company: board.company || a.company || account,
+    companySlug: account,
+    sourceUrl: url,
+    applyUrl: url,
+    linkRequired: false,
+    descriptionText: a.description,
+    descriptionComplete: a.description.length > 200,
+    locations: a.location ? [a.location] : [],
+    countries: country && workplace.value !== "remoto" ? [country] : [],
+    regionText: country && workplace.value === "remoto" ? [countryName] : [],
+    workplace,
+    remoteFlag: null,
+    employmentType: null,
+    department: a.area || undefined,
+    salary: null,
+    publishedAt: iso(a.datePosted) ?? hiringroomIdDate(a.id),
+    updatedAt: null,
+    expiresAt: iso(a.validThrough),
+    ...(a.employment ? { employmentHint: a.employment } : {}),
+    ...(a.seniority ? { seniorityHint: a.seniority } : {}),
+  };
+}
+
+function hiringroomJsonToPosting(j: HiringroomJsonPosting, board: Board): NormalizedPosting | null {
+  const id = j.url?.match(/\/jobs\/get_vacancy\/([a-f0-9]{24})(?:[/?#]|$)/)?.[1];
+  const title = j.title?.trim();
+  if (!id || !title) return null;
+  const addr = j.jobLocation?.address;
+  const location = typeof addr === "string" ? addr.trim() : [addr?.addressLocality, addr?.addressRegion, addr?.addressCountry].filter(Boolean).join(", ");
+  return normalizeHiringroom(
+    { id, title, location, description: htmlToText(j.description ?? "", DESC_MAX), employment: j.employmentType, datePosted: j.datePosted, validThrough: j.validThrough, company: j.hiringOrganization?.name },
+    board,
+  );
+}
+
+/**
+ * HiringRoom no tiene API pública: leemos el portal de empleo de la empresa como cualquier visitante.
+ * El portal nuevo trae todo el listado en JSON-LD (un pedido). El viejo arma tarjetas en el servidor y
+ * pagina de a 20 con JavaScript: tomamos la primera página y, si hay más, la sincronización queda
+ * incompleta (no se cierran avisos que no vimos). La descripción del portal viejo sale de la página
+ * de cada aviso (hasta 40, en serie). Si la página no tiene ninguno de los dos formatos, falla.
+ */
+export async function fetchHiringroom(board: Board, opts?: RetryOptions): Promise<BoardFetch> {
+  const account = hiringroomAccount(board.slug);
+  const base = `https://${account}.hiringroom.com`;
+  const html = await fetchText(`${base}/portal`, opts);
+  const ld = parseHiringroomJsonLd(html);
+  if (ld) {
+    const postings = ld.items.map((j) => hiringroomJsonToPosting(j, board)).filter((p): p is NormalizedPosting => !!p);
+    if (ld.items.length && !postings.length) throw new Error("Los avisos de HiringRoom no tienen el formato esperado");
+    return { postings, complete: postings.length === ld.items.length && (ld.total === null || ld.total <= ld.items.length), received: ld.items.length };
+  }
+  const old = parseHiringroomCards(html);
+  if (!old) throw new Error("El portal de HiringRoom no tiene el formato esperado");
+  const postings: NormalizedPosting[] = [];
+  for (const [i, c] of old.cards.entries()) {
+    const description = inDetailWindow(i, old.cards.length, HR_MAX_DETAILS) ? await fetchText(`${base}/jobs/get_vacancy/${c.id}`, opts).then(hiringroomDescription).catch(() => "") : "";
+    postings.push(normalizeHiringroom({ ...c, description }, board));
+  }
+  return { postings, complete: old.total !== null && old.cards.length >= old.total, received: old.cards.length };
+}
+
 export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) => Promise<BoardFetch>> = {
   greenhouse: fetchGreenhouse,
   lever: fetchLever,
@@ -1303,6 +1461,7 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   successfactors: fetchSuccessFactors,
   breezy: fetchBreezy,
   bamboohr: fetchBamboo,
+  hiringroom: fetchHiringroom,
 };
 
 /** Detecta ATS y slug a partir de la URL de una bolsa de empleo o de un aviso. */

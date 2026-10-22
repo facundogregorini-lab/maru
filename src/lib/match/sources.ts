@@ -166,6 +166,25 @@ export const SOURCES: SourceInfo[] = [
     linkRequired: false,
   },
   {
+    id: "hiringroom",
+    name: "HiringRoom (portal de empleo de cada empresa)",
+    kind: "ats",
+    docs: ["https://www.hiringroom.com/"],
+    access:
+      "GET https://<cuenta>.hiringroom.com/portal (el listado; el portal nuevo lo trae en JSON-LD JobPosting) y, en el portal viejo, la página pública de cada aviso para la descripción (sin autenticación).",
+    terms:
+      "No hay API pública documentada: es la página que la empresa publica para que cualquiera vea y se postule a sus avisos (el portal nuevo los marca con JobPosting para buscadores). No tiene robots.txt (404) y no encontramos condiciones que prohíban leerla. Uso mínimo: sólo avisos publicados, en serie, extracto y enlace al aviso del empleador; la postulación sigue en HiringRoom. Si una empresa lo bloquea o pide que no se use, se la excluye del directorio.",
+    limits: "1 pedido del portal y, en el portal viejo, hasta 40 páginas de aviso por empresa y sincronización, en serie.",
+    reviewedAt: "2026-10-22",
+    status: "habilitada",
+    enabled: true,
+    cost: "gratis",
+    partialFeed: false,
+    linkRequired: false,
+    notes:
+      "El portal viejo pagina de a 20 con JavaScript: con más de 20 avisos sólo se lee la primera página y la sincronización queda incompleta (no cierra avisos). Sin fecha exacta en el portal viejo, la fecha sale del id del aviso (ObjectId), que puede ser unos días anterior a la publicación.",
+  },
+  {
     id: "workday",
     name: "Workday (búsqueda del sitio de empleo de cada empresa)",
     kind: "ats",
