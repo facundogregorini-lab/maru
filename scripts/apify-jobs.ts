@@ -7,7 +7,7 @@ import { applyBoard, buildOpportunities, emptyInventory } from "../src/lib/match
 const arg = (name: string) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 async function main() {
   const source = arg("source") as ApifyJobSource;
-  if (!Object.hasOwn(APIFY_JOBS, source)) throw new Error("Elegí --source=linkedin, indeed o computrabajo.");
+  if (!Object.hasOwn(APIFY_JOBS, source)) throw new Error("Elegí --source=linkedin, indeed, computrabajo o bumeran.");
   const config = APIFY_JOBS[source];
   const limit = Number(arg("max-items") ?? 50);
   const input = apifyJobInput(source, arg("keyword") ?? "analista", limit);

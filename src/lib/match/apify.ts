@@ -1,10 +1,12 @@
-import type { NormalizedPosting } from "./types";
+import type { NormalizedPosting, Workplace } from "./types";
 import { htmlToText } from "./text";
 
 export const APIFY_JOBS = {
   linkedin: { actor: "curious_coder/linkedin-jobs-scraper", name: "LinkedIn", fields: ["id", "title", "companyName", "link", "applyUrl", "location", "descriptionText", "postedAt", "salary", "seniorityLevel", "employmentType", "companyLogo"] },
   indeed: { actor: "curious_coder/indeed-scraper", name: "Indeed", fields: ["id", "title", "companyDetails.name", "viewJobLink", "originalApplyUrl", "formattedLocation", "location.countryCode", "jobDescription", "pubDate", "expirationDate", "expired", "salary", "jobTypes", "companyDetails.logoUrl", "companyLogoUrl"] },
   computrabajo: { actor: "shahidirfan/Computrabajo-Jobs-Scraper", name: "Computrabajo", fields: ["id", "title", "company", "url", "applyUrl", "location", "descriptionText", "postedDate", "updatedAt", "salary", "jobType", "companyLogo", "logo"] },
+  // Bumeran Argentina. Nunca pedimos contactName, contactEmail, contactPhone, extractedEmails/Phones/Urls ni socialProfiles.
+  bumeran: { actor: "blackfalcondata/bumeran-scraper", name: "Bumeran", fields: ["jobKey", "title", "company", "isConfidential", "canonicalUrl", "portalUrl", "location", "descriptionHtml", "description", "postedDate", "expiresDate", "sourceCountry", "sourceDomain", "salaryText", "salaryMin", "salaryMax", "salaryCurrency", "salaryType", "workModality", "employmentType", "contractType", "seniorityLevel", "jobArea", "companyLogo", "changeType"] },
 } as const;
 export type ApifyJobSource = keyof typeof APIFY_JOBS;
 
@@ -25,6 +27,13 @@ export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cade
 /** Ubicaciones de LinkedIn que abarcan a la Argentina sin nombrarla: la elegibilidad decide con el texto del aviso. */
 const LATAM_LOCATION = /\b(latin america|latam|latinoam[eé]rica|am[eé]rica latina|south america|sudam[eé]rica)\b/i;
 export const linkedinJobId = (link: string) => /\/jobs\/view\/(?:[^/?#]*-)?(\d{6,})/.exec(link)?.[1] ?? "";
+/** Id de Bumeran: el número al final del enlace (".../empleos/analista-contable-empresa-1118281573.html"). */
+export const bumeranJobId = (link: string) => /^https?:\/\/(?:www\.)?bumeran\.com\.ar\/empleos\/(?:[^/?#]*-)?(\d{6,})\.html/.exec(link)?.[1] ?? "";
+/** Modalidad que Bumeran informa en cada aviso ("Remoto", "Híbrido", "Presencial"). */
+function bumeranWorkplace(value: string): Workplace {
+  const v = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return /remot/.test(v) ? "remoto" : /hibrid/.test(v) ? "hibrido" : /presencial/.test(v) ? "presencial" : "desconocido";
+}
 const str = (v: unknown) => typeof v === "string" ? v.trim() : "";
 const obj = (v: unknown): Record<string, unknown> => v && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : {};
 function url(value: unknown, base?: string): string {
@@ -55,21 +64,23 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
   const reject = (why: string) => { rejected[why] = (rejected[why] ?? 0) + 1; };
   for (const raw of rows) {
     const r = obj(raw);
-    const rawId = str(r.id) || (typeof r.id === "number" ? String(r.id) : "") || str(r.jobId) || (typeof r.jobId === "number" ? String(r.jobId) : "");
+    const rawId = source === "bumeran" ? "" : str(r.id) || (typeof r.id === "number" ? String(r.id) : "") || str(r.jobId) || (typeof r.jobId === "number" ? String(r.jobId) : "");
     const title = str(r.title) || str(r.jobTitle);
     const company = source === "linkedin" ? str(r.companyName) || str(r.company) || str(obj(r.company).name) : source === "indeed" ? str(r["companyDetails.name"]) || str(obj(r.companyDetails).name) : str(r.company);
     // El HTML conserva los párrafos y las listas: sin ellos no se separan requisitos de deseables
     // (valig trae "description" en texto plano pegado, sin saltos de línea).
     const description = htmlToText(str(r.descriptionHtml) || str(r.descriptionText) || str(r.jobDescription) || str(r.description), 100000);
-    const sourceUrl = source === "linkedin" ? url(r.link) || url(r.jobUrl) || url(r.url) : source === "indeed" ? url(r.viewJobLink, "https://ar.indeed.com") : url(r.url);
+    const sourceUrl = source === "linkedin" ? url(r.link) || url(r.jobUrl) || url(r.url) : source === "indeed" ? url(r.viewJobLink, "https://ar.indeed.com") : source === "bumeran" ? url(r.canonicalUrl) || url(r.portalUrl) : url(r.url);
     const applyUrl = source === "indeed" ? url(r.originalApplyUrl) || sourceUrl : url(r.applyUrl) || sourceUrl;
     // En LinkedIn el id sale del enlace: así coinciden los avisos que traen Actors distintos.
-    const id = (source === "linkedin" && linkedinJobId(sourceUrl)) || rawId;
+    // En Bumeran, el número del aviso (jobKey); "jobId" del Actor es un hash propio que no usamos.
+    const bumeranKey = typeof r.jobKey === "number" ? String(r.jobKey) : str(r.jobKey);
+    const id = source === "bumeran" ? (/^\d{6,}$/.test(bumeranKey) ? bumeranKey : bumeranJobId(sourceUrl)) : (source === "linkedin" && linkedinJobId(sourceUrl)) || rawId;
     const publishedAt = date(r.postedAt ?? r.pubDate ?? r.postedDate ?? r.publishedAt);
-    const expiresAt = date(r.expirationDate);
+    const expiresAt = date(r.expirationDate ?? r.expiresDate);
     if (!id || !title || !company || !sourceUrl || !applyUrl) { reject("campos_obligatorios"); continue; }
     if (description.length < 300) { reject("descripcion_corta"); continue; }
-    if (r.expired === true || (expiresAt && expiresAt <= now) || (publishedAt && Date.parse(now) - Date.parse(publishedAt) > 30 * 86400000)) { reject("vencido_o_antiguo"); continue; }
+    if (r.expired === true || r.changeType === "EXPIRED" || (expiresAt && expiresAt <= now) || (publishedAt && Date.parse(now) - Date.parse(publishedAt) > 30 * 86400000)) { reject("vencido_o_antiguo"); continue; }
     const country = str(r["location.countryCode"]) || str(obj(r.location).countryCode);
     if (source === "indeed" && country.toUpperCase() !== "AR") { reject("pais_no_confirmado"); continue; }
     // LinkedIn devuelve el país en cada ubicación; Computrabajo AR lo identifica por el host.
@@ -77,11 +88,17 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
     const latam = source === "linkedin" && !/argentina|buenos aires/i.test(location) && LATAM_LOCATION.test(location);
     if (source === "linkedin" && !/argentina|buenos aires/i.test(location) && !latam) { reject("pais_no_confirmado"); continue; }
     if (source === "computrabajo" && new URL(sourceUrl).hostname !== "ar.computrabajo.com") { reject("pais_no_confirmado"); continue; }
+    // Bumeran: sólo el sitio argentino (el Actor también cubre Perú, México, Chile y otros).
+    if (source === "bumeran" && (!/^(www\.)?bumeran\.com\.ar$/.test(new URL(sourceUrl).hostname) || (str(r.sourceCountry) && str(r.sourceCountry).toUpperCase() !== "AR"))) { reject("pais_no_confirmado"); continue; }
     if (seen.has(id)) { reject("duplicado"); continue; }
     seen.add(id);
     // No convertimos salario “a convenir”, números sospechosos o 0 en una promesa salarial.
-    const salaryText = str(r.salary) || str(r.salaryInfo) || (Array.isArray(r.salaryInfo) ? r.salaryInfo.map(str).filter(Boolean).join(" - ") : "");
-    const salary = /[1-9]\d/.test(salaryText) ? { value: { min: null, max: null, currency: "", period: "desconocido" as const, text: salaryText }, from: "fuente" as const } : null;
+    const salaryText = str(r.salary) || str(r.salaryInfo) || str(r.salaryText) || (Array.isArray(r.salaryInfo) ? r.salaryInfo.map(str).filter(Boolean).join(" - ") : "");
+    // Bumeran puede traer el rango en números (salaryMin/salaryMax); se usan sólo si son positivos.
+    const amount = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v > 0 ? v : null);
+    const [salaryMin, salaryMax] = source === "bumeran" ? [amount(r.salaryMin), amount(r.salaryMax)] : [null, null];
+    const salary = /[1-9]\d/.test(salaryText) || salaryMin || salaryMax ? { value: { min: salaryMin, max: salaryMax, currency: str(r.salaryCurrency), period: "desconocido" as const, text: salaryText || [salaryMin, salaryMax].filter(Boolean).join(" - ") }, from: "fuente" as const } : null;
+    const workplace = source === "bumeran" ? bumeranWorkplace(str(r.workModality)) : "desconocido";
     // Logo de la empresa si el Actor lo trae (sólo https; nunca fotos de personas).
     const logo = [r.companyLogo, r.companyLogoUrl, r.logo, r["companyDetails.logoUrl"], obj(r.companyDetails).logoUrl].map((v) => url(v)).find((u) => u.startsWith("https://"));
     postings.push({
@@ -91,9 +108,11 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
       descriptionText: description.slice(0, 12000), descriptionComplete: description.length <= 12000,
       // "Latin America" no es un país: sin "AR" fijo, eligibility.ts mira la región y la descripción (p. ej. "US only").
       locations: location ? [location] : [], countries: latam ? [] : ["AR"], regionText: [],
-      workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null,
+      workplace: workplace === "desconocido" ? { value: workplace, from: "fuente" } : { value: workplace, from: "fuente", evidence: `Bumeran: ${str(r.workModality)}` },
+      remoteFlag: workplace === "remoto" ? true : workplace === "presencial" ? false : null,
+      ...(source === "bumeran" && str(r.jobArea) ? { department: str(r.jobArea) } : {}),
       employmentType: null, salary, publishedAt, updatedAt: date(r.updatedAt), expiresAt,
-      employmentHint: str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
+      employmentHint: source === "bumeran" ? [str(r.employmentType), str(r.contractType)].filter(Boolean).join(", ") : str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
       seniorityHint: str(r.seniorityLevel) || str(r.experienceLevel),
     });
   }
@@ -105,6 +124,9 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
  * de LinkedIn que ya tenemos para que no los devuelva (no se pagan filas repetidas).
  */
 export type LinkedinSearchExtras = { remote?: boolean; skipJobIds?: string[] };
+
+/** Clave del modo incremental de Bumeran: una por palabra, estable aunque cambien las filas pedidas. */
+export const bumeranStateKey = (keyword: string) => `maru-ar-${keyword.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 
 export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina", extras: LinkedinSearchExtras = {}) {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
@@ -121,6 +143,16 @@ export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: nu
   if (source === "linkedin" && actor === "cheap") return { keyword: [keyword], location, publishedAt: age, maxItems: limit, saveOnlyUniqueItems: true, enrichCompanyData: false, jobTitleExclude: LINKEDIN_TITLE_EXCLUDE };
   if (source === "linkedin") return { keywords: keyword, location: "Argentina", datePosted: "pastWeek", scrapeCompany: false, limitPerSource: limit, splitByLocation: false };
   if (source === "indeed") return { country: "ar", query: keyword, location: "Argentina", postedWithinDays: "7", count: limit };
+  if (source === "bumeran") {
+    // El Actor no filtra por fecha: se piden los más recientes primero y normalizeApifyJobs descarta los de más de 30 días.
+    // Modo incremental con una clave por búsqueda: al repetirla sólo devuelve (y cobra) avisos nuevos o cambiados.
+    if (location !== "Argentina") throw new Error("Bumeran sólo se busca en Argentina.");
+    return {
+      query: keyword, country: "AR", sort: "RECIENTES", maxResults: limit,
+      includeDetails: true, descriptionFormat: "html", descriptionMaxLength: 0, compact: false,
+      incrementalMode: true, stateKey: bumeranStateKey(keyword), emitUnchanged: false, emitExpired: false,
+    };
+  }
   return { keyword, countryCode: "ar", maxJobs: limit, proxyConfiguration: { useApifyProxy: false } };
 }
 
@@ -128,7 +160,7 @@ export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: nu
  * Precio estimado por fila entregada (US$, docs/PROVEEDORES-AVISOS.md) y por inicio de Actor.
  * Se usa para frenar ANTES de pasarse del presupuesto: el costo real se registra después en el ledger.
  */
-export const APIFY_PRICE_PER_ROW: Record<ApifyJobSource, number> = { linkedin: 0.002, indeed: 0.0001, computrabajo: 0.0015 };
+export const APIFY_PRICE_PER_ROW: Record<ApifyJobSource, number> = { linkedin: 0.002, indeed: 0.0001, computrabajo: 0.0015, bumeran: 0.001 };
 export const APIFY_START_USD = 0.02;
 
 /**
@@ -157,6 +189,23 @@ export const APIFY_KEYWORDS: Record<ApifyJobSource, string[]> = {
   ],
   computrabajo: ["analista contable", "analista financiero", "desarrollador", "analista de recursos humanos", "marketing digital", "analista de datos"],
   indeed: ["desarrollador", "data analyst", "analista financiero", "marketing", "analista contable", "product manager"],
+  // Bumeran exige que el aviso tenga todas las palabras: búsquedas cortas, en español y generalistas.
+  bumeran: [
+    // Administración, contabilidad y finanzas
+    "analista administrativo", "analista contable", "contador", "analista de cuentas a pagar", "analista de impuestos",
+    "analista financiero", "tesorería", "auditor", "controller", "analista de costos", "analista de créditos",
+    // RR. HH. y legal
+    "analista de recursos humanos", "selección", "liquidación de sueldos", "capacitación", "abogado", "legales",
+    // Ventas B2B y marketing
+    "ejecutivo de cuentas", "key account", "desarrollo de negocios", "ejecutivo comercial", "marketing", "marketing digital",
+    "comunicación", "trade marketing",
+    // Operaciones, compras y comercio exterior
+    "analista de compras", "comprador", "comercio exterior", "supply chain", "planeamiento", "analista de procesos", "project manager",
+    // Datos y tecnología
+    "analista de datos", "business intelligence", "desarrollador", "analista funcional", "analista de sistemas", "analista de soporte",
+    // Atención al cliente (de analista para arriba) y programas de ingreso
+    "analista de atención al cliente", "customer success", "jóvenes profesionales", "trainee",
+  ],
 };
 
 const rowPrice = (source: ApifyJobSource, actor: LinkedinActor) => (source === "linkedin" ? LINKEDIN_ACTORS[actor].pricePerRow : APIFY_PRICE_PER_ROW[source]);

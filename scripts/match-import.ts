@@ -331,6 +331,8 @@ async function main() {
     // --remote=1: filtro «Remoto» de LinkedIn (sólo valig). Con valig, además, nunca se piden avisos que ya tenemos.
     const remote = arg("remote") === "1";
     if (remote && linkedinActor !== "valig") throw new Error("--remote=1 sólo con --actor=valig.");
+    // Se valida antes de gastar: un error al armar la búsqueda dentro de la corrida contaría su tope como gastado.
+    if ((remote || where === "latam") && apifySources.some((s) => s !== "linkedin")) throw new Error("--remote=1 y --location=latam sólo con --sources=linkedin.");
     const skipJobIds = new Set(linkedinActor === "valig" ? knownLinkedinIds(((await readInventoryFile(INV)) ?? emptyInventory("real")).postings) : []);
     if (skipJobIds.size) log(`Avisos de LinkedIn que ya tenemos (no se piden): ${skipJobIds.size}.`);
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).

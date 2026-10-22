@@ -393,6 +393,24 @@ export const SOURCES: SourceInfo[] = [
       staleDays: 30,
     }),
   ),
+  {
+    id: "apify-bumeran",
+    name: "Bumeran (vía Apify)",
+    kind: "portal",
+    docs: ["https://apify.com/blackfalcondata/bumeran-scraper", "https://docs.apify.com/platform/actors/running/usage-and-resources"],
+    access: "Actor blackfalcondata/bumeran-scraper con APIFY_TOKEN (sólo Actions), sitio bumeran.com.ar, con tope de gasto por corrida y acumulado.",
+    terms:
+      "Avisos públicos de bumeran.com.ar leídos por un Actor de terceros, no por una API de Bumeran: no hay acuerdo con el portal. Importamos sólo datos del aviso (nunca contactos, emails ni teléfonos) y enlazamos al aviso en Bumeran para postularse.",
+    limits: "US$1 cada 1.000 avisos (pago por resultado, 22/10/2026), dentro del presupuesto de Apify aprobado por el dueño. Ledger en data/match/providers-ledger.json.",
+    reviewedAt: "2026-10-22",
+    status: "habilitada",
+    enabled: false,
+    cost: "pago",
+    partialFeed: true,
+    linkRequired: true,
+    imported: true,
+    staleDays: 30,
+  },
   ...(["JSearch (RapidAPI)", "TheirStack"] as const).map(
     (name): SourceInfo => ({
       id: name.split(" ")[0].toLowerCase(),

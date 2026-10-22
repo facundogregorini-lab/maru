@@ -36,6 +36,7 @@ const PROVIDER: Record<string, string> = {
   "apify-computrabajo": "Apify",
   "apify-linkedin": "Apify",
   "apify-indeed": "Apify",
+  "apify-bumeran": "Apify",
 };
 const providerOf = (sourceId: string) => PROVIDER[sourceId] ?? "Gratis (ATS y portales)";
 
@@ -71,6 +72,7 @@ const ACTOR_SOURCE: [RegExp, string][] = [
   [/computrabajo/i, "apify-computrabajo"],
   [/linkedin/i, "apify-linkedin"],
   [/indeed/i, "apify-indeed"],
+  [/bumeran/i, "apify-bumeran"],
 ];
 const rowsBySource: Record<string, number> = {};
 const estUsdBySource: Record<string, number> = {};
