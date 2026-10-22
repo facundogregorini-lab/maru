@@ -430,7 +430,8 @@
       "sector": "ventas / servicios",
       "evidence": "https://jobs.lever.co/tsmg",
       "addedAt": "2026-10-15",
-      "status": "candidata"
+      "status": "excluida",
+      "reason": "22/10: 2.010 avisos abiertos y ninguno se puede tomar desde Argentina (ventas en ciudades de EE. UU. y Europa). Ocupaba 4,3 MB del inventario."
     },
     {
       "name": "Coderio",
@@ -982,7 +983,8 @@
       "sector": "staffing",
       "evidence": "https://worksterjobs.teamtailor.com/jobs/8555163-trust-safety-product-manager-ai-technology",
       "addedAt": "2026-10-17",
-      "status": "candidata"
+      "status": "excluida",
+      "reason": "Consultora de selección (22/10): de 578 avisos abiertos sólo 2 se podían tomar desde Argentina; el resto es iGaming y atención al cliente en Malta y Europa."
     },
     {
       "name": "Apply Minds",
