@@ -34,7 +34,7 @@ export type Plan = {
 export const PLANS: Record<PlanId, Plan> = {
   // Promo de lanzamiento: el mensual baja de $10.000 a $990.
   mensual: { id: "mensual", nombre: "Mensual", price: 990, priceText: "$990", per: "/mes", monthlyText: "$990 por mes", listPrice: 10000, listPriceText: "$10.000", badge: "Promo de lanzamiento", note: "Precio de lanzamiento. Renovación cada mes.", frequency: 1, frequencyType: "months" },
-  trimestral: { id: "trimestral", nombre: "Trimestral", price: 22500, priceText: "$22.500", per: "/3 meses", monthlyText: "$7.500 por mes", note: "Renovación cada 3 meses.", frequency: 3, frequencyType: "months" },
+  trimestral: { id: "trimestral", nombre: "Trimestral", price: 22500, priceText: "$22.500", per: "/3 meses", monthlyText: "$7.500 por mes", note: "Ahorrás 25% contra el precio regular del mensual.", frequency: 3, frequencyType: "months" },
   semanal: { id: "semanal", nombre: "Semanal", price: 4500, priceText: "$4.500", per: "/semana", monthlyText: "≈ $19.500 por mes", note: "Para una búsqueda urgente.", frequency: 7, frequencyType: "days" },
 };
 /** Orden de las tarjetas en /precios: el mensual en promo va al medio, destacado. */

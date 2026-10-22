@@ -9,9 +9,10 @@ Pedido del dueño, todo en una PR:
 3. **Home:** fuera «Practicá tu entrevista», «Grabá tu presentación» y «Explorá las búsquedas». Nueva fila «Aplicá en 1 click» (tercera), con maqueta al estilo jobright (`AutofillMock`) y botón que baja el zip de la extensión (o va a la tienda si se define `NEXT_PUBLIC_EXTENSION_URL`).
 4. **/cv:** sólo la herramienta, de «Empezá ahora» a «Armar mi CV» (sin hero ni bloques comerciales).
 5. **Extensión, plan gratis:** 4 autocompletados por día (`FREE_LIMITS.autofill`). Corre sólo con el cobro activo (`billingReady`). Sin sesión cuenta por instalación (`X-Maru-Install`, versión 0.3.2) y aparte por IP (tope 12/día); con la sesión de Maru en Chrome cuenta por cuenta y un plan pago usa su límite.
-   - **Pendiente:** la extensión todavía no se vincula con la cuenta de forma explícita. Si la cookie no llega (por ejemplo, servidor `maru-grego7.vercel.app` y sesión en `marucoach.com`), un pago queda con el cupo gratis en la extensión. Hay que reinstalar la 0.3.2 para que mande el identificador.
+   - La extensión todavía no se vincula con la cuenta de forma explícita. Si la cookie no llega (por ejemplo, servidor `maru-grego7.vercel.app` y sesión en `marucoach.com`), un pago queda con el cupo gratis en la extensión. El dueño lo aceptó así.
+   - **Aviso de versión (0.3.3, pedido del dueño):** la extensión manda `X-Maru-Version`. Las anteriores a la 0.3.2 (sin cupo por instalación) reciben un error 426 con el link para actualizar, que la extensión vieja muestra en el aviso de la página. Desde la 0.3.3 el popup consulta `/api/extension/version` y muestra un cartel si hay una versión nueva; el resumen del autocompletado también lo avisa. Al publicar una versión nueva: subir `EXTENSION_VERSION` en `src/lib/extensionVersion.ts` junto con el manifest (un test controla que coincidan) y, si hace falta cortar las viejas, `MIN_EXTENSION_VERSION`.
 6. **Promo de lanzamiento:** mensual a $990 (antes $10.000, -90%), destacado en /precios. Los pagos de suscripciones viejas a $10.000 se siguen acreditando (`acceptedAmounts`).
-   - **Para revisar con el dueño:** con la promo, el trimestral ($7.500/mes) y el semanal ($4.500) salen más caros que el mensual. Se quitó «El más conveniente» y «Ahorrá 25%» del trimestral para no mostrar algo falso.
+   - El trimestral ($7.500/mes) y el semanal ($4.500) quedan como estaban; el dueño pidió sólo quitar «El más conveniente». El trimestral conserva «Ahorrá 25%», ahora contra el precio regular del mensual.
 
 ## Más avisos de Apify sin repetir errores (plan en curso, desde 22/10/2026)
 

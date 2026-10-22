@@ -120,7 +120,9 @@ async function startServer() {
     if (req.method === "POST" && handler) {
       const chunks: Buffer[] = [];
       for await (const c of req) chunks.push(c as Buffer);
-      const response = await handler(new Request(`http://x${pathname}`, { method: "POST", body: Buffer.concat(chunks) }));
+      // Las cabeceras de la extensión (versión e instalación) llegan a la ruta como en producción.
+      const headers = new Headers(Object.entries(req.headers).flatMap(([k, v]) => (typeof v === "string" ? [[k, v] as [string, string]] : [])));
+      const response = await handler(new Request(`http://x${pathname}`, { method: "POST", headers, body: Buffer.concat(chunks) }));
       res.writeHead(response.status, { "content-type": "application/json" });
       res.end(Buffer.from(await response.arrayBuffer()));
       return;

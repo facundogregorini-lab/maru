@@ -86,7 +86,7 @@ async function fillTab(tab) {
       method: "POST",
       // Con la sesión de Maru abierta en Chrome, el cupo se cuenta en tu cuenta (y respeta tu plan).
       credentials: "include",
-      headers: { "content-type": "application/json", "X-Maru-Install": await installId() },
+      headers: { "content-type": "application/json", "X-Maru-Install": await installId(), "X-Maru-Version": chrome.runtime.getManifest().version },
       body: JSON.stringify({
         profile,
         extras: (extras || "").slice(0, 4000),
@@ -117,7 +117,9 @@ async function fillTab(tab) {
     if (r) for (const k of Object.keys(total)) total[k] += r.result[k];
   }
 
-  const summary = summarize(total);
+  // Hay una versión nueva: se avisa en el resumen y en el popup.
+  if (data.update && data.update.latest) await chrome.storage.local.set({ update: data.update });
+  const summary = summarize(total) + (data.update && data.update.latest ? `\nHay una versión nueva de Maru (${data.update.latest}): bajala en ${data.update.url}.` : "");
   await toast(tabId, summary);
   // Para "Guardar en mi seguimiento" desde el popup.
   return { ...total, summary, page: { url: tab.url, title: top.title || tab.title || "" } };
