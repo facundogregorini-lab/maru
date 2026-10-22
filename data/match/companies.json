@@ -1768,6 +1768,105 @@
       "evidence": "https://jobs.ashbyhq.com/clipboard",
       "addedAt": "2026-10-22",
       "status": "candidata"
+    },
+    {
+      "name": "Cencosud",
+      "sourceId": "hiringroom",
+      "slug": "cencosudarg",
+      "sector": "retail",
+      "evidence": "https://cencosudarg.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Newsan",
+      "sourceId": "hiringroom",
+      "slug": "newsan",
+      "sector": "industria / electrónica",
+      "evidence": "https://newsan.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Sanatorio Allende",
+      "sourceId": "hiringroom",
+      "slug": "sanatorioallende",
+      "sector": "salud",
+      "evidence": "https://sanatorioallende.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Scienza Argentina",
+      "sourceId": "hiringroom",
+      "slug": "scienza",
+      "sector": "salud / farmacia",
+      "evidence": "https://scienza.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "ID Logistics",
+      "sourceId": "hiringroom",
+      "slug": "idlogistics",
+      "sector": "logística",
+      "evidence": "https://idlogistics.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Grupo CENOA",
+      "sourceId": "hiringroom",
+      "slug": "grupocenoa",
+      "sector": "concesionarias / automotor",
+      "evidence": "https://grupocenoa.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Motus",
+      "sourceId": "hiringroom",
+      "slug": "motus",
+      "sector": "",
+      "evidence": "https://motus.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "DESA",
+      "sourceId": "hiringroom",
+      "slug": "desasa",
+      "sector": "",
+      "evidence": "https://desasa.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "BDO Argentina",
+      "sourceId": "hiringroom",
+      "slug": "bdoargentina",
+      "sector": "auditoría / consultoría",
+      "evidence": "https://bdoargentina.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "Profertil",
+      "sourceId": "hiringroom",
+      "slug": "profertil",
+      "sector": "industria / agro",
+      "evidence": "https://profertil.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
+    },
+    {
+      "name": "X-28 Alarmas",
+      "sourceId": "hiringroom",
+      "slug": "x28",
+      "sector": "seguridad electrónica",
+      "evidence": "https://x28.hiringroom.com/portal",
+      "addedAt": "2026-10-22",
+      "status": "candidata"
     }
   ]
 }
