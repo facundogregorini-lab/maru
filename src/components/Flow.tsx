@@ -8,6 +8,7 @@ import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { savePostulacion } from "@/lib/postulaciones";
 import { normalizeUrl, upsertTracked } from "@/lib/tracker";
 import CopyButton from "./CopyButton";
 import CvEditor from "./cv/CvEditor";
@@ -89,10 +90,14 @@ export default function Flow() {
     restoredRef.current = true;
     // Viene de "Encontrá tu trabajo perfecto" → "Preparar mi postulación": arrancamos con esa búsqueda
     // y descartamos la postulación anterior para que un recargo no la traiga de vuelta.
-    const handoff = takeHandoff();
+    // Desde la extensión: /postulacion?url=<aviso> llega como una búsqueda traída de otra pantalla.
+    const fromUrl = new URLSearchParams(window.location.search).get("url")?.trim() ?? "";
+    const linked = /^https?:\/\//i.test(fromUrl) ? ({ jobUrl: fromUrl.slice(0, 2000), jobText: "" } as Pick<Handoff, "jobUrl" | "jobText">) : null;
+    const taken = takeHandoff();
+    const handoff = taken ?? linked;
     const s = load<Session>(SESSION_KEY);
     if (handoff) {
-      originRef.current = handoff;
+      if (taken) originRef.current = taken;
       // Si ya armaste la postulación para esta misma búsqueda (por ejemplo, "Adaptar mi CV" desde el
       // seguimiento), se retoma: no se borra el CV que ya editaste.
       const same =
@@ -126,6 +131,27 @@ export default function Flow() {
     if (!analysis || !profile) return;
     save(SESSION_KEY, { jobUrl, jobText, feedback, analysis, profile, gaps, answers, gapAnswers, generation, doc } satisfies Session);
   }, [jobUrl, jobText, feedback, analysis, profile, gaps, answers, gapAnswers, generation, doc]);
+
+  // La postulación terminada queda en este navegador por vacante: la extensión de Chrome la usa al completar
+  // ese formulario (CV personalizado, motivación y respuestas). Se actualiza al editar el CV.
+  useEffect(() => {
+    if (!doc || !generation || !analysis || !profile || !jobUrl.trim()) return;
+    const t = window.setTimeout(async () => {
+      const { cvExportHtml } = await import("@/lib/export/client");
+      const { html, padY } = cvExportHtml(doc);
+      savePostulacion({
+        jobUrl: jobUrl.trim(),
+        company: analysis.empresa,
+        title: analysis.puesto,
+        nombre: profile.nombre,
+        motivacion: feedback.trim(),
+        respuestas: generation.recomendaciones_formulario.map((r) => ({ pregunta: r.campo, respuesta: r.respuesta_sugerida })),
+        // Un CV muy pesado (por ejemplo, con foto grande) no entra en el almacenamiento del navegador: va sin él.
+        ...(html.length < 600_000 ? { cvHtml: html, padY } : {}),
+      });
+    }, 800);
+    return () => window.clearTimeout(t);
+  }, [doc, generation, analysis, profile, jobUrl, feedback]);
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });

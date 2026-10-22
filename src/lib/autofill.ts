@@ -22,6 +22,7 @@ export function autofillBlocks(body: AutofillRequest, today = new Date()): Block
         `<perfil>\n${JSON.stringify(body.profile)}\n</perfil>`,
         `<datos_extra>\n${body.extras?.trim() || "(la persona no cargó datos extra)"}\n</datos_extra>`,
         `<cv_adjuntable>${body.hasCv ? "sí: la persona subió su CV como archivo" : "no"}</cv_adjuntable>`,
+        ...(body.postulacion ? [postulacionBlock(body.postulacion)] : []),
         `<pagina url="${attr(body.page.url)}" titulo="${attr(body.page.title)}">\n${body.page.text.slice(0, MAX_PAGE_TEXT)}\n</pagina>`,
         `<campos>\n${fields}\n</campos>`,
         "Completá el formulario.",
@@ -31,6 +32,17 @@ export function autofillBlocks(body: AutofillRequest, today = new Date()): Block
 }
 
 const attr = (s: string) => s.replace(/"/g, "'");
+
+/** Lo que la persona ya preparó en Maru para esta vacante: su motivación (con sus palabras) y las respuestas sugeridas. */
+function postulacionBlock(p: NonNullable<AutofillRequest["postulacion"]>): string {
+  const respuestas = p.respuestas.map((r) => `<respuesta pregunta="${attr(r.pregunta)}">\n${r.respuesta}\n</respuesta>`).join("\n");
+  return [
+    `<postulacion_en_maru empresa="${attr(p.empresa)}" puesto="${attr(p.puesto)}">`,
+    `<motivacion>\n${p.motivacion.trim() || "(no la escribió)"}\n</motivacion>`,
+    respuestas || "(sin respuestas sugeridas)",
+    "</postulacion_en_maru>",
+  ].join("\n");
+}
 
 /** Minúsculas, sin acentos ni espacios de más: para comparar opciones. */
 export function norm(s: string): string {

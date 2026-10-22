@@ -124,14 +124,16 @@ function findIndex(items: TrackItem[], input: TrackInput): number {
   );
 }
 
-/** Crea la tarjeta o suma lo nuevo a la que ya existe (mismo id, mismo link o, sin link, mismo puesto y empresa). */
-export function upsertTracked(input: TrackInput): TrackItem | null {
+/**
+ * Crea la tarjeta o suma lo nuevo a la que ya existe (mismo id, mismo link o, sin link, mismo puesto y empresa),
+ * sobre una lista dada. Sin localStorage: la usa también el servidor (seguimiento desde la extensión).
+ */
+export function upsertInto(items: TrackItem[], input: TrackInput, now = Date.now()): { items: TrackItem[]; item: TrackItem } | null {
   if (!input.title.trim() && !input.company.trim() && !input.jobUrl?.trim()) return null;
-  const now = Date.now();
   const kinds = input.artifact ? (Array.isArray(input.artifact) ? input.artifact : [input.artifact]) : [];
-  const items = read();
-  const i = findIndex(items, input);
-  const prev = i >= 0 ? items[i] : null;
+  const list = [...items];
+  const i = findIndex(list, input);
+  const prev = i >= 0 ? list[i] : null;
 
   const status: TrackStatus = !prev
     ? (input.status ?? "guardada")
@@ -157,10 +159,17 @@ export function upsertTracked(input: TrackInput): TrackItem | null {
     createdAt: prev?.createdAt ?? now,
     updatedAt: now,
   };
-  if (i >= 0) items[i] = next;
-  else items.push(next);
-  write(items);
-  return next;
+  if (i >= 0) list[i] = next;
+  else list.push(next);
+  return { items: list, item: next };
+}
+
+/** Crea la tarjeta o suma lo nuevo a la que ya existe, en este navegador. */
+export function upsertTracked(input: TrackInput): TrackItem | null {
+  const out = upsertInto(read(), input);
+  if (!out) return null;
+  write(out.items);
+  return out.item;
 }
 
 function patch(id: string, fn: (it: TrackItem) => TrackItem): void {

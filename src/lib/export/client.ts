@@ -31,10 +31,14 @@ async function fetchFile(url: string, body: unknown, fallback: string): Promise<
 
 const PDF_FALLBACK = "No pudimos generar el PDF. Descargá el Word: tiene el mismo contenido.";
 
+/** El HTML del CV listo para imprimir, el mismo que va a /api/export/pdf. */
+export function cvExportHtml(doc: CvDoc): { html: string; padY: number } {
+  return { html: renderToStaticMarkup(createElement(CvPaper, { doc, mode: "export" })), padY: resolveTheme(doc).padY };
+}
+
 /** CV: el mismo componente de la vista previa (sin controles), impreso a PDF en el servidor. */
 export async function downloadPdf(doc: CvDoc, filename: string): Promise<void> {
-  const html = renderToStaticMarkup(createElement(CvPaper, { doc, mode: "export" }));
-  downloadBlob(await fetchFile("/api/export/pdf", { html, padY: resolveTheme(doc).padY }, PDF_FALLBACK), `${filename}.pdf`);
+  downloadBlob(await fetchFile("/api/export/pdf", cvExportHtml(doc), PDF_FALLBACK), `${filename}.pdf`);
 }
 
 export async function downloadDocx(doc: CvDoc, filename: string): Promise<void> {

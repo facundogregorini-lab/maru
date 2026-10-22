@@ -13,11 +13,13 @@ export async function POST(req: Request) {
   try {
     // Una extensión vieja sólo sabe mostrar el error: así le llega el aviso de actualizar.
     const version = req.headers.get("X-Maru-Version");
+    // Instalada desde la Chrome Web Store: Chrome la actualiza sola, no hay zip que bajar.
+    const fromStore = req.headers.get("X-Maru-Source") === "store";
     if (extensionOutdated(version)) {
-      return Response.json(
-        { error: `Tu extensión de Maru está desactualizada. Bajá la versión ${EXTENSION_VERSION} en ${SITE_URL}/extension y reemplazá la carpeta en chrome://extensions.`, code: "EXTENSION_OUTDATED", updateUrl: `${SITE_URL}/extension` },
-        { status: 426 },
-      );
+      const error = fromStore
+        ? "Tu extensión de Maru está desactualizada. Abrí chrome://extensions, activá el modo de desarrollador y tocá Actualizar."
+        : `Tu extensión de Maru está desactualizada. Bajá la versión ${EXTENSION_VERSION} en ${SITE_URL}/extension y reemplazá la carpeta en chrome://extensions.`;
+      return Response.json({ error, code: "EXTENSION_OUTDATED", updateUrl: `${SITE_URL}/extension` }, { status: 426 });
     }
     const parsed = AutofillRequestSchema.safeParse(await req.json().catch(() => null));
     if (!parsed.success) {
@@ -25,8 +27,8 @@ export async function POST(req: Request) {
     }
     const body = parsed.data;
     // El cupo se descuenta recién con un formulario válido: un pedido roto no gasta un uso.
-    const limit = await extensionGuard(req);
-    if (limit) return limit;
+    const quota = await extensionGuard(req);
+    if (quota.blocked) return quota.blocked;
     const { campos } = await askStructured({
       editorialPaths: (draft) => draft.campos.flatMap((campo, i) => [
         `campos.${i}.nota`,
@@ -37,8 +39,13 @@ export async function POST(req: Request) {
       schema: AutofillAnswerSchema,
       effort: "low",
     });
-    const update = extensionUpdateAvailable(version) ? { latest: EXTENSION_VERSION, url: `${SITE_URL}/extension` } : undefined;
-    return Response.json({ answers: normalizeAnswers(body.fields, campos, !!body.hasCv), ...(update ? { update } : {}) });
+    const update = extensionUpdateAvailable(version) ? { latest: EXTENSION_VERSION, url: `${SITE_URL}/extension`, ...(fromStore ? { store: true } : {}) } : undefined;
+    // remaining y limit: cupo gratis del día (no van con el cobro apagado ni con plan pago). Son opcionales para versiones viejas.
+    return Response.json({
+      answers: normalizeAnswers(body.fields, campos, !!body.hasCv),
+      ...(update ? { update } : {}),
+      ...(quota.remaining !== null ? { remaining: quota.remaining, limit: quota.limit } : {}),
+    });
   } catch (err) {
     return errorResponse(err);
   }

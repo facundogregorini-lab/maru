@@ -277,15 +277,16 @@ describe("extensión y promo de lanzamiento", () => {
     expect(await s.allowAnonymousUsage("instalacion-aaaaaaaa", "1.1.1.1", "autofill", lunes + 86400_000)).toBe(true);
   });
 
-  it("el autocompletado responde 429 al pasar el cupo gratis", async () => {
+  it("el autocompletado dice cuántos usos quedan y responde 429 al pasar el cupo gratis", async () => {
     await setup();
     vi.stubGlobal("fetch", vi.fn());
     const { extensionGuard } = await import("@/lib/billing/http");
     const req = () => new Request("https://maru.test/api/autofill", { method: "POST", headers: { "X-Maru-Install": "instalacion-bbbbbbbb", "x-forwarded-for": "3.3.3.3" } });
-    for (let i = 0; i < 4; i++) expect(await extensionGuard(req())).toBeNull();
-    const res = await extensionGuard(req());
-    expect(res?.status).toBe(429);
-    expect((await res!.json()).code).toBe("PLAN_LIMIT");
+    // Cada uso devuelve cuántos quedan: 3, 2, 1, 0.
+    for (let i = 0; i < 4; i++) expect(await extensionGuard(req())).toEqual({ blocked: null, remaining: 3 - i, limit: 4 });
+    const { blocked } = await extensionGuard(req());
+    expect(blocked?.status).toBe(429);
+    expect(await blocked!.json()).toMatchObject({ code: "PLAN_LIMIT", remaining: 0, limit: 4 });
   });
 
   it("la promo es sólo el primer mes: se cobra $990 y la suscripción pasa a $10.000 al acreditarse", async () => {

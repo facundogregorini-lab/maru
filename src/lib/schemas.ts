@@ -421,6 +421,15 @@ export const AutofillRequestSchema = z.object({
   hasCv: z.boolean().optional(),
   page: z.object({ url: z.string().max(2000), title: z.string().max(500), text: z.string().max(20000) }),
   fields: z.array(AutofillFieldSchema).min(1).max(250),
+  /** La postulación que la persona armó en Maru para esta vacante (opcional; las versiones viejas no la mandan). */
+  postulacion: z
+    .object({
+      empresa: z.string().max(200),
+      puesto: z.string().max(300),
+      motivacion: z.string().max(4000),
+      respuestas: z.array(z.object({ pregunta: z.string().max(500), respuesta: z.string().max(4000) })).max(20),
+    })
+    .optional(),
 });
 export type AutofillRequest = z.infer<typeof AutofillRequestSchema>;
 

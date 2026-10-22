@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacidadPage() {
   return (
-    <LegalPage title="Privacidad" updated="17 de octubre de 2026">
+    <LegalPage title="Privacidad" updated="22 de octubre de 2026">
       <p>
         Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador y, si ingresás con tu email, también en tu cuenta. Esta página explica qué datos usamos, para qué y dónde quedan.
       </p>
@@ -52,6 +52,15 @@ export default function PrivacidadPage() {
         <li>Guarda tu perfil y tu CV en el almacenamiento de la extensión, en tu computadora.</li>
         <li>Cuando cargás tu CV, el archivo se envía a Maru y a su proveedor de IA para leerlo.</li>
         <li>Cuando tocás «Completar», envía a Maru y a su proveedor de IA tu perfil, tus datos extra, la dirección y el texto visible de la página y sus campos (también los de formularios de postulación que vienen dentro de la página) para decidir qué va en cada uno. No completa datos demográficos, consentimientos ni aceptaciones legales y nunca envía la postulación: eso lo hacés vos.</li>
+        <li>
+          Si preparaste esa postulación en Maru, la extensión la lee desde el sitio de Maru en este mismo navegador (no desde nuestros servidores) y usa tu CV personalizado, tu motivación y las respuestas
+          sugeridas. Para adjuntar el CV personalizado, se lo pide a Maru como PDF con tu sesión: Maru lo arma y no lo guarda.
+        </li>
+        <li>Guarda un identificador al azar de la instalación, sólo para contar los usos gratis del día. Si tenés la sesión de Maru abierta en Chrome, el cupo se cuenta en tu cuenta.</li>
+        <li>
+          Después de completar, mira la página (sin enviar nada) para darse cuenta de si enviaste la postulación y ofrecerte guardarla en tu seguimiento. Sólo se guarda si tocás «Guardar»: con sesión, en el
+          seguimiento de tu cuenta (empresa, puesto, dirección del aviso y fecha); sin sesión, se abre tu seguimiento en Maru.
+        </li>
       </ul>
 
       <h2>Dictado por voz</h2>

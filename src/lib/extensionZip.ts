@@ -14,17 +14,30 @@ async function files(dir: string): Promise<string[]> {
   return nested.flat().sort();
 }
 
+/** Lo que vive en extension/ pero no viaja en la extensión: material para la ficha de la Chrome Web Store. */
+const NOT_SHIPPED = /^(store\/|STORE_LISTING\.md$)/;
+
 /**
  * La extensión en un .zip con una sola carpeta adentro: se descomprime y esa carpeta
  * es la que se elige en "Cargar descomprimida". Se arma desde extension/, así nunca queda vieja.
+ * `store`: el paquete para subir a la Chrome Web Store, con el manifest en la raíz y sin los sitios de desarrollo.
  */
-export async function buildExtensionZip(dir = EXTENSION_DIR): Promise<Uint8Array> {
+export async function buildExtensionZip(dir = EXTENSION_DIR, { store = false }: { store?: boolean } = {}): Promise<Uint8Array> {
   const zip = new JSZip();
   for (const file of await files(dir)) {
     const name = path.relative(dir, file).split(path.sep).join("/");
-    if (name.startsWith(".")) continue;
+    if (name.startsWith(".") || NOT_SHIPPED.test(name)) continue;
+    let data: Buffer | string = await readFile(file);
+    if (store && name === "manifest.json") data = storeManifest(data.toString("utf8"));
     // Fecha fija: el mismo código da el mismo .zip.
-    zip.file(`${EXTENSION_FOLDER}/${name}`, await readFile(file), { date: new Date("2026-01-01T00:00:00Z") });
+    zip.file(store ? name : `${EXTENSION_FOLDER}/${name}`, data, { date: new Date("2026-01-01T00:00:00Z") });
   }
   return zip.generateAsync({ type: "uint8array", compression: "DEFLATE" });
+}
+
+/** Manifest de la Store: sin localhost en el puente con el sitio de Maru. */
+export function storeManifest(raw: string): string {
+  const manifest = JSON.parse(raw) as { content_scripts?: { matches: string[] }[] };
+  for (const cs of manifest.content_scripts ?? []) cs.matches = cs.matches.filter((m) => !m.startsWith("http://localhost"));
+  return `${JSON.stringify(manifest, null, 2)}\n`;
 }

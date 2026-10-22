@@ -1,4 +1,5 @@
 import { forgetProfile } from "../profileStore";
+import { POSTULACIONES_EVENT, POSTULACIONES_KEY } from "../postulaciones";
 import { load, remove, save } from "../storage";
 import type { ExternalJob } from "./api-schemas";
 import type { Interactions, MatchPrefs, MatchProfile } from "./types";
@@ -31,13 +32,15 @@ export function saveMatch(s: MatchState): void {
 }
 
 /** Lo último armado en cada herramienta y el seguimiento: también son datos de la persona. */
-const TOOL_KEYS = ["maru:sesion:v2", "maru:cv:v1", "maru:carta:v1", "maru:entrevista:v1", "maru:video:v1", "maru:tracker:v1"];
+const TOOL_KEYS = ["maru:sesion:v2", "maru:cv:v1", "maru:carta:v1", "maru:entrevista:v1", "maru:video:v1", "maru:tracker:v1", POSTULACIONES_KEY];
 
 /** Borra todo lo de Maru en este navegador: perfil, match, búsquedas propias, lo armado en cada herramienta y el seguimiento. */
 export function forgetEverything(): void {
   remove(KEY);
   remove(HANDOFF_KEY);
   for (const k of TOOL_KEYS) remove(k);
+  // La extensión también suelta las postulaciones que tenía copiadas de este navegador.
+  try { window.dispatchEvent(new Event(POSTULACIONES_EVENT)); } catch { /* sin window */ }
   forgetProfile();
 }
 

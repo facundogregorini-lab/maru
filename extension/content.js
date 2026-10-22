@@ -2,7 +2,7 @@
 // Lee los campos del formulario (scan) y los completa con las respuestas de Maru (apply).
 // No envía nada: el botón de enviar lo aprieta la persona.
 (() => {
-  const VERSION = "0.3.1";
+  const VERSION = "0.4.0";
   if (window.__maru?.version === VERSION) return;
 
   const ATTR = "data-maru-id";
@@ -375,6 +375,7 @@
     return {
       pass,
       origin: location.origin,
+      url: location.href.slice(0, 2000),
       fields: out,
       title: top ? clean(document.title) : "",
       text: top ? cut(clean(document.body ? document.body.innerText : ""), 15000) : "",
@@ -545,7 +546,11 @@
   let toastHost = null;
   let toastTimer = 0;
 
-  function toast(message, { sticky = false, error = false } = {}) {
+  /**
+   * Aviso en la esquina. `actions`: botones debajo del texto; cada uno abre un link (`href`) o le manda un
+   * mensaje a la extensión (`message`). Nunca tocan el formulario.
+   */
+  function toast(message, { sticky = false, error = false, actions = [] } = {}) {
     if (window !== window.top) return;
     if (!toastHost) {
       toastHost = document.createElement("div");
@@ -559,19 +564,108 @@
           .box.error { border-color: #c0623a; }
           .dot { width: 22px; height: 22px; border-radius: 6px; background: #1c8c4c; color: #fff; flex: none;
             display: grid; place-items: center; font-weight: 700; font-size: 12px; }
-          .msg { flex: 1; white-space: pre-line; }
-          button { all: unset; cursor: pointer; color: #75685f; padding: 0 2px; font-size: 16px; line-height: 1; }
+          .body { flex: 1; }
+          .msg { white-space: pre-line; }
+          .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+          .actions:empty { display: none; }
+          .action { all: unset; cursor: pointer; border-radius: 999px; background: #1c8c4c; color: #fff; padding: 5px 12px; font-weight: 600; font-size: 13px; }
+          .action.secondary { background: #f2f4f5; color: #0a0a0a; }
+          .close { all: unset; cursor: pointer; color: #75685f; padding: 0 2px; font-size: 16px; line-height: 1; }
         </style>
-        <div class="box"><div class="dot">M</div><div class="msg"></div><button aria-label="Cerrar">×</button></div>`;
-      root.querySelector("button").addEventListener("click", () => toastHost.remove());
+        <div class="box"><div class="dot">M</div><div class="body"><div class="msg"></div><div class="actions"></div></div><button class="close" aria-label="Cerrar">×</button></div>`;
+      root.querySelector(".close").addEventListener("click", () => toastHost.remove());
     }
     if (!toastHost.isConnected) document.documentElement.appendChild(toastHost);
     const root = toastHost.shadowRoot;
     root.querySelector(".msg").textContent = message;
     root.querySelector(".box").classList.toggle("error", error);
+    const bar = root.querySelector(".actions");
+    bar.textContent = "";
+    for (const a of actions) {
+      const b = document.createElement("button");
+      b.className = `action${a.secondary ? " secondary" : ""}`;
+      b.textContent = a.label;
+      b.addEventListener("click", () => {
+        if (a.href) window.open(a.href, "_blank", "noopener");
+        else if (a.message && typeof chrome !== "undefined" && chrome.runtime) chrome.runtime.sendMessage(a.message).catch(() => {});
+        toastHost.remove();
+      });
+      bar.appendChild(b);
+    }
     clearTimeout(toastTimer);
-    if (!sticky) toastTimer = setTimeout(() => toastHost.remove(), 12000);
+    if (!sticky) toastTimer = setTimeout(() => toastHost.remove(), actions.length ? 30000 : 12000);
   }
 
-  window.__maru = { version: VERSION, scan, apply, toast };
+  /* ---------- ¿Se envió la postulación? (para ofrecer guardarla en el seguimiento) ---------- */
+
+  const CONFIRM_URL = /(thank[-_ ]?you|thanks|gracias|confirmation|confirmacion|confirmed|applied|application[-_]?(submitted|received|complete)|submitted|success|postulacion[-_]?(enviada|exitosa))/i;
+  const CONFIRM_TEXT = [
+    /application (has been )?(submitted|received|sent)/i,
+    /thank(s| you) for (applying|your application|submitting)/i,
+    /we('ve| have) received your application/i,
+    /your application (was|has been) (submitted|received|sent)/i,
+    /recibimos tu (postulaci[oó]n|solicitud|cv)/i,
+    /(tu|su) postulaci[oó]n (fue|ha sido) (enviada|recibida|registrada)/i,
+    /gracias por (postularte|postular|tu postulaci[oó]n|aplicar)/i,
+    /postulaci[oó]n (enviada|exitosa|recibida)/i,
+    /candidatura (enviada|recebida)|obrigad[oa] por se candidatar/i,
+  ];
+
+  /**
+   * true si la página muestra que la postulación se envió: URL de confirmación o un texto típico de
+   * "recibimos tu postulación" visible. Un formulario todavía abierto con campos para completar no cuenta.
+   */
+  function confirmationShown(doc = document, url = location.href) {
+    let path = "";
+    try {
+      const u = new URL(url);
+      path = `${u.pathname}${u.search}`;
+    } catch {
+      path = "";
+    }
+    const text = clean(doc.body ? doc.body.innerText || doc.body.textContent || "" : "").slice(0, 20000);
+    const textHit = CONFIRM_TEXT.some((re) => re.test(text));
+    const urlHit = CONFIRM_URL.test(path);
+    if (!textHit && !urlHit) return false;
+    // Si todavía hay un formulario de postulación con campos visibles, es la página del aviso, no la confirmación.
+    const openForm = [...doc.querySelectorAll("form")].some((f) => f.querySelectorAll("input:not([type=hidden]), textarea, select").length >= 4 && isShown(f));
+    return textHit ? !openForm || /recibimos|received|submitted|enviada/i.test(text) : !openForm;
+  }
+
+  let watching = false;
+  /**
+   * Después de completar, escucha (sin tocar nada) el envío del formulario y la confirmación, y le avisa
+   * a la extensión una sola vez. Se apaga a los 30 minutos.
+   */
+  function watch() {
+    if (window !== window.top) return false;
+    const report = () => {
+      if (!watching) return;
+      watching = false;
+      if (typeof chrome !== "undefined" && chrome.runtime) chrome.runtime.sendMessage({ type: "submitted", url: location.href }).catch(() => {});
+    };
+    if (confirmationShown()) {
+      watching = true;
+      report();
+      return true;
+    }
+    if (watching) return false;
+    watching = true;
+    let checks = 0;
+    const check = () => {
+      if (watching && confirmationShown()) report();
+    };
+    document.addEventListener("submit", () => setTimeout(check, 2500), true);
+    const obs = new MutationObserver(() => {
+      if (++checks % 5 === 0) check();
+    });
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+    setTimeout(() => {
+      watching = false;
+      obs.disconnect();
+    }, 30 * 60 * 1000);
+    return false;
+  }
+
+  window.__maru = { version: VERSION, scan, apply, toast, watch, confirmationShown };
 })();
