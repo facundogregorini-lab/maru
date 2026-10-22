@@ -8,7 +8,7 @@
 import { safeFetch } from "./http";
 import { sourceById } from "./sources";
 import { fold } from "./text";
-import type { Inventory } from "./types";
+import type { Inventory, StoredPosting } from "./types";
 
 export type LiveStatus = { status: "abierta" | "cerrada" | "desconocido"; reason?: string };
 
@@ -34,6 +34,11 @@ const CLOSED = [
   "la oferta ha expirado",
   "ya no acepta postulaciones",
   "ya no se aceptan postulaciones",
+  // LinkedIn en español (ar.linkedin.com): hasta el 22/10 no se detectaba ningún aviso cerrado de LinkedIn.
+  "ya no se aceptan solicitudes",
+  "esta oferta ya no esta activa",
+  "la oferta ya no esta activa",
+  "este aviso ya no esta activo",
   "esta vaga nao esta mais disponivel",
 ];
 
@@ -118,11 +123,25 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
   const due = roundRobin(candidates, max);
   const stats = { checked: 0, closed: 0, open: 0, unknown: 0 };
   const bySource: Record<string, { abierta: number; cerrada: number; desconocido: number }> = {};
-  for (const p of due) {
-    if (clock() - start > budgetMs) {
-      log(`Tope de tiempo alcanzado: quedan ${due.length - stats.checked} para la próxima corrida.`);
-      break;
+  // Una cola por fuente, todas a la vez: cada sitio sigue recibiendo un pedido por vez y con pausa,
+  // pero el día rinde varias veces más (22/10: 8.515 importados sin revisar a 400 por día).
+  const queues = new Map<string, StoredPosting[]>();
+  for (const p of due) (queues.get(p.sourceId) ?? queues.set(p.sourceId, []).get(p.sourceId)!).push(p);
+  let budgetLogged = false;
+  await Promise.all([...queues.values()].map(async (queue) => {
+    for (const p of queue) {
+      if (clock() - start > budgetMs) {
+        if (!budgetLogged) log(`Tope de tiempo alcanzado: quedan ${due.length - stats.checked} para la próxima corrida.`);
+        budgetLogged = true;
+        return;
+      }
+      await checkOne(p);
     }
+  }));
+  for (const [id, s] of Object.entries(bySource)) log(`  ${id}: ${s.abierta} publicados, ${s.cerrada} cerrados, ${s.desconocido} sin dato`);
+  return stats;
+
+  async function checkOne(p: StoredPosting) {
     let result: LiveStatus = { status: "desconocido" };
     try {
       result = await liveStatus(await safeFetch(p.sourceUrl, { fetchImpl, resolve, timeoutMs: 15_000 }));
@@ -144,6 +163,4 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
     else stats.unknown++;
     if (pauseMs) await new Promise((r) => setTimeout(r, pauseMs));
   }
-  for (const [id, s] of Object.entries(bySource)) log(`  ${id}: ${s.abierta} publicados, ${s.cerrada} cerrados, ${s.desconocido} sin dato`);
-  return stats;
 }
