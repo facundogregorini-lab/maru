@@ -9921,6 +9921,864 @@
         "budgetUsd": 30
       },
       "created": 11
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista contable",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "FV0mRFOFcFDEu8fgz",
+        "datasetId": "z01kWRhyyXwkJGjVM"
+      },
+      "rows": 108,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.355,
+        "budgetUsd": 30
+      },
+      "created": 46
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "contador",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "UEPIijEqeaVf5DYs2",
+        "datasetId": "0UQoGke8IVflAX6S9"
+      },
+      "rows": 65,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.355,
+        "budgetUsd": 30
+      },
+      "created": 24
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de cuentas a pagar",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "jOa1yFKdLqfJdUbQg",
+        "datasetId": "ryRNJwTRf6SlidoJC"
+      },
+      "rows": 15,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.356,
+        "budgetUsd": 30
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de impuestos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "DoDZyZaEGdFg1FacR",
+        "datasetId": "GYasQTXiqRlUhuGEc"
+      },
+      "rows": 25,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.356,
+        "budgetUsd": 30
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista financiero",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "BfcIpzexB2OHQctnl",
+        "datasetId": "2qf2V1fQzgtS7kkZN"
+      },
+      "rows": 12,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.357,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "tesorería",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "2VS2ubk6dVD31gnhk",
+        "datasetId": "l9v2UsSS1TbJ9qej2"
+      },
+      "rows": 26,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.357,
+        "budgetUsd": 30
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "auditor",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "fWjMeYslO8YLIxXVg",
+        "datasetId": "WqoJVanC4WyXzR9rn"
+      },
+      "rows": 39,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.358,
+        "budgetUsd": 30
+      },
+      "created": 21
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "controller",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "L7b7kNqFfbR6aZT9g",
+        "datasetId": "GHXx9iquRezcc7vrx"
+      },
+      "rows": 5,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.358,
+        "budgetUsd": 30
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de costos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "ipujNQjpvTCVM0a0R",
+        "datasetId": "XHgVbyvzhekBGexxS"
+      },
+      "rows": 15,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.359,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de créditos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "XlJgdWUrtlUoJeTdn",
+        "datasetId": "tx0cSLQWjG9fk3iBd"
+      },
+      "rows": 7,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.359,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de recursos humanos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "wY2wjsi0IV3hgjCVz",
+        "datasetId": "B3OaYZhPkNTbT34L7"
+      },
+      "rows": 41,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 12.629,
+        "budgetUsd": 30
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "selección",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "fhJ12fdPgBP9yeM75",
+        "datasetId": "4sJwWrUS6D65RRZEA"
+      },
+      "rows": 24,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 12.899,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "liquidación de sueldos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "bVIUyrsCTjSNjt0lP",
+        "datasetId": "eym7ZbgnHvADgLdqt"
+      },
+      "rows": 8,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.9,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "capacitación",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "eiMlB3J3eyVRW8UGo",
+        "datasetId": "WpND8vQgsJRcybEB2"
+      },
+      "rows": 9,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.9,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "abogado",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "PqTD1AyLu0GqYvXS6",
+        "datasetId": "Swhyk4IslNhIHEPgh"
+      },
+      "rows": 68,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.901,
+        "budgetUsd": 30
+      },
+      "created": 42
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "legales",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "F7Nm4ipfkv1EsN3ic",
+        "datasetId": "iCkinDsGWdBGdsmUs"
+      },
+      "rows": 17,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.901,
+        "budgetUsd": 30
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "ejecutivo de cuentas",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "6KkiPnHrZlj3rTnkK",
+        "datasetId": "hWb6wM7Nl8RcUHGyC"
+      },
+      "rows": 58,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 12.902,
+        "budgetUsd": 30
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "key account",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "MsEyRSjbxmhl1wxlZ",
+        "datasetId": "3S1UcWGmm2rRBwhE5"
+      },
+      "rows": 10,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 13.172,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "desarrollo de negocios",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "ReknWHssxEbYrTdU8",
+        "datasetId": "WKoOaYCkyuZz9d1bM"
+      },
+      "rows": 9,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 13.442,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "marketing",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "QlNAjpIWFnFjCB4YS",
+        "datasetId": "Dkr7R0Fvw4ZxvHetQ"
+      },
+      "rows": 152,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.442,
+        "budgetUsd": 30
+      },
+      "created": 50
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "marketing digital",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "gBKIX1e14ki1QT3e2",
+        "datasetId": "mXVUyUzIVqVWwGrQS"
+      },
+      "rows": 22,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.443,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "comunicación",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "Dg9wThw1M5i40r5VV",
+        "datasetId": "UfFOWqgu0c5LEImk9"
+      },
+      "rows": 20,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.443,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "trade marketing",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "7ObUA0gAYXhOZzBFL",
+        "datasetId": "vcfy9jBe2KR2lfatT"
+      },
+      "rows": 16,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.444,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de compras",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "s254eOCQJqW58gId8",
+        "datasetId": "c20oaKaSRcYmA3wUi"
+      },
+      "rows": 46,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.444,
+        "budgetUsd": 30
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "comprador",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "o9z7MuoxI0QQd7MMA",
+        "datasetId": "lwjcQrRCGcFxPUJS1"
+      },
+      "rows": 32,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.445,
+        "budgetUsd": 30
+      },
+      "created": 19
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "comercio exterior",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "Apvc9IW1za3ksvpaR",
+        "datasetId": "y5W5uZbn32Q9iQ9GI"
+      },
+      "rows": 41,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.445,
+        "budgetUsd": 30
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "supply chain",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "uTlixuX5gNwNvTSvH",
+        "datasetId": "IdrSHCnfFyDdkrAxe"
+      },
+      "rows": 7,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.446,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "planeamiento",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "VjjeyG98Ada3I2Ezi",
+        "datasetId": "3qbvOb0yamsA4bskA"
+      },
+      "rows": 26,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.446,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de procesos",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "HzC7qblKjzc36gb2O",
+        "datasetId": "F2hoxzcyTbP04vWCZ"
+      },
+      "rows": 17,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.447,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "project manager",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "Iat66zMUwEjh5d5JK",
+        "datasetId": "AZ8gMDGIzvnQX4yRI"
+      },
+      "rows": 17,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 13.447,
+        "budgetUsd": 30
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "business intelligence",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "f57GPos9Mhi4eIGwA",
+        "datasetId": "XU7Cf4kr0dD8mOVoC"
+      },
+      "rows": 0,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 13.717,
+        "budgetUsd": 30
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "desarrollador",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "RFGkgpe2fAfLPIVct",
+        "datasetId": "tqWQJccBPYBCYWT7w"
+      },
+      "rows": 78,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 13.987,
+        "budgetUsd": 30
+      },
+      "created": 41
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista funcional",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "QkoT4ZAm2Z0MMx4g2",
+        "datasetId": "B5VpGzdVNJ9p1ss6P"
+      },
+      "rows": 39,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.257,
+        "budgetUsd": 30
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de sistemas",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "DbUDM3FwJxJFZ61bh",
+        "datasetId": "dhjZo5Kaltj6u2cg5"
+      },
+      "rows": 5,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.258,
+        "budgetUsd": 30
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de soporte",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "ju8yBfOf4Qdap7g9e",
+        "datasetId": "u8bviICDIdCFRDuMc"
+      },
+      "rows": 6,
+      "consumed": 0.27,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 14.528,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de atención al cliente",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "EKqc26ENfzZUGOTo9",
+        "datasetId": "OfKMzIHdadptsXHtk"
+      },
+      "rows": 6,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.528,
+        "budgetUsd": 30
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "customer success",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "2bBSHmuuF2Ses2lV5",
+        "datasetId": "tuXdVPIKmUhsjPhV1"
+      },
+      "rows": 7,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.529,
+        "budgetUsd": 30
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "jóvenes profesionales",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "duUC2HvLEpfaORuLz",
+        "datasetId": "hs6ZdKwS4fBkFrufZ"
+      },
+      "rows": 11,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.529,
+        "budgetUsd": 30
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-22T21:55:41.180Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "trainee",
+        "rows": "250",
+        "maxTotalChargeUsd": "0.27",
+        "location": "Argentina",
+        "runId": "xl3sTFrjIMMomrYvF",
+        "datasetId": "qa5tGsTvEOwHSQNT6"
+      },
+      "rows": 24,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 14.53,
+        "budgetUsd": 30
+      },
+      "created": 11
     }
   ]
 }
