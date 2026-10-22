@@ -1,5 +1,16 @@
 # Estado y próximos pasos de Maru
 
+## Extensión 0.4.1: activeTab en lugar de acceso a todos los sitios (22/10/2026)
+
+Pedido del dueño: la Chrome Web Store avisa que `<all_urls>` retrasa la revisión.
+
+- **Permisos:** `permissions` queda en `activeTab`, `scripting` y `storage`. `host_permissions` sólo lleva marucoach.com (más localhost, que `ext:pack` saca del paquete de la Store).
+- **ATS embebidos:** `optional_host_permissions` lista los 25 ATS de `extension/ats.js`. Al abrirse, el popup detecta los iframes de ATS sin permiso y los pide con el clic en «Completar» (`chrome.permissions.request`). Con Alt+Shift+M no se puede pedir: el aviso explica cómo hacerlo desde el ícono.
+- **Inyección bajo demanda:** al tocar el ícono o el atajo. Si un iframe no es accesible, se completa la página principal sin fallar.
+- **Seguimiento:** se sacó la reinyección después de navegar (`tabs.onUpdated`), que con activeTab ya no es posible. La confirmación se detecta si aparece en la misma página; si no, queda el botón del popup. El dueño aceptó esta pérdida.
+- **Tests:** el e2e con Chrome real corre de dos maneras. Con el iframe autorizado, se completan la página y el iframe. Sin permiso, sólo la página y el iframe queda intacto. También hay tests de manifest (sin permisos amplios, opcionales = ats.js, Store sin localhost) y uno que controla que no haya código remoto.
+- **Pendiente:** probar a mano en Chrome con un Greenhouse embebido real (`?gh_jid=`) que aparezca el pedido de permiso. El e2e no puede simular el clic en el ícono que otorga activeTab.
+
 ## Extensión: cerrar la brecha con Jobright Autofill (plan en curso, desde 22/10/2026)
 
 Pedido del dueño, en tres fases con una PR por fase. Lo que no se negocia: nunca enviar el formulario, nunca completar demografía, consentimientos ni declaraciones juradas, nunca inventar datos, verde = copiado del CV y amarillo = redactado o deducido, y el CV queda en el navegador.

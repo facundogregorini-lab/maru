@@ -169,7 +169,28 @@ chrome.runtime.onMessage.addListener((msg) => {
 /** La última página completada, para "Guardar en mi seguimiento". */
 let lastPage = null;
 
+/** Dominios de ATS embebidos en esta pestaña que todavía no tienen permiso (se piden al tocar Completar). */
+let needAts = [];
+
+/** Al abrir el popup (el clic en el ícono da acceso a esta pestaña), se mira si el formulario viene de un ATS embebido. */
+async function checkAts() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab || !tab.id || !/^https?:/.test(tab.url || "")) return;
+  needAts = (await chrome.runtime.sendMessage({ type: "ats-permissions", tabId: tab.id }).catch(() => [])) || [];
+  $("ats-note").textContent = needAts.length ? `El formulario está dentro de ${needAts.join(", ")}. Al completar, Chrome te va a pedir permiso para ese sitio.` : "";
+  $("ats-note").hidden = !needAts.length;
+}
+
 $("fill").addEventListener("click", async () => {
+  // El permiso tiene que pedirse con el clic, antes de cualquier otra espera.
+  if (needAts.length) {
+    const granted = await chrome.permissions.request({ origins: needAts.map((d) => `https://*.${d}/*`) }).catch(() => false);
+    // Sin permiso, Maru completa lo que está fuera de ese formulario y el resumen lo avisa.
+    if (granted) {
+      needAts = [];
+      $("ats-note").hidden = true;
+    }
+  }
   $("fill").disabled = true;
   status("Empezando…");
   const result = await chrome.runtime.sendMessage({ type: "fill" });
@@ -206,3 +227,4 @@ function dashboard({ completados = 0, revisar = 0, pendientes = 0 }) {
 
 render();
 checkUpdate();
+checkAts();

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Maru Coach: completá postulaciones con tu CV",
   "short_name": "Maru Coach",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Cargá tu CV una vez y completá formularios de postulación con un clic. Vos revisás y enviás.",
   "minimum_chrome_version": "116",
   "icons": {
@@ -18,11 +18,41 @@
     "service_worker": "background.js"
   },
   "permissions": [
+    "activeTab",
     "scripting",
     "storage"
   ],
   "host_permissions": [
-    "<all_urls>"
+    "https://www.marucoach.com/*",
+    "https://marucoach.com/*",
+    "http://localhost/*"
+  ],
+  "optional_host_permissions": [
+    "https://*.greenhouse.io/*",
+    "https://*.lever.co/*",
+    "https://*.ashbyhq.com/*",
+    "https://*.workable.com/*",
+    "https://*.myworkdayjobs.com/*",
+    "https://*.workday.com/*",
+    "https://*.smartrecruiters.com/*",
+    "https://*.teamtailor.com/*",
+    "https://*.bamboohr.com/*",
+    "https://*.recruitee.com/*",
+    "https://*.jobvite.com/*",
+    "https://*.icims.com/*",
+    "https://*.successfactors.com/*",
+    "https://*.successfactors.eu/*",
+    "https://*.hiringroom.com/*",
+    "https://*.breezy.hr/*",
+    "https://*.personio.de/*",
+    "https://*.personio.com/*",
+    "https://*.gupy.io/*",
+    "https://*.pinpointhq.com/*",
+    "https://*.jazzhr.com/*",
+    "https://*.applytojob.com/*",
+    "https://*.bumeran.com.ar/*",
+    "https://*.zonajobs.com.ar/*",
+    "https://*.computrabajo.com/*"
   ],
   "commands": {
     "fill": {
@@ -37,7 +67,6 @@
       "matches": [
         "https://www.marucoach.com/*",
         "https://marucoach.com/*",
-        "https://maru-grego7.vercel.app/*",
         "http://localhost/*"
       ],
       "js": [

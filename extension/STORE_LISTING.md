@@ -29,12 +29,13 @@ Material para publicar Maru Coach en la Chrome Web Store. El paquete se arma con
 
 | Permiso | Para qué |
 |---|---|
-| `scripting` | Leer los campos del formulario de postulación abierto y completarlos cuando la persona toca «Completar» o usa Alt+Shift+M. También mostrar los avisos de Maru en la página. |
+| `activeTab` | Acceso sólo a la pestaña donde la persona abre Maru: clic en el ícono o Alt+Shift+M. Ahí se leen los campos del formulario y se completan. Se pierde al cambiar de página. |
+| `scripting` | Inyectar el script que lee y completa el formulario, y que muestra los avisos de Maru, en esa pestaña y sólo cuando la persona lo pide. |
 | `storage` | Guardar en la computadora el perfil, el CV para adjuntar, los datos extra, el cupo del día y las postulaciones preparadas en Maru. `storage.session` guarda, mientras dura la sesión del navegador, qué pestaña se completó, para ofrecer guardarla en el seguimiento. |
-| `host_permissions: <all_urls>` | Los formularios de postulación están en miles de dominios: sitios propios de cada empresa y ATS como Greenhouse, Lever, Workday o HiringRoom, muchas veces dentro de un iframe. Sin acceso a cualquier sitio no se puede completar el formulario que la persona tiene abierto. La extensión sólo actúa cuando la persona lo pide, o justo después, para detectar el envío. |
-| Content script en marucoach.com | Leer, en el mismo navegador, las postulaciones que la persona preparó en Maru (CV personalizado y motivación). No corre en ningún otro sitio. |
+| `host_permissions`: `www.marucoach.com`, `marucoach.com` | La API de Maru (completar, leer el CV, imprimir el CV personalizado, seguimiento) y el puente que lee, en el mismo navegador, las postulaciones preparadas en marucoach.com. |
+| `optional_host_permissions`: 25 ATS (greenhouse.io, lever.co, ashbyhq.com, myworkdayjobs.com…) | Muchos formularios vienen en un iframe de un ATS dentro de la web de la empresa, y activeTab no alcanza para ese iframe. Si Maru detecta uno, pide permiso para ese dominio en el momento, con el clic de la persona en «Completar». Nunca se piden todos juntos ni al instalar. |
 
-**¿Usa código remoto?** No. Todo el código va en el paquete. Maru sólo devuelve datos (qué valor va en cada campo).
+**¿Usa código remoto?** No. Todo el código va en el paquete: no hay `eval`, `new Function` ni scripts externos, y un test lo controla. Maru sólo devuelve datos (qué valor va en cada campo).
 
 ## Prácticas de datos (formulario de la Store)
 
