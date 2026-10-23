@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { apifyNextCap } from "@/lib/match/apify";
 import { filterImported, importRejection } from "@/lib/match/import-filter";
-import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported } from "@/lib/match/inventory";
+import { applyBoard, buildOpportunities, emptyInventory, expireImported, purge, refreshImported, withWorkplace } from "@/lib/match/inventory";
 import { workplaceFromDescription } from "@/lib/match/connectors";
 import { isInferred } from "@/lib/match/labels";
 import { FANTASTIC_COHORTS, MONTHLY_QUERY_PREFIXES, normalizeFantastic, normalizeSerp, pickApplyLink, relativeAgeDays, runFantastic, runSerp, SERP_QUERIES } from "@/lib/match/providers";
@@ -252,6 +252,13 @@ describe("inventario con importaciones parciales", () => {
     // A los 30 días de la última revisión que lo vio publicado, vence igual.
     expect(expireImported(inv, "2026-12-11T12:00:00.000Z")).toBe(1);
   });
+  it("la modalidad que dice el título se usa cuando la fuente no la informa", () => {
+    const p = (title: string) => withWorkplace({ sourceId: "apify-linkedin", boardId: "apify:linkedin:ar", externalId: "1", title, company: "Acme", sourceUrl: "https://x.test/1", applyUrl: "https://x.test/1", linkRequired: false, descriptionText: "Analizar datos de ventas.", descriptionComplete: true, locations: ["Argentina"], countries: ["AR"], regionText: [], workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null, employmentType: null, salary: null, publishedAt: null, updatedAt: null, expiresAt: null }).workplace;
+    expect(p("Senior Data Engineer (Remote)")).toMatchObject({ value: "remoto", from: "titulo" });
+    expect(p("Analista Contable - Híbrido")).toMatchObject({ value: "hibrido", from: "titulo" });
+    expect(p("Analista de Datos").value).toBe("desconocido");
+  });
+
   it("la modalidad sale del texto sólo si está declarada, y los importados se re-analizan sin volver a descargarlos", () => {
     expect(workplaceFromDescription("Modalidad de trabajo: Presencial en Retiro.")?.value).toBe("presencial");
     expect(workplaceFromDescription("Modalidad híbrida de trabajo, 3 días en oficina.")?.value).toBe("hibrido");
