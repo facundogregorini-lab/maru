@@ -1,3 +1,6 @@
+/** Ficha de la extensión en la Chrome Web Store (aprobada el 22/10/2026). */
+export const EXTENSION_STORE_URL = "https://chromewebstore.google.com/detail/aikhpbjdjeojlpdkhkonmionghpnmkei";
+
 /** Versión publicada de la extensión de Chrome (la de extension/manifest.json, que se descarga desde /extension). */
 export const EXTENSION_VERSION = "0.4.1";
 /**

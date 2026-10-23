@@ -11,12 +11,10 @@ import SiteShell from "@/components/SiteShell";
 import { atLeast, landingData } from "@/lib/landing";
 import { POPULAR } from "@/lib/popular";
 import { displayCompany } from "@/lib/match/labels";
+import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 
 // Las cifras se regeneran cada hora y cuentan el mismo catálogo visible en Búsquedas.
 export const revalidate = 3600;
-const EXTENSION_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension";
-// Si la extensión ya está publicada en la tienda de Chrome, se va ahí; si no, se baja el zip.
-const EXTENSION_ZIP_URL = process.env.NEXT_PUBLIC_EXTENSION_URL || "/extension/maru-extension.zip";
 
 export default async function Home() {
   const data = await landingData();
@@ -60,8 +58,8 @@ export default async function Home() {
           <div>
             <Laurels
               items={[
-                { top: "Autocompleta en", main: "Greenhouse", second: "y Lever", href: EXTENSION_URL, label: "Autocompleta formularios en Greenhouse y Lever con la extensión" },
-                { top: "Extensión para", main: "Chrome", href: EXTENSION_URL, label: "Extensión para Chrome" },
+                { top: "Autocompleta en", main: "Greenhouse", second: "y Lever", href: "/extension", label: "Autocompleta formularios en Greenhouse y Lever con la extensión" },
+                { top: "Extensión para", main: "Chrome", href: "/extension", label: "Extensión para Chrome" },
                 { top: "8 herramientas en", main: "Una cuenta", href: "/#herramientas", label: "8 herramientas en una cuenta: ver las herramientas" },
               ]}
             />
@@ -149,9 +147,8 @@ export default async function Home() {
           <Feature
             title="Aplicá en 1 click"
             body="Con la extensión para Chrome, Maru completa los formularios de Greenhouse, Lever y otros portales con los datos de tu perfil. Te ahorrás la carga repetida y revisás todo antes de enviar."
-            cta="Descargar la extensión"
-            href={EXTENSION_ZIP_URL}
-            download={!process.env.NEXT_PUBLIC_EXTENSION_URL}
+            cta="Agregar a Chrome"
+            href={EXTENSION_STORE_URL}
             secondary={{ label: "Ver cómo instalarla", href: "/extension" }}
             visual={<AutofillMock />}
           />
@@ -161,7 +158,7 @@ export default async function Home() {
             { title: "Tu CV general", body: "Ordená tu trayectoria para el tipo de rol que buscás, aunque todavía no tengas un aviso.", href: "/cv", cta: "Armar mi CV" },
             { title: "Carta de presentación", body: "Contá por qué te interesa la empresa con ejemplos de tu experiencia y el tono que elijas.", href: "/carta", cta: "Escribir mi carta" },
             { title: "Seguimiento", body: "Guardá búsquedas y registrá cada avance. Al ingresar, el tablero también se sincroniza con tu cuenta.", href: "/seguimiento", cta: "Ver mi tablero" },
-            { title: "Extensión para Chrome", body: "Completá campos en Greenhouse, Lever y formularios compatibles. Revisá las respuestas antes de enviar.", href: EXTENSION_URL, cta: "Ver la extensión" },
+            { title: "Extensión para Chrome", body: "Completá campos en Greenhouse, Lever y formularios compatibles. Revisá las respuestas antes de enviar.", href: "/extension", cta: "Ver la extensión" },
           ].map((tool) => <article key={tool.href} className="flex flex-col rounded-3xl bg-surface p-6">
             <h3 className="text-lg font-semibold leading-6">{tool.title}</h3>
             <p className="mb-5 mt-2 text-sm leading-5 text-muted">{tool.body}</p>
@@ -183,14 +180,14 @@ export default async function Home() {
   );
 }
 
-function Feature({ title, body, cta, href, visual, download = false, secondary }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; download?: boolean; secondary?: { label: string; href: string } }) {
+function Feature({ title, body, cta, href, visual, secondary }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; secondary?: { label: string; href: string } }) {
   const ctaClass = "press mt-8 inline-flex h-12 min-w-[256px] items-center justify-center rounded-[28px] bg-ink px-6 text-lg font-medium text-white sm:text-xl";
   return <article className="grid items-center gap-8 lg:grid-cols-[384px_minmax(0,1fr)] lg:gap-20">
     <div className="text-center lg:text-left">
       <h3 className="font-display text-[32px] font-semibold leading-[1.05] sm:text-5xl">{title}</h3>
       <p className="mt-4 text-base leading-6 sm:text-lg">{body}</p>
-      {/* El zip se descarga directo: con <a download> el navegador no intenta navegar a la ruta. */}
-      {download ? <a href={href} download className={ctaClass}>{cta}</a> : <Link href={href} className={ctaClass}>{cta}</Link>}
+      {/* Los links de afuera (la Chrome Web Store) van con <a>: Link es para rutas del sitio. */}
+      {href.startsWith("http") ? <a href={href} className={ctaClass}>{cta}</a> : <Link href={href} className={ctaClass}>{cta}</Link>}
       {secondary && <p className="mt-3"><Link href={secondary.href} className="inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4">{secondary.label} →</Link></p>}
     </div>
     <div className="min-w-0">{visual}</div>

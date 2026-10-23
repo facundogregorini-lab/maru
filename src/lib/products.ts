@@ -417,7 +417,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     light: "tus postulaciones",
     strongFirst: true,
     desc: "Cargás tu CV una vez y, en cualquier formulario de postulación, Maru completa los campos por vos: datos, respuestas y tu CV adjunto. Vos revisás y enviás.",
-    cta: "Descargar la extensión",
+    cta: "Agregar a Chrome",
     hero: "autofill",
     stats: [
       { value: "1 clic", label: "o Alt + Shift + M para completar el formulario" },
@@ -434,7 +434,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
             ["Tu CV adjunto:", "lo sube solo en el campo de archivo."],
             ["Respuestas abiertas:", "las redacta con tu experiencia y respetando el largo máximo."],
           ],
-          cta: "Descargar la extensión",
+          cta: "Agregar a Chrome",
           visual: "autofill",
         },
         {
@@ -444,7 +444,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
             ["Nunca envía:", "completa y te deja revisar; el botón de enviar lo tocás vos."],
             ["Lo sensible, no:", "no completa datos demográficos ni aceptaciones legales."],
           ],
-          cta: "Descargar la extensión",
+          cta: "Agregar a Chrome",
           visual: "form",
         },
       ],
