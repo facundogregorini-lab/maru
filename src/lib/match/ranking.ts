@@ -353,6 +353,8 @@ export type Filters = {
   language?: "sin_ingles" | "con_ingles";
   maxAgeDays?: number;
   salaryPublished?: boolean;
+  /** Sólo los que publican el salario en dólares (remotos para afuera, sobre todo). */
+  salaryUsd?: boolean;
 };
 
 export type RankInput = {
@@ -860,6 +862,7 @@ function applyFilters(o: Opportunity, primary: StoredPosting | undefined, f: Fil
   if (f.seniorities?.length && (!o.extracted.seniority || !f.seniorities.includes(o.extracted.seniority.value))) return false;
   if (f.location?.trim() && !fold(o.locations.join(" ")).includes(fold(f.location))) return false;
   if (f.salaryPublished && !o.salary) return false;
+  if (f.salaryUsd && o.salary?.value.currency !== "USD") return false;
   if (f.maxAgeDays) {
     const d = o.publishedAt ?? o.firstSeenAt;
     if ((now.getTime() - new Date(d).getTime()) / 86_400_000 > f.maxAgeDays) return false;

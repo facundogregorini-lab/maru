@@ -569,6 +569,10 @@ function FilterPanel({ filters, setFilters }: { filters: Filters; setFilters: (f
         <input type="checkbox" checked={!!filters.salaryPublished} onChange={(e) => set("salaryPublished", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-brand)]" />
         Sólo con salario publicado
       </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" checked={!!filters.salaryUsd} onChange={(e) => set("salaryUsd", e.target.checked || undefined)} className="h-4 w-4 accent-[var(--color-brand)]" />
+        Sólo con salario en dólares
+      </label>
     </div>
   );
 }
