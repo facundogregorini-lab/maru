@@ -444,3 +444,15 @@ describe("ubicaciones", () => {
     expect(displayLocations(["Remote"], true)).toEqual(["Remoto desde Argentina"]);
   });
 });
+
+describe("filtro de salario en dólares", () => {
+  it("deja sólo los avisos con salario publicado en USD", async () => {
+    const { inv, out } = await rank(dataProfile, basePrefs, { filters: { salaryUsd: true } });
+    const listed = [...out.eligible, ...out.pending];
+    expect(listed.length).toBeGreaterThan(0);
+    const byId = new Map(inv.opportunities.map((o) => [o.id, o]));
+    for (const r of listed) expect(byId.get(r.id)?.salary?.value.currency).toBe("USD");
+    const { out: all } = await rank(dataProfile, basePrefs);
+    expect([...all.eligible, ...all.pending].length).toBeGreaterThan(listed.length);
+  });
+});

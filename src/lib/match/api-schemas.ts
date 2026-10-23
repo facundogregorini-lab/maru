@@ -105,6 +105,7 @@ export const FiltersSchema = z
     language: z.enum(["sin_ingles", "con_ingles"]).optional(),
     maxAgeDays: z.number().int().min(1).max(365).optional(),
     salaryPublished: z.boolean().optional(),
+    salaryUsd: z.boolean().optional(),
   })
   .optional();
 
