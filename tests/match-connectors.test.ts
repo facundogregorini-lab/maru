@@ -241,6 +241,11 @@ describe("elegibilidad desde Argentina", () => {
     expect(classifyEligibility(posting({ regionText: ["Americas"], workplace: remote })).status).toBe("por_confirmar");
     expect(classifyEligibility(posting({})).status).toBe("por_confirmar");
   });
+  it("países y regiones lejanas que antes quedaban por confirmar", () => {
+    expect(classifyEligibility(posting({ locations: ["Nepal"] })).status).toBe("no_elegible");
+    expect(classifyEligibility(posting({ locations: ["North Island"] })).status).toBe("no_elegible");
+    expect(classifyEligibility(posting({ locations: ["Morrinsville"] })).status).toBe("no_elegible");
+  });
   it("país estructurado sin Argentina excluye", () => {
     expect(classifyEligibility(posting({ countries: ["BR"], locations: ["Remote - Brazil"], workplace: remote })).status).toBe("no_elegible");
   });
