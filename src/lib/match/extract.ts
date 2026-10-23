@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 27;
+export const EXTRACTION_VERSION = 28;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -291,7 +291,7 @@ const SENIORITY_RULES: [Seniority, RegExp][] = [
   ["director", /\b(director|directora|head of|head,|jefe de area)\b/],
   ["manager", /\b(manager|gerente|jefe|jefa|supervisor|supervisora|encargad[oa])\b/],
   ["lead", /\b(lead|lider|staff|principal|architect|arquitect)\b/],
-  ["semi_senior", /\b(semi ?senior|ssr\.?|mid|mid-level|ii)\b/],
+  ["semi_senior", /\b(semi[ -]?senior|semi ?sr|ssr\.?|mid|mid-level|ii|plen[oa])\b/],
   ["senior", /\b(senior|sr\.?|sssr|iii)\b/],
   ["junior", /\b(junior|jr\.?|entry level|trainee|associate|graduate|i|ayudante|auxiliar|asistente|assistant|cadete|aprendiz|medio oficial)\b/],
   ["pasantia", /\b(intern|internship|pasante|pasantia|becari|practicante|practicas profesionales)\b/],
@@ -313,12 +313,12 @@ export function seniorityFromHint(hint: string): Seniority | null {
 }
 
 /** "Buscamos un/a PM Senior…", "con perfil semi senior": el nivel dicho en el texto, sólo en esas frases. */
-const BODY_LEVEL = /\b(?:buscamos|incorporar|incorpora|sumar|we are looking for|we're looking for|looking for)\s+(?:a |an |un |una |un\/a )?(?:[a-z0-9.+#/-]+\s+){0,5}?(semi ?senior|ssr|senior|sr|junior|jr|trainee)\b|\bperfil (semi ?senior|ssr|senior|sr|junior|jr)\b/;
+const BODY_LEVEL = /\b(?:buscamos|incorporar|incorpora|sumar|we are looking for|we're looking for|looking for|seeking|hiring|(?:en la )?busqueda de|esta buscando|buscando)\s+(?:a |an |un |una |un\/a |un\/una |una\/un )?(?:[a-z0-9.+#/-]+\s+){0,5}?(semi ?senior|semi ?sr|ssr|senior|sr|junior|jr|trainee)\b|\bperfil (semi ?senior|semi ?sr|ssr|senior|sr|junior|jr)\b/;
 export function seniorityFromBody(text: string): { value: Seniority; evidence: string } | null {
   const m = fold(text.slice(0, 3000)).match(BODY_LEVEL);
   if (!m) return null;
   const w = (m[1] ?? m[2]).replace(" ", "");
-  const value: Seniority = /^(semisenior|ssr)$/.test(w) ? "semi_senior" : /^(senior|sr)$/.test(w) ? "senior" : "junior";
+  const value: Seniority = /^(semisenior|semisr|ssr)$/.test(w) ? "semi_senior" : /^(senior|sr)$/.test(w) ? "senior" : "junior";
   return { value, evidence: m[0].slice(0, 80) };
 }
 
@@ -380,7 +380,7 @@ export function yearsRequired(text: string): number | null {
 }
 
 /** Avisos de primer empleo: "sin experiencia", "no se requiere experiencia", "entry level". */
-const ENTRY_LEVEL = /\b(sin experiencia|no (se )?requiere(s|n)? experiencia|no es necesaria experiencia|no necesitas experiencia|primer empleo|primera experiencia laboral|no (prior )?experience (is )?(required|needed|necessary)|entry[- ]level)\b/;
+const ENTRY_LEVEL = /\b(sin experiencia|no (se )?requiere(s|n)? experiencia|no es necesaria experiencia|no necesitas experiencia|primer empleo|primera experiencia laboral|primeros pasos|no (prior )?experience (is )?(required|needed|necessary)|entry[- ]level)\b/;
 export const isEntryLevel = (text: string) => ENTRY_LEVEL.test(fold(text));
 
 function seniorityFromYears(y: number): Seniority {
