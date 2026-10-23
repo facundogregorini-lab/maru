@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 22;
+export const EXTRACTION_VERSION = 23;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -145,21 +145,31 @@ const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|su
 // Auditoría del 22/10: «About You», «Who You Are», «Requerimientos», «Competencias», «Perfil buscado» no se reconocían.
 const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
 
+/**
+ * Línea que pide algo a quien se postula: "• 3+ years of experience in…", "• Manejo de Excel avanzado".
+ * Se usa sólo cuando el aviso no tiene un título de requisitos (22/10: 2.703 avisos elegibles sin requisitos así).
+ */
+const REQUIREMENT_CUE = /\b(experien\w*|conocimientos?|manejo de|dominio de|proven|strong (knowledge|experience|understanding|background)|familiar(ity)? with|knowledge of|proficien\w*|hands-on|years|anos de|excluyente|required|must|degree|bachelor|titulo|graduad[oa]s?|estudiante|nivel (avanzado|intermedio|basico)|ingles|english)\b/;
+
 /** Divide la descripción en bloques y los etiqueta según su encabezado. */
-export function splitSections(text: string): { required: string; desirable: string; other: string } {
+export function splitSections(text: string): { required: string; desirable: string; other: string; implicit: string } {
   const lines = text.split(/\n+/);
   let mode: "required" | "desirable" | "other" = "other";
-  const out = { required: [] as string[], desirable: [] as string[], other: [] as string[] };
+  // Dentro de "other": beneficios y "sobre nosotros" no piden nada.
+  let offer = false;
+  const out = { required: [] as string[], desirable: [] as string[], other: [] as string[], implicit: [] as string[] };
   for (const line of lines) {
     const isHeader = line.length < 90 && !line.startsWith("•");
     if (isHeader && DESIRABLE_HEAD.test(line)) mode = "desirable";
     else if (isHeader && REQUIRED_HEAD.test(line)) mode = "required";
-    else if (isHeader && /(benefits|beneficios|what we offer|ofrecemos|about us|sobre nosotros|perks|why join)/i.test(line)) mode = "other";
+    else if (isHeader && /(benefits|beneficios|what we offer|ofrecemos|about us|sobre nosotros|perks|why join)/i.test(line)) [mode, offer] = ["other", true];
+    else if (isHeader && mode === "other" && line.trim().length < 60 && /[:?]\s*$|^[A-ZÁÉÍÓÚÑ¿][^.]*$/.test(line.trim())) offer = false;
     // Una viñeta suelta con "plus"/"deseable" es deseable aunque esté en requisitos.
     const target = line.startsWith("•") && DESIRABLE_HEAD.test(line) ? "desirable" : mode;
     out[target].push(line);
+    if (target === "other" && !offer && line.startsWith("•") && REQUIREMENT_CUE.test(fold(line))) out.implicit.push(line);
   }
-  return { required: out.required.join("\n"), desirable: out.desirable.join("\n"), other: out.other.join("\n") };
+  return { required: out.required.join("\n"), desirable: out.desirable.join("\n"), other: out.other.join("\n"), implicit: out.implicit.join("\n") };
 }
 
 /* ---------- Familia de rol ---------- */
@@ -442,7 +452,9 @@ export function extract(input: {
 }): Extracted {
   const { title, descriptionText } = input;
   const sections = splitSections(descriptionText);
-  const req = findSkills(sections.required);
+  // Sin título de requisitos, las viñetas que piden algo ("• Manejo de Excel avanzado") hacen de requisitos.
+  const reqText = sections.required.trim() ? sections.required : sections.implicit;
+  const req = findSkills(reqText);
   const des = findSkills(sections.desirable).filter((s) => !req.includes(s));
   const all = findSkills(`${title}\n${descriptionText}`);
   const mentioned = all.filter((s) => !req.includes(s) && !des.includes(s));

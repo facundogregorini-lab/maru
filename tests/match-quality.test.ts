@@ -191,3 +191,16 @@ describe("inglés opcional dentro de los requisitos", () => {
     expect(en("Requirements\n• English advanced (C1)\nNice to have\n• Looker")?.required).toBe(true);
   });
 });
+
+describe("requisitos sin título de sección", () => {
+  it("toma las viñetas que piden algo, pero no las de beneficios ni las tareas", () => {
+    const e = extract({ title: "Data Analyst", descriptionText: "Buscamos un analista para el equipo.\n• 3+ años de experiencia con SQL y Python\n• Armar tableros semanales en Excel\nBeneficios\n• Experiencia de trabajo internacional con Tableau" });
+    expect(e.skillsRequired).toEqual(expect.arrayContaining(["sql", "python"]));
+    expect(e.skillsRequired).not.toContain("tableau");
+  });
+  it("si hay título de requisitos, manda ese", () => {
+    const e = extract({ title: "Data Analyst", descriptionText: "• Experiencia con Excel\nRequisitos\n• SQL" });
+    expect(e.skillsRequired).toContain("sql");
+    expect(e.skillsRequired).not.toContain("excel");
+  });
+});
