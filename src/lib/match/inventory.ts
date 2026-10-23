@@ -54,6 +54,7 @@ export function contentHash(p: NormalizedPosting): string {
       p.expiresAt,
       p.employmentHint ?? "",
       p.seniorityHint ?? "",
+      p.department ?? "",
     ]),
   );
 }
@@ -168,10 +169,13 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
       stats.created++;
       continue;
     }
-    prev.lastSeenAt = now;
+    // Datos más viejos que lo que ya sabemos (releer una corrida paga con su propia hora) no mueven la fecha
+    // hacia atrás ni reabren un aviso que se cerró después: "Ya no se aceptan solicitudes" de hoy le gana.
+    const stale = !!prev.closedAt && now <= prev.closedAt;
+    if (now > prev.lastSeenAt) prev.lastSeenAt = now;
     if (isAts) prev.lastVerifiedAt = now;
     prev.missedCompleteSyncs = 0;
-    if (prev.status === "cerrada") {
+    if (prev.status === "cerrada" && !stale) {
       prev.status = "abierta";
       delete prev.closedReason;
       delete prev.closedAt;
