@@ -1,4 +1,4 @@
-import { workplaceFromDescription } from "./connectors";
+import { workplaceFromDescription, workplaceFromText } from "./connectors";
 import { classifyEligibility } from "./eligibility";
 import { EXTRACTION_VERSION, extract } from "./extract";
 import { cleanSalary, salaryFromText } from "./salary";
@@ -65,6 +65,9 @@ const REMOTE_PLACE = /^\s*(remote|remoto|remota|desde (tu |su )?casa|home office
 export function withWorkplace(p: NormalizedPosting): NormalizedPosting {
   if (p.workplace.value !== "desconocido") return p;
   if (p.locations.length && p.locations.every((l) => REMOTE_PLACE.test(fold(l)))) return { ...p, workplace: { value: "remoto", from: "fuente", evidence: `ubicación: ${p.locations[0].slice(0, 60)}` } };
+  // "Senior Data Engineer (Remote)", "Analista Contable - Híbrido": el título lo dice (22/10: 227 elegibles sin usar).
+  const inTitle = workplaceFromText(p.title);
+  if (inTitle !== "desconocido") return { ...p, workplace: { value: inTitle, from: "titulo", evidence: p.title.slice(0, 80) } };
   const found = workplaceFromDescription(p.descriptionText);
   if (found) return { ...p, workplace: { value: found.value, from: "descripcion", evidence: found.evidence } };
   const inferred = inferPresencial(p);
