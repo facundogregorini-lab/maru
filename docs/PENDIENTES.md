@@ -27,6 +27,8 @@ La Store aprobó la 0.4.1 y está pública: https://chromewebstore.google.com/de
 - **Home y `/extension`:** los botones dicen «Agregar a Chrome» y van a la Store. `/extension` explica la instalación en 3 pasos y, en un desplegable, cómo pasar de la versión del zip a la de la Store (quitar la cargada a mano y volver a subir el CV, porque cada instalación guarda sus datos aparte). El zip sigue disponible ahí.
 - **PostHog:** evento nuevo `extension_store` al tocar un link a la ficha.
 - Sin cambios: `/api/extension/version` sigue mandando a `/extension` a quien instaló el zip; las de la Store se actualizan solas.
+- **Resultado de la postulación → extensión (pedido del dueño, 23/10):** el resultado no decía cómo seguir. Ahora, arriba de las pestañas, la tarjeta «Siguiente paso: completá el formulario con la extensión» explica los dos pasos, abre el aviso en otra pestaña y ofrece agregar la extensión. Si la postulación se armó sólo con texto (sin link), explica que la extensión no la va a reconocer.
+- **Brecha conocida:** la extensión busca la postulación por `jobKey` del aviso. Si el aviso es de LinkedIn u otra bolsa y el formulario está en el ATS de la empresa, las claves no coinciden y adjunta el CV general. Propuesta: en la extensión, si no hay coincidencia exacta, ofrecer la postulación reciente cuya empresa aparezca en la página (requiere versión nueva y revisión de la Store).
 - **Pendiente (dueño):** instalar desde la Store y probar un Greenhouse embebido (`?gh_jid=`), el PDF del CV personalizado y «Guardala en tu seguimiento» con la sesión de marucoach.com.
 
 ## Extensión 0.4.1: activeTab en lugar de acceso a todos los sitios (22/10/2026)
