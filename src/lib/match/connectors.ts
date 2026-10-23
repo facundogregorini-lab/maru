@@ -1018,7 +1018,8 @@ export async function fetchEightfold(board: Board, opts?: RetryOptions & { maxPa
 /* ---------- SuccessFactors (sitio de empleo público, "Recruiting Marketing") ---------- */
 
 const SF_PAGE = 25;
-const SF_MAX_DETAILS = 40;
+// 80 por día: EY (250 avisos) completa fechas y descripciones en 3 días en vez de 7 (22/10).
+const SF_MAX_DETAILS = 80;
 
 /** "careers.ey.com~ey" → host y prefijo del sitio (algunas empresas lo publican bajo una carpeta). */
 export function successFactorsSite(slug: string | undefined): { host: string; prefix: string } {
@@ -1126,7 +1127,7 @@ export function normalizeSuccessFactors(row: SfRow, detailHtml: string | null, b
 
 /**
  * Los sitios de empleo de SuccessFactors no tienen API pública: leemos la misma página de búsqueda que ve
- * cualquier persona, filtrada por Argentina, en serie (de a 25, o de a lo que pagine el sitio), y el detalle de hasta 40 avisos.
+ * cualquier persona, filtrada por Argentina, en serie (de a 25, o de a lo que pagine el sitio), y el detalle de hasta 80 avisos.
  * Si la página no tiene el marcado esperado, falla (no se toma como "sin avisos", para no cerrar nada por error).
  */
 export async function fetchSuccessFactors(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
