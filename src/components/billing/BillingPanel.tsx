@@ -17,6 +17,9 @@ export default function BillingPanel() {
   const [error, setError] = useState("");
   /** A qué botón corresponde el error: se muestra al lado, no al final del panel (si no, parecía que el clic no hacía nada). */
   const [errorFor, setErrorFor] = useState<PlanId | "cancel" | "status" | null>(null);
+  /** Mercado Pago no acepta el email de Maru como pagador («different site»): se puede probar con el de otra cuenta de Mercado Pago Argentina. */
+  const [payerAsk, setPayerAsk] = useState<PlanId | null>(null);
+  const [payerEmail, setPayerEmail] = useState("");
   const read = useCallback(async (refresh = false) => {
     const res = await fetch("/api/billing/status", { method: refresh ? "POST" : "GET", cache: "no-store", headers: email ? { "X-Maru-Account": email } : {} });
     const body = await res.json();
@@ -36,7 +39,7 @@ export default function BillingPanel() {
     }).catch(() => { if (active) setError("No pudimos consultar tu plan. Recargá la página para reintentar."); });
     return () => { active = false; };
   }, [email]);
-  async function act(action: PlanId | "cancel" | "status") {
+  async function act(action: PlanId | "cancel" | "status", payer?: string) {
     if (!email) { setLogin(true); return; }
     // La baja de un pago iniciado sin terminar sigue acá; la de un plan activo, en "Mi suscripción".
     if (action === "cancel" && !window.confirm("¿Cancelar el pago iniciado? No se te cobra nada.")) return;
@@ -46,10 +49,11 @@ export default function BillingPanel() {
       else {
         const checkout = action !== "cancel";
         if (checkout) trackPlanClick(action);
-        const res = await fetch(`/api/billing/${checkout ? "checkout" : "cancel"}`, { method: "POST", headers: { "X-Maru-Account": email, "Content-Type": "application/json" }, body: checkout ? JSON.stringify({ plan: action }) : undefined }).catch(() => null);
+        const res = await fetch(`/api/billing/${checkout ? "checkout" : "cancel"}`, { method: "POST", headers: { "X-Maru-Account": email, "Content-Type": "application/json" }, body: checkout ? JSON.stringify({ plan: action, ...(payer ? { payerEmail: payer } : {}) }) : undefined }).catch(() => null);
         const body = res ? await res.json().catch(() => ({})) : {};
         if (!res?.ok) {
           if (checkout) trackCheckoutFailed(action, res ? body.code : "red");
+          if (checkout && body.code === "PAYER_OTHER_SITE") setPayerAsk(action);
           throw new Error(body.error ?? "No pudimos completar el pedido.");
         }
         if (body.url) {
@@ -75,6 +79,11 @@ export default function BillingPanel() {
         {busy === plan.id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : resume ? "Retomar el pago" : "Elegir plan"}
       </button>
       {errorFor === plan.id && error && <p role="alert" className="mt-2 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {payerAsk === plan.id && <form className="mt-2 flex flex-col gap-2 sm:flex-row" onSubmit={(e) => { e.preventDefault(); if (payerEmail.trim()) void act(plan.id, payerEmail.trim()); }}>
+        <label className="sr-only" htmlFor={`payer-${plan.id}`}>Email de tu cuenta de Mercado Pago Argentina</label>
+        <input id={`payer-${plan.id}`} type="email" required autoComplete="email" placeholder="Email de tu Mercado Pago Argentina" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)} className="min-h-11 flex-1 rounded-full border border-line px-4 text-sm" />
+        <button type="submit" disabled={!!busy} className="min-h-11 rounded-full bg-ink px-5 text-sm font-bold text-white disabled:opacity-50">{busy === plan.id ? "Un momento…" : "Pagar con este email"}</button>
+      </form>}
       {blocked && !paid && status?.tier && <p className="mt-2 text-xs text-ink/70">Tenés un pago iniciado del plan {PLANS[status.tier].nombre.toLowerCase()}. Retomalo o cancelalo más abajo para elegir otro.</p>}
     </>;
   };

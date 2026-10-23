@@ -394,4 +394,33 @@ describe("extensión y promo de lanzamiento", () => {
     // El segundo clic vuelve a intentar (no queda trabado en «preparándose»).
     expect((await (await POST(req())).json()).code).toBe("CHECKOUT_REJECTED");
   });
+
+  it("si Mercado Pago no acepta el email como pagador, se puede pagar con el de otra cuenta de Mercado Pago", async () => {
+    await setup();
+    const payers: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      const path = new URL(String(url)).pathname;
+      if (path === "/preapproval" && init?.method === "POST") {
+        const body = JSON.parse(String(init.body));
+        payers.push(body.payer_email);
+        if (body.payer_email === "ana@example.com") return Response.json({ message: "Payer is associated with a different site", status: 400 }, { status: 400 });
+        return Response.json({ id: "sub7", external_reference: body.external_reference, status: "pending", init_point: "https://www.mercadopago.com.ar/subscriptions/checkout?id=sub7" });
+      }
+      throw new Error(`Unexpected provider request: ${path}`);
+    }));
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const { POST } = await import("@/app/api/billing/checkout/route");
+    const req = (extra = {}) => new Request("https://maru.test/api/billing/checkout", { method: "POST", headers: { origin: "https://maru.test", cookie: `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}` }, body: JSON.stringify({ plan: "mensual", ...extra }) });
+    const first = await POST(req());
+    expect(first.status).toBe(409);
+    expect((await first.json()).code).toBe("PAYER_OTHER_SITE");
+    expect((await (await POST(req({ payerEmail: "no-es-un-email" }))).json()).code).toBe("BAD_PAYER");
+    const ok = await POST(req({ payerEmail: " Ana.MP@Example.com " }));
+    expect(ok.status).toBe(200);
+    expect((await ok.json()).url).toContain("mercadopago.com.ar");
+    expect(payers).toEqual(["ana@example.com", "ana.mp@example.com"]);
+    // La suscripción sigue siendo de la cuenta de Maru (se vincula por la referencia).
+    const s = await import("@/lib/billing/server");
+    expect((await s.readSubscription("ana@example.com"))?.id).toBe("sub7");
+  });
 });
