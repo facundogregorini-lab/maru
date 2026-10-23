@@ -14482,6 +14482,880 @@
         "budgetUsd": 34
       },
       "created": 7
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "fullstack developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7884",
+        "runId": "g9HGdqv8M6ZAUDdgu",
+        "datasetId": "O7pmlDEcT28gZoGhR"
+      },
+      "rows": 57,
+      "consumed": 0.0157,
+      "quota": {
+        "usageTotalUsd": 0.01566,
+        "spentUsd": 27.875,
+        "budgetUsd": 34.5
+      },
+      "created": 34
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "site reliability engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7884",
+        "runId": "vfMzwdUTe8ba1g0rJ",
+        "datasetId": "GTuNZ5yHjK3CbX8fE"
+      },
+      "rows": 58,
+      "consumed": 0.0196,
+      "quota": {
+        "usageTotalUsd": 0.019620000000000002,
+        "spentUsd": 27.894,
+        "budgetUsd": 34.5
+      },
+      "created": 14
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "machine learning engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7884",
+        "runId": "nPoxf1rN2nNtolBkP",
+        "datasetId": "zPuGMVlimaf7pa0Yb"
+      },
+      "rows": 44,
+      "consumed": 0.0167,
+      "quota": {
+        "usageTotalUsd": 0.01674,
+        "spentUsd": 27.911,
+        "budgetUsd": 34.5
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ai engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7884",
+        "runId": "MNvRMJVc7FhHF8xky",
+        "datasetId": "kEm9nl29Wcp3xqScC"
+      },
+      "rows": 60,
+      "consumed": 0.02,
+      "quota": {
+        "usageTotalUsd": 0.01998,
+        "spentUsd": 27.931,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ui designer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7884",
+        "runId": "hYXaGDqVSm5QI8kQj",
+        "datasetId": "Ka1rkbfE8Y4yXKWIb"
+      },
+      "rows": 7,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 27.934,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "soporte it",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7995",
+        "runId": "BXaEIpPdmDP74P25I",
+        "datasetId": "5jkq7nCSLVZdqDuSw"
+      },
+      "rows": 85,
+      "consumed": 0.0301,
+      "quota": {
+        "usageTotalUsd": 0.030060000000000003,
+        "spentUsd": 27.964,
+        "budgetUsd": 34.5
+      },
+      "created": 39
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "salesforce developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7995",
+        "runId": "9IhjMjxjm7FacuzDn",
+        "datasetId": "58vKv7p6tCSb3KO8O"
+      },
+      "rows": 1,
+      "consumed": 0.06,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.024,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "sap consultant",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7995",
+        "runId": "J2dYWzLOcP6eEI7dz",
+        "datasetId": "hcKfzloOPpaahX3ab"
+      },
+      "rows": 13,
+      "consumed": 0.0056,
+      "quota": {
+        "usageTotalUsd": 0.00558,
+        "spentUsd": 28.03,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "golang developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7995",
+        "runId": "M9o5krwafLU6dheEv",
+        "datasetId": "Ewgcvzpou0HqUfdCe"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.031,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "angular developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "7995",
+        "runId": "emdCpJM6g66GI4pPr",
+        "datasetId": "9HYrSH04R1GwStUNl"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.032,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ios developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8083",
+        "runId": "4xpTAI7OFdm8bl8R3",
+        "datasetId": "qqsn50Y0Jnb4ezQ4K"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.033,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "android developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8083",
+        "runId": "eqj7gfhhZMGCduACk",
+        "datasetId": "Alc6NLWL3bK7UkeS3"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.034,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "tech lead",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8083",
+        "runId": "UljM0j9fAxsFPbLxf",
+        "datasetId": "h9cgTX8uQteD8SrKA"
+      },
+      "rows": 57,
+      "consumed": 0.0211,
+      "quota": {
+        "usageTotalUsd": 0.021060000000000002,
+        "spentUsd": 28.055,
+        "budgetUsd": 34.5
+      },
+      "created": 19
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "engineering manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8083",
+        "runId": "Z3uS57TIjZkauKbVT",
+        "datasetId": "aXuWuHRjyq0robgtW"
+      },
+      "rows": 69,
+      "consumed": 0.025,
+      "quota": {
+        "usageTotalUsd": 0.025020000000000004,
+        "spentUsd": 28.08,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data architect",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8083",
+        "runId": "ba6vzlUZWYZl9aU8m",
+        "datasetId": "fpuVZ3d4J7WwZh8nZ"
+      },
+      "rows": 6,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 28.083,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "bi analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8175",
+        "runId": "IjpQEsaPK9A7iZieP",
+        "datasetId": "BNUGNLt2Bh7GPAAgT"
+      },
+      "rows": 61,
+      "consumed": 0.0225,
+      "quota": {
+        "usageTotalUsd": 0.022500000000000003,
+        "spentUsd": 28.105,
+        "budgetUsd": 34.5
+      },
+      "created": 41
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analytics engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8175",
+        "runId": "AsnkJlorahTUHPcjN",
+        "datasetId": "JeuetWqLjdUL7Yruu"
+      },
+      "rows": 9,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 28.109,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote ux designer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8175",
+        "runId": "wxaGYkIJa5RGNvZbp",
+        "datasetId": "TML0WmR6f3lSTBxRB"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.11,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote data scientist",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8175",
+        "runId": "4lBbBLf0xtQQ30dJR",
+        "datasetId": "p1fTLDjvXjEIsqWf1"
+      },
+      "rows": 12,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 28.112,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote devops",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8175",
+        "runId": "OSycwOLKUmCWcrFNq",
+        "datasetId": "gibjUrvfo3l5BA8jx"
+      },
+      "rows": 3,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 28.114,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote qa automation",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8241",
+        "runId": "BAIv2UQnaTomy3Ck1",
+        "datasetId": "2Md7Ps4BP2m61p2o1"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.115,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote product owner",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8241",
+        "runId": "9soNgGuimA51l8bxI",
+        "datasetId": "ntyVKhyeAt5bEiz7H"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 28.116,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote business analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8241",
+        "runId": "qdsd8KCe9X9whRxpA",
+        "datasetId": "HjdzLN3tcSwgSiWoK"
+      },
+      "rows": 40,
+      "consumed": 0.0153,
+      "quota": {
+        "usageTotalUsd": 0.015300000000000001,
+        "spentUsd": 28.131,
+        "budgetUsd": 34.5
+      },
+      "created": 21
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote sales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8241",
+        "runId": "KnUYkz7lLFYx57O6W",
+        "datasetId": "zSJCbzA1VcesxwT1V"
+      },
+      "rows": 63,
+      "consumed": 0.0229,
+      "quota": {
+        "usageTotalUsd": 0.022860000000000002,
+        "spentUsd": 28.154,
+        "budgetUsd": 34.5
+      },
+      "created": 34
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote customer support",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8241",
+        "runId": "h8N9lRgnf6fIj8LSa",
+        "datasetId": "a8qYcGpa3PvzBbhha"
+      },
+      "rows": 46,
+      "consumed": 0.0167,
+      "quota": {
+        "usageTotalUsd": 0.01674,
+        "spentUsd": 28.171,
+        "budgetUsd": 34.5
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote recruiter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8361",
+        "runId": "CfRoJvaM9qCgppPLm",
+        "datasetId": "ANoZQQhk4vXfXCRzU"
+      },
+      "rows": 9,
+      "consumed": 0.0041,
+      "quota": {
+        "usageTotalUsd": 0.0041400000000000005,
+        "spentUsd": 28.175,
+        "budgetUsd": 34.5
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote project manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8361",
+        "runId": "KeF9mxMjHWZgrZb9x",
+        "datasetId": "iE9DamA0oqk6u3Qb4"
+      },
+      "rows": 34,
+      "consumed": 0.0128,
+      "quota": {
+        "usageTotalUsd": 0.01278,
+        "spentUsd": 28.188,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote salesforce",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8361",
+        "runId": "bFJptzxz5xfxVjmLq",
+        "datasetId": "fySz8pD4QLgdtWwGt"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 28.189,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote ai engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8361",
+        "runId": "4SpbakJlS8sor2cQv",
+        "datasetId": "xO4JOr8C8UqYj9TVA"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 28.19,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote machine learning",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8361",
+        "runId": "rB3RuWpcatnyaSTod",
+        "datasetId": "lw1EkaR3D7XKble8S"
+      },
+      "rows": 15,
+      "consumed": 0.0063,
+      "quota": {
+        "usageTotalUsd": 0.0063,
+        "spentUsd": 28.197,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote golang",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8420",
+        "runId": "yfGEIpqg5euHchFTq",
+        "datasetId": "UcEecbA24OfoPwNWp"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 28.199,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote angular",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8420",
+        "runId": "iHzOs1gpv6eDlK9rd",
+        "datasetId": "uBvi5Q5bffkwUfRk8"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.2,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote ios developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8420",
+        "runId": "1dErAV8lI1ntSEdIz",
+        "datasetId": "F1GGjucb3uJ3BAFw6"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.201,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote android developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8420",
+        "runId": "b6VPqwJxws4b0EySj",
+        "datasetId": "opGFicCurhtRdfi1e"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.202,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote copywriter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8420",
+        "runId": "0UP2PsGZwgx1daHOQ",
+        "datasetId": "ef0D2BbTwUdpHgX09"
+      },
+      "rows": 13,
+      "consumed": 0.0052,
+      "quota": {
+        "usageTotalUsd": 0.00522,
+        "spentUsd": 28.207,
+        "budgetUsd": 34.5
+      },
+      "created": 12
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote brand designer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8438",
+        "runId": "Lexoaq9ggAINX14Ad",
+        "datasetId": "DpU4QzY2YPwHZxWYs"
+      },
+      "rows": 4,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 28.209,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote video editor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8438",
+        "runId": "AbV4Zi2CmxZzDckXu",
+        "datasetId": "8pZzjVbSrryYtRUn5"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 28.212,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T12:58:00.406Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "remote tech lead",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8438",
+        "runId": "gThQmGe2O9C6LuXjn",
+        "datasetId": "jopIPax3EyNzdW0Fn"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 28.213,
+        "budgetUsd": 34.5
+      },
+      "created": 0
     }
   ]
 }
