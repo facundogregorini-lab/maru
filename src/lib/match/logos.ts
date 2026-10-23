@@ -104,6 +104,21 @@ export const KNOWN_DOMAINS: Record<string, string> = {
   "telus digital ai data solutions": "telusdigital.com", "telus digital": "telusdigital.com", arionkoder: "arionkoder.com",
   "sancor salud grupo de medicina privada": "sancorsalud.com.ar", "sancor salud": "sancorsalud.com.ar", "grupo sancor seguros": "gruposancorseguros.com",
   wurth: "wurth.com.ar", brainlabs: "brainlabsdigital.com", mabxience: "mabxience.com",
+  // Auditoría del 23/10: los siguientes empleadores con más avisos elegibles sin logo (nombres ambiguos quedan afuera).
+  "flux it": "fluxit.com.ar", atmosera: "atmosera.com", "cat technologies": "cat-technologies.com", "cactus communications": "cactusglobal.com",
+  "on city": "oncity.com", mural: "mural.co", ups: "ups.com", "glenmark pharmaceuticals": "glenmarkpharma.com", britecore: "britecore.com",
+  jampp: "jampp.com", redbee: "redbee.io", "sanatorio allende": "sanatorioallende.com", "byma bolsas y mercados argentinos": "byma.com.ar",
+  slb: "slb.com", "amazon web services (aws)": "aws.amazon.com", avature: "avature.net", "mutual jerarquicos": "jerarquicos.com",
+  telnyx: "telnyx.com", "grupo mirgor": "mirgor.com.ar", cbre: "cbre.com", supportyourapp: "supportyourapp.com", ebanx: "ebanx.com",
+  yuno: "y.uno", payoneer: "payoneer.com", abacum: "abacum.ai", "s&p global": "spglobal.com", byd: "byd.com", cocos: "cocos.capital",
+  zaelot: "zaelot.com", newsela: "newsela.com", xbow: "xbow.com", amperity: "amperity.com", webflow: "webflow.com", promtior: "promtior.ai",
+  finning: "finning.com", "td synnex": "tdsynnex.com", "prisma medios de pago": "prismamediosdepago.com", nestle: "nestle.com",
+  "hitachi energy": "hitachienergy.com", "nutrien ag solutions las": "nutrien.com", "park place technologies": "parkplacetechnologies.com",
+  "turner & townsend": "turnerandtownsend.com", "hire with near": "hirewithnear.com", "scale army careers": "scalearmy.com",
+  "mckinsey & company": "mckinsey.com", "ey parthenon": "ey.com", "chainlink labs": "chainlinklabs.com", softys: "softys.com",
+  "allegro microsystems": "allegromicro.com", "practia global": "practia.global", "publicis groupe": "publicisgroupe.com",
+  "oliver latin america": "oliver.agency", "irsa propiedades comerciales": "irsa.com.ar", "rebill com": "rebill.com", "payway ar": "payway.com.ar",
+  "iol inversiones": "invertironline.com", "sezzle la": "sezzle.com", gyansys: "gyansys.com", "the ritz carlton yacht collection": "ritzcarltonyachtcollection.com",
 };
 
 /** Las claves con la misma normalización que los nombres ("helmerich & payne" → "helmerich payne"). */
