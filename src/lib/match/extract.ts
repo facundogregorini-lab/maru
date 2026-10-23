@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 23;
+export const EXTRACTION_VERSION = 24;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -294,6 +294,28 @@ const SENIORITY_RULES: [Seniority, RegExp][] = [
 /** "Product Manager", "Account Manager"… suelen ser roles individuales: "manager" no indica gestión de personas. */
 const IC_MANAGER = /\b(product|account|customer success|success|project|program|community|campaign|partner|partnership|office|case|key account|social media|channel|category|content|brand|ecommerce|e-commerce|growth|crm|lifecycle)\s+manager\b/g;
 
+/** Niveles que informan los portales con otras palabras (Bumeran, Computrabajo, LinkedIn). */
+const HINT_LEVELS: [Seniority, RegExp][] = [
+  ["junior", /^(sin experiencia|entry level|internship|pasantia)$/],
+  ["semi_senior", /^(intermedio|algo de responsabilidad|mid[- ]senior level)$/],
+  ["director", /^(gerencia|director)/],
+  ["ejecutivo", /^(executive|ejecutivo)$/],
+];
+export function seniorityFromHint(hint: string): Seniority | null {
+  const h = fold(hint).trim();
+  return HINT_LEVELS.find(([, re]) => re.test(h))?.[0] ?? null;
+}
+
+/** "Buscamos un/a PM Senior…", "con perfil semi senior": el nivel dicho en el texto, sólo en esas frases. */
+const BODY_LEVEL = /\b(?:buscamos|incorporar|incorpora|sumar|we are looking for|we're looking for|looking for)\s+(?:a |an |un |una |un\/a )?(?:[a-z0-9.+#/-]+\s+){0,5}?(semi ?senior|ssr|senior|sr|junior|jr|trainee)\b|\bperfil (semi ?senior|ssr|senior|sr|junior|jr)\b/;
+export function seniorityFromBody(text: string): { value: Seniority; evidence: string } | null {
+  const m = fold(text.slice(0, 3000)).match(BODY_LEVEL);
+  if (!m) return null;
+  const w = (m[1] ?? m[2]).replace(" ", "");
+  const value: Seniority = /^(semisenior|ssr)$/.test(w) ? "semi_senior" : /^(senior|sr)$/.test(w) ? "senior" : "junior";
+  return { value, evidence: m[0].slice(0, 80) };
+}
+
 export function seniorityFromTitle(title: string): Seniority | null {
   const t = ` ${fold(title).replace(IC_MANAGER, "$1")} `;
   for (const [s, re] of SENIORITY_RULES) if (re.test(t)) return s;
@@ -463,11 +485,14 @@ export function extract(input: {
 
   const years = (sections.required ? yearsRequired(sections.required) : null) ?? yearsRequired(descriptionText);
   const sTitle = seniorityFromTitle(title);
-  const sHint = input.seniorityHint ? seniorityFromTitle(input.seniorityHint) : null;
+  const sHint = input.seniorityHint ? (seniorityFromTitle(input.seniorityHint) ?? seniorityFromHint(input.seniorityHint)) : null;
+  const sBody = sTitle || sHint ? null : seniorityFromBody(descriptionText);
   const seniority: Field<Seniority> | null = sTitle
     ? { value: sTitle, from: "titulo", evidence: title }
     : sHint
       ? { value: sHint, from: "fuente", evidence: input.seniorityHint! }
+      : sBody
+      ? { value: sBody.value, from: "descripcion", evidence: sBody.evidence }
       : years !== null
       ? { value: seniorityFromYears(years), from: "descripcion", evidence: `${years}+ años de experiencia` }
       : isEntryLevel(descriptionText)
