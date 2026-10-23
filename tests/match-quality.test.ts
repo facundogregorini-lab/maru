@@ -220,10 +220,18 @@ describe("seniority desde el nivel de la fuente y el texto", () => {
     expect(s("Vendedor", "Atención de clientes.", "Sin experiencia")).toBe("junior");
     expect(s("Analista", "Tareas varias.", "Intermedio")).toBe("semi_senior");
     expect(s("Gerente comercial", "Liderar el área.", "Gerencia / Alta Gerencia / Dirección")).toBe("manager");
+    // Computrabajo: «Semi Sr» se leía como senior.
+    expect(s("Analista Contable", "Tareas varias.", "Semi Sr")).toBe("semi_senior");
+    expect(s("Ejecutivo de cuentas", "Tareas varias.", "Senior / Semi-Senior")).toBe("semi_senior");
+    expect(s("Semi-Senior Designer", "Tareas varias.")).toBe("semi_senior");
+    expect(s("Analista Pleno Gestión Comercial", "Tareas varias.")).toBe("semi_senior");
   });
   it("toma el nivel sólo de frases de búsqueda", () => {
     expect(s("Account Executive", "Buscamos sumar un/a senior account executive a nuestro equipo.")).toBe("senior");
     expect(s("Analista Contable", "Buscamos a una persona con perfil junior para el área.")).toBe("junior");
     expect(s("Risk Analyst", "Present findings to senior management.")).toBeNull();
+    expect(s("Administrativo", "Empresa minera se encuentra en la búsqueda de un/a Administrativo/a Junior.")).toBe("junior");
+    expect(s("Full Stack Engineer", "We are seeking a Senior engineer to join us.")).toBe("senior");
+    expect(s("Desarrollador Mobile", "Estamos buscando un desarrollador mobile semi sr.")).toBe("semi_senior");
   });
 });
