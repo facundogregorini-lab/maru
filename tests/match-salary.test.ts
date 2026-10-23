@@ -33,6 +33,12 @@ describe("salario publicado en el texto del aviso", () => {
     expect(s.from).toBe("descripcion");
     expect(s.evidence).toMatch(/900\.000/);
   });
+
+  it("lee «Monthly base of…» y «Base: …», no «Knowledge base»", () => {
+    expect(v("Remote from LATAM. Monthly base of US$800-US$1,000 based on experience.")).toMatchObject({ min: 800, max: 1000, currency: "USD", period: "mes" });
+    expect(v("Compensation\n• Base: $1,000 USD/month, guaranteed")).toMatchObject({ min: 1000, currency: "USD", period: "mes" });
+    expect(v("Knowledge base: 2000 articles")).toBeNull();
+  });
 });
 
 describe("cleanSalary: salario que la fuente trae sólo como texto", () => {
