@@ -133,6 +133,13 @@ describe("área cuando el título no alcanza", () => {
     ["Analista Ssr de Importaciones", "logistica"],
     ["Gerente de Excelencia Operativa", "operaciones"],
     ["Data Governance Lead", "datos"],
+    ["Analista e-Commerce", "marketing"],
+    ["Equity Capital Markets Support Team - Analyst", "finanzas"],
+    ["Analista de siniestros RC", "finanzas"],
+    ["Systems Analyst", "software"],
+    ["Public Policy Manager, Economic Policy", "legal"],
+    ["Vendor Management Specialist - Advanced", "logistica"],
+    ["Especialista en Diseño CX", "diseno"],
     ["Analista de laboratorio", "otros"],
   ])("títulos que en la auditoría del 22/10 caían en otros: %s", (title, family) => expect(familyOf(title).value).toBe(family));
 
