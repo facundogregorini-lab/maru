@@ -88,7 +88,11 @@ const ACRONYMS = new Set("CABA GBA AMBA B2B B2C SAP IT RRHH RR.HH. HR QA UX UI B
  */
 export function displayTitle(raw: string): string {
   let t = raw
+    // Emojis de adorno ("🚀 Analista…", "Ejecutivo de Cuentas - 📍Rosario").
+    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, " ")
     .replace(/^\s*(ref\.?|referencia|cod\.?|c[oó]digo)\s*[:#]?\s*\d+\s*[:\-–]?\s*/i, "")
+    // Códigos internos de consultoras al principio: "1353 CC | Analista…", "876SI JUNIOR ANALISTA…".
+    .replace(/^\s*\d{3,5}\s?[A-Z]{1,3}\s*\|\s*|^\s*\d{3,5}[A-Z]{1,3}\s+(?=[A-ZÁÉÍÓÚÑ])/, "")
     .replace(/\s*\(\s*req\s*\d{4,}\s*\)|\s*\breq\s?\d{4,}\b|\s*\bID\s?\d{4,}\b/gi, "")
     .replace(/\s+/g, " ")
     .replace(/[\s\-–|.:/]+$/, "")
