@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 21;
+export const EXTRACTION_VERSION = 22;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -141,7 +141,7 @@ export function findSkills(text: string): string[] {
 
 /* ---------- Secciones obligatorio / deseable ---------- */
 
-const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally|como diferencial)/i;
+const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally)/i;
 // Auditoría del 22/10: «About You», «Who You Are», «Requerimientos», «Competencias», «Perfil buscado» no se reconocían.
 const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
 
@@ -389,10 +389,14 @@ export function writtenInEnglish(text: string): boolean {
 /** Nivel que se infiere cuando el aviso está escrito en inglés y no dice cuál pide. */
 export const ENGLISH_IMPLICIT = "intermedio o más (el aviso está escrito en inglés)";
 
+const OPTIONAL_INLINE = /\b(deseable|valorable|plus|no excluyente|preferentemente|preferred|nice to have|opcional|optional)\b/;
+const OPTIONAL_BEFORE = /\b(deseable|valorable|preferentemente|preferred|nice to have|opcional|optional)\b/;
+
 export function languagesFrom(text: string, desirableText: string): LanguageReq[] {
   const out: LanguageReq[] = [];
   const f = fold(text);
   const fd = fold(desirableText);
+  const lines = text.split("\n").map(fold).join("\n");
   for (const [lang, re] of LANGS) {
     const m = f.match(re);
     if (!m) continue;
@@ -400,7 +404,17 @@ export function languagesFrom(text: string, desirableText: string): LanguageReq[
     // "Español" sólo cuenta si se pide como requisito, no si el aviso está escrito en español.
     if (lang === "español" && !LEVEL.test(around)) continue;
     const level = around.match(LEVEL)?.[1] ?? "";
-    out.push({ language: lang, level, required: !re.test(fd) });
+    // "Inglés intermedio deseable", "Deseable: inglés", "inglés no excluyente": opcional aunque esté en la sección
+    // de requisitos (22/10: 63 de 307 avisos así figuraban como requisito y no salían con «Sin requisito de inglés»).
+    // Se mira la misma línea: "English advanced (C1)" seguido de un título "Nice to have" no es opcional.
+    const lm = lines.match(re);
+    const at = lm?.index ?? 0;
+    const before = lm ? (lines.slice(Math.max(0, at - 30), at).split(/[.;\n]/).pop() ?? "") : "";
+    // Hasta el próximo idioma: en "inglés y español (el portugués es un plus)" el plus es del portugués.
+    const after = lm ? lines.slice(at + lm[0].length, at + lm[0].length + 45).split(/[.;\n]|\b(?:portugu|frances|french|aleman|german|italian|chin|espanol|spanish)/)[0] : "";
+    // Antes, sin "plus": en "Portuguese, plus business-level English" el plus es "además".
+    const optional = OPTIONAL_INLINE.test(after) || OPTIONAL_BEFORE.test(before);
+    out.push({ language: lang, level, required: !optional && !re.test(fd) });
   }
   // Un aviso entero en inglés (típico de empresas de EE. UU.) casi siempre exige trabajar en inglés,
   // aunque no lo diga como requisito. Lo marcamos explícito para que el filtro de idioma funcione.

@@ -170,11 +170,24 @@ describe("asistente = junior", () => {
 });
 
 describe("secciones de requisitos con otros nombres", () => {
-  it("reconoce «About You», «Requerimientos», «Competencias» y «como diferencial»", () => {
+  it("reconoce «About You», «Requerimientos» y «Competencias»", () => {
     const e = (descriptionText: string) => extract({ title: "Analista", descriptionText });
     expect(e("Sobre el puesto\nGestionar reportes.\nAbout You\n• Experiencia con SQL y Excel").skillsRequired).toContain("sql");
     expect(e("Tareas\nArmar tableros.\nRequerimientos:\n• Manejo de Power BI").skillsRequired.length).toBeGreaterThan(0);
     expect(e("Tareas\nArmar tableros.\nCompetencias clave\n• Excel avanzado").skillsRequired.length).toBeGreaterThan(0);
-    expect(e("Requisitos\n• Excel\n¿Qué valoramos como diferencial?\n• Python").skillsDesirable.length).toBeGreaterThan(0);
+    // YPF pone todos sus requisitos bajo «¿Qué valoramos como diferencial?»: no se toma como sección de deseables.
+    expect(e("¿Qué valoramos como diferencial?\n• Idioma: Inglés Intermedio\n• Conocimientos: Power BI").languages[0]).toMatchObject({ language: "inglés", required: true });
+  });
+});
+
+describe("inglés opcional dentro de los requisitos", () => {
+  const en = (descriptionText: string) => extract({ title: "Analista", descriptionText }).languages.find((l) => l.language === "inglés");
+  it("lo marca opcional si la misma línea lo dice", () => {
+    expect(en("Requisitos\n• Excel avanzado\n• Inglés intermedio deseable")?.required).toBe(false);
+    expect(en("Requisitos\n• Inglés básico (no excluyente)")?.required).toBe(false);
+    expect(en("Requisitos\n• Idioma: Inglés preferentemente")?.required).toBe(false);
+  });
+  it("no se confunde con otra línea ni con otro idioma", () => {
+    expect(en("Requirements\n• English advanced (C1)\nNice to have\n• Looker")?.required).toBe(true);
   });
 });
