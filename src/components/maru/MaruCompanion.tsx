@@ -87,6 +87,8 @@ export default function MaruCompanion() {
     setReady(true);
     if (g.status === "abierta") setMode(g.min ? "mini" : "guide");
     if (g.status !== "nueva") return;
+    // En planes y en los botones de baja o arrepentimiento, el saludo tapaba los botones (sobre todo en el celular).
+    if (/^\/(precios|baja|arrepentimiento)(\/|$)/.test(window.location.pathname)) return;
     const t = window.setTimeout(() => setMode("ask", { wave: true, talk: true }), ASK_AFTER_MS);
     return () => clearTimeout(t);
   }, [setMode]);
