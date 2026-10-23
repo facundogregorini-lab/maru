@@ -259,6 +259,8 @@ describe("seniority desde el nivel de la fuente y el texto", () => {
     expect(s("Ejecutivo de cuentas", "Tareas varias.", "Senior / Semi-Senior")).toBe("semi_senior");
     expect(s("Semi-Senior Designer", "Tareas varias.")).toBe("semi_senior");
     expect(s("Analista Pleno Gestión Comercial", "Tareas varias.")).toBe("semi_senior");
+    expect(s("Software Technical Leader", "Tareas varias.")).toBe("lead");
+    expect(s("Team Leader de Cobranzas", "Tareas varias.")).toBe("lead");
   });
   it("toma el nivel sólo de frases de búsqueda", () => {
     expect(s("Account Executive", "Buscamos sumar un/a senior account executive a nuestro equipo.")).toBe("senior");
