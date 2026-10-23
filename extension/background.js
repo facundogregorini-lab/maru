@@ -221,7 +221,10 @@ async function fillTab(tab) {
 
   // ¿Ya preparó esta postulación en Maru? Se busca por la pestaña y por los frames (Greenhouse embebido, etc.).
   const frameUrls = scans.map((s) => s.result.url).filter(Boolean);
-  const post = findPostulacion(postulaciones, [tab.url, ...frameUrls]);
+  // Si no, la de la misma empresa (aviso en LinkedIn y formulario en el sitio de la empresa, por ejemplo).
+  const exact = findPostulacion(postulaciones, [tab.url, ...frameUrls]);
+  const post = exact || self.maruMatchByCompany(postulaciones, { urls: [tab.url, ...frameUrls], title: top.title, text: top.text });
+  const byCompany = !!post && !exact;
   let attach = cv;
   let tailored = false;
   if (post) {
@@ -297,7 +300,11 @@ async function fillTab(tab) {
 
   const page = { url: tab.url, title: top.title || tab.title || "" };
   const lines = [summarize(total)];
-  if (tailored) lines.unshift(`Usamos tu CV personalizado para ${post.company || "esta vacante"}.`);
+  if (byCompany) {
+    // Se eligió por la empresa, no por el link: se dice cuál, por si es otro puesto de la misma empresa.
+    const which = [post.title, post.company].filter(Boolean).join(" · ");
+    lines.unshift(`Usamos ${tailored ? "tu CV personalizado" : "lo que preparaste en Maru"} para ${which}: lo reconocimos por la empresa. Si es otro puesto, revisá el CV adjunto y las respuestas.`);
+  } else if (tailored) lines.unshift(`Usamos tu CV personalizado para ${post.company || "esta vacante"}.`);
   else if (post) lines.unshift("Usamos lo que preparaste en Maru para esta vacante. Para adjuntar tu CV personalizado, ingresá en Maru en este Chrome.");
   if (blocked.length) lines.push(`Una parte del formulario está dentro de ${blocked.join(", ")}: para completarla, tocá el ícono de Maru y aceptá el permiso.`);
   const quota = quotaLine(data);

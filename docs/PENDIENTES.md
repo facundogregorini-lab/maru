@@ -19,6 +19,15 @@ Arreglos:
 
 **Pendiente (anterior):** mirar el motivo del 400 en el panel la próxima vez que pase. Que haya ocurrido antes de la promo, con los otros montos, sugiere que no es por los $990. Las causas posibles son pagar con la misma cuenta que cobra, el email del pagador o el `back_url`.
 
+## Extensión 0.4.2: la postulación de Maru aunque el aviso esté en otro sitio (23/10/2026)
+
+Pedido del dueño. Antes, si la postulación se armó con un aviso de LinkedIn (u otra bolsa) y el formulario estaba en el ATS o el sitio de la empresa, las claves (`jobKey`) no coincidían y se adjuntaba el CV general.
+
+- **Ahora:** si no hay coincidencia por link, `maruMatchByCompany` (`extension/jobkey.js`) busca una postulación de los últimos 30 días cuya empresa aparezca en las URLs de la pestaña o de los frames (host o path), en el título de la página o, si también aparece alguna palabra del puesto, en el texto. Si dos postulaciones empatan, no elige ninguna.
+- **Aviso:** el resumen dice cuál usó («… para Head of Growth · Rebill.com: lo reconocimos por la empresa. Si es otro puesto, revisá el CV adjunto y las respuestas»).
+- **Tests:** `tests/extension-company-match.test.ts`. El e2e con Chrome real (`tests/extension.test.ts`) no corre en los contenedores con Chromium 1243 (falla igual en `main`, al iniciar el service worker): queda probarlo a mano.
+- **Pendiente (dueño):** subir `dist/maru-extension-0.4.2-store.zip` en el panel (Paquete → Subir nuevo paquete → Enviar para revisión). Los permisos no cambiaron.
+
 ## Extensión en la Chrome Web Store (23/10/2026)
 
 La Store aprobó la 0.4.1 y está pública: https://chromewebstore.google.com/detail/aikhpbjdjeojlpdkhkonmionghpnmkei

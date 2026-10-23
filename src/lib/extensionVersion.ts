@@ -2,7 +2,7 @@
 export const EXTENSION_STORE_URL = "https://chromewebstore.google.com/detail/aikhpbjdjeojlpdkhkonmionghpnmkei";
 
 /** Versión publicada de la extensión de Chrome (la de extension/manifest.json, que se descarga desde /extension). */
-export const EXTENSION_VERSION = "0.4.1";
+export const EXTENSION_VERSION = "0.4.2";
 /**
  * Versión mínima que puede autocompletar. Desde la 0.3.2 la extensión manda su identificador de instalación,
  * que cuenta el cupo gratis; las anteriores reciben un aviso para actualizar.
