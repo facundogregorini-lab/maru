@@ -69,6 +69,17 @@ describe("años pedidos y primer empleo", () => {
     expect(yearsRequired("Experiencia mínima de 6 meses en atención al público")).toBe(0.5);
   });
 
+  it("lee rangos en viñetas y frases de requisito, sin tomar la historia de la empresa", () => {
+    expect(yearsRequired("What You Will Bring\n• 3 to 5 years hands-on in cybersecurity: SOC")).toBe(3);
+    expect(yearsRequired("Requisitos\n• 4 a 5 años operando infraestructura de nube")).toBe(4);
+    expect(yearsRequired("Experiencia: Mínimo de 8 años de trayectoria progresiva en posiciones directivas")).toBe(8);
+    expect(yearsRequired("Requires 5 years clinical research/monitoring experience")).toBe(5);
+    expect(yearsRequired("experiencia previa de 2 o 3 años como coordinador")).toBe(2);
+    expect(yearsRequired("Experiencia Laboral\n\n• De 6 a 9 años con licenciatura")).toBe(6);
+    expect(yearsRequired("We've been leading the way in technology projects for over 15 years.")).toBeNull();
+    expect(yearsRequired("• No es necesario poseer experiencia previa\n\n4 meses de duración")).toBeNull();
+  });
+
   it("no confunde edades ni la historia de la empresa", () => {
     expect(yearsRequired("Aceptamos primer empleo de 18 a 24 años")).toBeNull();
     expect(yearsRequired("Somos una empresa con más de 30 años de experiencia en el rubro")).toBeNull();

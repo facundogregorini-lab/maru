@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 20;
+export const EXTRACTION_VERSION = 21;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -292,29 +292,35 @@ export function seniorityFromTitle(title: string): Seniority | null {
 
 const NUM_WORD: Record<string, number> = { un: 1, uno: 1, una: 1, one: 1, dos: 2, two: 2, tres: 3, three: 3, cuatro: 4, four: 4, cinco: 5, five: 5, seis: 6, six: 6, siete: 7, seven: 7, ocho: 8, eight: 8, diez: 10, ten: 10 };
 const N = String.raw`(\d{1,2}(?:\.\d+)?|un|uno|una|one|dos|two|tres|three|cuatro|four|cinco|five|seis|six|siete|seven|ocho|eight|diez|ten)`;
-const RANGE_TAIL = String.raw`\s*\+?\s*(?:(?:-|to|a|y)\s*\d{1,2}(?:\.\d+)?\s*)?`;
+const RANGE_TAIL = String.raw`\s*\+?\s*(?:(?:-|to|a|y|o|or)\s*\d{1,2}(?:\.\d+)?\s*)?`;
 const YEARS = String.raw`(?:years?|yrs|anos?)`;
 const EXP = String.raw`(?:experience|experiencia|exp\b)`;
 /** Patrones de años pedidos: "3+ años de experiencia", "5 years of progressive experience", "experiencia mínima de dos años", "3+ years". */
-const YEAR_PATTERNS: [RegExp, number][] = [
+/** El tercer valor indica una frase de requisito explícita ("mínimo de 8 años de trayectoria"): ahí no aplica COMPANY_AFTER. */
+const YEAR_PATTERNS: [RegExp, number, boolean?][] = [
   [new RegExp(String.raw`(?<![\d.])\b${N}${RANGE_TAIL}${YEARS}\s+(?:of\s+|de\s+)?(?:(?:[a-z-]+\s+){0,3}?${EXP}|relevant|professional|in\b|en\b)`), 1],
-  [new RegExp(String.raw`${EXP}\s+(?:(?:minima|comprobable|previa|laboral|progresiva|demostrable)\s+)*(?:de\s+|of\s+|between\s+|entre\s+|:\s*)?(?:al menos\s+|at least\s+|mas de\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1],
+  [new RegExp(String.raw`${EXP}\s+(?:(?:minima|comprobable|previa|laboral|progresiva|demostrable)\s+)*(?:-\s*)?(?:de\s+|of\s+|between\s+|entre\s+|:\s*)?(?:al menos\s+|at least\s+|mas de\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1],
   [new RegExp(String.raw`(?<![\d.])\b(\d{1,2})\s*\+\s*${YEARS}\b`), 1],
   [new RegExp(String.raw`\b(?:minimum|minimo|at least|al menos)\s+(?:de\s+|of\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1],
   [new RegExp(String.raw`(?<![\d.])\b${N}\s+meses\s+de\s+${EXP}|${EXP}\s+(?:(?:minima|comprobable|previa)\s+)*(?:de\s+)?${N}\s+meses`), 1 / 12],
+  // Auditoría del 22/10: "Requires 5 years clinical research", "idealmente entre 2 y 3 años", "Mínimo de 8 años de trayectoria".
+  [new RegExp(String.raw`\b(?:minimo|minimum|al menos|at least|requires?|requiere|requerimos|must have|cuentes con|tengas|poseas|posean|idealmente|ideally|entre|between)\s+(?:de\s+|of\s+)?${N}${RANGE_TAIL}${YEARS}\b`), 1, true],
+  // Al principio de una viñeta o después de un guión: "• 3 to 5 years hands-on in cybersecurity", "EXPERIENCE - 2-4 years".
+  [new RegExp(String.raw`(?:\n\s*|\s-\s*)${N}${RANGE_TAIL}${YEARS}\b`), 1],
 ];
 /** "Una empresa con más de 30 años de experiencia" habla de la empresa, no del puesto. */
-const ABOUT_COMPANY = /\b(empresa|compania|company|firma|organizacion|we have|we've|tenemos|contamos con|founded|fundad[ao])\b[^.,;-]{0,15}$/;
+const ABOUT_COMPANY = /\b(empresa|compania|company|firma|organizacion|we have|we've|tenemos|contamos con|founded|fundad[ao]|hace)\b[^.,;-]{0,15}$/;
 const COMPANY_AFTER = /^\s*(business|the market|el mercado|el rubro|de trayectoria|de historia)\b/;
 
 export function yearsRequired(text: string): number | null {
-  const f = fold(text.replace(/[–—−]/g, "-").replace(/(\d),(\d)/g, "$1.$2"));
+  // El principio de cada línea o viñeta queda como " - ": fold junta los saltos de línea.
+  const f = fold(text.replace(/[–—−]/g, "-").replace(/(\d),(\d)/g, "$1.$2").replace(/\n\s*[•*·▪◦-]?\s*/g, " - "));
   let best: { at: number; years: number } | null = null;
-  for (const [re, unit] of YEAR_PATTERNS) {
+  for (const [re, unit, explicit] of YEAR_PATTERNS) {
     for (const m of f.matchAll(new RegExp(re.source, "g"))) {
       const raw = m.slice(1).find((g) => g !== undefined);
       const at = m.index ?? 0;
-      if (!raw || ABOUT_COMPANY.test(f.slice(Math.max(0, at - 50), at)) || COMPANY_AFTER.test(f.slice(at + m[0].length))) continue;
+      if (!raw || ABOUT_COMPANY.test(f.slice(Math.max(0, at - 50), at)) || (!explicit && COMPANY_AFTER.test(f.slice(at + m[0].length)))) continue;
       const n = (NUM_WORD[raw] ?? Number(raw)) * unit;
       // Más de 15 años casi siempre es una edad ("de 18 a 24 años") o la historia de la empresa.
       if (n > 0 && n <= 15 && (!best || at < best.at)) best = { at, years: Math.round(n * 10) / 10 };
