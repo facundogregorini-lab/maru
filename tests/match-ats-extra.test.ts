@@ -103,16 +103,21 @@ describe("Eightfold (API del sitio de empleo)", () => {
     expect(p.workplace.value).toBe("hibrido");
   });
 
-  it("pide Argentina por página y el detalle si falta la descripción", async () => {
+  it("pide Argentina por página a la API PCSX y el detalle si falta la descripción", async () => {
     const calls: string[] = [];
+    const pcsx = { id: 44855554, name: "Sr Software Engineer", locations: ["argentina", "Bogotá,Colombia"], standardizedLocations: ["AR", "Bogotá, Bogota, CO"], postedTs: 1791907541, department: "IT", workLocationOption: "hybrid", positionUrl: "/careers/job/44855554" };
     const fetchImpl = (async (url: RequestInfo | URL) => {
       calls.push(String(url));
-      return String(url).includes("/jobs?") ? json({ count: 1, positions: [pos] }) : json({ ...pos, job_description: desc });
+      return String(url).includes("/search?") ? json({ status: 200, data: { count: 1, positions: [pcsx] } }) : json({ status: 200, data: { ...pcsx, jobDescription: desc, publicUrl: "https://mercadolibre.eightfold.ai/careers/job/44855554" } });
     }) as typeof fetch;
     const res = await fetchEightfold(board, { fetchImpl, retries: 0 });
-    expect(calls).toEqual(["https://mercadolibre.eightfold.ai/api/apply/v2/jobs?domain=mercadolibre.com&location=Argentina&start=0&num=20", "https://mercadolibre.eightfold.ai/api/apply/v2/jobs/44853699?domain=mercadolibre.com"]);
+    expect(calls).toEqual(["https://mercadolibre.eightfold.ai/api/pcsx/search?domain=mercadolibre.com&query=&location=Argentina&start=0", "https://mercadolibre.eightfold.ai/api/pcsx/position_details?position_id=44855554&domain=mercadolibre.com"]);
     expect(res).toMatchObject({ complete: true, received: 1 });
-    expect(res.postings[0].descriptionText).toContain("tesorería");
+    const [p] = res.postings;
+    expect(p.descriptionText).toContain("tesorería");
+    expect(p).toMatchObject({ externalId: "44855554", department: "IT", applyUrl: "https://mercadolibre.eightfold.ai/careers/job/44855554", publishedAt: new Date(1791907541000).toISOString() });
+    expect(p.countries).toEqual(expect.arrayContaining(["AR", "CO"]));
+    expect(p.workplace.value).toBe("hibrido");
   });
 });
 

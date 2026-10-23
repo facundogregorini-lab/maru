@@ -947,9 +947,35 @@ type EfPosition = {
   canonicalPositionUrl?: string;
   work_location_option?: string;
   job_description?: string;
+  /** Códigos de país de la API nueva: "AR", "Bogotá, Bogota, CO". */
+  standardizedLocations?: string[];
 };
-const EF_PAGE = 20;
-const EF_MAX_DETAILS = 40;
+/** Aviso de la API "PCSX" (la de /api/apply/v2 responde 403 desde el 18/10; ésta responde también desde Actions, 23/10). */
+type PcsxPosition = {
+  id: number | string;
+  name: string;
+  locations?: string[];
+  standardizedLocations?: string[];
+  department?: string | null;
+  postedTs?: number;
+  workLocationOption?: string;
+  positionUrl?: string;
+  publicUrl?: string;
+  jobDescription?: string;
+};
+const fromPcsx = (j: PcsxPosition, host: string): EfPosition => ({
+  id: j.id,
+  name: j.name,
+  locations: j.locations,
+  standardizedLocations: j.standardizedLocations,
+  department: j.department ?? undefined,
+  t_create: j.postedTs,
+  work_location_option: j.workLocationOption,
+  canonicalPositionUrl: j.publicUrl || (j.positionUrl?.startsWith("/") ? `https://${host}${j.positionUrl}` : undefined),
+  job_description: j.jobDescription,
+});
+const EF_PAGE = 10;
+const EF_MAX_DETAILS = 80;
 
 /** "mercadolibre.eightfold.ai" → dominio de la empresa que pide la API ("mercadolibre.com"). */
 export function eightfoldDomain(host: string): string {
@@ -965,7 +991,8 @@ export function normalizeEightfold(j: EfPosition, board: Board): NormalizedPosti
   const workplace = opt.includes("remote") ? wp("remoto", "fuente", `work_location_option: ${opt}`) : opt.includes("hybrid") ? wp("hibrido", "fuente", `work_location_option: ${opt}`) : opt.includes("onsite") || opt.includes("on-site") ? wp("presencial", "fuente", `work_location_option: ${opt}`) : wp(workplaceFromText(locs.join(" ")), "fuente");
   const text = htmlToText(j.job_description, DESC_MAX);
   const url = j.canonicalPositionUrl || `https://${host}/careers/job/${j.id}`;
-  const countries = [...new Set(locs.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c))];
+  const codes = (j.standardizedLocations ?? []).map((l) => l.split(",").pop()!.trim()).filter((c) => /^[A-Z]{2}$/.test(c));
+  const countries = [...new Set([...codes, ...locs.map((l) => countryIso(l.split(",").pop())).filter((c): c is string => !!c)])];
   return {
     sourceId: "eightfold",
     boardId: board.boardId,
@@ -992,17 +1019,18 @@ export function normalizeEightfold(j: EfPosition, board: Board): NormalizedPosti
   };
 }
 
-/** Eightfold arma cada sitio de empleo con una API JSON sin autenticación: pedimos sólo Argentina, de a 20, en serie. */
+/** Eightfold arma cada sitio de empleo con una API JSON sin autenticación: pedimos sólo Argentina, de a 10, en serie. */
 export async function fetchEightfold(board: Board, opts?: RetryOptions & { maxPages?: number }): Promise<BoardFetch> {
   const host = decodeURIComponent(assertSlug(board.slug));
   const domain = eightfoldDomain(host);
-  const base = `https://${host}/api/apply/v2/jobs`;
+  const base = `https://${host}/api/pcsx`;
   const list: EfPosition[] = [];
   let complete = false;
-  for (let page = 0; page < (opts?.maxPages ?? 15); page++) {
-    const data = await fetchJson<{ positions?: EfPosition[]; count?: number }>(`${base}?domain=${encodeURIComponent(domain)}&location=Argentina&start=${page * EF_PAGE}&num=${EF_PAGE}`, opts);
-    if (!Array.isArray(data.positions)) throw new Error("Respuesta de Eightfold sin 'positions'");
-    list.push(...data.positions);
+  for (let page = 0; page < (opts?.maxPages ?? 30); page++) {
+    const res = await fetchJson<{ data?: { positions?: PcsxPosition[]; count?: number } }>(`${base}/search?domain=${encodeURIComponent(domain)}&query=&location=Argentina&start=${page * EF_PAGE}`, opts);
+    const data = res.data;
+    if (!Array.isArray(data?.positions)) throw new Error("Respuesta de Eightfold sin 'positions'");
+    list.push(...data.positions.map((j) => fromPcsx(j, host)));
     if (data.positions.length < EF_PAGE || list.length >= (data.count ?? 0)) {
       complete = true;
       break;
@@ -1010,8 +1038,10 @@ export async function fetchEightfold(board: Board, opts?: RetryOptions & { maxPa
   }
   const postings: NormalizedPosting[] = [];
   for (const [i, j] of list.entries()) {
-    const full = inDetailWindow(i, list.length, EF_MAX_DETAILS) && !j.job_description ? await fetchJson<EfPosition>(`${base}/${encodeURIComponent(String(j.id))}?domain=${encodeURIComponent(domain)}`, opts).catch(() => j) : j;
-    postings.push(normalizeEightfold({ ...j, ...full }, board));
+    const full = inDetailWindow(i, list.length, EF_MAX_DETAILS) && !j.job_description
+      ? await fetchJson<{ data?: PcsxPosition }>(`${base}/position_details?position_id=${encodeURIComponent(String(j.id))}&domain=${encodeURIComponent(domain)}`, opts).then((r) => (r.data ? fromPcsx(r.data, host) : j)).catch(() => j)
+      : j;
+    postings.push(normalizeEightfold({ ...j, ...Object.fromEntries(Object.entries(full).filter(([, v]) => v !== undefined)) }, board));
   }
   return { postings, complete, received: list.length };
 }
