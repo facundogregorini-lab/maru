@@ -22,6 +22,7 @@ describe("logos compartidos por empresa", () => {
     ]);
     expect(out.find((x) => x.key === "b")!.companyLogo).toBe("https://img/randstad.png");
     expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
+    expect(withCompanyLogos([p("e", "Softtek")])[0].companyLogo).toBe(domainLogo("softtek.com"));
     expect(out.find((x) => x.key === "e")!.companyLogo).toBeUndefined();
     expect(out.find((x) => x.key === "f")!.companyLogo).toBe("http://inseguro/logo.png");
   });
@@ -60,6 +61,7 @@ describe("logo por dominio conocido", () => {
     expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("pwc.com"));
     expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("kpmg.com"));
     expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
+    expect(withCompanyLogos([p("e", "Softtek")])[0].companyLogo).toBe(domainLogo("softtek.com"));
     expect(out.find((x) => x.key === "e")!.companyLogo).toBe("https://img/ey.png");
   });
 
@@ -75,5 +77,6 @@ describe("logo por dominio conocido", () => {
     expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("aws.amazon.com"));
     expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("byd.com"));
     expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
+    expect(withCompanyLogos([p("e", "Softtek")])[0].companyLogo).toBe(domainLogo("softtek.com"));
   });
 });

@@ -118,7 +118,7 @@ export const KNOWN_DOMAINS: Record<string, string> = {
   "mckinsey & company": "mckinsey.com", "ey parthenon": "ey.com", "chainlink labs": "chainlinklabs.com", softys: "softys.com",
   "allegro microsystems": "allegromicro.com", "practia global": "practia.global", "publicis groupe": "publicisgroupe.com",
   "oliver latin america": "oliver.agency", "irsa propiedades comerciales": "irsa.com.ar", "rebill com": "rebill.com", "payway ar": "payway.com.ar",
-  "iol inversiones": "invertironline.com", "sezzle la": "sezzle.com", gyansys: "gyansys.com", "the ritz carlton yacht collection": "ritzcarltonyachtcollection.com",
+  softtek: "softtek.com", haleon: "haleon.com", "iol inversiones": "invertironline.com", "sezzle la": "sezzle.com", gyansys: "gyansys.com", "the ritz carlton yacht collection": "ritzcarltonyachtcollection.com",
 };
 
 /** Las claves con la misma normalización que los nombres ("helmerich & payne" → "helmerich payne"). */

@@ -768,7 +768,7 @@
       "evidence": "https://careers-meli.mercadolibre.com/",
       "addedAt": "2026-10-15",
       "status": "excluida",
-      "reason": "Usa una plataforma de empleos propia (no Greenhouse/Lever/Ashby): sin conector compatible en el MVP."
+      "reason": "Su portal propio no tiene API; los avisos llegan por Eightfold (entrada mercadolibre.eightfold.ai, activa desde el 23/10)."
     },
     {
       "name": "Globant",

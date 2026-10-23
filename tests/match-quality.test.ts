@@ -175,6 +175,12 @@ describe("área cuando el título no alcanza", () => {
   });
 });
 
+describe("área desde la unidad de negocio", () => {
+  it("«Shipping» (Mercado Envíos) es logística", () => {
+    expect(familyOf("Analista de Nodos - Mercado Envíos", "Shipping").value).toBe("logistica");
+  });
+});
+
 describe("asistente = junior", () => {
   it("un puesto de asistente sin nivel explícito cuenta como junior", () => {
     expect(seniorityFromTitle("Asistente contable")).toBe("junior");

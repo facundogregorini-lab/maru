@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 30;
+export const EXTRACTION_VERSION = 31;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -295,6 +295,8 @@ const DEPARTMENT_RULES: [RoleFamily, RegExp][] = [
   ["ventas", /\b(commercial|comercial|go to market|sales|ventas|partners)/],
   ["atencion_cliente", /\b(clients?|customers?|service)\b/],
   ["produccion", /\b(fabricacion|manufactur|produccion)/],
+  // Mercado Libre informa «Shipping» para Mercado Envíos (23/10).
+  ["logistica", /\b(shipping|logistics?|logistica|supply chain|envios)\b/],
 ];
 
 /** Pistas fuertes en el texto del aviso: proyectos para entrenar modelos de IA. */
