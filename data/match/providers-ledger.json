@@ -15598,6 +15598,556 @@
         "budgetUsd": 34.5
       },
       "created": 1
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "SCjIVfrmqzJLqNl33",
+        "datasetId": "5iH0NPHC5SkyMBMIi"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.632,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ejecutivo comercial cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "8Wzw4m7oDIcYbhdtS",
+        "datasetId": "POhPCgZTfvGgstFzA"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.802,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista cordoba",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "7rlIwweqxHlQC85yu",
+        "datasetId": "ABMZDURCcaCQ22Ndl"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.972,
+        "budgetUsd": 34.5
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador rosario",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "n3Xp0n9TC325TRYvj",
+        "datasetId": "ONOwre2Iza9gR7o4P"
+      },
+      "rows": 55,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.142,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "ejecutivo comercial rosario",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "Qi84GlaupWVz5cIXy",
+        "datasetId": "uot9ksjR3insA4LcO"
+      },
+      "rows": 78,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.312,
+        "budgetUsd": 34.5
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista rosario",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "ZmlilHJnbGW7Ephah",
+        "datasetId": "6NJK9zfIFLUHv9fxU"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.482,
+        "budgetUsd": 34.5
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo la plata",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "BjQ2eVulLz4yCF5Fa",
+        "datasetId": "k4ATkqYP9n8m1zxjK"
+      },
+      "rows": 50,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.652,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista la plata",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "qjiYRjS2tnufKmcSe",
+        "datasetId": "bApZaUFMkL9VJ4tqQ"
+      },
+      "rows": 55,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.822,
+        "budgetUsd": 34.5
+      },
+      "created": 17
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "vendedor mar del plata",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "i6DyNucuFxT6ULBWM",
+        "datasetId": "jct2h8gPbKSAge0RY"
+      },
+      "rows": 79,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 29.992,
+        "budgetUsd": 34.5
+      },
+      "created": 14
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista neuquen",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "FSU17GUVp4Jj864LI",
+        "datasetId": "98IB9ThJJLYIglfiR"
+      },
+      "rows": 63,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.162,
+        "budgetUsd": 34.5
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador santa fe",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "fYEapI7pxShrwF900",
+        "datasetId": "iTGp2bi7ANTxa6kBY"
+      },
+      "rows": 73,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.332,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo bahia blanca",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "UreBLxsZFcnbxLdbp",
+        "datasetId": "IWK97gO6lO3BKVeaM"
+      },
+      "rows": 12,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.502,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista bahia blanca",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "3DzKFir0xvZeSIPH2",
+        "datasetId": "fCppHHNbJYVHbhQiS"
+      },
+      "rows": 2,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.672,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo parana",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "UbJHigi3W8DPzge5K",
+        "datasetId": "P7SJgHsq9HRDrkW7z"
+      },
+      "rows": 7,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.842,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo san juan",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "EIwQ9m2yX1ZeWt8gE",
+        "datasetId": "e5C2rFxpQeza62qJL"
+      },
+      "rows": 10,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.012,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo corrientes",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "Nmw9wBgRGPvNltMZc",
+        "datasetId": "mcGtnSbJ091vSdBKy"
+      },
+      "rows": 100,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.182,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo posadas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "jbtWdUzKH6jAdIndY",
+        "datasetId": "DQbG2JG6ZMqx3uF3z"
+      },
+      "rows": 10,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.352,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo resistencia",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "I39hbBgakN4LzUygt",
+        "datasetId": "x5xhFsvS2IzGiQySx"
+      },
+      "rows": 18,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.522,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo rio cuarto",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "TfyEJItDk0WoXATL5",
+        "datasetId": "4h0lbnCrAp0splg4r"
+      },
+      "rows": 6,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.692,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo comodoro rivadavia",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "2a5c3C2v5RPRYWFVx",
+        "datasetId": "ybebhPS5lsaKFLnI0"
+      },
+      "rows": 6,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.862,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "administrativo san luis",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "AnXwzIkB6t4jggXPt",
+        "datasetId": "K0j1aVVhZUikKW2ej"
+      },
+      "rows": 14,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 32.032,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador mendoza",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "Za3nHGX3Dmx4vXwyN",
+        "datasetId": "GFlMlunXYeklPDnCG"
+      },
+      "rows": 12,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 32.202,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista mendoza",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "7ajyz32vrR7oZCK0G",
+        "datasetId": "EPkGqPOpY31fkdBsW"
+      },
+      "rows": 67,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 32.372,
+        "budgetUsd": 34.5
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "contador tucuman",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "AmC8j1AbeUhayP5Tf",
+        "datasetId": "OgWreMwh43BOchPFc"
+      },
+      "rows": 20,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 32.542,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:44:06.288Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
+        "keyword": "analista salta",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.17",
+        "location": "Argentina",
+        "runId": "48JaGa2N9MWsRDqi7",
+        "datasetId": "8S4K9kP55WwVRI2rN"
+      },
+      "rows": 35,
+      "consumed": 0.17,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 32.712,
+        "budgetUsd": 34.5
+      },
+      "created": 6
     }
   ]
 }
