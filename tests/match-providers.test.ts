@@ -261,6 +261,11 @@ describe("inventario con importaciones parciales", () => {
 
   it("la modalidad sale del texto sólo si está declarada, y los importados se re-analizan sin volver a descargarlos", () => {
     expect(workplaceFromDescription("Modalidad de trabajo: Presencial en Retiro.")?.value).toBe("presencial");
+    expect(workplaceFromDescription("This is a full time remote opportunity for developers.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Location: Remote (LATAM)")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Work remote from Latin America with a US team.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Puesto full time híbrido en Belgrano.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Experience with hybrid cloud and hybrid search.")).toBeNull();
     expect(workplaceFromDescription("Modalidad híbrida de trabajo, 3 días en oficina.")?.value).toBe("hibrido");
     expect(workplaceFromDescription("Equipo bajo modalidad 100% home office.")?.value).toBe("remoto");
     expect(workplaceFromDescription("Beneficios: home office los viernes, prepaga.")).toBeNull();

@@ -94,7 +94,7 @@ export function workplaceFromDescription(text: string): { value: Workplace; evid
         : `hibrido: ${split[0]}`
       : (declared?.[2] ??
         t.match(
-          /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote|presencial)|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma|de forma|de tipo) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|work(ing)?( model)?|schedule)|(position|role) (will be|is) (categorized as )?(hybrid|remote|on-?site)|remote (full[ -]?time )?(position|role|job|work environment)|(based|work) remotely (from|in)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|presencial (full[ -]?time|part[ -]?time|jornada)|on-?site (role|position))\b/,
+          /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote|presencial)|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma|de forma|de tipo) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|opportunity|model|work(ing)?( model)?|schedule)|(puesto|trabajo|empleo)( full[ -]?time)? hibrid[oa]|(completely|entirely) remote|location\s*:?\s*remote|remote (from|in) (latam|latin america|argentina|south america)|(position|role) (will be|is) (categorized as )?(hybrid|remote|on-?site)|remote (full[ -]?time )?(position|role|job|opportunity|contractor role|work environment)|(based|work) remotely (from|in)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|presencial (full[ -]?time|part[ -]?time|jornada)|on-?site (role|position))\b/,
         )?.[0] ??
         t.match(/#li-(remote|hybrid|onsite)\b/)?.[0]));
   if (!hit) return null;
