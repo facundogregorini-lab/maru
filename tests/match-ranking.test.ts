@@ -456,3 +456,18 @@ describe("filtro de salario en dólares", () => {
     expect([...all.eligible, ...all.pending].length).toBeGreaterThan(listed.length);
   });
 });
+
+describe("filtro de ubicación", () => {
+  it("entiende las distintas formas de nombrar CABA y el GBA", async () => {
+    const { matchesLocation } = await import("@/lib/match/ranking");
+    for (const l of ["Capital Federal, Buenos Aires", "Retiro, Capital Federal", "Buenos Aires, Cdad. Autónoma de Buenos Aires", "Buenos Aires, Buenos Aires Province, Argentina", "CABA, Argentina"]) {
+      expect(matchesLocation([l], "CABA")).toBe(true);
+      expect(matchesLocation([l], "capital federal")).toBe(true);
+    }
+    expect(matchesLocation(["Mar del Plata, Buenos Aires Province, Argentina"], "CABA")).toBe(false);
+    expect(matchesLocation(["Greater Buenos Aires"], "GBA")).toBe(true);
+    expect(matchesLocation(["Tigre, Buenos Aires-GBA"], "gran buenos aires")).toBe(true);
+    expect(matchesLocation(["Córdoba, Argentina"], "cordoba")).toBe(true);
+    expect(matchesLocation(["Rosario, Santa Fe"], "Córdoba")).toBe(false);
+  });
+});
