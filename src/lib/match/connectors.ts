@@ -81,7 +81,7 @@ export function workplaceFromDescription(text: string): { value: Workplace; evid
   const t = fold(text.slice(0, 6000));
   // Días repartidos entre oficina y casa ("3 días presenciales y 2 home office", "2 days per week on-site").
   const split = t.match(/\b\d\s*(\/\s*\d\s*)?(dias?|days?)\s*((per|a la|por) (week|semana)\s*)?(de\s*)?(presencial(es)?|en (la )?oficina|on-?site|in (the )?office|home office|remot[oa]s?)\b/);
-  const declared = t.match(/\b(modalidad|esquema|modelo|formato|lugar de trabajo|work ?(?:mode|model|arrangement))(?: de (?:trabajo|contratacion|empleo))?\s*(?:(?:full|part)[ -]?time\s*)?(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
+  const declared = t.match(/\b(modalidad|esquema|modelo|formato|lugar de trabajo|work ?(?:mode|model|arrangement|modality|type)|modality)(?: de (?:trabajo|contratacion|empleo))?\s*(?:(?:full|part)[ -]?time\s*)?(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
   // "5 días presenciales" es presencial; sólo un reparto parcial de la semana indica híbrido.
   const fullWeek = !!split && Number(split[0].match(/\d/)![0]) >= 5 && !split[1];
   // "in-office presence four days per week": días de oficina de una semana parcial → híbrido.
@@ -94,11 +94,11 @@ export function workplaceFromDescription(text: string): { value: Workplace; evid
         : `hibrido: ${split[0]}`
       : (declared?.[2] ??
         t.match(
-          /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote|presencial)|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma|de forma|de tipo) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|opportunity|model|work(ing)?( model)?|schedule)|(puesto|trabajo|empleo)( full[ -]?time)? hibrid[oa]|(completely|entirely) remote|location\s*:?\s*remote|remote (from|in) (latam|latin america|argentina|south america)|(position|role) (will be|is) (categorized as )?(hybrid|remote|on-?site)|remote (full[ -]?time )?(position|role|job|opportunity|contractor role|work environment)|(based|work) remotely (from|in)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|presencial (full[ -]?time|part[ -]?time|jornada)|on-?site (role|position))\b/,
+          /\b(100\s*(por ciento)?\s*(remot[oa]|home office|remote(ly)?|presencial)|jornada( laboral)? hibrida|work from anywhere|location\s*:?\s*([a-z]+[ ,]+){1,3}-?\s*remote|full ?remot[oa]|full ?remote|fully remote|trabajo remoto|teletrabajo|(de manera|en forma|de forma|de tipo) (presencial|remota|hibrida)|esquema hibrido|hybrid (role|position|opportunity|model|work(ing)?( model)?|schedule)|(puesto|trabajo|empleo)( full[ -]?time)? hibrid[oa]|(completely|entirely) remote|location\s*:?\s*remote|remote (from|in) (latam|latin america|argentina|south america)|(position|role|job) (will be|is) (categorized as )?(fully |100\s*)?(hybrid|remote|on-?site)|remote (full[ -]?time )?(position|role|job|opportunity|contractor role|work environment)|(based|work) remotely (from|in)|(full[ -]?time|jornada|empleo|trabajo|puesto) presencial|presencial (full[ -]?time|part[ -]?time|jornada)|on-?site (role|position))\b/,
         )?.[0] ??
         t.match(/#li-(remote|hybrid|onsite)\b/)?.[0]));
   if (!hit) return null;
-  const value: Workplace = /hibrid|hybrid/.test(hit) ? "hibrido" : /remot|teletrabajo|home office/.test(hit) ? "remoto" : "presencial";
+  const value: Workplace = /hibrid|hybrid/.test(hit) ? "hibrido" : /remot|teletrabajo|home office|anywhere/.test(hit) ? "remoto" : "presencial";
   return { value, evidence: (officeDays?.[0] ?? split?.[0] ?? declared?.[0] ?? hit).slice(0, 80) };
 }
 
