@@ -15,7 +15,9 @@ Arreglos:
 - El error aparece **debajo del botón** que se tocó. Un pago iniciado del mismo plan se puede **retomar**, y si hay uno de otro plan, se explica por qué el botón está deshabilitado.
 - El saludo de Maru no aparece solo en `/precios`, `/baja` ni `/arrepentimiento`.
 
-**Pendiente:** mirar el motivo del 400 en el panel la próxima vez que pase. Que haya ocurrido antes de la promo, con los otros montos, sugiere que no es por los $990. Las causas posibles son pagar con la misma cuenta que cobra, el email del pagador o el `back_url`.
+**Motivo encontrado (23/10, 00:28):** Mercado Pago responde «Payer is associated with a different site»: no acepta el email de Axel como pagador del cobro en Argentina. Axel dice que su cuenta no es de otro país. Lo más común es que ese email esté asociado a una cuenta de Mercado Pago o Mercado Libre de otro país; si no es eso, hay que mirar en el panel si la cuenta que cobra es de Argentina (`site` MLA) y productiva. Arreglo: en ese caso se puede pagar con el email de otra cuenta de Mercado Pago Argentina (`payerEmail`). La suscripción sigue vinculada a la cuenta de Maru por la referencia.
+
+**Pendiente (anterior):** mirar el motivo del 400 en el panel la próxima vez que pase. Que haya ocurrido antes de la promo, con los otros montos, sugiere que no es por los $990. Las causas posibles son pagar con la misma cuenta que cobra, el email del pagador o el `back_url`.
 
 ## Extensión 0.4.1: activeTab en lugar de acceso a todos los sitios (22/10/2026)
 

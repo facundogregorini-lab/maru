@@ -64,6 +64,17 @@ export class CheckoutRejected extends Error {
   constructor(public cause: MpError) {
     super(cause.message);
   }
+  /**
+   * «Payer is associated with a different site»: Mercado Pago no acepta ese email como pagador del sitio del cobro
+   * (Argentina). Lo más común es que el email tenga una cuenta de Mercado Pago o Mercado Libre de otro país.
+   */
+  get otherSite() {
+    return /different site/i.test(this.cause.reason);
+  }
+  /** Se intentó pagar con la misma cuenta que cobra («Payer and collector cannot be the same user» y similares). */
+  get sameAccount() {
+    return /collector/i.test(this.cause.reason) && /same|igual|mism/i.test(this.cause.reason);
+  }
 }
 
 export async function checkout(email: string, planId: PlanId): Promise<string> {
@@ -71,7 +82,12 @@ export async function checkout(email: string, planId: PlanId): Promise<string> {
 }
 
 /** Igual que `checkout`, pero devuelve también el id del checkout (el mismo en reintentos de la misma suscripción pendiente). */
-export async function startCheckout(email: string, planId: PlanId): Promise<{ url: string; checkoutId: string }> {
+/**
+ * `payerEmail`: el email de la cuenta de Mercado Pago Argentina con la que se paga, si no es el de Maru
+ * (por ejemplo, si el email de Maru está asociado a una cuenta de Mercado Pago de otro país).
+ * La suscripción se vincula a la cuenta de Maru por la referencia, no por este email.
+ */
+export async function startCheckout(email: string, planId: PlanId, payerEmail?: string): Promise<{ url: string; checkoutId: string }> {
   if (!billingReady()) throw new Error("La suscripción todavía no está habilitada.");
   const prev = await readSubscription(email);
   if (hasPaidAccess(prev)) throw new Error("Ya tenés el plan activo.");
@@ -96,7 +112,7 @@ export async function startCheckout(email: string, planId: PlanId): Promise<{ ur
     sub = await mp<Preapproval>("/preapproval", {
       method: "POST",
       headers: { "X-Idempotency-Key": reference },
-      body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: firstCharge(plan), currency_id: "ARS" } }),
+      body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: payerEmail || email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: firstCharge(plan), currency_id: "ARS" } }),
     });
   } catch (err) {
     // Un rechazo definitivo no creó nada: se libera la reserva para que el próximo intento use una referencia
