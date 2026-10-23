@@ -204,3 +204,17 @@ describe("requisitos sin título de sección", () => {
     expect(e.skillsRequired).not.toContain("excel");
   });
 });
+
+describe("seniority desde el nivel de la fuente y el texto", () => {
+  const s = (title: string, descriptionText: string, seniorityHint?: string) => extract({ title, descriptionText, seniorityHint })?.seniority?.value ?? null;
+  it("entiende los niveles de los portales", () => {
+    expect(s("Vendedor", "Atención de clientes.", "Sin experiencia")).toBe("junior");
+    expect(s("Analista", "Tareas varias.", "Intermedio")).toBe("semi_senior");
+    expect(s("Gerente comercial", "Liderar el área.", "Gerencia / Alta Gerencia / Dirección")).toBe("manager");
+  });
+  it("toma el nivel sólo de frases de búsqueda", () => {
+    expect(s("Account Executive", "Buscamos sumar un/a senior account executive a nuestro equipo.")).toBe("senior");
+    expect(s("Analista Contable", "Buscamos a una persona con perfil junior para el área.")).toBe("junior");
+    expect(s("Risk Analyst", "Present findings to senior management.")).toBeNull();
+  });
+});
