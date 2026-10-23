@@ -193,6 +193,14 @@ describe("secciones de requisitos con otros nombres", () => {
     expect(e("¿Qué valoramos como diferencial?\n• Idioma: Inglés Intermedio\n• Conocimientos: Power BI").languages[0]).toMatchObject({ language: "inglés", required: true });
   });
   const e = (descriptionText: string) => extract({ title: "Analista", descriptionText });
+  it("reconoce «¿Qué esperamos de vos?», «What you'll bring» y «What will help you succeed»", () => {
+    expect(e("Tareas\nArmar piezas.\n¿Qué esperamos de vos?\n• Manejo de Photoshop").skillsRequired).toContain("photoshop");
+    expect(e("The role\nBuild APIs.\nWhat you'll bring\n• Python and Kafka").skillsRequired).toEqual(expect.arrayContaining(["python", "kafka"]));
+    expect(e("Who we are looking for: Experts at work\nWe value curiosity.\nWhat will help you succeed\n• Experience with InDesign").skillsRequired).toContain("indesign");
+  });
+  it("si la sección de requisitos sólo pide actitudes, usa las viñetas que piden herramientas", () => {
+    expect(e("Tareas\n• Experiencia con SQL y Power BI\n¿Qué esperamos de vos?\n• Orientación a resultados").skillsRequired).toContain("sql");
+  });
   it("«plus» abre deseables sólo como título", () => {
     expect(e("Requirements\n• Golang\nStrong proficiency in Golang, plus working proficiency in Python.\n• SQL").skillsRequired).toContain("sql");
     expect(e("Requisitos\n• Excel\n¡Vení a vivir la experiencia Pluspetrol!\n• SQL").skillsRequired).toContain("sql");

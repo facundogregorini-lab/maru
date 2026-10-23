@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 29;
+export const EXTRACTION_VERSION = 30;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -191,7 +191,7 @@ const DESIRABLE_HEAD = /(nice to have|bonus|preferred|deseable|valorable|suma|se
 const PLUS_HEAD = /^\W*(a\s+)?(big\s+|strong\s+|desirable\s+)?plus(es)?\b|\bplus(es)?\W*$|\b(is|es|son|are|be|ser[aá]|seria|would be)\s+(a\s+|un\s+|una\s+|considered\s+a\s+)?(big\s+|huge\s+|gran\s+)?plus\b|\bplus (if|si)\b/i;
 const PLUS_INLINE = /\bplus\b/i;
 // Auditoría del 22/10: «About You», «Who You Are», «Requerimientos», «Competencias», «Perfil buscado» no se reconocían.
-const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
+const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|esperamos de (vos|ti|usted)|qu[eé] valoramos|what we look for|what we are looking for|who (are we|we are) looking for|what you.?ll bring|what you will bring|what you need|se requiere|excluyentes?\s*:?\s*$|necesita para aplicar|te har[aá] exitos|help you succeed|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
 
 /**
  * Línea que pide algo a quien se postula: "• 3+ years of experience in…", "• Manejo de Excel avanzado".
@@ -533,9 +533,10 @@ export function extract(input: {
 }): Extracted {
   const { title, descriptionText } = input;
   const sections = splitSections(descriptionText);
-  // Sin título de requisitos, las viñetas que piden algo ("• Manejo de Excel avanzado") hacen de requisitos.
-  const reqText = sections.required.trim() ? sections.required : sections.implicit;
-  const req = findSkills(reqText);
+  // Sin título de requisitos, o si esa sección no nombra ninguna habilidad («¿Qué esperamos de vos?» con competencias
+  // blandas), las viñetas que piden algo ("• Manejo de Excel avanzado") hacen de requisitos.
+  const fromSection = findSkills(sections.required);
+  const req = fromSection.length ? fromSection : findSkills(sections.implicit);
   const des = findSkills(sections.desirable).filter((s) => !req.includes(s));
   const all = findSkills(`${title}\n${descriptionText}`);
   const mentioned = all.filter((s) => !req.includes(s) && !des.includes(s));
