@@ -77,7 +77,7 @@ export function leadershipFrom(p: Pick<Profile, "resumen" | "experiencia">): Mat
 
 export function profileToMatch(p: Profile): MatchProfile {
   const text = [p.titulo, p.resumen, ...p.experiencia.flatMap((e) => [e.cargo, e.descripcion, ...e.logros]), ...p.certificaciones.map((c) => c.nombre)].join("\n");
-  const skills = [...new Set([...p.aptitudes.flatMap(splitSkill), ...findSkills(text)])].slice(0, 40);
+  const skills = [...new Set([...p.aptitudes.flatMap(splitSkill), ...findSkills(text)])].slice(0, 60);
   const leadership = leadershipFrom(p);
   return {
     headline: p.titulo.slice(0, 200),

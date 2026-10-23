@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 28;
+export const EXTRACTION_VERSION = 29;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -39,6 +39,48 @@ export const SKILLS: Record<string, string[]> = {
   "machine learning": ["machine learning", "ml", "aprendizaje automático"],
   "inteligencia artificial": ["ai", "artificial intelligence", "inteligencia artificial", "llm", "llms", "genai", "ia generativa"],
   ciberseguridad: ["cybersecurity", "security engineering", "ciberseguridad", "seguridad informática"],
+  // Auditoría del 23/10: 966 avisos elegibles tenían sección de requisitos y ninguna habilidad reconocida.
+  "c++": ["c++", "cpp"],
+  rust: ["rust"],
+  scala: ["scala"],
+  "html/css": ["html", "css", "html5", "css3", "sass", "tailwind"],
+  "next.js": ["next.js", "nextjs"],
+  "react native": ["react native"],
+  flutter: ["flutter", "dart"],
+  django: ["django"],
+  flask: ["flask", "fastapi"],
+  "spring boot": ["spring boot", "spring framework"],
+  graphql: ["graphql"],
+  "apis rest": ["rest api", "rest apis", "api rest", "apis rest", "restful", "microservices", "microservicios"],
+  mongodb: ["mongodb", "mongo"],
+  redis: ["redis"],
+  kafka: ["kafka", "rabbitmq"],
+  elasticsearch: ["elasticsearch", "opensearch"],
+  git: ["git", "github", "gitlab", "bitbucket"],
+  linux: ["linux", "unix", "bash", "shell scripting"],
+  jenkins: ["jenkins", "github actions", "gitlab ci"],
+  "automatización de pruebas": ["selenium", "cypress", "playwright", "appium"],
+  spark: ["spark", "pyspark"],
+  databricks: ["databricks"],
+  snowflake: ["snowflake"],
+  airflow: ["airflow"],
+  dbt: ["dbt"],
+  pandas: ["pandas", "numpy"],
+  bigquery: ["bigquery"],
+  "redes informáticas": ["networking", "ccna", "cableado estructurado", "redes lan", "redes wan", "tcp/ip", "routing y switching"],
+  itil: ["itil", "servicenow"],
+  "soporte técnico": ["soporte técnico", "technical support", "mesa de ayuda", "service desk"],
+  "microsoft office": ["paquete office", "microsoft office", "ms office", "office 365", "microsoft 365", "word", "powerpoint", "google workspace"],
+  vba: ["vba", "macros de excel", "excel macros"],
+  "power automate": ["power automate", "power apps", "power platform"],
+  autocad: ["autocad"],
+  revit: ["revit", "bim"],
+  solidworks: ["solidworks"],
+  photoshop: ["photoshop"],
+  illustrator: ["illustrator"],
+  indesign: ["indesign"],
+  "edición de video": ["premiere", "after effects", "final cut", "davinci resolve", "edición de video", "video editing"],
+  canva: ["canva"],
   // datos y análisis
   excel: ["excel", "spreadsheets", "planillas", "hojas de cálculo"],
   "power bi": ["power bi", "powerbi"],
