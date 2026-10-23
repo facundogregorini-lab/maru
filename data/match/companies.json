@@ -1344,8 +1344,7 @@
       "sector": "tecnología / e-commerce / fintech",
       "evidence": "https://mercadolibre.eightfold.ai/careers/job/44853699-l%C3%ADder-de-operaciones-mercado-env%C3%ADos-buenos-aires-argentina",
       "addedAt": "2026-10-17",
-      "status": "excluida",
-      "reason": "Eightfold responde HTTP 403 desde GitHub Actions (sync del 18/10)."
+      "status": "candidata"
     },
     {
       "name": "Softtek",
@@ -1354,8 +1353,7 @@
       "sector": "tecnología",
       "evidence": "https://softtek.eightfold.ai/careers/job/893398087959-software-engineer-web-microsoft-pr-argentina",
       "addedAt": "2026-10-17",
-      "status": "excluida",
-      "reason": "Eightfold responde HTTP 403 desde GitHub Actions (sync del 18/10)."
+      "status": "candidata"
     },
     {
       "name": "Haleon",
@@ -1364,8 +1362,7 @@
       "sector": "consumo / salud",
       "evidence": "https://careers.haleon.com/careers/job/563705892957621-analista-de-control-de-calidad-producto-terminado-temporal-san-fernando-buenos-aires-argentina",
       "addedAt": "2026-10-17",
-      "status": "excluida",
-      "reason": "Eightfold responde HTTP 403 desde GitHub Actions (sync del 18/10)."
+      "status": "candidata"
     },
     {
       "name": "YPF",
