@@ -2,7 +2,7 @@
 // Lee los campos del formulario (scan) y los completa con las respuestas de Maru (apply).
 // No envía nada: el botón de enviar lo aprieta la persona.
 (() => {
-  const VERSION = "0.4.1";
+  const VERSION = "0.4.2";
   if (window.__maru?.version === VERSION) return;
 
   const ATTR = "data-maru-id";
