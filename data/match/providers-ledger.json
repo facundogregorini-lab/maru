@@ -15356,6 +15356,248 @@
         "budgetUsd": 34.5
       },
       "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "disenador grafico",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "fvuppg8fiZUyTNei6",
+        "datasetId": "xwa5JnxcslAFBNdC8"
+      },
+      "rows": 26,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.175,
+        "budgetUsd": 34.5
+      },
+      "created": 18
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista seo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "s1Y3avXOZpqM0v4Od",
+        "datasetId": "0RX9XPQgs2AeWcyBq"
+      },
+      "rows": 0,
+      "consumed": 0.12,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.295,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "key account manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "BIUTjxMU7eMv4OsnA",
+        "datasetId": "UmwVTeU13TRLIQ9xa"
+      },
+      "rows": 8,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.295,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "product manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "sIznup5ni627zXqxo",
+        "datasetId": "xs7uPNbGDjxM2k6qq"
+      },
+      "rows": 3,
+      "consumed": 0.12,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.415,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista bi",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "jgNSHHIdqir7ofxE8",
+        "datasetId": "lwEgade0gdktFVjX0"
+      },
+      "rows": 1,
+      "consumed": 0.12,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.535,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "desarrollador fullstack",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "EetPpCYTq5p7pvTkr",
+        "datasetId": "BHVGospe9sgM26vHv"
+      },
+      "rows": 1,
+      "consumed": 0.12,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.655,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "desarrollador frontend",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "Aptv2O3uzi1MmqBye",
+        "datasetId": "lnn57J4UZrTcmFd41"
+      },
+      "rows": 4,
+      "consumed": 0.12,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 28.775,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "soporte tecnico",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "y3lGUpc7tog7evCR8",
+        "datasetId": "M9IJIf3NOI78Nq2R9"
+      },
+      "rows": 34,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.776,
+        "budgetUsd": 34.5
+      },
+      "created": 10
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "JNBmTRqxXH6PR1Mgw",
+        "datasetId": "vnu9ZmDlMKIOutPEO"
+      },
+      "rows": 100,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.776,
+        "budgetUsd": 34.5
+      },
+      "created": 44
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "analista de riesgo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "NyQURNBSesFIglQrT",
+        "datasetId": "fkUhDkntu8GfIgCtL"
+      },
+      "rows": 5,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.777,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:41:17.645Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "blackfalcondata/bumeran-scraper",
+        "keyword": "logistica",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.12",
+        "location": "Argentina",
+        "runId": "HarlUc8VDNkm6ueNP",
+        "datasetId": "l4NNi3ifccToCdeB2"
+      },
+      "rows": 100,
+      "consumed": 0.0005,
+      "quota": {
+        "usageTotalUsd": 0.0005,
+        "spentUsd": 28.777,
+        "budgetUsd": 34.5
+      },
+      "created": 1
     }
   ]
 }
