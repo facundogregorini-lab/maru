@@ -283,6 +283,13 @@ describe("inventario con importaciones parciales", () => {
     expect(workplaceFromDescription("Lugar de trabajo: Saavedra, CABA.")).toBeNull();
     expect(workplaceFromDescription("This role is a full-time remote position.")?.value).toBe("remoto");
     expect(workplaceFromDescription("Monitoreo remoto de cámaras y control de accesos.")).toBeNull();
+    // Auditoría del 23/10 (avisos de LinkedIn sin modalidad).
+    expect(workplaceFromDescription("Location: Rosario, Argentina - Remote")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Work modality: Hybrid. Minimum qualifications: Bachelor.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Jornada laboral híbrida, ubicación Buenos Aires.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("This job is hybrid with two office days.")?.value).toBe("hibrido");
+    expect(workplaceFromDescription("Work from anywhere in LATAM.")?.value).toBe("remoto");
+    expect(workplaceFromDescription("Tenemos oficinas en CABA y Córdoba. Si estás en otras provincias nuestras posiciones son remotas.")).toBeNull();
     const inv = emptyInventory("fixture");
     const [p] = normalizeFantastic([{ ...fantasticRow, remote_derived: undefined }], "fantastic_ats", "G1", T).postings;
     applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: [p], complete: false }, NOW);
