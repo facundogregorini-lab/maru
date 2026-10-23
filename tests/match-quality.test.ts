@@ -84,6 +84,9 @@ describe("años pedidos y primer empleo", () => {
     expect(yearsRequired("Aceptamos primer empleo de 18 a 24 años")).toBeNull();
     expect(yearsRequired("Somos una empresa con más de 30 años de experiencia en el rubro")).toBeNull();
     expect(yearsRequired("con más de 20 años de trayectoria en el mercado")).toBeNull();
+    expect(yearsRequired("Somos Redbee, una empresa argentina de tecnología con más de 14 años de experiencia.\nRequisitos\n• +6 años de experiencia como full stack")).toBe(6);
+    expect(yearsRequired("Working with a financial company led by a management team with over 12 years of experience.")).toBeNull();
+    expect(yearsRequired("Buscamos un profesional con más de 3 años de experiencia para una empresa líder.")).toBe(3);
   });
 
   it("un aviso sin experiencia previa es junior", () => {
@@ -177,6 +180,12 @@ describe("secciones de requisitos con otros nombres", () => {
     expect(e("Tareas\nArmar tableros.\nCompetencias clave\n• Excel avanzado").skillsRequired.length).toBeGreaterThan(0);
     // YPF pone todos sus requisitos bajo «¿Qué valoramos como diferencial?»: no se toma como sección de deseables.
     expect(e("¿Qué valoramos como diferencial?\n• Idioma: Inglés Intermedio\n• Conocimientos: Power BI").languages[0]).toMatchObject({ language: "inglés", required: true });
+  });
+  const e = (descriptionText: string) => extract({ title: "Analista", descriptionText });
+  it("«plus» abre deseables sólo como título", () => {
+    expect(e("Requirements\n• Golang\nStrong proficiency in Golang, plus working proficiency in Python.\n• SQL").skillsRequired).toContain("sql");
+    expect(e("Requisitos\n• Excel\n¡Vení a vivir la experiencia Pluspetrol!\n• SQL").skillsRequired).toContain("sql");
+    expect(e("Requisitos\n• Excel\nSerá un plus si contás con:\n• SQL").skillsRequired).not.toContain("sql");
   });
 });
 

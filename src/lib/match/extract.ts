@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 26;
+export const EXTRACTION_VERSION = 27;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -141,7 +141,13 @@ export function findSkills(text: string): string[] {
 
 /* ---------- Secciones obligatorio / deseable ---------- */
 
-const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally)/i;
+const DESIRABLE_HEAD = /(nice to have|bonus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally)/i;
+/**
+ * "Plus" sólo como título: "Será un plus si contás con:", "Strong Pluses", "Nice-to-Haves / Pluses:".
+ * No "Pluspetrol", "Farmaplus" ni "Golang, plus working proficiency in Python." (auditoría del 23/10).
+ */
+const PLUS_HEAD = /^\W*(a\s+)?(big\s+|strong\s+|desirable\s+)?plus(es)?\b|\bplus(es)?\W*$|\b(is|es|son|are|be|ser[aá]|seria|would be)\s+(a\s+|un\s+|una\s+|considered\s+a\s+)?(big\s+|huge\s+|gran\s+)?plus\b|\bplus (if|si)\b/i;
+const PLUS_INLINE = /\bplus\b/i;
 // Auditoría del 22/10: «About You», «Who You Are», «Requerimientos», «Competencias», «Perfil buscado» no se reconocían.
 const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
 
@@ -160,12 +166,12 @@ export function splitSections(text: string): { required: string; desirable: stri
   const out = { required: [] as string[], desirable: [] as string[], other: [] as string[], implicit: [] as string[] };
   for (const line of lines) {
     const isHeader = line.length < 90 && !line.startsWith("•");
-    if (isHeader && DESIRABLE_HEAD.test(line)) mode = "desirable";
+    if (isHeader && (DESIRABLE_HEAD.test(line) || PLUS_HEAD.test(line))) mode = "desirable";
     else if (isHeader && REQUIRED_HEAD.test(line)) mode = "required";
     else if (isHeader && /(benefits|beneficios|what we offer|ofrecemos|about us|sobre nosotros|perks|why join)/i.test(line)) [mode, offer] = ["other", true];
     else if (isHeader && mode === "other" && line.trim().length < 60 && /[:?]\s*$|^[A-ZÁÉÍÓÚÑ¿][^.]*$/.test(line.trim())) offer = false;
     // Una viñeta suelta con "plus"/"deseable" es deseable aunque esté en requisitos.
-    const target = line.startsWith("•") && DESIRABLE_HEAD.test(line) ? "desirable" : mode;
+    const target = line.startsWith("•") && (DESIRABLE_HEAD.test(line) || PLUS_INLINE.test(line)) ? "desirable" : mode;
     out[target].push(line);
     if (target === "other" && !offer && line.startsWith("•") && REQUIREMENT_CUE.test(fold(line))) out.implicit.push(line);
   }
@@ -343,6 +349,17 @@ const YEAR_PATTERNS: [RegExp, number, boolean?][] = [
 /** "Una empresa con más de 30 años de experiencia" habla de la empresa, no del puesto. */
 const ABOUT_COMPANY = /\b(empresa|compania|company|firma|organizacion|we have|we've|tenemos|contamos con|founded|fundad[ao]|hace)\b[^.,;-]{0,15}$/;
 const COMPANY_AFTER = /^\s*(business|the market|el mercado|el rubro|de trayectoria|de historia)\b/;
+/**
+ * La frase entera habla de la empresa: "somos redbee, una empresa argentina de tecnología con más de 14 años de experiencia",
+ * "is working with a financial company led by a management team with over 12 years of experience".
+ */
+const COMPANY_CLAUSE = /\b(somos|acompanamos a|is working with|led by|referentes? en|empresa|compania|company|grupo|consultora|firma)\b/;
+const PERSON_CLAUSE = /\b(buscamos|busca|seeking|looking for|hiring|profesional\w*|perfil|candidat\w*|persona|you|tengas|cuentes|poseas|ideal|role|rol|puesto|posicion|requisit\w*|requirements?|requires?|requiere|incorporar|sumar|minimo|minimum|al menos|at least|experience|experiencia|internship|pasantia)\b/;
+function aboutCompany(f: string, at: number): boolean {
+  const start = Math.max(0, f.lastIndexOf(". ", at), f.lastIndexOf(" - ", at), at - 200);
+  const clause = f.slice(start, at);
+  return COMPANY_CLAUSE.test(clause) && !PERSON_CLAUSE.test(clause);
+}
 
 export function yearsRequired(text: string): number | null {
   // El principio de cada línea o viñeta queda como " - ": fold junta los saltos de línea.
@@ -352,7 +369,7 @@ export function yearsRequired(text: string): number | null {
     for (const m of f.matchAll(new RegExp(re.source, "g"))) {
       const raw = m.slice(1).find((g) => g !== undefined);
       const at = m.index ?? 0;
-      if (!raw || ABOUT_COMPANY.test(f.slice(Math.max(0, at - 50), at)) || (!explicit && COMPANY_AFTER.test(f.slice(at + m[0].length)))) continue;
+      if (!raw || ABOUT_COMPANY.test(f.slice(Math.max(0, at - 50), at)) || aboutCompany(f, at) || (!explicit && COMPANY_AFTER.test(f.slice(at + m[0].length)))) continue;
       const n = (NUM_WORD[raw] ?? Number(raw)) * unit;
       // Más de 15 años casi siempre es una edad ("de 18 a 24 años") o la historia de la empresa.
       if (n > 0 && n <= 15 && (!best || at < best.at)) best = { at, years: Math.round(n * 10) / 10 };
