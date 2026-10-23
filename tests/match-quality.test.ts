@@ -87,8 +87,17 @@ describe("años pedidos y primer empleo", () => {
     expect(yearsRequired("Somos Redbee, una empresa argentina de tecnología con más de 14 años de experiencia.\nRequisitos\n• +6 años de experiencia como full stack")).toBe(6);
     expect(yearsRequired("Working with a financial company led by a management team with over 12 years of experience.")).toBeNull();
     expect(yearsRequired("Buscamos un profesional con más de 3 años de experiencia para una empresa líder.")).toBe(3);
+    expect(yearsRequired("Requisitos\n• 6 o más años de experiencia en cloud operations")).toBe(6);
+    expect(yearsRequired("Requirements\n• Three or more years recruiting experience")).toBe(3);
+    expect(yearsRequired("Minimum 5-year experience in consumer products")).toBe(5);
+    expect(yearsRequired("• 4-year university degree in accounting\n• 5+ years of finance experience")).toBe(5);
   });
 
+  it("«experiencia de 0 a 1 año» es primer empleo, no «0+ años»", () => {
+    const e = extract({ title: "Analista de Operaciones", descriptionText: "Requisitos\n• Experiencia de 0 a 1 año en roles de backoffice" });
+    expect(e.yearsRequired).toBeNull();
+    expect(e.seniority).toMatchObject({ value: "junior", from: "descripcion" });
+  });
   it("un aviso sin experiencia previa es junior", () => {
     const e = extract({ title: "Vendedor/a de salón", descriptionText: "Buscamos personas para atención al público. No se requiere experiencia, te capacitamos." });
     expect(e.seniority).toMatchObject({ value: "junior", from: "descripcion" });
