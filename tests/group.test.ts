@@ -99,5 +99,10 @@ describe("título para mostrar", () => {
     ["vendedor mostrador", "Vendedor mostrador"],
     ["iOS Developer", "iOS Developer"],
     ["Senior Data Analyst", "Senior Data Analyst"],
+    ["🚀 Especialista de Propuesta de Valor | Banca Mayorista", "Especialista de Propuesta de Valor | Banca Mayorista"],
+    ["Ejecutivo de Cuentas  - 📍Rosario", "Ejecutivo de Cuentas - Rosario"],
+    ["1353 CC | ANALISTA DE RECURSOS HUMANOS | INGLÉS AVANZADO", "Analista de recursos humanos | inglés avanzado"],
+    ["876SI JUNIOR ANALISTA ADMINISTRACION DE PERSONAL", "Junior analista administracion de personal"],
+    ["360 Marketing Specialist", "360 Marketing Specialist"],
   ])("%s → %s", (raw, shown) => expect(displayTitle(raw)).toBe(shown));
 });
