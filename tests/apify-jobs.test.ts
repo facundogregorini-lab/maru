@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
-import { analyzeStandalone } from "@/lib/match/inventory";
+import { analyzeStandalone, applyBoard, emptyInventory, refreshImported } from "@/lib/match/inventory";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
 const description = "Buscamos analista para preparar reportes de ventas con SQL y tableros. ".repeat(8);
@@ -47,12 +47,16 @@ describe("piloto de avisos Apify", () => {
     const [p] = normalizeApifyJobs("linkedin", [row], now).postings;
     expect(p.descriptionText).toMatch(/Qué buscamos\?\n+• Experiencia en SAP/);
   });
-  it("valig: la función del puesto (workType) queda como área, sólo si es una", () => {
+  it("valig: workType es el rubro de la empresa, no se usa como área (y se borra lo guardado)", () => {
     const base = { title: "Specialist", companyName: "Empresa", location: "Buenos Aires, Argentina", descriptionHtml: `<p>${description}</p>` };
-    const [one] = normalizeApifyJobs("linkedin", [{ ...base, url: "https://ar.linkedin.com/jobs/view/x-4480846131", workType: "Sales" }], now).postings;
-    const [many] = normalizeApifyJobs("linkedin", [{ ...base, url: "https://ar.linkedin.com/jobs/view/x-4480846132", workType: "Engineering, Finance, and Research" }], now).postings;
-    expect(one.department).toBe("Sales");
-    expect(many.department).toBeUndefined();
+    const [p] = normalizeApifyJobs("linkedin", [{ ...base, url: "https://ar.linkedin.com/jobs/view/x-4480846131", workType: "Financial Services" }], now).postings;
+    expect(p.department).toBeUndefined();
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, "apify:linkedin:ar", "apify-linkedin", { postings: [{ ...p, department: "Financial Services" }], complete: false }, now);
+    expect(inv.postings[0].extracted.family).toMatchObject({ value: "finanzas", from: "fuente" });
+    expect(refreshImported(inv)).toBe(1);
+    expect(inv.postings[0].department).toBeUndefined();
+    expect(inv.postings[0].extracted.family.value).toBe("otros");
   });
   it("acepta puestos de LinkedIn para Latinoamérica sin fijar Argentina: decide la elegibilidad", () => {
     const base = { title: "Senior Data Engineer", companyName: "Empresa", location: "Latin America", descriptionHtml: `<p>${description}</p>` };

@@ -258,6 +258,8 @@ export function refreshImported(inv: Inventory): number {
   let n = 0;
   for (const p of inv.postings) {
     if (!sourceById(p.sourceId)?.imported || p.status !== "abierta") continue;
+    // El `workType` de LinkedIn (PR #181) es el rubro de la empresa, no la función del puesto: no sirve como área.
+    if (p.sourceId === "apify-linkedin") delete p.department;
     const next = withWorkplace(p);
     const hash = contentHash(next);
     if (hash === p.contentHash) continue;
