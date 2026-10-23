@@ -19,7 +19,8 @@ export type Board = {
 
 export type BoardFetch = { postings: NormalizedPosting[]; complete: boolean; received: number };
 
-const DESC_MAX = 6000;
+// 6.000 cortaba 589 avisos elegibles (Greenhouse, Recruitee, Workday) antes de los requisitos: 23/10.
+const DESC_MAX = 12000;
 
 /* ---------- helpers ---------- */
 
@@ -78,7 +79,7 @@ export function workplaceFromText(text: string): Workplace {
  * Sólo frases explícitas: una mención suelta de "home office" como beneficio no alcanza para decir remoto.
  */
 export function workplaceFromDescription(text: string): { value: Workplace; evidence: string } | null {
-  const t = fold(text.slice(0, 6000));
+  const t = fold(text.slice(0, DESC_MAX));
   // Días repartidos entre oficina y casa ("3 días presenciales y 2 home office", "2 days per week on-site").
   const split = t.match(/\b\d\s*(\/\s*\d\s*)?(dias?|days?)\s*((per|a la|por) (week|semana)\s*)?(de\s*)?(presencial(es)?|en (la )?oficina|on-?site|in (the )?office|home office|remot[oa]s?)\b/);
   const declared = t.match(/\b(modalidad|esquema|modelo|formato|lugar de trabajo|work ?(?:mode|model|arrangement|modality|type)|modality)(?: de (?:trabajo|contratacion|empleo))?\s*(?:(?:full|part)[ -]?time\s*)?(?:100\s*)?(presencial|hibrid[oa]|remot[oa]|home office|on-?site|hybrid|remote)\b/);
