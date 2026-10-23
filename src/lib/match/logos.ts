@@ -93,10 +93,24 @@ export const KNOWN_DOMAINS: Record<string, string> = {
   alignerr: "alignerr.com", comafi: "comafi.com.ar", "mercado libre": "mercadolibre.com", accenture: "accenture.com",
   deloitte: "deloitte.com", ibm: "ibm.com", microsoft: "microsoft.com", amazon: "amazon.com", globant: "globant.com",
   santander: "santander.com", bbva: "bbva.com", "naranja x": "naranjax.com", "mercado pago": "mercadopago.com",
+  // Auditoría del 22/10: los empleadores con más avisos elegibles sin logo.
+  fullstack: "fullstack.com", bluelight: "bluelightconsulting.com", "bluelight consulting": "bluelightconsulting.com",
+  "swiss medical group": "swissmedical.com.ar", "swiss medical": "swissmedical.com.ar", "anyone ai": "anyoneai.com",
+  "thermo fisher scientific": "thermofisher.com", "mutt data": "muttdata.ai", toptal: "toptal.com", zs: "zs.com",
+  tiendanube: "tiendanube.com", scania: "scania.com", fiserv: "fiserv.com", elevenlabs: "elevenlabs.io", danone: "danone.com",
+  siemens: "siemens.com", "warner bros discovery": "wbd.com", "marvell technology": "marvell.com", trafigura: "trafigura.com",
+  worley: "worley.com", alixpartners: "alixpartners.com", "otis elevator": "otis.com", devrev: "devrev.ai", agileengine: "agileengine.com",
+  "sovos latinoamerica": "sovos.com", sovos: "sovos.com", "syneos health commercial solutions": "syneoshealth.com", "syneos health": "syneoshealth.com",
+  "telus digital ai data solutions": "telusdigital.com", "telus digital": "telusdigital.com", arionkoder: "arionkoder.com",
+  "sancor salud grupo de medicina privada": "sancorsalud.com.ar", "sancor salud": "sancorsalud.com.ar", "grupo sancor seguros": "gruposancorseguros.com",
+  wurth: "wurth.com.ar", brainlabs: "brainlabsdigital.com", mabxience: "mabxience.com",
 };
 
+/** Las claves con la misma normalización que los nombres ("helmerich & payne" → "helmerich payne"). */
+const KNOWN = new Map(Object.entries(KNOWN_DOMAINS).map(([k, v]) => [companyKey(k), v]));
+
 /** También sin aclaraciones entre paréntesis: "PwC (jóvenes profesionales)" → pwc. */
-const knownDomain = (company: string) => KNOWN_DOMAINS[companyKey(company)] ?? KNOWN_DOMAINS[companyKey(company.replace(/\([^)]*\)/g, " "))];
+const knownDomain = (company: string) => KNOWN.get(companyKey(company)) ?? KNOWN.get(companyKey(company.replace(/\([^)]*\)/g, " ")));
 
 /** Logos de la fuente, después los de la misma empresa y, si no hay, el ícono de su sitio (del aviso o conocido). */
 export function withCompanyLogos(postings: StoredPosting[]): StoredPosting[] {

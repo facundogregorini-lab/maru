@@ -483,7 +483,7 @@ type GobJob = {
     min_salary?: number | null;
     max_salary?: number | null;
     published_at?: number;
-    company?: { data?: { id?: string; attributes?: { name?: string } } };
+    company?: { data?: { id?: string; attributes?: { name?: string; logo?: string } } };
     seniority?: { data?: { id?: number | string } };
     modality?: { data?: { id?: number | string } };
   };
@@ -550,6 +550,8 @@ export function normalizeGetonbrd(j: GobJob, board: Board): NormalizedPosting {
     updatedAt: null,
     expiresAt: null,
     sourceLanguage: a.lang,
+    // Logo que la empresa sube a Get on Board (sólo https).
+    ...(a.company?.data?.attributes?.logo?.startsWith("https://") ? { companyLogo: a.company.data.attributes.logo } : {}),
     ...(sen ? { seniorityHint: sen } : {}),
   };
 }
