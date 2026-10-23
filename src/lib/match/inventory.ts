@@ -55,6 +55,7 @@ export function contentHash(p: NormalizedPosting): string {
       p.employmentHint ?? "",
       p.seniorityHint ?? "",
       p.department ?? "",
+      !!p.remoteGlobal,
     ]),
   );
 }

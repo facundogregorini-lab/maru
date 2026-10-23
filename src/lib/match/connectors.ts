@@ -10,11 +10,13 @@ import type { Field, NormalizedPosting, Salary, Workplace } from "./types";
  */
 
 export type Board = {
-  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors" | "breezy" | "bamboohr" | "hiringroom";
+  sourceId: "greenhouse" | "lever" | "ashby" | "remotive" | "jobicy" | "getonbrd" | "himalayas" | "teamtailor" | "smartrecruiters" | "recruitee" | "workday" | "eightfold" | "successfactors" | "breezy" | "bamboohr" | "hiringroom";
   boardId: string; // "greenhouse:clara", "remotive"…
   slug?: string;
   region?: "us" | "eu";
   company?: string; // nombre para mostrar (directorio)
+  /** La empresa contrata en remoto desde cualquier país: sus remotos sin región no quedan "por confirmar". */
+  remoteGlobal?: boolean;
 };
 
 export type BoardFetch = { postings: NormalizedPosting[]; complete: boolean; received: number };
@@ -460,6 +462,89 @@ export async function fetchJobicy(board: Board, opts?: RetryOptions): Promise<Bo
   if (!Array.isArray(data.jobs)) throw new Error("Respuesta de Jobicy sin 'jobs'");
   // Jobicy devuelve sólo los últimos avisos: el listado nunca es "completo".
   return { postings: data.jobs.map((j) => normalizeJobicy(j, board)), complete: false, received: data.jobs.length };
+}
+
+/* ---------- Himalayas (API pública de empleos remotos) ---------- */
+
+type HimalayasJob = {
+  title: string;
+  companyName?: string;
+  companySlug?: string;
+  companyLogo?: string | null;
+  employmentType?: string | null;
+  minSalary?: number | null;
+  maxSalary?: number | null;
+  salaryPeriod?: string | null;
+  seniority?: string[] | null;
+  currency?: string | null;
+  locationRestrictions?: string[] | null;
+  parentCategories?: string[] | null;
+  description?: string | null;
+  excerpt?: string | null;
+  pubDate?: number | null;
+  expiryDate?: number | null;
+  applicationLink: string;
+  guid: string;
+};
+const HIM_PAGES = 120;
+const HIM_PAUSE_MS = 1100;
+
+export function normalizeHimalayas(j: HimalayasJob, board: Board): NormalizedPosting {
+  const restrictions = (j.locationRestrictions ?? []).filter(Boolean);
+  const countries = [...new Set(restrictions.map(countryIso).filter((c): c is string => !!c))];
+  const text = htmlToText(j.description || j.excerpt, DESC_MAX);
+  // "Mid-level", "Entry-level": sin guion, como los demás niveles que leemos.
+  const level = (j.seniority ?? []).map((x) => x.replace(/-level$/i, " level")).join(" / ");
+  const ts = (n: number | null | undefined) => (typeof n === "number" && n > 0 ? new Date(n * 1000).toISOString() : null);
+  return {
+    sourceId: "himalayas",
+    boardId: board.boardId,
+    externalId: j.guid,
+    title: j.title.trim(),
+    company: (j.companyName ?? "").trim(),
+    sourceUrl: j.guid,
+    // Condición de Himalayas: postular siempre por su applicationLink.
+    applyUrl: j.applicationLink,
+    linkRequired: true,
+    attribution: "Publicado en Himalayas",
+    descriptionText: text,
+    descriptionComplete: !!j.description && text.length > 200,
+    locations: [],
+    countries,
+    regionText: countries.length ? [] : restrictions.slice(0, 6),
+    // Lista vacía = cualquier país (documentación de la API).
+    ...(restrictions.length ? {} : { remoteGlobal: true }),
+    workplace: wp("remoto", "fuente", "Himalayas sólo publica empleos remotos"),
+    remoteFlag: true,
+    employmentType: null,
+    department: j.parentCategories?.[0] || undefined,
+    salary: j.currency ? salary(j.minSalary, j.maxSalary, j.currency, periodFrom(j.salaryPeriod)) : null,
+    publishedAt: ts(j.pubDate),
+    updatedAt: null,
+    expiresAt: ts(j.expiryDate),
+    ...(j.companyLogo?.startsWith("https://") ? { companyLogo: j.companyLogo } : {}),
+    ...(j.employmentType ? { employmentHint: j.employmentType } : {}),
+    ...(level ? { seniorityHint: level } : {}),
+  };
+}
+
+/**
+ * Búsqueda con country=AR: incluye los que aceptan Argentina y los de cualquier país. De a 20, del más reciente,
+ * con pausa (60 pedidos por minuto sin clave). El listado nunca es completo: los avisos se cierran al vencer.
+ */
+export async function fetchHimalayas(board: Board, opts?: RetryOptions & { maxPages?: number; pauseMs?: number }): Promise<BoardFetch> {
+  const out = new Map<string, NormalizedPosting>();
+  const pause = opts?.pauseMs ?? HIM_PAUSE_MS;
+  let received = 0;
+  for (let page = 1; page <= (opts?.maxPages ?? HIM_PAGES); page++) {
+    if (page > 1 && pause) await (opts?.sleep ?? ((ms: number) => new Promise((r) => setTimeout(r, ms))))(pause);
+    const data = await fetchJson<{ jobs?: HimalayasJob[]; totalCount?: number }>(`https://himalayas.app/jobs/api/search?country=AR&sort=recent&page=${page}`, opts);
+    if (!Array.isArray(data.jobs)) throw new Error("Respuesta de Himalayas sin 'jobs'");
+    received += data.jobs.length;
+    for (const j of data.jobs) if (j.guid && j.applicationLink && j.title) out.set(j.guid, normalizeHimalayas(j, board));
+    if (data.jobs.length < 20 || received >= (data.totalCount ?? 0)) break;
+  }
+  return { postings: [...out.values()], complete: false, received };
 }
 
 /* ---------- Get on Board ---------- */
@@ -1509,6 +1594,7 @@ export const FETCHERS: Record<Board["sourceId"], (b: Board, o?: RetryOptions) =>
   ashby: fetchAshby,
   remotive: fetchRemotive,
   jobicy: fetchJobicy,
+  himalayas: fetchHimalayas,
   getonbrd: fetchGetonbrd,
   teamtailor: fetchTeamtailor,
   smartrecruiters: fetchSmartRecruiters,

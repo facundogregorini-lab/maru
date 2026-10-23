@@ -13,6 +13,8 @@ export type CompanyEntry = {
   addedAt: string;
   status: "candidata" | "excluida";
   reason?: string;
+  /** Decisión del dueño: la empresa contrata en remoto desde cualquier país (Tether, 23/10). */
+  remoteGlobal?: boolean;
 };
 
 export type Directory = { reviewedAt: string; companies: CompanyEntry[] };
@@ -25,7 +27,7 @@ export function boardIdFor(sourceId: string, slug?: string): string {
 export function boardsFrom(dir: Directory, env: Record<string, string | undefined> = process.env): Board[] {
   const enabled = new Set(enabledSources(env).map((s) => s.id));
   const boards: Board[] = [];
-  for (const id of ["remotive", "jobicy", "getonbrd"] as const) {
+  for (const id of ["remotive", "jobicy", "getonbrd", "himalayas"] as const) {
     if (enabled.has(id)) boards.push({ sourceId: id, boardId: id });
   }
   const seen = new Set<string>();
@@ -34,7 +36,7 @@ export function boardsFrom(dir: Directory, env: Record<string, string | undefine
     const boardId = boardIdFor(c.sourceId, c.slug);
     if (seen.has(boardId)) continue;
     seen.add(boardId);
-    boards.push({ sourceId: c.sourceId, boardId, slug: c.slug, region: c.region, company: c.name });
+    boards.push({ sourceId: c.sourceId, boardId, slug: c.slug, region: c.region, company: c.name, ...(c.remoteGlobal ? { remoteGlobal: true } : {}) });
   }
   return boards;
 }

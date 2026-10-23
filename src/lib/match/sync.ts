@@ -1,7 +1,7 @@
 import { FETCHERS, type Board, type BoardFetch } from "./connectors";
 import { HttpError, type RetryOptions } from "./http";
 import { applyBoard, buildOpportunities, expireImported, purge, recordRun, refreshImported } from "./inventory";
-import type { BoardSyncResult, Inventory } from "./types";
+import type { BoardSyncResult, Inventory, NormalizedPosting } from "./types";
 
 /**
  * Orquestación de una sincronización: lotes, checkpoints, bloqueo de ejecuciones simultáneas,
@@ -34,6 +34,12 @@ export type SyncDeps = {
 };
 
 export type SyncOutcome = { status: "completa" | "parcial" | "bloqueada"; processed: number; pending: number; results: BoardSyncResult[] };
+
+/** Empresas que contratan en remoto desde cualquier país (directorio): sus remotos sin región son elegibles. */
+export function markRemoteGlobal(board: Board, postings: NormalizedPosting[]): void {
+  if (!board.remoteGlobal) return;
+  for (const p of postings) if (p.workplace.value === "remoto" && !p.countries.length && !p.regionText.length) p.remoteGlobal = true;
+}
 
 export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
   const now = deps.now ?? (() => new Date());
@@ -86,6 +92,7 @@ export async function runSync(deps: SyncDeps): Promise<SyncOutcome> {
       let res: BoardSyncResult;
       try {
         fetched = await fetchBoard(board, deps.retry);
+        markRemoteGlobal(board, fetched.postings);
         res = { boardId: board.boardId, ok: true, complete: fetched.complete, received: fetched.received, durationMs: now().getTime() - t0 };
       } catch (err) {
         const status = err instanceof HttpError ? err.status : undefined;

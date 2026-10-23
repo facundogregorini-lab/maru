@@ -153,9 +153,9 @@ describe("protección SSRF", () => {
 });
 
 describe("sin dependencias facturables", () => {
-  it("sólo se habilitan fuentes gratuitas, y Himalayas queda sin activar", () => {
+  it("sólo se habilitan fuentes gratuitas; Himalayas, con su atribución y su enlace (términos del 23/10)", () => {
     expect(enabledSources({}).every((s) => s.cost === "gratis")).toBe(true);
-    expect(SOURCES.find((s) => s.id === "himalayas")!.enabled).toBe(false);
+    expect(SOURCES.find((s) => s.id === "himalayas")).toMatchObject({ enabled: true, cost: "gratis", linkRequired: true, attribution: "Publicado en Himalayas" });
     expect(SOURCES.filter((s) => s.cost !== "gratis").every((s) => !s.enabled)).toBe(true);
   });
   it("se pueden deshabilitar fuentes por configuración", () => {

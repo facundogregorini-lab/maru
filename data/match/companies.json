@@ -1137,7 +1137,8 @@
       "sector": "fintech / cripto",
       "evidence": "https://tether.recruitee.com/",
       "addedAt": "2026-10-17",
-      "status": "candidata"
+      "status": "candidata",
+      "remoteGlobal": true
     },
     {
       "name": "Accenture",
