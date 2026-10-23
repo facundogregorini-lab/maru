@@ -856,11 +856,28 @@ function diversify(sorted: Scored[], top = 10, perCompany = 2): Scored[] {
   return [...head, ...rest];
 }
 
+/**
+ * Las fuentes nombran el mismo lugar de muchas formas: quien busca «CABA» también quiere «Capital Federal»,
+ * «Cdad. Autónoma de Buenos Aires» y la ciudad como la publica LinkedIn («Buenos Aires, Buenos Aires Province»).
+ */
+const PLACE_ALIASES: [RegExp, RegExp][] = [
+  [/^(caba|capital( federal)?|ciudad (autonoma )?de buenos aires|ciudad autonoma|cdad\.? autonoma.*|buenos aires city)$/, /\b(caba|capital federal|autonoma de buenos aires|ciudad de buenos aires|buenos aires city)\b|^buenos aires\s+buenos aires\b/],
+  [/^(gba|gran buenos aires|greater buenos aires|conurbano|amba)$/, /\b(gba|gran buenos aires|greater buenos aires|conurbano|amba)\b/],
+];
+
+export function matchesLocation(locations: string[], query: string): boolean {
+  const q = fold(query).trim();
+  const each = locations.map((l) => fold(l));
+  if (each.some((l) => l.includes(q))) return true;
+  const alias = PLACE_ALIASES.find(([re]) => re.test(q))?.[1];
+  return !!alias && each.some((l) => alias.test(l));
+}
+
 function applyFilters(o: Opportunity, primary: StoredPosting | undefined, f: Filters, now: Date): boolean {
   if (f.families?.length && !f.families.includes(o.extracted.family.value)) return false;
   if (f.workplaces?.length && !f.workplaces.includes(o.workplace.value)) return false;
   if (f.seniorities?.length && (!o.extracted.seniority || !f.seniorities.includes(o.extracted.seniority.value))) return false;
-  if (f.location?.trim() && !fold(o.locations.join(" ")).includes(fold(f.location))) return false;
+  if (f.location?.trim() && !matchesLocation(o.locations, f.location)) return false;
   if (f.salaryPublished && !o.salary) return false;
   if (f.salaryUsd && o.salary?.value.currency !== "USD") return false;
   if (f.maxAgeDays) {
