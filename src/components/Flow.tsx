@@ -8,6 +8,7 @@ import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { saveProfile } from "@/lib/profileStore";
 import { contextFromAnalysis, type Analysis, type CvDoc, type GapQuestion, type Generation, type Profile } from "@/lib/schemas";
 import { load, remove, save } from "@/lib/storage";
+import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 import { savePostulacion } from "@/lib/postulaciones";
 import { normalizeUrl, upsertTracked } from "@/lib/tracker";
 import CopyButton from "./CopyButton";
@@ -346,7 +347,7 @@ export default function Flow() {
       )}
 
       {stage === "resultado" && doc && generation && analysis && (
-        <Results doc={doc} setDoc={setDoc} generation={generation} analysis={analysis} onRestart={restart} onBack={() => setStage("preguntas")} />
+        <Results doc={doc} setDoc={setDoc} generation={generation} analysis={analysis} jobUrl={jobUrl.trim()} onRestart={restart} onBack={() => setStage("preguntas")} />
       )}
     </div>
   );
@@ -359,6 +360,7 @@ function Results({
   setDoc,
   generation,
   analysis,
+  jobUrl,
   onRestart,
   onBack,
 }: {
@@ -366,6 +368,7 @@ function Results({
   setDoc: (fn: (d: CvDoc) => CvDoc) => void;
   generation: Generation;
   analysis: Analysis;
+  jobUrl: string;
   onRestart: () => void;
   onBack: () => void;
 }) {
@@ -377,6 +380,8 @@ function Results({
       <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">
         {analysis.puesto} <span className="text-muted">· {analysis.empresa}</span>
       </h1>
+
+      <ApplyWithExtension jobUrl={jobUrl} />
 
       <div className="mt-6 inline-flex rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
         {(
@@ -435,5 +440,50 @@ function Results({
         </button>
       </div>
     </div>
+  );
+}
+
+/**
+ * Siguiente paso después de armar la postulación: abrir el formulario y completarlo con la extensión,
+ * que encuentra esta postulación por el link del aviso (extension/bridge.js) y usa este CV y estas respuestas.
+ */
+function ApplyWithExtension({ jobUrl }: { jobUrl: string }) {
+  const linked = /^https?:\/\//i.test(jobUrl);
+  return (
+    <section className="mt-6 rounded-3xl bg-brand-soft p-5 ring-1 ring-brand/20 sm:p-7">
+      <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">Siguiente paso: completá el formulario con la extensión</h2>
+      {linked ? (
+        <>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 leading-relaxed text-ink/80">
+            <li>
+              Abrí el aviso y tocá <strong>Postularme</strong> (o <strong>Apply</strong>) hasta llegar al formulario.
+            </li>
+            <li>
+              Tocá el ícono de Maru en Chrome o usá <strong>Alt + Shift + M</strong>. Completa los campos con este CV y estas respuestas; vos revisás y enviás.
+            </li>
+          </ol>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href={jobUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="press inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 font-medium text-white"
+            >
+              Abrir el aviso ↗
+            </a>
+            <a href={EXTENSION_STORE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center text-sm font-semibold underline underline-offset-4">
+              ¿Todavía no tenés la extensión? Agregala a Chrome
+            </a>
+          </div>
+          <p className="mt-3 text-sm text-muted">
+            Usá el mismo navegador donde armaste esta postulación: queda guardada acá, no en tu cuenta. Si el aviso es de LinkedIn u otra bolsa y el formulario está en otro sitio, la extensión todavía no los relaciona y adjunta tu CV general.
+          </p>
+        </>
+      ) : (
+        <p className="mt-3 leading-relaxed text-ink/80">
+          La extensión reconoce la postulación por el link del aviso, y esta se armó con el texto pegado. Para que use este CV, volvé a empezar con el link del aviso o descargá el PDF y adjuntalo a mano.
+        </p>
+      )}
+    </section>
   );
 }
