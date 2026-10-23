@@ -61,5 +61,5 @@ Certificaciones:
 
 1. `npm run ext:screenshots` si cambió el popup, y después `npm run ext:pack`.
 2. Subir `dist/maru-extension-<versión>-store.zip` en el panel de la Store y completar la ficha con este archivo.
-3. Cuando la Store la publique, cargar `NEXT_PUBLIC_EXTENSION_URL` en Vercel con el link de la ficha: los botones de la home van ahí en lugar de bajar el zip.
+3. Publicada el 22/10/2026 (0.4.1): https://chromewebstore.google.com/detail/aikhpbjdjeojlpdkhkonmionghpnmkei. El link está en `EXTENSION_STORE_URL` (`src/lib/extensionVersion.ts`) y lo usan la home y `/extension`. Para una versión nueva alcanza con subir el zip en el panel: el link no cambia.
 4. Las instalaciones de la Store mandan `X-Maru-Source: store`, así que el aviso de versión vieja no les pide bajar el zip.

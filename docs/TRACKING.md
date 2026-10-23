@@ -20,6 +20,7 @@ Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/com
 | `busqueda_aviso_original`, `busqueda_preparar` | Abrir el aviso original o llevar la búsqueda a una herramienta | `destino` |
 | `seguimiento_estado` | Cambiar el estado de una postulación en el tablero | `estado` |
 | `extension_descarga` | Clic en el `.zip` de la extensión | — |
+| `extension_store` | Clic en un link a la ficha de la Chrome Web Store | — |
 | `herramienta_error` | Una llamada de `post()` volvió con error (desde el 19/10/2026) | `ruta` (p. ej. `/api/cv/analyze`), `codigo` (`AUTH_REQUIRED`, `PLAN_LIMIT`, `CV_UNREADABLE`… o el HTTP) |
 | `login_pedido` | Se abre el diálogo de ingreso | `motivo` (texto fijo del código: "descargar tu CV", "entrar a Maru"…) |
 | `login_google` | Toca "Continuar con Google" | `ventana`: `aparte` o `misma_pestana` (el navegador bloqueó la ventana) |

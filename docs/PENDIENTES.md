@@ -19,6 +19,16 @@ Arreglos:
 
 **Pendiente (anterior):** mirar el motivo del 400 en el panel la próxima vez que pase. Que haya ocurrido antes de la promo, con los otros montos, sugiere que no es por los $990. Las causas posibles son pagar con la misma cuenta que cobra, el email del pagador o el `back_url`.
 
+## Extensión en la Chrome Web Store (23/10/2026)
+
+La Store aprobó la 0.4.1 y está pública: https://chromewebstore.google.com/detail/aikhpbjdjeojlpdkhkonmionghpnmkei
+
+- El link quedó fijo en el código (`EXTENSION_STORE_URL`, `src/lib/extensionVersion.ts`) en lugar de `NEXT_PUBLIC_EXTENSION_URL`: es público y así no depende de una variable de Vercel ni de recompilar.
+- **Home y `/extension`:** los botones dicen «Agregar a Chrome» y van a la Store. `/extension` explica la instalación en 3 pasos y, en un desplegable, cómo pasar de la versión del zip a la de la Store (quitar la cargada a mano y volver a subir el CV, porque cada instalación guarda sus datos aparte). El zip sigue disponible ahí.
+- **PostHog:** evento nuevo `extension_store` al tocar un link a la ficha.
+- Sin cambios: `/api/extension/version` sigue mandando a `/extension` a quien instaló el zip; las de la Store se actualizan solas.
+- **Pendiente (dueño):** instalar desde la Store y probar un Greenhouse embebido (`?gh_jid=`), el PDF del CV personalizado y «Guardala en tu seguimiento» con la sesión de marucoach.com.
+
 ## Extensión 0.4.1: activeTab en lugar de acceso a todos los sitios (22/10/2026)
 
 Pedido del dueño: la Chrome Web Store avisa que `<all_urls>` retrasa la revisión.
@@ -59,7 +69,7 @@ Pedido del dueño, en tres fases con una PR por fase. Lo que no se negocia: nunc
 **Pendiente de la Fase 1:**
 - Probar en Chrome real que la cookie de sesión llega a `/api/export/pdf` y a `/api/tracking/application` desde la extensión, con el servidor igual al dominio donde se ingresa (marucoach.com).
 - `DEFAULT_SERVER` pasó a `https://www.marucoach.com`: es donde se ingresa, y la cookie de sesión tiene que ser de ese dominio. Quien cambió el servidor a mano en «Avanzado» sigue usando el suyo.
-- Publicar en la Store y cargar `NEXT_PUBLIC_EXTENSION_URL`.
+- ~~Publicar en la Store~~: aprobada y pública el 22/10/2026 (ver abajo).
 
 **Fase 2 (cobertura) y Fase 3 (más valor en el navegador): sin empezar.** El dueño pidió parar después de cada fase para revisar.
 
