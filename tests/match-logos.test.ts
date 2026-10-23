@@ -69,4 +69,11 @@ describe("logo por dominio conocido", () => {
     expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("sovos.com"));
     expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("otis.com"));
   });
+  it("reconoce los empleadores sumados el 23/10 con su forma de LinkedIn", () => {
+    const out = withCompanyLogos([p("a", "BYMA Bolsas y Mercados Argentinos S.A."), p("b", "Amazon Web Services (AWS)"), p("c", "BYD Argentina"), p("d", "Kiwi")]);
+    expect(out.find((x) => x.key === "a")!.companyLogo).toBe(domainLogo("byma.com.ar"));
+    expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("aws.amazon.com"));
+    expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("byd.com"));
+    expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
+  });
 });
