@@ -137,6 +137,10 @@ Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, con
 - **Vigencia:** un importado que la revisión diaria ve publicado no vence a los 30 días sin volver a importarse: cuenta desde la última revisión que lo vio publicado, hasta 60 días desde la publicación. Así una compra no se pierde entera al mes.
 - **Tamaño:** los importados se guardan en partes de hasta 40 MB (`inventory-imported.json`, `inventory-imported-2.json`…).
 
+## Saldo del mes (23/10/2026)
+
+El dueño aprobó gastar hoy lo que queda hasta el límite de la cuenta de Apify (US$35). Las corridas usan `--budget-usd=34.5 --budget-source=account`: comparan contra el uso real de la cuenta y frenan US$0,50 antes del límite. Dos tandas de LinkedIn con `--actor=valig` (unos US$0,36 cada 1.000 filas), palabras nuevas, 100 filas por búsqueda y 5 en paralelo.
+
 ## Bumeran vía Apify (desde el 22/10/2026)
 
 Fuente nueva `apify-bumeran` (bolsa `apify:bumeran:ar`, «Publicado en Bumeran · vía Apify»), con el Actor `blackfalcondata/bumeran-scraper`. Se revisó su esquema con `match-probe` el 22/10; todavía no se corrió.
