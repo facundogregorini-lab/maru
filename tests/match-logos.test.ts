@@ -62,4 +62,11 @@ describe("logo por dominio conocido", () => {
     expect(out.find((x) => x.key === "d")!.companyLogo).toBeUndefined();
     expect(out.find((x) => x.key === "e")!.companyLogo).toBe("https://img/ey.png");
   });
+
+  it("encuentra nombres con símbolos o acentos («Helmerich & Payne», «Sovos Latinoamérica»)", () => {
+    const out = withCompanyLogos([p("a", "Helmerich & Payne"), p("b", "Sovos Latinoamérica"), p("c", "Otis Elevator Co.")]);
+    expect(out.find((x) => x.key === "a")!.companyLogo).toBe(domainLogo("hpinc.com"));
+    expect(out.find((x) => x.key === "b")!.companyLogo).toBe(domainLogo("sovos.com"));
+    expect(out.find((x) => x.key === "c")!.companyLogo).toBe(domainLogo("otis.com"));
+  });
 });
