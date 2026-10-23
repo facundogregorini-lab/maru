@@ -110,6 +110,17 @@ describe("habilidades de áreas no técnicas", () => {
   });
 });
 
+describe("herramientas frecuentes en requisitos", () => {
+  it("reconoce Office, Adobe, APIs REST, Git, Linux, redes y el stack de datos", () => {
+    const s = findSkills("Manejo de paquete Office. Dominio de la Suite Adobe (Photoshop, Illustrator, InDesign). Experiencia con APIs REST, Git y Linux. Cableado estructurado. Spark, Databricks y dbt.");
+    for (const k of ["microsoft office", "photoshop", "illustrator", "indesign", "apis rest", "git", "linux", "redes informáticas", "spark", "databricks", "dbt"]) expect(s).toContain(k);
+  });
+  it("no confunde home office, escalas ni macros de otro rubro", () => {
+    const s = findSkills("Modalidad home office. Trabajo a gran escala. IP layout macros.");
+    for (const k of ["microsoft office", "scala", "vba"]) expect(s).not.toContain(k);
+  });
+});
+
 describe("habilidades de banca y marketing", () => {
   it("reconoce riesgo crediticio, prevención de lavado, mercado de capitales y trade marketing", () => {
     const s = findSkills("Análisis de crédito y scoring de cartera. Normativa de prevención de lavado (PLD/KYC). Renta fija. Trade marketing en punto de venta.");
