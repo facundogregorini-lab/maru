@@ -15,6 +15,8 @@ export default function BillingPanel() {
   const [busy, setBusy] = useState<PlanId | "cancel" | "status" | null>(null);
   const [login, setLogin] = useState(false);
   const [error, setError] = useState("");
+  /** A qué botón corresponde el error: se muestra al lado, no al final del panel (si no, parecía que el clic no hacía nada). */
+  const [errorFor, setErrorFor] = useState<PlanId | "cancel" | "status" | null>(null);
   const read = useCallback(async (refresh = false) => {
     const res = await fetch("/api/billing/status", { method: refresh ? "POST" : "GET", cache: "no-store", headers: email ? { "X-Maru-Account": email } : {} });
     const body = await res.json();
@@ -38,7 +40,7 @@ export default function BillingPanel() {
     if (!email) { setLogin(true); return; }
     // La baja de un pago iniciado sin terminar sigue acá; la de un plan activo, en "Mi suscripción".
     if (action === "cancel" && !window.confirm("¿Cancelar el pago iniciado? No se te cobra nada.")) return;
-    setBusy(action); setError("");
+    setBusy(action); setError(""); setErrorFor(null);
     try {
       if (action === "status") await read(true);
       else {
@@ -56,7 +58,7 @@ export default function BillingPanel() {
           window.location.assign(body.url);
         } else await read();
       }
-    } catch (err) { setError(err instanceof Error ? err.message : "No pudimos completar el pedido."); }
+    } catch (err) { setError(err instanceof Error ? err.message : "No pudimos completar el pedido."); setErrorFor(action); }
     finally { setBusy(null); }
   }
   const paid = status?.plan === "maru";
@@ -65,9 +67,16 @@ export default function BillingPanel() {
   const button = (plan: Plan, strong: boolean) => {
     const current = paid && status?.tier === plan.id;
     if (current) return <p className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-brand-soft px-4 text-center text-sm font-bold">Tu plan actual</p>;
-    return <button disabled={!!busy || !status?.enabled || pending || paid} onClick={() => void act(plan.id)} className={`press mt-5 min-h-12 w-full rounded-full px-6 py-3 font-bold uppercase disabled:cursor-default disabled:opacity-60 ${strong ? "bg-neon text-ink" : "border border-ink bg-white text-ink"}`}>
-      {busy === plan.id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : "Elegir plan"}
-    </button>;
+    // Un pago iniciado y sin terminar del mismo plan se puede retomar (el servidor devuelve el mismo link de Mercado Pago).
+    const resume = status?.status === "pending" && status.tier === plan.id;
+    const blocked = (pending && !resume) || paid;
+    return <>
+      <button disabled={!!busy || !status?.enabled || blocked} onClick={() => void act(plan.id)} className={`press mt-5 min-h-12 w-full rounded-full px-6 py-3 font-bold uppercase disabled:cursor-default disabled:opacity-60 ${strong ? "bg-neon text-ink" : "border border-ink bg-white text-ink"}`}>
+        {busy === plan.id ? "Un momento…" : !status ? "Consultando…" : !status.enabled ? "Próximamente" : resume ? "Retomar el pago" : "Elegir plan"}
+      </button>
+      {errorFor === plan.id && error && <p role="alert" className="mt-2 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {blocked && !paid && status?.tier && <p className="mt-2 text-xs text-ink/70">Tenés un pago iniciado del plan {PLANS[status.tier].nombre.toLowerCase()}. Retomalo o cancelalo más abajo para elegir otro.</p>}
+    </>;
   };
   const discount = planDiscount(featured);
   return <div>
@@ -105,7 +114,7 @@ export default function BillingPanel() {
     </div>
 
     <div className="mx-auto mt-5 max-w-2xl text-center">
-      {error && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {error && !(errorFor && errorFor in PLANS) && <p role="alert" className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">{error}</p>}
       {status && !status.enabled && <p className="rounded-2xl bg-sand p-4 text-sm leading-relaxed">Los planes todavía no están a la venta: hoy podés usar todas las herramientas gratis.</p>}
       {email && status && (paid || status.cancelRequest || status.refund || status.status === "authorized") && <div className="mt-4"><SubscriptionManager email={email} status={status} onChanged={() => read()} /></div>}
       {pending && status?.status === "pending" && <>

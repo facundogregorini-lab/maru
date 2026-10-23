@@ -4,7 +4,7 @@ import { userId } from "../sync/server";
 import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, GUARANTEE_DAYS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { recordBillingEvent } from "./log";
-import { mp, type Invoice, type Payment, type Preapproval } from "./provider";
+import { mp, MpError, type Invoice, type Payment, type Preapproval } from "./provider";
 
 /**
  * `plan` falta en suscripciones creadas antes de los tres planes: eran mensuales.
@@ -59,6 +59,13 @@ export function lastPayment(sub: Subscription | null): { id: string; amount: num
   return { id: String(sub.paymentId), amount: sub.paymentAmount ?? PLANS[plan].price, currency: "ARS", first: sub.firstPaymentId === sub.paymentId, at: sub.paymentAt, plan };
 }
 
+/** Mercado Pago rechazó crear la suscripción. `reason` es su motivo, para el panel y los logs (sin datos personales). */
+export class CheckoutRejected extends Error {
+  constructor(public cause: MpError) {
+    super(cause.message);
+  }
+}
+
 export async function checkout(email: string, planId: PlanId): Promise<string> {
   return (await startCheckout(email, planId)).url;
 }
@@ -84,11 +91,23 @@ export async function startCheckout(email: string, planId: PlanId): Promise<{ ur
   if (!(await compareAndSetJson(key(email), prev?.updatedAt ?? 0, reservation)).ok) throw new Error("Tu pago se está preparando. Probá en un momento.");
   // La referencia se genera en el servidor y queda vinculada a la sesión; no se toma el email del webhook.
   await setJson(`maru:billing:ref:${reference}`, { email });
-  const sub = await mp<Preapproval>("/preapproval", {
-    method: "POST",
-    headers: { "X-Idempotency-Key": reference },
-    body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: firstCharge(plan), currency_id: "ARS" } }),
-  });
+  let sub: Preapproval;
+  try {
+    sub = await mp<Preapproval>("/preapproval", {
+      method: "POST",
+      headers: { "X-Idempotency-Key": reference },
+      body: JSON.stringify({ reason: `Maru · Plan ${plan.nombre.toLowerCase()}`, external_reference: reference, payer_email: email, back_url: `${SITE_URL}/precios?estado=pendiente`, status: "pending", auto_recurring: { frequency: plan.frequency, frequency_type: plan.frequencyType, transaction_amount: firstCharge(plan), currency_id: "ARS" } }),
+    });
+  } catch (err) {
+    // Un rechazo definitivo no creó nada: se libera la reserva para que el próximo intento use una referencia
+    // nueva. Si no, quedaba "preparándose" y, al reintentar con la misma clave, Mercado Pago repetía el rechazo.
+    if (err instanceof MpError && err.definitive) {
+      await change(email, (current) => (current.reference === reference ? { ...current, status: "failed", checkoutUrl: undefined } : current)).catch(() => {});
+      await recordBillingEvent({ source: "actualizar", type: "checkout", result: "rechazado por Mercado Pago", detail: `${plan.id}: ${err.status} ${err.reason}`.slice(0, 200) });
+      throw new CheckoutRejected(err);
+    }
+    throw err;
+  }
   if (!sub.id || !sub.init_point || !/^https:\/\/([a-z0-9-]+\.)?mercadopago\.com(\.ar)?\//i.test(sub.init_point)) throw new Error("Mercado Pago no devolvió un link de pago válido.");
   await change(email, (current) => ({ ...current, id: sub.id, status: sub.status, checkoutUrl: sub.init_point }));
   return { url: sub.init_point, checkoutId: checkoutId(reference) };

@@ -15,8 +15,28 @@ export async function mp<T>(path: string, init: RequestInit = {}): Promise<T> {
     signal: AbortSignal.timeout(8000),
   });
   // Sólo la ruta, sin query ni IDs: alcanza para saber qué consulta falló sin dejar datos en los logs.
-  if (!res.ok) throw new Error(`Mercado Pago respondió ${res.status} en ${path.split("?")[0].replace(/\/[^/]*\d[^/]*/g, "/:id")}.`);
+  if (!res.ok) throw new MpError(res.status, path.split("?")[0].replace(/\/[^/]*\d[^/]*/g, "/:id"), mpReason(await res.json().catch(() => null)));
   return res.json() as Promise<T>;
+}
+
+/** Error de Mercado Pago con el código HTTP y el motivo que informa (sin emails ni datos de pago). */
+export class MpError extends Error {
+  constructor(public status: number, public route: string, public reason: string) {
+    super(`Mercado Pago respondió ${status} en ${route}.${reason ? ` Motivo: ${reason}` : ""}`);
+  }
+  /** Rechazo definitivo (datos inválidos): reintentar con lo mismo no cambia nada. 429 y 5xx pueden ser pasajeros. */
+  get definitive() {
+    return this.status >= 400 && this.status < 500 && this.status !== 429 && this.status !== 408;
+  }
+}
+
+/** El motivo que devuelve Mercado Pago (message, error y cause[].description), recortado y sin emails. */
+export function mpReason(body: unknown): string {
+  if (!body || typeof body !== "object") return "";
+  const b = body as { message?: unknown; error?: unknown; cause?: unknown };
+  const causes = Array.isArray(b.cause) ? b.cause.map((c) => (c && typeof c === "object" ? [(c as { code?: unknown }).code, (c as { description?: unknown }).description].filter(Boolean).join(" ") : String(c))) : [];
+  const text = [b.message, b.error, ...causes].filter((x) => typeof x === "string" || typeof x === "number").map(String).join(" · ");
+  return text.replace(/[^\s@]+@[^\s@]+/g, "[email]").slice(0, 300);
 }
 export const validWebhook = (req: Request, id: string): boolean => webhookProblem(req, id) === null;
 /** Por qué no vale la firma (null si vale), para el registro del panel. No incluye valores de las cabeceras. */

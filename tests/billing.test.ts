@@ -352,4 +352,46 @@ describe("extensión y promo de lanzamiento", () => {
     expect(s.refundOption(sub, true, paidAt + 11 * day)).toBeNull();
     expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 990 } }, false, paidAt + day)).toBeNull();
   });
+
+  it("si Mercado Pago rechaza crear la suscripción, libera la reserva y el próximo intento usa otra referencia", async () => {
+    const s = await setup();
+    const refs: string[] = [];
+    let reject = true;
+    vi.stubGlobal("fetch", vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      const path = new URL(String(url)).pathname;
+      if (path === "/preapproval" && init?.method === "POST") {
+        refs.push(String((init.headers as Record<string, string>)["X-Idempotency-Key"]));
+        if (reject) return Response.json({ message: "Invalid users involved", error: "bad_request", status: 400, cause: [{ code: "x", description: "payer ana@example.com" }] }, { status: 400 });
+        const reference = JSON.parse(String(init.body)).external_reference;
+        return Response.json({ id: "sub9", external_reference: reference, status: "pending", init_point: "https://www.mercadopago.com.ar/subscriptions/checkout?id=sub9" });
+      }
+      throw new Error(`Unexpected provider request: ${path}`);
+    }));
+    await expect(s.startCheckout("ana@example.com", "mensual")).rejects.toBeInstanceOf(s.CheckoutRejected);
+    expect((await s.readSubscription("ana@example.com"))?.status).toBe("failed");
+    // Antes quedaba "preparándose": cada clic devolvía «Tu pago se está preparando».
+    reject = false;
+    const out = await s.startCheckout("ana@example.com", "mensual");
+    expect(out.url).toContain("mercadopago.com.ar");
+    expect(refs).toHaveLength(2);
+    expect(refs[0]).not.toBe(refs[1]);
+    const { readBillingEvents } = await import("@/lib/billing/log");
+    const events = await readBillingEvents();
+    const rejected = events.find((e) => e.result === "rechazado por Mercado Pago");
+    expect(rejected?.detail).toContain("Invalid users involved");
+    expect(JSON.stringify(events)).not.toContain("ana@example.com");
+  });
+
+  it("la ruta de checkout explica el rechazo en lugar de un error genérico", async () => {
+    await setup();
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ message: "bad" }, { status: 400 })));
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const { POST } = await import("@/app/api/billing/checkout/route");
+    const req = () => new Request("https://maru.test/api/billing/checkout", { method: "POST", headers: { origin: "https://maru.test", cookie: `${SESSION_COOKIE}=${createSessionToken("ana@example.com")}` }, body: JSON.stringify({ plan: "mensual" }) });
+    const first = await POST(req());
+    expect(first.status).toBe(502);
+    expect((await first.json()).code).toBe("CHECKOUT_REJECTED");
+    // El segundo clic vuelve a intentar (no queda trabado en «preparándose»).
+    expect((await (await POST(req())).json()).code).toBe("CHECKOUT_REJECTED");
+  });
 });

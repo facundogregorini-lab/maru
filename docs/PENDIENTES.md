@@ -1,5 +1,22 @@
 # Estado y próximos pasos de Maru
 
+## Arreglo: el botón del plan mensual «no hacía nada» (23/10/2026)
+
+Axel tocaba «Elegir plan» en el mensual y no veía ninguna respuesta. En producción (errores de Vercel) se vio la cadena completa:
+
+1. 00:08:55: Mercado Pago respondió **400 al crear la suscripción** (`/preapproval`). Ya había pasado 4 veces entre el 16 y el 17/10.
+2. La reserva quedaba en «creando». Los 20 clics siguientes devolvieron «Tu pago se está preparando» y, pasados 2 minutos, se reintentaba con la misma clave de idempotencia, con lo que Mercado Pago repetía el rechazo.
+3. El error se mostraba al final del panel, debajo de «Otros planes»: desde el botón no se veía.
+4. En el celular, el saludo de Maru tapaba el botón del mensual.
+
+Arreglos:
+- `mp()` guarda el **motivo** que da Mercado Pago (`MpError`, sin emails), en el log y en el panel (`/match/admin`, «Cobros»).
+- Un rechazo definitivo (4xx) libera la reserva (`status: "failed"`), así que el próximo clic usa una referencia nueva. La ruta responde `CHECKOUT_REJECTED` con un mensaje claro.
+- El error aparece **debajo del botón** que se tocó. Un pago iniciado del mismo plan se puede **retomar**, y si hay uno de otro plan, se explica por qué el botón está deshabilitado.
+- El saludo de Maru no aparece solo en `/precios`, `/baja` ni `/arrepentimiento`.
+
+**Pendiente:** mirar el motivo del 400 en el panel la próxima vez que pase. Que haya ocurrido antes de la promo, con los otros montos, sugiere que no es por los $990. Las causas posibles son pagar con la misma cuenta que cobra, el email del pagador o el `back_url`.
+
 ## Extensión 0.4.1: activeTab en lugar de acceso a todos los sitios (22/10/2026)
 
 Pedido del dueño: la Chrome Web Store avisa que `<all_urls>` retrasa la revisión.
