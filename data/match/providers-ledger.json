@@ -16148,6 +16148,1655 @@
         "budgetUsd": 34.5
       },
       "created": 6
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "seo specialist",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8153",
+        "runId": "PqjZZGHQ5bqO35dkM",
+        "datasetId": "Xuv5Pgres54D9tO2r"
+      },
+      "rows": 12,
+      "consumed": 0.0052,
+      "quota": {
+        "usageTotalUsd": 0.00522,
+        "spentUsd": 30.122,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "content manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8153",
+        "runId": "GEdaj1T8WmJsbRBXQ",
+        "datasetId": "AbpAVfnjdygRG1E5q"
+      },
+      "rows": 6,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 30.124,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "digital marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8153",
+        "runId": "S8DhygeKlntu0F85w",
+        "datasetId": "7A2gKr8XboorIxAMK"
+      },
+      "rows": 26,
+      "consumed": 0.0074,
+      "quota": {
+        "usageTotalUsd": 0.00738,
+        "spentUsd": 30.132,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product marketing manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8153",
+        "runId": "qIxgiuL3Q1C8nNmmf",
+        "datasetId": "SxpczePZ9eD1ghaHn"
+      },
+      "rows": 10,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 30.136,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8153",
+        "runId": "usTtyV8ahUNzEe270",
+        "datasetId": "ZaoeO3dTMFdLvlACz"
+      },
+      "rows": 0,
+      "consumed": 0.06,
+      "quota": {},
+      "error": "Apify respondió HTTP 502."
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "copywriter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8187",
+        "runId": "tXYmg9jXT0ETE7aYO",
+        "datasetId": "xjq3zd9bbu8auCcMc"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.197,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ecommerce manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8187",
+        "runId": "aT8LmK9XEtCc49tRN",
+        "datasetId": "1Ec3VgkplQgK3U0r8"
+      },
+      "rows": 1,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.198,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "inside sales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8187",
+        "runId": "8r3KV3yowb6rZvaz9",
+        "datasetId": "KZ5NIpYbfPOj2mPX5"
+      },
+      "rows": 76,
+      "consumed": 0.0283,
+      "quota": {
+        "usageTotalUsd": 0.028260000000000004,
+        "spentUsd": 30.226,
+        "budgetUsd": 34.5
+      },
+      "created": 26
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "sales manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8187",
+        "runId": "KsrgyQRukS94XyZJb",
+        "datasetId": "JR8rW7kydnGcaQAG1"
+      },
+      "rows": 24,
+      "consumed": 0.0085,
+      "quota": {
+        "usageTotalUsd": 0.00846,
+        "spentUsd": 30.235,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "fp and a",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8187",
+        "runId": "eWuGddwBgwCbdvVlk",
+        "datasetId": "tmKq7dIQGSljsRyFG"
+      },
+      "rows": 24,
+      "consumed": 0.0092,
+      "quota": {
+        "usageTotalUsd": 0.00918,
+        "spentUsd": 30.244,
+        "budgetUsd": 34.5
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "impuestos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8302",
+        "runId": "YPIubRYuWgthuTp2Z",
+        "datasetId": "6qFw207vaaWnQvKbj"
+      },
+      "rows": 4,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.245,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista contable senior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8302",
+        "runId": "J11agv7czNfAecY1E",
+        "datasetId": "EhVfUoLJXFzAlpNJg"
+      },
+      "rows": 10,
+      "consumed": 0.0038,
+      "quota": {
+        "usageTotalUsd": 0.0037800000000000004,
+        "spentUsd": 30.249,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "people analytics",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8302",
+        "runId": "INkK2Xbe15qMinXkF",
+        "datasetId": "zZcLZhEqBUpp83dXy"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 30.251,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "legal counsel",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8302",
+        "runId": "sUuNAViZjI3a96lZf",
+        "datasetId": "oLhNDLIfrGozmWfvb"
+      },
+      "rows": 12,
+      "consumed": 0.0049,
+      "quota": {
+        "usageTotalUsd": 0.00486,
+        "spentUsd": 30.256,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "comercio exterior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8302",
+        "runId": "ND0wgLhi3OeleLiGw",
+        "datasetId": "7PwaEGNH0HF8HgegS"
+      },
+      "rows": 31,
+      "consumed": 0.0121,
+      "quota": {
+        "usageTotalUsd": 0.012060000000000001,
+        "spentUsd": 30.268,
+        "budgetUsd": 34.5
+      },
+      "created": 6
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "supply chain analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8359",
+        "runId": "6ggBLMzQYWihsRadl",
+        "datasetId": "hzQvPLa229skbdCCC"
+      },
+      "rows": 8,
+      "consumed": 0.0038,
+      "quota": {
+        "usageTotalUsd": 0.0037800000000000004,
+        "spentUsd": 30.272,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "demand planner",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8359",
+        "runId": "rt2J5gnxTQxQxdAKf",
+        "datasetId": "CnVouPTYh7nva6mWk"
+      },
+      "rows": 3,
+      "consumed": 0.002,
+      "quota": {
+        "usageTotalUsd": 0.00198,
+        "spentUsd": 30.274,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8359",
+        "runId": "l95NZrWexsz9hMNaa",
+        "datasetId": "mMtX6wn7cmsH3TvKt"
+      },
+      "rows": 14,
+      "consumed": 0.0052,
+      "quota": {
+        "usageTotalUsd": 0.00522,
+        "spentUsd": 30.279,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "logistica",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8359",
+        "runId": "vXEthkHMlPujHCttL",
+        "datasetId": "7ScHMcpTmjgxVozZJ"
+      },
+      "rows": 87,
+      "consumed": 0.0319,
+      "quota": {
+        "usageTotalUsd": 0.03186,
+        "spentUsd": 30.311,
+        "budgetUsd": 34.5
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "operations analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8359",
+        "runId": "zsmhvAD3yTCqeMbV9",
+        "datasetId": "Wu0xebfeP9GbjDBKV"
+      },
+      "rows": 42,
+      "consumed": 0.0153,
+      "quota": {
+        "usageTotalUsd": 0.015300000000000001,
+        "spentUsd": 30.327,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ux researcher",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8485",
+        "runId": "bLkktOBA4Po6eYP9F",
+        "datasetId": "4ijoUqFqlhnQMDsXg"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.328,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "motion designer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8485",
+        "runId": "gXtp6QzplhvFRbB2D",
+        "datasetId": "tOlItHHRIvo8ilrTv"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 30.329,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de datos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8485",
+        "runId": "8sdSBhpLntbl9AOAT",
+        "datasetId": "nmTSDxskOjGY5k0DF"
+      },
+      "rows": 11,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 30.332,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "power bi developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8485",
+        "runId": "LmzyjYToj2Aq3sL0B",
+        "datasetId": "bp6rlv1ZnA7cgoolf"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 30.334,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "qa manual",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Argentina",
+        "skipJobIds": "8485",
+        "runId": "HSkb0KncF4ffPXhNA",
+        "datasetId": "I3tvhI9BqWdlZdcAk"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 30.335,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "growth marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "lTjgiLisbwKxBH5WE",
+        "datasetId": "aiLBJKcDTDOgRToIv"
+      },
+      "rows": 46,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.335,
+        "budgetUsd": 34.5
+      },
+      "created": 38
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "performance marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "m6eFRMEHgn7q8G5lW",
+        "datasetId": "d7gtRaT7EKlH6fjd5"
+      },
+      "rows": 54,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.335,
+        "budgetUsd": 34.5
+      },
+      "created": 15
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "seo specialist",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "0g4eXTs6Im6AgpSf0",
+        "datasetId": "PJeceFReskfM03gY4"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.365,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "content manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "rRpAguf4ihuDECoGc",
+        "datasetId": "KddYVJCGnPJjUy9gU"
+      },
+      "rows": 0,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.395,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "brand manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "VtTxEgyzlufrni5MV",
+        "datasetId": "iDRXiDdI4o4tV6Ttb"
+      },
+      "rows": 3,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.395,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "trade marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "TJCGrqunc9lxEUWCB",
+        "datasetId": "mfylXLOOwm81PLsxN"
+      },
+      "rows": 6,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.396,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "digital marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "qolMK2Nxh3eTnCd2Q",
+        "datasetId": "xb1nbJipEKs6Z4Y5t"
+      },
+      "rows": 55,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.396,
+        "budgetUsd": 34.5
+      },
+      "created": 21
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "crm marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "K3j3jnzDqJkmUj1Lj",
+        "datasetId": "ocCflxdGuYFbn7tBE"
+      },
+      "rows": 24,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.396,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "product marketing manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "jMM0lXvVMlo0Gi1pz",
+        "datasetId": "e74WVxurrVpFWiAEC"
+      },
+      "rows": 2,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.396,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "marketing analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "z0G0ezpovSrmod9Oi",
+        "datasetId": "QLlHFbt3rUsicCWbh"
+      },
+      "rows": 12,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.396,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "paid media",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "sPUIdVD0nD1uvIUhf",
+        "datasetId": "5DUocJidEbJa4zi7S"
+      },
+      "rows": 1,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.426,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "copywriter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "3yRfocmdYE5Lhxaw8",
+        "datasetId": "rx4OMFMHurDlPRxtJ"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.456,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "ecommerce manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "hUdaZtSfiHNHMaT34",
+        "datasetId": "rWEJCBtEEqF3azDvL"
+      },
+      "rows": 0,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.456,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "disenador grafico",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "ItCrQrSPU5hB8uj7Z",
+        "datasetId": "OKD719ZOTvfHbguIM"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.486,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "community manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "8m4NjIhE7Xn1pBgBO",
+        "datasetId": "UYpl1K6m1V7NLSjAD"
+      },
+      "rows": 0,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.516,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "key account manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "hxC7oJJFUEIduSCsp",
+        "datasetId": "hpJ5kpvGnJEyyVs4m"
+      },
+      "rows": 1,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.516,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "customer success manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "TfGt7tDHyaJ3j3A10",
+        "datasetId": "XawLOTGjUT91A6Pdc"
+      },
+      "rows": 1,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.516,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "inside sales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "QJNMQhcAXbnqku5uL",
+        "datasetId": "dntL3rChvIOiOFcwh"
+      },
+      "rows": 1,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.516,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "business development",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "ZV4U8P0BrKV3B74K8",
+        "datasetId": "3Z9CQtVILOwlh7BVK"
+      },
+      "rows": 3,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.546,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "sales manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "QusdVwVV9LeuTr8nH",
+        "datasetId": "30tUrn4GZdU7nOw91"
+      },
+      "rows": 4,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.546,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "financial analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "maCimBodZnOXNzhzM",
+        "datasetId": "AZexrcN8VJHY9alwO"
+      },
+      "rows": 29,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.576,
+        "budgetUsd": 34.5
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "controller",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "0akt2Umw73dSXVYUC",
+        "datasetId": "bfS74V9mm684JaI3Y"
+      },
+      "rows": 3,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.606,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "fp and a",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "gUzxfD7g66rSV14Tm",
+        "datasetId": "pMKVQYU9MgVwjEgfL"
+      },
+      "rows": 0,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.636,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "auditor interno",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "0ffKhJKG5v6HyNveL",
+        "datasetId": "kPHAfuise79A2Sit2"
+      },
+      "rows": 1,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.666,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "tesoreria",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "P4A7BIXfp5aypS0UU",
+        "datasetId": "hPoo08mBjskdvaknK"
+      },
+      "rows": 4,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.696,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "impuestos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "GPI4gVM8CnWNLU2Cl",
+        "datasetId": "9QOiAe5TgDI0Wx57g"
+      },
+      "rows": 11,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.726,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "analista contable senior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "SAz9HlidM4DAMDym8",
+        "datasetId": "iTAL4Xu86h1mVWnZE"
+      },
+      "rows": 1,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.756,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "recruiter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "ucraGGioj8hBrQ8yi",
+        "datasetId": "f5tuHDdRwcMGsA0LM"
+      },
+      "rows": 29,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.757,
+        "budgetUsd": 34.5
+      },
+      "created": 20
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "talent acquisition",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "XDJd7ObDqaQSUT776",
+        "datasetId": "svuPpwA2QhLXnHqob"
+      },
+      "rows": 14,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "hr business partner",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "uV2hc4J7ja1YCZCnn",
+        "datasetId": "XqtJ4ycrNs9v2zSYG"
+      },
+      "rows": 0,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "people analytics",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "1BFpGqZSe1DsFQJaQ",
+        "datasetId": "Ua4tCG3V0Srcepmat"
+      },
+      "rows": 32,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "compensaciones y beneficios",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "Lru9gErbK97C6MPl1",
+        "datasetId": "WVF52mfaBR31flFfd"
+      },
+      "rows": 15,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 8
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "abogado",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "DtCl1h72GfAWOHaen",
+        "datasetId": "ffkJSZdSMgCagh2uY"
+      },
+      "rows": 7,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "compliance",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "bAZSkY4jzRS7YdNfd",
+        "datasetId": "t202ozp6diWc9Gu6D"
+      },
+      "rows": 100,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 39
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "legal counsel",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "S518Vd2Nb379iTo60",
+        "datasetId": "kLghregextB23qVm6"
+      },
+      "rows": 13,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.787,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "comercio exterior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "XcbUf14N56jdulf9D",
+        "datasetId": "Pu9CV0geOoszErUSU"
+      },
+      "rows": 7,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.817,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "supply chain analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "EIFH0Qm8XenJyo3fE",
+        "datasetId": "c0MGtHhcCBqc5hpum"
+      },
+      "rows": 6,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.847,
+        "budgetUsd": 34.5
+      },
+      "created": 3
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "demand planner",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "OS36emjPybIXihd3Q",
+        "datasetId": "s9i6GrXVjkYmZ0hwc"
+      },
+      "rows": 0,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.877,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "logistica",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "1DrvU4ym0Z58jy79G",
+        "datasetId": "IaJcgqGJo2HSpDBjO"
+      },
+      "rows": 54,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.877,
+        "budgetUsd": 34.5
+      },
+      "created": 22
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "operations analyst",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "mbYcVzq0NIaJtXZlX",
+        "datasetId": "z3EqbM8G05BEehEAw"
+      },
+      "rows": 31,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 30.877,
+        "budgetUsd": 34.5
+      },
+      "created": 7
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "project manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "bewDXeUh6EwDALTDn",
+        "datasetId": "cEhgL0KIOwbRHVbIZ"
+      },
+      "rows": 5,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.907,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "pmo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "CFDu5C81oeEwyPZK0",
+        "datasetId": "73v1BFhFxAfcHkUz4"
+      },
+      "rows": 3,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.937,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "scrum master",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "d35XBltrX6gpebH1A",
+        "datasetId": "EH4Zbkx9C6oxPmeep"
+      },
+      "rows": 4,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.967,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "ux researcher",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "RUzvuCRkhCikkwC4D",
+        "datasetId": "h9V9AVIpIMWesla4y"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.997,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "motion designer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "knEWPS1kWoVaEaeth",
+        "datasetId": "gkKzX870w9KaYbqX6"
+      },
+      "rows": 3,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.027,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "data engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "pwPivNIUopgS3QKpC",
+        "datasetId": "jhRdsmzIzwbI6lRfp"
+      },
+      "rows": 45,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 31.027,
+        "budgetUsd": 34.5
+      },
+      "created": 28
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "analista de datos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "dy5lYHd16qBmkCnW9",
+        "datasetId": "YdD86Nkavr9ILW0gS"
+      },
+      "rows": 21,
+      "consumed": 0.0001,
+      "quota": {
+        "usageTotalUsd": 0.0001,
+        "spentUsd": 31.028,
+        "budgetUsd": 34.5
+      },
+      "created": 11
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "power bi developer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "84krxCCuz2nYRTtdb",
+        "datasetId": "M3IdD6xpKLExkgbCA"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.058,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-23T13:48:44.610Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "curious_coder/indeed-scraper",
+        "keyword": "qa manual",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.03",
+        "location": "Argentina",
+        "runId": "haJfhXN9XHYngtfj3",
+        "datasetId": "bkboS8U9tAMcTGgqq"
+      },
+      "rows": 2,
+      "consumed": 0.03,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 31.088,
+        "budgetUsd": 34.5
+      },
+      "created": 1
     }
   ]
 }
