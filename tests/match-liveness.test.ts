@@ -101,6 +101,20 @@ describe("vigencia de avisos importados", () => {
     expect(maxTotal).toBe(2);
   });
 
+  it("releer datos viejos no reabre un aviso que la revisión cerró después", async () => {
+    const inv = inventory();
+    const fetchImpl = (async () => new Response("<p>Ya no se aceptan solicitudes</p>")) as typeof fetch;
+    await checkImportedLiveness(inv, NOW, { fetchImpl, resolve: publicDns, pauseMs: 0 });
+    const a = inv.postings.find((p) => p.externalId === "a")!;
+    expect(a.status).toBe("cerrada");
+    const again = { postings: [{ ...a, descriptionText: a.descriptionText }], complete: false };
+    applyBoard(inv, a.boardId, a.sourceId, again, "2026-10-16T00:00:00.000Z");
+    expect(a.status).toBe("cerrada");
+    expect(a.lastSeenAt).toBe("2026-10-16T00:00:00.000Z");
+    applyBoard(inv, a.boardId, a.sourceId, again, "2026-10-25T00:00:00.000Z");
+    expect(a.status).toBe("abierta");
+  });
+
   it("turna entre fuentes para que una grande no se lleve todos los pedidos", () => {
     const items = [..."abcdef"].map((x) => ({ sourceId: "grande", x })).concat([{ sourceId: "chica", x: "1" }, { sourceId: "chica", x: "2" }]);
     expect(roundRobin(items, 5).map((i) => i.x)).toEqual(["a", "1", "b", "2", "c"]);

@@ -27,7 +27,7 @@ export function apifySourceOfActor(actor: string): { source: ApifyJobSource; alt
   const source = (Object.keys(APIFY_JOBS) as ApifyJobSource[]).find((s) => APIFY_JOBS[s].actor === actor);
   return source ? { source, alt: false } : null;
 }
-export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionHtml", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl"] as const;
+export const LINKEDIN_ALT_FIELDS = ["id", "jobId", "title", "jobTitle", "companyName", "company", "link", "url", "jobUrl", "applyUrl", "location", "descriptionHtml", "descriptionText", "description", "jobDescription", "postedAt", "publishedAt", "postedDate", "salary", "salaryInfo", "seniorityLevel", "experienceLevel", "employmentType", "contractType", "companyLogo", "companyLogoUrl", "workType"] as const;
 /** Títulos que los Actors pueden descartar antes de cobrar la fila (el filtro fino es import-filter.ts). */
 export const LINKEDIN_TITLE_EXCLUDE = ["chofer", "operario", "repartidor", "cadete", "cajero", "repositor", "mozo", "vigilador", "mostrador", "promotor", "telemarketer", "call center"];
 /** Ubicaciones de LinkedIn que abarcan a la Argentina sin nombrarla: la elegibilidad decide con el texto del aviso. */
@@ -117,6 +117,9 @@ export function normalizeApifyJobs(source: ApifyJobSource, rows: unknown[], now:
       workplace: workplace === "desconocido" ? { value: workplace, from: "fuente" } : { value: workplace, from: "fuente", evidence: `Bumeran: ${str(r.workModality)}` },
       remoteFlag: workplace === "remoto" ? true : workplace === "presencial" ? false : null,
       ...(source === "bumeran" && str(r.jobArea) ? { department: str(r.jobArea) } : {}),
+      // LinkedIn (valig) informa la función del puesto ("Sales", "Information Technology"). Sólo si es una:
+      // "Engineering, Finance, and Research" mezcla áreas y confundiría la clasificación.
+      ...(source === "linkedin" && str(r.workType) && !/,|\band\b/i.test(str(r.workType)) ? { department: str(r.workType) } : {}),
       employmentType: null, salary, publishedAt, updatedAt: date(r.updatedAt), expiresAt,
       employmentHint: source === "bumeran" ? [str(r.employmentType), str(r.contractType)].filter(Boolean).join(", ") : str(r.employmentType) || str(r.contractType) || str(r.jobType) || (Array.isArray(r.jobTypes) ? r.jobTypes.map(str).filter(Boolean).join(", ") : ""),
       seniorityHint: str(r.seniorityLevel) || str(r.experienceLevel),

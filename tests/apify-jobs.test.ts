@@ -47,6 +47,13 @@ describe("piloto de avisos Apify", () => {
     const [p] = normalizeApifyJobs("linkedin", [row], now).postings;
     expect(p.descriptionText).toMatch(/Qué buscamos\?\n+• Experiencia en SAP/);
   });
+  it("valig: la función del puesto (workType) queda como área, sólo si es una", () => {
+    const base = { title: "Specialist", companyName: "Empresa", location: "Buenos Aires, Argentina", descriptionHtml: `<p>${description}</p>` };
+    const [one] = normalizeApifyJobs("linkedin", [{ ...base, url: "https://ar.linkedin.com/jobs/view/x-4480846131", workType: "Sales" }], now).postings;
+    const [many] = normalizeApifyJobs("linkedin", [{ ...base, url: "https://ar.linkedin.com/jobs/view/x-4480846132", workType: "Engineering, Finance, and Research" }], now).postings;
+    expect(one.department).toBe("Sales");
+    expect(many.department).toBeUndefined();
+  });
   it("acepta puestos de LinkedIn para Latinoamérica sin fijar Argentina: decide la elegibilidad", () => {
     const base = { title: "Senior Data Engineer", companyName: "Empresa", location: "Latin America", descriptionHtml: `<p>${description}</p>` };
     const rows = [
