@@ -6,7 +6,8 @@ import type { Field, Salary } from "./types";
  * Sólo cuando una palabra de salario lo anuncia: nunca rondas de inversión, facturación ni
  * "salario estimado" de terceros (eso no lo publicó el empleador).
  */
-const ANCHOR = /(salario|sueldo|remuneraci[oó]n|rango salarial|banda salarial|compensation|salary|pay range|base pay|hourly rate|tarifa)/gi;
+// «Monthly base of US$800», «Base: $1,000 USD/month» (auditoría del 23/10).
+const ANCHOR = /(salario|sueldo|remuneraci[oó]n|rango salarial|banda salarial|compensation|salary|pay range|base pay|hourly rate|tarifa|monthly base|\bbase:)/gi;
 const NOT_PUBLISHED = /(estimad|estimate|promedio|average|funding|financiaci|valuad|valuation|billion|million|mill[oó]n|millones|trillion|revenue|factura)/i;
 const NUM = String.raw`(?:US?\s?\$|U\$S|AR\$|ARS|USD|€|\$)?\s?(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{1,2})?|\d+(?:[.,]\d{1,2})?)\s?(k|mil)?`;
 const RANGE = new RegExp(`${NUM}(?:\\s?(?:usd|ars|dólares|dolares|pesos))?(?:\\s*(?:-|–|—|a|to|y|hasta)\\s*${NUM})?`, "i");
