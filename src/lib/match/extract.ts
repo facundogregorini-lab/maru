@@ -7,7 +7,7 @@ import type { EmploymentType, Extracted, Field, LanguageReq, RoleFamily, Seniori
  * Si algo no aparece, queda vacío: nunca se completa con supuestos.
  */
 
-export const EXTRACTION_VERSION = 19;
+export const EXTRACTION_VERSION = 20;
 
 /* ---------- Habilidades: término canónico → variantes (es/en) ---------- */
 
@@ -141,8 +141,9 @@ export function findSkills(text: string): string[] {
 
 /* ---------- Secciones obligatorio / deseable ---------- */
 
-const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally)/i;
-const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience)/i;
+const DESIRABLE_HEAD = /(nice to have|bonus|plus|preferred|deseable|valorable|suma|se valorar|would be great|extra points|ideally|como diferencial)/i;
+// Auditoría del 22/10: «About You», «Who You Are», «Requerimientos», «Competencias», «Perfil buscado» no se reconocían.
+const REQUIRED_HEAD = /(requirements|requisitos|qualifications|must have|what you.ll need|what we.re looking for|buscamos|you have|you bring|lo que necesit|skills|experience|about you|who you are|requerimientos|perfil (buscado|requerido)|tu perfil|qu[eé] necesit|^\s*-?\s*(competencias|conocimientos|formaci[oó]n|experiencia)( clave| t[eé]cnicos| requerida)?\s*:?\s*$)/i;
 
 /** Divide la descripción en bloques y los etiqueta según su encabezado. */
 export function splitSections(text: string): { required: string; desirable: string; other: string } {

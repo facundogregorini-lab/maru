@@ -157,3 +157,13 @@ describe("asistente = junior", () => {
     expect(seniorityFromTitle("Asistente contable senior")).toBe("senior");
   });
 });
+
+describe("secciones de requisitos con otros nombres", () => {
+  it("reconoce «About You», «Requerimientos», «Competencias» y «como diferencial»", () => {
+    const e = (descriptionText: string) => extract({ title: "Analista", descriptionText });
+    expect(e("Sobre el puesto\nGestionar reportes.\nAbout You\n• Experiencia con SQL y Excel").skillsRequired).toContain("sql");
+    expect(e("Tareas\nArmar tableros.\nRequerimientos:\n• Manejo de Power BI").skillsRequired.length).toBeGreaterThan(0);
+    expect(e("Tareas\nArmar tableros.\nCompetencias clave\n• Excel avanzado").skillsRequired.length).toBeGreaterThan(0);
+    expect(e("Requisitos\n• Excel\n¿Qué valoramos como diferencial?\n• Python").skillsDesirable.length).toBeGreaterThan(0);
+  });
+});
