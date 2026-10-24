@@ -1,633 +1,6 @@
 {
   "entries": [
     {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "account",
-      "params": {},
-      "rows": 0,
-      "consumed": 0,
-      "quota": {
-        "plan_name": "Free Plan",
-        "plan_searches_left": 248,
-        "total_searches_left": 248,
-        "searches_per_month": 250,
-        "this_month_usage": 2,
-        "plan_monthly_price": 0
-      }
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo contable Córdoba",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "analista de finanzas Rosario",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "recursos humanos Mendoza",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor La Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "logística Tucumán",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "asistente administrativo Buenos Aires",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "analista de recursos humanos Buenos Aires",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "analista de logística Buenos Aires",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "ejecutivo comercial Córdoba",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "contador Rosario",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "compras Mendoza",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 5,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:42:12.651Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Tucumán",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-ats-count",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina"
-      },
-      "rows": 0,
-      "consumed": 0,
-      "quota": {
-        "jobs-this-request": 0,
-        "jobs-remaining": 450,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50,
-        "count": 953
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-ats",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "administrativo OR administrativa OR contable OR contador OR finanzas OR tesorería OR \"recursos humanos\" OR recruiter OR \"talent acquisition\" OR facturación",
-        "limit": "60",
-        "description_format": "text"
-      },
-      "rows": 12,
-      "consumed": 12,
-      "quota": {
-        "jobs-this-request": 12,
-        "jobs-remaining": 438,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-jb",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "administrativo OR administrativa OR contable OR contador OR finanzas OR tesorería OR \"recursos humanos\" OR recruiter OR \"talent acquisition\" OR facturación",
-        "limit": "60",
-        "description_format": "text",
-        "source": "linkedin",
-        "exclude_recruiter_fields": "true"
-      },
-      "rows": 55,
-      "consumed": 55,
-      "quota": {
-        "jobs-this-request": 55,
-        "jobs-remaining": 395,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-ats",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "comercial OR ventas OR vendedor OR \"account executive\" OR operaciones OR logística OR \"supply chain\" OR depósito OR compras OR \"atención al cliente\"",
-        "limit": "60",
-        "description_format": "text"
-      },
-      "rows": 26,
-      "consumed": 26,
-      "quota": {
-        "jobs-this-request": 26,
-        "jobs-remaining": 424,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-jb",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "comercial OR ventas OR vendedor OR \"account executive\" OR operaciones OR logística OR \"supply chain\" OR depósito OR compras OR \"atención al cliente\"",
-        "limit": "60",
-        "description_format": "text",
-        "source": "linkedin",
-        "exclude_recruiter_fields": "true"
-      },
-      "rows": 60,
-      "consumed": 60,
-      "quota": {
-        "jobs-this-request": 60,
-        "jobs-remaining": 390,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-ats",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "developer OR desarrollador OR \"software engineer\" OR \"data analyst\" OR \"analista de datos\" OR QA OR \"product manager\"",
-        "limit": "60",
-        "description_format": "text"
-      },
-      "rows": 60,
-      "consumed": 60,
-      "quota": {
-        "jobs-this-request": 60,
-        "jobs-remaining": 390,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:44:34.896Z",
-      "provider": "fantastic",
-      "call": "active-jb",
-      "params": {
-        "time_frame": "7d",
-        "location": "Argentina",
-        "title": "developer OR desarrollador OR \"software engineer\" OR \"data analyst\" OR \"analista de datos\" OR QA OR \"product manager\"",
-        "limit": "60",
-        "description_format": "text",
-        "source": "linkedin",
-        "exclude_recruiter_fields": "true"
-      },
-      "rows": 60,
-      "consumed": 60,
-      "quota": {
-        "jobs-this-request": 60,
-        "jobs-remaining": 390,
-        "jobs-limit": 500,
-        "requests-remaining": 35,
-        "requests-limit": 50
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "administrativo",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "FVZOmEp6xuDFdSrjf",
-        "datasetId": "qPOtLZdHxsqdA23wd"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 0.171,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "contable",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "pqOqmLGqExwtcnExh",
-        "datasetId": "3e7k6ChESAMyRGQom"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 0.342,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "recursos humanos",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "7SWz1gytoU4Wqxl5g",
-        "datasetId": "bsYzbRhMmjdogjU6R"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 0.513,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "vendedor",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "viptTsACOIuiwr9nb",
-        "datasetId": "Z3NZNfKV4WdzNwlYR"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 0.684,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "logística",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "f6XCAkbckdpRdK6th",
-        "datasetId": "LkDGU5VBISKbiaKTW"
-      },
-      "rows": 100,
-      "consumed": 0.17,
-      "quota": {
-        "usageTotalUsd": 0,
-        "spentUsd": 0.854,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "atención al cliente",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "A825t79bR68JBal9V",
-        "datasetId": "log0fzYYdwWa3T9v3"
-      },
-      "rows": 100,
-      "consumed": 0.17,
-      "quota": {
-        "usageTotalUsd": 0,
-        "spentUsd": 1.024,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "compras",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "PS38GiYbMKB2shj5w",
-        "datasetId": "u79talnwiOtH7drzn"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 1.195,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "tesorería",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "tAEyp1WdGVpDaqJSl",
-        "datasetId": "qAxQgIfpgg8FfVzMl"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 1.366,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "analista",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "RT7hTZdWF3zqMZpOi",
-        "datasetId": "Y0misuX6AczeYD3KN"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 1.537,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "asistente",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "QbP69MmFfewnerKwi",
-        "datasetId": "kb0mVS7ELpyVpKW2q"
-      },
-      "rows": 100,
-      "consumed": 0.17,
-      "quota": {
-        "usageTotalUsd": 0,
-        "spentUsd": 1.707,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "administrativo",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "inkSG5W9ua9tp9t1x",
-        "datasetId": "sUjvbIe9jmhomjFbe"
-      },
-      "rows": 49,
-      "consumed": 0.0148,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.722,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "contable",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "w1OdzN0mXOq6dIduu",
-        "datasetId": "F8H95zujBqXTGDRvA"
-      },
-      "rows": 21,
-      "consumed": 0.0063,
-      "quota": {
-        "usageTotalUsd": 0,
-        "spentUsd": 1.728,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "recursos humanos",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "UkHU2Mc5tdljidf5Q",
-        "datasetId": "fsEkEObyAoFA1DNxk"
-      },
-      "rows": 22,
-      "consumed": 0.0067,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.735,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "vendedor",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "wKjD6T05cE03PAQEI",
-        "datasetId": "sInNylkJR9N11J1fD"
-      },
-      "rows": 9,
-      "consumed": 0.0028,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.738,
-        "budgetUsd": 4.5
-      }
-    },
-    {
       "at": "2026-10-16T22:45:29.187Z",
       "provider": "apify",
       "call": "run",
@@ -20067,6 +19440,1018 @@
       "quota": {
         "usageTotalUsd": 0.00162,
         "spentUsd": 30.907,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8485",
+        "runId": "4y8Qw0sgYHRJtywWD",
+        "datasetId": "pN7SVOr6MaOsvrIXD"
+      },
+      "rows": 8,
+      "consumed": 0.0038,
+      "quota": {
+        "usageTotalUsd": 0.0037800000000000004,
+        "spentUsd": 30.922,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista financiero",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8485",
+        "runId": "ZLItKFEKnqUWvrgeu",
+        "datasetId": "SdiXed9t90P4aZ4FU"
+      },
+      "rows": 6,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 30.925,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de tesoreria",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8485",
+        "runId": "ceXCfyRIlAnu4wQfK",
+        "datasetId": "WDiJfn9mJqGs5mawX"
+      },
+      "rows": 3,
+      "consumed": 0.002,
+      "quota": {
+        "usageTotalUsd": 0.00198,
+        "spentUsd": 30.927,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de impuestos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8485",
+        "runId": "jdxadgmdcMWTQjWid",
+        "datasetId": "iPGIdgp98g5W4gJZe"
+      },
+      "rows": 7,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 30.93,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de costos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8485",
+        "runId": "pQf4SSR7dQMaVO1YL",
+        "datasetId": "qI9fjecrAeAMF0qsp"
+      },
+      "rows": 16,
+      "consumed": 0.0063,
+      "quota": {
+        "usageTotalUsd": 0.0063,
+        "spentUsd": 30.936,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "control de gestion",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8508",
+        "runId": "hqezC8Tk1zLSgtng5",
+        "datasetId": "DZQBOk5TxX1AkIVkS"
+      },
+      "rows": 21,
+      "consumed": 0.0074,
+      "quota": {
+        "usageTotalUsd": 0.00738,
+        "spentUsd": 30.944,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "fp and a",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8508",
+        "runId": "XcChFnl4iJjeAQR7I",
+        "datasetId": "WAmYiZIT6s4fCzvoy"
+      },
+      "rows": 8,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 30.947,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "auditor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8508",
+        "runId": "F066eKsZMNfgXUwNm",
+        "datasetId": "BtzawzfTYayjwVrbp"
+      },
+      "rows": 13,
+      "consumed": 0.0056,
+      "quota": {
+        "usageTotalUsd": 0.00558,
+        "spentUsd": 30.953,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "contador publico",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8508",
+        "runId": "OM4uEceDuviFFtnvf",
+        "datasetId": "sptZAAG4jHxLc39bm"
+      },
+      "rows": 2,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 30.954,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "cuentas a pagar",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8508",
+        "runId": "GNCBmMCsRuQoPBSQY",
+        "datasetId": "OJUNEQPEcLjsX9XGj"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.955,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "cuentas a cobrar",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8543",
+        "runId": "sToiVEoYwlhmf5Ue2",
+        "datasetId": "tjNvNmVNnTTh07Wts"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 30.957,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "facturacion",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8543",
+        "runId": "hqrWtsVGv1c5KbY1A",
+        "datasetId": "CCjnraHx42Azvpus9"
+      },
+      "rows": 11,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 30.961,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "cobranzas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8543",
+        "runId": "Ux3uMQWgYihi4DDgD",
+        "datasetId": "J6OumbCmS2Llmere6"
+      },
+      "rows": 11,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 30.965,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de creditos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8543",
+        "runId": "WYGfSVOKboK2fnpXh",
+        "datasetId": "6bE1LOMiotunkRRvO"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.965,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "riesgo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8543",
+        "runId": "PElBiyiqfUeyoaJLj",
+        "datasetId": "5GMju6AZ6vb0hn0JR"
+      },
+      "rows": 51,
+      "consumed": 0.0193,
+      "quota": {
+        "usageTotalUsd": 0.019260000000000003,
+        "spentUsd": 30.985,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compliance",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8611",
+        "runId": "kpHEMnUH0LEyghmVz",
+        "datasetId": "Naps0408MI7I6s6iV"
+      },
+      "rows": 9,
+      "consumed": 0.0038,
+      "quota": {
+        "usageTotalUsd": 0.0037800000000000004,
+        "spentUsd": 30.989,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "legales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8611",
+        "runId": "wHfX1GfvWR78ASgCR",
+        "datasetId": "C2VjZ6TXFHd834MIq"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 30.99,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "talent acquisition",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8611",
+        "runId": "LeqDZ75lLDlkXHWRZ",
+        "datasetId": "HoQNnUiqXCDzzi5Mp"
+      },
+      "rows": 3,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 30.992,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "hr business partner",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8611",
+        "runId": "zH5sm8RpEbAdf2CVH",
+        "datasetId": "UFM7MIfrechfRBAPO"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.993,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de rrhh",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8611",
+        "runId": "dHaPRLizO2zLPF8A4",
+        "datasetId": "uXPOBiuTMdVk59cmj"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 30.994,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "liquidacion de sueldos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8625",
+        "runId": "XrTiASjgIrG0p27Rm",
+        "datasetId": "j0HsasQOf4T7BlqaE"
+      },
+      "rows": 6,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 30.997,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "capacitacion",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8625",
+        "runId": "TA0J735Lx96C3jeQQ",
+        "datasetId": "vhOF3xkoElwawuegq"
+      },
+      "rows": 87,
+      "consumed": 0.0319,
+      "quota": {
+        "usageTotalUsd": 0.03186,
+        "spentUsd": 31.029,
+        "budgetUsd": 34.5
+      },
+      "created": 4
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compensaciones",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8625",
+        "runId": "OGUWVXwlHulcpMyC6",
+        "datasetId": "ZHzczhdhCujmXEgyf"
+      },
+      "rows": 39,
+      "consumed": 0.0142,
+      "quota": {
+        "usageTotalUsd": 0.01422,
+        "spentUsd": 31.043,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "administrativo contable",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8625",
+        "runId": "eUcg4OKEMHfusxg3M",
+        "datasetId": "A4h0jDKmBNCCvaNKa"
+      },
+      "rows": 1,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 31.044,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "asistente administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8625",
+        "runId": "cbnJSgHQRulMEWN3M",
+        "datasetId": "5HaNtLSwTW5uWq3xZ"
+      },
+      "rows": 8,
+      "consumed": 0.0034,
+      "quota": {
+        "usageTotalUsd": 0.0034200000000000003,
+        "spentUsd": 31.047,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "recepcionista",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8725",
+        "runId": "CHt30aIr4vFcnVU68",
+        "datasetId": "FmH9NMNRHg64WQspy"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 31.049,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "atencion al cliente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8725",
+        "runId": "gc0fq9lDnh84eedZH",
+        "datasetId": "qcvt7v5UWNhnik0b6"
+      },
+      "rows": 13,
+      "consumed": 0.0049,
+      "quota": {
+        "usageTotalUsd": 0.00486,
+        "spentUsd": 31.054,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "call center",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8725",
+        "runId": "LxWkGi7QwidUIE8Cd",
+        "datasetId": "HB2R2rEtkwXO6xtfx"
+      },
+      "rows": 5,
+      "consumed": 0.0023,
+      "quota": {
+        "usageTotalUsd": 0.00234,
+        "spentUsd": 31.056,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "supply chain",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8725",
+        "runId": "X5arBSWNZUYPmpcly",
+        "datasetId": "R14EaL4HXutH8vBJ9"
+      },
+      "rows": 14,
+      "consumed": 0.0059,
+      "quota": {
+        "usageTotalUsd": 0.00594,
+        "spentUsd": 31.062,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "comercio exterior",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8725",
+        "runId": "FFpndZ3qZEspWVfbx",
+        "datasetId": "JndSAh0kfV4HjeZYj"
+      },
+      "rows": 1,
+      "consumed": 0.0013,
+      "quota": {
+        "usageTotalUsd": 0.00126,
+        "spentUsd": 31.063,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "planeamiento",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8750",
+        "runId": "qp7D9SEPu96h0to0R",
+        "datasetId": "o3tUHHQ0A52GXd5Nm"
+      },
+      "rows": 7,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 31.067,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista de calidad",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8750",
+        "runId": "PbykBIDOsopC3BQ5H",
+        "datasetId": "rzPMFKr6nLArzeBel"
+      },
+      "rows": 11,
+      "consumed": 0.0049,
+      "quota": {
+        "usageTotalUsd": 0.00486,
+        "spentUsd": 31.071,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ingeniero industrial",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8750",
+        "runId": "UzHrn1jYz5KGNT8BD",
+        "datasetId": "h1KmtWTkraDF3EaNq"
+      },
+      "rows": 17,
+      "consumed": 0.007,
+      "quota": {
+        "usageTotalUsd": 0.00702,
+        "spentUsd": 31.078,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "mantenimiento",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8750",
+        "runId": "451bQ7560qYg7l8XJ",
+        "datasetId": "9KcY1Qr141Y07shL3"
+      },
+      "rows": 31,
+      "consumed": 0.0121,
+      "quota": {
+        "usageTotalUsd": 0.012060000000000001,
+        "spentUsd": 31.091,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "seguridad e higiene",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8750",
+        "runId": "Y3spcxJkGmkhjn5Je",
+        "datasetId": "leqh0RzpcSVd7oBdY"
+      },
+      "rows": 26,
+      "consumed": 0.0067,
+      "quota": {
+        "usageTotalUsd": 0.00666,
+        "spentUsd": 31.097,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jefe",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8803",
+        "runId": "ZJaA7Pm5iZCdZytze",
+        "datasetId": "AOWjMsq41rUmn9uJ1"
+      },
+      "rows": 21,
+      "consumed": 0.0085,
+      "quota": {
+        "usageTotalUsd": 0.00846,
+        "spentUsd": 31.106,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "gerente",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8803",
+        "runId": "hjtROstOwR7UjIwGK",
+        "datasetId": "2T5lYY4R6zFBbzRoy"
+      },
+      "rows": 19,
+      "consumed": 0.0077,
+      "quota": {
+        "usageTotalUsd": 0.00774,
+        "spentUsd": 31.113,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "coordinador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8803",
+        "runId": "IJW9ZLOekyrDIX30H",
+        "datasetId": "0v7rpv7WcJiE7Xhgz"
+      },
+      "rows": 17,
+      "consumed": 0.007,
+      "quota": {
+        "usageTotalUsd": 0.00702,
+        "spentUsd": 31.12,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "supervisor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8803",
+        "runId": "dCJqXlR63QiAQTpUy",
+        "datasetId": "QFbb78elxGpqSaWtm"
+      },
+      "rows": 18,
+      "consumed": 0.007,
+      "quota": {
+        "usageTotalUsd": 0.00702,
+        "spentUsd": 31.127,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "trainee",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8803",
+        "runId": "3fJp252KzIrP3zbaS",
+        "datasetId": "kfL7yerJIlDoHhOgf"
+      },
+      "rows": 10,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 31.132,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "pasantia",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8838",
+        "runId": "cTcauEodH6gFm9GRV",
+        "datasetId": "HKysS9vU74r4fnJnf"
+      },
+      "rows": 7,
+      "consumed": 0.0031,
+      "quota": {
+        "usageTotalUsd": 0.0030600000000000002,
+        "spentUsd": 31.135,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "jovenes profesionales",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8838",
+        "runId": "KLKuFDiIiE5ThDzGf",
+        "datasetId": "fBCbJ1SNc6N3xEaUu"
+      },
+      "rows": 11,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 31.14,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ingles",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8838",
+        "runId": "zKuFBGSktrXyE6LZh",
+        "datasetId": "fBHDKK5xKXVV1h4oD"
+      },
+      "rows": 1,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 31.14,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T16:19:40.584Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "bilingue",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Ciudad Autónoma de Buenos Aires, Argentina",
+        "skipJobIds": "8838",
+        "runId": "bpqdWYc4AoRzT1MbG",
+        "datasetId": "eyyFxhezEe0YA2WLH"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 31.143,
         "budgetUsd": 34.5
       },
       "created": 0
