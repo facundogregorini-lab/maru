@@ -15,6 +15,7 @@ import type { Stat } from "@/lib/products";
 import { ProductHero, ProductMore, ToolHeading } from "../product/ProductLanding";
 import { useInAppEntry } from "../product/useInAppEntry";
 import { ErrorBanner, Loading, PrimaryButton, StepCard, post } from "../ui";
+import AlertsPanel from "./AlertsPanel";
 import PrefsForm, { EMPTY_PREFS } from "./PrefsForm";
 import ProfileConfirm from "./ProfileConfirm";
 import QuickStart, { trackQuickStart } from "./QuickStart";
@@ -174,6 +175,8 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
           }}
         />
       )}
+      {/* Al editar lo que busca (ya con resultados), también puede ajustar sus alertas. */}
+      {stage === "preferencias" && state.profile && state.prefs && <AlertsPanel profile={state.profile} prefs={state.prefs} interactions={state.interactions} />}
 
       {stage === "resultados" && state.profile && state.prefs && (
         <Results

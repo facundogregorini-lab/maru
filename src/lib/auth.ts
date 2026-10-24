@@ -23,6 +23,16 @@ function sign(data: string): string {
   return b64url(createHmac("sha256", secret()).update(data).digest());
 }
 
+/** Firma corta de un valor (para links sin sesión, como la baja de las alertas). */
+export function signValue(data: string): string {
+  return sign(`valor:${data}`);
+}
+export function verifySignedValue(data: string, sig: string): boolean {
+  const expected = Buffer.from(signValue(data));
+  const given = Buffer.from(sig);
+  return expected.length === given.length && timingSafeEqual(expected, given);
+}
+
 function createToken(typ: TokenPayload["typ"], email: string, ttlSeconds: number, now = Date.now(), extra: Pick<TokenPayload, "next" | "popup"> = {}): string {
   const payload: TokenPayload = { typ, email, exp: Math.floor(now / 1000) + ttlSeconds, n: b64url(randomBytes(9)), ...extra };
   const body = b64url(Buffer.from(JSON.stringify(payload)));

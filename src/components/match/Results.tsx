@@ -17,6 +17,7 @@ import CompanyTile from "../busquedas/CompanyTile";
 import MaruWorking, { WorkingDots } from "../maru/MaruWorking";
 import { MaruHead } from "../maru/PixelMaru";
 import { ErrorBanner, inputClass, post } from "../ui";
+import AlertsPanel from "./AlertsPanel";
 import { MultiChips } from "./fields";
 import CompanyName from "@/components/busquedas/CompanyName";
 import { displayCompany } from "@/lib/match/labels";
@@ -68,6 +69,7 @@ export default function Results({
   const [tab, setTab] = useState<Tab>("elegibles");
   const [filters, setFilters] = useState<Filters>({});
   const [showFilters, setShowFilters] = useState(false);
+  const [showAlerts, setShowAlerts] = useState(false);
   const [adding, setAdding] = useState(false);
   const [limit, setLimit] = useState(PAGE);
   const [refining, setRefining] = useState(false);
@@ -185,6 +187,9 @@ export default function Results({
         <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"}`}>
           Filtros{hasActiveFilters ? " activos" : ""}
         </button>
+        <button type="button" onClick={() => setShowAlerts((x) => !x)} aria-expanded={showAlerts} className={`rounded-full border px-4 py-2 text-sm transition ${showAlerts ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"}`}>
+          🔔 Alertas por mail
+        </button>
         <button type="button" onClick={() => setAdding(true)} className="rounded-full border border-line bg-paper px-4 py-2 text-sm transition hover:border-brand hover:text-brand">
           + Agregar una búsqueda
         </button>
@@ -203,6 +208,7 @@ export default function Results({
       )}
 
       {showFilters && <FilterPanel filters={filters} setFilters={setFilters} />}
+      {showAlerts && <AlertsPanel profile={profile} prefs={prefs} interactions={interactions} filters={filters} />}
       {adding && <AddExternal onClose={() => setAdding(false)} onAdd={(job) => setExternal([job, ...external])} />}
 
       <div className="mt-6">

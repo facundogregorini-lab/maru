@@ -45,6 +45,10 @@ export default function PrivacidadPage() {
       <ul>
         <li>Ingresás con Google, sin contraseña. Usamos el email verificado que devuelve Google para identificar tu cuenta.</li>
         <li>Al ingresar se guarda una cookie de sesión firmada en tu navegador, que dura hasta 180 días o hasta que salgas.</li>
+        <li>
+          Si activás las alertas semanales, guardamos en nuestra base tu email, tu perfil y lo que buscás en el match, tus filtros, el porcentaje mínimo y qué búsquedas ya te mandamos. Los usamos sólo para
+          armar y enviar ese mail (con Resend). Las apagás desde tu match o con el link de cada mail, sin ingresar.
+        </li>
       </ul>
 
       <h2>Extensión de Chrome</h2>

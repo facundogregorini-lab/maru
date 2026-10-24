@@ -15,7 +15,14 @@ Pedido del dueño. Una PR por funcionalidad, en este orden. «Pro» = cualquier 
    - Cupo propio: 10 mensajes por día gratis. Con plan, 80 por día, aparte del tope combinado de 25 (`PAID_COPILOT_DAILY_LIMIT`).
    - La charla dura lo que la pestaña (sessionStorage), así sobrevive a las acciones que cambian de pantalla.
    - Hay acceso «Preguntale a Maru» en /busquedas (`AskMaru`) y la sección «Tu copiloto de búsqueda» en la home (`CopilotMock`). También figura en la tabla de /precios.
-5. [ ] Alertas semanales (Pro): filtros del match + umbral de % elegible, desde resultados y perfil; cron de Vercel + Resend; link para darse de baja. Sin clave se configuran pero no se envían.
+5. [x] Alertas semanales (plan pago): «🔔 Alertas por mail» en los resultados de /match (toma los filtros puestos) y en «Lo que busco» (conserva los guardados).
+   - Se elige el % mínimo (50 a 95) y se guarda en `maru:alerta:<uid>`, con el email y una copia del perfil, lo que busca y las interacciones. El índice de activas está en `maru:alertas`.
+   - `src/lib/alerts.ts`: cada lunes a las 9 (cron de Vercel, `/api/cron/alertas`), rankea a cada persona con plan y le manda hasta 8 búsquedas sobre su mínimo. Nunca repite las ya enviadas.
+   - El mail se arma sin IA y sale con Resend. El link visible lleva a `/alertas/baja`, que tiene un botón. `List-Unsubscribe-Post` hace la baja en un clic contra `/api/alertas/baja`. El token va firmado con AUTH_SECRET.
+   - Sin `RESEND_API_KEY` se configuran y el cron cuenta, pero no manda nada ni marca nada como enviado. Sin `CRON_SECRET` el cron no corre.
+   - **Falta del dueño:** crear la cuenta de Resend, verificar marucoach.com, cargar en Vercel `RESEND_API_KEY` y `CRON_SECRET` (y opcional `ALERTS_FROM`, por defecto `Maru <alertas@marucoach.com>`), y hacer redeploy.
+   - Pendiente: la copia del perfil se actualiza al guardar la alerta. Si la persona cambia su CV y no vuelve a guardarla, el lunes se usa la copia anterior.
+   - En esta PR también se sumó `/api/copiloto` a `outputFileTracingIncludes` (lee el inventario).
 
 ## Después de la primera venta (plan en curso, desde 24/10/2026)
 
