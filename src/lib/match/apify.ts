@@ -136,6 +136,23 @@ export type LinkedinSearchExtras = { remote?: boolean; skipJobIds?: string[] };
 /** Clave del modo incremental de Bumeran: una por palabra, estable aunque cambien las filas pedidas. */
 export const bumeranStateKey = (keyword: string) => `maru-ar-${keyword.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
 
+/**
+ * Ciudades para LinkedIn (sólo valig/cheap): cada búsqueda trae como mucho 100 avisos de todo el país, así que las
+ * mismas palabras por ciudad encuentran otros (24/10). Se cuentan como búsquedas distintas en el ledger.
+ */
+export const LINKEDIN_CITIES: Record<string, string> = {
+  caba: "Ciudad Autónoma de Buenos Aires, Argentina",
+  cordoba: "Córdoba, Argentina",
+  rosario: "Rosario, Santa Fe, Argentina",
+  mendoza: "Mendoza, Argentina",
+  la_plata: "La Plata, Buenos Aires, Argentina",
+  mar_del_plata: "Mar del Plata, Buenos Aires, Argentina",
+  tucuman: "San Miguel de Tucumán, Tucumán, Argentina",
+  neuquen: "Neuquén, Argentina",
+  santa_fe: "Santa Fe, Argentina",
+  salta: "Salta, Argentina",
+};
+
 export function apifyJobInput(source: ApifyJobSource, keyword: string, limit: number, maxLimit = 50, actor: LinkedinActor = "curious", window: "week" | "month" = "week", location = "Argentina", extras: LinkedinSearchExtras = {}) {
   if (!Number.isInteger(limit) || limit < 1 || limit > maxLimit) throw new Error(`Se admiten entre 1 y ${maxLimit} avisos por fuente.`);
   if ((extras.remote || extras.skipJobIds?.length) && !(source === "linkedin" && actor === "valig")) throw new Error("El filtro remoto y la lista de avisos a saltear sólo existen en LinkedIn con --actor=valig.");

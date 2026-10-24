@@ -141,6 +141,10 @@ Gasto real: US$9,76, unos US$0,36 cada 1.000 filas en Starter. Si se repite, con
 
 El dueño aprobó gastar hoy lo que queda hasta el límite de la cuenta de Apify (US$35). Las corridas usan `--budget-usd=34.5 --budget-source=account`: comparan contra el uso real de la cuenta y frenan US$0,50 antes del límite. Dos tandas de LinkedIn con `--actor=valig` (unos US$0,36 cada 1.000 filas), palabras nuevas, 100 filas por búsqueda y 5 en paralelo.
 
+## LinkedIn por ciudad (desde el 24/10/2026)
+
+Cada búsqueda de LinkedIn trae como mucho 100 avisos de todo el país: las palabras amplias («analista», «desarrollador») se cortan ahí. Con `--location=<ciudad>` (sólo `--sources=linkedin` y `--actor=valig` o `cheap`) la misma palabra se busca en una ciudad y encuentra otros avisos; en el ledger es otra búsqueda, así que no la frena la regla de 7 días. Ciudades: `caba`, `cordoba`, `rosario`, `mendoza`, `la_plata`, `mar_del_plata`, `tucuman`, `neuquen`, `santa_fe`, `salta`. Ejemplo: `provider=apify mode=run args=--actor=valig --sources=linkedin --location=cordoba --rows=100 --keywords=analista,desarrollador --budget-usd=34.5 --budget-source=account`.
+
 ## Bumeran vía Apify (desde el 22/10/2026)
 
 Fuente nueva `apify-bumeran` (bolsa `apify:bumeran:ar`, «Publicado en Bumeran · vía Apify»), con el Actor `blackfalcondata/bumeran-scraper`. Se revisó su esquema con `match-probe` el 22/10; todavía no se corrió.
