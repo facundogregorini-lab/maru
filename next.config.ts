@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     // Inventario compartido de vacantes (lo genera la sincronización programada).
     "/api/match/**": ["./data/match/*.json"],
+    // El copiloto y las alertas semanales rankean con el mismo inventario.
+    "/api/copiloto": ["./data/match/*.json"],
+    "/api/cron/alertas": ["./data/match/*.json"],
     "/busquedas": ["./data/match/inventory*.json"],
     "/busquedas/[id]": ["./data/match/inventory*.json"],
     // La home lee los números del inventario al regenerarse (ISR).

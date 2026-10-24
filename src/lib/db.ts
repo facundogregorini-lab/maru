@@ -28,6 +28,7 @@ function conn(): Conn | null {
 
 const memory = new Map<string, string>();
 const lists = new Map<string, string[]>();
+const sets = new Map<string, Set<string>>();
 const inMemory = () => !conn() && process.env.NODE_ENV !== "production";
 
 /** true si hay dónde guardar (Upstash, o la memoria en desarrollo). */
@@ -88,6 +89,21 @@ function runMemory([op, key, ...args]: Cmd): unknown {
       return "OK";
     case "LRANGE":
       return (lists.get(k) ?? []).slice(Number(args[0]), Number(args[1]) + 1);
+    case "SADD": {
+      const set = sets.get(k) ?? new Set<string>();
+      const before = set.size;
+      for (const a of args) set.add(String(a));
+      sets.set(k, set);
+      return set.size - before;
+    }
+    case "SREM": {
+      const set = sets.get(k);
+      let n = 0;
+      for (const a of args) if (set?.delete(String(a))) n++;
+      return n;
+    }
+    case "SMEMBERS":
+      return [...(sets.get(k) ?? [])];
     default:
       throw new DbError(`Comando no soportado en memoria: ${op}`);
   }
@@ -144,9 +160,22 @@ export async function readRecent<T>(key: string, max: number): Promise<T[]> {
   return (raw as string[]).map((r) => JSON.parse(r) as T);
 }
 
+/** Conjunto sin repetidos (índice de alertas). */
+export async function setAdd(key: string, member: string): Promise<void> {
+  await pipeline([["SADD", key, member]]);
+}
+export async function setRemove(key: string, member: string): Promise<void> {
+  await pipeline([["SREM", key, member]]);
+}
+export async function setMembers(key: string): Promise<string[]> {
+  const [raw] = await pipeline([["SMEMBERS", key]]);
+  return (raw as string[]) ?? [];
+}
+
 /** Para tests. */
 export function resetMemoryDb() {
   lists.clear();
+  sets.clear();
   memoryExpiry.clear();
   memory.clear();
 }
