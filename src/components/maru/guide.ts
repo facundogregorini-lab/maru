@@ -1,4 +1,5 @@
 import { PLANS } from "@/lib/plans";
+import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 /**
  * El recorrido de Maru por los productos: breve, cálido y verdadero (sólo lo que Maru hace hoy).
  * Cada paso es un ítem del checklist; se tilda al pasarlo o al visitar su página.
@@ -49,11 +50,11 @@ export const GUIDE_STEPS: readonly GuideStep[] = [
   },
   {
     id: "extension",
-    href: "/extension",
+    href: EXTENSION_STORE_URL,
     emoji: "⚡",
     title: "Extensión para Chrome",
     text: "Completo los formularios de postulación por vos. Vos revisás y enviás, siempre.",
-    cta: "Ver la extensión",
+    cta: "Instalar la extensión",
   },
   {
     id: "entrevista",
