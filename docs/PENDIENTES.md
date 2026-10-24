@@ -5,7 +5,7 @@
 La primera compradora chocó con el límite en la postulación, pagó, volvió a /precios y no retomó la postulación. Plan, en PRs chicas:
 
 1. [x] Volver a la herramienta tras pagar: `PaywallHost` guarda la ruta (`src/lib/billing/returnTo.ts`) y, con el plan activo, `/precios` muestra «Continuar tu postulación» (o la herramienta que corresponda). Cada herramienta ya restaura lo cargado desde el navegador.
-2. [ ] Cobrar el cupo gratis sólo si la generación sale bien (hoy `planGuard` lo descuenta antes de llamar a la IA).
+2. [x] Cobrar el cupo gratis sólo si la generación sale bien: `usageGuard` (en `src/lib/billing/http.ts`) toma el uso y las cinco rutas de IA lo devuelven con `release()` si `askStructured` falla. Límite: si Vercel corta la función por tiempo (maxDuration), no llega a devolverse.
 3. [ ] PostHog: `identify` con el ID interno hasheado (sin email) y eventos de baja y devolución con el número de solicitud.
 
 ## Garantía por mail y arrepentimiento menos expuesto (24/10/2026)

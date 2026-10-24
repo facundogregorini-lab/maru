@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { planGuard, usageGuard } from "@/lib/billing/http";
 import { askStructured, errorResponse, feedbackBlock, jobBlock } from "@/lib/claude";
 import { GENERATE_SYSTEM } from "@/lib/prompts";
 import { GenerationSchema, type Analysis, type JobInput, type Profile } from "@/lib/schemas";
@@ -33,11 +33,11 @@ export async function POST(req: Request) {
         ].join("\n\n"),
       },
     ];
-    const limit = await planGuard(req, "cv");
-    if (limit) return limit;
+    const usage = await usageGuard(req, "cv");
+    if (usage.blocked) return usage.blocked;
     const generation = await askStructured({
       editorialPaths: ["titular", "resumen", "logros_clave.*", "experiencias.*.logros.*", "cambios_clave.*", "recomendaciones_formulario.*.respuesta_sugerida", "recomendaciones_formulario.*.por_que", "recomendaciones_formulario.*.tip"],
-      system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" });
+      system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" }).catch(async (err) => { await usage.release(); throw err; });
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);
