@@ -1,5 +1,13 @@
 # Estado y próximos pasos de Maru
 
+## Después de la primera venta (plan en curso, desde 24/10/2026)
+
+La primera compradora chocó con el límite en la postulación, pagó, volvió a /precios y no retomó la postulación. Plan, en PRs chicas:
+
+1. [x] Volver a la herramienta tras pagar: `PaywallHost` guarda la ruta (`src/lib/billing/returnTo.ts`) y, con el plan activo, `/precios` muestra «Continuar tu postulación» (o la herramienta que corresponda). Cada herramienta ya restaura lo cargado desde el navegador.
+2. [ ] Cobrar el cupo gratis sólo si la generación sale bien (hoy `planGuard` lo descuenta antes de llamar a la IA).
+3. [ ] PostHog: `identify` con el ID interno hasheado (sin email) y eventos de baja y devolución con el número de solicitud.
+
 ## Garantía por mail y arrepentimiento menos expuesto (24/10/2026)
 
 Tras la primera venta, devuelta al instante con la garantía, se agrega fricción sin tocar lo que exige la ley:
