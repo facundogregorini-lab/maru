@@ -50,6 +50,16 @@ describe("re-evaluación con IA", () => {
     expect(out.counts.eligible).toBe(out.eligible.length);
   });
 
+  it("actualiza las ocultas con la re-evaluación y saca las que excluye", async () => {
+    const before = stage1();
+    const pool = before.eligible.map((x) => ({ ...x, hidden: true }));
+    const evaluate = async (_s: string, _c: string, ids: string[]) => ids.map((id) => fakeEval(id, titleOf(id)));
+    const out = await rerank({ result: { ...before, hiddenPool: pool, counts: { ...before.counts, hidden: pool.length } }, profile: leader.profile, prefs: leader.prefs, opportunities: oppMap, postings: postingMap, evaluate });
+    expect(out.hiddenPool?.[0]).toMatchObject({ title: "Head of Marketing - Argentina / Uruguay", score: 97, depth: "ia" });
+    expect(out.hiddenPool?.map((x) => x.title)).not.toContain("Marketing Director LATAM");
+    expect(out.counts.hidden).toBe(out.hiddenPool?.length);
+  });
+
   it("topea en 40 si el rol no encaja", async () => {
     const evaluate = async (_s: string, _c: string, ids: string[]) => ids.map((id) => ({ ...fakeEval(id, titleOf(id)), puntos: { rol: 10, seniority: 25, requisitos: 20, preferencias: 15 } }));
     const out = await rerank({ result: stage1(), profile: leader.profile, prefs: leader.prefs, opportunities: oppMap, postings: postingMap, evaluate });

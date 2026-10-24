@@ -1,5 +1,7 @@
+import { paidFeatures } from "@/lib/billing/http";
 import { RankingRequestSchema, invalidFields, type ExternalJob } from "@/lib/match/api-schemas";
 import { workplaceFromText } from "@/lib/match/connectors";
+import { withHiddenSection } from "@/lib/match/hidden";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
 import { rankOpportunities, weightsFromEnv, type RankOutput } from "@/lib/match/ranking";
@@ -58,9 +60,11 @@ export async function POST(req: Request) {
       now,
     });
     // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
-    const result = ai
+    const paged = ai
       ? pageOf(await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }), limit ?? 40)
       : ranked;
+    // Oportunidades ocultas: en el plan gratis, las difuminadas llegan sólo con el porcentaje.
+    const result = withHiddenSection(paged, await paidFeatures(req));
 
     return Response.json(
       {
@@ -84,7 +88,7 @@ export async function POST(req: Request) {
 function pageOf<T extends RankOutput>(r: T, limit: number): T {
   const eligible = r.eligible.slice(0, limit);
   const pending = r.pending.slice(0, limit);
-  return { ...r, eligible, pending, counts: { ...r.counts, shown: eligible.length + pending.length } };
+  return { ...r, eligible, pending, ...(r.hiddenPool ? { hiddenPool: r.hiddenPool.slice(0, limit) } : {}), counts: { ...r.counts, shown: eligible.length + pending.length } };
 }
 
 function externalToPosting(e: ExternalJob): NormalizedPosting {

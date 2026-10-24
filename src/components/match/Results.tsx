@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
+import { rememberReturnTo } from "@/lib/billing/returnTo";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
+import { isLocked, type HiddenSection } from "@/lib/match/hidden";
 import { itemProps, track } from "@/lib/match/events";
 import ScoreRing, { matchLevel } from "@/components/ScoreRing";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
@@ -18,8 +21,8 @@ import { MultiChips } from "./fields";
 import CompanyName from "@/components/busquedas/CompanyName";
 import { displayCompany } from "@/lib/match/labels";
 
-type RankingResponse = RankOutput & { ia?: { disponible: boolean; aplicada: boolean }; inventory: { generatedAt: string | null; open: number } };
-type Tab = "elegibles" | "pendientes" | "guardadas";
+type RankingResponse = RankOutput & { hidden?: HiddenSection; ia?: { disponible: boolean; aplicada: boolean }; inventory: { generatedAt: string | null; open: number } };
+type Tab = "elegibles" | "pendientes" | "ocultas" | "guardadas";
 const PAGE = 40;
 
 const DISCARD_REASONS: [DiscardReason, string][] = [
@@ -113,7 +116,8 @@ export default function Results({
     return () => clearTimeout(t);
   }, [load]);
 
-  const list = !data ? [] : tab === "elegibles" ? data.eligible : tab === "pendientes" ? data.pending : data.saved;
+  const hidden = data?.hidden;
+  const list = !data ? [] : tab === "elegibles" ? data.eligible : tab === "pendientes" ? data.pending : tab === "guardadas" ? data.saved : [];
 
   function save(item: RankedItem) {
     const on = interactions.saved.includes(item.id);
@@ -169,6 +173,7 @@ export default function Results({
             [
               ["elegibles", `Para vos${data ? ` (${data.counts.eligible})` : ""}`],
               ["pendientes", `Por confirmar${data ? ` (${data.counts.pending})` : ""}`],
+              ["ocultas", `Ocultas${hidden ? ` (${hidden.total})` : ""}`],
               ["guardadas", `Guardadas (${interactions.saved.length})`],
             ] as const
           ).map(([k, label]) => (
@@ -188,6 +193,12 @@ export default function Results({
       {tab === "pendientes" && (
         <p className="mt-4 rounded-2xl bg-honey/15 px-4 py-3 text-sm leading-relaxed text-ink">
           Estas búsquedas pueden servirte, pero el aviso no deja claro si contratan a personas que viven en Argentina (o falta otro dato importante). Confirmalo antes de postularte.
+        </p>
+      )}
+
+      {tab === "ocultas" && (
+        <p className="mt-4 rounded-2xl bg-brand-soft px-4 py-3 text-sm leading-relaxed text-ink">
+          Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn. Suelen tener menos postulantes.
         </p>
       )}
 
@@ -220,7 +231,7 @@ export default function Results({
           </p>
         )}
         {data && !data.inventory.generatedAt && tab !== "guardadas" && !external.length && <EmptyInventory />}
-        {data && (data.inventory.generatedAt || external.length > 0 || tab === "guardadas") && list.length === 0 && !loading && (
+        {data && tab !== "ocultas" && (data.inventory.generatedAt || external.length > 0 || tab === "guardadas") && list.length === 0 && !loading && (
           <EmptyResults tab={tab} hasFilters={hasActiveFilters} pending={data.counts.pending} onShowPending={() => setTab("pendientes")} onClearFilters={() => setFilters({})} />
         )}
         <div className={`space-y-4 transition ${loading && data ? "opacity-60" : ""}`}>
@@ -237,8 +248,63 @@ export default function Results({
               preliminary={refining}
             />
           ))}
+          {tab === "ocultas" &&
+            hidden?.items.map((entry, i) =>
+              isLocked(entry) ? (
+                <LockedCard key={`locked-${i}`} score={entry.score} preliminary={refining} />
+              ) : (
+                <JobCard
+                  key={entry.id}
+                  item={entry}
+                  position={i + 1}
+                  saved={interactions.saved.includes(entry.id)}
+                  onSave={() => save(entry)}
+                  onDiscard={(r) => discard(entry, r)}
+                  preliminary={refining}
+                />
+              ),
+            )}
         </div>
-        {data && tab !== "guardadas" && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
+        {data && tab === "ocultas" && hidden && hidden.total === 0 && !loading && (
+          <div className="rounded-3xl border border-line bg-paper p-8 text-center">
+            <p className="font-display text-2xl">Entre tus resultados no hay búsquedas ocultas</p>
+            <p className="mt-2 text-sm text-muted">Probá sumar roles en “Lo que busco” o quitar algún filtro.</p>
+          </div>
+        )}
+        {data && tab === "ocultas" && hidden?.full && hidden.items.length >= limit && hidden.total > hidden.items.length && (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setLimit((l) => l + PAGE)}
+              disabled={loading}
+              className="press rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white hover:bg-black disabled:opacity-60"
+            >
+              {loading ? "Buscando…" : "Ver más búsquedas"}
+            </button>
+            <p className="mt-2 text-xs text-muted">
+              Viendo {hidden.items.length} de {hidden.total.toLocaleString("es-AR")}
+            </p>
+          </div>
+        )}
+        {data && tab === "ocultas" && hidden && !hidden.full && hidden.total > 0 && (
+          <div className="mt-6 rounded-3xl bg-ink p-6 text-center text-white">
+            <p className="font-display text-2xl">
+              {hidden.total > hidden.items.length ? `Hay ${hidden.total.toLocaleString("es-AR")} búsquedas ocultas para vos` : "Desbloqueá las búsquedas difuminadas"}
+            </p>
+            <p className="mt-2 text-sm text-white/80">Con un plan de Maru ves todas, con la empresa, el aviso y el porqué de cada una.</p>
+            <Link
+              href="/precios"
+              onClick={() => {
+                rememberReturnTo("/match");
+                track("match_ocultas_desbloquear", { ocultas: hidden.total });
+              }}
+              className="press mt-4 inline-flex min-h-11 items-center rounded-full bg-neon px-6 py-2.5 text-sm font-bold text-ink hover:bg-neon/80"
+            >
+              Ver los planes
+            </Link>
+          </div>
+        )}
+        {data && tab !== "guardadas" && tab !== "ocultas" && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
           <div className="mt-6 text-center">
             <button
               type="button"
@@ -253,7 +319,7 @@ export default function Results({
             </p>
           </div>
         )}
-        {data && tab !== "guardadas" && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
+        {data && tab !== "guardadas" && tab !== "ocultas" && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
           <p className="mt-6 text-center text-sm text-muted">
             Hay {data.counts.lowMatch.toLocaleString("es-AR")} búsquedas más que coinciden menos del {MIN_SCORE}% con tu perfil y lo que buscás. Para verlas, filtrá por área o sumá roles en “Lo que busco”.
           </p>
@@ -330,6 +396,7 @@ function JobCard({
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
               <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1">{FAMILY_LABEL[item.family]}</span>
+              {item.hidden && <span className="rounded-md bg-brand-soft px-1.5 py-1 text-brand-dark" title="La leímos del sitio de empleos de la empresa y no la vimos en LinkedIn.">Oculta · no está en LinkedIn</span>}
               {item.external && <span className="rounded-md bg-sage-soft px-1.5 py-1 text-sage">Agregada por vos · privada</span>}
               {item.status === "cerrada" && <span className="rounded-md bg-danger-soft px-1.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
             </p>
@@ -503,6 +570,44 @@ function JobCard({
               <br />
               Información {item.confidence === "alta" ? "amplia" : item.confidence === "media" ? "parcial" : "escasa"}
             </p>
+          </>
+        )}
+      </div>
+    </article>
+  );
+}
+
+/** Oculta difuminada del plan gratis: el servidor sólo manda el porcentaje, el resto es relleno ilustrativo. */
+function LockedCard({ score, preliminary }: { score: number; preliminary: boolean }) {
+  const level = matchLevel(score);
+  return (
+    <article className="relative flex overflow-hidden rounded-2xl bg-white">
+      <div aria-hidden className="min-w-0 flex-1 select-none p-4 blur-[6px] sm:p-5">
+        <div className="flex gap-4">
+          <div className="h-[60px] w-[60px] shrink-0 rounded-xl bg-black/10" />
+          <div className="min-w-0 flex-1 space-y-2 pt-1">
+            <div className="h-3 w-24 rounded bg-black/10" />
+            <div className="h-5 w-3/4 rounded bg-black/15" />
+            <div className="h-4 w-1/2 rounded bg-black/10" />
+          </div>
+        </div>
+        <div className="mt-5 space-y-2">
+          <div className="h-3 w-full rounded bg-black/10" />
+          <div className="h-3 w-5/6 rounded bg-black/10" />
+          <div className="h-3 w-2/3 rounded bg-black/10" />
+        </div>
+      </div>
+      <div className="absolute inset-y-0 left-0 right-[128px] flex flex-col items-center justify-center gap-2 bg-white/40 px-4 text-center sm:right-[172px]">
+        <p className="text-sm font-semibold">Búsqueda oculta para vos</p>
+        <p className="text-xs text-muted">Con un plan ves la empresa, el aviso y el porqué.</p>
+      </div>
+      <div className="m-1 flex w-[120px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:w-[164px]">
+        {preliminary ? (
+          <Calculating dark />
+        ) : (
+          <>
+            <ScoreRing value={score} size="dark" />
+            <p className="mt-3 text-sm font-semibold uppercase">{level.label}</p>
           </>
         )}
       </div>

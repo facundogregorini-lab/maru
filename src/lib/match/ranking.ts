@@ -1,6 +1,7 @@
 import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { functionMismatch, GENERIC_SKILLS, levelScore, levelVerdict, postingLevel, salaryMeets, skillWeight, targetRange } from "./fit";
 import { sourceById } from "./sources";
+import { isHiddenOpportunity } from "./hidden";
 import { CONTRACT_LABEL, displayTitle, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
 import {
@@ -322,6 +323,8 @@ export type RankedItem = {
   status: "abierta" | "cerrada";
   external?: boolean;
   saved?: boolean;
+  /** Leída del ATS de la empresa y no vista en LinkedIn (hidden.ts). */
+  hidden?: boolean;
 };
 
 export type ScorePart = { puntos: number; max: number; razon: string };
@@ -376,7 +379,9 @@ export type RankOutput = {
   pending: RankedItem[];
   saved: RankedItem[];
   /** lowMatch: abiertas que pasan las condiciones pero con coincidencia menor a MIN_SCORE (no se listan). */
-  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number };
+  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number; hidden?: number };
+  /** Las mejores ocultas (hidden.ts) de todo el ranking, no sólo de la página: arman su sección. */
+  hiddenPool?: RankedItem[];
 };
 
 type Scored = { item: RankedItem; raw: number };
@@ -706,9 +711,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
     if (o.eligibility.status === "elegible") reasonsScored.push([0.38, `Se puede trabajar desde Argentina (${o.eligibility.evidence[0]}).`]);
     if (o.eligibility.timezone) pending.push(`Horario pedido: ${o.eligibility.timezone}. Es una condición horaria, no un permiso de contratación.`);
 
-    const sources = o.postingKeys
-      .map((k) => postings.get(k))
-      .filter((p): p is StoredPosting => !!p)
+    const posts = o.postingKeys.map((k) => postings.get(k)).filter((p): p is StoredPosting => !!p);
+    const sources = posts
       .map((p): SourceLink => {
         if (p.sourceId === "usuario") return { name: "Agregada por vos", url: p.sourceUrl, applyUrl: p.applyUrl, required: false, kind: "usuario" };
         const s = sourceById(p.sourceId);
@@ -761,6 +765,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
       descriptionComplete: o.descriptionComplete,
       status: o.status,
       ...(isSaved ? { saved: true } : {}),
+      ...(isHiddenOpportunity(posts) ? { hidden: true } : {}),
       ...(external ? { external: true, reviewedLabel: "Agregada por vos" } : {}),
     };
     const scored = { item, raw: order };
@@ -777,11 +782,13 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const sort = (a: Scored, b: Scored) => b.raw - a.raw
     || (Date.parse(b.item.publishedAt ?? b.item.reviewedAt) - Date.parse(a.item.publishedAt ?? a.item.reviewedAt));
   const sortTop = (arr: Scored[]) => diversify(arr.sort(sort)).slice(0, limit).map((s) => s.item);
+  const hidden = [...elig, ...pend].filter((s) => s.item.hidden);
   return {
     eligible: sortTop(elig),
     pending: sortTop(pend),
     saved: savedOut.sort(sort).map((s) => s.item),
-    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
+    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length), hidden: hidden.length },
+    hiddenPool: sortTop(hidden),
   };
 }
 
