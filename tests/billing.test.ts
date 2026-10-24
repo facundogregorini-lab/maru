@@ -323,14 +323,14 @@ describe("extensión y promo de lanzamiento", () => {
     expect((await s.cancel("ana@example.com")).requestId).toBe(out.requestId);
   });
 
-  it("la garantía devuelve el 100% del primer pago una sola vez, aunque se haya usado Maru", async () => {
+  it("el arrepentimiento devuelve el 100% del primer pago una sola vez", async () => {
     const s = await setup(); const fixture = apiFixture(990);
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.processNotification("subscription_authorized_payment", "100");
     const option = await s.readRefundOption("ana@example.com");
-    expect(option).toMatchObject({ kind: "garantia", amount: 990 });
+    expect(option).toMatchObject({ kind: "arrepentimiento", amount: 990 });
     const out = await s.requestRefund("ana@example.com");
-    expect(out).toMatchObject({ kind: "garantia", amount: 990 });
+    expect(out).toMatchObject({ kind: "arrepentimiento", amount: 990 });
     expect(out.requestId).toMatch(/^DEV-/);
     expect(fixture.refunds()).toBe(1);
     const sub = await s.readSubscription("ana@example.com");
@@ -341,16 +341,16 @@ describe("extensión y promo de lanzamiento", () => {
     expect(fixture.refunds()).toBe(1);
   });
 
-  it("calcula los plazos de garantía (14 días) y arrepentimiento (10 días)", async () => {
+  it("ofrece online sólo el arrepentimiento (10 días); la garantía de 14 días va por mail", async () => {
     const s = await setup();
     const day = 86400_000;
     const paidAt = Date.parse("2026-10-01T12:00:00Z");
     const sub = { id: "sub1", reference: "r", status: "authorized", plan: "mensual" as const, firstPaymentId: 1, paymentId: 1, firstPaymentAt: paidAt, paymentAmount: 990, updatedAt: 0 };
-    expect(s.refundOption(sub, false, paidAt + 13 * day)?.kind).toBe("garantia");
-    expect(s.refundOption(sub, false, paidAt + 15 * day)).toBeNull();
-    expect(s.refundOption(sub, true, paidAt + 9 * day)?.kind).toBe("arrepentimiento");
-    expect(s.refundOption(sub, true, paidAt + 11 * day)).toBeNull();
-    expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 990 } }, false, paidAt + day)).toBeNull();
+    expect(s.refundOption(sub, paidAt + day)?.kind).toBe("arrepentimiento");
+    expect(s.refundOption(sub, paidAt + 9 * day)?.kind).toBe("arrepentimiento");
+    expect(s.refundOption(sub, paidAt + 11 * day)).toBeNull();
+    expect(s.refundOption(sub, paidAt + 13 * day)).toBeNull();
+    expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 990 } }, paidAt + day)).toBeNull();
   });
 
   it("si Mercado Pago rechaza crear la suscripción, libera la reserva y el próximo intento usa otra referencia", async () => {

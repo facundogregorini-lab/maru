@@ -53,13 +53,14 @@ export const chargeTerms = (plan: Plan): string =>
     ? `Hoy pagás ${plan.intro.priceText}. Desde el segundo período se renueva ${plan.renewalText} a ${plan.priceText}.`
     : `Hoy pagás ${plan.priceText}. Se renueva ${plan.renewalText} al mismo precio.`;
 
-/** Garantía de satisfacción: devolución del 100% del primer pago de la primera contratación, aunque se haya usado Maru. */
+/** Garantía de satisfacción: devolución del 100% del primer pago de la primera contratación. Se pide por mail a SUPPORT_EMAIL y la procesamos a mano. */
 export const GUARANTEE_DAYS = 14;
+export const SUPPORT_EMAIL = "hola@marucoach.com";
 /** Derecho de arrepentimiento (Ley 24.240, art. 34): 10 días corridos desde la contratación. */
 export const WITHDRAWAL_DAYS = 10;
 /** Textos de baja y garantía que van cerca del precio y del botón, en /precios y en el aviso de límite. */
 export const NO_LOCK_IN_TEXT = "Sin permanencia. Cancelás online cuando quieras, sin cargos por baja.";
-export const GUARANTEE_TEXT = `Si Maru no te sirve, pedí la devolución dentro de los primeros ${GUARANTEE_DAYS} días y te reintegramos el 100% de tu primer pago.`;
+export const GUARANTEE_TEXT = `Si Maru no te sirve, escribinos a ${SUPPORT_EMAIL} dentro de los primeros ${GUARANTEE_DAYS} días y te reintegramos el 100% de tu primer pago.`;
 export const isPlanId = (v: unknown): v is PlanId => typeof v === "string" && Object.hasOwn(PLANS, v);
 
 /** Pedidos gratis. Los diarios se renuevan a las 0 h de Argentina; los semanales, el lunes. */

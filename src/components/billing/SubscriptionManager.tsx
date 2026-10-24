@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { GUARANTEE_DAYS, PLANS, type PlanId } from "@/lib/plans";
+import { PLANS, type PlanId } from "@/lib/plans";
 
 export type RefundOption = { kind: "garantia" | "arrepentimiento"; until: number; amount: number };
 export type ManagedStatus = {
@@ -26,8 +26,9 @@ const fmtDate = (ms: number) => new Date(ms).toLocaleDateString("es-AR", { day: 
 const fmtMoney = (n: number) => `$${n.toLocaleString("es-AR")}`;
 
 /**
- * "Mi suscripción": baja de la renovación y devolución (garantía o arrepentimiento) con una sola confirmación,
- * motivo opcional y número de solicitud en pantalla. Lo usan /precios, /baja y /arrepentimiento.
+ * "Mi suscripción": baja de la renovación con una sola confirmación, motivo opcional y número de solicitud en pantalla.
+ * El arrepentimiento sólo se ofrece en /arrepentimiento (focus "devolucion"); la garantía se pide por mail.
+ * Lo usan /precios, /baja y /arrepentimiento.
  */
 export default function SubscriptionManager({
   email,
@@ -49,7 +50,7 @@ export default function SubscriptionManager({
 
   const paid = status.plan === "maru";
   const renewing = status.status === "authorized" || status.status === "pending";
-  const option = status.refundOption ?? null;
+  const option = focus === "devolucion" ? status.refundOption ?? null : null;
   const plan = status.tier ? PLANS[status.tier] : null;
 
   async function act(kind: "baja" | "devolucion") {
@@ -79,7 +80,7 @@ export default function SubscriptionManager({
 
   const refundButton = option && (
     <button type="button" disabled={busy} onClick={() => setConfirming("devolucion")} className="min-h-11 rounded-full border border-ink px-5 py-2 text-sm font-semibold disabled:opacity-50">
-      {option.kind === "garantia" ? "Pedir devolución (garantía)" : "Arrepentirme de la compra"}
+      Arrepentirme de la compra
     </button>
   );
   const cancelButton = renewing && (
@@ -119,9 +120,7 @@ export default function SubscriptionManager({
       )}
       {option && !confirming && (
         <p className="mt-2 text-xs text-ink/60">
-          {option.kind === "garantia"
-            ? `Garantía de ${GUARANTEE_DAYS} días: podés pedir el 100% de tu primer pago hasta el ${fmtDate(option.until)}, aunque hayas usado Maru.`
-            : `Arrepentimiento: podés pedir la devolución de tu primer pago hasta el ${fmtDate(option.until)}.`}
+          {`Arrepentimiento: podés pedir la devolución de tu primer pago hasta el ${fmtDate(option.until)}.`}
         </p>
       )}
 

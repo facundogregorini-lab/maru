@@ -3,7 +3,7 @@ import Link from "next/link";
 import SiteShell from "@/components/SiteShell";
 import BillingPanel from "@/components/billing/BillingPanel";
 import { landingData } from "@/lib/landing";
-import { FREE_LIMITS, GUARANTEE_DAYS, GUARANTEE_TEXT, PLANS, WITHDRAWAL_DAYS } from "@/lib/plans";
+import { FREE_LIMITS, GUARANTEE_DAYS, GUARANTEE_TEXT, PLANS } from "@/lib/plans";
 
 export const metadata: Metadata = { title: "Planes y precios · Maru", description: "Elegí tu plan de Maru: semanal, mensual o trimestral. CV a medida, cartas, entrevistas y videos sin esperar al día siguiente." };
 // Los números del inventario se regeneran cada hora, como en la home.
@@ -99,7 +99,7 @@ export default async function PreciosPage() {
             <span><strong>{title}.</strong> <span className="text-ink/75">{body}</span></span>
           </li>)}
         </ol>
-        <p className="mt-3 text-center text-xs text-ink/60">La baja corta los próximos cobros y no devuelve el período en curso. Para la devolución, mirá la garantía de {GUARANTEE_DAYS} días. <Link href="/baja" className="underline">Botón de baja</Link> · <Link href="/arrepentimiento" className="underline">Botón de arrepentimiento</Link></p>
+        <p className="mt-3 text-center text-xs text-ink/60">La baja corta los próximos cobros y no devuelve el período en curso. Para la devolución, mirá la garantía de {GUARANTEE_DAYS} días. <Link href="/baja" className="underline">Botón de baja</Link></p>
       </section>
 
       <div className="mx-auto mt-12 max-w-3xl space-y-3">
@@ -108,8 +108,7 @@ export default async function PreciosPage() {
           ["¿Los $990 son sólo el primer mes?", `Sí. El primer mes del plan mensual sale ${PLANS.mensual.intro?.priceText}; desde el segundo mes se renueva a ${PLANS.mensual.priceText} por mes. Antes de pagar ves cuánto se cobra hoy y cuánto en cada renovación. Podés cancelar antes de que se renueve.`],
           ["¿Cómo se confirma el pago?", "Mercado Pago procesa la suscripción y nos confirma la acreditación. Volver a Maru desde el pago no activa por sí solo el plan. Si la confirmación tarda, usá Actualizar estado de mi pago."],
           ["¿Puedo cancelar o cambiar de plan?", "Sí, sin permanencia ni cargos por baja. Cancelás desde Mi suscripción, en esta página, con una sola confirmación. No se te cobra más y conservás el acceso hasta que termine el período pagado. Para cambiar de plan, cancelá la renovación y elegí el nuevo cuando termine."],
-          [`¿Cómo funciona la garantía de ${GUARANTEE_DAYS} días?`, `${GUARANTEE_TEXT} Vale aunque hayas armado y descargado CVs, en tu primera contratación. No tenés que explicar por qué. La pedís desde Mi suscripción: la procesamos en el momento y cancelamos las renovaciones. La acreditación depende de tu medio de pago y de tu banco. No es una prueba gratis: hay un cobro inicial.`],
-          ["¿Y el derecho de arrepentimiento?", `Es tu derecho legal, aparte de la garantía: podés arrepentirte dentro de los ${WITHDRAWAL_DAYS} días corridos de contratar desde el Botón de arrepentimiento, al pie de cada página.`],
+          [`¿Cómo funciona la garantía de ${GUARANTEE_DAYS} días?`, `${GUARANTEE_TEXT} Vale aunque hayas usado Maru, en tu primera contratación. Escribinos desde el mail de tu cuenta y te respondemos dentro de las 48 horas hábiles; al hacer la devolución cancelamos las renovaciones. La acreditación depende de tu medio de pago y de tu banco. No es una prueba gratis: hay un cobro inicial.`],
           ["¿Qué significa ilimitado?", "Que no contás pedidos: armás un CV, una carta o una práctica para cada búsqueda que te interese. Para cuidar el servicio hay un tope de uso razonable por día que una búsqueda normal no alcanza."],
           ["¿Qué pasa con mis datos?", "Sin cuenta, quedan en tu navegador. Al ingresar, perfil, preferencias y seguimiento se guardan también en tu cuenta. Los documentos que generás siguen en el navegador."],
           ["¿Maru me garantiza un trabajo?", "No. Maru te ayuda a preparar mejor cada postulación y cada entrevista; las decisiones son de cada empresa."],
