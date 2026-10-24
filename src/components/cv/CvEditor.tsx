@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { atsReport } from "@/lib/ats";
-import { cvToText, fileBaseName, photoRecommended, setTemplate } from "@/lib/cv";
-import type { CvContext, CvDoc, SectionKey } from "@/lib/schemas";
+import { cvToText, fileBaseName, item, photoRecommended, setTemplate } from "@/lib/cv";
+import type { CvContext, CvDoc, KeywordProposal, SectionKey } from "@/lib/schemas";
 import { trackActivation } from "@/lib/tracking";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import PhotoCropper from "../PhotoCropper";
 import AtsPanel from "./AtsPanel";
-import CvPaper from "./CvPaper";
+import CvPaper, { type PaperProposal, type ProposalAction } from "./CvPaper";
 import StylePanel from "./StylePanel";
 import TemplatePicker from "./TemplatePicker";
 import { resolveTheme } from "./themes";
@@ -45,6 +45,80 @@ export default function CvEditor({
   const [cropFile, setCropFile] = useState<File | null>(null);
 
   const report = useMemo(() => atsReport(doc, context.palabrasClave), [doc, context.palabrasClave]);
+
+  /*
+   * Palabras clave de ATS que faltan: Maru propone un logro en la experiencia más relevante. Las propuestas
+   * viven fuera del CV hasta que la persona las acepta (no se descargan ni se copian). Si ninguna experiencia
+   * respalda la palabra, no se inventa: se ofrece sumarla a habilidades.
+   */
+  const [proposals, setProposals] = useState<PaperProposal[]>([]);
+  const [unsupported, setUnsupported] = useState<{ palabra: string; motivo: string }[]>([]);
+  const [covering, setCovering] = useState(false);
+  const pendingWords = new Set([...proposals.map((p) => p.palabra), ...unsupported.map((u) => u.palabra)]);
+  const toCover = report.missing.filter((k) => !pendingWords.has(k));
+
+  async function askPhrases(palabras: string[], evitar?: Record<string, string>): Promise<KeywordProposal[]> {
+    const res = await fetch("/api/cv/keywords", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        puesto: context.puesto,
+        idioma: doc.lang,
+        palabras,
+        experiencias: doc.experiencia.slice(0, 12).map((e) => ({ id: e.id, cargo: e.cargo, empresa: e.empresa, logros: e.bullets.map((b) => b.text).filter(Boolean).slice(0, 12) })),
+        ...(evitar ? { evitar } : {}),
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || "No pudimos proponer frases. Probá de nuevo.");
+    return data.propuestas as KeywordProposal[];
+  }
+
+  function applyResults(list: KeywordProposal[]) {
+    setProposals((cur) => [
+      ...cur.filter((c) => !list.some((r) => r.palabra === c.palabra)),
+      ...list.filter((r) => r.experiencia_id).map((r) => ({ palabra: r.palabra, expId: r.experiencia_id, texto: r.frase, estado: "propuesta" as const })),
+    ]);
+    setUnsupported((cur) => [...cur.filter((c) => !list.some((r) => r.palabra === c.palabra)), ...list.filter((r) => !r.experiencia_id).map((r) => ({ palabra: r.palabra, motivo: r.motivo }))]);
+  }
+
+  async function coverKeywords() {
+    if (!toCover.length || !doc.experiencia.length) return;
+    setCovering(true);
+    setError("");
+    try {
+      applyResults(await askPhrases(toCover.slice(0, 20)));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setCovering(false);
+    }
+  }
+
+  async function onProposal(action: ProposalAction, palabra: string, texto?: string) {
+    const p = proposals.find((x) => x.palabra === palabra);
+    if (!p) return;
+    if (action === "descartar") return setProposals((cur) => cur.filter((x) => x.palabra !== palabra));
+    if (action === "escribir") return setProposals((cur) => cur.map((x) => (x.palabra === palabra ? { ...x, texto: "", estado: "escribiendo" } : x)));
+    if (action === "aceptar" && texto) {
+      setDoc((d) => ({ ...d, experiencia: d.experiencia.map((e) => (e.id === p.expId ? { ...e, bullets: [...e.bullets, item(texto)] } : e)) }));
+      return setProposals((cur) => cur.filter((x) => x.palabra !== palabra));
+    }
+    if (action === "otra") {
+      setProposals((cur) => cur.map((x) => (x.palabra === palabra ? { ...x, estado: "cargando" } : x)));
+      try {
+        applyResults(await askPhrases([palabra], p.texto ? { [palabra]: p.texto } : undefined));
+      } catch (e) {
+        setError((e as Error).message);
+        setProposals((cur) => cur.map((x) => (x.palabra === palabra ? { ...x, estado: "propuesta" } : x)));
+      }
+    }
+  }
+
+  function addToSkills(palabra: string) {
+    setDoc((d) => ({ ...d, habilidades: d.habilidades.trim() ? `${d.habilidades.trim().replace(/[,·;]\s*$/, "")}, ${palabra}` : palabra }));
+    setUnsupported((cur) => cur.filter((u) => u.palabra !== palabra));
+  }
   const filename = fileBaseName(doc, context.puesto);
   const photoOk = photoRecommended(context.pais);
   const order = resolveTheme(doc).order;
@@ -164,7 +238,7 @@ export default function CvEditor({
             Tocá cualquier texto para editarlo. Los cambios se guardan solos.
           </p>
           <div className="cv-scroll">
-            <CvPaper doc={doc} onChange={setDoc} onRegenerate={regenerate} regenerating={regenerating} />
+            <CvPaper doc={doc} onChange={setDoc} onRegenerate={regenerate} regenerating={regenerating} proposals={proposals} onProposal={onProposal} />
           </div>
         </div>
 
@@ -195,7 +269,19 @@ export default function CvEditor({
             </p>
           </div>
 
-          <AtsPanel report={report} />
+          <AtsPanel
+            report={report}
+            cover={{
+              pending: toCover.length,
+              busy: covering,
+              disabled: !doc.experiencia.length,
+              proposals: proposals.length,
+              unsupported,
+              onCover: () => void coverKeywords(),
+              onSkill: addToSkills,
+              onDismiss: (palabra) => setUnsupported((cur) => cur.filter((u) => u.palabra !== palabra)),
+            }}
+          />
 
           <div className="rounded-3xl bg-paper p-5">
             <div className="flex items-center justify-between gap-3">

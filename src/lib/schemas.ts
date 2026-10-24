@@ -125,6 +125,21 @@ export type Generation = z.infer<typeof GenerationSchema>;
 
 export const BulletSchema = z.object({ texto: z.string() });
 
+/** Frases propuestas para cubrir palabras clave de ATS que faltan en el CV. */
+export const KeywordPhrasesSchema = z.object({
+  propuestas: z
+    .array(
+      z.object({
+        palabra: z.string().describe("La palabra clave, tal como vino"),
+        experiencia_id: z.string().describe("El id de la experiencia donde va la frase; '' si ninguna experiencia la respalda"),
+        frase: z.string().describe("Un logro nuevo de una oración que incluye la palabra clave tal cual; '' si experiencia_id es ''"),
+        motivo: z.string().describe("En menos de 15 palabras, por qué esa experiencia, o por qué no se puede respaldar"),
+      }),
+    )
+    .describe("Una propuesta por palabra clave pedida, en el mismo orden"),
+});
+export type KeywordProposal = { palabra: string; experiencia_id: string; frase: string; motivo: string };
+
 /* ---------- CV editable ---------- */
 
 export type Item = { id: string; text: string };

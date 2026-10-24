@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type CSSProperties, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { contactLine, item, newId, visible } from "@/lib/cv";
 import type { CvDoc, CvExperience, Item, SectionKey } from "@/lib/schemas";
 import EditableText from "./EditableText";
@@ -14,11 +14,60 @@ export type PaperProps = {
   onChange?: Update;
   onRegenerate?: (expId: string, bulletId: string) => void;
   regenerating?: string | null;
+  /** Frases propuestas para palabras clave de ATS: se ven resaltadas en su experiencia y no se exportan. */
+  proposals?: PaperProposal[];
+  onProposal?: (action: ProposalAction, palabra: string, texto?: string) => void;
   /** export: sin padding vertical (lo pone @page) y sin sombra. */
   mode?: "preview" | "export";
 };
 
+export type PaperProposal = { palabra: string; expId: string; texto: string; estado: "propuesta" | "escribiendo" | "cargando" };
+export type ProposalAction = "aceptar" | "otra" | "escribir" | "descartar";
+
 export const PAPER_WIDTH = 794; // A4 a 96 dpi
+
+/**
+ * Propuesta de Maru para cubrir una palabra clave: resaltada en amarillo (redactado por Maru), editable,
+ * con aceptar, pedir otra, escribirla vos o descartarla. Nunca se exporta.
+ */
+function ProposalRow({ p, onAction }: { p: PaperProposal; onAction: (action: ProposalAction, texto?: string) => void }) {
+  const [text, setText] = useState(p.texto);
+  useEffect(() => setText(p.texto), [p.texto]);
+  const writing = p.estado === "escribiendo";
+  const loading = p.estado === "cargando";
+  return (
+    <li className="cv-proposal font-sans" style={{ listStyle: "none", margin: "6px 0 6px 18px", padding: "8px 10px", borderRadius: 8, background: "#fdf3d7", borderLeft: "3px solid #d9a441" }}>
+      <p style={{ fontSize: 11, fontWeight: 600, color: "#7a5a12", margin: 0 }}>
+        {writing ? `Escribí una frase con «${p.palabra}»` : `Propuesta de Maru para «${p.palabra}» · revisá que sea verdad`}
+      </p>
+      <textarea
+        value={loading ? "Maru está escribiendo otra frase…" : text}
+        disabled={loading}
+        onChange={(e) => setText(e.target.value)}
+        rows={2}
+        placeholder={`Un logro tuyo que incluya «${p.palabra}»`}
+        aria-label={`Frase para ${p.palabra}`}
+        style={{ width: "100%", marginTop: 4, padding: "4px 6px", fontSize: 12.5, lineHeight: 1.45, border: "1px solid #ecd9a6", borderRadius: 6, background: "#fffaf0", resize: "vertical" }}
+      />
+      <span style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+        <button type="button" disabled={loading || !text.trim()} onClick={() => onAction("aceptar", text.trim())} className="rounded-full bg-ink px-3 py-1 text-[11.5px] font-semibold text-white disabled:opacity-50">
+          Aceptar
+        </button>
+        <button type="button" disabled={loading} onClick={() => onAction("otra")} className="rounded-full border border-line bg-white px-3 py-1 text-[11.5px] font-medium disabled:opacity-50">
+          {loading ? "Escribiendo…" : "Otra frase"}
+        </button>
+        {!writing && (
+          <button type="button" disabled={loading} onClick={() => onAction("escribir")} className="rounded-full border border-line bg-white px-3 py-1 text-[11.5px] font-medium disabled:opacity-50">
+            La escribo yo
+          </button>
+        )}
+        <button type="button" disabled={loading} onClick={() => onAction("descartar")} className="px-2 py-1 text-[11.5px] text-muted underline underline-offset-2 disabled:opacity-50">
+          Descartar
+        </button>
+      </span>
+    </li>
+  );
+}
 
 function move<T>(list: T[], from: number, to: number): T[] {
   if (to < 0 || to >= list.length) return list;
@@ -93,7 +142,7 @@ function Text({
 
 /* ---------- papel ---------- */
 
-export default function CvPaper({ doc, onChange, onRegenerate, regenerating, mode = "preview" }: PaperProps) {
+export default function CvPaper({ doc, onChange, onRegenerate, regenerating, proposals = [], onProposal, mode = "preview" }: PaperProps) {
   const t: Theme = resolveTheme(doc);
   const editable = !!onChange;
   const set: Update = onChange ?? (() => {});
@@ -168,6 +217,7 @@ export default function CvPaper({ doc, onChange, onRegenerate, regenerating, mod
           )}
         </li>
       ))}
+      {editable && exp && onProposal && proposals.filter((p) => p.expId === exp.id).map((p) => <ProposalRow key={p.palabra} p={p} onAction={(a, texto) => onProposal(a, p.palabra, texto)} />)}
       {editable && (
         <li>
           <AddButton onClick={() => onItems((list) => [...list, item("")])}>+ Agregar logro</AddButton>

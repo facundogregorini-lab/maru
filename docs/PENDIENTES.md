@@ -1,5 +1,15 @@
 # Estado y próximos pasos de Maru
 
+## CV en la home, keywords ATS, oportunidades ocultas, copiloto y alertas (plan en curso, desde 24/10/2026)
+
+Pedido del dueño. Una PR por funcionalidad, en este orden. «Pro» = cualquier plan pago. Mails con Resend (falta que el dueño cree la cuenta, verifique marucoach.com y cargue `RESEND_API_KEY` en Vercel).
+
+1. [x] Home: sección «Creá tu CV optimizado» después de «Una postulación para cada aviso» (PR #210).
+2. [x] Keywords ATS: en /cv, el botón «Cubrir las N palabras que faltan» (`/api/cv/keywords`) propone un logro con cada palabra en la experiencia que mejor la respalda. La propuesta queda resaltada en el CV con Aceptar / Otra frase / La escribo yo / Descartar; nada entra al CV sin aceptar. Si ninguna experiencia la respalda, no se inventa frase: se ofrece sumarla a habilidades. `cleanProposals` (`src/lib/keywords.ts`) descarta frases sin la palabra, con corchetes o en experiencias inexistentes.
+3. [ ] Oportunidades ocultas (avisos leídos del ATS de la empresa que no están en LinkedIn): sección extra en Match y 2 de los 5 primeros difuminados con sólo el % para el plan gratis. El servidor no manda los datos ocultos a quien no paga.
+4. [ ] Copiloto de Maru (reemplaza el chat actual) y sección en la home.
+5. [ ] Alertas semanales (Pro): filtros del match + umbral de % elegible, desde resultados y perfil; cron de Vercel + Resend; link para darse de baja. Sin clave se configuran pero no se envían.
+
 ## Después de la primera venta (plan en curso, desde 24/10/2026)
 
 La primera compradora chocó con el límite en la postulación, pagó, volvió a /precios y no retomó la postulación. Plan, en PRs chicas:

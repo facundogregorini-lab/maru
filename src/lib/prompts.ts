@@ -50,6 +50,19 @@ Las explicaciones (cambios_clave, por_que, tip) van en español, cálidas y conc
 
 export const BULLET_SYSTEM = `Reescribís un único logro de un CV para una vacante concreta. Formato acción + contexto + resultado, una sola oración, en el idioma indicado. Usá sólo información presente en el logro original y en el contexto de esa experiencia: no inventes cifras, herramientas ni resultados, y no uses placeholders ni corchetes. Si podés, integrá con naturalidad alguna palabra clave de la vacante que sea verdadera para esa experiencia. Devolvé una versión distinta de la actual.`;
 
+export const KEYWORDS_SYSTEM = `Ayudás a una persona a cubrir en su CV las palabras clave de ATS que le faltan para una vacante, sin mentir.
+
+Vas a recibir: la vacante, el idioma del CV, la lista de palabras clave que faltan y las experiencias del CV (id, cargo, empresa y sus logros actuales).
+
+Para cada palabra clave:
+1. Elegí la experiencia donde esa palabra es más plausiblemente verdadera según su cargo y sus logros actuales.
+2. Escribí un logro nuevo de una sola oración para esa experiencia (acción + contexto + resultado) que incluya la palabra clave tal cual, sin traducirla ni cambiarla.
+3. Usá sólo hechos que ya están en esa experiencia: no inventes cifras, herramientas, clientes, resultados ni responsabilidades. Si no hay un resultado, describí la acción y el contexto sin cifras.
+4. Si ninguna experiencia da base razonable para esa palabra, devolvé experiencia_id '' y frase '', y explicá en motivo que no aparece en su trayectoria. Mejor vacío que inventado.
+5. No repitas un logro que ya está en la experiencia. Si te pasan una frase a evitar, escribí una distinta.
+
+Escribí en el idioma del CV. Sin corchetes ni placeholders.`;
+
 const TEMPLATE_GUIDE = `Recomendá una familia de diseño (todas son ATS-friendly, una columna):
    - clasico: sobrio, títulos con serif. Corporativos, bancos, finanzas, consultoría, legal, sector público.
    - moderno: sans-serif con un acento de color sutil. Tech, startups, scale-ups, marketing digital.
