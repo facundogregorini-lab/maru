@@ -122,7 +122,7 @@ export function trackCheckoutFailed(plan: string, codigo: string | undefined): v
 export async function trackCheckoutCreated(email: Email, plan: string, checkoutId: string, waitMs = 800): Promise<AdsResult | "duplicate"> {
   const started = Date.now();
   const first = await claimFirst("begin_checkout", email, checkoutId);
-  trackProduct("checkout_creado", { plan, primera: first });
+  trackProduct("checkout_creado", { plan, primera: first, checkout: checkoutId });
   if (!first) return "duplicate";
   return sendAdsConversion("begin_checkout", { transaction_id: `co_${checkoutId}` }, { waitMs: Math.max(150, waitMs - (Date.now() - started)) });
 }
@@ -137,6 +137,6 @@ export async function trackVerifiedPurchase(email: Email, payment: VerifiedPayme
   if (!payment || !/^\d{1,20}$/.test(payment.id) || !(payment.amount > 0) || now - payment.at > PURCHASE_WINDOW_MS) return;
   const first = await claimFirst("purchase", email, payment.id);
   if (!first) return;
-  trackProduct("compra_confirmada", { plan: payment.plan, renovacion: !payment.first, monto: payment.amount });
+  trackProduct("compra_confirmada", { plan: payment.plan, renovacion: !payment.first, monto: payment.amount, pago: payment.id });
   if (payment.first && payment.currency === "ARS") await sendAdsConversion("purchase", { value: payment.amount, currency: "ARS", transaction_id: `mp_${payment.id}` });
 }

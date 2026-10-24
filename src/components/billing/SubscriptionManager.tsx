@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { PLANS, type PlanId } from "@/lib/plans";
+import { trackProduct } from "@/lib/tracking";
 
 export type RefundOption = { kind: "garantia" | "arrepentimiento"; until: number; amount: number };
 export type ManagedStatus = {
@@ -64,6 +65,8 @@ export default function SubscriptionManager({
       }).catch(() => null);
       const body = res ? await res.json().catch(() => ({})) : {};
       if (!res?.ok) throw new Error(body.error ?? "No pudimos completar el pedido.");
+      // Con el número de solicitud, PostHog se cruza con el registro de cobros sin mandar el email.
+      trackProduct(kind === "baja" ? "baja_confirmada" : "devolucion_confirmada", { solicitud: body.requestId, plan: status.tier ?? undefined, motivo: reason || undefined, tipo: body.kind });
       setReceipt(
         kind === "baja"
           ? `Renovación desactivada. ${body.paidThrough ? `Conservás el acceso hasta el ${fmtDate(body.paidThrough)}. ` : ""}Número de solicitud: ${body.requestId}.`
