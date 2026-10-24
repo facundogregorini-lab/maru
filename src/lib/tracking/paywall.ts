@@ -22,6 +22,16 @@ export function toolForRoute(url: string): LimitedTool | null {
   return ROUTES.find(([route]) => path === route)?.[1] ?? null;
 }
 
+/** Funciones que sólo vienen con un plan pago (402 PLAN_FEATURE), con el texto que muestra el modal. */
+export type PlanFeature = "keywords";
+export const PLAN_FEATURE_EVENT = "maru:plan-feature";
+
+/** Abre el modal de planes porque la función es del plan pago (no es un límite: no cuenta como "Límite alcanzado"). */
+export function notifyPlanFeature(feature: PlanFeature): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(PLAN_FEATURE_EVENT, { detail: { feature } }));
+}
+
 /** Llamarlo con la respuesta de error de una acción del usuario. Devuelve la herramienta si abrió el paywall. */
 export function notifyPlanLimit(url: string, status: number, code: string | undefined): LimitedTool | null {
   if (typeof window === "undefined" || status !== 429 || code !== "PLAN_LIMIT") return null;

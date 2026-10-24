@@ -13,6 +13,10 @@ import CvPaper, { type PaperProposal, type ProposalAction } from "./CvPaper";
 import StylePanel from "./StylePanel";
 import TemplatePicker from "./TemplatePicker";
 import { resolveTheme } from "./themes";
+import { notifyPlanFeature } from "@/lib/tracking/paywall";
+
+/** Sin plan: el modal de planes ya explica por qué; no hace falta otro error en pantalla. */
+class PlanFeatureError extends Error {}
 
 const SECTION_LABELS: Record<SectionKey, string> = {
   resumen: "Perfil / resumen",
@@ -70,6 +74,10 @@ export default function CvEditor({
       }),
     });
     const data = await res.json().catch(() => ({}));
+    if (res.status === 402 && data.code === "PLAN_FEATURE") {
+      notifyPlanFeature("keywords");
+      throw new PlanFeatureError();
+    }
     if (!res.ok) throw new Error(data.error || "No pudimos proponer frases. Probá de nuevo.");
     return data.propuestas as KeywordProposal[];
   }
@@ -89,7 +97,7 @@ export default function CvEditor({
     try {
       applyResults(await askPhrases(toCover.slice(0, 20)));
     } catch (e) {
-      setError((e as Error).message);
+      if (!(e instanceof PlanFeatureError)) setError((e as Error).message);
     } finally {
       setCovering(false);
     }
@@ -109,7 +117,7 @@ export default function CvEditor({
       try {
         applyResults(await askPhrases([palabra], p.texto ? { [palabra]: p.texto } : undefined));
       } catch (e) {
-        setError((e as Error).message);
+        if (!(e instanceof PlanFeatureError)) setError((e as Error).message);
         setProposals((cur) => cur.map((x) => (x.palabra === palabra ? { ...x, estado: "propuesta" } : x)));
       }
     }
