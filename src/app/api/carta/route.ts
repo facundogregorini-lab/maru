@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { planGuard, usageGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, cvBlocks, errorResponse, jobBlock } from "@/lib/claude";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { CARTA_SYSTEM } from "@/lib/prompts";
@@ -52,11 +52,11 @@ export async function POST(req: Request) {
         ].join("\n"),
       },
     ];
-    const limit = await planGuard(req, "carta");
-    if (limit) return limit;
+    const usage = await usageGuard(req, "carta");
+    if (usage.blocked) return usage.blocked;
     const carta = await askStructured({
       editorialPaths: ["saludo", "parrafos.*", "cierre", "asunto_email", "mensaje_corto", "requisitos_cubiertos.*.como", "consejos.*"],
-      system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
+      system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" }).catch(async (err) => { await usage.release(); throw err; });
     return Response.json({ carta });
   } catch (err) {
     return errorResponse(err);

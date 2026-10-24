@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { planGuard, usageGuard } from "@/lib/billing/http";
 import { UserFacingError, askStructured, cvBlocks, errorResponse } from "@/lib/claude";
 import { normalizeCvSource } from "@/lib/cvSource";
 import { VIDEO_GUION_SYSTEM } from "@/lib/prompts";
@@ -22,11 +22,11 @@ export async function POST(req: Request) {
       ...(await cvBlocks(normalizeCvSource(body))),
       { type: "text" as const, text: `<opciones>\nDuración: ${o.duracion} segundos\nTono: ${o.tono}\nIdioma: ${o.idioma}\n</opciones>` },
     ];
-    const limit = await planGuard(req, "video");
-    if (limit) return limit;
+    const usage = await usageGuard(req, "video");
+    if (usage.blocked) return usage.blocked;
     const guion = await askStructured({
       editorialPaths: ["bloques.*.texto", "bloques.*.tip", "consejos.*", "mensaje_envio"],
-      system: VIDEO_GUION_SYSTEM, content, schema: VideoGuionSchema, effort: "medium" });
+      system: VIDEO_GUION_SYSTEM, content, schema: VideoGuionSchema, effort: "medium" }).catch(async (err) => { await usage.release(); throw err; });
     return Response.json({ guion });
   } catch (err) {
     return errorResponse(err);

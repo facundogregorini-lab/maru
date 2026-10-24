@@ -189,6 +189,18 @@ return 0`;
   const [wait] = await pipeline([["EVAL", script, 1, key, limit, windowMs]]);
   return Number(wait);
 }
+/** Devuelve un uso tomado con takeCounter (por ejemplo, si la acción que lo consumió falló). Nunca baja de cero y conserva el vencimiento. */
+export async function releaseCounter(key: string): Promise<void> {
+  if (inMemory()) {
+    const counter = counters.get(key);
+    if (counter && counter.count > 0) counter.count--;
+    return;
+  }
+  const script = `local count = tonumber(redis.call('GET', KEYS[1]) or '0')
+if count > 0 then redis.call('DECR', KEYS[1]) end
+return 0`;
+  await pipeline([["EVAL", script, 1, key]]);
+}
 /** Como takeCounter, pero devuelve también cuántos usos lleva la ventana (para mostrar cuántos quedan). */
 export async function takeCounterCount(key: string, limit: number, windowMs: number, now = Date.now()): Promise<{ wait: number; count: number }> {
   if (inMemory()) {

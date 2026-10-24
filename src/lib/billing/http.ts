@@ -2,7 +2,7 @@ import { sessionEmail } from "../auth";
 import { FREE_LIMITS, type UsageKind } from "../plans";
 import { clientIp } from "../rateLimit";
 import { SITE_URL } from "../site";
-import { allowUsage, billingReady, hasPaidPlan, takeAnonymousUsage, takeUsage } from "./server";
+import { billingReady, hasPaidPlan, releaseUsage, takeAnonymousUsage, takeUsage, takeUsageSlot } from "./server";
 
 export const billingJson = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 export function billingSession(req: Request): string | null {
@@ -15,15 +15,26 @@ export function billingSession(req: Request): string | null {
   } catch { return null; }
 }
 export const loginRequired = () => billingJson({ error: "Ingresá con Google para continuar.", code: "AUTH_REQUIRED" }, 401);
-export async function planGuard(req: Request, kind?: UsageKind): Promise<Response | null> {
+/** Sesión obligatoria (con el cobro encendido). Para las acciones que consumen cupo, usar usageGuard. */
+export async function planGuard(req: Request): Promise<Response | null> {
   if (!billingReady()) return null;
+  return billingSession(req) ? null : loginRequired();
+}
+const noRelease = async () => {};
+/**
+ * Sesión y cupo de una acción. Si la acción falla después (por ejemplo, la IA no responde), llamar a `release`:
+ * así un error no le consume a la persona su uso gratis del día.
+ */
+export async function usageGuard(req: Request, kind: UsageKind): Promise<{ blocked: Response | null; release: () => Promise<void> }> {
+  if (!billingReady()) return { blocked: null, release: noRelease };
   const email = billingSession(req);
-  if (!email) return loginRequired();
-  if (!kind) return null;
+  if (!email) return { blocked: loginRequired(), release: noRelease };
   try {
-    if (await allowUsage(email, kind)) return null;
-    return billingJson({ error: "Llegaste al límite gratis de hoy (o de esta semana, en entrevistas y videos). Con un plan de Maru no tenés que esperar.", code: "PLAN_LIMIT", upgradeUrl: "/precios" }, 429);
-  } catch { return billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503); }
+    const key = await takeUsageSlot(email, kind);
+    if (key === null) return { blocked: billingJson({ error: "Llegaste al límite gratis de hoy (o de esta semana, en entrevistas y videos). Con un plan de Maru no tenés que esperar.", code: "PLAN_LIMIT", upgradeUrl: "/precios" }, 429), release: noRelease };
+    // Devolver el uso nunca debe tapar el error original de la acción.
+    return { blocked: null, release: () => releaseUsage(key).catch(() => {}) };
+  } catch { return { blocked: billingJson({ error: "No pudimos verificar tu plan. Probá en un momento.", code: "PLAN_UNAVAILABLE" }, 503), release: noRelease }; }
 }
 /** Funciones exclusivas del plan: true con cobro apagado o plan activo. Si no se puede verificar, se trata como gratis. */
 export async function paidFeatures(req: Request): Promise<boolean> {

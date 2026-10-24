@@ -188,6 +188,19 @@ describe("suscripción validada en el servidor", () => {
     expect(await s.allowUsage("ana@example.com", "entrevista", martes)).toBe(false);
     expect(await s.allowUsage("ana@example.com", "entrevista", lunes + 7 * 86400_000)).toBe(true);
   });
+  it("si la generación falla, el uso gratis vuelve al cupo", async () => {
+    const s = await setup();
+    const lunes = Date.parse("2026-10-12T15:00:00Z");
+    const key = await s.takeUsageSlot("ana@example.com", "cv", lunes);
+    expect(key).toBeTruthy();
+    expect(await s.takeUsageSlot("ana@example.com", "cv", lunes)).toBeNull();
+    await s.releaseUsage(key!);
+    expect(await s.takeUsageSlot("ana@example.com", "cv", lunes)).toBe(key);
+    // Devolver dos veces no regala usos de más: nunca baja de cero.
+    await s.releaseUsage(key!); await s.releaseUsage(key!);
+    expect(await s.takeUsageSlot("ana@example.com", "cv", lunes)).toBe(key);
+    expect(await s.takeUsageSlot("ana@example.com", "cv", lunes)).toBeNull();
+  });
   it("cuenta días y semanas en hora de Argentina", async () => {
     const s = await setup();
     // 01:30 UTC del martes todavía es lunes en Argentina.

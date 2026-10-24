@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter, takeCounterCount } from "../db";
+import { compareAndSetJson, dbConfigured, getManyJson, releaseCounter, setJson, takeCounter, takeCounterCount } from "../db";
 import { userId } from "../sync/server";
 import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
@@ -332,12 +332,22 @@ export async function hasPaidPlan(email: string): Promise<boolean> {
   if (!billingReady()) return true;
   return hasPaidAccess(await readSubscription(email));
 }
-export async function allowUsage(email: string, kind: UsageKind, now = Date.now()): Promise<boolean> {
-  if (!billingReady()) return true;
+/**
+ * Toma un uso del cupo de la cuenta. Devuelve la clave del contador, para devolver el uso con releaseUsage
+ * si la acción falla; "" si el cobro está apagado y no se cuenta; null si no queda cupo.
+ */
+export async function takeUsageSlot(email: string, kind: UsageKind, now = Date.now()): Promise<string | null> {
+  if (!billingReady()) return "";
   const paid = await hasPaidPlan(email);
   const { limit, window } = paid ? { limit: PAID_DAILY_LIMIT, window: "dia" as const } : FREE_LIMITS[kind];
   const ttl = (window === "semana" ? 8 : 2) * 86400_000;
-  return (await takeCounter(`maru:usage:${userId(email)}:${usageWindow(window, now)}:${paid ? "plan" : kind}`, limit, ttl, now)) === 0;
+  const key = `maru:usage:${userId(email)}:${usageWindow(window, now)}:${paid ? "plan" : kind}`;
+  return (await takeCounter(key, limit, ttl, now)) === 0 ? key : null;
+}
+export const allowUsage = async (email: string, kind: UsageKind, now = Date.now()): Promise<boolean> => (await takeUsageSlot(email, kind, now)) !== null;
+/** Devuelve un uso tomado con takeUsageSlot: la generación falló y no corresponde descontarla del cupo. */
+export async function releaseUsage(key: string): Promise<void> {
+  if (key) await releaseCounter(key);
 }
 /** Tope por IP para el uso gratis sin cuenta: holgado para varias personas en una misma red, pero frena reinstalar la extensión para sumar usos. */
 export const ANON_IP_FACTOR = 3;
