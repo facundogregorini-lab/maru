@@ -79,3 +79,26 @@ describe("empresas que contratan desde cualquier país (Tether)", () => {
     expect(postings.map((p) => analyzeStandalone(p, NOW).eligibility.status)).toEqual(["elegible", "no_elegible", "no_elegible"]);
   });
 });
+
+describe("vigencia de Himalayas", () => {
+  it("consulta su API de verificación sólo para los que no volvieron en la última lectura", async () => {
+    const { applyBoard, emptyInventory } = await import("@/lib/match/inventory");
+    const { checkImportedLiveness, himalayasCheckUrl } = await import("@/lib/match/liveness");
+    expect(himalayasCheckUrl("https://himalayas.app/companies/acme/jobs/data-engineer")).toBe("https://himalayas.app/jobs/api/companies/acme/jobs/data-engineer");
+    expect(himalayasCheckUrl("https://evil.test/companies/acme/jobs/x")).toBeNull();
+    const inv = emptyInventory("fixture");
+    const jobs = ["a", "b", "c"].map((id) => normalizeHimalayas(job({ guid: `https://himalayas.app/companies/acme/jobs/${id}` }) as never, board));
+    applyBoard(inv, "himalayas", "himalayas", { postings: jobs, complete: false }, "2026-10-20T10:00:00.000Z");
+    // "c" volvió hoy en el feed: no se consulta.
+    applyBoard(inv, "himalayas", "himalayas", { postings: [jobs[2]], complete: false }, "2026-10-23T10:00:00.000Z");
+    const calls: string[] = [];
+    const fetchImpl = (async (url: RequestInfo | URL) => {
+      calls.push(String(url));
+      return new Response("{}", { status: String(url).endsWith("/a") ? 410 : 200 });
+    }) as typeof fetch;
+    const stats = await checkImportedLiveness(inv, "2026-10-23T12:00:00.000Z", { fetchImpl, resolve: async () => ["93.184.216.34"], pauseMs: 0 });
+    expect(calls.sort()).toEqual(["https://himalayas.app/jobs/api/companies/acme/jobs/a", "https://himalayas.app/jobs/api/companies/acme/jobs/b"]);
+    expect(stats).toMatchObject({ checked: 2, closed: 1, open: 1 });
+    expect(inv.postings.find((p) => p.externalId.endsWith("/a"))!.status).toBe("cerrada");
+  });
+});

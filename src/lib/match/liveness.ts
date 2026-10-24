@@ -67,6 +67,16 @@ export async function liveStatus(res: Response): Promise<LiveStatus> {
   return hit ? { status: "cerrada", reason: `La página original dice “${hit}”` } : { status: "abierta" };
 }
 
+/**
+ * Himalayas pide sacar los avisos que se cierran antes de vencer. Leemos sólo los más recientes de su feed, así que
+ * los que no volvieron en la última lectura se consultan en su API de verificación (200 publicado, 410/404 cerrado).
+ */
+export function himalayasCheckUrl(guid: string): string | null {
+  const m = guid.match(/^https:\/\/himalayas\.app\/(companies\/[^/?#]+\/jobs\/[^/?#]+)$/);
+  return m ? `https://himalayas.app/jobs/api/${m[1]}` : null;
+}
+const HIMALAYAS_PAUSE_MS = 1100;
+
 export type LivenessOptions = {
   max?: number;
   pauseMs?: number;
@@ -118,7 +128,7 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
   const blocked = blockedSources(inv);
   if (blocked.size) log(`Fuentes que bloquean la revisión (se saltean): ${[...blocked].join(", ")}`);
   const candidates = inv.postings
-    .filter((p) => p.status === "abierta" && sourceById(p.sourceId)?.imported && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
+    .filter((p) => p.status === "abierta" && (sourceById(p.sourceId)?.imported || (p.sourceId === "himalayas" && Date.parse(p.lastSeenAt) < Date.parse(now) - 86_400_000)) && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
     .sort((a, b) => (a.lastLiveCheckAt ?? "").localeCompare(b.lastLiveCheckAt ?? "") || a.firstSeenAt.localeCompare(b.firstSeenAt));
   const due = roundRobin(candidates, max);
   const stats = { checked: 0, closed: 0, open: 0, unknown: 0 };
@@ -144,7 +154,9 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
   async function checkOne(p: StoredPosting) {
     let result: LiveStatus = { status: "desconocido" };
     try {
-      result = await liveStatus(await safeFetch(p.sourceUrl, { fetchImpl, resolve, timeoutMs: 15_000 }));
+      const api = p.sourceId === "himalayas" ? himalayasCheckUrl(p.sourceUrl) : null;
+      const res = await safeFetch(api ?? p.sourceUrl, { fetchImpl, resolve, timeoutMs: 15_000 });
+      result = api && res.ok ? { status: "abierta" } : await liveStatus(res);
     } catch {
       // Red, DNS o URL rechazada: no sabemos nada nuevo.
     }
@@ -161,6 +173,7 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
       log(`✗ ${p.key}: ${result.reason}`);
     } else if (result.status === "abierta") stats.open++;
     else stats.unknown++;
-    if (pauseMs) await new Promise((r) => setTimeout(r, pauseMs));
+    const pause = p.sourceId === "himalayas" ? Math.max(pauseMs, HIMALAYAS_PAUSE_MS) : pauseMs;
+    if (pause) await new Promise((r) => setTimeout(r, pause));
   }
 }
