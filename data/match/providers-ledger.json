@@ -18368,6 +18368,581 @@
         "budgetUsd": 34.5
       },
       "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analista",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8458",
+        "runId": "pknNatCv5xCdeqLJC",
+        "datasetId": "dKXjxpcYgcXEb3U3B"
+      },
+      "rows": 12,
+      "consumed": 0.0052,
+      "quota": {
+        "usageTotalUsd": 0.00522,
+        "spentUsd": 30.719,
+        "budgetUsd": 34.5
+      },
+      "created": 9
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "desarrollador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8458",
+        "runId": "veQ9sBNEpHXIM8S5p",
+        "datasetId": "ZDQSiqdN6DMAMYTMM"
+      },
+      "rows": 13,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 30.724,
+        "budgetUsd": 34.5
+      },
+      "created": 5
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "software engineer",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8458",
+        "runId": "aie5sg8J3zhpqsRl6",
+        "datasetId": "EGS4S3tlsbXiiRSfe"
+      },
+      "rows": 12,
+      "consumed": 0.0045,
+      "quota": {
+        "usageTotalUsd": 0.0045000000000000005,
+        "spentUsd": 30.728,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "marketing",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8458",
+        "runId": "sFyoSmBxnWatWR3dh",
+        "datasetId": "BV6JUySFZDusWfMkP"
+      },
+      "rows": 2,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.729,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ventas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8458",
+        "runId": "zxK7FiiRAbPrupFHD",
+        "datasetId": "Vagis3BibCHhsLweu"
+      },
+      "rows": 7,
+      "consumed": 0.0023,
+      "quota": {
+        "usageTotalUsd": 0.00234,
+        "spentUsd": 30.731,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "contador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8482",
+        "runId": "bMsTdTEeeadg2L4J0",
+        "datasetId": "QejSbTcls1Rl3detk"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.732,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "recursos humanos",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8482",
+        "runId": "m4wvFeuw2nrgDQXr9",
+        "datasetId": "vOsdRIvjPB9hmXJZ7"
+      },
+      "rows": 2,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.733,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ingeniero",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8482",
+        "runId": "sWcZqBuVWVJfihXrN",
+        "datasetId": "jaM4RXNxiKjFc7QHP"
+      },
+      "rows": 5,
+      "consumed": 0.0027,
+      "quota": {
+        "usageTotalUsd": 0.0027,
+        "spentUsd": 30.736,
+        "budgetUsd": 34.5
+      },
+      "created": 2
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "data",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8482",
+        "runId": "4aMN7O9AXUaimVE4Q",
+        "datasetId": "xaKF2hkRcKH5eQnfb"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.737,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "administrativo",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8482",
+        "runId": "8g2mdRwAitWnVF6Ub",
+        "datasetId": "uPaKKJ3Kd5JYJtlz3"
+      },
+      "rows": 9,
+      "consumed": 0.0041,
+      "quota": {
+        "usageTotalUsd": 0.0041400000000000005,
+        "spentUsd": 30.741,
+        "budgetUsd": 34.5
+      },
+      "created": 1
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "disenador",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "KRSxdaf6IPitmtB9d",
+        "datasetId": "A2ndAchzTZsSNpIzA"
+      },
+      "rows": 0,
+      "consumed": 0.06,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.801,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "product",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "aweH25nrQSFL2Zftz",
+        "datasetId": "6hxxg5rgxeXftm0MK"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.802,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "finanzas",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "48brPCpAGYi2fihLA",
+        "datasetId": "JzpIT5O8O8R4i4akU"
+      },
+      "rows": 0,
+      "consumed": 0.06,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.862,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "abogado",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "yzPCO6btu8CUhiifP",
+        "datasetId": "5eEkUJimbqYmKSUQw"
+      },
+      "rows": 0,
+      "consumed": 0.06,
+      "quota": {
+        "usageTotalUsd": 0,
+        "spentUsd": 30.922,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "project manager",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "FLzkPDz2eZVzjbgYZ",
+        "datasetId": "OsR5hSCZvuLlvK62s"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.923,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "customer success",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "AJCoCP5C938LzfBOM",
+        "datasetId": "HNNgbqyh0W4BZcvnC"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.923,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "recruiter",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "CNWiCIngGgDPK3lmU",
+        "datasetId": "LDRn9uK6rMuTGyLEx"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.924,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "logistica",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "jFnY2SlmvKcLIqCTM",
+        "datasetId": "awlpM5us9FCcCCIR4"
+      },
+      "rows": 2,
+      "consumed": 0.0016,
+      "quota": {
+        "usageTotalUsd": 0.00162,
+        "spentUsd": 30.926,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "compras",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "80vz8M3TwJk7Wt8oE",
+        "datasetId": "rpN1gtIejgVONpvyX"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.927,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "ux",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8495",
+        "runId": "mtL8GG1qDSPqlPVZV",
+        "datasetId": "h22UPAMn1oPns776d"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.928,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "comercial",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8497",
+        "runId": "RlLmqAGwNy03jvxgj",
+        "datasetId": "T6Y2TUG9OvCm7albI"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.929,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "operaciones",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8497",
+        "runId": "CfLQ8aLzAgXppX1n2",
+        "datasetId": "d9cQD3KeFxZwLXfJb"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.93,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "consultor",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8497",
+        "runId": "DNo8jDCtvInjgb2Rm",
+        "datasetId": "cKWa4SWo9iN2c08Lr"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.93,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "soporte",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8497",
+        "runId": "FRAErPl7A39qmmAdV",
+        "datasetId": "DwkFVU2fHcrFm8JRr"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.931,
+        "budgetUsd": 34.5
+      },
+      "created": 0
+    },
+    {
+      "at": "2026-10-24T15:38:57.200Z",
+      "provider": "apify",
+      "call": "run",
+      "params": {
+        "actor": "valig/linkedin-jobs-scraper",
+        "keyword": "analytics",
+        "rows": "100",
+        "maxTotalChargeUsd": "0.06",
+        "location": "Córdoba, Argentina",
+        "skipJobIds": "8497",
+        "runId": "FJTlzuuihMvUHCTt1",
+        "datasetId": "bfbk87A4TyoyZAewG"
+      },
+      "rows": 0,
+      "consumed": 0.0009,
+      "quota": {
+        "usageTotalUsd": 0.0009,
+        "spentUsd": 30.932,
+        "budgetUsd": 34.5
+      },
+      "created": 0
     }
   ]
 }
