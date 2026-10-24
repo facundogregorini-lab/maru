@@ -1,3 +1,5 @@
+import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
+
 /** Secciones del sitio (header, menú y footer). Va aparte: los componentes de servidor no pueden importar datos de un módulo "use client". */
 export const NAV = [
   { href: "/precios", label: "Planes" },
@@ -9,7 +11,7 @@ export const NAV = [
   { href: "/video", label: "Video" },
   { href: "/entrevista", label: "Entrevista" },
   { href: "/seguimiento", label: "Seguimiento" },
-  { href: "/extension", label: "Extensión" },
+  { href: EXTENSION_STORE_URL, label: "Extensión" },
 ] as const;
 
 /** Menú "Herramientas ▾" del header (el "Features ▾" de jobright). */
@@ -21,5 +23,5 @@ export const TOOLS = [
   { href: "/entrevista", label: "Práctica de entrevista", hint: "Preguntas y repreguntas para tu rol" },
   { href: "/video", label: "Video de presentación", hint: "Guion, teleprompter y feedback" },
   { href: "/seguimiento", label: "Seguimiento", hint: "Tus postulaciones en un tablero" },
-  { href: "/extension", label: "Extensión para Chrome", hint: "Autocompletá postulaciones" },
+  { href: EXTENSION_STORE_URL, label: "Extensión para Chrome", hint: "Autocompletá postulaciones" },
 ] as const;

@@ -58,8 +58,8 @@ export default async function Home() {
           <div>
             <Laurels
               items={[
-                { top: "Autocompleta en", main: "Greenhouse", second: "y Lever", href: "/extension", label: "Autocompleta formularios en Greenhouse y Lever con la extensión" },
-                { top: "Extensión para", main: "Chrome", href: "/extension", label: "Extensión para Chrome" },
+                { top: "Autocompleta en", main: "Greenhouse", second: "y Lever", href: EXTENSION_STORE_URL, label: "Autocompleta formularios en Greenhouse y Lever con la extensión" },
+                { top: "Extensión para", main: "Chrome", href: EXTENSION_STORE_URL, label: "Extensión para Chrome" },
                 { top: "8 herramientas en", main: "Una cuenta", href: "/#herramientas", label: "8 herramientas en una cuenta: ver las herramientas" },
               ]}
             />
@@ -149,7 +149,6 @@ export default async function Home() {
             body="Con la extensión para Chrome, Maru completa los formularios de Greenhouse, Lever y otros portales con los datos de tu perfil. Te ahorrás la carga repetida y revisás todo antes de enviar."
             cta="Agregar a Chrome"
             href={EXTENSION_STORE_URL}
-            secondary={{ label: "Ver cómo instalarla", href: "/extension" }}
             visual={<AutofillMock />}
           />
         </div>
@@ -158,7 +157,7 @@ export default async function Home() {
             { title: "Tu CV general", body: "Ordená tu trayectoria para el tipo de rol que buscás, aunque todavía no tengas un aviso.", href: "/cv", cta: "Armar mi CV" },
             { title: "Carta de presentación", body: "Contá por qué te interesa la empresa con ejemplos de tu experiencia y el tono que elijas.", href: "/carta", cta: "Escribir mi carta" },
             { title: "Seguimiento", body: "Guardá búsquedas y registrá cada avance. Al ingresar, el tablero también se sincroniza con tu cuenta.", href: "/seguimiento", cta: "Ver mi tablero" },
-            { title: "Extensión para Chrome", body: "Completá campos en Greenhouse, Lever y formularios compatibles. Revisá las respuestas antes de enviar.", href: "/extension", cta: "Ver la extensión" },
+            { title: "Extensión para Chrome", body: "Completá campos en Greenhouse, Lever y formularios compatibles. Revisá las respuestas antes de enviar.", href: EXTENSION_STORE_URL, cta: "Instalar la extensión" },
           ].map((tool) => <article key={tool.href} className="flex flex-col rounded-3xl bg-surface p-6">
             <h3 className="text-lg font-semibold leading-6">{tool.title}</h3>
             <p className="mb-5 mt-2 text-sm leading-5 text-muted">{tool.body}</p>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AppShell from "@/components/app/AppShell";
@@ -135,7 +136,7 @@ export default async function JobPage({ params }: Props) {
                 Datos, respuestas y tu CV adjunto, en 1 clic.
               </span>
             </div>
-            <Link href="/extension" className={`${btn} mt-3`}>
+            <Link href={EXTENSION_STORE_URL} className={`${btn} mt-3`}>
               Bajar la extensión
             </Link>
           </Boost>
