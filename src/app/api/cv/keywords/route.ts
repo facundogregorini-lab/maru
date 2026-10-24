@@ -1,4 +1,4 @@
-import { planGuard } from "@/lib/billing/http";
+import { paidFeatures, planGuard } from "@/lib/billing/http";
 import { askStructured, errorResponse, UserFacingError } from "@/lib/claude";
 import { KEYWORDS_SYSTEM } from "@/lib/prompts";
 import { cleanProposals } from "@/lib/keywords";
@@ -22,11 +22,13 @@ const Body = z.object({
 /**
  * Propone, para cada palabra clave que falta, un logro nuevo en la experiencia más relevante del CV.
  * Las propuestas no se agregan solas: la persona acepta, pide otra o la escribe. Si ninguna experiencia
- * respalda la palabra, no se inventa una frase.
+ * respalda la palabra, no se inventa una frase. Es del plan pago: sin plan responde 402 PLAN_FEATURE.
  */
 export async function POST(req: Request) {
   const auth = await planGuard(req);
   if (auth) return auth;
+  if (!(await paidFeatures(req)))
+    return Response.json({ error: "Cubrir las palabras clave es parte de los planes de Maru.", code: "PLAN_FEATURE", upgradeUrl: "/precios" }, { status: 402 });
   try {
     const parsed = Body.safeParse(await req.json().catch(() => null));
     if (!parsed.success) throw new UserFacingError("No pudimos leer el CV. Recargá la página y probá de nuevo.", "BAD_REQUEST", 400);

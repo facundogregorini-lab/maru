@@ -41,8 +41,25 @@ describe("cleanProposals", () => {
   });
 });
 
+let paid = true;
+vi.mock("@/lib/billing/http", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/billing/http")>();
+  return { ...actual, paidFeatures: async () => paid };
+});
+
 describe("POST /api/cv/keywords", () => {
-  beforeEach(() => askStructured.mockReset());
+  beforeEach(() => {
+    askStructured.mockReset();
+    paid = true;
+  });
+
+  it("sin plan pago responde 402 PLAN_FEATURE y no llama a la IA", async () => {
+    paid = false;
+    const res = await POST(req(body));
+    expect(res.status).toBe(402);
+    expect((await res.json()).code).toBe("PLAN_FEATURE");
+    expect(askStructured).not.toHaveBeenCalled();
+  });
 
   it("devuelve una propuesta limpia por palabra pedida", async () => {
     askStructured.mockResolvedValue({

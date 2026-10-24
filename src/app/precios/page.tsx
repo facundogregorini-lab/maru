@@ -20,6 +20,7 @@ const FEATURES: { name: string; benefit: string; paid: string | true; free: stri
   { name: "Video de presentación", benefit: "Guion a medida y teleprompter", paid: "Ilimitado", free: free("video") },
   { name: "Extensión para Chrome", benefit: "Autocompletá postulaciones en Greenhouse, Lever y más", paid: "Ilimitado", free: free("autofill") },
   { name: "Copiloto de Maru", benefit: "Preguntale qué avisos te convienen y te abre la postulación", paid: "Ilimitado", free: `${FREE_LIMITS.copiloto.limit} mensajes por día` },
+  { name: "Cubrir las palabras clave del ATS", benefit: "Maru propone una frase en tu experiencia para cada palabra que falta", paid: true, free: false },
   { name: "Respuesta más fuerte (STAR) en el informe", benefit: "Sabé cómo responder mejor cada pregunta", paid: true, free: false },
   { name: "Feedback de cámara en tu video", benefit: "Encuadre, luz, fondo y mirada en cada toma", paid: true, free: false },
   { name: "Descarga en Word", benefit: "Editá tu CV y tu carta donde quieras", paid: true, free: "Sólo PDF" },

@@ -75,6 +75,7 @@ export default function AtsPanel({ report, cover }: { report: AtsReport; cover?:
             className="press w-full rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
           >
             {cover.busy ? "Maru está escribiendo…" : `✨ Cubrir ${cover.pending === 1 ? "la palabra que falta" : `las ${cover.pending} palabras que faltan`}`}
+            {!cover.busy && <span className="ml-2 rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide">Pro</span>}
           </button>
           <p className="mt-1.5 text-xs leading-relaxed text-muted">
             {cover.disabled ? "Sumá al menos una experiencia para que Maru proponga frases." : "Maru propone una frase en tu experiencia más relevante. Aceptá sólo lo que sea verdad."}
