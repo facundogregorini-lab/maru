@@ -6,7 +6,7 @@ La primera compradora chocó con el límite en la postulación, pagó, volvió a
 
 1. [x] Volver a la herramienta tras pagar: `PaywallHost` guarda la ruta (`src/lib/billing/returnTo.ts`) y, con el plan activo, `/precios` muestra «Continuar tu postulación» (o la herramienta que corresponda). Cada herramienta ya restaura lo cargado desde el navegador.
 2. [x] Cobrar el cupo gratis sólo si la generación sale bien: `usageGuard` (en `src/lib/billing/http.ts`) toma el uso y las cinco rutas de IA lo devuelven con `release()` si `askStructured` falla. Límite: si Vercel corta la función por tiempo (maxDuration), no llega a devolverse.
-3. [ ] PostHog: `identify` con el ID interno hasheado (sin email) y eventos de baja y devolución con el número de solicitud.
+3. [x] PostHog: `checkout_creado` lleva `checkout`, `compra_confirmada` lleva `pago` (id de Mercado Pago), y hay eventos nuevos `baja_confirmada` y `devolucion_confirmada` con `solicitud` (BAJA-…, DEV-…), `plan`, `motivo` y `tipo`. Así un recorrido de PostHog se cruza con el registro de cobros sin mandar el email. **Sin `identify`**: la política de privacidad dice que PostHog sólo usa un identificador al azar del navegador; unir dispositivos de una misma cuenta requiere cambiar primero esa política (decisión del dueño).
 
 ## Garantía por mail y arrepentimiento menos expuesto (24/10/2026)
 

@@ -112,6 +112,9 @@ describe("envío de conversiones", () => {
   it("los eventos de producto descartan datos personales y texto libre", async () => {
     const { safeProps } = await import("@/lib/tracking/analytics");
     expect(safeProps({ herramienta: "cv", plan: "ana@example.com", codigo: "texto con espacios", primera: true, monto: 4500 })).toEqual({ herramienta: "cv", primera: true, monto: 4500 });
+    // Números internos de operación, para cruzar con el registro de cobros; nunca un email.
+    expect(safeProps({ solicitud: "DEV-AB12CD34", pago: "123456789", checkout: "0f".repeat(16), motivo: "precio", tipo: "garantia" })).toEqual({ solicitud: "DEV-AB12CD34", pago: "123456789", checkout: "0f".repeat(16), motivo: "precio", tipo: "garantia" });
+    expect(safeProps({ solicitud: "ana@example.com" })).toEqual({});
   });
 });
 

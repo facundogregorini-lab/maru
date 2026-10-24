@@ -2,7 +2,8 @@
  * Eventos de producto (analytics). Salen por Vercel Analytics (window.va) y PostHog (posthog.ts), igual que
  * los eventos del match (src/lib/match/events.ts), y por el evento "maru:event" del navegador para depurar.
  * Pueden repetirse y llevar más detalle que las conversiones publicitarias, pero nunca datos personales:
- * sólo valores de una lista cerrada (herramienta, plan, códigos, montos agregados).
+ * sólo valores de una lista cerrada (herramienta, plan, códigos, montos agregados) y números internos de operación
+ * (checkout, pago de Mercado Pago, solicitud de baja o devolución), que sólo se cruzan con el registro de cobros de Maru.
  */
 import { capture } from "./posthog";
 
@@ -13,6 +14,8 @@ export type ProductEvent =
   | "checkout_creado" // el servidor creó la suscripción en Mercado Pago
   | "checkout_error" // el clic en un plan no llegó a checkout
   | "compra_confirmada" // pago aprobado verificado por el servidor
+  | "baja_confirmada" // canceló la renovación desde Mi suscripción
+  | "devolucion_confirmada" // pidió la devolución del primer pago (arrepentimiento)
   | "ads_bloqueado" // la etiqueta de Google no cargó (bloqueador, red): la conversión no salió
   | "meta_bloqueado"; // el píxel de Meta no cargó: el hito salió a Google pero no a Meta
 
@@ -25,9 +28,15 @@ export type ProductProps = Partial<{
   renovacion: boolean;
   monto: number;
   conversion: string;
+  /** Números internos para cruzar con el registro de cobros: checkout (hash), pago de Mercado Pago y solicitud (BAJA-…, DEV-…). */
+  checkout: string;
+  pago: string;
+  solicitud: string;
+  motivo: string;
+  tipo: "garantia" | "arrepentimiento";
 }>;
 
-const ALLOWED = new Set(["herramienta", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion"]);
+const ALLOWED = new Set(["herramienta", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion", "checkout", "pago", "solicitud", "motivo", "tipo"]);
 const SAFE_VALUE = /^[a-z0-9_-]{1,40}$/i;
 
 /** Filtra props: claves conocidas y valores cortos sin texto libre (nunca emails, nombres ni contenido). */

@@ -7,7 +7,7 @@ Organización **Growth Labs 2**, proyecto **670796** (US). Tableros:
 - [Maru · Funnel general](https://us.posthog.com/project/670796/dashboard/2224638): visita → activación → ve el límite → click en pagar → pago (ventana 30 días), en pasos y por semana.
 - [Maru · Funnels por herramienta](https://us.posthog.com/project/670796/dashboard/2224639): uno por sección, desde la visita a la web (ventana 14 días).
 
-Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/components/PostHogPageviews.tsx` (visitas y descarga de la extensión). Sólo con `NEXT_PUBLIC_POSTHOG_KEY` (clave pública `phc_…` del proyecto, en Vercel → Production) y en los dominios de `NEXT_PUBLIC_GOOGLE_ADS_HOSTS` (por defecto `www.marucoach.com`, `marucoach.com`). Sin autocaptura, sin grabación de sesiones, sin `identify`: el funnel une los pasos por navegador y nunca viaja el email.
+Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/components/PostHogPageviews.tsx` (visitas y descarga de la extensión). Sólo con `NEXT_PUBLIC_POSTHOG_KEY` (clave pública `phc_…` del proyecto, en Vercel → Production) y en los dominios de `NEXT_PUBLIC_GOOGLE_ADS_HOSTS` (por defecto `www.marucoach.com`, `marucoach.com`). Sin autocaptura, sin grabación de sesiones, sin `identify`: el funnel une los pasos por navegador y nunca viaja el email. Los eventos de cobro llevan números internos de operación (`checkout`, `pago`, `solicitud`) para cruzarlos con el registro de cobros de Maru o con Mercado Pago.
 
 | Evento | Cuándo | Propiedades |
 |---|---|---|
