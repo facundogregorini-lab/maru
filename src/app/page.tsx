@@ -4,7 +4,7 @@ import CtaScene from "@/components/landing/CtaScene";
 import Faq from "@/components/landing/Faq";
 import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
 import Laurels from "@/components/landing/Laurels";
-import { AutofillMock, CvMock, MatchMock } from "@/components/landing/Mocks";
+import { AtsMock, AutofillMock, CvMock, MatchMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
@@ -144,6 +144,13 @@ export default async function Home() {
         <div className="mt-10 space-y-16 sm:mt-14 sm:space-y-24">
           <Feature title="Búsquedas a tu medida" body="Compará tu perfil con el catálogo. Cada match muestra la afinidad, los motivos y los requisitos que faltan confirmar." cta="Ver mis matches" href="/match#empezar" visual={<MatchMock />} />
           <Feature title="Una postulación para cada aviso" body="Traé una vacante y prepará el CV y las respuestas del formulario con los datos de tu perfil." cta="Preparar una postulación" href="/postulacion#empezar" visual={<CvMock />} />
+          <Feature
+            title="Creá tu CV optimizado"
+            body="Un CV que pasa los filtros ATS con las palabras clave de tu rol y un formato que leen bien los sistemas y los recruiters. Ves tu compatibilidad y qué palabras te faltan mientras lo editás."
+            cta="Crear mi CV"
+            href="/cv#empezar"
+            visual={<AtsMock />}
+          />
           <Feature
             title="Aplicá en 1 click"
             body="Con la extensión para Chrome, Maru completa los formularios de Greenhouse, Lever y otros portales con los datos de tu perfil. Te ahorrás la carga repetida y revisás todo antes de enviar."

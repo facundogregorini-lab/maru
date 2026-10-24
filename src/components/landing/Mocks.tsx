@@ -141,6 +141,55 @@ export function CvMock({ bare = false }: { bare?: boolean }) {
   );
 }
 
+/** CV optimizado: puntaje ATS y palabras clave cubiertas, como en el editor de CV. */
+export function AtsMock({ bare = false }: { bare?: boolean }) {
+  const kws: [string, boolean][] = [
+    ["Head of Growth", true],
+    ["growth marketing", true],
+    ["fintech", true],
+    ["LATAM", true],
+    ["experimentation", true],
+    ["funnel", false],
+    ["CRM", false],
+  ];
+  return (
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo">
+      <div className="relative mx-auto grid max-w-[480px] gap-4 sm:grid-cols-[1fr_190px]">
+        <div className="rounded-2xl bg-white p-5 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
+          <p className="font-display text-lg font-bold uppercase">Ana Pérez</p>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Head of Growth · Fintech · LATAM</p>
+          <p className="mt-4 text-[11px] font-bold uppercase tracking-wide">Experiencia</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted">
+            • Lideré <mark className="rounded bg-brand-soft px-0.5 text-ink">growth marketing</mark> en 4 países y subí 120% el ROI de medios.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-muted">
+            • Armé el programa de <mark className="rounded bg-brand-soft px-0.5 text-ink">experimentation</mark> del equipo.
+          </p>
+          <div className="mt-3 space-y-1.5">
+            <div className="h-1.5 w-11/12 rounded bg-line" />
+            <div className="h-1.5 w-3/4 rounded bg-line" />
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-4 shadow-[0_24px_50px_-30px_rgba(0,0,0,0.35)]">
+          <div className="flex items-center gap-3">
+            <Ring value={86} size={56} />
+            <p className="min-w-0 text-xs font-semibold leading-tight">Compatibilidad ATS</p>
+          </div>
+          <p className="mt-3 text-[10px] font-bold uppercase tracking-wide text-muted">Palabras clave · 5/7</p>
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {kws.map(([k, ok]) => (
+              <span key={k} className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${ok ? "bg-brand-soft text-brand-dark" : "border border-line text-muted"}`}>
+                {ok ? "✓ " : ""}
+                {k}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </MockPanel>
+  );
+}
+
 /** Extensión: el panel de Maru sobre un formulario de postulación, como el autocompletado de jobright. */
 export function AutofillMock({ bare = false }: { bare?: boolean }) {
   const required = [
