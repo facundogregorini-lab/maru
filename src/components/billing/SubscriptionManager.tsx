@@ -5,6 +5,8 @@ import { PLANS, type PlanId } from "@/lib/plans";
 export type RefundOption = { kind: "garantia" | "arrepentimiento"; until: number; amount: number };
 export type ManagedStatus = {
   plan: string;
+  /** Cuenta del equipo con el plan sin cargo (PRO_EMAILS). */
+  cortesia?: boolean;
   tier: PlanId | null;
   status: string;
   paidThrough: number | null;
@@ -92,7 +94,9 @@ export default function SubscriptionManager({
   return (
     <div id="mi-plan" className="scroll-mt-24 rounded-[24px] border border-line bg-white p-5 text-left sm:p-6">
       <h3 className="text-lg font-bold">Mi suscripción</h3>
-      {paid ? (
+      {paid && status.cortesia && !plan ? (
+        <p className="mt-1 text-sm">Tenés el plan de Maru sin cargo y sin vencimiento.</p>
+      ) : paid ? (
         <p className="mt-1 text-sm">
           Plan {plan?.nombre.toLowerCase()} activo{status.paidThrough ? ` hasta el ${fmtDate(status.paidThrough)}` : ""}.{" "}
           {renewing ? `Se renueva ${plan?.renewalText} a ${plan?.priceText}.` : "La renovación está cancelada."}

@@ -204,6 +204,17 @@ describe("suscripción validada en el servidor", () => {
     for (let i = PAID_DAILY_LIMIT + 5; i < PAID_COPILOT_DAILY_LIMIT; i++) await s.allowUsage("beto@example.com", "copiloto", lunes);
     expect(await s.allowUsage("beto@example.com", "copiloto", lunes)).toBe(false);
   });
+  it("las cuentas de PRO_EMAILS tienen el plan sin suscripción", async () => {
+    const s = await setup();
+    vi.stubEnv("PRO_EMAILS", "Ana@Example.com, beto@example.com\ncami@example.com");
+    expect(s.isComplimentary("ana@example.com")).toBe(true);
+    expect(await s.hasPaidPlan("cami@example.com")).toBe(true);
+    expect(await s.hasPaidPlan("otra@example.com")).toBe(false);
+    const { GET } = await import("@/app/api/billing/status/route");
+    const { SESSION_COOKIE, createSessionToken } = await import("@/lib/auth");
+    const body = await (await GET(new Request("https://maru.test/api/billing/status", { headers: { cookie: `${SESSION_COOKIE}=${createSessionToken("beto@example.com")}` } }))).json();
+    expect(body).toMatchObject({ plan: "maru", cortesia: true, tier: null });
+  });
   it("cuenta días y semanas en hora de Argentina", async () => {
     const s = await setup();
     // 01:30 UTC del martes todavía es lunes en Argentina.
