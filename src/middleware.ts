@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/api/analyze",
-    "/api/chat",
+    "/api/copiloto",
     "/api/billing/checkout",
     "/api/billing/cancel",
     "/api/billing/status",

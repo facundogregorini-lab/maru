@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter, takeCounterCount } from "../db";
 import { userId } from "../sync/server";
-import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
+import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, PAID_COPILOT_DAILY_LIMIT, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { recordBillingEvent } from "./log";
 import { mp, MpError, type Invoice, type Payment, type Preapproval } from "./provider";
@@ -335,9 +335,11 @@ export async function hasPaidPlan(email: string): Promise<boolean> {
 export async function allowUsage(email: string, kind: UsageKind, now = Date.now()): Promise<boolean> {
   if (!billingReady()) return true;
   const paid = await hasPaidPlan(email);
-  const { limit, window } = paid ? { limit: PAID_DAILY_LIMIT, window: "dia" as const } : FREE_LIMITS[kind];
+  const copilot = kind === "copiloto";
+  const { limit, window } = paid ? { limit: copilot ? PAID_COPILOT_DAILY_LIMIT : PAID_DAILY_LIMIT, window: "dia" as const } : FREE_LIMITS[kind];
   const ttl = (window === "semana" ? 8 : 2) * 86400_000;
-  return (await takeCounter(`maru:usage:${userId(email)}:${usageWindow(window, now)}:${paid ? "plan" : kind}`, limit, ttl, now)) === 0;
+  const slot = paid ? (copilot ? "plan-copiloto" : "plan") : kind;
+  return (await takeCounter(`maru:usage:${userId(email)}:${usageWindow(window, now)}:${slot}`, limit, ttl, now)) === 0;
 }
 /** Tope por IP para el uso gratis sin cuenta: holgado para varias personas en una misma red, pero frena reinstalar la extensión para sumar usos. */
 export const ANON_IP_FACTOR = 3;

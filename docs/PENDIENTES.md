@@ -7,7 +7,14 @@ Pedido del dueño. Una PR por funcionalidad, en este orden. «Pro» = cualquier 
 1. [x] Home: sección «Creá tu CV optimizado» después de «Una postulación para cada aviso» (PR #210).
 2. [x] Keywords ATS: en /cv, el botón «Cubrir las N palabras que faltan» (`/api/cv/keywords`) propone un logro con cada palabra en la experiencia que mejor la respalda. La propuesta queda resaltada en el CV con Aceptar / Otra frase / La escribo yo / Descartar; nada entra al CV sin aceptar. Si ninguna experiencia la respalda, no se inventa frase: se ofrece sumarla a habilidades. `cleanProposals` (`src/lib/keywords.ts`) descarta frases sin la palabra, con corchetes o en experiencias inexistentes.
 3. [x] Oportunidades ocultas: pestaña «Ocultas» en /match. Cuenta como oculta la búsqueda cuyas publicaciones vienen todas del ATS de la empresa (conectores `ats` o `fantastic_ats`) y ninguna de LinkedIn (`apify-linkedin`, `fantastic_jb` o un link a linkedin.com). El texto dice «no las vimos publicadas en LinkedIn», no que no estén. `rankOpportunities` devuelve `counts.hidden` y `hiddenPool` con las mejores de todo el ranking. El rerank las actualiza y saca las que excluye. `withHiddenSection` (`src/lib/match/hidden.ts`), con `paidFeatures`: con plan pago van todas, con «Ver más». En el plan gratis van 5, con la 2.ª y la 4.ª difuminadas: de esas sólo viaja `{ locked, score }` y se sacan de las otras listas. El cierre lleva a /precios y guarda la vuelta a /match. Las ocultas visibles llevan la etiqueta «Oculta · no está en LinkedIn».
-4. [ ] Copiloto de Maru (reemplaza el chat actual) y sección en la home.
+4. [x] Copiloto de Maru, al estilo Orion de Jobright (definido con el dueño el 24/10): reemplaza el chat de /busquedas (se borraron `/api/chat` y `MaruChat`).
+   - Se abre tocando a Maru en el rincón (`MaruCompanion`, modo `copilot`) o con `openCopilot(pregunta)` desde cualquier pantalla. El recorrido queda como link dentro del panel.
+   - `/api/copiloto` (`src/lib/copilot.ts`) recibe el CV y el match del navegador si la persona deja activado «Usar mi CV y mi match». Los datos de contacto se borran antes de enviar.
+   - Con match, los avisos salen de su ranking con el % real; sin match, de buscar las palabras de la consulta en el inventario. También conoce las guardadas.
+   - La IA propone hasta 3 acciones: ver un aviso, preparar la postulación, ir a una herramienta o buscar. El servidor las valida y arma el texto de cada botón. Nada se ejecuta sin que la persona toque.
+   - Cupo propio: 10 mensajes por día gratis. Con plan, 80 por día, aparte del tope combinado de 25 (`PAID_COPILOT_DAILY_LIMIT`).
+   - La charla dura lo que la pestaña (sessionStorage), así sobrevive a las acciones que cambian de pantalla.
+   - Hay acceso «Preguntale a Maru» en /busquedas (`AskMaru`) y la sección «Tu copiloto de búsqueda» en la home (`CopilotMock`). También figura en la tabla de /precios.
 5. [ ] Alertas semanales (Pro): filtros del match + umbral de % elegible, desde resultados y perfil; cron de Vercel + Resend; link para darse de baja. Sin clave se configuran pero no se envían.
 
 ## Después de la primera venta (plan en curso, desde 24/10/2026)

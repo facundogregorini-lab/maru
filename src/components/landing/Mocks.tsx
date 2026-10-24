@@ -353,3 +353,39 @@ export function TrackerMock({ bare = false }: { bare?: boolean }) {
     </MockPanel>
   );
 }
+
+/** Copiloto: una charla con Maru que termina en avisos con su % y acciones para tocar. */
+export function CopilotMock({ bare = false }: { bare?: boolean }) {
+  return (
+    <MockPanel bare={bare} caption="Ejemplo ilustrativo">
+      <div className="mx-auto max-w-[400px] overflow-hidden rounded-[24px] bg-white shadow-[var(--shadow-card)]">
+        <div className="flex items-center gap-2.5 border-b border-black/[0.06] px-4 py-3">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-neon">
+            <MaruHead size={20} />
+          </span>
+          <p className="text-sm font-bold">Copiloto de Maru</p>
+        </div>
+        <div className="space-y-2.5 px-4 py-4 text-[13px] leading-snug">
+          <p className="ml-10 rounded-2xl bg-ink px-3 py-2 text-white">¿Qué búsquedas me convienen esta semana?</p>
+          <p className="mr-4 rounded-2xl bg-sand px-3 py-2">Por tu experiencia en growth, estas dos te quedan muy bien. A la primera le falta que muestres CRM en tu CV.</p>
+          {[
+            ["Head of Growth", "Tucán · Remoto", 92],
+            ["Growth Lead LATAM", "Pampa Pay · Híbrido", 87],
+          ].map(([t, c, s]) => (
+            <div key={t} className="mr-4 flex items-center gap-2 rounded-xl px-3 py-2 ring-1 ring-black/[0.08]">
+              <span className="min-w-0 flex-1">
+                <span className="block font-semibold">{t}</span>
+                <span className="block text-muted">{c}</span>
+              </span>
+              <span className="rounded-full bg-neon/20 px-2 py-0.5 text-[11px] font-bold">{s}%</span>
+            </div>
+          ))}
+          <div className="flex flex-wrap gap-2 pt-1">
+            <span className="rounded-full bg-neon px-3 py-1.5 font-semibold">Preparar mi postulación →</span>
+            <span className="rounded-full bg-neon px-3 py-1.5 font-semibold">Mejorar mi CV →</span>
+          </div>
+        </div>
+      </div>
+    </MockPanel>
+  );
+}

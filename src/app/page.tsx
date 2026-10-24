@@ -4,7 +4,8 @@ import CtaScene from "@/components/landing/CtaScene";
 import Faq from "@/components/landing/Faq";
 import HeroVideoPlayer from "@/components/landing/HeroVideoPlayer";
 import Laurels from "@/components/landing/Laurels";
-import { AtsMock, AutofillMock, CvMock, MatchMock } from "@/components/landing/Mocks";
+import CopilotCta from "@/components/landing/CopilotCta";
+import { AtsMock, AutofillMock, CopilotMock, CvMock, MatchMock } from "@/components/landing/Mocks";
 import TimeAgo from "@/components/landing/TimeAgo";
 import { MaruSprite } from "@/components/maru/PixelMaru";
 import SiteShell from "@/components/SiteShell";
@@ -152,6 +153,14 @@ export default async function Home() {
             visual={<AtsMock />}
           />
           <Feature
+            title="Tu copiloto de búsqueda"
+            body="Preguntale a Maru qué avisos te convienen, qué le falta a tu CV o cómo encarar una entrevista. Responde con tu CV y tu match, y con un toque te abre el aviso, la postulación o la herramienta que necesitás."
+            cta="Hablar con Maru"
+            href="#copiloto"
+            copilot
+            visual={<CopilotMock />}
+          />
+          <Feature
             title="Aplicá en 1 click"
             body="Con la extensión para Chrome, Maru completa los formularios de Greenhouse, Lever y otros portales con los datos de tu perfil. Te ahorrás la carga repetida y revisás todo antes de enviar."
             cta="Agregar a Chrome"
@@ -186,14 +195,14 @@ export default async function Home() {
   );
 }
 
-function Feature({ title, body, cta, href, visual, secondary }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; secondary?: { label: string; href: string } }) {
+function Feature({ title, body, cta, href, visual, secondary, copilot = false }: { title: string; body: string; cta: string; href: string; visual: React.ReactNode; secondary?: { label: string; href: string }; copilot?: boolean }) {
   const ctaClass = "press mt-8 inline-flex h-12 min-w-[256px] items-center justify-center rounded-[28px] bg-ink px-6 text-lg font-medium text-white sm:text-xl";
   return <article className="grid items-center gap-8 lg:grid-cols-[384px_minmax(0,1fr)] lg:gap-20">
     <div className="text-center lg:text-left">
       <h3 className="font-display text-[32px] font-semibold leading-[1.05] sm:text-5xl">{title}</h3>
       <p className="mt-4 text-base leading-6 sm:text-lg">{body}</p>
       {/* Los links de afuera (la Chrome Web Store) van con <a>: Link es para rutas del sitio. */}
-      {href.startsWith("http") ? <a href={href} className={ctaClass}>{cta}</a> : <Link href={href} className={ctaClass}>{cta}</Link>}
+      {copilot ? <CopilotCta className={ctaClass}>{cta}</CopilotCta> : href.startsWith("http") ? <a href={href} className={ctaClass}>{cta}</a> : <Link href={href} className={ctaClass}>{cta}</Link>}
       {secondary && <p className="mt-3"><Link href={secondary.href} className="inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4">{secondary.label} →</Link></p>}
     </div>
     <div className="min-w-0">{visual}</div>

@@ -13,6 +13,8 @@ import {
   PLAN_PRICE_TEXT,
   type GuideState,
 } from "./guide";
+import { OPEN_COPILOT_EVENT } from "@/lib/copilotClient";
+import Copilot from "./Copilot";
 import { useMaruAway } from "./MaruWorking";
 import { MaruDesk, MaruHead } from "./PixelMaru";
 import type { DeskFrame } from "./sprite";
@@ -23,7 +25,7 @@ import type { DeskFrame } from "./sprite";
  * en modo checklist. Al final, si no sos cliente, la oferta. Tocándola, el recorrido vuelve.
  */
 
-type Mode = "work" | "ask" | "guide" | "mini";
+type Mode = "work" | "ask" | "guide" | "mini" | "copilot";
 
 const OFFER = GUIDE_STEPS.length; // el paso que viene después de los productos
 const ASK_AFTER_MS = 2600;
@@ -36,6 +38,8 @@ export default function MaruCompanion() {
   const [mode, setModeState] = useState<Mode>("work");
   const [client, setClient] = useState(false);
   const [ready, setReady] = useState(false);
+  /** Pregunta que llega de un botón de otra pantalla; `n` distingue dos envíos iguales. */
+  const [initial, setInitial] = useState<{ text: string; n: number } | undefined>(undefined);
   /** Mientras Maru trabaja en el centro de la pantalla (MaruWorking), el rincón queda vacío. */
   const away = useMaruAway();
   const hopEl = useRef<HTMLSpanElement>(null);
@@ -89,7 +93,8 @@ export default function MaruCompanion() {
     if (g.status !== "nueva") return;
     // En planes y en los botones de baja o arrepentimiento, el saludo tapaba los botones (sobre todo en el celular).
     if (/^\/(precios|baja|arrepentimiento)(\/|$)/.test(window.location.pathname)) return;
-    const t = window.setTimeout(() => setMode("ask", { wave: true, talk: true }), ASK_AFTER_MS);
+    // Si mientras tanto abrió el copiloto, el saludo no lo tapa.
+    const t = window.setTimeout(() => modeRef.current === "work" && setMode("ask", { wave: true, talk: true }), ASK_AFTER_MS);
     return () => clearTimeout(t);
   }, [setMode]);
 
@@ -226,10 +231,25 @@ export default function MaruCompanion() {
     };
   }, []);
 
+  const openCopilot = useCallback(
+    (question?: string) => {
+      if (question) setInitial((prev) => ({ text: question, n: (prev?.n ?? 0) + 1 }));
+      setMode("copilot", { talk: true });
+    },
+    [setMode],
+  );
+  useEffect(() => {
+    const onOpen = (e: Event) => openCopilot((e as CustomEvent<{ question?: string }>).detail?.question);
+    window.addEventListener(OPEN_COPILOT_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_COPILOT_EVENT, onOpen);
+  }, [openCopilot]);
+
+  // Tocar a Maru abre el copiloto; el recorrido sigue a mano desde el copiloto y desde el saludo.
   const onMaru = () => {
     if (mode === "guide") return close("cerrada");
+    if (mode === "copilot") return setMode("work");
     if (mode === "ask") return open(0);
-    open();
+    openCopilot();
   };
 
   return (
@@ -246,6 +266,7 @@ export default function MaruCompanion() {
           }}
         />
       )}
+      {mode === "copilot" && <Copilot initial={initial} onClose={() => setMode("work")} onGuide={() => open(0)} />}
       {mode === "guide" && <Guide focus={focusPanel} state={guide} client={client} onGo={goTo} onTry={tryIt} onClose={() => close("cerrada")} onFinish={() => close("terminada")} />}
       {mode === "mini" && (
         <button
@@ -268,8 +289,8 @@ export default function MaruCompanion() {
           hover.current = false;
           kickRef.current();
         }}
-        aria-label={mode === "guide" ? "Cerrar el recorrido de Maru" : "Maru: hacer el recorrido por todo lo que hace"}
-        aria-expanded={mode === "guide"}
+        aria-label={mode === "guide" ? "Cerrar el recorrido de Maru" : mode === "copilot" ? "Cerrar el copiloto de Maru" : "Abrir el copiloto de Maru"}
+        aria-expanded={mode === "guide" || mode === "copilot"}
         data-mode={mode}
         className={`maru-desk maru-scale group pointer-events-auto relative block rounded-2xl outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ink ${ready ? "opacity-100" : "opacity-0"}`}
       >
@@ -297,7 +318,7 @@ export default function MaruCompanion() {
         <span aria-hidden className="mx-auto -mt-0.5 block h-1.5 w-[88px] rounded-full bg-black/10 blur-[2px]" />
         {mode === "work" && (
           <span className="pointer-events-none absolute -top-7 right-0 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold opacity-0 shadow-md ring-1 ring-black/5 transition-opacity group-hover:opacity-100">
-            ¿Te muestro todo? 👋
+            Preguntame lo que quieras 👋
           </span>
         )}
       </button>

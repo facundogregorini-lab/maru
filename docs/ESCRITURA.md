@@ -26,7 +26,7 @@ en el navegador ni elegir una opción.
 | Postulación | Redacción del CV y respuestas abiertas del formulario. |
 | Teleprompter | Texto de los bloques, indicaciones y mensaje para compartir. Las duraciones se conservan. |
 | Entrevista | Apertura, preguntas, repreguntas, cierre, informe y respuestas sugeridas. Los puntajes se conservan. |
-| Chat | Respuesta de Maru. IDs de avisos y vínculos se conservan. |
+| Copiloto | Respuesta de Maru. IDs de avisos, acciones y vínculos se conservan; el texto de cada botón lo arma el servidor. |
 | Extensión | Política común y revisión de textos largos redactados y notas. Opciones, valores copiados y otros campos quedan fuera. |
 | Match (re-evaluación con IA) | Sólo la razón principal de cada aviso. Puntos, niveles, salario y razones por componente quedan fuera. Usa el modelo de la etapa (Haiku por defecto). |
 | Extracción de perfil | Se copia la fuente sin reescritura editorial (`verbatim: true`). |

@@ -71,8 +71,12 @@ export const FREE_LIMITS = {
   video: { limit: 1, window: "semana" },
   /** Autocompletados de la extensión de Chrome. */
   autofill: { limit: 4, window: "dia" },
+  /** Mensajes al copiloto de Maru. */
+  copiloto: { limit: 10, window: "dia" },
 } as const;
 export type UsageKind = keyof typeof FREE_LIMITS;
 
 /** Uso razonable del plan pago, combinado entre todas las herramientas. Protege el servicio; no se muestra como cuota. */
 export const PAID_DAILY_LIMIT = 25;
+/** El copiloto se usa de a muchos mensajes cortos: con plan pago tiene su propio tope diario, aparte del combinado. */
+export const PAID_COPILOT_DAILY_LIMIT = 80;
