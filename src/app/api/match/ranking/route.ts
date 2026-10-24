@@ -47,6 +47,8 @@ export async function POST(req: Request) {
     // La web pide primero sin IA (resultados en segundos) y después el afinado, que puede tardar más.
     const available = rerankEnabled();
     const ai = available && ia !== false;
+    // Plan gratis: las ocultas (no vistas en LinkedIn) no van en las listas; sólo su % difuminado.
+    const paid = await paidFeatures(req);
     const ranked = rankOpportunities({
       opportunities,
       postings: allPostings,
@@ -58,13 +60,13 @@ export async function POST(req: Request) {
       // Con IA, la primera etapa entrega las 200 mejores para re-evaluar; después se recorta a la página.
       limit: ai ? Math.max(limit ?? 40, RERANK_ELIGIBLE, RERANK_PENDING) : limit,
       now,
+      excludeHidden: !paid,
     });
     // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
     const paged = ai
       ? pageOf(await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }), limit ?? 40)
       : ranked;
-    // Oportunidades ocultas: en el plan gratis, las difuminadas llegan sólo con el porcentaje.
-    const result = withHiddenSection(paged, await paidFeatures(req));
+    const result = withHiddenSection(paged, paid);
 
     return Response.json(
       {

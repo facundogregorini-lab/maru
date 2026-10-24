@@ -372,6 +372,8 @@ export type RankInput = {
   now?: Date;
   /** Coincidencia mínima para listar (por defecto MIN_SCORE). */
   minScore?: number;
+  /** Plan gratis: las ocultas no van en las listas (sólo cuentan y arman `hiddenPool`). */
+  excludeHidden?: boolean;
 };
 
 export type RankOutput = {
@@ -432,6 +434,8 @@ export function rankOpportunities(input: RankInput): RankOutput {
   const elig: Scored[] = [];
   const pend: Scored[] = [];
   const savedOut: Scored[] = [];
+  /** Ocultas listables (las de las listas o, en el plan gratis, las que se quedan afuera). */
+  const hid: Scored[] = [];
 
   for (const o of input.opportunities) {
     const isSaved = savedIds.has(o.id);
@@ -769,26 +773,27 @@ export function rankOpportunities(input: RankInput): RankOutput {
       ...(external ? { external: true, reviewedLabel: "Agregada por vos" } : {}),
     };
     const scored = { item, raw: order };
-    if (isSaved) savedOut.push(scored);
+    const lockedOut = !!input.excludeHidden && !!item.hidden;
+    if (isSaved && !lockedOut) savedOut.push(scored);
     if (o.status !== "abierta" || excludedByHard || (o.eligibility.status === "no_elegible" && bucket === "eligible")) continue;
     // Lo que casi no se parece a lo que busca no es "para vos": se cuenta aparte. Si filtra por área, se muestra igual.
     if (item.score < minScore && !f.families?.length && !external) {
       lowMatch++;
       continue;
     }
-    (bucket === "eligible" ? elig : pend).push(scored);
+    if (item.hidden) hid.push(scored);
+    if (!lockedOut) (bucket === "eligible" ? elig : pend).push(scored);
   }
 
   const sort = (a: Scored, b: Scored) => b.raw - a.raw
     || (Date.parse(b.item.publishedAt ?? b.item.reviewedAt) - Date.parse(a.item.publishedAt ?? a.item.reviewedAt));
   const sortTop = (arr: Scored[]) => diversify(arr.sort(sort)).slice(0, limit).map((s) => s.item);
-  const hidden = [...elig, ...pend].filter((s) => s.item.hidden);
   return {
     eligible: sortTop(elig),
     pending: sortTop(pend),
     saved: savedOut.sort(sort).map((s) => s.item),
-    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length), hidden: hidden.length },
-    hiddenPool: sortTop(hidden),
+    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length), hidden: hid.length },
+    hiddenPool: sortTop(hid),
   };
 }
 

@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { normalizeEmail } from "../auth";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter, takeCounterCount } from "../db";
 import { userId } from "../sync/server";
 import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, PAID_COPILOT_DAILY_LIMIT, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
@@ -327,7 +328,16 @@ export function usageWindow(window: "dia" | "semana", now = Date.now()): string 
   if (window === "semana") local.setUTCDate(local.getUTCDate() - ((local.getUTCDay() + 6) % 7));
   return `${window === "semana" ? "s" : "d"}${local.toISOString().slice(0, 10)}`;
 }
+/**
+ * Cuentas con el plan sin cargo y sin vencimiento (el equipo de Maru): PRO_EMAILS en Vercel, separados por comas,
+ * espacios o saltos de línea. Los emails no van en el repo, que es público.
+ */
+export function isComplimentary(email: string, env: Record<string, string | undefined> = process.env): boolean {
+  const target = normalizeEmail(email);
+  return !!target && (env.PRO_EMAILS ?? "").split(/[,\s]+/).some((e) => normalizeEmail(e) === target);
+}
 export async function hasPaidPlan(email: string): Promise<boolean> {
+  if (isComplimentary(email)) return true;
   // Con la bandera encendida pero sin credenciales o base, Maru sigue como en el lanzamiento en lugar de cortar la IA.
   if (!billingReady()) return true;
   return hasPaidAccess(await readSubscription(email));

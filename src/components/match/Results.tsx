@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
 import { rememberReturnTo } from "@/lib/billing/returnTo";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
-import { isLocked, type HiddenSection } from "@/lib/match/hidden";
+import { TEASER_POSITIONS, type HiddenSection, type HiddenTeaser } from "@/lib/match/hidden";
 import { itemProps, track } from "@/lib/match/events";
 import ScoreRing, { matchLevel } from "@/components/ScoreRing";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
@@ -120,6 +120,13 @@ export default function Results({
 
   const hidden = data?.hidden;
   const list = !data ? [] : tab === "elegibles" ? data.eligible : tab === "pendientes" ? data.pending : tab === "guardadas" ? data.saved : [];
+  // Plan gratis: en «Para vos», las posiciones 2 y 4 son ocultas difuminadas (sólo llega su %).
+  const rows: ({ item: RankedItem; position: number } | { teaser: HiddenTeaser })[] = list.map((item, i) => ({ item, position: i + 1 }));
+  if (tab === "elegibles" && hidden && !hidden.full)
+    TEASER_POSITIONS.forEach((pos, k) => {
+      const teaser = hidden.teasers[k];
+      if (teaser && pos <= rows.length) rows.splice(pos, 0, { teaser });
+    });
 
   function save(item: RankedItem) {
     const on = interactions.saved.includes(item.id);
@@ -169,13 +176,12 @@ export default function Results({
         La información faltante se indica por separado. No es una probabilidad de contratación ni una comparación con todo el mercado.
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
         <div className="inline-flex flex-wrap rounded-full bg-white p-1 text-sm ring-1 ring-black/[0.08]">
           {(
             [
               ["elegibles", `Para vos${data ? ` (${data.counts.eligible})` : ""}`],
               ["pendientes", `Por confirmar${data ? ` (${data.counts.pending})` : ""}`],
-              ["ocultas", `Ocultas${hidden ? ` (${hidden.total})` : ""}`],
               ["guardadas", `Guardadas (${interactions.saved.length})`],
             ] as const
           ).map(([k, label]) => (
@@ -184,6 +190,18 @@ export default function Results({
             </button>
           ))}
         </div>
+        {/* Las que no están en LinkedIn, aparte y a la derecha: con plan se ven todas; sin plan, sólo cuántas hay. */}
+        <button
+          type="button"
+          onClick={() => setTab("ocultas")}
+          aria-pressed={tab === "ocultas"}
+          className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition ${tab === "ocultas" ? "bg-ink text-white" : "bg-neon/20 text-ink ring-1 ring-neon hover:bg-neon/30"}`}
+        >
+          {hidden && !hidden.full && <span aria-hidden>🔒</span>}
+          Ocultas · no están en LinkedIn{hidden ? ` (${hidden.total.toLocaleString("es-AR")})` : ""}
+        </button>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         <button type="button" onClick={() => setShowFilters((x) => !x)} className={`rounded-full border px-4 py-2 text-sm transition ${hasActiveFilters ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-paper hover:border-brand"}`}>
           Filtros{hasActiveFilters ? " activos" : ""}
         </button>
@@ -201,7 +219,7 @@ export default function Results({
         </p>
       )}
 
-      {tab === "ocultas" && (
+      {tab === "ocultas" && hidden?.full && (
         <p className="mt-4 rounded-2xl bg-brand-soft px-4 py-3 text-sm leading-relaxed text-ink">
           Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn. Suelen tener menos postulantes.
         </p>
@@ -241,35 +259,36 @@ export default function Results({
           <EmptyResults tab={tab} hasFilters={hasActiveFilters} pending={data.counts.pending} onShowPending={() => setTab("pendientes")} onClearFilters={() => setFilters({})} />
         )}
         <div className={`space-y-4 transition ${loading && data ? "opacity-60" : ""}`}>
-          {list.map((item, i) => (
+          {rows.map((row, i) =>
+            "teaser" in row ? (
+              <LockedCard key={`teaser-${i}`} score={row.teaser.score} preliminary={refining} />
+            ) : (
             <JobCard
-              key={item.id}
-              item={item}
-              position={i + 1}
-              saved={interactions.saved.includes(item.id)}
-              onSave={() => save(item)}
-              onDiscard={(r) => discard(item, r)}
-              onRemoveExternal={item.external ? () => setExternal(external.filter((e) => e.id !== item.id)) : undefined}
-              external={external.find((e) => e.id === item.id)}
+              key={row.item.id}
+              item={row.item}
+              position={row.position}
+              saved={interactions.saved.includes(row.item.id)}
+              onSave={() => save(row.item)}
+              onDiscard={(r) => discard(row.item, r)}
+              onRemoveExternal={row.item.external ? () => setExternal(external.filter((e) => e.id !== row.item.id)) : undefined}
+              external={external.find((e) => e.id === row.item.id)}
               preliminary={refining}
             />
-          ))}
+            ),
+          )}
           {tab === "ocultas" &&
-            hidden?.items.map((entry, i) =>
-              isLocked(entry) ? (
-                <LockedCard key={`locked-${i}`} score={entry.score} preliminary={refining} />
-              ) : (
-                <JobCard
-                  key={entry.id}
-                  item={entry}
-                  position={i + 1}
-                  saved={interactions.saved.includes(entry.id)}
-                  onSave={() => save(entry)}
-                  onDiscard={(r) => discard(entry, r)}
-                  preliminary={refining}
-                />
-              ),
-            )}
+            hidden?.full &&
+            hidden.items.map((entry, i) => (
+              <JobCard
+                key={entry.id}
+                item={entry}
+                position={i + 1}
+                saved={interactions.saved.includes(entry.id)}
+                onSave={() => save(entry)}
+                onDiscard={(r) => discard(entry, r)}
+                preliminary={refining}
+              />
+            ))}
         </div>
         {data && tab === "ocultas" && hidden && hidden.total === 0 && !loading && (
           <div className="rounded-3xl border border-line bg-paper p-8 text-center">
@@ -293,18 +312,23 @@ export default function Results({
           </div>
         )}
         {data && tab === "ocultas" && hidden && !hidden.full && hidden.total > 0 && (
-          <div className="mt-6 rounded-3xl bg-ink p-6 text-center text-white">
-            <p className="font-display text-2xl">
-              {hidden.total > hidden.items.length ? `Hay ${hidden.total.toLocaleString("es-AR")} búsquedas ocultas para vos` : "Desbloqueá las búsquedas difuminadas"}
+          <div className="rounded-3xl bg-ink p-6 text-center text-white sm:p-10">
+            <p className="text-3xl" aria-hidden>
+              🔒
             </p>
-            <p className="mt-2 text-sm text-white/80">Con un plan de Maru ves todas, con la empresa, el aviso y el porqué de cada una.</p>
+            <p className="mt-2 font-display text-2xl sm:text-3xl">
+              {hidden.total === 1 ? "Hay 1 búsqueda para vos que no está en LinkedIn" : `Hay ${hidden.total.toLocaleString("es-AR")} búsquedas para vos que no están en LinkedIn`}
+            </p>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/80">
+              Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn, así que suelen tener menos postulantes. Para verlas, pasate a un plan de Maru.
+            </p>
             <Link
               href="/precios"
               onClick={() => {
                 rememberReturnTo("/match");
                 track("match_ocultas_desbloquear", { ocultas: hidden.total });
               }}
-              className="press mt-4 inline-flex min-h-11 items-center rounded-full bg-neon px-6 py-2.5 text-sm font-bold text-ink hover:bg-neon/80"
+              className="press mt-5 inline-flex min-h-11 items-center rounded-full bg-neon px-6 py-2.5 text-sm font-bold text-ink hover:bg-neon/80"
             >
               Ver los planes
             </Link>
@@ -604,8 +628,18 @@ function LockedCard({ score, preliminary }: { score: number; preliminary: boolea
         </div>
       </div>
       <div className="absolute inset-y-0 left-0 right-[128px] flex flex-col items-center justify-center gap-2 bg-white/40 px-4 text-center sm:right-[172px]">
-        <p className="text-sm font-semibold">Búsqueda oculta para vos</p>
-        <p className="text-xs text-muted">Con un plan ves la empresa, el aviso y el porqué.</p>
+        <p className="text-sm font-semibold">🔒 Búsqueda que no está en LinkedIn</p>
+        <p className="max-w-xs text-xs text-muted">La leímos del sitio de empleos de la empresa. Desbloqueala para ver cuál es y postularte.</p>
+        <Link
+          href="/precios"
+          onClick={() => {
+            rememberReturnTo("/match");
+            track("match_ocultas_desbloquear", { lista: "elegibles" });
+          }}
+          className="press mt-1 inline-flex min-h-10 items-center rounded-full bg-neon px-5 text-sm font-bold text-ink hover:bg-neon/80"
+        >
+          Desbloquear
+        </Link>
       </div>
       <div className="m-1 flex w-[120px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:w-[164px]">
         {preliminary ? (

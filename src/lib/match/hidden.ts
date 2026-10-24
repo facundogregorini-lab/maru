@@ -8,10 +8,8 @@ import type { StoredPosting } from "./types";
  * vimos publicadas en LinkedIn. No afirmamos que no estén en LinkedIn: sólo que nosotros no las encontramos ahí.
  */
 
-/** Índices que aparecen difuminados en el plan gratis (2 de los 5 primeros). */
-export const LOCKED_POSITIONS = [1, 3];
-/** Cuántas ocultas ve el plan gratis en su sección (incluidas las difuminadas). */
-export const FREE_HIDDEN = 5;
+/** Posiciones de «Para vos» (desde 0) donde el plan gratis ve una oculta difuminada: la 2 y la 4. */
+export const TEASER_POSITIONS = [1, 3];
 
 const LINKEDIN_SOURCES = new Set(["apify-linkedin", "fantastic_jb"]);
 const LINKEDIN_URL = /(^|\/\/|\.)linkedin\.com\//i;
@@ -27,39 +25,37 @@ export function isHiddenOpportunity(posts: StoredPosting[]): boolean {
 }
 
 /** Lo único que viaja de una oculta difuminada: la compatibilidad. */
-export type LockedHidden = { locked: true; score: number };
-export type HiddenEntry = RankedItem | LockedHidden;
-export type HiddenSection = { items: HiddenEntry[]; total: number; full: boolean };
+export type HiddenTeaser = { score: number };
+/**
+ * Con plan: `items` trae las ocultas de todo el ranking (pestaña «Ocultas»).
+ * Sin plan: `items` vacío y `teasers` con el % de las 2 mejores, para difuminarlas en «Para vos».
+ */
+export type HiddenSection = { items: RankedItem[]; teasers: HiddenTeaser[]; total: number; full: boolean };
 
 /**
- * Arma la sección «Ocultas» del ranking ya ordenado. Con plan pago van todas. En el plan gratis, de las 5 primeras,
- * 2 quedan difuminadas: el servidor sólo manda su porcentaje y las saca de las demás listas, así no se filtran por otro lado.
+ * Arma la sección de ocultas del ranking ya ordenado. Con el plan gratis, el ranking ya las dejó afuera de las listas
+ * (`excludeHidden`); acá se descartan igual por las dudas y nunca viaja nada más que el porcentaje.
  */
 export function withHiddenSection<T extends RankOutput>(r: T, paid: boolean): Omit<T, "hiddenPool"> & { hidden: HiddenSection } {
   const { hiddenPool, ...rest } = r;
   const all = hiddenPool ?? [...r.eligible, ...r.pending].filter((i) => i.hidden);
   const total = Math.max(r.counts.hidden ?? 0, all.length);
-  if (paid) return { ...rest, hidden: { items: all, total, full: true } };
+  if (paid) return { ...rest, hidden: { items: all, teasers: [], total, full: true } };
 
-  const top = all.slice(0, FREE_HIDDEN);
-  const lockedIds = new Set(top.filter((_, i) => LOCKED_POSITIONS.includes(i)).map((i) => i.id));
-  const items = top.map((i): HiddenEntry => (lockedIds.has(i.id) ? { locked: true, score: i.score } : i));
-  const keep = (xs: RankedItem[]) => xs.filter((i) => !lockedIds.has(i.id));
-  const eligible = keep(r.eligible);
-  const pending = keep(r.pending);
+  const visible = (xs: RankedItem[]) => xs.filter((i) => !i.hidden);
+  const eligible = visible(r.eligible);
+  const pending = visible(r.pending);
   return {
     ...rest,
     eligible,
     pending,
-    saved: keep(r.saved),
+    saved: visible(r.saved),
     counts: {
       ...r.counts,
       eligible: r.counts.eligible - (r.eligible.length - eligible.length),
       pending: r.counts.pending - (r.pending.length - pending.length),
       shown: eligible.length + pending.length,
     },
-    hidden: { items, total, full: false },
+    hidden: { items: [], teasers: all.slice(0, TEASER_POSITIONS.length).map((i) => ({ score: i.score })), total, full: false },
   };
 }
-
-export const isLocked = (e: HiddenEntry): e is LockedHidden => "locked" in e;

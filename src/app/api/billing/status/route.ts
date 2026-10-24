@@ -1,6 +1,6 @@
 import { billingJson, billingSession } from "@/lib/billing/http";
 import { recordBillingEvent } from "@/lib/billing/log";
-import { billingMissing, billingReady, hasPaidAccess, lastPayment, readRefundOption, readSubscription, refreshSubscription, subscriptionPlan } from "@/lib/billing/server";
+import { billingMissing, billingReady, hasPaidAccess, isComplimentary, lastPayment, readRefundOption, readSubscription, refreshSubscription, subscriptionPlan } from "@/lib/billing/server";
 import { billingEnabled } from "@/lib/plans";
 import { dbConfigured } from "@/lib/db";
 export const runtime = "nodejs";
@@ -15,7 +15,9 @@ export async function GET(req: Request) {
     // lastPayment: último pago acreditado y verificado (id de Mercado Pago, importe, moneda, primero o renovación), para medir la compra.
     const refundOption = sub ? await readRefundOption(email, sub) : null;
     // cancelRequest / refund: números de solicitud para mostrar; refundOption: si hoy puede pedir la devolución y hasta cuándo.
-    return billingJson({ enabled, missing, plan: hasPaidAccess(sub) ? "maru" : "gratis", tier: sub ? subscriptionPlan(sub) : null, status: sub?.status ?? "none", paidThrough: sub?.paidThrough ?? null, lastPayment: lastPayment(sub ?? null), cancelRequest: sub?.cancelRequest ?? null, refund: sub?.refund ? { id: sub.refund.id, at: sub.refund.at, kind: sub.refund.kind, amount: sub.refund.amount } : null, refundOption });
+    // Cuenta del equipo (PRO_EMAILS): plan activo sin suscripción.
+    const cortesia = isComplimentary(email);
+    return billingJson({ enabled, missing, cortesia, plan: hasPaidAccess(sub) || cortesia ? "maru" : "gratis", tier: sub ? subscriptionPlan(sub) : null, status: sub?.status ?? "none", paidThrough: sub?.paidThrough ?? null, lastPayment: lastPayment(sub ?? null), cancelRequest: sub?.cancelRequest ?? null, refund: sub?.refund ? { id: sub.refund.id, at: sub.refund.at, kind: sub.refund.kind, amount: sub.refund.amount } : null, refundOption });
   } catch { return billingJson({ error: "No pudimos consultar tu plan.", code: "PLAN_UNAVAILABLE" }, 503); }
 }
 export async function POST(req: Request) {

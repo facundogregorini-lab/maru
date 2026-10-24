@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { isHiddenOpportunity, isLocked, withHiddenSection } from "@/lib/match/hidden";
-import type { RankedItem, RankOutput } from "@/lib/match/ranking";
+import { isHiddenOpportunity, TEASER_POSITIONS, withHiddenSection } from "@/lib/match/hidden";
+import { rankOpportunities, type RankedItem, type RankOutput } from "@/lib/match/ranking";
 import type { StoredPosting } from "@/lib/match/types";
+import { EVAL_CASES, EVAL_NOW, evalInventory } from "./match-eval-cases";
 
 const post = (sourceId: string, sourceUrl = "https://boards.greenhouse.io/acme/jobs/1", applyUrl = "") => ({ sourceId, sourceUrl, applyUrl }) as StoredPosting;
 const item = (id: string, score: number, hidden = false) => ({ id, score, title: `Puesto ${id}`, company: `Empresa ${id}`, ...(hidden ? { hidden: true } : {}) }) as RankedItem;
@@ -31,48 +32,46 @@ describe("oportunidades ocultas: qué cuenta como no publicada en LinkedIn", () 
   });
 });
 
-describe("sección «Ocultas» según el plan", () => {
-  const ranked = output([item("a", 90, true), item("b", 88), item("c", 85, true), item("d", 80, true)], [item("e", 70, true), item("f", 65, true), item("g", 60, true)], [item("c", 85, true)]);
+describe("ocultas según el plan", () => {
+  const pool = [item("x", 95, true), item("y", 91, true), item("z", 90, true)];
+  const ranked = { ...output([item("a", 92, true), item("b", 88)], [item("c", 70, true)], [item("a", 92, true)]), hiddenPool: pool, counts: { ...output([]).counts, eligible: 12, pending: 1, hidden: 120 } };
 
-  it("con plan pago van todas, sin difuminar", () => {
+  it("con plan pago: todas en la pestaña, sin difuminar, y siguen en las listas", () => {
     const r = withHiddenSection(ranked, true);
-    expect(r.hidden).toMatchObject({ total: 6, full: true });
-    expect(r.hidden.items.some(isLocked)).toBe(false);
-    expect(r.eligible).toHaveLength(4);
+    expect(r.hidden).toMatchObject({ total: 120, full: true, teasers: [] });
+    expect(r.hidden.items.map((i) => i.id)).toEqual(["x", "y", "z"]);
+    expect(r.eligible.map((i) => i.id)).toEqual(["a", "b"]);
+    expect("hiddenPool" in r).toBe(false);
   });
 
-  it("en el plan gratis, 2 de las 5 primeras llegan sólo con el porcentaje", () => {
+  it("sin plan: la pestaña no trae ninguna, sólo el total y el % de dos para difuminar en «Para vos»", () => {
     const r = withHiddenSection(ranked, false);
-    expect(r.hidden.total).toBe(6);
-    expect(r.hidden.full).toBe(false);
-    expect(r.hidden.items).toHaveLength(5);
-    expect(r.hidden.items.map((e) => (isLocked(e) ? `🔒${e.score}` : e.id))).toEqual(["a", "🔒85", "d", "🔒70", "f"]);
-    // Las difuminadas no traen ningún otro dato.
-    for (const e of r.hidden.items.filter(isLocked)) expect(Object.keys(e).sort()).toEqual(["locked", "score"]);
+    expect(r.hidden).toEqual({ items: [], teasers: [{ score: 95 }, { score: 91 }], total: 120, full: false });
+    expect(TEASER_POSITIONS).toEqual([1, 3]);
+    // Ninguna oculta queda en las listas ni viaja con sus datos.
+    expect([...r.eligible, ...r.pending, ...r.saved].map((i) => i.id)).toEqual(["b"]);
+    expect(JSON.stringify(r)).not.toMatch(/Empresa [axyzc]/);
+    expect(r.counts).toMatchObject({ eligible: 11, pending: 0, shown: 1 });
   });
 
-  it("las difuminadas salen de todas las listas y de los conteos, para no filtrarse por otro lado", () => {
-    const r = withHiddenSection(ranked, false);
-    const ids = [...r.eligible, ...r.pending, ...r.saved].map((i) => i.id);
-    expect(ids).not.toContain("c");
-    expect(ids).not.toContain("e");
-    expect(JSON.stringify(r)).not.toContain("Empresa c");
-    expect(r.counts).toMatchObject({ eligible: ranked.counts.eligible - 1, pending: ranked.counts.pending - 1, shown: 5 });
-  });
-
-  it("sin ocultas, la sección queda vacía", () => {
+  it("sin ocultas, nada que difuminar", () => {
     const r = withHiddenSection(output([item("b", 88)]), false);
-    expect(r.hidden).toEqual({ items: [], total: 0, full: false });
-    expect(r.eligible).toHaveLength(1);
+    expect(r.hidden).toEqual({ items: [], teasers: [], total: 0, full: false });
   });
 });
 
-describe("ocultas de todo el ranking, no sólo de la página", () => {
-  it("usa el pool del ranking y su conteo total", () => {
-    const pool = [item("x", 95, true), item("y", 91, true), item("z", 90, true)];
-    const r = withHiddenSection({ ...output([item("b", 88)]), hiddenPool: pool, counts: { ...output([]).counts, hidden: 120 } }, true);
-    expect(r.hidden.total).toBe(120);
-    expect(r.hidden.items.map((e) => (isLocked(e) ? "" : e.id))).toEqual(["x", "y", "z"]);
-    expect("hiddenPool" in r).toBe(false);
+describe("el ranking deja afuera las ocultas para el plan gratis", () => {
+  it("las cuenta y arma el pool, pero no las lista", () => {
+    const { opportunities, postings } = evalInventory();
+    const map = new Map(postings.map((p) => [p.key, p]));
+    const leader = EVAL_CASES[0];
+    const base = { opportunities, postings: map, profile: leader.profile, prefs: leader.prefs, interactions: { saved: [], discarded: [] }, now: EVAL_NOW };
+    const all = rankOpportunities(base);
+    const free = rankOpportunities({ ...base, excludeHidden: true });
+    const hiddenIds = new Set((all.hiddenPool ?? []).map((i) => i.id));
+    expect(hiddenIds.size).toBeGreaterThan(0);
+    expect([...free.eligible, ...free.pending].some((i) => hiddenIds.has(i.id))).toBe(false);
+    expect(free.counts.hidden).toBe(all.counts.hidden);
+    expect(free.counts.eligible + free.counts.pending + (free.counts.hidden ?? 0)).toBe(all.counts.eligible + all.counts.pending);
   });
 });
