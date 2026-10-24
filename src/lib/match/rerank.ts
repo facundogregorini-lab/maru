@@ -294,9 +294,12 @@ export async function rerank(input: RerankInput): Promise<RankOutput & { ia: { e
   const eligible: RankedItem[] = [];
   const pending: RankedItem[] = [];
   const delta = { eligible: 0, pending: 0 };
+  /** Versión re-evaluada de cada candidata (null si la IA la excluyó), para actualizar las ocultas. */
+  const revised = new Map<string, RankedItem | null>();
   for (const c of candidates) {
     const ev = evals.get(c.item.id);
     const applied = ev ? applyEval(c.item, ev, prefs, c.bucket) : { item: c.item, bucket: c.bucket };
+    revised.set(c.item.id, applied.bucket === "excluded" ? null : applied.item);
     if (applied.bucket === c.bucket) {
       (c.bucket === "eligible" ? eligible : pending).push(applied.item);
       continue;
@@ -311,14 +314,18 @@ export async function rerank(input: RerankInput): Promise<RankOutput & { ia: { e
   const ids = new Set(candidates.map((c) => c.item.id));
   const restE = result.eligible.filter((x) => !ids.has(x.id));
   const restP = result.pending.filter((x) => !ids.has(x.id));
+  const pool = result.hiddenPool?.map((x) => (revised.has(x.id) ? revised.get(x.id)! : x));
+  const hiddenPool = pool?.filter((x): x is RankedItem => !!x).sort(byScore);
   return {
     ...result,
+    ...(hiddenPool ? { hiddenPool } : {}),
     eligible: [...eligible.sort(byScore), ...restE],
     pending: [...pending.sort(byScore), ...restP],
     counts: {
       ...result.counts,
       eligible: result.counts.eligible + delta.eligible,
       pending: result.counts.pending + delta.pending,
+      ...(result.counts.hidden !== undefined ? { hidden: result.counts.hidden - (pool ?? []).filter((x) => !x).length } : {}),
       shown: eligible.length + restE.length + pending.length + restP.length,
     },
     ia: { evaluated: evals.size, cached, failed },
