@@ -1,5 +1,6 @@
 import { ENGLISH_IMPLICIT, familyFromTitle, findSkills } from "./extract";
 import { functionMismatch, GENERIC_SKILLS, levelScore, levelVerdict, postingLevel, salaryMeets, skillWeight, targetRange } from "./fit";
+import { isHidden } from "./hidden";
 import { sourceById } from "./sources";
 import { CONTRACT_LABEL, displayTitle, FAMILY_LABEL, isInferred, SENIORITY_LABEL } from "./labels";
 import { fold, sanitizeDisplay, tokens } from "./text";
@@ -322,6 +323,8 @@ export type RankedItem = {
   status: "abierta" | "cerrada";
   external?: boolean;
   saved?: boolean;
+  /** Oportunidad oculta (hidden.ts): la leímos del sitio de la empresa y no la vimos en LinkedIn. */
+  hidden?: boolean;
 };
 
 export type ScorePart = { puntos: number; max: number; razon: string };
@@ -376,7 +379,7 @@ export type RankOutput = {
   pending: RankedItem[];
   saved: RankedItem[];
   /** lowMatch: abiertas que pasan las condiciones pero con coincidencia menor a MIN_SCORE (no se listan). */
-  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number };
+  counts: { open: number; eligible: number; pending: number; lowMatch: number; afterHardFilters: number; shown: number; hiddenEligible: number; hiddenPending: number };
 };
 
 type Scored = { item: RankedItem; raw: number };
@@ -781,7 +784,7 @@ export function rankOpportunities(input: RankInput): RankOutput {
     eligible: sortTop(elig),
     pending: sortTop(pend),
     saved: savedOut.sort(sort).map((s) => s.item),
-    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length) },
+    counts: { open, eligible: elig.length, pending: pend.length, lowMatch, afterHardFilters: afterHard, shown: Math.min(limit, elig.length) + Math.min(limit, pend.length), hiddenEligible: elig.filter((s) => isHidden(s.item)).length, hiddenPending: pend.filter((s) => isHidden(s.item)).length },
   };
 }
 

@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
+import { rememberReturnTo } from "@/lib/billing/returnTo";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
+import type { HiddenInfo } from "@/lib/match/hidden";
 import { itemProps, track } from "@/lib/match/events";
 import ScoreRing, { matchLevel } from "@/components/ScoreRing";
 import { FAMILY_LABEL, SENIORITY_LABEL, WORKPLACE_OPTIONS } from "@/lib/match/labels";
@@ -18,8 +21,13 @@ import { MultiChips } from "./fields";
 import CompanyName from "@/components/busquedas/CompanyName";
 import { displayCompany } from "@/lib/match/labels";
 
-type RankingResponse = RankOutput & { ia?: { disponible: boolean; aplicada: boolean }; inventory: { generatedAt: string | null; open: number } };
-type Tab = "elegibles" | "pendientes" | "guardadas";
+type RankingResponse = RankOutput & {
+  ia?: { disponible: boolean; aplicada: boolean };
+  inventory: { generatedAt: string | null; open: number };
+  hidden?: HiddenInfo;
+  hiddenItems?: RankedItem[];
+};
+type Tab = "elegibles" | "pendientes" | "ocultas" | "guardadas";
 const PAGE = 40;
 
 const DISCARD_REASONS: [DiscardReason, string][] = [
@@ -113,7 +121,10 @@ export default function Results({
     return () => clearTimeout(t);
   }, [load]);
 
-  const list = !data ? [] : tab === "elegibles" ? data.eligible : tab === "pendientes" ? data.pending : data.saved;
+  const list = !data ? [] : tab === "elegibles" ? data.eligible : tab === "pendientes" ? data.pending : tab === "ocultas" ? (data.hiddenItems ?? []) : data.saved;
+  const hidden = data?.hidden;
+  const hiddenTotal = hidden ? hidden.eligible + hidden.pending : 0;
+  const teaser = tab === "elegibles" && hidden && !hidden.unlocked ? hidden.teaser : [];
 
   function save(item: RankedItem) {
     const on = interactions.saved.includes(item.id);
@@ -169,6 +180,7 @@ export default function Results({
             [
               ["elegibles", `Para vos${data ? ` (${data.counts.eligible})` : ""}`],
               ["pendientes", `Por confirmar${data ? ` (${data.counts.pending})` : ""}`],
+              ...(hiddenTotal > 0 ? ([["ocultas", `${hidden?.unlocked ? "" : "🔒 "}Ocultas (${hiddenTotal})`]] as const) : []),
               ["guardadas", `Guardadas (${interactions.saved.length})`],
             ] as const
           ).map(([k, label]) => (
@@ -190,6 +202,8 @@ export default function Results({
           Estas búsquedas pueden servirte, pero el aviso no deja claro si contratan a personas que viven en Argentina (o falta otro dato importante). Confirmalo antes de postularte.
         </p>
       )}
+
+      {tab === "ocultas" && hidden && <HiddenIntro hidden={hidden} />}
 
       {showFilters && <FilterPanel filters={filters} setFilters={setFilters} />}
       {adding && <AddExternal onClose={() => setAdding(false)} onAdd={(job) => setExternal([job, ...external])} />}
@@ -220,11 +234,12 @@ export default function Results({
           </p>
         )}
         {data && !data.inventory.generatedAt && tab !== "guardadas" && !external.length && <EmptyInventory />}
-        {data && (data.inventory.generatedAt || external.length > 0 || tab === "guardadas") && list.length === 0 && !loading && (
+        {data && tab !== "ocultas" && (data.inventory.generatedAt || external.length > 0 || tab === "guardadas") && list.length === 0 && !loading && (
           <EmptyResults tab={tab} hasFilters={hasActiveFilters} pending={data.counts.pending} onShowPending={() => setTab("pendientes")} onClearFilters={() => setFilters({})} />
         )}
         <div className={`space-y-4 transition ${loading && data ? "opacity-60" : ""}`}>
-          {list.map((item, i) => (
+          {list.flatMap((item, i) => [
+            ...teaser.filter((t) => t.position === i + 1).map((t) => <LockedCard key={`oculta-${t.position}`} score={t.score} />),
             <JobCard
               key={item.id}
               item={item}
@@ -235,10 +250,11 @@ export default function Results({
               onRemoveExternal={item.external ? () => setExternal(external.filter((e) => e.id !== item.id)) : undefined}
               external={external.find((e) => e.id === item.id)}
               preliminary={refining}
-            />
-          ))}
+            />,
+          ])}
+          {teaser.filter((t) => t.position > list.length).map((t) => <LockedCard key={`oculta-${t.position}`} score={t.score} />)}
         </div>
-        {data && tab !== "guardadas" && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
+        {data && (tab === "elegibles" || tab === "pendientes") && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
           <div className="mt-6 text-center">
             <button
               type="button"
@@ -253,7 +269,7 @@ export default function Results({
             </p>
           </div>
         )}
-        {data && tab !== "guardadas" && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
+        {data && (tab === "elegibles" || tab === "pendientes") && data.counts.lowMatch > 0 && list.length >= (tab === "elegibles" ? data.counts.eligible : data.counts.pending) && (
           <p className="mt-6 text-center text-sm text-muted">
             Hay {data.counts.lowMatch.toLocaleString("es-AR")} búsquedas más que coinciden menos del {MIN_SCORE}% con tu perfil y lo que buscás. Para verlas, filtrá por área o sumá roles en “Lo que busco”.
           </p>
@@ -265,6 +281,75 @@ export default function Results({
         )}
       </div>
     </div>
+  );
+}
+
+/* ---------- oportunidades ocultas ---------- */
+
+/** Lleva a /precios y deja anotado volver al match cuando se confirme el pago. */
+function UnlockLink({ children, from }: { children: React.ReactNode; from: string }) {
+  return (
+    <Link
+      href="/precios"
+      onClick={() => {
+        rememberReturnTo(`${window.location.pathname}${window.location.search}`);
+        track("match_ocultas_cta", { desde: from });
+      }}
+      className="press inline-flex min-h-11 items-center rounded-full bg-ink px-5 py-2 text-sm font-semibold text-white hover:bg-black"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function HiddenIntro({ hidden }: { hidden: HiddenInfo }) {
+  const total = hidden.eligible + hidden.pending;
+  return (
+    <div className="mt-4 rounded-2xl bg-honey/15 px-4 py-3 text-sm leading-relaxed text-ink">
+      <p>
+        <strong className="font-semibold">Oportunidades ocultas:</strong> búsquedas que leímos directo del sitio de empleo de cada empresa (Greenhouse, Lever, HiringRoom y otros) y que no vimos
+        publicadas en LinkedIn.
+      </p>
+      {!hidden.unlocked && (
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <UnlockLink from="pestana">Ver las {total.toLocaleString("es-AR")} con un plan</UnlockLink>
+          <span className="text-xs text-muted">Están incluidas en cualquier plan pago.</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Plan gratis: una oculta con match fuerte, sin datos del aviso (el servidor no los manda). */
+function LockedCard({ score }: { score: number }) {
+  return (
+    <article className="relative overflow-hidden rounded-2xl bg-white" aria-label={`Oportunidad oculta con ${score}% de match`}>
+      <div aria-hidden className="pointer-events-none select-none p-4 blur-[6px] sm:p-5">
+        <div className="flex gap-4">
+          <div className="h-[60px] w-[60px] shrink-0 rounded-2xl bg-sand" />
+          <div className="flex-1 space-y-2 pt-1">
+            <div className="h-3 w-24 rounded bg-neon/20" />
+            <div className="h-5 w-3/4 rounded bg-ink/15" />
+            <div className="h-4 w-1/2 rounded bg-ink/10" />
+          </div>
+        </div>
+        <div className="mt-4 space-y-2">
+          <div className="h-3 w-full rounded bg-ink/10" />
+          <div className="h-3 w-5/6 rounded bg-ink/10" />
+        </div>
+      </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white/40 p-4 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="flex items-center gap-3">
+          <ScoreRing value={score} size="sm" />
+          <p className="max-w-xs text-sm leading-snug">
+            <strong className="font-semibold">Oportunidad oculta</strong>
+            <br />
+            <span className="text-muted">No la vimos en LinkedIn. Desbloqueala con un plan.</span>
+          </p>
+        </div>
+        <UnlockLink from="tarjeta">Desbloquear</UnlockLink>
+      </div>
+    </article>
   );
 }
 
@@ -331,6 +416,7 @@ function JobCard({
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
               <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1">{FAMILY_LABEL[item.family]}</span>
               {item.external && <span className="rounded-md bg-sage-soft px-1.5 py-1 text-sage">Agregada por vos · privada</span>}
+              {item.hidden && <span className="rounded-md bg-honey/20 px-1.5 py-1">Oculta · no la vimos en LinkedIn</span>}
               {item.status === "cerrada" && <span className="rounded-md bg-danger-soft px-1.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
             </p>
             <h3 className="mt-1.5 text-lg font-semibold leading-snug sm:text-xl">{item.title}</h3>

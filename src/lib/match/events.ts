@@ -16,11 +16,12 @@ export type MatchEvent =
   | "match_ver_busqueda"
   | "match_preparar_postulacion"
   | "match_busqueda_externa"
-  | "match_datos_borrados";
+  | "match_datos_borrados"
+  | "match_ocultas_cta";
 
 type Props = Record<string, string | number | boolean>;
 
-const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros", "tramo", "lista", "personalizacion"]);
+const ALLOWED_KEYS = new Set(["resultados", "pendientes", "motivo", "fuente", "posicion", "familia", "confianza", "filtros", "tramo", "lista", "personalizacion", "desde"]);
 
 /** Tramo del % de match: alcanza para comparar guardados y postulaciones por afinidad sin mandar el aviso. */
 export function scoreBand(score: number): string {

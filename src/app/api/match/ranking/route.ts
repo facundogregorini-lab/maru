@@ -1,3 +1,5 @@
+import { paidFeatures } from "@/lib/billing/http";
+import { applyHidden } from "@/lib/match/hidden";
 import { RankingRequestSchema, invalidFields, type ExternalJob } from "@/lib/match/api-schemas";
 import { workplaceFromText } from "@/lib/match/connectors";
 import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
@@ -13,6 +15,7 @@ export const runtime = "nodejs";
  * llegan en el pedido, se usan para ordenar y no se guardan ni se registran en logs.
  * Las mejores de la etapa por reglas se re-evalúan con IA (rerank.ts); esa evaluación queda
  * en memoria del proceso hasta una hora para no repetir llamadas al recargar.
+ * Las oportunidades ocultas (hidden.ts) sólo viajan completas con un plan pago.
  */
 export async function POST(req: Request) {
   const raw = await req.text();
@@ -53,14 +56,15 @@ export async function POST(req: Request) {
       interactions: inter,
       filters,
       weights: weightsFromEnv(),
-      // Con IA, la primera etapa entrega las 200 mejores para re-evaluar; después se recorta a la página.
-      limit: ai ? Math.max(limit ?? 40, RERANK_ELIGIBLE, RERANK_PENDING) : limit,
+      // La primera etapa entrega las 200 mejores (para re-evaluar con IA y para sacar las ocultas en el plan gratis);
+      // después se recorta a la página.
+      limit: Math.max(limit ?? 40, RERANK_ELIGIBLE, RERANK_PENDING),
       now,
     });
     // Segunda etapa: la IA re-evalúa las mejores que pasaron los filtros. Sin clave o con error, quedan las reglas.
-    const result = ai
-      ? pageOf(await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }), limit ?? 40)
-      : ranked;
+    const reranked = ai ? await rerank({ result: ranked, profile, prefs, opportunities: new Map(opportunities.map((o) => [o.id, o])), postings: allPostings }) : ranked;
+    const withHidden = applyHidden(reranked, ranked, await paidFeatures(req));
+    const result = { ...pageOf(withHidden, limit ?? 40), hiddenItems: withHidden.hiddenItems.slice(0, limit ?? 40) };
 
     return Response.json(
       {
