@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Garantía por mail y arrepentimiento menos expuesto (24/10/2026)
+
+Tras la primera venta, devuelta al instante con la garantía, se agrega fricción sin tocar lo que exige la ley:
+
+- La garantía de 14 días se pide por mail a `hola@marucoach.com` y se procesa a mano (procedimiento en `docs/COBROS.md`). Sale de «Mi suscripción».
+- El Botón de arrepentimiento (Res. 424/2020) queda en el pie de página y sigue siendo automático por 10 días, sólo desde `/arrepentimiento`. Se sacó del bloque «Cómo cancelar», de las preguntas de `/precios` y de `/baja`.
+- DNS: MX `mx1/mx2.improvmx.com` y SPF `include:spf.improvmx.com` cargados en Vercel. Falta que el dueño cree el alias `hola@` en ImprovMX.
+- Pendiente: avisos por mail de cada solicitud (por ejemplo, con Resend) para poder pasar el arrepentimiento a revisión manual sin perder plazos; y revisar con un abogado si conviene que `/arrepentimiento` no pida login.
+
 ## Arreglo: el botón del plan mensual «no hacía nada» (23/10/2026)
 
 Axel tocaba «Elegir plan» en el mensual y no veía ninguna respuesta. En producción (errores de Vercel) se vio la cadena completa:

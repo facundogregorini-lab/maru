@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { compareAndSetJson, dbConfigured, getManyJson, setJson, takeCounter, takeCounterCount } from "../db";
 import { userId } from "../sync/server";
-import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, GUARANTEE_DAYS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
+import { acceptedAmounts, billingEnabled, billingFlagState, firstCharge, FREE_LIMITS, PAID_DAILY_LIMIT, PLANS, WITHDRAWAL_DAYS, type PlanId, type UsageKind } from "../plans";
 import { SITE_URL } from "../site";
 import { recordBillingEvent } from "./log";
 import { mp, MpError, type Invoice, type Payment, type Preapproval } from "./provider";
@@ -212,27 +212,23 @@ export async function cancel(email: string, reason?: string): Promise<{ requestI
 }
 
 /**
- * Qué devolución puede pedir hoy, sobre el primer pago de la suscripción:
- * la garantía de 14 días (una vez por cuenta) o, si ya la usó, el arrepentimiento legal de 10 días.
+ * Qué devolución puede pedir hoy online, sobre el primer pago de la suscripción: el arrepentimiento legal de 10 días.
+ * La garantía de 14 días no es autoservicio: se pide por mail y la procesamos a mano (ver docs/COBROS.md).
  */
-export function refundOption(sub: Subscription | null, guaranteeUsed: boolean, now = Date.now()): { kind: RefundKind; until: number; amount: number } | null {
+export function refundOption(sub: Subscription | null, now = Date.now()): { kind: RefundKind; until: number; amount: number } | null {
   if (!sub?.firstPaymentId || !sub.firstPaymentAt || sub.refund || sub.paymentLive === false) return null;
   const amount = sub.paymentId === sub.firstPaymentId ? sub.paymentAmount ?? firstCharge(PLANS[subscriptionPlan(sub)]) : firstCharge(PLANS[subscriptionPlan(sub)]);
-  const guaranteeUntil = sub.firstPaymentAt + GUARANTEE_DAYS * 86400_000;
-  if (!guaranteeUsed && now <= guaranteeUntil) return { kind: "garantia", until: guaranteeUntil, amount };
   const withdrawalUntil = sub.firstPaymentAt + WITHDRAWAL_DAYS * 86400_000;
   if (now <= withdrawalUntil) return { kind: "arrepentimiento", until: withdrawalUntil, amount };
   return null;
 }
 export async function readRefundOption(email: string, sub?: Subscription | null) {
   const current = sub === undefined ? await readSubscription(email) : sub;
-  if (!current?.firstPaymentId) return null;
-  const used = (await getManyJson<{ at: number }>([guaranteeKey(email)]))[0];
-  return refundOption(current, !!used);
+  return refundOption(current ?? null);
 }
 
 /**
- * Devolución automática del 100% del primer pago: cancela las renovaciones y pide el reembolso a Mercado Pago.
+ * Arrepentimiento (Ley 24.240, art. 34): devolución automática del 100% del primer pago; cancela las renovaciones y pide el reembolso a Mercado Pago.
  * El acceso termina si ese pago era el período vigente; si ya hubo una renovación, se conserva lo pagado aparte.
  */
 export async function requestRefund(email: string, reason?: string): Promise<{ requestId: string; kind: RefundKind; amount: number }> {
@@ -240,7 +236,7 @@ export async function requestRefund(email: string, reason?: string): Promise<{ r
   const sub = await readSubscription(email);
   if (sub?.refund) return { requestId: sub.refund.id, kind: sub.refund.kind, amount: sub.refund.amount };
   const option = await readRefundOption(email, sub);
-  if (!sub || !option || !sub.firstPaymentId) throw new Error(`La devolución se puede pedir dentro de los ${GUARANTEE_DAYS} días del primer pago.`);
+  if (!sub || !option || !sub.firstPaymentId) throw new Error(`El arrepentimiento se puede pedir dentro de los ${WITHDRAWAL_DAYS} días corridos del primer pago.`);
   const id = requestId("DEV");
   if (sub.status !== "cancelled") {
     const result = await mp<Preapproval>(`/preapproval/${encodeURIComponent(sub.id)}`, { method: "PUT", body: JSON.stringify({ status: "cancelled" }) });
@@ -248,7 +244,6 @@ export async function requestRefund(email: string, reason?: string): Promise<{ r
   }
   // La clave de idempotencia es el pago: repetir el pedido no genera un segundo reembolso.
   await mp(`/v1/payments/${encodeURIComponent(String(sub.firstPaymentId))}/refunds`, { method: "POST", headers: { "X-Idempotency-Key": `maru-refund-${sub.firstPaymentId}` }, body: "{}" });
-  if (option.kind === "garantia") await setJson(guaranteeKey(email), { at: Date.now() });
   const firstPaymentId = sub.firstPaymentId;
   const next = await change(email, (s) => ({
     ...s,
