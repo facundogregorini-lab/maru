@@ -188,6 +188,22 @@ describe("suscripción validada en el servidor", () => {
     expect(await s.allowUsage("ana@example.com", "entrevista", martes)).toBe(false);
     expect(await s.allowUsage("ana@example.com", "entrevista", lunes + 7 * 86400_000)).toBe(true);
   });
+  it("el copiloto tiene su propio cupo: 10 por día gratis y, con plan, aparte del tope combinado", async () => {
+    const s = await setup();
+    const lunes = Date.parse("2026-10-12T15:00:00Z");
+    for (let i = 0; i < 10; i++) expect(await s.allowUsage("ana@example.com", "copiloto", lunes)).toBe(true);
+    expect(await s.allowUsage("ana@example.com", "copiloto", lunes)).toBe(false);
+    expect(await s.allowUsage("ana@example.com", "cv", lunes)).toBe(true);
+    const fixture = apiFixture(4500);
+    await s.checkout("beto@example.com", "semanal"); fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    const { PAID_COPILOT_DAILY_LIMIT, PAID_DAILY_LIMIT } = await import("@/lib/plans");
+    for (let i = 0; i < PAID_DAILY_LIMIT + 5; i++) expect(await s.allowUsage("beto@example.com", "copiloto", lunes)).toBe(true);
+    // Los mensajes al copiloto no se comen el tope de las otras herramientas.
+    expect(await s.allowUsage("beto@example.com", "cv", lunes)).toBe(true);
+    for (let i = PAID_DAILY_LIMIT + 5; i < PAID_COPILOT_DAILY_LIMIT; i++) await s.allowUsage("beto@example.com", "copiloto", lunes);
+    expect(await s.allowUsage("beto@example.com", "copiloto", lunes)).toBe(false);
+  });
   it("cuenta días y semanas en hora de Argentina", async () => {
     const s = await setup();
     // 01:30 UTC del martes todavía es lunes en Argentina.

@@ -1,10 +1,10 @@
-import MaruChat from "@/components/chat/MaruChat";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppShell from "@/components/app/AppShell";
 import JobCard from "@/components/busquedas/JobCard";
 import { JobFilterChips, JobSearchPill } from "@/components/busquedas/JobSearchBar";
+import AskMaru from "@/components/maru/AskMaru";
 import { MaruHead } from "@/components/maru/PixelMaru";
 import { PAGE_SIZE, searchJobs } from "@/lib/busquedas";
 import { AREAS, MAX_PAGES, parseJobQuery, type JobQuery } from "@/lib/jobFilters";
@@ -24,6 +24,8 @@ function hrefFor(query: JobQuery, pagina: number) {
   const s = sp.toString();
   return s ? `/busquedas?${s}` : "/busquedas";
 }
+
+const ASK = ["¿Cuáles de estas me convienen?", "¿Qué le falta a mi CV para estos avisos?"];
 
 export default async function BusquedasPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const query = parseJobQuery(await searchParams);
@@ -53,7 +55,7 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
         </p>
         <span className="ml-auto hidden rounded-lg bg-white px-3 py-1.5 text-[13px] sm:inline">Más nuevas primero</span>
       </div>
-      <details className="mt-3 rounded-2xl bg-white p-4 xl:hidden"><summary className="min-h-8 cursor-pointer font-semibold">Consultar a Maru sobre mi búsqueda</summary><MaruChat /></details>
+      <AskMaru className="mt-3 xl:hidden" suggestions={ASK} />
       <div className="mt-3">
         <JobFilterChips value={query} />
       </div>
@@ -99,7 +101,7 @@ export default async function BusquedasPage({ searchParams }: { searchParams: Pr
   );
 }
 
-/** El panel de la derecha: guía contextual y chat con Maru. */
+/** El panel de la derecha: guía contextual y acceso al copiloto de Maru. */
 function SidePanel({ label, total }: { label: string; total: number }) {
   return (
     <div className="flex h-full flex-col">
@@ -122,7 +124,7 @@ function SidePanel({ label, total }: { label: string; total: number }) {
           Ver mi match
         </Link>
       </div>
-      <MaruChat />
+      <AskMaru className="mt-4" suggestions={ASK} />
       <p className="mt-6 text-sm font-semibold">Búsquedas populares</p>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {POPULAR.map((p) => (

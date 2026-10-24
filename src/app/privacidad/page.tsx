@@ -37,7 +37,7 @@ export default function PrivacidadPage() {
         </li>
         <li>Para ordenar las búsquedas del match, tu perfil y tus preferencias viajan al servidor, se usan para el ranking y no se guardan ni se registran.</li>
         <li>Para el feedback del video, se envían la transcripción y 3 fotogramas de la toma. El video completo no sale de tu navegador.</li>
-        <li>El chat con Maru envía tu consulta y el historial visible a la IA. Tu perfil se incluye sólo si marcás esa opción. Maru no guarda la conversación en su base.</li>
+        <li>El copiloto de Maru envía tu consulta y el historial visible a la IA. Si dejás activado «Usar mi CV y mi match», también tu CV (sin nombre ni datos de contacto), lo que buscás y tus búsquedas guardadas en este navegador. Podés desactivarlo desde el copiloto. La conversación queda en esta pestaña del navegador y Maru no la guarda en su base.</li>
         <li>Cuando pegás el link de un aviso, nuestro servidor lo lee desde el sitio público donde está publicado.</li>
       </ul>
 
