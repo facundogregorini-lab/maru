@@ -20,7 +20,8 @@ Pedido del dueño. Una PR por funcionalidad, en este orden. «Pro» = cualquier 
    - `src/lib/alerts.ts`: cada lunes a las 9 (cron de Vercel, `/api/cron/alertas`), rankea a cada persona con plan y le manda hasta 8 búsquedas sobre su mínimo. Nunca repite las ya enviadas.
    - El mail se arma sin IA y sale con Resend. El link visible lleva a `/alertas/baja`, que tiene un botón. `List-Unsubscribe-Post` hace la baja en un clic contra `/api/alertas/baja`. El token va firmado con AUTH_SECRET.
    - Sin `RESEND_API_KEY` se configuran y el cron cuenta, pero no manda nada ni marca nada como enviado. Sin `CRON_SECRET` el cron no corre.
-   - **Falta del dueño:** crear la cuenta de Resend, verificar marucoach.com, cargar en Vercel `RESEND_API_KEY` y `CRON_SECRET` (y opcional `ALERTS_FROM`, por defecto `Maru <alertas@marucoach.com>`), y hacer redeploy.
+   - **Resend (24/10):** el dueño creó la cuenta y agregó marucoach.com (región São Paulo). Registros cargados en el DNS de Vercel: TXT `resend._domainkey` (DKIM), CNAME `send` → `send.forge.rmta.net`, CNAME `rsend` → `rsend-sae1.forge.rmta.net` y TXT `_dmarc` `v=DMARC1; p=none;`. No tocan el MX ni el SPF de la raíz, que hoy son de Forward Email (reenvío de @marucoach.com a Gmail), no de ImprovMX.
+   - **Falta del dueño:** tocar Verify en Resend, crear la API key (Sending access, sólo marucoach.com), cargar en Vercel `RESEND_API_KEY` y `CRON_SECRET` (y opcional `ALERTS_FROM`, por defecto `Maru <alertas@marucoach.com>`), y hacer redeploy.
    - Pendiente: la copia del perfil se actualiza al guardar la alerta. Si la persona cambia su CV y no vuelve a guardarla, el lunes se usa la copia anterior.
    - En esta PR también se sumó `/api/copiloto` a `outputFileTracingIncludes` (lee el inventario).
 
