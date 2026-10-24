@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
+import { LINKEDIN_CITIES, apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, normalizeApifyJobs } from "@/lib/match/apify";
 import { analyzeStandalone, applyBoard, emptyInventory, refreshImported } from "@/lib/match/inventory";
 import { canonicalUrl } from "@/lib/match/text";
 const now = "2026-10-16T20:00:00Z";
@@ -72,6 +72,11 @@ describe("piloto de avisos Apify", () => {
     expect(ok).toBe("elegible");
     expect(usOnly).not.toBe("elegible");
     expect(apifyJobInput("linkedin", "data engineer", 100, 500, "valig", "month", "Latin America")).toMatchObject({ location: "Latin America" });
+    expect(apifyJobInput("linkedin", "analista", 100, 500, "valig", "week", LINKEDIN_CITIES.cordoba)).toMatchObject({ location: "Córdoba, Argentina" });
+    // La misma palabra en otra ciudad es otra búsqueda: no la frena la regla de 7 días.
+    const log = [{ at: "2026-10-23T10:00:00Z", provider: "apify", call: "run", params: { actor: "valig/linkedin-jobs-scraper", keyword: "analista", location: "Argentina" }, rows: 100 }];
+    expect(apifyRepeatReason(log as never, "valig/linkedin-jobs-scraper", "analista", LINKEDIN_CITIES.cordoba, false, "2026-10-24T10:00:00Z")).toBeNull();
+    expect(apifyRepeatReason(log as never, "valig/linkedin-jobs-scraper", "analista", "Argentina", false, "2026-10-24T10:00:00Z")).not.toBeNull();
   });
   it("arma la entrada de cada Actor de LinkedIn y calcula el tope con su precio", () => {
     expect(apifyJobInput("linkedin", "data analyst", 200, 500, "valig")).toMatchObject({ keywords: "data analyst", location: "Argentina", limit: 200, titleExclude: expect.arrayContaining(["chofer"]) });

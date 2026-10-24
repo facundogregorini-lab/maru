@@ -12,7 +12,7 @@
  */
 import { readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { APIFY_JOBS, APIFY_KEYWORDS, apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
+import { APIFY_JOBS, APIFY_KEYWORDS, LINKEDIN_CITIES, apifyJobInput, apifyNextCap, apifyRepeatReason, apifySourceOfActor, knownLinkedinIds, LINKEDIN_ACTORS, LINKEDIN_ALT_FIELDS, normalizeApifyJobs, type ApifyJobSource, type LinkedinActor } from "../src/lib/match/apify";
 import { filterImported } from "../src/lib/match/import-filter";
 import { readInventoryFile, writeInventoryFile } from "../src/lib/match/inventory-file";
 import { applyBoard, buildOpportunities, emptyInventory, forStorage, opportunitiesOf, recordRun } from "../src/lib/match/inventory";
@@ -364,19 +364,21 @@ async function main() {
     const window = arg("date-posted") ?? "week";
     if (window !== "week" && window !== "month") throw new Error("--date-posted debe ser week o month.");
     // --location=latam busca puestos de LinkedIn para Latinoamérica (casi siempre remotos), sólo con los Actors alternativos.
+    // --location=cordoba (y las demás de LINKEDIN_CITIES): la misma búsqueda por ciudad, sólo LinkedIn con valig o cheap.
     const where = arg("location") ?? "argentina";
-    if (where !== "argentina" && where !== "latam") throw new Error("--location debe ser argentina o latam.");
-    if (where === "latam" && linkedinActor === "curious") throw new Error("--location=latam sólo con --actor=valig o cheap.");
+    const city = LINKEDIN_CITIES[where];
+    if (where !== "argentina" && where !== "latam" && !city) throw new Error(`--location debe ser argentina, latam o una de: ${Object.keys(LINKEDIN_CITIES).join(", ")}.`);
+    if ((where === "latam" || city) && linkedinActor === "curious") throw new Error("--location=latam o una ciudad sólo con --actor=valig o cheap.");
     // --remote=1: filtro «Remoto» de LinkedIn (sólo valig). Con valig, además, nunca se piden avisos que ya tenemos.
     const remote = arg("remote") === "1";
     if (remote && linkedinActor !== "valig") throw new Error("--remote=1 sólo con --actor=valig.");
     // Se valida antes de gastar: un error al armar la búsqueda dentro de la corrida contaría su tope como gastado.
-    if ((remote || where === "latam") && apifySources.some((s) => s !== "linkedin")) throw new Error("--remote=1 y --location=latam sólo con --sources=linkedin.");
+    if ((remote || where !== "argentina") && apifySources.some((s) => s !== "linkedin")) throw new Error("--remote=1 y --location distinta de argentina sólo con --sources=linkedin.");
     const skipJobIds = new Set(linkedinActor === "valig" ? knownLinkedinIds(((await readInventoryFile(INV)) ?? emptyInventory("real")).postings) : []);
     if (skipJobIds.size) log(`Avisos de LinkedIn que ya tenemos (no se piden): ${skipJobIds.size}.`);
     // --keywords=administrativo_tucuman,vendedor_mendoza: "_" es espacio (el workflow no admite espacios en args).
     const custom = csv("keywords", []).map((k) => k.replace(/_/g, " "));
-    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : "Argentina", { remote, history: ledger.entries, skipJobIds, parallel: Math.min(5, Math.max(1, Math.floor(num("parallel", 1)))) });
+    result = await runApify(key("APIFY_TOKEN"), apifySources, apifyRows, apifyBudget, apifySpent, num("keywords-per-source", 10), nowIso, custom, arg("budget-source") === "account", linkedinActor, window, (partial) => persist(partial, ledger.entries, nowIso, progress).then(() => undefined), where === "latam" ? "Latin America" : (city ?? "Argentina"), { remote, history: ledger.entries, skipJobIds, parallel: Math.min(5, Math.max(1, Math.floor(num("parallel", 1)))) });
   }
 
   const inv = await persist(result, ledger.entries, nowIso, progress, true);
