@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import LoginDialog from "@/components/auth/LoginDialog";
 import { chargeTerms, firstChargeText, GUARANTEE_TEXT, NO_LOCK_IN_TEXT, PLAN_ORDER, PLANS, planDiscount, type Plan, type PlanId } from "@/lib/plans";
+import { forgetReturnTo, readReturnTo } from "@/lib/billing/returnTo";
 import SubscriptionManager, { type ManagedStatus } from "./SubscriptionManager";
 import { trackCheckoutCreated, trackCheckoutFailed, trackPlanClick, trackVerifiedPurchase, type VerifiedPayment } from "@/lib/tracking";
 
@@ -20,6 +21,9 @@ export default function BillingPanel() {
   /** Mercado Pago no acepta el email de Maru como pagador («different site»): se puede probar con el de otra cuenta de Mercado Pago Argentina. */
   const [payerAsk, setPayerAsk] = useState<PlanId | null>(null);
   const [payerEmail, setPayerEmail] = useState("");
+  /** La herramienta donde el cupo frenó a la persona, para volver ahí cuando el pago queda confirmado. */
+  const [back, setBack] = useState<{ path: string; label: string } | null>(null);
+  useEffect(() => setBack(readReturnTo()), []);
   const read = useCallback(async (refresh = false) => {
     const res = await fetch("/api/billing/status", { method: refresh ? "POST" : "GET", cache: "no-store", headers: email ? { "X-Maru-Account": email } : {} });
     const body = await res.json();
@@ -89,6 +93,11 @@ export default function BillingPanel() {
   };
   const discount = planDiscount(featured);
   return <div>
+    {paid && back && <div role="status" className="mx-auto mb-8 max-w-xl rounded-[24px] bg-brand-soft p-5 text-center sm:p-6">
+      <p className="text-lg font-bold">Tu plan está activo.</p>
+      <p className="mt-1 text-sm">Lo que habías cargado te espera donde lo dejaste.</p>
+      <Link href={back.path} onClick={forgetReturnTo} className="press mt-4 inline-flex min-h-12 items-center justify-center rounded-full bg-neon px-6 py-3 font-bold uppercase text-ink">{back.label}</Link>
+    </div>}
     {/* El mensual en promo, solo y destacado: precio de hoy, renovación, baja y garantía junto al botón. */}
     <article data-plan-card={featured.id} className="relative mx-auto max-w-xl rounded-[24px] border-2 border-ink bg-white p-6 pt-10 shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:p-8 sm:pt-12">
       {featured.badge && <p className="absolute inset-x-0 top-0 rounded-t-[22px] bg-neon py-1.5 text-center text-xs font-extrabold uppercase tracking-wider">{featured.badge}</p>}

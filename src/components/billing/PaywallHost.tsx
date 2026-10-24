@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { syncLocalMilestones, trackPaywallViewed, trackVerifiedPurchase } from "@/lib/tracking";
+import { rememberReturnTo } from "@/lib/billing/returnTo";
 import { PLAN_LIMIT_EVENT, type LimitedTool } from "@/lib/tracking/paywall";
 import BillingPanel from "./BillingPanel";
 
@@ -32,7 +33,10 @@ export default function PaywallHost() {
   useEffect(() => {
     const onLimit = (e: Event) => {
       const tool = (e as CustomEvent<{ tool?: LimitedTool }>).detail?.tool;
-      if (tool && tool in TOOL_TEXT) setExposure((prev) => ({ n: (prev?.n ?? 0) + 1, tool }));
+      if (!tool || !(tool in TOOL_TEXT)) return;
+      // Mercado Pago vuelve a /precios: guardamos la herramienta para ofrecer volver cuando se confirme el pago.
+      rememberReturnTo(`${window.location.pathname}${window.location.search}${window.location.hash}`);
+      setExposure((prev) => ({ n: (prev?.n ?? 0) + 1, tool }));
     };
     window.addEventListener(PLAN_LIMIT_EVENT, onLimit);
     return () => window.removeEventListener(PLAN_LIMIT_EVENT, onLimit);
