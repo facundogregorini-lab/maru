@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Data Analyst · Andes Data</title>
+<!-- Formulario de postulación de ejemplo (empresa ficticia) con la estructura típica de un ATS. -->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 "Inter", system-ui, sans-serif; color: #1b1f24; background: #f6f7f9; }
+  header { background: #fff; border-bottom: 1px solid #e6e8eb; }
+  .top { max-width: 920px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 12px; }
+  .logo { width: 34px; height: 34px; border-radius: 9px; background: #4f46e5; color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .co { font-weight: 650; font-size: 17px; }
+  main { max-width: 920px; margin: 0 auto; padding: 18px 24px 40px; }
+  h1 { font-size: 26px; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .meta { color: #5d6670; margin-bottom: 14px; }
+  .card { background: #fff; border: 1px solid #e6e8eb; border-radius: 14px; padding: 20px 26px; }
+  h2 { font-size: 18px; margin: 0 0 12px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; }
+  .full { grid-column: 1 / -1; }
+  label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  input, textarea, select { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid #cfd4da; border-radius: 9px; background: #fff; }
+  textarea { min-height: 84px; resize: vertical; }
+  .file { display: flex; align-items: center; gap: 10px; }
+  .file input { padding: 8px; }
+  .req { color: #c2410c; }
+  button { margin-top: 14px; background: #1b1f24; color: #fff; border: 0; border-radius: 999px; padding: 12px 26px; font: 600 15px Inter, system-ui; }
+</style>
+</head>
+<body>
+<header><div class="top"><div class="logo">A</div><div class="co">Andes Data</div></div></header>
+<main>
+  <h1>Data Analyst</h1>
+  <div class="meta">Remoto desde Argentina · Tiempo completo</div>
+  <form class="card" onsubmit="event.preventDefault()">
+    <h2>Postulate a este puesto</h2>
+    <div class="grid">
+      <div><label for="first">Nombre <span class="req">*</span></label><input id="first" name="first_name" required /></div>
+      <div><label for="last">Apellido <span class="req">*</span></label><input id="last" name="last_name" required /></div>
+      <div><label for="email">Email <span class="req">*</span></label><input id="email" type="email" name="email" required /></div>
+      <div><label for="phone">Teléfono</label><input id="phone" type="tel" name="phone" /></div>
+      <div><label for="li">Perfil de LinkedIn</label><input id="li" type="url" name="linkedin" /></div>
+      <div><label for="city">Ubicación</label><input id="city" name="location" /></div>
+      <div class="full"><label for="resume">CV <span class="req">*</span></label><div class="file"><input id="resume" type="file" name="resume" required /></div></div>
+      <div><label for="years">Años de experiencia con SQL <span class="req">*</span></label><input id="years" type="number" name="years" required /></div>
+      <div><label for="english">Nivel de inglés</label><select id="english" name="english"><option value="">Elegí…</option><option>Básico</option><option>Intermedio</option><option>Avanzado</option><option>Bilingüe</option></select></div>
+      <div class="full"><label for="why">¿Por qué querés trabajar en Andes Data? <span class="req">*</span></label><textarea id="why" name="why" maxlength="800" required></textarea></div>
+      <div class="full"><label for="salary">Pretensión salarial (bruta mensual) <span class="req">*</span></label><input id="salary" name="salary" required /></div>
+    </div>
+    <button type="submit">Enviar postulación</button>
+  </form>
+</main>
+</body>
+</html>
