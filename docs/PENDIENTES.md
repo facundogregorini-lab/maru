@@ -1,5 +1,13 @@
 # Estado y próximos pasos de Maru
 
+## Video demo para redes y ventas (25/10/2026)
+
+Pedido de Axel: un video corto que muestre Maru navegando la web real, para quienes buscan trabajo. Está en [`video/demo`](../video/demo/README.md), es un proyecto aparte (Remotion) y no entra en el build, el lint ni los tests de la app.
+
+- [x] `video/demo/out/maru-horizontal.mp4` (1920 × 1080, 41 s) y `maru-vertical.mp4` (1080 × 1920): match con búsquedas reales del inventario, postulación a medida (CV adaptado y respuestas) y la extensión completando un formulario. Música de Mixkit (se baja al renderizar, no se versiona).
+- [x] Capturas de producción con la IA simulada (`video/demo/capture/maru/fixtures.mjs`, postulante ficticia) y ranking real sin IA: no se gastó nada. La extensión real se probó contra un formulario de ejemplo con un servidor local.
+- [ ] Que el dueño lo mire y decida dónde usarlo (anuncios, home, redes). Cambiar textos o tiempos: `video/demo/src/maru/`; recapturar si cambia la interfaz: ver el README.
+
 ## CV en la home, keywords ATS, oportunidades ocultas, copiloto y alertas (plan en curso, desde 24/10/2026)
 
 Pedido del dueño. Una PR por funcionalidad, en este orden. «Pro» = cualquier plan pago. Mails con Resend (falta que el dueño cree la cuenta, verifique marucoach.com y cargue `RESEND_API_KEY` en Vercel).

@@ -1,0 +1,39 @@
+{
+  "nombre": "Lucía Fernández",
+  "titulo": "Analista de Datos · SQL, Python y Power BI",
+  "ubicacion": "Buenos Aires, Argentina",
+  "email": "lucia.fernandez@ejemplo.com",
+  "telefono": "",
+  "linkedin_url": "",
+  "otros_links": [],
+  "resumen": "Analista de datos con 5 años de experiencia en retail y fintech. Armo tableros, automatizo reportes y traduzco datos en decisiones de negocio.",
+  "aptitudes": ["SQL", "Python", "Power BI", "Excel avanzado", "Tableau", "Google Analytics", "ETL", "Estadística"],
+  "experiencia": [
+    {
+      "empresa": "Fintech del Sur",
+      "cargo": "Analista de Datos Semi Senior",
+      "inicio": "03/2022",
+      "fin": "actual",
+      "ubicacion": "Buenos Aires",
+      "descripcion": "",
+      "logros": [
+        "Automaticé 12 reportes semanales con Python y SQL y liberé 15 horas por semana del equipo.",
+        "Armé el tablero de riesgo crediticio en Power BI que usa el comité de créditos."
+      ],
+      "fragmentos_incompletos": []
+    },
+    {
+      "empresa": "Tiendas Andinas",
+      "cargo": "Analista de Datos Junior",
+      "inicio": "01/2020",
+      "fin": "02/2022",
+      "ubicacion": "Buenos Aires",
+      "descripcion": "",
+      "logros": ["Modelé ventas por sucursal y mejoré el pronóstico de stock un 18 %."],
+      "fragmentos_incompletos": []
+    }
+  ],
+  "educacion": [{ "institucion": "Universidad de Buenos Aires", "titulo": "Licenciatura en Economía", "inicio": "2014", "fin": "2019" }],
+  "idiomas": [{ "idioma": "Inglés", "nivel": "Avanzado (C1)" }],
+  "certificaciones": [{ "nombre": "Google Data Analytics", "emisor": "Google", "anio": "2021" }]
+}
