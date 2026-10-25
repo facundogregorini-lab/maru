@@ -31,7 +31,7 @@ export default function BillingDiagnostics() {
       {d.events.length === 0 ? <p className="text-muted">Todavía no llegó ninguna notificación ni se actualizó ningún estado desde que existe este registro.</p>
         : <ul className="space-y-2">{d.events.map((e, i) => <li key={`${e.at}-${i}`} className="border-t border-line pt-2">
           <p><span className="font-medium">{e.source === "webhook" ? "Notificación" : "Actualizar estado"}</span>{e.type ? ` · ${e.type}` : ""} · {e.result}</p>
-          <p className="text-xs text-muted">{new Date(e.at).toLocaleString("es-AR")}{e.detail ? ` · ${e.detail}` : ""}</p>
+          <p className="text-xs text-muted">{new Date(e.at).toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", hourCycle: "h23" })}{e.detail ? ` · ${e.detail}` : ""}</p>
         </li>)}</ul>}
     </div>}
   </section>;
