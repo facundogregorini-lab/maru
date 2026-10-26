@@ -20,6 +20,22 @@ const FEATURE_TEXT: Record<PlanFeature, { title: string; text: string }> = {
     title: "Cubrir las palabras clave es parte de los planes",
     text: "Con un plan, Maru propone una frase para cada palabra clave que falta, en la experiencia que mejor la respalda, y vos decidís cuáles sumar.",
   },
+  word: {
+    title: "La descarga en Word es parte de los planes",
+    text: "Con un plan descargás tu CV y tus cartas en Word para editarlos donde quieras. El PDF sigue gratis.",
+  },
+  alertas: {
+    title: "Las alertas semanales son parte de los planes",
+    text: "Con un plan, Maru te manda cada lunes las búsquedas nuevas que mejor encajan con tu perfil.",
+  },
+  ocultas: {
+    title: "Las búsquedas que no están en LinkedIn son parte de los planes",
+    text: "Las leímos directo del sitio de empleos de cada empresa, así que suelen tener menos postulantes. Con un plan ves cuáles son y te postulás.",
+  },
+  star: {
+    title: "Las respuestas sugeridas son parte de los planes",
+    text: "Con un plan, el informe de cada entrevista trae una respuesta más fuerte para cada pregunta, armada con el método STAR.",
+  },
 };
 
 /**

@@ -24,7 +24,8 @@ export function toolForRoute(url: string): LimitedTool | null {
 }
 
 /** Funciones que sólo vienen con un plan pago (402 PLAN_FEATURE), con el texto que muestra el modal. */
-export type PlanFeature = "keywords";
+export type PlanFeature = "keywords" | "word" | "alertas" | "ocultas" | "star";
+export const PLAN_FEATURES: PlanFeature[] = ["keywords", "word", "alertas", "ocultas", "star"];
 export const PLAN_FEATURE_EVENT = "maru:plan-feature";
 
 /** Abre el modal de planes porque la función es del plan pago. Suma a la misma conversión que el límite (ver trackPlanFeatureViewed). */

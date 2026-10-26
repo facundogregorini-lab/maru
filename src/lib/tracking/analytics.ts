@@ -19,7 +19,7 @@ export type ProductEvent =
 
 export type ProductProps = Partial<{
   herramienta: "cv" | "carta" | "video" | "entrevista";
-  funcion: "keywords";
+  funcion: "keywords" | "word" | "alertas" | "ocultas" | "star";
   via: "descarga_pdf" | "descarga_word" | "copia" | "toma" | "informe";
   primera: boolean;
   plan: string;

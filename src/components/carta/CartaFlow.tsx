@@ -11,6 +11,7 @@ import { load, remove, save } from "@/lib/storage";
 import { takeHandoff, type Handoff } from "@/lib/match/clientStore";
 import { upsertTracked } from "@/lib/tracker";
 import { trackActivation } from "@/lib/tracking";
+import { notifyPlanFeature } from "@/lib/tracking/paywall";
 import { useLoginGate } from "../auth/useLoginGate";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
@@ -401,6 +402,11 @@ function Result({
       } catch (e) {
         if (e instanceof DownloadError && e.code === "AUTH_REQUIRED") {
           gate.ask("descargar tu carta", () => doExport(kind));
+          return;
+        }
+        // Word es del plan pago: se muestran los planes en lugar del error.
+        if (e instanceof DownloadError && e.code === "PLAN_FEATURE") {
+          notifyPlanFeature("word");
           return;
         }
         throw e;

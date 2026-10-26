@@ -4,7 +4,8 @@
 
 - Pedido del dueño: que la conversión por la que optimizan las campañas («Maru | Límite alcanzado» en Google, `maru_paywall_viewed` → «Maru | Límite gratuito alcanzado» en Meta) cuente también cuando alguien toca una función paga y ve el mismo modal de planes.
 - Hecho: `trackPlanFeatureViewed` (`src/lib/tracking/index.ts`) usa el mismo hito `paywall`, así sale a Google, al píxel y a la API de conversiones de Meta con la misma deduplicación: una vez por cuenta entre límite y función paga. En analytics queda aparte como `funcion_plan_vista`. No hace falta tocar nada en Google Ads ni en Meta.
-- Hoy la única función paga que abre el modal es «Cubrir palabras clave» del CV. La descarga en Word de la carta y las alertas semanales responden 402 pero muestran un texto, no el modal: **pendiente de decisión del dueño** si también abren los planes (y entonces suman).
+- Hecho (pedido del dueño): todas las funciones pagas abren el modal de planes en lugar de un error o de mandar a `/precios`, y suman a la conversión: palabras clave, Word del CV y de la carta, alertas semanales, búsquedas que no están en LinkedIn (los dos botones) y respuesta STAR del informe de entrevista (`PlanFeature` en `src/lib/tracking/paywall.ts`).
+- Queda fuera el tope diario del copiloto: también lo tienen los planes pagos, así que mostrar planes ahí no corresponde.
 - Las exposiciones anteriores a este cambio no se pueden recuperar: no quedó registro con qué mandarlas.
 
 ## Video demo para redes y ventas (25/10/2026)

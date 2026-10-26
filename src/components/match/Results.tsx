@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ExternalJob } from "@/lib/match/api-schemas";
 import { rememberReturnTo } from "@/lib/billing/returnTo";
+import { notifyPlanFeature } from "@/lib/tracking/paywall";
 import { handoffToPostulacion } from "@/lib/match/clientStore";
 import { TEASER_POSITIONS, type HiddenSection, type HiddenTeaser } from "@/lib/match/hidden";
 import { itemProps, track } from "@/lib/match/events";
@@ -322,16 +322,17 @@ export default function Results({
             <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/80">
               Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn, así que suelen tener menos postulantes. Para verlas, pasate a un plan de Maru.
             </p>
-            <Link
-              href="/precios"
+            <button
+              type="button"
               onClick={() => {
                 rememberReturnTo("/match");
                 track("match_ocultas_desbloquear", { ocultas: hidden.total });
+                notifyPlanFeature("ocultas");
               }}
               className="press mt-5 inline-flex min-h-11 items-center rounded-full bg-neon px-6 py-2.5 text-sm font-bold text-ink hover:bg-neon/80"
             >
               Ver los planes
-            </Link>
+            </button>
           </div>
         )}
         {data && tab !== "guardadas" && tab !== "ocultas" && list.length >= limit && (tab === "elegibles" ? data.counts.eligible : data.counts.pending) > list.length && (
@@ -630,16 +631,17 @@ function LockedCard({ score, preliminary }: { score: number; preliminary: boolea
       <div className="absolute inset-y-0 left-0 right-[128px] flex flex-col items-center justify-center gap-2 bg-white/40 px-4 text-center sm:right-[172px]">
         <p className="text-sm font-semibold">🔒 Búsqueda que no está en LinkedIn</p>
         <p className="max-w-xs text-xs text-muted">La leímos del sitio de empleos de la empresa. Desbloqueala para ver cuál es y postularte.</p>
-        <Link
-          href="/precios"
+        <button
+          type="button"
           onClick={() => {
             rememberReturnTo("/match");
             track("match_ocultas_desbloquear", { lista: "elegibles" });
+            notifyPlanFeature("ocultas");
           }}
           className="press mt-1 inline-flex min-h-10 items-center rounded-full bg-neon px-5 text-sm font-bold text-ink hover:bg-neon/80"
         >
           Desbloquear
-        </Link>
+        </button>
       </div>
       <div className="m-1 flex w-[120px] shrink-0 flex-col items-center justify-center rounded-xl bg-[linear-gradient(180deg,#000_0%,#2c3a3a_100%)] px-3 py-5 text-center text-white sm:w-[164px]">
         {preliminary ? (

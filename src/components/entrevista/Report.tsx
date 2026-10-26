@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import type { Informe, Intercambio } from "@/lib/schemas";
+import { notifyPlanFeature } from "@/lib/tracking/paywall";
 import CopyButton from "../CopyButton";
 
 function Dots({ n }: { n: number }) {
@@ -116,7 +116,7 @@ export default function Report({ informe, historial }: { informe: Informe; histo
                     ) : (
                       <p className="rounded-2xl bg-cream px-4 py-3">
                         <b>Una respuesta más fuerte (STAR)</b> para cada pregunta viene con los planes de Maru.{" "}
-                        <Link href="/precios" className="font-semibold underline underline-offset-4">Ver planes</Link>
+                        <button type="button" onClick={() => notifyPlanFeature("star")} className="font-semibold underline underline-offset-4">Ver planes</button>
                       </p>
                     )}
                   </div>

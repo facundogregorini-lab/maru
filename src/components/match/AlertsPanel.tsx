@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { DEFAULT_ALERT_SCORE, MAX_ALERT_SCORE, MIN_ALERT_SCORE, type AlertView } from "@/lib/alertsShared";
@@ -8,6 +7,7 @@ import { rememberReturnTo } from "@/lib/billing/returnTo";
 import { requestLogin } from "@/lib/loginRequest";
 import type { Filters } from "@/lib/match/ranking";
 import type { Interactions, MatchPrefs, MatchProfile } from "@/lib/match/types";
+import { notifyPlanFeature } from "@/lib/tracking/paywall";
 import { capture } from "@/lib/tracking/posthog";
 
 type Status = { disponible: boolean; envio: boolean; pro: boolean; alerta: AlertView | null };
@@ -49,6 +49,10 @@ export default function AlertsPanel({ profile, prefs, interactions, filters }: {
         body: JSON.stringify({ active, minScore, filters: filters ?? status?.alerta?.filters ?? {}, profile, prefs, interactions }),
       });
       const d = await res.json().catch(() => ({}));
+      if (res.status === 402 && d.code === "PLAN_FEATURE") {
+        notifyPlanFeature("alertas");
+        return;
+      }
       if (!res.ok) throw new Error(d.error ?? "No pudimos guardar tu alerta.");
       setStatus(d as Status);
       setSaved(active ? "Alerta guardada." : "Alertas apagadas.");
@@ -89,9 +93,9 @@ export default function AlertsPanel({ profile, prefs, interactions, filters }: {
       ) : !status.pro ? (
         <div className="mt-4 rounded-2xl bg-sand p-4 text-sm">
           <p>Las alertas semanales son del plan de Maru.{active ? " Tu alerta quedó en pausa hasta que vuelvas a tener el plan." : ""}</p>
-          <Link href="/precios" onClick={() => rememberReturnTo("/match")} className="press mt-3 inline-flex rounded-full bg-neon px-4 py-2 font-bold">
+          <button type="button" onClick={() => { rememberReturnTo("/match"); notifyPlanFeature("alertas"); }} className="press mt-3 inline-flex rounded-full bg-neon px-4 py-2 font-bold">
             Ver los planes
-          </Link>
+          </button>
           {active && (
             <button type="button" disabled={busy} onClick={() => save(false)} className="ml-3 text-sm text-ink/60 underline underline-offset-2">
               Apagar alertas
