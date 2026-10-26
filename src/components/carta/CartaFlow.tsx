@@ -13,6 +13,7 @@ import { upsertTracked } from "@/lib/tracker";
 import { trackActivation } from "@/lib/tracking";
 import { notifyPlanFeature } from "@/lib/tracking/paywall";
 import { useLoginGate } from "../auth/useLoginGate";
+import { useProOffer } from "../billing/ProOffer";
 import CopyButton from "../CopyButton";
 import CvSourceField, { useCvInput } from "../CvSourceField";
 import StylePanel from "../cv/StylePanel";
@@ -383,8 +384,12 @@ function Result({
   // Descargar o copiar la carta exige haber ingresado.
   const gate = useLoginGate();
 
+  // Antes de la primera descarga gratis (PDF), la oferta de Maru Pro; al cerrarla, descarga igual. Word es del plan pago y sigue su camino.
+  const offer = useProOffer();
+
   function exportAs(kind: "pdf" | "docx") {
-    gate.run("descargar tu carta", () => doExport(kind));
+    if (busy || offer.checking) return;
+    gate.run("descargar tu carta", () => (kind === "pdf" ? offer.guard("carta", () => void doExport("pdf")) : doExport(kind)));
   }
 
   async function doExport(kind: "pdf" | "docx"): Promise<void> {
@@ -424,6 +429,7 @@ function Result({
   return (
     <div className="animate-rise">
       {gate.dialog}
+      {offer.dialog}
       <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Tu carta para</p>
       <h1 className="mt-1 font-display text-3xl tracking-tight sm:text-4xl">
         {carta.puesto || "la búsqueda"} {carta.empresa && <span className="text-muted">· {carta.empresa}</span>}
@@ -446,10 +452,10 @@ function Result({
             <button
               type="button"
               onClick={() => exportAs("pdf")}
-              disabled={!!busy}
+              disabled={!!busy || offer.checking}
               className="rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:opacity-70"
             >
-              {busy === "pdf" ? "Generando PDF…" : "Descargar PDF"}
+              {busy === "pdf" ? "Generando PDF…" : offer.checking ? "Un momento…" : "Descargar PDF"}
             </button>
             <button
               type="button"

@@ -29,6 +29,22 @@ Código: `src/lib/tracking/posthog.ts` (inicio, `capture`, secciones) y `src/com
 
 Funnel general: `$pageview` → `activacion` → `limite_planes_visto` → `plan_click` ("click en pagar": elige un plan y va a Mercado Pago) → `compra_confirmada`. Por herramienta: `$pageview` → `seccion_vista` → resultado → activación de esa herramienta (en Postulación y CV la activación se separa por `seccion`, porque las dos usan el mismo editor). `seccion_vista` existe porque una misma visita no puede contar para dos pasos del funnel: así, quien entra directo a `/cv` desde un anuncio completa los dos primeros pasos.
 
+### Oferta anticipada de Maru Pro (desde el 26/10/2026)
+
+Antes de la primera descarga gratis en PDF de un CV o una carta, una cuenta gratuita ve una sola vez la oferta de Maru Pro (`src/components/billing/ProOffer.tsx`). No es un límite: cualquier cierre sigue con la descarga. La decide el servidor (`POST /api/billing/offer`, `src/lib/billing/offer.ts`): cobro a la venta, sin plan pago ni cuenta del equipo, sin activación previa registrada y sin exposición anterior (clave `maru:offer:<hash>:primera_descarga`, sin vencimiento, marcada con SET NX). Si el servidor tarda más de 1,5 s o falla, se descarga directo.
+
+| Evento | Cuándo | Propiedades |
+|---|---|---|
+| `oferta_pro_vista` | La oferta quedó pintada y visible (una vez por exposición) | `origen_oferta=primera_descarga`, `tipo_resultado` (`cv`/`carta`), `usuario_autenticado`, `exposure_id` |
+| `oferta_pro_click` | «Conocer Maru Pro» (abre los planes dentro del mismo modal) | `origen_oferta`, `tipo_resultado`, `exposure_id` |
+| `oferta_pro_omitida` | Siguió gratis o cerró la oferta | los mismos, más `motivo`: `descarga_gratis`, `cerrar_modal`, `escape`, `click_fuera`, `planes_descarga_gratis`, `planes_cerrar` |
+
+**Sólo analytics.** Estos eventos salen por `trackProduct` (PostHog y Vercel Analytics) y nunca por `claimFirst` ni `sendAdsConversion`: no disparan `limite_planes_visto`, ni el hito `paywall`, ni ninguna conversión de Google Ads o de Meta (`src/lib/tracking/offer.ts`; lo verifica `tests/oferta-pro.test.ts`). La activación sigue saliendo recién cuando el archivo se descarga.
+
+**`origen_oferta`** (`src/lib/tracking/origin.ts`) etiqueta `limite_planes_visto` (`limite_real`), `funcion_plan_vista` (`funcion_plan`), `plan_click`, `checkout_creado`, `checkout_error` y la primera `compra_confirmada` (no las renovaciones). Valores: `primera_descarga`, `limite_real`, `funcion_plan`, `menu_planes` (entró a /precios sin una exposición en los últimos 30 minutos) y `otro`. Se guarda en este navegador; al crear el checkout queda fijo 7 días para esa compra, porque Mercado Pago vuelve a /precios. Una compra confirmada desde otro navegador llega como `otro`.
+
+Funnels: `oferta_pro_vista` → `oferta_pro_click` → `plan_click` → `checkout_creado` → `compra_confirmada` (filtrando `origen_oferta = primera_descarga` desde `plan_click`) y `oferta_pro_vista` → `oferta_pro_omitida` → `activacion`. Ojo con el funnel general: desde este cambio, `plan_click` también llega desde la oferta; para el funnel del límite real, filtrar `origen_oferta = limite_real`.
+
 Prueba local: `NEXT_PUBLIC_POSTHOG_KEY=phc_test NEXT_PUBLIC_GOOGLE_ADS_HOSTS=localhost npm run dev` y `localStorage.ph_debug = "true"` en la consola: cada evento se imprime como `send "…"`. PostHog descarta los navegadores automatizados (headless) como bots.
 
 # Conversiones de Google Ads
@@ -75,7 +91,7 @@ No son secretos: viajan al navegador. Las credenciales de backend (Mercado Pago,
 | `maru_begin_checkout` | El servidor creó la suscripción en Mercado Pago (`/api/billing/checkout` OK) | `trackCheckoutCreated` (BillingPanel) | Maru \| Inicio de checkout (`azVYCO_ckKAdEOSNwPVE`) | Secundaria, Una, sin valor, `transaction_id=co_<checkoutId>` |
 | `maru_purchase` | `/api/billing/status` devuelve `lastPayment` (pago aprobado por Mercado Pago, verificado en el servidor, real, en ARS, por el monto del plan) y es el primero de esa suscripción | `trackVerifiedPurchase` (BillingPanel, PaywallHost) | Maru \| Compra confirmada (`pbctCOzckKAdEOSNwPVE`) | Secundaria, Todas, valor dinámico ARS, `transaction_id=mp_<payment_id>` |
 
-Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_planes_visto` (con `primera`), `funcion_plan_vista` (con `funcion` y `primera`), `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` (con `renovacion`), `ads_bloqueado`.
+Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_planes_visto` (con `primera`), `funcion_plan_vista` (con `funcion` y `primera`), `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` (con `renovacion`), `ads_bloqueado`, y los de la oferta anticipada (`oferta_pro_vista`, `oferta_pro_click`, `oferta_pro_omitida`), que no tienen conversión publicitaria.
 
 ## Reglas de deduplicación
 

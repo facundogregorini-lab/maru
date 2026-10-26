@@ -4,6 +4,7 @@
  * Pueden repetirse y llevar más detalle que las conversiones publicitarias, pero nunca datos personales:
  * sólo valores de una lista cerrada (herramienta, plan, códigos, montos agregados).
  */
+import type { OrigenOferta } from "./origin";
 import { capture } from "./posthog";
 
 export type ProductEvent =
@@ -14,6 +15,9 @@ export type ProductEvent =
   | "checkout_creado" // el servidor creó la suscripción en Mercado Pago
   | "checkout_error" // el clic en un plan no llegó a checkout
   | "compra_confirmada" // pago aprobado verificado por el servidor
+  | "oferta_pro_vista" // la oferta anticipada de Maru Pro quedó en pantalla (una vez por cuenta; no es un límite)
+  | "oferta_pro_click" // tocó «Conocer Maru Pro» en esa oferta
+  | "oferta_pro_omitida" // siguió con la descarga gratis o cerró la oferta
   | "ads_bloqueado" // la etiqueta de Google no cargó (bloqueador, red): la conversión no salió
   | "meta_bloqueado"; // el píxel de Meta no cargó: el hito salió a Google pero no a Meta
 
@@ -27,9 +31,17 @@ export type ProductProps = Partial<{
   renovacion: boolean;
   monto: number;
   conversion: string;
+  /** De dónde vino la persona a los planes (ver origin.ts). */
+  origen_oferta: OrigenOferta;
+  /** Qué entregable motivó la oferta anticipada. */
+  tipo_resultado: "cv" | "carta" | "otro";
+  usuario_autenticado: boolean;
+  /** Id aleatorio de una exposición de la oferta anticipada (une vista, click y omitida). */
+  exposure_id: string;
+  motivo: "descarga_gratis" | "cerrar_modal" | "escape" | "click_fuera" | "planes_descarga_gratis" | "planes_cerrar";
 }>;
 
-const ALLOWED = new Set(["herramienta", "funcion", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion"]);
+const ALLOWED = new Set(["herramienta", "funcion", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion", "origen_oferta", "tipo_resultado", "usuario_autenticado", "exposure_id", "motivo"]);
 const SAFE_VALUE = /^[a-z0-9_-]{1,40}$/i;
 
 /** Filtra props: claves conocidas y valores cortos sin texto libre (nunca emails, nombres ni contenido). */
