@@ -40,8 +40,9 @@ it("evita descargar sin la foto mientras el recorte está pendiente y exporta la
   expect(document.querySelector('[role="status"]')?.textContent).toContain("Usar foto");
   await act(async () => { button("Usar foto").click(); });
   expect(button("Descargar PDF").disabled).toBe(false);
-  await act(async () => { button("Descargar PDF").click(); await new Promise((resolve) => setTimeout(resolve, 20)); });
-  expect(downloadPdf).toHaveBeenCalledTimes(1);
+  await act(async () => { button("Descargar PDF").click(); });
+  // Antes de descargar pasa por la oferta de Maru Pro (sin sesión no consulta): esperamos la descarga, no un tiempo fijo.
+  await act(async () => { await vi.waitFor(() => expect(downloadPdf).toHaveBeenCalledTimes(1)); });
   expect(downloadPdf.mock.calls[0][0]).toMatchObject({ showPhoto: true, photo: { dataUrl: photo, shape: "circle" } });
 });
 
@@ -49,6 +50,7 @@ it("permite cancelar el recorte y descargar el CV sin foto", async () => {
   await pickPhoto();
   await act(async () => { button("Cancelar recorte").click(); });
   expect(button("Descargar PDF").disabled).toBe(false);
-  await act(async () => { button("Descargar PDF").click(); await new Promise((resolve) => setTimeout(resolve, 20)); });
+  await act(async () => { button("Descargar PDF").click(); });
+  await act(async () => { await vi.waitFor(() => expect(downloadPdf).toHaveBeenCalledTimes(1)); });
   expect(downloadPdf.mock.calls[0][0].photo).toBeNull();
 });

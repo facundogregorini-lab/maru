@@ -1,13 +1,14 @@
 # Estado y próximos pasos de Maru
 
-## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR #222 abierta para revisión)
+## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR #222, en producción desde las 01:45)
 
 Pedido del dueño: una oferta opcional de Maru Pro cuando una cuenta gratuita va a descargar su primer CV o carta, sin tocar límites, sin contar como paywall y sin ensuciar las conversiones de Google Ads y Meta. Funcionalidad permanente, no experimento. Esta vez se pidió rama aparte y PR para revisar, sin mergear ni desplegar.
 
 - [x] Servidor: `src/lib/billing/offer.ts` y `POST /api/billing/offer`. Una vez por cuenta (Redis, SET NX), sólo con cobro a la venta, sin plan pago ni `PRO_EMAILS` y sin activación previa (`REQUIRE_FIRST_RESULT`).
 - [x] Modal `src/components/billing/ProOffer.tsx` en `CvEditor` (CV y postulación) y `CartaFlow`, sólo en «Descargar PDF» (Word sigue siendo del plan pago). «Conocer Maru Pro» abre los planes reales (`BillingPanel`) en el mismo modal, con «Por ahora, descargar gratis»; cualquier cierre descarga.
 - [x] Eventos `oferta_pro_vista`, `oferta_pro_click`, `oferta_pro_omitida` y `origen_oferta` en los eventos comerciales (ver docs/TRACKING.md). Nada nuevo sale a Google Ads ni a Meta.
-- [ ] Revisar la PR, mergear y verificar en producción: una cuenta gratis nueva ve la oferta una vez; PostHog recibe los tres eventos; en Google Ads y Meta no aparece ningún evento nuevo.
+- [x] PR #222 mergeada y desplegada (deployment `dpl_A9khfTt7UmMJZ4MkXoBpzGupEhWz`, alias www.marucoach.com).
+- [ ] Verificar en producción: una cuenta gratis nueva ve la oferta una vez; PostHog recibe los tres eventos; en Google Ads y Meta no aparece ningún evento nuevo.
 - [ ] Armar en PostHog los funnels de la oferta y filtrar el funnel general por `origen_oferta = limite_real` (antes `plan_click` sólo venía de los límites).
 - [ ] Decidir si se mantiene `REQUIRE_FIRST_RESULT` (hoy: quien ya descargó o copió algo antes no ve la oferta).
 
