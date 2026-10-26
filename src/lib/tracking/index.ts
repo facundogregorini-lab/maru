@@ -13,6 +13,7 @@ import type { AdsConversion } from "./config";
 import { trackProduct } from "./analytics";
 import type { Milestone } from "./server";
 import type { LimitedTool, PlanFeature } from "./paywall";
+import { checkoutOrigen, currentOrigen, freezeCheckoutOrigen } from "./origin";
 
 export { trackProduct } from "./analytics";
 
@@ -103,7 +104,7 @@ export async function trackActivation(email: Email, herramienta: LimitedTool, vi
 /** El cupo gratis frenó una acción y los planes ya están en pantalla. Conversión sólo la primera vez por cuenta. */
 export async function trackPaywallViewed(email: Email, herramienta: LimitedTool): Promise<void> {
   const first = await claimFirst("paywall", email);
-  trackProduct("limite_planes_visto", { herramienta, primera: first });
+  trackProduct("limite_planes_visto", { herramienta, primera: first, origen_oferta: "limite_real" });
   if (first) await sendAdsConversion("paywall");
 }
 
@@ -113,16 +114,17 @@ export async function trackPaywallViewed(email: Email, herramienta: LimitedTool)
  */
 export async function trackPlanFeatureViewed(email: Email, funcion: PlanFeature): Promise<void> {
   const first = await claimFirst("paywall", email);
-  trackProduct("funcion_plan_vista", { funcion, primera: first });
+  trackProduct("funcion_plan_vista", { funcion, primera: first, origen_oferta: "funcion_plan" });
   if (first) await sendAdsConversion("paywall");
 }
 
+/** `origen_oferta`: por qué está viendo los planes (origin.ts). Sólo analytics: plan_click no es una conversión. */
 export function trackPlanClick(plan: string): void {
-  trackProduct("plan_click", { plan });
+  trackProduct("plan_click", { plan, origen_oferta: currentOrigen() });
 }
 
 export function trackCheckoutFailed(plan: string, codigo: string | undefined): void {
-  trackProduct("checkout_error", { plan, codigo: codigo ?? "desconocido" });
+  trackProduct("checkout_error", { plan, codigo: codigo ?? "desconocido", origen_oferta: currentOrigen() });
 }
 
 /**
@@ -132,7 +134,10 @@ export function trackCheckoutFailed(plan: string, codigo: string | undefined): v
 export async function trackCheckoutCreated(email: Email, plan: string, checkoutId: string, waitMs = 800): Promise<AdsResult | "duplicate"> {
   const started = Date.now();
   const first = await claimFirst("begin_checkout", email, checkoutId);
-  trackProduct("checkout_creado", { plan, primera: first });
+  const origen = currentOrigen();
+  // Mercado Pago vuelve a /precios: el origen de esta compra queda fijo acá.
+  freezeCheckoutOrigen(origen);
+  trackProduct("checkout_creado", { plan, primera: first, origen_oferta: origen });
   if (!first) return "duplicate";
   return sendAdsConversion("begin_checkout", { transaction_id: `co_${checkoutId}` }, { waitMs: Math.max(150, waitMs - (Date.now() - started)) });
 }
@@ -147,6 +152,7 @@ export async function trackVerifiedPurchase(email: Email, payment: VerifiedPayme
   if (!payment || !/^\d{1,20}$/.test(payment.id) || !(payment.amount > 0) || now - payment.at > PURCHASE_WINDOW_MS) return;
   const first = await claimFirst("purchase", email, payment.id);
   if (!first) return;
-  trackProduct("compra_confirmada", { plan: payment.plan, renovacion: !payment.first, monto: payment.amount });
+  // El origen sólo describe la primera compra; una renovación no vino de ninguna pantalla.
+  trackProduct("compra_confirmada", { plan: payment.plan, renovacion: !payment.first, monto: payment.amount, ...(payment.first ? { origen_oferta: checkoutOrigen() } : {}) });
   if (payment.first && payment.currency === "ARS") await sendAdsConversion("purchase", { value: payment.amount, currency: "ARS", transaction_id: `mp_${payment.id}` });
 }

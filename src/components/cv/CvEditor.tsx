@@ -6,6 +6,7 @@ import { cvToText, fileBaseName, item, photoRecommended, setTemplate } from "@/l
 import type { CvContext, CvDoc, KeywordProposal, SectionKey } from "@/lib/schemas";
 import { trackActivation } from "@/lib/tracking";
 import { useLoginGate } from "../auth/useLoginGate";
+import { useProOffer } from "../billing/ProOffer";
 import CopyButton from "../CopyButton";
 import PhotoCropper from "../PhotoCropper";
 import AtsPanel from "./AtsPanel";
@@ -177,9 +178,12 @@ export default function CvEditor({
   // Descargar o copiar el CV exige haber ingresado.
   const gate = useLoginGate();
 
+  // Antes de la primera descarga gratis (PDF), la oferta de Maru Pro; al cerrarla, descarga igual. Word es del plan pago y sigue su camino.
+  const offer = useProOffer();
+
   function exportAs(kind: "pdf" | "docx") {
-    if (cropFile) return;
-    gate.run("descargar tu CV", () => doExport(kind));
+    if (cropFile || busy || offer.checking) return;
+    gate.run("descargar tu CV", () => (kind === "pdf" ? offer.guard("cv", () => void doExport("pdf")) : doExport(kind)));
   }
 
   async function doExport(kind: "pdf" | "docx"): Promise<void> {
@@ -220,6 +224,7 @@ export default function CvEditor({
   return (
     <div className="mt-6 space-y-6">
       {gate.dialog}
+      {offer.dialog}
       <section>
         <h2 className="mb-3 font-display text-xl tracking-tight">Elegí el diseño</h2>
         <TemplatePicker doc={doc} recommended={context.templateRecomendado} reason={context.razonTemplate} onPick={(t) => setDoc((d) => setTemplate(d, t))} />
@@ -261,10 +266,10 @@ export default function CvEditor({
             <button
               type="button"
               onClick={() => exportAs("pdf")}
-              disabled={!!busy || !!cropFile}
+              disabled={!!busy || !!cropFile || offer.checking}
               className="rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-paper transition hover:bg-brand-dark disabled:opacity-70"
             >
-              {busy === "pdf" ? "Generando PDF…" : "Descargar PDF"}
+              {busy === "pdf" ? "Generando PDF…" : offer.checking ? "Un momento…" : "Descargar PDF"}
             </button>
             <button
               type="button"

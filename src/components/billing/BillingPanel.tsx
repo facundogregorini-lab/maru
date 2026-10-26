@@ -7,11 +7,20 @@ import { chargeTerms, firstChargeText, GUARANTEE_TEXT, NO_LOCK_IN_TEXT, PLAN_ORD
 import { forgetReturnTo, readReturnTo } from "@/lib/billing/returnTo";
 import SubscriptionManager, { type ManagedStatus } from "./SubscriptionManager";
 import { trackCheckoutCreated, trackCheckoutFailed, trackPlanClick, trackVerifiedPurchase, type VerifiedPayment } from "@/lib/tracking";
+import { ensureOrigen, setOrigen, type OrigenOferta } from "@/lib/tracking/origin";
 
 type Status = ManagedStatus & { enabled: boolean; lastPayment?: VerifiedPayment | null };
-/** El mensual en promo destacado, los otros planes en segundo plano y "Mi suscripción" de la cuenta. */
-export default function BillingPanel() {
+/**
+ * El mensual en promo destacado, los otros planes en segundo plano y "Mi suscripción" de la cuenta.
+ * `origen`: por qué se muestran los planes (límite real, función paga, oferta anticipada). Sin él (en /precios)
+ * respeta una exposición reciente o cuenta como entrada por el menú. Sólo etiqueta los eventos de producto.
+ */
+export default function BillingPanel({ origen }: { origen?: OrigenOferta } = {}) {
   const { email } = useAuth();
+  useEffect(() => {
+    if (origen) setOrigen(origen);
+    else ensureOrigen("menu_planes");
+  }, [origen]);
   const [status, setStatus] = useState<Status | null>(null);
   const [busy, setBusy] = useState<PlanId | "cancel" | "status" | null>(null);
   const [login, setLogin] = useState(false);

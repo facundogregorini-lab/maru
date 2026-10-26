@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { syncLocalMilestones, trackPaywallViewed, trackPlanFeatureViewed, trackVerifiedPurchase } from "@/lib/tracking";
 import { rememberReturnTo } from "@/lib/billing/returnTo";
+import { setOrigen } from "@/lib/tracking/origin";
 import { PLAN_FEATURE_EVENT, PLAN_LIMIT_EVENT, type LimitedTool, type PlanFeature } from "@/lib/tracking/paywall";
 import BillingPanel from "./BillingPanel";
 
@@ -81,6 +82,8 @@ export default function PaywallHost() {
   // Abrir y medir: una sola vez por exposición, después de que el navegador pintó las tarjetas de planes.
   useEffect(() => {
     if (!exposure) return;
+    // Cada exposición etiqueta los eventos de planes y checkout que siguen (origen_oferta, sólo analytics).
+    setOrigen(exposure.tool ? "limite_real" : "funcion_plan");
     const d = dialogRef.current;
     if (!d) return;
     if (!d.open) d.showModal();
@@ -132,7 +135,7 @@ export default function PaywallHost() {
             </button>
           </div>
           <div className="mt-6">
-            <BillingPanel />
+            <BillingPanel origen={feature ? "funcion_plan" : "limite_real"} />
           </div>
           <p className="mt-4 text-center text-sm">
             <Link href="/precios" onClick={close} className="font-semibold underline underline-offset-4">
