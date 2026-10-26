@@ -1,5 +1,12 @@
 # Estado y próximos pasos de Maru
 
+## Funciones pagas también suman a la conversión de optimización (26/10/2026)
+
+- Pedido del dueño: que la conversión por la que optimizan las campañas («Maru | Límite alcanzado» en Google, `maru_paywall_viewed` → «Maru | Límite gratuito alcanzado» en Meta) cuente también cuando alguien toca una función paga y ve el mismo modal de planes.
+- Hecho: `trackPlanFeatureViewed` (`src/lib/tracking/index.ts`) usa el mismo hito `paywall`, así sale a Google, al píxel y a la API de conversiones de Meta con la misma deduplicación: una vez por cuenta entre límite y función paga. En analytics queda aparte como `funcion_plan_vista`. No hace falta tocar nada en Google Ads ni en Meta.
+- Hoy la única función paga que abre el modal es «Cubrir palabras clave» del CV. La descarga en Word de la carta y las alertas semanales responden 402 pero muestran un texto, no el modal: **pendiente de decisión del dueño** si también abren los planes (y entonces suman).
+- Las exposiciones anteriores a este cambio no se pueden recuperar: no quedó registro con qué mandarlas.
+
 ## Video demo para redes y ventas (25/10/2026)
 
 Pedido de Axel: un video corto que muestre Maru navegando la web real, para quienes buscan trabajo. Está en [`video/demo`](../video/demo/README.md), es un proyecto aparte (Remotion) y no entra en el build, el lint ni los tests de la app.
