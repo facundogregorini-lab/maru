@@ -202,6 +202,11 @@ export default function CvEditor({
           gate.ask("descargar tu CV", () => doExport(kind));
           return;
         }
+        // Word es del plan pago: se muestran los planes en lugar del error.
+        if (e instanceof DownloadError && e.code === "PLAN_FEATURE") {
+          notifyPlanFeature("word");
+          return;
+        }
         throw e;
       }
     } catch (e) {
