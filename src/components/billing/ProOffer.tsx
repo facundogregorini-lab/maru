@@ -22,6 +22,8 @@ export const OFFER_TEXT: Record<OfferResult, { title: string; subtitle: string; 
 export const FREE_NOTE = "Tu descarga gratuita está disponible. No necesitás pagar.";
 
 type Step = "oferta" | "planes";
+/** Clics sobre el fondo que llegan tan rápido después de abrir son el segundo clic de «Descargar», no un cierre. */
+const BACKDROP_GRACE_MS = 600;
 
 /**
  * Oferta anticipada de Maru Pro antes de la primera descarga gratis.
@@ -44,6 +46,8 @@ export function useProOffer() {
   const busy = useRef(false);
   const proceedRef = useRef<(() => void) | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  /** Un doble clic en «Descargar» no debe cerrar la oferta apenas aparece: el segundo clic cae sobre el fondo. */
+  const openedAt = useRef(0);
 
   const guard = useCallback(
     async (tipo: OfferResult, proceed: () => void) => {
@@ -104,6 +108,7 @@ export function useProOffer() {
     if (!d) return;
     if (!d.open) {
       d.showModal();
+      openedAt.current = Date.now();
       // El foco va a la acción principal; Escape, ✕ y el botón gratis quedan a un tab.
       d.querySelector<HTMLElement>("[data-offer-primary]")?.focus();
     }
@@ -140,7 +145,10 @@ export function useProOffer() {
         e.preventDefault();
         finish(dismissReason("escape"));
       }}
-      onClick={(e) => e.target === dialogRef.current && finish(dismissReason("click_fuera"))}
+      onClick={(e) => {
+        if (e.target !== dialogRef.current || Date.now() - openedAt.current < BACKDROP_GRACE_MS) return;
+        finish(dismissReason("click_fuera"));
+      }}
       aria-labelledby="oferta-pro-title"
       aria-describedby="oferta-pro-desc"
       className={`m-auto max-h-[calc(100dvh-32px)] w-[calc(100%-32px)] overflow-y-auto rounded-[28px] bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/40 backdrop:backdrop-blur-[2px] ${step === "planes" ? "max-w-[1000px]" : "max-w-[480px]"}`}
@@ -164,8 +172,8 @@ export function useProOffer() {
           <hr className="my-5 border-line" />
 
           <div id="oferta-pro-desc">
-            <p className="flex items-center gap-2 text-lg font-bold">
-              <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-neon">Pro</span>
+            <p className="text-lg font-bold leading-snug">
+              <span className="mr-2 inline-block rounded-full bg-ink px-2 py-0.5 align-[0.15em] text-[11px] font-extrabold uppercase leading-normal tracking-wider text-neon">Pro</span>
               ¿Querés acelerar tu búsqueda laboral?
             </p>
             <p className="mt-2 leading-relaxed text-ink/80">{text.body}</p>
