@@ -1,6 +1,6 @@
 # Estado y próximos pasos de Maru
 
-## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR abierta para revisión)
+## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR #222 abierta para revisión)
 
 Pedido del dueño: una oferta opcional de Maru Pro cuando una cuenta gratuita va a descargar su primer CV o carta, sin tocar límites, sin contar como paywall y sin ensuciar las conversiones de Google Ads y Meta. Funcionalidad permanente, no experimento. Esta vez se pidió rama aparte y PR para revisar, sin mergear ni desplegar.
 
