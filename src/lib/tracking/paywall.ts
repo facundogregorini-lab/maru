@@ -1,7 +1,8 @@
 /**
  * Puente entre la respuesta del servidor y el modal de planes: cuando una acción choca con el cupo
  * gratis (429 PLAN_LIMIT de src/lib/billing/http.ts, la misma lógica que cobra el producto), avisamos
- * con un evento del navegador y el modal muestra los planes. No cuenta los frenos por exceso de uso
+ * con un evento del navegador y el modal muestra los planes. Lo mismo al tocar una función del plan pago
+ * (402 PLAN_FEATURE). No cuenta los frenos por exceso de uso
  * (RATE_LIMIT), los errores técnicos ni las visitas voluntarias a /precios.
  */
 
@@ -26,7 +27,7 @@ export function toolForRoute(url: string): LimitedTool | null {
 export type PlanFeature = "keywords";
 export const PLAN_FEATURE_EVENT = "maru:plan-feature";
 
-/** Abre el modal de planes porque la función es del plan pago (no es un límite: no cuenta como "Límite alcanzado"). */
+/** Abre el modal de planes porque la función es del plan pago. Suma a la misma conversión que el límite (ver trackPlanFeatureViewed). */
 export function notifyPlanFeature(feature: PlanFeature): void {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(PLAN_FEATURE_EVENT, { detail: { feature } }));

@@ -9,6 +9,7 @@ import { capture } from "./posthog";
 export type ProductEvent =
   | "activacion" // primer resultado útil de una herramienta (se mide cada vez, con `primera`)
   | "limite_planes_visto" // el cupo gratis frenó una acción y se mostraron los planes
+  | "funcion_plan_vista" // tocó una función del plan pago y se mostraron los planes
   | "plan_click" // eligió un plan (todavía sin checkout)
   | "checkout_creado" // el servidor creó la suscripción en Mercado Pago
   | "checkout_error" // el clic en un plan no llegó a checkout
@@ -18,6 +19,7 @@ export type ProductEvent =
 
 export type ProductProps = Partial<{
   herramienta: "cv" | "carta" | "video" | "entrevista";
+  funcion: "keywords";
   via: "descarga_pdf" | "descarga_word" | "copia" | "toma" | "informe";
   primera: boolean;
   plan: string;
@@ -27,7 +29,7 @@ export type ProductProps = Partial<{
   conversion: string;
 }>;
 
-const ALLOWED = new Set(["herramienta", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion"]);
+const ALLOWED = new Set(["herramienta", "funcion", "via", "primera", "plan", "codigo", "renovacion", "monto", "conversion"]);
 const SAFE_VALUE = /^[a-z0-9_-]{1,40}$/i;
 
 /** Filtra props: claves conocidas y valores cortos sin texto libre (nunca emails, nombres ni contenido). */

@@ -12,7 +12,7 @@ import { sendMetaEvent } from "./meta";
 import type { AdsConversion } from "./config";
 import { trackProduct } from "./analytics";
 import type { Milestone } from "./server";
-import type { LimitedTool } from "./paywall";
+import type { LimitedTool, PlanFeature } from "./paywall";
 
 export { trackProduct } from "./analytics";
 
@@ -104,6 +104,16 @@ export async function trackActivation(email: Email, herramienta: LimitedTool, vi
 export async function trackPaywallViewed(email: Email, herramienta: LimitedTool): Promise<void> {
   const first = await claimFirst("paywall", email);
   trackProduct("limite_planes_visto", { herramienta, primera: first });
+  if (first) await sendAdsConversion("paywall");
+}
+
+/**
+ * La persona tocó una función del plan pago y los mismos planes ya están en pantalla. Suma a la misma conversión
+ * que el límite (hito "paywall": una sola vez por cuenta entre los dos); en analytics queda aparte.
+ */
+export async function trackPlanFeatureViewed(email: Email, funcion: PlanFeature): Promise<void> {
+  const first = await claimFirst("paywall", email);
+  trackProduct("funcion_plan_vista", { funcion, primera: first });
   if (first) await sendAdsConversion("paywall");
 }
 

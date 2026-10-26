@@ -71,11 +71,11 @@ No son secretos: viajan al navegador. Las credenciales de backend (Mercado Pago,
 | Evento | Cuándo | Función | Acción de Ads (label) | Rol |
 |---|---|---|---|---|
 | `maru_core_activation` | Primera descarga de CV (PDF/Word), primera copia o descarga de una carta (o su mensaje corto), primera toma de video grabada y disponible, primera entrevista con informe | `trackActivation` (CvEditor, CartaFlow, Recorder, InterviewFlow) | Maru \| Activación (`xDWcCOnckKAdEOSNwPVE`) | Secundaria, Una, sin valor |
-| `maru_paywall_viewed` | Una acción devuelve 429 `PLAN_LIMIT` (lógica real de cupo, `planGuard`) y el modal ya muestra las tarjetas de planes | `trackPaywallViewed` (PaywallHost) | Maru \| Límite alcanzado (`0QrpCObckKAdEOSNwPVE`) | **Optimización** (objetivo personalizado), Una, sin valor |
+| `maru_paywall_viewed` | Una acción devuelve 429 `PLAN_LIMIT` (lógica real de cupo, `planGuard`), o la persona toca una función del plan pago que devuelve 402 `PLAN_FEATURE` (hoy «Cubrir palabras clave» del CV), y el modal ya muestra las tarjetas de planes. Los dos casos comparten el hito: una sola vez por cuenta entre ambos | `trackPaywallViewed` / `trackPlanFeatureViewed` (PaywallHost) | Maru \| Límite alcanzado (`0QrpCObckKAdEOSNwPVE`) | **Optimización** (objetivo personalizado), Una, sin valor |
 | `maru_begin_checkout` | El servidor creó la suscripción en Mercado Pago (`/api/billing/checkout` OK) | `trackCheckoutCreated` (BillingPanel) | Maru \| Inicio de checkout (`azVYCO_ckKAdEOSNwPVE`) | Secundaria, Una, sin valor, `transaction_id=co_<checkoutId>` |
 | `maru_purchase` | `/api/billing/status` devuelve `lastPayment` (pago aprobado por Mercado Pago, verificado en el servidor, real, en ARS, por el monto del plan) y es el primero de esa suscripción | `trackVerifiedPurchase` (BillingPanel, PaywallHost) | Maru \| Compra confirmada (`pbctCOzckKAdEOSNwPVE`) | Secundaria, Todas, valor dinámico ARS, `transaction_id=mp_<payment_id>` |
 
-Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_planes_visto` (con `primera`), `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` (con `renovacion`), `ads_bloqueado`.
+Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_planes_visto` (con `primera`), `funcion_plan_vista` (con `funcion` y `primera`), `plan_click`, `checkout_creado`, `checkout_error`, `compra_confirmada` (con `renovacion`), `ads_bloqueado`.
 
 ## Reglas de deduplicación
 
@@ -83,7 +83,7 @@ Eventos de producto (Vercel Analytics, pueden repetirse): `activacion`, `limite_
 - **Sin sesión** (hoy no pasa en producción: con el cobro activo, todas las herramientas de IA exigen ingresar): decide `localStorage`. Limitaciones: otro navegador, otro dispositivo, modo incógnito o borrar datos del sitio pueden contar de nuevo. Al ingresar, lo que este navegador ya envió se marca en la cuenta.
 - **Checkout**: una por `checkoutId` (hash de la referencia interna; un reintento sobre la misma suscripción pendiente devuelve el mismo id). También va como `transaction_id`. Un clic con error no cuenta (`checkout_error` en analytics).
 - **Compra**: una por id de pago de Mercado Pago (`transaction_id=mp_<id>`), siempre el mismo para la misma compra; recargas y reintentos no repiten. Pagos pendientes, rechazados, reembolsados, de prueba (`live_mode=false`) o con otro monto no aparecen en `lastPayment`. Las renovaciones se miden sólo en analytics.
-- **Efectos repetidos, renderizados, prefetch o cambios de ruta** no disparan nada: las conversiones salen de acciones concretas o de una exposición nueva del paywall (cada 429 `PLAN_LIMIT` es una), con guardas en memoria contra efectos dobles.
+- **Efectos repetidos, renderizados, prefetch o cambios de ruta** no disparan nada: las conversiones salen de acciones concretas o de una exposición nueva del paywall (cada 429 `PLAN_LIMIT` o 402 `PLAN_FEATURE` que abre el modal es una), con guardas en memoria contra efectos dobles.
 - Si gtag.js no cargó (bloqueador), no se consume el hito y queda `ads_bloqueado` en analytics: no se da por entregada.
 
 ## Atribución

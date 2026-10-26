@@ -291,6 +291,20 @@ describe("píxel de Meta", () => {
     expect((win as unknown as { gtag: { mock: { calls: unknown[] } } }).gtag.mock.calls).toHaveLength(1);
   });
 
+  it("tocar una función paga suma a la misma conversión que el límite, una sola vez entre los dos", async () => {
+    const fbq = vi.fn();
+    const win = stubMeta("www.marucoach.com", fbq);
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) });
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, { status: 401 })));
+    const { trackPlanFeatureViewed, trackPaywallViewed } = await import("@/lib/tracking");
+    await trackPlanFeatureViewed(null, "keywords");
+    await trackPlanFeatureViewed(null, "keywords");
+    await trackPaywallViewed(null, "cv");
+    expect(fbq.mock.calls).toEqual([["trackCustom", "maru_paywall_viewed", {}, undefined]]);
+    expect((win as unknown as { gtag: { mock: { calls: unknown[][] } } }).gtag.mock.calls).toHaveLength(1);
+  });
+
   it("en previews no envía a Meta aunque haya ID", async () => {
     const fbq = vi.fn();
     stubMeta("maru-git-rama-grego7.vercel.app", fbq);
