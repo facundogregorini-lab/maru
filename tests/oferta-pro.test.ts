@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+// posthog-js se evalúa una sola vez (no lo reinicia resetModules): cargarlo sin `window` evita que lea `location` al importarse.
+import "@/lib/tracking/posthog";
 
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 beforeEach(() => { vi.resetModules(); });
