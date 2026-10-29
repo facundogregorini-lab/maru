@@ -163,7 +163,7 @@ describe("origen comercial en el funnel de planes", () => {
     const byName = (n: string) => events.find((e) => e.event === n);
     expect(byName("plan_click")).toMatchObject({ plan: "mensual", origen_oferta: "primera_descarga" });
     expect(byName("checkout_creado")).toMatchObject({ plan: "mensual", origen_oferta: "primera_descarga" });
-    await tracking.trackVerifiedPurchase(EMAIL, { id: "200", amount: 990, currency: "ARS", first: true, at: Date.now(), plan: "mensual" });
+    await tracking.trackVerifiedPurchase(EMAIL, { id: "200", amount: 3900, currency: "ARS", first: true, at: Date.now(), plan: "mensual" });
     expect(byName("compra_confirmada")).toMatchObject({ origen_oferta: "primera_descarga", renovacion: false });
   });
 
