@@ -23,6 +23,8 @@ export type Plan = {
    * La suscripción se crea con el monto de la promo y, al acreditarse el primer pago, Maru la pasa al precio regular.
    */
   intro?: { price: number; priceText: string };
+  /** Precios de promos anteriores: se siguen acreditando para checkouts creados antes de cambiar la promo. */
+  legacyIntroPrices?: number[];
   badge?: string;
   note: string;
   /** Frecuencia del débito en Mercado Pago Suscripciones. */
@@ -33,8 +35,9 @@ export type Plan = {
 };
 
 export const PLANS: Record<PlanId, Plan> = {
-  // Promo de lanzamiento: el primer mes sale $990; desde el segundo, $10.000 por mes.
-  mensual: { id: "mensual", nombre: "Mensual", price: 10000, priceText: "$10.000", per: "/mes", monthlyText: "$10.000 por mes", intro: { price: 990, priceText: "$990" }, badge: "Promo de lanzamiento", note: "Primer mes $990; luego $10.000 por mes.", frequency: 1, frequencyType: "months", renewalText: "cada mes" },
+  // Promo de lanzamiento: el primer mes sale $3.900; desde el segundo, $10.000 por mes.
+  // `legacyIntroPrices`: la promo anterior ($990), para acreditar checkouts que empezaron antes del cambio.
+  mensual: { id: "mensual", nombre: "Mensual", price: 10000, priceText: "$10.000", per: "/mes", monthlyText: "$10.000 por mes", intro: { price: 3900, priceText: "$3.900" }, legacyIntroPrices: [990], badge: "Promo de lanzamiento", note: "Primer mes $3.900; luego $10.000 por mes.", frequency: 1, frequencyType: "months", renewalText: "cada mes" },
   trimestral: { id: "trimestral", nombre: "Trimestral", price: 22500, priceText: "$22.500", per: "/3 meses", monthlyText: "$7.500 por mes", note: "Ahorrás 25% contra el precio regular del mensual.", frequency: 3, frequencyType: "months", renewalText: "cada 3 meses" },
   semanal: { id: "semanal", nombre: "Semanal", price: 4500, priceText: "$4.500", per: "/semana", monthlyText: "≈ $19.500 por mes", note: "Para una búsqueda urgente.", frequency: 7, frequencyType: "days", renewalText: "cada 7 días" },
 };
@@ -43,10 +46,10 @@ export const PLAN_ORDER: PlanId[] = ["mensual", "trimestral", "semanal"];
 /** Importe del primer cobro (con la promo, si la hay). */
 export const firstCharge = (plan: Plan): number => plan.intro?.price ?? plan.price;
 export const firstChargeText = (plan: Plan): string => plan.intro?.priceText ?? plan.priceText;
-/** Descuento de la promo sobre el primer período, en % entero (90 para $10.000 → $990). */
+/** Descuento de la promo sobre el primer período, en % entero (61 para $10.000 → $3.900). */
 export const planDiscount = (plan: Plan): number | null => (plan.intro && plan.intro.price < plan.price ? Math.round((1 - plan.intro.price / plan.price) * 100) : null);
 /** Montos que acreditan un pago del plan: el del primer cobro con promo y el regular de las renovaciones. */
-export const acceptedAmounts = (plan: Plan): number[] => (plan.intro ? [plan.intro.price, plan.price] : [plan.price]);
+export const acceptedAmounts = (plan: Plan): number[] => (plan.intro ? [plan.intro.price, plan.price, ...(plan.legacyIntroPrices ?? [])] : [plan.price]);
 /** Condiciones antes de pagar: cuánto se cobra hoy y cuánto en cada renovación. */
 export const chargeTerms = (plan: Plan): string =>
   plan.intro

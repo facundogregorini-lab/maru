@@ -10,11 +10,11 @@ Implementación preparada en la rama `codex/cuentas-sync-y-planes`. El cobro que
 
   | Plan | Cobro | Frecuencia en Mercado Pago | Equivale a |
   |---|---|---|---|
-  | Mensual (destacado, promo de lanzamiento) | $990 el primer mes; luego $10.000 | cada 1 mes | $10.000/mes |
+  | Mensual (destacado, promo de lanzamiento) | $3.900 el primer mes; luego $10.000 | cada 1 mes | $10.000/mes |
   | Trimestral | $22.500 | cada 3 meses | $7.500/mes |
   | Semanal | $4.500 | cada 7 días | ≈ $19.500/mes |
 
-  Promo del primer período (`intro` en `plans.ts`): la suscripción se crea por $990 y, al acreditarse el primer pago, Maru le hace `PUT /preapproval/{id}` con `auto_recurring.transaction_amount` = $10.000 (`applyRenewalPrice`). Si ese paso falla, se reintenta en la próxima notificación o con «Actualizar estado»; queda en el registro del panel. Se acreditan los dos importes ($990 y $10.000). Antes de pagar, cada tarjeta dice cuánto se cobra hoy y cuánto en cada renovación (`chargeTerms`).
+  Promo del primer período (`intro` en `plans.ts`): la suscripción se crea por $3.900 y, al acreditarse el primer pago, Maru le hace `PUT /preapproval/{id}` con `auto_recurring.transaction_amount` = $10.000 (`applyRenewalPrice`). Si ese paso falla, se reintenta en la próxima notificación o con «Actualizar estado»; queda en el registro del panel. Se acreditan los dos importes ($3.900 y $10.000), más $990 de la promo anterior para checkouts empezados antes del cambio (`legacyIntroPrices`). Antes de pagar, cada tarjeta dice cuánto se cobra hoy y cuánto en cada renovación (`chargeTerms`).
 - Gratis: 1 CV por día (a medida o general), 1 carta por día, 1 práctica de entrevista y 1 guion de video por semana. Plan pago: "ilimitado" con uso razonable de 25 pedidos principales por día, combinados (`PAID_DAILY_LIMIT`).
 - Exclusivo del plan pago (recortado en el servidor): la respuesta sugerida STAR del informe de entrevista, el feedback de cámara del video (sin plan no se envían fotogramas a la IA) y la descarga en Word (402 `PLAN_FEATURE`; el PDF sigue gratis). La IA igual redacta la respuesta STAR: medir si conviene un prompt aparte para el plan gratis.
 - Las cuotas cuentan solicitudes principales admitidas, incluso si la IA luego falla. Los días se cuentan en hora de Argentina (UTC-3) y las semanas, de lunes a domingo. Análisis, repreguntas y reescrituras no consumen ese contador mensual; sí tienen protección por IP compartida en Redis.

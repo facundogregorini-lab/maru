@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Promo del mensual a $3.900 el primer mes (29/10/2026)
+
+Pedido del dueño: la promo de lanzamiento del plan mensual pasa de $990 a $3.900 el primer mes. La renovación sigue en $10.000 por mes; trimestral y semanal, sin cambios.
+
+- [x] `PLANS.mensual.intro` a $3.900 (descuento mostrado: -61%). Textos de /precios, /terminos, preguntas de cada producto y docs/COBROS.md actualizados.
+- [x] `legacyIntroPrices: [990]`: un checkout empezado a $990 antes del cambio y pagado después se sigue acreditando (si no, Mercado Pago cobraba y Maru no daba acceso). Test nuevo en `tests/billing.test.ts`.
+- [ ] Verificar en producción que /precios muestre $3.900 y que un checkout nuevo cree la suscripción por $3.900.
+- [ ] Revisar anuncios activos de Meta y Google que digan $990 (no se tocaron).
+
 ## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR #222, en producción desde las 01:45)
 
 Pedido del dueño: una oferta opcional de Maru Pro cuando una cuenta gratuita va a descargar su primer CV o carta, sin tocar límites, sin contar como paywall y sin ensuciar las conversiones de Google Ads y Meta. Funcionalidad permanente, no experimento. Esta vez se pidió rama aparte y PR para revisar, sin mergear ni desplegar.

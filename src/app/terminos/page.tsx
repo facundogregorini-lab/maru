@@ -38,7 +38,7 @@ export default function TerminosPage() {
       <h2>Plan pago</h2>
       <p>
         Maru ofrece planes pagos con renovación automática por Mercado Pago. Antes de pagar se informa cuánto se cobra hoy, cuánto en cada renovación y con qué frecuencia. Con la promo de lanzamiento, el
-        primer mes del plan mensual sale $990 y desde el segundo mes se renueva a $10.000 por mes.
+        primer mes del plan mensual sale $3.900 y desde el segundo mes se renueva a $10.000 por mes.
       </p>
       <ul>
         <li>

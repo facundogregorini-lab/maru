@@ -316,28 +316,38 @@ describe("extensión y promo de lanzamiento", () => {
     expect(await blocked!.json()).toMatchObject({ code: "PLAN_LIMIT", remaining: 0, limit: 4 });
   });
 
-  it("la promo es sólo el primer mes: se cobra $990 y la suscripción pasa a $10.000 al acreditarse", async () => {
+  it("la promo es sólo el primer mes: se cobra $3.900 y la suscripción pasa a $10.000 al acreditarse", async () => {
     const { PLANS, planDiscount, acceptedAmounts, chargeTerms } = await import("@/lib/plans");
     expect(PLANS.mensual.price).toBe(10000);
-    expect(planDiscount(PLANS.mensual)).toBe(90);
-    expect(acceptedAmounts(PLANS.mensual)).toEqual([990, 10000]);
+    expect(planDiscount(PLANS.mensual)).toBe(61);
+    expect(acceptedAmounts(PLANS.mensual)).toEqual([3900, 10000, 990]);
     expect(planDiscount(PLANS.trimestral)).toBeNull();
-    expect(chargeTerms(PLANS.mensual)).toBe("Hoy pagás $990. Desde el segundo período se renueva cada mes a $10.000.");
-    const s = await setup(); const fixture = apiFixture(990);
+    expect(chargeTerms(PLANS.mensual)).toBe("Hoy pagás $3.900. Desde el segundo período se renueva cada mes a $10.000.");
+    const s = await setup(); const fixture = apiFixture(3900);
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     const created = fixture.fetchMock.mock.calls.find(([url, init]) => String(url).endsWith("/preapproval") && init?.method === "POST");
-    expect(JSON.parse(String(created?.[1]?.body)).auto_recurring.transaction_amount).toBe(990);
+    expect(JSON.parse(String(created?.[1]?.body)).auto_recurring.transaction_amount).toBe(3900);
     await s.processNotification("subscription_authorized_payment", "100");
     const sub = await s.readSubscription("ana@example.com");
     expect(s.hasPaidAccess(sub)).toBe(true);
     expect(fixture.renewalAmount()).toBe(10000);
     expect(sub?.renewalPriceSet).toBe(true);
+    expect(sub?.paymentAmount).toBe(3900);
+    expect(s.lastPayment(sub)?.amount).toBe(3900);
+  });
+
+  it("acredita un primer pago a $990 de un checkout empezado con la promo anterior", async () => {
+    const s = await setup(); const fixture = apiFixture(990);
+    await s.checkout("ana@example.com", "mensual"); fixture.authorize();
+    await s.processNotification("subscription_authorized_payment", "100");
+    const sub = await s.readSubscription("ana@example.com");
+    expect(s.hasPaidAccess(sub)).toBe(true);
     expect(sub?.paymentAmount).toBe(990);
-    expect(s.lastPayment(sub)?.amount).toBe(990);
+    expect(fixture.renewalAmount()).toBe(10000);
   });
 
   it("la baja corta la renovación, conserva el acceso y devuelve un número de solicitud", async () => {
-    const s = await setup(); const fixture = apiFixture(990);
+    const s = await setup(); const fixture = apiFixture(3900);
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.processNotification("subscription_authorized_payment", "100");
     const out = await s.cancel("ana@example.com", "precio");
@@ -351,13 +361,13 @@ describe("extensión y promo de lanzamiento", () => {
   });
 
   it("el arrepentimiento devuelve el 100% del primer pago una sola vez", async () => {
-    const s = await setup(); const fixture = apiFixture(990);
+    const s = await setup(); const fixture = apiFixture(3900);
     await s.checkout("ana@example.com", "mensual"); fixture.authorize();
     await s.processNotification("subscription_authorized_payment", "100");
     const option = await s.readRefundOption("ana@example.com");
-    expect(option).toMatchObject({ kind: "arrepentimiento", amount: 990 });
+    expect(option).toMatchObject({ kind: "arrepentimiento", amount: 3900 });
     const out = await s.requestRefund("ana@example.com");
-    expect(out).toMatchObject({ kind: "arrepentimiento", amount: 990 });
+    expect(out).toMatchObject({ kind: "arrepentimiento", amount: 3900 });
     expect(out.requestId).toMatch(/^DEV-/);
     expect(fixture.refunds()).toBe(1);
     const sub = await s.readSubscription("ana@example.com");
@@ -372,12 +382,12 @@ describe("extensión y promo de lanzamiento", () => {
     const s = await setup();
     const day = 86400_000;
     const paidAt = Date.parse("2026-10-01T12:00:00Z");
-    const sub = { id: "sub1", reference: "r", status: "authorized", plan: "mensual" as const, firstPaymentId: 1, paymentId: 1, firstPaymentAt: paidAt, paymentAmount: 990, updatedAt: 0 };
+    const sub = { id: "sub1", reference: "r", status: "authorized", plan: "mensual" as const, firstPaymentId: 1, paymentId: 1, firstPaymentAt: paidAt, paymentAmount: 3900, updatedAt: 0 };
     expect(s.refundOption(sub, paidAt + day)?.kind).toBe("arrepentimiento");
     expect(s.refundOption(sub, paidAt + 9 * day)?.kind).toBe("arrepentimiento");
     expect(s.refundOption(sub, paidAt + 11 * day)).toBeNull();
     expect(s.refundOption(sub, paidAt + 13 * day)).toBeNull();
-    expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 990 } }, paidAt + day)).toBeNull();
+    expect(s.refundOption({ ...sub, refund: { id: "DEV-1", at: paidAt, kind: "garantia", paymentId: 1, amount: 3900 } }, paidAt + day)).toBeNull();
   });
 
   it("si Mercado Pago rechaza crear la suscripción, libera la reserva y el próximo intento usa otra referencia", async () => {
