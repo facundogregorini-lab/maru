@@ -21,11 +21,26 @@ const DATA_DIR = path.join(process.cwd(), "data", "match");
 /** `inv.opportunities` llega agrupado (un puesto por empresa); `alias` lleva los ids de las copias al representante. */
 type Loaded = { inv: Inventory; postings: Map<string, StoredPosting>; alias: Map<string, string>; mtime: number };
 let cache: Loaded | null = null;
+/**
+ * La carga en curso, compartida: en una instancia nueva, la página de una búsqueda pide el inventario dos veces
+ * a la vez (metadatos y contenido) y cada lectura arma ~137 MB de JSON. Leerlo en paralelo agotaba la memoria.
+ */
+let pending: { key: string; promise: Promise<Loaded> } | null = null;
 
 export async function loadInventory(file = process.env.MATCH_INVENTORY_PATH ?? path.join(DATA_DIR, "inventory.json")): Promise<Loaded> {
   const mtime = await inventoryMtime(file);
   if (!mtime) return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
   if (cache && cache.mtime === mtime) return cache;
+  const key = `${file}:${mtime}`;
+  if (pending?.key === key) return pending.promise;
+  const promise = readAndGroup(file, mtime).finally(() => {
+    if (pending?.promise === promise) pending = null;
+  });
+  pending = { key, promise };
+  return promise;
+}
+
+async function readAndGroup(file: string, mtime: number): Promise<Loaded> {
   const stored = await readInventoryFile(file);
   if (!stored) return { inv: emptyInventory("real"), postings: new Map(), alias: new Map(), mtime: 0 };
   const read = { ...emptyInventory("real"), ...stored };
@@ -52,4 +67,5 @@ export async function loadDirectory(): Promise<Directory> {
 /** Para tests: olvidar la caché. */
 export function resetInventoryCache() {
   cache = null;
+  pending = null;
 }

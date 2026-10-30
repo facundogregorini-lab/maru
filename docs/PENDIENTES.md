@@ -9,6 +9,15 @@ Pedido del dueño: la promo de lanzamiento del plan mensual pasa de $990 a $3.90
 - [ ] Verificar en producción que /precios muestre $3.900 y que un checkout nuevo cree la suscripción por $3.900.
 - [ ] Revisar anuncios activos de Meta y Google que digan $990 (no se tocaron).
 
+### QA completo de funnels (29/10/2026)
+
+- [x] Producción: 17 páginas públicas en celular y escritorio, sin errores JS, links internos rotos (50) ni desbordes; precios $3.900 / $10.000 en /precios y /terminos.
+- [x] E2E local con Mercado Pago simulado (27/27): límite y función paga abren el modal con $3.900 y -61%; checkout crea la suscripción por $3.900 y vuelve a `/precios?estado=pendiente`; «Retomar el pago» no duplica; al acreditar pasa la renovación a $10.000; arrepentimiento devuelve $3.900 con número DEV-; trimestral por $22.500; baja con número BAJA-.
+- [x] PostHog recibe los eventos del funnel (`limite_planes_visto`, `plan_click`, `checkout_creado`, `compra_confirmada`, oferta Pro).
+- [x] Corte por memoria en `/busquedas/[id]` (5 en la semana): en una instancia nueva, metadatos y página leían el inventario (~137 MB) a la vez. Ahora comparten una sola lectura (`loadInventory`).
+- [ ] `/_vercel/insights/script.js` da 404 en todas las páginas: Vercel Web Analytics no está activado en el proyecto. Activarlo en el panel (decisión del dueño) o sacar el script del layout. Los eventos igual llegan a PostHog.
+- [ ] 404 de Mercado Pago en `/authorized_payments/:id` (2 avisos el 29/10 a las 20:15 UTC): id inexistente, probablemente una notificación de prueba del panel. El webhook responde 503 y Mercado Pago reintenta; sin impacto en cobros.
+
 ## Oferta anticipada de Maru Pro antes de la primera descarga (26/10/2026, PR #222, en producción desde las 01:45)
 
 Pedido del dueño: una oferta opcional de Maru Pro cuando una cuenta gratuita va a descargar su primer CV o carta, sin tocar límites, sin contar como paywall y sin ensuciar las conversiones de Google Ads y Meta. Funcionalidad permanente, no experimento. Esta vez se pidió rama aparte y PR para revisar, sin mergear ni desplegar.

@@ -29,6 +29,12 @@ describe("almacenamiento compacto del inventario", () => {
     const expected = groupOpportunities(inv.opportunities).opportunities;
     expect(loaded.inv.opportunities.map((o) => o.id).sort()).toEqual(expected.map((o) => o.id).sort());
     expect(loaded.postings.size).toBe(3);
+
+    // Dos pedidos a la vez en una instancia nueva comparten una sola lectura (antes se armaba el inventario dos veces y se agotaba la memoria).
+    const [a, b] = await Promise.all([loadInventory(file), loadInventory(file)]);
+    expect(a).toBe(b);
+    expect(await loadInventory(file)).toBe(a);
+    resetInventoryCache();
   });
 
   it("guarda los importados en un archivo aparte y al leer junta los dos", async () => {
