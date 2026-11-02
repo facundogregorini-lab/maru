@@ -1,537 +1,6 @@
 {
   "entries": [
     {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "logística",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "AnhQyCdt7m3uHAWn7",
-        "datasetId": "j3cFEX8qNZReF3Dwr"
-      },
-      "rows": 29,
-      "consumed": 0.0088,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.746,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "atención al cliente",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "ucw1T1BcHa3PEnHw5",
-        "datasetId": "ZOTU6yxM6E0scJtCT"
-      },
-      "rows": 58,
-      "consumed": 0.0175,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.764,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "compras",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "aB0fIwScO8JX3hx6K",
-        "datasetId": "RdJjIhtEcg1jpU8un"
-      },
-      "rows": 25,
-      "consumed": 0.0076,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.771,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "analista",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "YaCIKhTGsivffMZqO",
-        "datasetId": "mWcPs9f2wie9bQtkI"
-      },
-      "rows": 41,
-      "consumed": 0.0124,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.784,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "desarrollador",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "cW16u5K2fLHHk5hMY",
-        "datasetId": "tjxbbfJhRutXm6IJX"
-      },
-      "rows": 12,
-      "consumed": 0.0037,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.788,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "data analyst",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "Hpxrq81SgSUvdVOL1",
-        "datasetId": "kXDIEQJwuVuSE9gNa"
-      },
-      "rows": 48,
-      "consumed": 0.0145,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 1.802,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "analista administrativo",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "5VV6wQRjvhSr847bJ",
-        "datasetId": "n0n6sfNK4Evg2p0KN"
-      },
-      "rows": 99,
-      "consumed": 0.3819,
-      "quota": {
-        "usageTotalUsd": 0.16405,
-        "spentUsd": 2.184,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "contador",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "yFCHN9ph40HcvmlH9",
-        "datasetId": "lwegN9GcXh7VHM8hr"
-      },
-      "rows": 100,
-      "consumed": 0.4161,
-      "quota": {
-        "usageTotalUsd": 0.19605,
-        "spentUsd": 2.6,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "recursos humanos",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "xaRezZf9CeNeSodsO",
-        "datasetId": "4m7cfb7eCKL23ax5k"
-      },
-      "rows": 100,
-      "consumed": 0.4161,
-      "quota": {
-        "usageTotalUsd": 0.19605,
-        "spentUsd": 3.016,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "ejecutivo comercial",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "daanPtsxWave4O6me",
-        "datasetId": "eWX3SmcAKWJDHQRWn"
-      },
-      "rows": 100,
-      "consumed": 0.4001,
-      "quota": {
-        "usageTotalUsd": 0.18005,
-        "spentUsd": 3.416,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "logística",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "hvzoFDfjlh937qWQp",
-        "datasetId": "xEE6linWNyHkyY6lw"
-      },
-      "rows": 100,
-      "consumed": 0.4181,
-      "quota": {
-        "usageTotalUsd": 0.19805,
-        "spentUsd": 3.834,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T22:45:29.187Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/linkedin-jobs-scraper",
-        "keyword": "analista de datos",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.22",
-        "runId": "xcyNL9pIwcjew3F6a",
-        "datasetId": "4BLSmJIZdmrpXq9wa"
-      },
-      "rows": 100,
-      "consumed": 0.4181,
-      "quota": {
-        "usageTotalUsd": 0.19805,
-        "spentUsd": 4.253,
-        "budgetUsd": 4.5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "administrativo",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "iVsTCvIkTaDG9Jajo",
-        "datasetId": "C79E9RdTpjZE8Ti3r"
-      },
-      "rows": 48,
-      "consumed": 0.0145,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.267,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "contable",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "g9MM1AGppklIzOeiB",
-        "datasetId": "DdKVcAC9eIkp72vIV"
-      },
-      "rows": 22,
-      "consumed": 0.0067,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.274,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "recursos humanos",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "efh3DNUfjFHoafJfM",
-        "datasetId": "fFMcf1PWykZP8swbx"
-      },
-      "rows": 22,
-      "consumed": 0.0067,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.28,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "vendedor",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "CIba0e0SwQ6cm0b8n",
-        "datasetId": "IOzLmlxw9Igi3Y8Vp"
-      },
-      "rows": 9,
-      "consumed": 0.0028,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.283,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "logística",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "ou3HG2i6Gumrl0nQj",
-        "datasetId": "t2xolpYRMydM4SqD6"
-      },
-      "rows": 29,
-      "consumed": 0.0088,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.292,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "atención al cliente",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "RIrcRQdDjx7ly6AZu",
-        "datasetId": "YBjCu3cV7ZoMC6quj"
-      },
-      "rows": 58,
-      "consumed": 0.0175,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.31,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "compras",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "kGcaGtMZOSfshELc0",
-        "datasetId": "rjPhtFFVodrqupxck"
-      },
-      "rows": 25,
-      "consumed": 0.0076,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.317,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "analista",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "Bhgeq67MQFKiwpWOh",
-        "datasetId": "8qiVwkMyXM2cwiEKg"
-      },
-      "rows": 41,
-      "consumed": 0.0124,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.33,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "desarrollador",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "xDbuUhbfMgkBieZRe",
-        "datasetId": "Ne2ceXRkxTYY6T4hC"
-      },
-      "rows": 12,
-      "consumed": 0.0037,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.333,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:02:54.433Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "curious_coder/indeed-scraper",
-        "keyword": "data analyst",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.03",
-        "runId": "bTTh2R8Zixu2Yo2zF",
-        "datasetId": "cksdwdoKdjnlQx7cZ"
-      },
-      "rows": 47,
-      "consumed": 0.0142,
-      "quota": {
-        "usageTotalUsd": 0.0001,
-        "spentUsd": 4.347,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "account",
-      "params": {},
-      "rows": 0,
-      "consumed": 0,
-      "quota": {
-        "plan_name": "Free Plan",
-        "plan_searches_left": 238,
-        "total_searches_left": 238,
-        "searches_per_month": 250,
-        "this_month_usage": 12,
-        "plan_monthly_price": 0
-      }
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Salta",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 8,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Salta",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Santa Fe",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "logística Santa Fe",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-16T23:25:36.872Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Bahía Blanca",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
       "at": "2026-10-16T23:25:36.872Z",
       "provider": "serpapi",
       "call": "google_jobs",
@@ -20455,6 +19924,429 @@
         "budgetUsd": 34.5
       },
       "created": 0
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 250,
+        "total_searches_left": 250,
+        "searches_per_month": 250,
+        "this_month_usage": 0,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de marketing Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing digital Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "community manager Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "trade marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "brand manager Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "performance marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "SEO SEM Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 7,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "growth marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "ecommerce marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "comunicación institucional Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 2,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "content manager Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista financiero Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de tesorería Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista contable Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de créditos Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "oficial de negocios banco Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 3,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de riesgo Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "controller financiero Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de costos Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de impuestos Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "auditor Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de seguros Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "fintech analista Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": null,
+      "quota": {},
+      "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
+    },
+    {
+      "at": "2026-11-02T11:02:17.633Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista financiero Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": null,
+      "quota": {},
+      "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
     }
   ]
 }
