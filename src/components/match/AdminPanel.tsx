@@ -63,7 +63,7 @@ export default function AdminPanel() {
         <p className="text-sm font-medium uppercase tracking-[0.18em] text-brand">Encontrá tu trabajo perfecto</p>
         <h1 className="mt-1 font-display text-3xl tracking-tight">Cobertura y calidad del inventario</h1>
         <p className="mt-2 text-sm text-muted">
-          {m.generatedAt ? `Última sincronización completa: ${new Date(m.generatedAt).toLocaleString("es-AR")}.` : "Todavía no corrió ninguna sincronización."} Son conteos del inventario propio: no son un
+          {m.generatedAt ? `Última sincronización completa: ${new Date(m.generatedAt).toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", hourCycle: "h23" })}.` : "Todavía no corrió ninguna sincronización."} Son conteos del inventario propio: no son un
           porcentaje del mercado laboral.
         </p>
       </div>

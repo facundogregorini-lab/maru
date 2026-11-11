@@ -30,7 +30,7 @@ export default function ProviderPilot() {
 }
 function Result({ result }: { result: PilotResult }) {
   return <div className="mt-4 space-y-3 text-sm">
-    <p className="text-xs text-muted">{new Date(result.checkedAt).toLocaleString("es-AR")}</p>
+    <p className="text-xs text-muted">{new Date(result.checkedAt).toLocaleString("es-AR", { timeZone: "America/Argentina/Buenos_Aires", hourCycle: "h23" })}</p>
     <dl>{Object.entries({ ...result.quota, ...result.counts }).map(([key, value]) => <div key={key} className="flex justify-between gap-3 border-b border-line py-1"><dt>{key}</dt><dd>{value ?? "Sin dato"}</dd></div>)}</dl>
     {result.summary && <p>Recibidos: {result.summary.received} · con datos suficientes: {result.summary.usable} · nuevos por URL: {result.summary.newUsable} · duplicados por URL: {result.summary.duplicates}. La comparación por URL puede no detectar todas las copias entre portales.</p>}
     <p className="text-xs text-muted">{result.note}</p>
