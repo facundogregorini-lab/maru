@@ -47,6 +47,22 @@ export type SerpQuery = { id: string; q: string };
 
 /** `--queries=mensual`: la tanda automática (marketing, finanzas y tecnología junior). */
 export const MONTHLY_QUERY_PREFIXES = ["mk-", "fz-", "tj-"];
+
+/**
+ * `--queries=semanal` (workflow match-weekly, lunes 07:00): la tanda de marketing, finanzas y tecnología junior
+ * más `extra` búsquedas profesionales del interior que rotan cada semana (administración, finanzas, RR. HH.,
+ * logística y compras: las de la primera tanda, sin número en el id). Quedan afuera las tandas 2 a 5 (atención,
+ * venta de salón y oficios) y las verticales: el filtro de áreas de la importación descarta casi todo lo que traen.
+ */
+export function weeklyQueryIds(now: Date, extra = 9): string[] {
+  const base = SERP_QUERIES.filter((q) => MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p))).map((q) => q.id);
+  const pool = SERP_QUERIES.filter((q) => !q.id.startsWith("v-") && !/\d/.test(q.id) && !MONTHLY_QUERY_PREFIXES.some((p) => q.id.startsWith(p))).map((q) => q.id);
+  if (!pool.length || extra <= 0) return base;
+  const week = Math.floor(now.getTime() / (7 * 86_400_000));
+  const start = (week * extra) % pool.length;
+  const rotating = Array.from({ length: Math.min(extra, pool.length) }, (_, i) => pool[(start + i) % pool.length]);
+  return [...base, ...rotating];
+}
 export const SERP_QUERIES: SerpQuery[] = [
   { id: "adm-cba", q: "administrativo contable Córdoba" },
   { id: "fin-ros", q: "analista de finanzas Rosario" },
