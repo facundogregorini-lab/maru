@@ -23,7 +23,9 @@ Diagnóstico (20/11): `match-sync` falló todos los días del 14 al 20/11. La sy
 
    Las alertas por email pasan de las 09:00 a las 11:00 (cron `0 14 * * 1`) para salir con el catálogo nuevo ya publicado. Sin Apify (decisión del dueño, 20/11).
 4. **Pendiente (dueño):** crear un token fino de GitHub sólo para `facundogregorini-lab/maru` con permiso «Actions: read and write» y cargarlo en Vercel como `GITHUB_DISPATCH_TOKEN` (Production). Sin él, el lunes corre igual por el respaldo de GitHub, pero a la tarde.
-5. **Pendiente:** confirmar el primer lunes (23/11) que el workflow arrancó a las 07:00, que el resumen tiene sentido y que las alertas salieron después.
+5. **Hecho (20/11, 20:35 UTC): la sync volvió a guardar.** Corrida manual con las partes nuevas: 191 bolsas, commit `2ed44a8` (archivos de 25 a 40 MB) y deploy. Catálogo: 26.557 oportunidades abiertas, 15.565 elegibles. La revisión de vigencia cerró 309 importados. La issue de aviso se cerró sola.
+6. **Pendiente: Workday responde 429.** Desde el 19/11, 20 de las 22 bolsas de Workday (PwC, Accenture, Pfizer, GSK, Thomson Reuters…) dan HTTP 429 en cada sync. No se cierra nada (una bolsa que falla no toca sus avisos), pero esos ~250 avisos dejan de actualizarse. Probar una pausa más larga entre bolsas de Workday (hoy 300 ms y todas comparten `myworkdayjobs.com`) y mirar el `Retry-After` con `match-probe`.
+7. **Pendiente:** confirmar el primer lunes (23/11) que el workflow arrancó a las 07:00, que el resumen tiene sentido y que las alertas salieron después.
 
 ## Bajar el costo de la IA (plan en curso, desde 20/11/2026)
 
