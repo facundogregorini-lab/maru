@@ -26,6 +26,10 @@ Las variables son opcionales: sin ellas rigen los modelos de la tabla. Si la cal
 
 Haiku no tiene respaldo del lado del servidor ante un rechazo: la respuesta se maneja en `askStructured`. Sonnet usa `fallbacks: "default"`.
 
+## CV en PDF (desde el 20/11)
+
+`cvBlocks` (`src/lib/claude.ts`) extrae el texto del PDF en el servidor con `unpdf` y manda sólo el texto. Un PDF mandado como archivo se cobra página por página como imagen más texto (~1.500–3.000 tokens por página); como texto cuesta una fracción. Si el PDF tiene menos de 80 caracteres legibles (escaneo, Canva exportado como imagen) o no se puede leer, se manda el PDF como antes, así la IA lo puede leer igual.
+
 ## Barandas para la clave nueva
 
 - Cargar un **límite de gasto mensual** en la consola de Anthropic. Sugerido: US$20 por mes; con el reparto de arriba y el uso de octubre y noviembre debería sobrar.
