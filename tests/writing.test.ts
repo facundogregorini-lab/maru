@@ -93,3 +93,26 @@ describe("generación central", () => {
     expect(result.campos).toEqual([{ valor: "Innovación", revisar: false }, { valor: clean, revisar: true }]);
   });
 });
+
+describe("modelo por tarea", () => {
+  it("usa Haiku por defecto y también para la revisión editorial", async () => {
+    parse.mockResolvedValueOnce(response(draft)).mockResolvedValueOnce(response({ patches: [] }));
+    await askStructured(opts);
+    expect(parse.mock.calls[0][0].model).toBe("claude-haiku-5-5");
+    expect(parse.mock.calls[1][0].model).toBe("claude-haiku-5-5");
+  });
+  it("usa Sonnet para la redacción principal y Haiku para la revisión editorial", async () => {
+    parse.mockResolvedValueOnce(response(draft)).mockResolvedValueOnce(response({ patches: [] }));
+    await askStructured({ ...opts, nivel: "redaccion" });
+    expect(parse.mock.calls[0][0]).toMatchObject({ model: "claude-sonnet-5-5", fallbacks: "default" });
+    expect(parse.mock.calls[1][0].model).toBe("claude-haiku-5-5");
+    expect(parse.mock.calls[1][0].fallbacks).toBeUndefined();
+  });
+  it("ignora la variable global vieja ANTHROPIC_MODEL", async () => {
+    vi.stubEnv("ANTHROPIC_MODEL", "claude-opus-5-5");
+    parse.mockResolvedValueOnce(response(draft)).mockResolvedValueOnce(response({ patches: [] }));
+    await askStructured(opts);
+    expect(parse.mock.calls[0][0].model).toBe("claude-haiku-5-5");
+    vi.unstubAllEnvs();
+  });
+});

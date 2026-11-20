@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     if (limit) return limit;
     const carta = await askStructured({
       editorialPaths: ["saludo", "parrafos.*", "cierre", "asunto_email", "mensaje_corto", "requisitos_cubiertos.*.como", "consejos.*"],
-      system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "high" });
+      system: CARTA_SYSTEM, content, schema: CartaSchema, effort: "medium", nivel: "redaccion" });
     return Response.json({ carta });
   } catch (err) {
     return errorResponse(err);
