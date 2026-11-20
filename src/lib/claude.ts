@@ -83,6 +83,10 @@ export async function cvBlocks(source: CvSource | undefined): Promise<Block[]> {
       if (!looksLikePdf(source.fileBase64)) {
         throw new UserFacingError("El archivo no es un PDF válido. Probá exportarlo de nuevo o pegá tu experiencia.", "CV_INVALID", 422);
       }
+      // El texto cuesta mucho menos que el PDF, que se cobra página por página como imagen y texto
+      // (docs/COSTOS-IA.md). Si no hay texto legible (escaneo, Canva exportado como imagen), va el PDF.
+      const text = await pdfText(source.fileBase64);
+      if (text.length >= MIN_TEXT_CHARS) return [{ type: "text", text: `<cv titulo="${label}">\n${text}\n</cv>` }];
       return [{ type: "document", source: { type: "base64", media_type: "application/pdf", data: source.fileBase64 }, title: label }];
     }
     if (source.mimeType === DOCX_MIME && looksLikeDocx(source.fileBase64)) {
@@ -96,6 +100,18 @@ export async function cvBlocks(source: CvSource | undefined): Promise<Block[]> {
     return [{ type: "text", text: `<cv titulo="Perfil pegado por la persona">\n${source.text.trim()}\n</cv>` }];
   }
   throw new UserFacingError(CV_MISSING, "CV_MISSING");
+}
+
+/** Texto del PDF, extraído en el servidor sin costo. Devuelve "" si no se puede leer. */
+export async function pdfText(base64: string): Promise<string> {
+  try {
+    const { extractText, getDocumentProxy } = await import("unpdf");
+    const pdf = await getDocumentProxy(new Uint8Array(Buffer.from(base64, "base64")));
+    const { text } = await extractText(pdf, { mergePages: true });
+    return text.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  } catch {
+    return "";
+  }
 }
 
 /** El archivo llegó bien pero no tiene texto legible (CV de Canva exportado como imagen, escaneos…). */
