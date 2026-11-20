@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     if (limit) return limit;
     const generation = await askStructured({
       editorialPaths: ["titular", "resumen", "logros_clave.*", "experiencias.*.logros.*", "cambios_clave.*", "consejos.*"],
-      system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "high" });
+      system: CV_GENERATE_SYSTEM, content, schema: CvGenerationSchema, effort: "medium", nivel: "redaccion" });
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);

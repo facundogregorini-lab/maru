@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Bajar el costo de la IA (plan en curso, desde 20/11/2026)
+
+Pedido del dueño: la clave de Anthropic se venció tras gastar ~US$40 por semana durante 4 semanas; la nueva tiene que gastar mucho menos. Diagnóstico y reparto de modelos en `docs/COSTOS-IA.md`.
+
+1. **Hecho (PR 1): modelo por tarea.** `askStructured` elige el modelo por nivel (`rapido` = Haiku 5.5 por defecto, `redaccion` = Sonnet 5.5 para CV y carta). La revisión editorial usa siempre Haiku. CV y carta pasan de esfuerzo `high` a `medium`. El código ya no lee `ANTHROPIC_MODEL`: el dueño puede borrarla de Vercel.
+2. **Pendiente (PR 2): no reenviar el PDF.** Las herramientas que reciben el CV (análisis, carta, guion, entrevista) usan el perfil ya leído por `/api/profile` en lugar del PDF.
+3. **Pendiente (PR 3): medir.** Registrar tokens y modelo por ruta (sin datos personales) y caché de prompts en las instrucciones fijas.
+4. **Pendiente (dueño):** clave nueva con límite de gasto mensual en la consola de Anthropic; claves separadas para producción, previews y GitHub Actions. Probar con 3 o 4 CV reales si Haiku alcanza también para CV y carta (`ANTHROPIC_MODEL_REDACCION`).
+
 ## Promo del mensual a $3.900 el primer mes (29/10/2026)
 
 Pedido del dueño: la promo de lanzamiento del plan mensual pasa de $990 a $3.900 el primer mes. La renovación sigue en $10.000 por mes; trimestral y semanal, sin cambios.

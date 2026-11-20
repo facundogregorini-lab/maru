@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     if (limit) return limit;
     const generation = await askStructured({
       editorialPaths: ["titular", "resumen", "logros_clave.*", "experiencias.*.logros.*", "cambios_clave.*", "recomendaciones_formulario.*.respuesta_sugerida", "recomendaciones_formulario.*.por_que", "recomendaciones_formulario.*.tip"],
-      system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "high" });
+      system: GENERATE_SYSTEM, content, schema: GenerationSchema, effort: "medium", nivel: "redaccion" });
     return Response.json({ generation });
   } catch (err) {
     return errorResponse(err);
