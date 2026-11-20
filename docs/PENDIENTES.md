@@ -1,5 +1,15 @@
 # Estado y próximos pasos de Maru
 
+## Catálogo de avisos: sync caída y actualización semanal (plan en curso, desde 20/11/2026)
+
+Pedido del dueño: analizar cómo se alimentan las búsquedas y armar una actualización semanal los lunes a las 07:00 que sume avisos nuevos y dé de baja los viejos. **Sin Apify** (decisión del dueño, 20/11).
+
+Diagnóstico (20/11): `match-sync` falló todos los días del 14 al 20/11. La sync corría bien, pero GitHub rechazaba el commit porque `inventory.json` llegó a 105 MB (límite: 100). El catálogo quedó congelado en el del 13/11 y nadie se enteró. Además, el cron de GitHub arranca con 6 a 10 horas de atraso. De 17.368 avisos elegibles, 9.529 son importados de octubre que se vencen (Computrabajo e Indeed bloquean la revisión de vigencia).
+
+1. **Hecho (PR 1): guardar en partes y avisar si falla.** `writeInventoryFile` reparte también los avisos de empleadores: los que no entran en `inventory.json` (40 MB) van a `inventory-boards.json`, `-2`… Con el inventario actual quedan 40 + 40 + 23 MB. `match-sync` frena antes del push si un archivo pasa los 95 MB, abre una issue «La sincronización de avisos está fallando» si falla y la cierra sola cuando vuelve a andar.
+2. **Pendiente (PR 2): reglas de baja.** Importados sin revisión de vigencia (Computrabajo, Indeed): 21 días sin verse. Importados de más de 45 días de publicados: se cierran salvo que la revisión de vigencia los haya visto en los últimos 7 días. ATS de más de 60 días: siguen abiertos, pero bajan en el orden y muestran la antigüedad. Jobicy: sólo elegibles o por confirmar.
+3. **Pendiente (PR 3): `match-weekly`, lunes 07:00.** Lo dispara un cron de Vercel (`0 10 * * 1`) con `workflow_dispatch`, porque el de GitHub llega tarde: sync completa, Google Jobs (~45 búsquedas por semana en lugar de los días 2 y 17), `match-discover` con `apply=1`, vigencia ampliada, resumen y aviso si los elegibles caen más de 15%. Las alertas por email salen después.
+
 ## Bajar el costo de la IA (plan en curso, desde 20/11/2026)
 
 Pedido del dueño: la clave de Anthropic se venció tras gastar ~US$40 por semana durante 4 semanas; la nueva tiene que gastar mucho menos. Diagnóstico y reparto de modelos en `docs/COSTOS-IA.md`.

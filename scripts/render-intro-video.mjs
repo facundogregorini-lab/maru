@@ -26,11 +26,14 @@ const { groupOpportunities, opportunitiesOf } = await import(`data:text/javascri
 /** Números y búsquedas reales del inventario. */
 function inventoryData() {
   const inv = JSON.parse(readFileSync(path.join(ROOT, "data", "match", "inventory.json"), "utf8"));
-  // Los avisos importados van en archivos aparte: inventory-imported.json, -2, -3… (src/lib/match/inventory-file.ts).
-  for (let n = 1; ; n++) {
-    const importedFile = path.join(ROOT, "data", "match", n === 1 ? "inventory-imported.json" : `inventory-imported-${n}.json`);
-    if (!existsSync(importedFile)) break;
-    inv.postings.push(...JSON.parse(readFileSync(importedFile, "utf8")).postings);
+  // Los avisos de empleadores que no entran en el principal y los importados van en archivos aparte:
+  // inventory-boards.json, -2… e inventory-imported.json, -2… (src/lib/match/inventory-file.ts).
+  for (const kind of ["boards", "imported"]) {
+    for (let n = 1; ; n++) {
+      const part = path.join(ROOT, "data", "match", n === 1 ? `inventory-${kind}.json` : `inventory-${kind}-${n}.json`);
+      if (!existsSync(part)) break;
+      inv.postings.push(...JSON.parse(readFileSync(part, "utf8")).postings);
+    }
   }
   const open = groupOpportunities(opportunitiesOf(inv)).opportunities.filter((o) => o.status === "abierta");
   const eligible = open.filter((o) => o.eligibility?.status === "elegible");

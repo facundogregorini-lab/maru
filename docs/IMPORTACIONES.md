@@ -96,7 +96,7 @@ Después de la tanda 1, `inventory.json` llegó a 52,6 MB. GitHub avisa desde 50
 - `inventory.json`: bolsas de empleadores y metadatos, 37 MB al migrar.
 - `inventory-imported.json`: avisos de Apify, Google Jobs y Fantastic, 18 MB al migrar.
 
-Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Desde el 22/10 los importados se parten solos en archivos de hasta 40 MB.
+Al leer se juntan, y un inventario viejo de un solo archivo se sigue leyendo. Los dos workflows commitean los dos archivos. Desde el 22/10 los importados se parten solos en archivos de hasta 40 MB. Desde el 20/11 también los avisos de empleadores: los que no entran en los 40 MB de `inventory.json` van a `inventory-boards.json`, `inventory-boards-2.json`… (el 14/11 el principal pasó los 100 MB y la sync dejó de guardar durante una semana).
 
 ## Calidad de los avisos de LinkedIn vía valig (19/10/2026)
 
