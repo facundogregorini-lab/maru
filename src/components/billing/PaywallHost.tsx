@@ -30,8 +30,8 @@ const FEATURE_TEXT: Record<PlanFeature, { title: string; text: string }> = {
     text: "Con un plan, Maru te manda cada lunes las búsquedas nuevas que mejor encajan con tu perfil.",
   },
   ocultas: {
-    title: "Las búsquedas que no están en LinkedIn son parte de los planes",
-    text: "Las leímos directo del sitio de empleos de cada empresa, así que suelen tener menos postulantes. Con un plan ves cuáles son y te postulás.",
+    title: "Las búsquedas directo de la empresa son parte de los planes",
+    text: "Las leímos del sitio de empleos de cada empresa, no de un portal. Con un plan ves cuáles son y te postulás en la fuente.",
   },
   star: {
     title: "Las respuestas sugeridas son parte de los planes",

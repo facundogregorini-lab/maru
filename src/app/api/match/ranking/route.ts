@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     // La web pide primero sin IA (resultados en segundos) y después el afinado, que puede tardar más.
     const available = rerankEnabled();
     const ai = available && ia !== false;
-    // Plan gratis: las ocultas (no vistas en LinkedIn) no van en las listas; sólo su % difuminado.
+    // Plan gratis: las ocultas (directo de la empresa) no van en las listas; sólo su % difuminado.
     const paid = await paidFeatures(req);
     const ranked = rankOpportunities({
       opportunities,

@@ -10,6 +10,10 @@ Pedido del dueño: la clave de Anthropic se venció tras gastar ~US$40 por seman
 4. **Hecho (PR 4): redeploy después de cambiar la clave.** `scripts/vercel-ignore-build.sh` cancelaba cualquier «Redeploy» del mismo commit porque no había diff, así que la clave nueva no llegaba a producción. Ahora construye si es el mismo commit o si cambió el propio script.
 5. **Pendiente (dueño):** clave nueva con límite de gasto mensual en la consola de Anthropic; claves separadas para producción, previews y GitHub Actions. Probar con 3 o 4 CV reales si Haiku alcanza también para CV y carta (`ANTHROPIC_MODEL_REDACCION`).
 
+## Ocultas: «directo de la empresa» en lugar de «no están en LinkedIn» (20/11/2026)
+
+Pedido del dueño. La regla (`src/lib/match/hidden.ts`) sólo sabe que la búsqueda viene del sitio de empleos de la empresa y que no la vimos en los avisos de LinkedIn que importamos: unos 8.600, de compras puntuales y sobre todo de Argentina, contra ~10.100 búsquedas abiertas de ATS globales; 106 de las 183 empresas con ATS también aparecen en esa muestra de LinkedIn. No alcanza para afirmar «no están en LinkedIn» ni «suelen tener menos postulantes». Los textos de `/match` y del modal de planes dicen ahora «Ocultas · directo de la empresa»: «Las leímos del sitio de empleos de cada empresa, no de un portal. Te postulás en la fuente». La regla no cambia.
+
 ## Promo del mensual a $3.900 el primer mes (29/10/2026)
 
 Pedido del dueño: la promo de lanzamiento del plan mensual pasa de $990 a $3.900 el primer mes. La renovación sigue en $10.000 por mes; trimestral y semanal, sin cambios.
