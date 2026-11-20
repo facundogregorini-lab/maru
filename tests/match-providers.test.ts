@@ -252,6 +252,30 @@ describe("inventario con importaciones parciales", () => {
     // A los 30 días de la última revisión que lo vio publicado, vence igual.
     expect(expireImported(inv, "2026-12-11T12:00:00.000Z")).toBe(1);
   });
+  it("desde los 45 días de publicado sigue sólo si se confirmó en las últimas dos semanas", () => {
+    const inv = emptyInventory("fixture");
+    const batch = normalizeFantastic([fantasticRow, { ...fantasticRow, id: "8" }, { ...fantasticRow, id: "9" }], "fantastic_ats", "G1", T);
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: batch.postings, complete: false }, "2026-11-03T12:00:00.000Z");
+    const [reciente, confirmado, sinConfirmar] = inv.postings;
+    Object.assign(reciente, { publishedAt: "2026-11-01T00:00:00.000Z" });
+    Object.assign(confirmado, { publishedAt: "2026-10-01T00:00:00.000Z", lastLiveCheckAt: "2026-11-18T12:00:00.000Z", lastLiveResult: "abierta" });
+    Object.assign(sinConfirmar, { publishedAt: "2026-10-01T00:00:00.000Z", lastLiveCheckAt: "2026-11-04T12:00:00.000Z", lastLiveResult: "abierta" });
+    expect(expireImported(inv, "2026-11-20T12:00:00.000Z")).toBe(1);
+    expect([reciente.status, confirmado.status, sinConfirmar.status]).toEqual(["abierta", "abierta", "cerrada"]);
+    expect(sinConfirmar.closedReason).toMatch(/más de 45 días/);
+  });
+
+  it("los importados de fuentes que no dejan revisar la vigencia vencen a los 21 días", () => {
+    const inv = emptyInventory("fixture");
+    const rows = Array.from({ length: 21 }, (_, i) => ({ ...fantasticRow, id: `b${i}` }));
+    const batch = normalizeFantastic(rows, "fantastic_ats", "G1", T);
+    applyBoard(inv, "fantastic:ats:ar", "fantastic_ats", { postings: batch.postings, complete: false }, "2026-11-01T12:00:00.000Z");
+    for (const p of inv.postings) Object.assign(p, { publishedAt: "2026-10-30T00:00:00.000Z", lastLiveCheckAt: "2026-11-02T12:00:00.000Z", lastLiveResult: "desconocido" });
+    expect(expireImported(inv, "2026-11-21T12:00:00.000Z")).toBe(0);
+    expect(expireImported(inv, "2026-11-23T12:00:00.000Z")).toBe(21);
+    expect(inv.postings[0].closedReason).toBe("Sin verse en 21 días en una importación parcial");
+  });
+
   it("la modalidad que dice el título se usa cuando la fuente no la informa", () => {
     const p = (title: string) => withWorkplace({ sourceId: "apify-linkedin", boardId: "apify:linkedin:ar", externalId: "1", title, company: "Acme", sourceUrl: "https://x.test/1", applyUrl: "https://x.test/1", linkRequired: false, descriptionText: "Analizar datos de ventas.", descriptionComplete: true, locations: ["Argentina"], countries: ["AR"], regionText: [], workplace: { value: "desconocido", from: "fuente" }, remoteFlag: null, employmentType: null, salary: null, publishedAt: null, updatedAt: null, expiresAt: null }).workplace;
     expect(p("Senior Data Engineer (Remote)")).toMatchObject({ value: "remoto", from: "titulo" });

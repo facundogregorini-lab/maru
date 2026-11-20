@@ -34,6 +34,7 @@ Localmente: `npx --yes tsx@4 scripts/match-import.ts --provider=... --mode=...` 
 - Se rechazan avisos sin título, empresa o enlace seguro, con descripción menor a 300 caracteres, vencidos, publicados hace más de 45 días (Fantastic) o 30 (Google Jobs, Apify), y los de Google Jobs que sólo ofrecen agregadores secundarios.
 - Google Jobs da antigüedad relativa: se guarda como texto (`postedLabel`) y se muestra "según Google, al verla"; nunca se convierte en fecha. En Búsquedas esas tarjetas dicen "vista hace…".
 - Son feeds parciales: una ausencia no cierra avisos. La sync diaria no los consulta ni los purga, pero los **vence** por la fecha de la fuente o si pasan 30 días (21 en Google Jobs) sin volver a verse. Así el catálogo no arrastra avisos viejos cuando se termina el trial o el presupuesto.
+- Desde el 20/11: los de Computrabajo e Indeed (no dejan revisar la vigencia) vencen a los 21 días sin verse, y cualquier importado con más de 45 días de publicado vence si la revisión no lo vio publicado en los últimos 14 días. La revisión de vigencia corre antes de la sync, con hasta 4.000 importados por día.
 - Además, la sync diaria mira la página original de hasta 150 importados (`scripts/match-liveness.ts`) y cierra los que responden 404/410 o dicen explícitamente que el aviso terminó.
 - Logos: se usan los que informa la fuente (https). Si no cargan, la tarjeta vuelve a la inicial.
 

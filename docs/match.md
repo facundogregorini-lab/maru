@@ -74,7 +74,8 @@ Garantías:
 3. Un aviso se cierra tras **2 sincronizaciones completas seguidas** sin aparecer (si reaparece, se reabre).
 4. En feeds parciales (Jobicy: sólo los últimos 200), la ausencia nunca cierra; se retira si pasan **30 días** sin verlo.
 5. Un vencimiento explícito de la fuente cierra el aviso.
-6. Los cerrados se conservan 30 días (para mostrar "Ya no figura en la fuente" a quien lo guardó) y después se purgan.
+6. Importados (desde el 20/11/2026): de las fuentes que no dejan revisar la vigencia (Computrabajo, Indeed) se cierran a los 21 días sin verse; con más de 45 días de publicados, sólo siguen si la revisión de vigencia los vio publicados en los últimos 14 días. Jobicy guarda sólo avisos elegibles o por confirmar.
+7. Los cerrados se conservan 30 días (para mostrar "Ya no figura en la fuente" a quien lo guardó) y después se purgan.
 
 La UI nunca dice "vacante confirmada abierta": muestra "Revisado en el sitio del empleador" (ATS) o "Visto por última vez en la fuente" (portales), con fecha.
 

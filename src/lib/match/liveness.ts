@@ -6,9 +6,12 @@
  * Pocos pedidos por corrida, en serie, con pausa y sin reintentos.
  */
 import { safeFetch } from "./http";
+import { blockedSources } from "./live-blocked";
 import { sourceById } from "./sources";
 import { fold } from "./text";
 import type { Inventory, StoredPosting } from "./types";
+
+export { blockedSources };
 
 export type LiveStatus = { status: "abierta" | "cerrada" | "desconocido"; reason?: string };
 
@@ -106,20 +109,10 @@ export function roundRobin<T extends { sourceId: string }>(items: T[], max: numb
 }
 
 /**
- * Fuentes que casi nunca dejan ver el aviso al bot (p. ej. responden 403): no vale la pena gastar
- * pedidos en ellas. Hace falta una muestra mínima para no descartar una fuente por mala suerte.
+ * Himalayas (feed parcial): se revisan los que el feed dejó de traer. La revisión corre antes de la sync del día,
+ * así que lo visto ayer todavía no cuenta como ausente: hacen falta dos días sin verlo.
  */
-export function blockedSources(inv: Inventory, minChecks = 20, maxUnknownShare = 0.9): Set<string> {
-  const tally = new Map<string, { n: number; unknown: number }>();
-  for (const p of inv.postings) {
-    if (!p.lastLiveResult) continue;
-    const t = tally.get(p.sourceId) ?? { n: 0, unknown: 0 };
-    t.n++;
-    if (p.lastLiveResult === "desconocido") t.unknown++;
-    tally.set(p.sourceId, t);
-  }
-  return new Set([...tally].filter(([, t]) => t.n >= minChecks && t.unknown / t.n >= maxUnknownShare).map(([id]) => id));
-}
+const HIMALAYAS_UNSEEN_MS = 2 * 86_400_000;
 
 export async function checkImportedLiveness(inv: Inventory, now: string, opts: LivenessOptions = {}) {
   const { max = 150, pauseMs = 700, minDaysBetween = 3, budgetMs = Infinity, clock = Date.now, fetchImpl, resolve, log = () => {} } = opts;
@@ -128,7 +121,7 @@ export async function checkImportedLiveness(inv: Inventory, now: string, opts: L
   const blocked = blockedSources(inv);
   if (blocked.size) log(`Fuentes que bloquean la revisión (se saltean): ${[...blocked].join(", ")}`);
   const candidates = inv.postings
-    .filter((p) => p.status === "abierta" && (sourceById(p.sourceId)?.imported || (p.sourceId === "himalayas" && Date.parse(p.lastSeenAt) < Date.parse(now) - 86_400_000)) && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
+    .filter((p) => p.status === "abierta" && (sourceById(p.sourceId)?.imported || (p.sourceId === "himalayas" && Date.parse(p.lastSeenAt) < Date.parse(now) - HIMALAYAS_UNSEEN_MS)) && !blocked.has(p.sourceId) && (!p.lastLiveCheckAt || Date.parse(p.lastLiveCheckAt) < cutoff))
     .sort((a, b) => (a.lastLiveCheckAt ?? "").localeCompare(b.lastLiveCheckAt ?? "") || a.firstSeenAt.localeCompare(b.firstSeenAt));
   const due = roundRobin(candidates, max);
   const stats = { checked: 0, closed: 0, open: 0, unknown: 0 };

@@ -32,6 +32,8 @@ export type SourceInfo = {
    * conserva sus avisos y los vence por fecha de la fuente o por `staleDays` sin volver a verlos.
    */
   imported?: boolean;
+  /** Sólo se guardan los avisos que se pueden tomar desde la Argentina o están por confirmar (feeds globales con poco para acá). */
+  onlyEligible?: boolean;
   staleDays?: number;
 };
 
@@ -266,6 +268,7 @@ export const SOURCES: SourceInfo[] = [
     enabled: true,
     cost: "gratis",
     partialFeed: true,
+    onlyEligible: true,
     linkRequired: true,
     attribution: "Publicado en Jobicy",
     notes: "jobGeo='Anywhere' es el valor por defecto cuando el aviso no informa región: lo tratamos como 'por confirmar', no como worldwide.",

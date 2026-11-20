@@ -4,6 +4,7 @@ import { EXTRACTION_VERSION, extract } from "./extract";
 import { cleanSalary, salaryFromText } from "./salary";
 import { importRejection } from "./import-filter";
 import { INFERRED, isInferred } from "./labels";
+import { blockedSources } from "./live-blocked";
 import { sourceById } from "./sources";
 import { sha } from "./hash";
 import { canonicalUrl, fold, shingleSimilarity } from "./text";
@@ -154,6 +155,8 @@ export function applyBoard(inv: Inventory, boardId: string, sourceId: string, fe
     const hash = contentHash(p);
     if (!prev) {
       const a = analyze(p);
+      // Jobicy: de 4.202 avisos abiertos, 181 eran elegibles (20/11). El resto ocupaba lugar sin mostrarse.
+      if (source?.onlyEligible && a.eligibility.status === "no_elegible") continue;
       const sp: StoredPosting = {
         ...store(p, a),
         ...a,
@@ -239,16 +242,33 @@ export function lastKnownAlive(p: StoredPosting, now: string): string {
  */
 export function expireImported(inv: Inventory, now: string): number {
   let closed = 0;
+  const blocked = blockedSources(inv);
   for (const p of inv.postings) {
     const source = sourceById(p.sourceId);
     if (!source?.imported || p.status !== "abierta") continue;
+    // Fuentes que no dejan revisar la vigencia (Computrabajo, Indeed): nada confirma que sigan, se dan de baja antes.
+    const stale = blocked.has(p.sourceId) ? Math.min(UNVERIFIABLE_STALE_DAYS, source.staleDays ?? STALE_DAYS) : (source.staleDays ?? STALE_DAYS);
     if (p.expiresAt && Date.parse(p.expiresAt) < Date.parse(now)) close(p, now, "Venció según la fuente");
     else if (importRejection(p.title, p.extracted.family.value)) close(p, now, "Fuera de las áreas que importamos");
-    else if (daysSince(lastKnownAlive(p, now), now) > (source.staleDays ?? STALE_DAYS)) close(p, now, `Sin verse en ${source.staleDays ?? STALE_DAYS} días en una importación parcial`);
+    else if (daysSince(p.publishedAt ?? p.firstSeenAt, now) > OLD_IMPORTED_DAYS && !confirmedRecently(p, now)) close(p, now, `Publicado hace más de ${OLD_IMPORTED_DAYS} días y sin confirmar en la fuente en ${CONFIRMED_WITHIN_DAYS} días`);
+    else if (daysSince(lastKnownAlive(p, now), now) > stale) close(p, now, `Sin verse en ${stale} días en una importación parcial`);
     else continue;
     closed++;
   }
   return closed;
+}
+
+/** Importados de fuentes que no dejan revisar la vigencia: días sin volver a verlos antes de darlos de baja. */
+export const UNVERIFIABLE_STALE_DAYS = 21;
+/** Desde esta antigüedad, un importado sigue sólo si la revisión de vigencia lo vio publicado hace poco. */
+export const OLD_IMPORTED_DAYS = 45;
+/** Ventana de confirmación: la revisión pasa cada 3 a 5 días; 14 tolera una semana de sync caída sin dar de baja avisos vivos. */
+export const CONFIRMED_WITHIN_DAYS = 14;
+
+/** La revisión de vigencia lo vio publicado en los últimos CONFIRMED_WITHIN_DAYS días, o se volvió a importar en ese lapso. */
+function confirmedRecently(p: StoredPosting, now: string): boolean {
+  if (daysSince(p.lastSeenAt, now) <= CONFIRMED_WITHIN_DAYS) return true;
+  return p.lastLiveResult === "abierta" && !!p.lastLiveCheckAt && daysSince(p.lastLiveCheckAt, now) <= CONFIRMED_WITHIN_DAYS;
 }
 
 /**
@@ -270,11 +290,16 @@ export function refreshImported(inv: Inventory): number {
   return n;
 }
 
-/** Purga avisos cerrados viejos y avisos de bolsas que ya no están en el directorio (salvo importados). */
+/**
+ * Purga avisos cerrados viejos, avisos de bolsas que ya no están en el directorio (salvo importados) y los
+ * no elegibles de fuentes que sólo guardan elegibles (`onlyEligible`).
+ */
 export function purge(inv: Inventory, now: string, activeBoards?: Set<string>): number {
   const before = inv.postings.length;
   inv.postings = inv.postings.filter((p) => {
-    if (activeBoards && !activeBoards.has(p.boardId) && !sourceById(p.sourceId)?.imported) return false;
+    const source = sourceById(p.sourceId);
+    if (activeBoards && !activeBoards.has(p.boardId) && !source?.imported) return false;
+    if (source?.onlyEligible && p.eligibility.status === "no_elegible") return false;
     return !(p.status === "cerrada" && p.closedAt && daysSince(p.closedAt, now) > RETAIN_CLOSED_DAYS);
   });
   return before - inv.postings.length;
