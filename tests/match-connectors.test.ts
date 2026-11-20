@@ -11,7 +11,7 @@ import {
   parseBoardUrl,
 } from "@/lib/match/connectors";
 import { classifyEligibility } from "@/lib/match/eligibility";
-import { applyBoard, emptyInventory } from "@/lib/match/inventory";
+import { applyBoard, emptyInventory, purge } from "@/lib/match/inventory";
 import { extract, familyFromTitle, seniorityFromTitle } from "@/lib/match/extract";
 import { fetchJson } from "@/lib/match/http";
 import { htmlToText } from "@/lib/match/text";
@@ -60,6 +60,20 @@ describe("conectores", () => {
     const jb = await fetchJobicy(BOARDS.jobicy, opts({ "https://jobicy.com/api/v2/remote-jobs": fixture("jobicy.json") }));
     expect(jb.complete).toBe(false); // feed parcial: sólo los últimos avisos
     expect(jb.postings.find((p) => p.externalId === "7001")!.regionText).toEqual([]); // "Anywhere" = sin dato
+  });
+
+  it("Jobicy guarda sólo lo elegible o por confirmar, y la purga saca los no elegibles que ya estaban", async () => {
+    const jb = await fetchJobicy(BOARDS.jobicy, opts({ "https://jobicy.com/api/v2/remote-jobs": fixture("jobicy.json") }));
+    const usOnly = { ...jb.postings[0], externalId: "7999", title: "Account Executive", countries: ["US"], regionText: ["USA"], locations: ["United States"] };
+    expect(classifyEligibility(usOnly).status).toBe("no_elegible");
+    const inv = emptyInventory("fixture");
+    applyBoard(inv, BOARDS.jobicy.boardId, "jobicy", { postings: [...jb.postings, usOnly], complete: false }, "2026-11-20T12:00:00.000Z");
+    expect(inv.postings.map((p) => p.externalId).sort()).toEqual(jb.postings.map((p) => p.externalId).sort());
+    // Un inventario anterior al cambio puede tenerlos guardados: la purga de la sync los saca.
+    inv.postings.push({ ...inv.postings[0], key: "jobicy:viejo", externalId: "viejo", eligibility: { status: "no_elegible", evidence: ["US only"] } });
+    purge(inv, "2026-11-20T12:00:00.000Z");
+    expect(inv.postings.some((p) => p.externalId === "viejo")).toBe(false);
+    expect(inv.postings).toHaveLength(jb.postings.length);
   });
 
   it("Get on Board: recorre categorías y lee países", async () => {

@@ -7,7 +7,13 @@ Pedido del dueño: analizar cómo se alimentan las búsquedas y armar una actual
 Diagnóstico (20/11): `match-sync` falló todos los días del 14 al 20/11. La sync corría bien, pero GitHub rechazaba el commit porque `inventory.json` llegó a 105 MB (límite: 100). El catálogo quedó congelado en el del 13/11 y nadie se enteró. Además, el cron de GitHub arranca con 6 a 10 horas de atraso. De 17.368 avisos elegibles, 9.529 son importados de octubre que se vencen (Computrabajo e Indeed bloquean la revisión de vigencia).
 
 1. **Hecho (PR 1): guardar en partes y avisar si falla.** `writeInventoryFile` reparte también los avisos de empleadores: los que no entran en `inventory.json` (40 MB) van a `inventory-boards.json`, `-2`… Con el inventario actual quedan 40 + 40 + 23 MB. `match-sync` frena antes del push si un archivo pasa los 95 MB, abre una issue «La sincronización de avisos está fallando» si falla y la cierra sola cuando vuelve a andar.
-2. **Pendiente (PR 2): reglas de baja.** Importados sin revisión de vigencia (Computrabajo, Indeed): 21 días sin verse. Importados de más de 45 días de publicados: se cierran salvo que la revisión de vigencia los haya visto en los últimos 7 días. ATS de más de 60 días: siguen abiertos, pero bajan en el orden y muestran la antigüedad. Jobicy: sólo elegibles o por confirmar.
+2. **Hecho (PR 2): reglas de baja** (`expireImported`, `src/lib/match/inventory.ts`):
+   - Importados de fuentes que no dejan revisar la vigencia (Computrabajo, Indeed, según `blockedSources`): 21 días sin verse, en lugar de 30.
+   - Importados de más de 45 días de publicados: se cierran salvo que la revisión de vigencia los haya visto publicados (o se hayan vuelto a importar) en los últimos 14 días. Se usó 14 y no 7 para que una semana de sync caída no dé de baja avisos vivos.
+   - Jobicy (`onlyEligible`): sólo guarda elegibles o por confirmar; la purga saca los no elegibles que ya estaban (~4.000 avisos, unos 10 MB).
+   - Avisos de ATS de más de 60 días: ya bajaban en el orden (×0,85), mostraban la fecha y se ocultan desde los 120 días. Sin cambios.
+   - `match-sync` ahora revisa la vigencia **antes** de sincronizar, con hasta 4.000 importados y 25 minutos (antes 1.500 y 15 minutos, después de la sync). LinkedIn tenía 5.700 abiertos y se revisaban unos 400 por día.
+   - Impacto medido con el inventario del 13/11: 17.368 elegibles → ~13.400. La mayor parte (Computrabajo e Indeed, ~2.400) vencía igual en estos días con la regla de 30.
 3. **Pendiente (PR 3): `match-weekly`, lunes 07:00.** Lo dispara un cron de Vercel (`0 10 * * 1`) con `workflow_dispatch`, porque el de GitHub llega tarde: sync completa, Google Jobs (~45 búsquedas por semana en lugar de los días 2 y 17), `match-discover` con `apply=1`, vigencia ampliada, resumen y aviso si los elegibles caen más de 15%. Las alertas por email salen después.
 
 ## Bajar el costo de la IA (plan en curso, desde 20/11/2026)

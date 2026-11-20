@@ -23,7 +23,7 @@ async function main() {
   const inv = { ...emptyInventory("real"), ...((await readInventoryFile(INV)) as Inventory) };
   if (inv.kind !== "real") throw new Error("inventory.json no es un inventario real.");
   const stats = await checkImportedLiveness(inv, new Date().toISOString(), {
-    max: Number.isFinite(max) ? Math.min(max, 2000) : 150,
+    max: Number.isFinite(max) ? Math.min(max, 5000) : 150,
     budgetMs: (Number.isFinite(budgetMin) && budgetMin > 0 ? budgetMin : 8) * 60_000,
     log: (m) => console.log(m),
   });
