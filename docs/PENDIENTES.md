@@ -6,7 +6,7 @@ Pedido del dueño: la clave de Anthropic se venció tras gastar ~US$40 por seman
 
 1. **Hecho (PR 1): modelo por tarea.** `askStructured` elige el modelo por nivel (`rapido` = Haiku 5.5 por defecto, `redaccion` = Sonnet 5.5 para CV y carta). La revisión editorial usa siempre Haiku. CV y carta pasan de esfuerzo `high` a `medium`. El código ya no lee `ANTHROPIC_MODEL`: el dueño puede borrarla de Vercel.
 2. **Hecho (PR 2): no reenviar el PDF.** `cvBlocks` saca el texto del PDF en el servidor con `unpdf` (gratis) y manda ese texto a la IA. Si el PDF casi no tiene texto (escaneo, Canva como imagen) o no se puede leer, manda el PDF como antes. Vale para todas las herramientas que reciben el CV, incluida `/api/profile`.
-3. **Pendiente (PR 3): medir.** Registrar tokens y modelo por ruta (sin datos personales) y caché de prompts en las instrucciones fijas.
+3. **Hecho (PR 3): medir.** Cada llamada deja en los logs de Vercel una línea `MARU_IA_USO` con modelo, etapa (borrador o editorial), tokens y costo estimado, sin contenido. La caché de prompts quedó descartada por ahora: con poco tráfico la caché vence (5 minutos) antes de reusarse y escribirla cuesta 25% más que leer sin caché. Revisarla si los logs muestran ráfagas de pedidos.
 4. **Pendiente (dueño):** clave nueva con límite de gasto mensual en la consola de Anthropic; claves separadas para producción, previews y GitHub Actions. Probar con 3 o 4 CV reales si Haiku alcanza también para CV y carta (`ANTHROPIC_MODEL_REDACCION`).
 
 ## Promo del mensual a $3.900 el primer mes (29/10/2026)

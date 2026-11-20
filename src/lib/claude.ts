@@ -127,6 +127,27 @@ export function feedbackBlock(feedback: string | undefined): Block {
   return { type: "text", text: `<feedback_de_la_persona>\n${feedback?.trim() || "(sin completar)"}\n</feedback_de_la_persona>` };
 }
 
+/** US$ por millón de tokens (entrada, salida). Sólo para estimar en los logs; ver docs/COSTOS-IA.md. */
+const PRICES: Record<string, [number, number]> = {
+  "claude-haiku-5-5": [0.1, 0.5],
+  "claude-sonnet-5-5": [2, 10],
+  "claude-opus-5-5": [4, 20],
+};
+
+type Usage = { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null; cache_creation_input_tokens?: number | null };
+
+/**
+ * Una línea por llamada en los logs de Vercel (que ya muestran la ruta del pedido): modelo, etapa,
+ * tokens y costo estimado. Nunca contenido ni datos de la persona.
+ */
+export function logUsage(model: string, etapa: "borrador" | "editorial", usage: Usage | undefined): void {
+  if (!usage) return;
+  const [inPrice, outPrice] = PRICES[model] ?? [0, 0];
+  const input = usage.input_tokens + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0);
+  const usd = (input * inPrice + usage.output_tokens * outPrice) / 1e6;
+  console.info(`MARU_IA_USO ${JSON.stringify({ model, etapa, entrada: input, salida: usage.output_tokens, usd: Number(usd.toFixed(5)) })}`);
+}
+
 /** Haiku no tiene fallback del lado del servidor: ante un rechazo, la respuesta se maneja acá. */
 function fallbackFor(model: string): { betas?: ["server-side-fallback-2026-07-01"]; fallbacks?: "default" } {
   return model.startsWith("claude-haiku") ? {} : { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" };
@@ -159,6 +180,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
     output_config: { effort: opts.effort, format: betaZodOutputFormat(opts.schema) },
     messages: [{ role: "user", content: opts.content }],
   }, request);
+  logUsage(response.model ?? model, "borrador", response.usage);
 
   if (response.stop_reason === "refusal") {
     throw new UserFacingError("No pudimos procesar este pedido. Revisá el contenido e intentá de nuevo.", "REFUSAL", 422);
@@ -184,6 +206,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
       output_config: { effort: "low", format: betaZodOutputFormat(PatchSchema) },
       messages: [{ role: "user", content: JSON.stringify({ borradores: fields }) }],
     }, { timeout: 12000, maxRetries: 0 });
+    logUsage(edited.model ?? editor, "editorial", edited.usage);
     if (edited.stop_reason === "max_tokens" || !edited.parsed_output) return draft;
     const candidate = applyEditorialPatches(draft, fields, edited.parsed_output.patches);
     const checked = opts.schema.safeParse(candidate);
