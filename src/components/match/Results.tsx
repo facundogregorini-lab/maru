@@ -190,7 +190,7 @@ export default function Results({
             </button>
           ))}
         </div>
-        {/* Las que no están en LinkedIn, aparte y a la derecha: con plan se ven todas; sin plan, sólo cuántas hay. */}
+        {/* Las ocultas (directo del sitio de empleos de la empresa), aparte y a la derecha: con plan se ven todas; sin plan, sólo cuántas hay. */}
         <button
           type="button"
           onClick={() => setTab("ocultas")}
@@ -198,7 +198,7 @@ export default function Results({
           className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition ${tab === "ocultas" ? "bg-ink text-white" : "bg-neon/20 text-ink ring-1 ring-neon hover:bg-neon/30"}`}
         >
           {hidden && !hidden.full && <span aria-hidden>🔒</span>}
-          Ocultas · no están en LinkedIn{hidden ? ` (${hidden.total.toLocaleString("es-AR")})` : ""}
+          Ocultas · directo de la empresa{hidden ? ` (${hidden.total.toLocaleString("es-AR")})` : ""}
         </button>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -221,7 +221,7 @@ export default function Results({
 
       {tab === "ocultas" && hidden?.full && (
         <p className="mt-4 rounded-2xl bg-brand-soft px-4 py-3 text-sm leading-relaxed text-ink">
-          Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn. Suelen tener menos postulantes.
+          Las leímos del sitio de empleos de cada empresa, no de un portal. Te postulás en la fuente, con el aviso actualizado.
         </p>
       )}
 
@@ -317,10 +317,10 @@ export default function Results({
               🔒
             </p>
             <p className="mt-2 font-display text-2xl sm:text-3xl">
-              {hidden.total === 1 ? "Hay 1 búsqueda para vos que no está en LinkedIn" : `Hay ${hidden.total.toLocaleString("es-AR")} búsquedas para vos que no están en LinkedIn`}
+              {hidden.total === 1 ? "Hay 1 búsqueda para vos directo de la empresa" : `Hay ${hidden.total.toLocaleString("es-AR")} búsquedas para vos directo de la empresa`}
             </p>
             <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/80">
-              Las leímos directo del sitio de empleos de cada empresa y no las vimos publicadas en LinkedIn, así que suelen tener menos postulantes. Para verlas, pasate a un plan de Maru.
+              Las leímos del sitio de empleos de cada empresa, no de un portal, y te postulás en la fuente. Para verlas, pasate a un plan de Maru.
             </p>
             <button
               type="button"
@@ -427,7 +427,7 @@ function JobCard({
             <p className="flex flex-wrap gap-1.5 text-[11px] font-medium">
               {item.seniority && <span className="rounded-md bg-neon/10 px-1.5 py-1">{SENIORITY_LABEL[item.seniority]}</span>}
               <span className="rounded-md bg-[rgba(20,200,240,0.1)] px-1.5 py-1">{FAMILY_LABEL[item.family]}</span>
-              {item.hidden && <span className="rounded-md bg-brand-soft px-1.5 py-1 text-brand-dark" title="La leímos del sitio de empleos de la empresa y no la vimos en LinkedIn.">Oculta · no está en LinkedIn</span>}
+              {item.hidden && <span className="rounded-md bg-brand-soft px-1.5 py-1 text-brand-dark" title="La leímos del sitio de empleos de la empresa, no de un portal.">Oculta · directo de la empresa</span>}
               {item.external && <span className="rounded-md bg-sage-soft px-1.5 py-1 text-sage">Agregada por vos · privada</span>}
               {item.status === "cerrada" && <span className="rounded-md bg-danger-soft px-1.5 py-1 text-danger-dark">Ya no figura en la fuente</span>}
             </p>
@@ -629,7 +629,7 @@ function LockedCard({ score, preliminary }: { score: number; preliminary: boolea
         </div>
       </div>
       <div className="absolute inset-y-0 left-0 right-[128px] flex flex-col items-center justify-center gap-2 bg-white/40 px-4 text-center sm:right-[172px]">
-        <p className="text-sm font-semibold">🔒 Búsqueda que no está en LinkedIn</p>
+        <p className="text-sm font-semibold">🔒 Búsqueda directo de la empresa</p>
         <p className="max-w-xs text-xs text-muted">La leímos del sitio de empleos de la empresa. Desbloqueala para ver cuál es y postularte.</p>
         <button
           type="button"
