@@ -1,0 +1,123 @@
+# Actualización semanal del catálogo de "Encontrá tu trabajo perfecto": lunes 07:00 hora de Argentina.
+# La dispara el cron de Vercel (/api/cron/semanal, 10:00 UTC) con workflow_dispatch, porque el cron de GitHub
+# llega con 6 a 10 horas de atraso. El schedule de abajo es sólo un respaldo: si ya hubo una corrida buena
+# en los últimos 5 días, no hace nada.
+# Pasos: vigencia de importados → empresas nuevas (discover) → sync completa → Google Jobs (plan gratuito)
+# → resumen. Sin Apify ni otros proveedores pagos (decisión del dueño, 20/11/2026).
+# Claves: sólo el secret SERP_API, nunca como input ni en el log.
+name: match-weekly
+
+on:
+  schedule:
+    - cron: "41 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      serp_searches:
+        description: "Búsquedas de Google Jobs (plan gratuito; 45 por semana entran en las 250 del mes con 20 de reserva)"
+        required: false
+        default: "45"
+
+permissions:
+  contents: write
+  issues: write
+
+# Mismo grupo que la sync diaria y las importaciones: nunca escriben el inventario a la vez.
+concurrency:
+  group: match-sync
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: ¿Ya corrió esta semana?
+        id: guard
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          since=$(date -u -d '5 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          n=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/match-weekly.yml/runs?status=success&created=>${since}" --jq '.total_count')
+          if [ "${n:-0}" -gt 0 ]; then echo "Ya hubo una corrida buena desde $since: no se repite."; echo "skip=1" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        with:
+          # El último commit de la rama al empezar: otra corrida del mismo grupo puede haber guardado mientras esperaba.
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        with:
+          node-version: 22
+      - name: Foto de antes
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        run: npx --yes tsx@4 scripts/match-weekly-report.ts --snapshot="$RUNNER_TEMP/antes.json"
+      - name: Vigencia de importados
+        # Primero se confirma qué sigue publicado; después la sync da de baja lo viejo sin confirmar.
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        continue-on-error: true
+        run: npx --yes tsx@4 scripts/match-liveness.ts --max=5000 --budget-min=30
+      - name: Empresas nuevas con bolsa pública
+        # Las empresas de los avisos importados que tienen Greenhouse, Lever o Ashby pasan al directorio:
+        # desde ahí la sync las trae gratis para siempre.
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        continue-on-error: true
+        timeout-minutes: 25
+        run: npx --yes tsx@4 scripts/match-discover.ts --top=150 --min-eligible=3 --apply=1
+      - name: Sincronizar
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        env:
+          MATCH_SYNC_BUDGET_MS: "1800000"
+        run: npx --yes tsx@4 scripts/match-sync.ts
+      - name: Google Jobs (plan gratuito)
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        continue-on-error: true
+        timeout-minutes: 40
+        env:
+          SERP_API: ${{ secrets.SERP_API }}
+          SEARCHES: ${{ github.event.inputs.serp_searches || '45' }}
+        run: |
+          [[ "$SEARCHES" =~ ^[0-9]+$ && "$SEARCHES" -le 60 ]] || { echo "serp_searches inválido (0 a 60)"; exit 1; }
+          if [ -z "$SERP_API" ]; then echo "Falta el secret SERP_API: se saltea Google Jobs."; exit 0; fi
+          npx --yes tsx@4 scripts/match-import.ts --provider=serpapi --mode=run --queries=semanal --max-searches="$SEARCHES" --reserve=20
+      - name: Resumen
+        id: report
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        run: |
+          set +e
+          npx --yes tsx@4 scripts/match-weekly-report.ts --compare="$RUNNER_TEMP/antes.json" --out="$RUNNER_TEMP/resumen.md" --max-drop=0.15
+          code=$?
+          cat "$RUNNER_TEMP/resumen.md" >> "$GITHUB_STEP_SUMMARY"
+          [ "$code" = "2" ] && echo "drop=1" >> "$GITHUB_OUTPUT"
+          [ "$code" = "0" ] || [ "$code" = "2" ]
+      - name: Guardar inventario
+        if: ${{ steps.guard.outputs.skip != '1' }}
+        run: |
+          git config user.name "maru-match-bot"
+          git config user.email "maru-match-bot@users.noreply.github.com"
+          git add -A -- "data/match/inventory*.json" data/match/sync-state.json data/match/companies.json data/match/providers-ledger.json
+          [ -f data/match/providers-discoveries.json ] && git add data/match/providers-discoveries.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          big=$(find data/match -name '*.json' -size +95M)
+          [ -z "$big" ] || { echo "::error::Archivos de más de 95 MB: $big"; exit 1; }
+          git commit -m "chore(match): actualización semanal de avisos"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Avisar si los elegibles cayeron mucho
+        if: ${{ steps.report.outputs.drop == '1' && github.ref_name == 'main' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          { printf 'Corrida: %s\n\n' "$RUN_URL"; cat "$RUNNER_TEMP/resumen.md"; } > "$RUNNER_TEMP/issue.md"
+          gh issue create --title "Actualización semanal: los avisos elegibles cayeron más de 15%" --body-file "$RUNNER_TEMP/issue.md"
+      - name: Avisar si falló
+        if: ${{ failure() && github.ref_name == 'main' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create --title "La actualización semanal de avisos falló" --body "La corrida $RUN_URL falló. El catálogo de /match no se actualizó esta semana."

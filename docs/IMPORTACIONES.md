@@ -204,7 +204,11 @@ Google Jobs (SerpApi, plan gratuito): 15 búsquedas `v-…` de las 16 preparadas
 
 Rechazos: 36 sólo ofrecían agregadores secundarios y 1 tenía descripción corta. El plan gratuito se renueva a principio de mes: ahí se pueden repetir las búsquedas sin resultados con otra redacción ("maestro mayor de obras", "oficial de negocios banco", "farmacia Córdoba").
 
-## Corrida automática de marketing y finanzas (desde 17/10/2026)
+## Actualización semanal (desde 20/11/2026)
+
+Google Jobs ya no corre los días 2 y 17: lo hace `match-weekly` todos los lunes a las 07:00 (hora de Argentina), con `--queries=semanal --max-searches=45 --reserve=20`. Son las 36 búsquedas de marketing, finanzas y tecnología junior más 9 del interior que rotan cada semana. Cinco lunes en un mes usan 225 de las 250 búsquedas, sin tocar la reserva. Como los avisos de Google Jobs vencen a los 21 días sin volver a verse, la corrida semanal los mantiene vigentes mientras sigan publicados. El mismo workflow revisa la vigencia, suma empresas nuevas al directorio (`match-discover --apply=1`) y corre la sync completa. Ver `.github/workflows/match-weekly.yml`.
+
+## Corrida automática de marketing y finanzas (desde 17/10/2026) (reemplazada el 20/11/2026)
 
 El workflow `match-providers` corre solo los días 2 y 17 de cada mes a las 10:07 UTC, después de la sync diaria: Google Jobs (plan gratuito de SerpApi) con la tanda `--queries=mensual`, que son las búsquedas `mk-…` (14 de marketing), `fz-…` (16 de finanzas) y `tj-…` (6 de tecnología junior), `--max-searches=36 --reserve=20`. Usa como máximo 72 de las 250 búsquedas del mes y nunca toca la reserva. Dos corridas por mes porque los avisos de Google Jobs vencen a los 21 días sin volver a verse. Se puede lanzar a mano igual que antes; a mano sigue empezando en modo "plan".
 

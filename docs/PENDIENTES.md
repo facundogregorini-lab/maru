@@ -14,7 +14,16 @@ Diagnóstico (20/11): `match-sync` falló todos los días del 14 al 20/11. La sy
    - Avisos de ATS de más de 60 días: ya bajaban en el orden (×0,85), mostraban la fecha y se ocultan desde los 120 días. Sin cambios.
    - `match-sync` ahora revisa la vigencia **antes** de sincronizar, con hasta 4.000 importados y 25 minutos (antes 1.500 y 15 minutos, después de la sync). LinkedIn tenía 5.700 abiertos y se revisaban unos 400 por día.
    - Impacto medido con el inventario del 13/11: 17.368 elegibles → ~13.400. La mayor parte (Computrabajo e Indeed, ~2.400) vencía igual en estos días con la regla de 30.
-3. **Pendiente (PR 3): `match-weekly`, lunes 07:00.** Lo dispara un cron de Vercel (`0 10 * * 1`) con `workflow_dispatch`, porque el de GitHub llega tarde: sync completa, Google Jobs (~45 búsquedas por semana en lugar de los días 2 y 17), `match-discover` con `apply=1`, vigencia ampliada, resumen y aviso si los elegibles caen más de 15%. Las alertas por email salen después.
+3. **Hecho (PR 3): `match-weekly`, lunes 07:00.** El cron de Vercel `0 10 * * 1` llama a `/api/cron/semanal`, que lanza el workflow con `workflow_dispatch`, porque el cron de GitHub llega tarde. Un `schedule` de GitHub (lunes 14:41 UTC) hace de respaldo y no corre si ya hubo una corrida buena en los últimos 5 días. Pasos:
+   1. Vigencia de importados (hasta 5.000 avisos, 30 minutos).
+   2. `match-discover --apply=1`: empresas de los avisos importados con Greenhouse, Lever o Ashby pasan al directorio.
+   3. Sync completa.
+   4. Google Jobs `--queries=semanal`: las 36 de marketing, finanzas y tecnología junior más 9 profesionales del interior que rotan, 45 por semana con reserva de 20 (entra en las 250 del plan gratis aun con 5 lunes). Reemplaza la corrida de los días 2 y 17, que se sacó de `match-providers`.
+   5. Resumen por fuente en el job (`scripts/match-weekly-report.ts`). Abre una issue si los elegibles caen más de 15% o si el workflow falla.
+
+   Las alertas por email pasan de las 09:00 a las 11:00 (cron `0 14 * * 1`) para salir con el catálogo nuevo ya publicado. Sin Apify (decisión del dueño, 20/11).
+4. **Pendiente (dueño):** crear un token fino de GitHub sólo para `facundogregorini-lab/maru` con permiso «Actions: read and write» y cargarlo en Vercel como `GITHUB_DISPATCH_TOKEN` (Production). Sin él, el lunes corre igual por el respaldo de GitHub, pero a la tarde.
+5. **Pendiente:** confirmar el primer lunes (23/11) que el workflow arrancó a las 07:00, que el resumen tiene sentido y que las alertas salieron después.
 
 ## Bajar el costo de la IA (plan en curso, desde 20/11/2026)
 
