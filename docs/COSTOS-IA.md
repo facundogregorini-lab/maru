@@ -30,6 +30,18 @@ Haiku no tiene respaldo del lado del servidor ante un rechazo: la respuesta se m
 
 `cvBlocks` (`src/lib/claude.ts`) extrae el texto del PDF en el servidor con `unpdf` y manda sólo el texto. Un PDF mandado como archivo se cobra página por página como imagen más texto (~1.500–3.000 tokens por página); como texto cuesta una fracción. Si el PDF tiene menos de 80 caracteres legibles (escaneo, Canva exportado como imagen) o no se puede leer, se manda el PDF como antes, así la IA lo puede leer igual.
 
+## Medición (desde el 20/11)
+
+Cada llamada a la IA deja una línea en los logs de Vercel (la ruta del pedido ya figura en el log):
+
+```
+MARU_IA_USO {"model":"claude-haiku-5-5","etapa":"borrador","entrada":9000,"salida":1500,"usd":0.00165}
+```
+
+Para ver el gasto de un período, filtrar los logs por `MARU_IA_USO` y sumar `usd`. Es una estimación con los precios de lista; la cifra que se cobra es la de la consola de Anthropic.
+
+Caché de prompts: descartada por ahora. Con poco tráfico la caché (5 minutos) vence antes de reusarse, y escribirla cuesta 25% más que una entrada normal.
+
 ## Barandas para la clave nueva
 
 - Cargar un **límite de gasto mensual** en la consola de Anthropic. Sugerido: US$20 por mes; con el reparto de arriba y el uso de octubre y noviembre debería sobrar.

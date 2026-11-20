@@ -116,3 +116,18 @@ describe("modelo por tarea", () => {
     vi.unstubAllEnvs();
   });
 });
+
+describe("registro de uso", () => {
+  it("registra modelo, tokens y costo estimado, sin contenido", async () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    parse
+      .mockResolvedValueOnce({ ...response(draft), model: "claude-sonnet-5-5", usage: { input_tokens: 10000, output_tokens: 2000 } })
+      .mockResolvedValueOnce({ ...response({ patches: [] }), model: "claude-haiku-5-5", usage: { input_tokens: 1000, output_tokens: 500 } });
+    await askStructured({ ...opts, nivel: "redaccion" });
+    const lines = info.mock.calls.map((c) => String(c[0]));
+    expect(lines[0]).toBe('MARU_IA_USO {"model":"claude-sonnet-5-5","etapa":"borrador","entrada":10000,"salida":2000,"usd":0.04}');
+    expect(lines[1]).toBe('MARU_IA_USO {"model":"claude-haiku-5-5","etapa":"editorial","entrada":1000,"salida":500,"usd":0.00035}');
+    expect(lines.join("")).not.toContain("SQL");
+    info.mockRestore();
+  });
+});
