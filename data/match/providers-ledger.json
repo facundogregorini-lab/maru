@@ -1,712 +1,6 @@
 {
   "entries": [
     {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Rosario",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Rosario",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Rosario",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente La Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo La Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente San Juan",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor San Juan",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 9,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo San Juan",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 7,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Paraná",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 6,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Paraná",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Corrientes",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 7,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Corrientes",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 9,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Resistencia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 6,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Resistencia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Resistencia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 5,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente San Luis",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor San Luis",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 8,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo San Luis",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 1,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Santiago del Estero",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 4,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Santiago del Estero",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 5,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Santiago del Estero",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 1,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Comodoro Rivadavia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Comodoro Rivadavia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 2,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Comodoro Rivadavia",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 5,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Bariloche",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 9,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Bariloche",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 6,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Bariloche",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 1,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Río Cuarto",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 1,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Río Cuarto",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 4,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Río Cuarto",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 3,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "atención al cliente Tandil",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 6,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "vendedor Tandil",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:52:44.423Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "administrativo Tandil",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 9,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T13:58:03.748Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "administrativo tucuman",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "60lFbtLMuOXstK8X6",
-        "datasetId": "fDk0Ti8BL5Lgs0zv0"
-      },
-      "rows": 29,
-      "consumed": 0.0503,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 4.398,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-17T13:58:03.748Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "vendedor mendoza",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "QTiGACrVEb0BKTbI3",
-        "datasetId": "f8o1sjCxQc5PmRa7U"
-      },
-      "rows": 100,
-      "consumed": 0.171,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 4.569,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-17T13:58:03.748Z",
-      "provider": "apify",
-      "call": "run",
-      "params": {
-        "actor": "shahidirfan/Computrabajo-Jobs-Scraper",
-        "keyword": "administrativo salta",
-        "rows": "100",
-        "maxTotalChargeUsd": "0.17",
-        "runId": "Wc8TyCVtTsXiCe9H7",
-        "datasetId": "fldeywM6WakC3BC0k"
-      },
-      "rows": 32,
-      "consumed": 0.0554,
-      "quota": {
-        "usageTotalUsd": 0.001,
-        "spentUsd": 4.624,
-        "budgetUsd": 5
-      }
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "account",
-      "params": {},
-      "rows": 0,
-      "consumed": 0,
-      "quota": {
-        "plan_name": "Free Plan",
-        "plan_searches_left": 172,
-        "total_searches_left": 172,
-        "searches_per_month": 250,
-        "this_month_usage": 78,
-        "plan_monthly_price": 0
-      }
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "recursos humanos Neuquén",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "logística Neuquén",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "contable Neuquén",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "recursos humanos Mar del Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "logística Mar del Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 8,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "contable Mar del Plata",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 8,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "recursos humanos Santa Fe",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "contable Santa Fe",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
-      "at": "2026-10-17T14:31:40.282Z",
-      "provider": "serpapi",
-      "call": "google_jobs",
-      "params": {
-        "engine": "google_jobs",
-        "q": "recursos humanos Bahía Blanca",
-        "location": "Argentina",
-        "gl": "ar",
-        "hl": "es"
-      },
-      "rows": 10,
-      "consumed": 1,
-      "quota": {}
-    },
-    {
       "at": "2026-10-17T14:31:40.282Z",
       "provider": "serpapi",
       "call": "google_jobs",
@@ -20293,6 +19587,698 @@
         "hl": "es"
       },
       "rows": 9,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "account",
+      "params": {},
+      "rows": 0,
+      "consumed": 0,
+      "quota": {
+        "plan_name": "Free Plan",
+        "plan_searches_left": 250,
+        "total_searches_left": 250,
+        "searches_per_month": 250,
+        "this_month_usage": 0,
+        "plan_monthly_price": 0
+      }
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "administrativo contable Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de finanzas Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "recursos humanos Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "vendedor La Plata",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "logística Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "asistente administrativo Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de recursos humanos Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de logística Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "ejecutivo comercial Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de marketing Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing digital Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "community manager Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "trade marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "brand manager Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "performance marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "SEO SEM Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "growth marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "ecommerce marketing Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "comunicación institucional Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 6,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "marketing Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "content manager Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista financiero Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de tesorería Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista contable Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de créditos Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "oficial de negocios banco Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 5,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de riesgo Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "controller financiero Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de costos Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 0,
+      "consumed": null,
+      "quota": {},
+      "error": "El proveedor no respondió a tiempo. No se reintentó la consulta."
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de impuestos Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "auditor Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de seguros Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "fintech analista Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista financiero Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista contable Rosario",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista financiero Mendoza",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 3,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista contable Tucumán",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "desarrollador junior Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "programador trainee Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "QA tester junior Argentina",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "analista de datos junior Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "soporte técnico IT junior Córdoba",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 4,
+      "consumed": 1,
+      "quota": {}
+    },
+    {
+      "at": "2026-11-23T10:56:16.636Z",
+      "provider": "serpapi",
+      "call": "google_jobs",
+      "params": {
+        "engine": "google_jobs",
+        "q": "pasantía sistemas Buenos Aires",
+        "location": "Argentina",
+        "gl": "ar",
+        "hl": "es"
+      },
+      "rows": 10,
       "consumed": 1,
       "quota": {}
     }
