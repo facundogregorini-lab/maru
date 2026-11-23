@@ -1,4 +1,1276 @@
 {
   "lock": null,
-  "checkpoint": null
+  "checkpoint": {
+    "runStartedAt": "2026-11-23T21:41:25.376Z",
+    "done": [
+      "remotive",
+      "jobicy",
+      "getonbrd",
+      "himalayas",
+      "greenhouse:oliverargentina",
+      "greenhouse:oliver",
+      "greenhouse:pinterest",
+      "greenhouse:launch2",
+      "greenhouse:clara",
+      "greenhouse:dept",
+      "greenhouse:pfm",
+      "greenhouse:upgrade",
+      "greenhouse:newsela",
+      "greenhouse:evocs-latam",
+      "greenhouse:interviewengineering",
+      "greenhouse:greenhouse",
+      "greenhouse:quintoandar",
+      "greenhouse:ebanx",
+      "greenhouse:cabify",
+      "greenhouse:invgate",
+      "greenhouse:monsterenergylatam",
+      "greenhouse:alpaca",
+      "greenhouse:pipe17",
+      "greenhouse:sezzle",
+      "greenhouse:usergems",
+      "greenhouse:figment",
+      "greenhouse:gympass",
+      "greenhouse:xometry",
+      "greenhouse:caylent",
+      "greenhouse:getbuilt",
+      "greenhouse:gofundme",
+      "greenhouse:santex",
+      "greenhouse:celerocommunicationsinc",
+      "greenhouse:backblaze",
+      "greenhouse:sterlingtonpllc",
+      "greenhouse:housebuyersofamerica",
+      "lever:despegar",
+      "lever:dlocal",
+      "lever:resilientco",
+      "lever:bluelightconsulting",
+      "lever:aleph",
+      "lever:binance",
+      "lever:oowlish",
+      "lever:muttdata",
+      "lever:yuno",
+      "lever:getwingapp",
+      "lever:coderio",
+      "lever:assist-world",
+      "lever:weloglobal",
+      "lever:luxurypresence",
+      "lever:applydigital",
+      "lever:atmosera",
+      "lever:1840&company",
+      "ashby:whippy",
+      "ashby:sunnydata",
+      "ashby:anyone-ai",
+      "ashby:rehire",
+      "ashby:acentecom",
+      "ashby:speak",
+      "ashby:siena",
+      "ashby:halter",
+      "ashby:canals",
+      "ashby:upguard",
+      "ashby:nubank",
+      "ashby:profound",
+      "ashby:pragmatike",
+      "ashby:won.ai",
+      "ashby:maple",
+      "ashby:dualentry",
+      "ashby:puzzle-consulting-services",
+      "ashby:hirehangar",
+      "ashby:scale army careers",
+      "ashby:retell-ai",
+      "ashby:assembly",
+      "ashby:xbowcareers",
+      "ashby:curvionblue",
+      "ashby:agent",
+      "greenhouse:blockchain",
+      "lever:minders",
+      "lever:ryzlabs",
+      "ashby:solvd",
+      "greenhouse:telnyx54",
+      "teamtailor:davidkennedyrecruitment.teamtailor.com",
+      "teamtailor:bidcom.na.teamtailor.com",
+      "teamtailor:empleos.byma.com.ar",
+      "teamtailor:cdainformatica.na.teamtailor.com",
+      "teamtailor:empleos.supermercadosdia.com.ar",
+      "teamtailor:naranjax.na.teamtailor.com",
+      "teamtailor:pecom.na.teamtailor.com",
+      "teamtailor:talentocumbre.na.teamtailor.com",
+      "teamtailor:talento.cpaferrere.com",
+      "teamtailor:diagnosticomaipu.na.teamtailor.com",
+      "teamtailor:empleos.invertironline.com.ar",
+      "teamtailor:careers.spyro-soft.com",
+      "teamtailor:umbralcapitalhumano.na.teamtailor.com",
+      "teamtailor:inspiredway.teamtailor.com",
+      "teamtailor:applyminds-1747397997.teamtailor.com",
+      "teamtailor:thecapitacorporation.na.teamtailor.com",
+      "teamtailor:suessa.teamtailor.com",
+      "teamtailor:apdes.na.teamtailor.com",
+      "teamtailor:wildfi.na.teamtailor.com",
+      "teamtailor:asapconsulting-busquedas.na.teamtailor.com",
+      "teamtailor:pearster-1746721541.na.teamtailor.com",
+      "ashby:ruby-labs",
+      "ashby:abacum",
+      "smartrecruiters:louisdreyfuscompany",
+      "smartrecruiters:walmartinc",
+      "smartrecruiters:accorhotel",
+      "smartrecruiters:talan",
+      "smartrecruiters:sikaag",
+      "smartrecruiters:lesaffre",
+      "recruitee:cocoscapital",
+      "recruitee:tether",
+      "workday:accenture.wd103.accenturecareers",
+      "workday:chevron.wd5.jobs",
+      "workday:dentsuaegis.wd3.dan_global",
+      "workday:essity.wd3.job_opportunities",
+      "workday:fiserv.wd5.ext",
+      "workday:flowserve.wd1.applied",
+      "workday:generalmotors.wd5.careers_gm",
+      "workday:gsk.wd5.gskcareers",
+      "workday:gsknch.wd3.gskcareers",
+      "workday:hpinc.wd5.hpinc",
+      "workday:iff.wd5.iff_careers",
+      "workday:iqvia.wd1.iqvia",
+      "workday:mmc.wd1.mmc",
+      "workday:natura.wd501.naturacarreiras",
+      "workday:pfizer.wd1.pfizercareers",
+      "workday:prysmiangroup.wd3.careers",
+      "workday:pwc.wd3.global_campus_careers",
+      "workday:pwc.wd3.global_experienced_careers",
+      "workday:sbdinc.wd1.stanley_black_decker_career_site",
+      "workday:teladoc.wd503.teladochealth_is_hiring",
+      "workday:thomsonreuters.wd5.external_career_site",
+      "workday:weir.wd3.weir_external_careers",
+      "eightfold:mercadolibre.eightfold.ai",
+      "eightfold:softtek.eightfold.ai",
+      "eightfold:careers.haleon.com",
+      "successfactors:oportunidades.ypf.com",
+      "successfactors:careers.techint.com",
+      "successfactors:careers.ey.com~ey",
+      "successfactors:swissmedical.jobs2web.com",
+      "successfactors:empleos.gruposancorseguros.com",
+      "successfactors:claroempleos-aup.com",
+      "successfactors:jobs.bunge.com",
+      "successfactors:empleos.mirgor.com.ar",
+      "successfactors:jobs.bcdtravel.com",
+      "successfactors:careers.cofcointernational.com",
+      "successfactors:jobs.arauco.com~argentina",
+      "successfactors:jobs.driv.com",
+      "successfactors:careers.anglogoldashanti.com",
+      "breezy:rockcruit",
+      "breezy:fluxit",
+      "bamboohr:satellogic"
+    ],
+    "results": [
+      {
+        "boardId": "remotive",
+        "ok": true,
+        "complete": true,
+        "received": 15,
+        "durationMs": 159
+      },
+      {
+        "boardId": "jobicy",
+        "ok": true,
+        "complete": false,
+        "received": 100,
+        "durationMs": 339
+      },
+      {
+        "boardId": "getonbrd",
+        "ok": true,
+        "complete": true,
+        "received": 961,
+        "durationMs": 75147
+      },
+      {
+        "boardId": "himalayas",
+        "ok": true,
+        "complete": false,
+        "received": 2400,
+        "durationMs": 339499
+      },
+      {
+        "boardId": "greenhouse:oliverargentina",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 182
+      },
+      {
+        "boardId": "greenhouse:oliver",
+        "ok": true,
+        "complete": true,
+        "received": 39,
+        "durationMs": 182
+      },
+      {
+        "boardId": "greenhouse:pinterest",
+        "ok": true,
+        "complete": true,
+        "received": 171,
+        "durationMs": 187
+      },
+      {
+        "boardId": "greenhouse:launch2",
+        "ok": true,
+        "complete": true,
+        "received": 42,
+        "durationMs": 97
+      },
+      {
+        "boardId": "greenhouse:clara",
+        "ok": true,
+        "complete": true,
+        "received": 140,
+        "durationMs": 163
+      },
+      {
+        "boardId": "greenhouse:dept",
+        "ok": true,
+        "complete": true,
+        "received": 202,
+        "durationMs": 1023
+      },
+      {
+        "boardId": "greenhouse:pfm",
+        "ok": true,
+        "complete": true,
+        "received": 101,
+        "durationMs": 661
+      },
+      {
+        "boardId": "greenhouse:upgrade",
+        "ok": true,
+        "complete": true,
+        "received": 30,
+        "durationMs": 84
+      },
+      {
+        "boardId": "greenhouse:newsela",
+        "ok": true,
+        "complete": true,
+        "received": 8,
+        "durationMs": 78
+      },
+      {
+        "boardId": "greenhouse:evocs-latam",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 64
+      },
+      {
+        "boardId": "greenhouse:interviewengineering",
+        "ok": true,
+        "complete": true,
+        "received": 11,
+        "durationMs": 62
+      },
+      {
+        "boardId": "greenhouse:greenhouse",
+        "ok": true,
+        "complete": true,
+        "received": 26,
+        "durationMs": 73
+      },
+      {
+        "boardId": "greenhouse:quintoandar",
+        "ok": true,
+        "complete": true,
+        "received": 89,
+        "durationMs": 142
+      },
+      {
+        "boardId": "greenhouse:ebanx",
+        "ok": true,
+        "complete": true,
+        "received": 35,
+        "durationMs": 91
+      },
+      {
+        "boardId": "greenhouse:cabify",
+        "ok": true,
+        "complete": true,
+        "received": 44,
+        "durationMs": 213
+      },
+      {
+        "boardId": "greenhouse:invgate",
+        "ok": true,
+        "complete": true,
+        "received": 10,
+        "durationMs": 58
+      },
+      {
+        "boardId": "greenhouse:monsterenergylatam",
+        "ok": true,
+        "complete": true,
+        "received": 17,
+        "durationMs": 165
+      },
+      {
+        "boardId": "greenhouse:alpaca",
+        "ok": true,
+        "complete": true,
+        "received": 69,
+        "durationMs": 117
+      },
+      {
+        "boardId": "greenhouse:pipe17",
+        "ok": true,
+        "complete": true,
+        "received": 5,
+        "durationMs": 65
+      },
+      {
+        "boardId": "greenhouse:sezzle",
+        "ok": true,
+        "complete": true,
+        "received": 235,
+        "durationMs": 198
+      },
+      {
+        "boardId": "greenhouse:usergems",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 64
+      },
+      {
+        "boardId": "greenhouse:figment",
+        "ok": true,
+        "complete": true,
+        "received": 0,
+        "durationMs": 57
+      },
+      {
+        "boardId": "greenhouse:gympass",
+        "ok": true,
+        "complete": true,
+        "received": 96,
+        "durationMs": 174
+      },
+      {
+        "boardId": "greenhouse:xometry",
+        "ok": true,
+        "complete": true,
+        "received": 262,
+        "durationMs": 216
+      },
+      {
+        "boardId": "greenhouse:caylent",
+        "ok": true,
+        "complete": true,
+        "received": 47,
+        "durationMs": 95
+      },
+      {
+        "boardId": "greenhouse:getbuilt",
+        "ok": true,
+        "complete": true,
+        "received": 11,
+        "durationMs": 69
+      },
+      {
+        "boardId": "greenhouse:gofundme",
+        "ok": true,
+        "complete": true,
+        "received": 23,
+        "durationMs": 123
+      },
+      {
+        "boardId": "greenhouse:santex",
+        "ok": true,
+        "complete": true,
+        "received": 9,
+        "durationMs": 66
+      },
+      {
+        "boardId": "greenhouse:celerocommunicationsinc",
+        "ok": true,
+        "complete": true,
+        "received": 26,
+        "durationMs": 67
+      },
+      {
+        "boardId": "greenhouse:backblaze",
+        "ok": true,
+        "complete": true,
+        "received": 35,
+        "durationMs": 87
+      },
+      {
+        "boardId": "greenhouse:sterlingtonpllc",
+        "ok": true,
+        "complete": true,
+        "received": 26,
+        "durationMs": 88
+      },
+      {
+        "boardId": "greenhouse:housebuyersofamerica",
+        "ok": true,
+        "complete": true,
+        "received": 636,
+        "durationMs": 276
+      },
+      {
+        "boardId": "lever:despegar",
+        "ok": true,
+        "complete": true,
+        "received": 108,
+        "durationMs": 702
+      },
+      {
+        "boardId": "lever:dlocal",
+        "ok": true,
+        "complete": true,
+        "received": 0,
+        "durationMs": 45
+      },
+      {
+        "boardId": "lever:resilientco",
+        "ok": true,
+        "complete": true,
+        "received": 23,
+        "durationMs": 214
+      },
+      {
+        "boardId": "lever:bluelightconsulting",
+        "ok": true,
+        "complete": true,
+        "received": 851,
+        "durationMs": 28008
+      },
+      {
+        "boardId": "lever:aleph",
+        "ok": true,
+        "complete": true,
+        "received": 171,
+        "durationMs": 445
+      },
+      {
+        "boardId": "lever:binance",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 66
+      },
+      {
+        "boardId": "lever:oowlish",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 49
+      },
+      {
+        "boardId": "lever:muttdata",
+        "ok": true,
+        "complete": true,
+        "received": 39,
+        "durationMs": 56
+      },
+      {
+        "boardId": "lever:yuno",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 166
+      },
+      {
+        "boardId": "lever:getwingapp",
+        "ok": true,
+        "complete": true,
+        "received": 393,
+        "durationMs": 1127
+      },
+      {
+        "boardId": "lever:coderio",
+        "ok": true,
+        "complete": true,
+        "received": 43,
+        "durationMs": 80
+      },
+      {
+        "boardId": "lever:assist-world",
+        "ok": true,
+        "complete": true,
+        "received": 39,
+        "durationMs": 219
+      },
+      {
+        "boardId": "lever:weloglobal",
+        "ok": true,
+        "complete": true,
+        "received": 455,
+        "durationMs": 1383
+      },
+      {
+        "boardId": "lever:luxurypresence",
+        "ok": true,
+        "complete": true,
+        "received": 25,
+        "durationMs": 422
+      },
+      {
+        "boardId": "lever:applydigital",
+        "ok": true,
+        "complete": true,
+        "received": 13,
+        "durationMs": 53
+      },
+      {
+        "boardId": "lever:atmosera",
+        "ok": true,
+        "complete": true,
+        "received": 12,
+        "durationMs": 3008
+      },
+      {
+        "boardId": "lever:1840&company",
+        "ok": true,
+        "complete": true,
+        "received": 65,
+        "durationMs": 1024
+      },
+      {
+        "boardId": "ashby:whippy",
+        "ok": true,
+        "complete": true,
+        "received": 26,
+        "durationMs": 86
+      },
+      {
+        "boardId": "ashby:sunnydata",
+        "ok": true,
+        "complete": true,
+        "received": 15,
+        "durationMs": 88
+      },
+      {
+        "boardId": "ashby:anyone-ai",
+        "ok": true,
+        "complete": true,
+        "received": 229,
+        "durationMs": 68
+      },
+      {
+        "boardId": "ashby:rehire",
+        "ok": true,
+        "complete": true,
+        "received": 93,
+        "durationMs": 48
+      },
+      {
+        "boardId": "ashby:acentecom",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 171
+      },
+      {
+        "boardId": "ashby:speak",
+        "ok": true,
+        "complete": true,
+        "received": 30,
+        "durationMs": 38
+      },
+      {
+        "boardId": "ashby:siena",
+        "ok": true,
+        "complete": true,
+        "received": 6,
+        "durationMs": 38
+      },
+      {
+        "boardId": "ashby:halter",
+        "ok": true,
+        "complete": true,
+        "received": 265,
+        "durationMs": 242
+      },
+      {
+        "boardId": "ashby:canals",
+        "ok": true,
+        "complete": true,
+        "received": 20,
+        "durationMs": 87
+      },
+      {
+        "boardId": "ashby:upguard",
+        "ok": true,
+        "complete": true,
+        "received": 18,
+        "durationMs": 35
+      },
+      {
+        "boardId": "ashby:nubank",
+        "ok": true,
+        "complete": true,
+        "received": 108,
+        "durationMs": 62
+      },
+      {
+        "boardId": "ashby:profound",
+        "ok": true,
+        "complete": true,
+        "received": 90,
+        "durationMs": 207
+      },
+      {
+        "boardId": "ashby:pragmatike",
+        "ok": true,
+        "complete": true,
+        "received": 52,
+        "durationMs": 30
+      },
+      {
+        "boardId": "ashby:won.ai",
+        "ok": true,
+        "complete": true,
+        "received": 0,
+        "durationMs": 91
+      },
+      {
+        "boardId": "ashby:maple",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 404",
+        "httpStatus": 404,
+        "durationMs": 82
+      },
+      {
+        "boardId": "ashby:dualentry",
+        "ok": true,
+        "complete": true,
+        "received": 66,
+        "durationMs": 35
+      },
+      {
+        "boardId": "ashby:puzzle-consulting-services",
+        "ok": true,
+        "complete": true,
+        "received": 6,
+        "durationMs": 244
+      },
+      {
+        "boardId": "ashby:hirehangar",
+        "ok": true,
+        "complete": true,
+        "received": 118,
+        "durationMs": 87
+      },
+      {
+        "boardId": "ashby:scale army careers",
+        "ok": true,
+        "complete": true,
+        "received": 58,
+        "durationMs": 129
+      },
+      {
+        "boardId": "ashby:retell-ai",
+        "ok": true,
+        "complete": true,
+        "received": 20,
+        "durationMs": 31
+      },
+      {
+        "boardId": "ashby:assembly",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 23
+      },
+      {
+        "boardId": "ashby:xbowcareers",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 23
+      },
+      {
+        "boardId": "ashby:curvionblue",
+        "ok": true,
+        "complete": true,
+        "received": 9,
+        "durationMs": 93
+      },
+      {
+        "boardId": "ashby:agent",
+        "ok": true,
+        "complete": true,
+        "received": 22,
+        "durationMs": 105
+      },
+      {
+        "boardId": "greenhouse:blockchain",
+        "ok": true,
+        "complete": true,
+        "received": 43,
+        "durationMs": 168
+      },
+      {
+        "boardId": "lever:minders",
+        "ok": true,
+        "complete": true,
+        "received": 18,
+        "durationMs": 8882
+      },
+      {
+        "boardId": "lever:ryzlabs",
+        "ok": true,
+        "complete": true,
+        "received": 39,
+        "durationMs": 131
+      },
+      {
+        "boardId": "ashby:solvd",
+        "ok": true,
+        "complete": true,
+        "received": 21,
+        "durationMs": 115
+      },
+      {
+        "boardId": "greenhouse:telnyx54",
+        "ok": true,
+        "complete": true,
+        "received": 59,
+        "durationMs": 150
+      },
+      {
+        "boardId": "teamtailor:davidkennedyrecruitment.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 114,
+        "durationMs": 1329
+      },
+      {
+        "boardId": "teamtailor:bidcom.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 24,
+        "durationMs": 269
+      },
+      {
+        "boardId": "teamtailor:empleos.byma.com.ar",
+        "ok": true,
+        "complete": true,
+        "received": 14,
+        "durationMs": 432
+      },
+      {
+        "boardId": "teamtailor:cdainformatica.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 11,
+        "durationMs": 299
+      },
+      {
+        "boardId": "teamtailor:empleos.supermercadosdia.com.ar",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 342
+      },
+      {
+        "boardId": "teamtailor:naranjax.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 12,
+        "durationMs": 305
+      },
+      {
+        "boardId": "teamtailor:pecom.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 8,
+        "durationMs": 131
+      },
+      {
+        "boardId": "teamtailor:talentocumbre.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 245
+      },
+      {
+        "boardId": "teamtailor:talento.cpaferrere.com",
+        "ok": true,
+        "complete": true,
+        "received": 13,
+        "durationMs": 616
+      },
+      {
+        "boardId": "teamtailor:diagnosticomaipu.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 25,
+        "durationMs": 282
+      },
+      {
+        "boardId": "teamtailor:empleos.invertironline.com.ar",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 387
+      },
+      {
+        "boardId": "teamtailor:careers.spyro-soft.com",
+        "ok": true,
+        "complete": true,
+        "received": 109,
+        "durationMs": 2641
+      },
+      {
+        "boardId": "teamtailor:umbralcapitalhumano.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 19,
+        "durationMs": 255
+      },
+      {
+        "boardId": "teamtailor:inspiredway.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 11,
+        "durationMs": 443
+      },
+      {
+        "boardId": "teamtailor:applyminds-1747397997.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 1,
+        "durationMs": 487
+      },
+      {
+        "boardId": "teamtailor:thecapitacorporation.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 280
+      },
+      {
+        "boardId": "teamtailor:suessa.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 13,
+        "durationMs": 646
+      },
+      {
+        "boardId": "teamtailor:apdes.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 9,
+        "durationMs": 280
+      },
+      {
+        "boardId": "teamtailor:wildfi.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 18,
+        "durationMs": 412
+      },
+      {
+        "boardId": "teamtailor:asapconsulting-busquedas.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 40,
+        "durationMs": 321
+      },
+      {
+        "boardId": "teamtailor:pearster-1746721541.na.teamtailor.com",
+        "ok": true,
+        "complete": true,
+        "received": 5,
+        "durationMs": 167
+      },
+      {
+        "boardId": "ashby:ruby-labs",
+        "ok": true,
+        "complete": true,
+        "received": 32,
+        "durationMs": 121
+      },
+      {
+        "boardId": "ashby:abacum",
+        "ok": true,
+        "complete": true,
+        "received": 14,
+        "durationMs": 24
+      },
+      {
+        "boardId": "smartrecruiters:louisdreyfuscompany",
+        "ok": true,
+        "complete": true,
+        "received": 28,
+        "durationMs": 13154
+      },
+      {
+        "boardId": "smartrecruiters:walmartinc",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 568
+      },
+      {
+        "boardId": "smartrecruiters:accorhotel",
+        "ok": true,
+        "complete": true,
+        "received": 18,
+        "durationMs": 8438
+      },
+      {
+        "boardId": "smartrecruiters:talan",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 3521
+      },
+      {
+        "boardId": "smartrecruiters:sikaag",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 2221
+      },
+      {
+        "boardId": "smartrecruiters:lesaffre",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 3606
+      },
+      {
+        "boardId": "recruitee:cocoscapital",
+        "ok": true,
+        "complete": true,
+        "received": 16,
+        "durationMs": 263
+      },
+      {
+        "boardId": "recruitee:tether",
+        "ok": true,
+        "complete": true,
+        "received": 207,
+        "durationMs": 1085
+      },
+      {
+        "boardId": "workday:accenture.wd103.accenturecareers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9326
+      },
+      {
+        "boardId": "workday:chevron.wd5.jobs",
+        "ok": true,
+        "complete": true,
+        "received": 18,
+        "durationMs": 84221
+      },
+      {
+        "boardId": "workday:dentsuaegis.wd3.dan_global",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9352
+      },
+      {
+        "boardId": "workday:essity.wd3.job_opportunities",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9623
+      },
+      {
+        "boardId": "workday:fiserv.wd5.ext",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7475
+      },
+      {
+        "boardId": "workday:flowserve.wd1.applied",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 23707
+      },
+      {
+        "boardId": "workday:generalmotors.wd5.careers_gm",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 9035
+      },
+      {
+        "boardId": "workday:gsk.wd5.gskcareers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7741
+      },
+      {
+        "boardId": "workday:gsknch.wd3.gskcareers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9676
+      },
+      {
+        "boardId": "workday:hpinc.wd5.hpinc",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7523
+      },
+      {
+        "boardId": "workday:iff.wd5.iff_careers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7660
+      },
+      {
+        "boardId": "workday:iqvia.wd1.iqvia",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7646
+      },
+      {
+        "boardId": "workday:mmc.wd1.mmc",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7500
+      },
+      {
+        "boardId": "workday:natura.wd501.naturacarreiras",
+        "ok": true,
+        "complete": true,
+        "received": 9,
+        "durationMs": 8597
+      },
+      {
+        "boardId": "workday:pfizer.wd1.pfizercareers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7558
+      },
+      {
+        "boardId": "workday:prysmiangroup.wd3.careers",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 33817
+      },
+      {
+        "boardId": "workday:pwc.wd3.global_campus_careers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9705
+      },
+      {
+        "boardId": "workday:pwc.wd3.global_experienced_careers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9612
+      },
+      {
+        "boardId": "workday:sbdinc.wd1.stanley_black_decker_career_site",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7826
+      },
+      {
+        "boardId": "workday:teladoc.wd503.teladochealth_is_hiring",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 6560
+      },
+      {
+        "boardId": "workday:thomsonreuters.wd5.external_career_site",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 7771
+      },
+      {
+        "boardId": "workday:weir.wd3.weir_external_careers",
+        "ok": false,
+        "complete": false,
+        "received": 0,
+        "error": "HTTP 429",
+        "httpStatus": 429,
+        "durationMs": 9534
+      },
+      {
+        "boardId": "eightfold:mercadolibre.eightfold.ai",
+        "ok": true,
+        "complete": true,
+        "received": 163,
+        "durationMs": 20062
+      },
+      {
+        "boardId": "eightfold:softtek.eightfold.ai",
+        "ok": true,
+        "complete": true,
+        "received": 19,
+        "durationMs": 6853
+      },
+      {
+        "boardId": "eightfold:careers.haleon.com",
+        "ok": true,
+        "complete": true,
+        "received": 2,
+        "durationMs": 995
+      },
+      {
+        "boardId": "successfactors:oportunidades.ypf.com",
+        "ok": true,
+        "complete": true,
+        "received": 70,
+        "durationMs": 16524
+      },
+      {
+        "boardId": "successfactors:careers.techint.com",
+        "ok": true,
+        "complete": true,
+        "received": 34,
+        "durationMs": 7585
+      },
+      {
+        "boardId": "successfactors:careers.ey.com~ey",
+        "ok": true,
+        "complete": false,
+        "received": 200,
+        "durationMs": 72246
+      },
+      {
+        "boardId": "successfactors:swissmedical.jobs2web.com",
+        "ok": true,
+        "complete": true,
+        "received": 61,
+        "durationMs": 17310
+      },
+      {
+        "boardId": "successfactors:empleos.gruposancorseguros.com",
+        "ok": true,
+        "complete": true,
+        "received": 4,
+        "durationMs": 5829
+      },
+      {
+        "boardId": "successfactors:claroempleos-aup.com",
+        "ok": true,
+        "complete": true,
+        "received": 61,
+        "durationMs": 17019
+      },
+      {
+        "boardId": "successfactors:jobs.bunge.com",
+        "ok": true,
+        "complete": true,
+        "received": 15,
+        "durationMs": 8580
+      },
+      {
+        "boardId": "successfactors:empleos.mirgor.com.ar",
+        "ok": true,
+        "complete": true,
+        "received": 7,
+        "durationMs": 3145
+      },
+      {
+        "boardId": "successfactors:jobs.bcdtravel.com",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 2920
+      },
+      {
+        "boardId": "successfactors:careers.cofcointernational.com",
+        "ok": true,
+        "complete": true,
+        "received": 10,
+        "durationMs": 3946
+      },
+      {
+        "boardId": "successfactors:jobs.arauco.com~argentina",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 1558
+      },
+      {
+        "boardId": "successfactors:jobs.driv.com",
+        "ok": true,
+        "complete": true,
+        "received": 0,
+        "durationMs": 613
+      },
+      {
+        "boardId": "successfactors:careers.anglogoldashanti.com",
+        "ok": true,
+        "complete": true,
+        "received": 3,
+        "durationMs": 2726
+      },
+      {
+        "boardId": "breezy:rockcruit",
+        "ok": true,
+        "complete": true,
+        "received": 15,
+        "durationMs": 6674
+      },
+      {
+        "boardId": "breezy:fluxit",
+        "ok": true,
+        "complete": true,
+        "received": 42,
+        "durationMs": 18396
+      },
+      {
+        "boardId": "bamboohr:satellogic",
+        "ok": true,
+        "complete": true,
+        "received": 15,
+        "durationMs": 44280
+      }
+    ]
+  }
 }
