@@ -57,7 +57,8 @@ export const ContactosElegirRequestSchema = z.object({
   empresa: z.string().min(1).max(200),
   puesto: z.string().max(300),
   vacante: z.string().max(MAX_PAGE_TEXT),
-  profile: ProfileSchema.optional(),
+  /** Si el perfil guardado en la extensión es de un formato viejo, se sigue sin él (notas sin datos de experiencia). */
+  profile: ProfileSchema.optional().catch(undefined),
   tarjetas: z.array(ContactCardSchema).min(1).max(40),
 });
 export type ContactosElegirRequest = z.infer<typeof ContactosElegirRequestSchema>;
