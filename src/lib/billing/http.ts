@@ -35,21 +35,22 @@ export async function paidFeatures(req: Request): Promise<boolean> {
 
 const INSTALL_ID = /^[A-Za-z0-9-]{16,64}$/;
 /**
- * Cupo de la extensión de Chrome: 4 autocompletados por día en el plan gratis. Si Chrome manda la sesión de Maru,
+ * Cupo de la extensión de Chrome en el plan gratis: 4 autocompletados y 3 búsquedas de contactos por día. Si Chrome manda la sesión de Maru,
  * cuenta por cuenta (y un plan pago usa el límite del plan); si no, por instalación de la extensión y por IP.
  * No exige ingresar: la extensión funciona sin cuenta.
  */
-export async function extensionGuard(req: Request): Promise<{ blocked: Response | null; remaining: number | null; limit: number }> {
-  const limit = FREE_LIMITS.autofill.limit;
+export async function extensionGuard(req: Request, kind: "autofill" | "contactos" = "autofill"): Promise<{ blocked: Response | null; remaining: number | null; limit: number }> {
+  const limit = FREE_LIMITS[kind].limit;
   if (!billingReady()) return { blocked: null, remaining: null, limit };
   let email: string | null = null;
   try { email = sessionEmail(req); } catch { email = null; }
   const install = req.headers.get("X-Maru-Install");
   try {
-    const r = email ? await takeUsage(email, "autofill") : await takeAnonymousUsage(install && INSTALL_ID.test(install) ? install : null, clientIp(req.headers), "autofill");
+    const r = email ? await takeUsage(email, kind) : await takeAnonymousUsage(install && INSTALL_ID.test(install) ? install : null, clientIp(req.headers), kind);
     if (r.ok) return { blocked: null, remaining: r.remaining, limit };
+    const error = kind === "contactos" ? `Usaste las ${limit} búsquedas de contactos gratis de hoy. Se renuevan a las 0 h.` : `Usaste los ${limit} autocompletados gratis de hoy. Se renuevan a las 0 h.`;
     return {
-      blocked: billingJson({ error: `Usaste los ${limit} autocompletados gratis de hoy. Se renuevan a las 0 h.`, code: "PLAN_LIMIT", upgradeUrl: `${SITE_URL}/precios`, remaining: 0, limit }, 429),
+      blocked: billingJson({ error, code: "PLAN_LIMIT", upgradeUrl: `${SITE_URL}/precios`, remaining: 0, limit }, 429),
       remaining: 0,
       limit,
     };
