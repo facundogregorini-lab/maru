@@ -205,6 +205,20 @@ $("fill").addEventListener("click", async () => {
   }
 });
 
+/**
+ * Contactos de la vacante: el permiso para LinkedIn se pide con el clic (antes de cualquier otra espera) y Maru abre
+ * su página de contactos, que busca en tu LinkedIn y te prepara cada invitación.
+ */
+$("contacts").addEventListener("click", async () => {
+  const granted = await chrome.permissions.request({ origins: ["https://www.linkedin.com/*"] }).catch(() => false);
+  if (!granted) return status("Para buscar contactos, Maru necesita permiso para LinkedIn. Lo usa sólo cuando tocás este botón.", true);
+  $("contacts").disabled = true;
+  status("Leyendo la vacante…");
+  const result = await chrome.runtime.sendMessage({ type: "contacts" }).catch(() => null);
+  $("contacts").disabled = false;
+  if (!result || result.error) status((result && result.error) || "Algo salió mal. Probá de nuevo.", true);
+});
+
 /** Guarda esta postulación en el seguimiento de la cuenta; sin sesión de Maru, abre el seguimiento con la postulación agregada. */
 $("track").addEventListener("click", async () => {
   if (!lastPage) return;
