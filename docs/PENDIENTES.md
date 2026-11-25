@@ -1,5 +1,19 @@
 # Estado y próximos pasos de Maru
 
+## Extensión: contactos de la vacante en LinkedIn (plan en curso, desde 25/11/2026)
+
+Pedido del dueño: cuando la persona encuentra una búsqueda, que la extensión le encuentre en LinkedIn a quien lidera el equipo (hiring manager), a quien recluta y a People/HR, y le deje lista la invitación con una nota. Nivel elegido: **semiautomático**. La extensión abre el perfil, toca «Conectar», agrega la nota y resalta «Enviar»; el envío lo hace la persona. Nunca se envía nada solo (las condiciones de LinkedIn prohíben automatizar y la cuenta de quien busca trabajo es lo que está en juego).
+
+Límites de LinkedIn que condicionan el diseño (25/11/2026): en cuentas gratis, 5 invitaciones con nota por mes y nota de hasta 200 caracteres; tope semanal de invitaciones no publicado (100 a 200 según la cuenta). Por eso la nota va primero al hiring manager y cada contacto trae además el mensaje para cuando acepte (los mensajes a conexiones no tienen ese tope).
+
+1. **Hecho (PR 1): backend.**
+   - `POST /api/contactos/plan`: con el texto de la vacante, la IA (Haiku, sin revisión editorial) devuelve empresa, puesto y una búsqueda por tipo (`hiring_manager`, `recruiter`, `people`). `buildSearches` arma las URLs de búsqueda de personas de LinkedIn con la empresa entre comillas. Cuenta un uso del cupo nuevo `contactos` (3 por día gratis; con plan, el límite general).
+   - `POST /api/contactos/elegir`: recibe las tarjetas que la extensión vio en LinkedIn (url + texto) y el perfil (sin email ni teléfono). Devuelve de 2 a 5 personas con motivo, nota (≤200 caracteres, `fitNote`) y mensaje para cuando acepte. `finalizeContacts` descarta personas que no estaban en las tarjetas y repetidas. Motivo, nota y mensaje pasan por la revisión editorial.
+   - El servidor nunca consulta LinkedIn: las búsquedas las hace la extensión con la sesión de la persona.
+   - Tests: `tests/contactos.test.ts`.
+2. **Pendiente (PR 2): extensión 0.5.0.**
+3. **Riesgo conocido:** `/api/contactos/elegir` no descuenta cupo (lo hace el paso 1); lo frena el límite por IP del middleware. Si aparece abuso, firmar un token en el paso 1.
+
 ## Catálogo de avisos: sync caída y actualización semanal (plan en curso, desde 20/11/2026)
 
 Pedido del dueño: analizar cómo se alimentan las búsquedas y armar una actualización semanal los lunes a las 07:00 que sume avisos nuevos y dé de baja los viejos. **Sin Apify** (decisión del dueño, 20/11).

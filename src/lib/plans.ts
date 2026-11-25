@@ -76,6 +76,8 @@ export const FREE_LIMITS = {
   autofill: { limit: 4, window: "dia" },
   /** Mensajes al copiloto de Maru. */
   copiloto: { limit: 10, window: "dia" },
+  /** Búsquedas de contactos de una vacante en LinkedIn, desde la extensión. */
+  contactos: { limit: 3, window: "dia" },
 } as const;
 export type UsageKind = keyof typeof FREE_LIMITS;
 
