@@ -87,3 +87,10 @@ kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; backgro
 /* Aviso de versión nueva. */
 .update { display: flex; flex-direction: column; gap: 4px; border-radius: 10px; background: #fff4d6; padding: 10px 12px; }
 .update a { color: #136c39; font-weight: 700; }
+
+/* Contactos de la vacante en LinkedIn. */
+.contacts { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.secondary { border: 1.5px solid var(--ink); border-radius: 10px; background: #fff; color: var(--ink); padding: 11px 14px; font-weight: 700; }
+.secondary:hover { background: #f5f6f7; }
+.secondary:disabled { opacity: 0.6; cursor: default; }
+.contacts p { margin: 0; }

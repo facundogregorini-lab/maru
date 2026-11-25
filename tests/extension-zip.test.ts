@@ -52,10 +52,10 @@ describe("permisos de la extensión", () => {
     expect([...manifest.host_permissions, ...manifest.content_scripts.flatMap((c: { matches: string[] }) => c.matches)].some(broad)).toBe(false);
     expect(manifest.host_permissions.every((p: string) => /marucoach\.com|localhost/.test(p))).toBe(true);
   });
-  it("los permisos opcionales son exactamente los ATS de ats.js", () => {
+  it("los permisos opcionales son exactamente los ATS de ats.js y LinkedIn (contactos de la vacante)", () => {
     const sandbox: { MARU_ATS?: { ATS_DOMAINS: string[]; atsPattern(d: string): string } } = {};
     vm.runInNewContext(ats, { self: sandbox });
-    expect(manifest.optional_host_permissions).toEqual(sandbox.MARU_ATS!.ATS_DOMAINS.map((d) => sandbox.MARU_ATS!.atsPattern(d)));
+    expect(manifest.optional_host_permissions).toEqual([...sandbox.MARU_ATS!.ATS_DOMAINS.map((d) => sandbox.MARU_ATS!.atsPattern(d)), "https://www.linkedin.com/*"]);
   });
   it("en el paquete de la Store no queda localhost", async () => {
     const zip = await JSZip.loadAsync(await buildExtensionZip(undefined, { store: true }));
@@ -64,11 +64,14 @@ describe("permisos de la extensión", () => {
     expect(store.host_permissions).toEqual(["https://www.marucoach.com/*", "https://marucoach.com/*"]);
   });
   it("no hay código remoto ni evaluación de texto como código", () => {
-    for (const f of ["background.js", "content.js", "popup.js", "bridge.js", "jobkey.js", "ats.js"]) {
+    for (const f of ["background.js", "content.js", "popup.js", "bridge.js", "jobkey.js", "ats.js", "linkedin.js", "contactos.js"]) {
       const src = readFileSync(new URL(`../extension/${f}`, import.meta.url), "utf8");
       expect(src).not.toMatch(/\beval\(|new Function\(|importScripts\([^)]*https?:|setTimeout\(\s*["'`]/);
     }
-    const html = readFileSync(new URL("../extension/popup.html", import.meta.url), "utf8");
-    expect(html).not.toMatch(/<script[^>]+src=["']https?:/);
+    for (const page of ["popup.html", "contactos.html"]) {
+      const html = readFileSync(new URL(`../extension/${page}`, import.meta.url), "utf8");
+      expect(html).not.toMatch(/<script[^>]+src=["']https?:/);
+      expect(html).not.toMatch(/<script>(?!<\/script>)/);
+    }
   });
 });

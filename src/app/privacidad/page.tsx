@@ -60,6 +60,12 @@ export default function PrivacidadPage() {
           Si preparaste esa postulación en Maru, la extensión la lee desde el sitio de Maru en este mismo navegador (no desde nuestros servidores) y usa tu CV personalizado, tu motivación y las respuestas
           sugeridas. Para adjuntar el CV personalizado, se lo pide a Maru como PDF con tu sesión: Maru lo arma y no lo guarda.
         </li>
+        <li>
+          Contactos de la vacante (opcional): si tocás «Contactos de esta vacante en LinkedIn» y aceptás el permiso para linkedin.com, la extensión envía a Maru y a su proveedor de IA el texto de la
+          vacante para saber qué buscar, hace hasta tres búsquedas de personas en tu LinkedIn, con tu sesión y en tu navegador, y envía a Maru el nombre, el cargo y el link de perfil que se ven en esos
+          resultados, junto con tu perfil sin email ni teléfono, para elegir a quiénes escribirles y redactar la nota. Los contactos y las notas se guardan en la extensión, en tu computadora. Cuando
+          tocás «Preparar invitación», abre el perfil, toca «Conectar» y deja la nota escrita: la invitación la enviás vos. Maru no guarda en sus servidores los resultados de LinkedIn ni tu sesión.
+        </li>
         <li>Guarda un identificador al azar de la instalación, sólo para contar los usos gratis del día. Si tenés la sesión de Maru abierta en Chrome, el cupo se cuenta en tu cuenta.</li>
         <li>
           Después de completar, mira la página (sin enviar nada) para darse cuenta de si enviaste la postulación y ofrecerte guardarla en tu seguimiento. Sólo se guarda si tocás «Guardar»: con sesión, en el

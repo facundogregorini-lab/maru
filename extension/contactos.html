@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contactos de la vacante · Maru</title>
+    <link rel="stylesheet" href="contactos.css" />
+  </head>
+  <body>
+    <header>
+      <img class="logo" src="icons/48.png" alt="" />
+      <div>
+        <strong class="brand">Maru</strong>
+        <span class="muted small">Contactos de la vacante en LinkedIn</span>
+      </div>
+    </header>
+
+    <main>
+      <h1 id="title">Contactos de la vacante</h1>
+      <p id="subtitle" class="muted"></p>
+
+      <!-- Buscando: lo que está haciendo Maru en este momento. -->
+      <div id="progress" class="progress" role="status" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="step"></span>
+      </div>
+
+      <div id="error" class="error" role="alert" hidden>
+        <p id="error-text"></p>
+        <div id="error-actions" class="row"></div>
+      </div>
+
+      <section id="results" hidden>
+        <div class="tip">
+          <strong>Cómo usarlo</strong>
+          <p>
+            Tocá «Preparar invitación»: Maru abre el perfil, toca «Conectar» y deja la nota escrita. Revisala y tocá «Enviar» vos: Maru nunca envía nada por su cuenta.
+          </p>
+          <p>
+            En cuentas gratis, LinkedIn deja agregar nota a 5 invitaciones por mes. Usá la nota con quien lidera el equipo y, al resto, mandales la invitación sin nota y el mensaje cuando acepten.
+          </p>
+        </div>
+        <ol id="list" class="list"></ol>
+        <p id="quota" class="muted small" hidden></p>
+        <button id="again" class="link">Buscar de nuevo (usa una búsqueda de tu cupo)</button>
+      </section>
+
+      <p id="empty" class="muted" hidden>
+        No hay una búsqueda de contactos guardada para esta vacante. Abrí el aviso, tocá el ícono de Maru y después «Contactos de esta vacante».
+      </p>
+    </main>
+
+    <template id="item">
+      <li class="contact">
+        <div class="head">
+          <div>
+            <a class="name" target="_blank" rel="noopener"></a>
+            <span class="cargo muted"></span>
+          </div>
+          <span class="tipo"></span>
+        </div>
+        <p class="motivo"></p>
+        <label class="note">
+          <span class="row between"><strong>Nota de la invitación</strong><span class="count muted small"></span></span>
+          <textarea rows="3" maxlength="300"></textarea>
+        </label>
+        <div class="row">
+          <button class="primary prepare">Preparar invitación en LinkedIn</button>
+          <button class="ghost copy-note">Copiar nota</button>
+        </div>
+        <details>
+          <summary>Mensaje para cuando acepte</summary>
+          <textarea class="message" rows="5"></textarea>
+          <button class="ghost copy-message">Copiar mensaje</button>
+        </details>
+        <p class="state small" role="status"></p>
+      </li>
+    </template>
+
+    <script src="contactos.js"></script>
+  </body>
+</html>

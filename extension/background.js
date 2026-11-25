@@ -409,6 +409,97 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   chrome.storage.session.remove(`track:${tabId}`).catch(() => {});
 });
 
+/* ---------- Contactos de la vacante en LinkedIn ---------- */
+
+// La persona toca «Contactos de esta vacante» en el popup: se lee la vacante de esta pestaña (activeTab) y se abre
+// la página de contactos de Maru, que busca en su LinkedIn y le prepara cada invitación. Maru nunca envía invitaciones.
+const LINKEDIN = "https://www.linkedin.com/*";
+const MAX_CONTACT_SETS = 10;
+
+/** Clave de la vacante para sus contactos. En LinkedIn, el id del aviso (la búsqueda de empleos cambia de URL con cada uno). */
+function contactKey(raw) {
+  try {
+    const u = new URL(raw);
+    if (/(^|\.)linkedin\.com$/i.test(u.hostname)) {
+      const id = u.searchParams.get("currentJobId") || (u.pathname.match(/\/jobs\/view\/(?:[^/]*?-)?(\d+)/) || [])[1];
+      if (id) return `linkedin:${id}`;
+    }
+  } catch {
+    return "";
+  }
+  return self.maruJobKey(raw);
+}
+
+/** Igual que en linkedin.js: https://www.linkedin.com/in/<slug>/, o "" si no es un perfil. */
+function profileUrl(raw) {
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:" || !/(^|\.)linkedin\.com$/i.test(u.hostname)) return "";
+    const m = u.pathname.match(/^\/in\/([^/]+)/);
+    return m ? `https://www.linkedin.com/in/${m[1].toLowerCase()}/` : "";
+  } catch {
+    return "";
+  }
+}
+
+async function contactSets() {
+  const { contactSets: sets } = await chrome.storage.local.get("contactSets");
+  return Array.isArray(sets) ? sets : [];
+}
+
+/** Texto de la vacante. En LinkedIn, sólo el detalle del aviso (la lista de al lado tiene otros avisos). */
+function readJobPage() {
+  const detail = /(^|\.)linkedin\.com$/.test(location.hostname)
+    ? document.querySelector(".jobs-search__job-details--container, .jobs-details, .job-view-layout, .jobs-description")
+    : null;
+  const el = detail || document.body;
+  return { url: location.href, title: document.title, text: String((el && el.innerText) || "").slice(0, 20000) };
+}
+
+async function startContacts() {
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  if (!tab || !tab.id || !/^https?:/.test(tab.url || "")) throw new UserError("Abrí el aviso de la vacante en esta pestaña y probá de nuevo.");
+  const key = contactKey(tab.url) || tab.url;
+  const sets = await contactSets();
+  const existing = sets.find((s) => s.key === key);
+  // Ya tiene contactos para esta vacante: se abren sin volver a buscar (no gasta un uso).
+  if (!existing || existing.estado === "error" || existing.estado === "nuevo") {
+    const [r] = await run(tab.id, readJobPage, [], [0]);
+    const page = r && r.result;
+    if (!page || page.text.trim().length < 200) throw new UserError("No encontramos la vacante en esta pestaña. Abrí el aviso completo y probá de nuevo.");
+    const { postulaciones } = await settings();
+    const post = findPostulacion(postulaciones, [tab.url]) || self.maruMatchByCompany(postulaciones, { urls: [tab.url], title: page.title, text: page.text });
+    const set = {
+      key,
+      estado: "nuevo",
+      page: { url: page.url.slice(0, 2000), title: page.title.slice(0, 500), text: page.text },
+      ...(post ? { postulacion: { empresa: String(post.company || "").slice(0, 200), puesto: String(post.title || "").slice(0, 300) } } : {}),
+      contactos: [],
+      at: Date.now(),
+    };
+    await chrome.storage.local.set({ contactSets: [set, ...sets.filter((s) => s.key !== key)].slice(0, MAX_CONTACT_SETS) });
+  }
+  await chrome.tabs.create({ url: chrome.runtime.getURL(`contactos.html?key=${encodeURIComponent(key)}`), index: tab.index + 1 });
+  return { ok: true };
+}
+
+/** La persona apretó «Enviar» en la invitación (Maru no la envía): el contacto queda como invitado. */
+async function markInvited(url) {
+  const target = profileUrl(url);
+  if (!target) return;
+  const sets = await contactSets();
+  let changed = false;
+  for (const set of sets) {
+    for (const c of set.contactos || []) {
+      if (c.url === target && c.estado !== "invitado") {
+        c.estado = "invitado";
+        changed = true;
+      }
+    }
+  }
+  if (changed) await chrome.storage.local.set({ contactSets: sets });
+}
+
 /* ---------- Puente con el sitio de Maru ---------- */
 
 /** Limpia lo que llega del sitio de Maru antes de guardarlo: sólo campos conocidos y con tope de tamaño. */
@@ -433,6 +524,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === "fill") {
     fillActiveTab().then(sendResponse);
     return true;
+  }
+  if (msg.type === "contacts" && sender.id === chrome.runtime.id && !sender.tab) {
+    startContacts().then(sendResponse, (err) => {
+      if (!(err instanceof UserError)) console.error(err);
+      sendResponse({ error: err instanceof UserError ? err.message : "Algo salió mal. Recargá la página y probá de nuevo." });
+    });
+    return true;
+  }
+  if (msg.type === "contact-invited" && sender.id === chrome.runtime.id && sender.tab && /^https:\/\/([a-z]+\.)?linkedin\.com\//.test(sender.tab.url || "")) {
+    markInvited(msg.url || sender.tab.url);
+    return;
   }
   if (msg.type === "postulaciones") {
     // Sólo el puente que corre en el sitio de Maru puede escribir esto.
@@ -470,3 +572,4 @@ chrome.commands.onCommand.addListener((command) => {
 // Para los tests de punta a punta.
 self.fillActiveTab = fillActiveTab;
 self.trackApplication = trackApplication;
+self.contactKey = contactKey;

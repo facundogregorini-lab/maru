@@ -22,8 +22,9 @@ Material para publicar Maru Coach en la Chrome Web Store. El paquete se arma con
 > - No completamos datos demográficos, consentimientos ni declaraciones juradas.
 > - No inventamos datos. Si algo no está en tu CV, lo dejamos vacío.
 > - Cuando enviás, te ofrecemos guardar la postulación en tu seguimiento de Maru.
+> - **Contactos de la vacante:** Maru busca en tu LinkedIn a quien lidera el equipo y a quienes reclutan, y te deja cada invitación con la nota escrita. La enviás vos.
 >
-> Plan gratis: 4 autocompletados por día.
+> Plan gratis: 4 autocompletados y 3 búsquedas de contactos por día.
 
 ## Justificación de permisos
 
@@ -34,6 +35,7 @@ Material para publicar Maru Coach en la Chrome Web Store. El paquete se arma con
 | `storage` | Guardar en la computadora el perfil, el CV para adjuntar, los datos extra, el cupo del día y las postulaciones preparadas en Maru. `storage.session` guarda, mientras dura la sesión del navegador, qué pestaña se completó, para ofrecer guardarla en el seguimiento. |
 | `host_permissions`: `www.marucoach.com`, `marucoach.com` | La API de Maru (completar, leer el CV, imprimir el CV personalizado, seguimiento) y el puente que lee, en el mismo navegador, las postulaciones preparadas en marucoach.com. |
 | `optional_host_permissions`: 25 ATS (greenhouse.io, lever.co, ashbyhq.com, myworkdayjobs.com…) | Muchos formularios vienen en un iframe de un ATS dentro de la web de la empresa, y activeTab no alcanza para ese iframe. Si Maru detecta uno, pide permiso para ese dominio en el momento, con el clic de la persona en «Completar». Nunca se piden todos juntos ni al instalar. |
+| `optional_host_permissions`: `www.linkedin.com` | Sólo si la persona toca «Contactos de esta vacante en LinkedIn» y acepta el permiso en ese momento. La extensión hace hasta tres búsquedas de personas en el LinkedIn de la persona (su sesión, en su navegador), lee los resultados visibles y, cuando la persona toca «Preparar invitación», abre ese perfil, toca «Conectar» y escribe la nota. Nunca envía la invitación ni mensajes: el botón «Enviar» lo aprieta la persona. No hace nada en LinkedIn por su cuenta ni en segundo plano. |
 
 **¿Usa código remoto?** No. Todo el código va en el paquete: no hay `eval`, `new Function` ni scripts externos, y un test lo controla. Maru sólo devuelve datos (qué valor va en cada campo).
 
@@ -49,7 +51,7 @@ Material para publicar Maru Coach en la Chrome Web Store. El paquete se arma con
 | Ubicación | No | Sólo la ciudad o el país que figuran en el CV. |
 | Historial web | No | Sólo la dirección de la página que se completa, cuando la persona lo pide. |
 | Actividad del usuario | No | No registra clics ni teclas. Después de completar, mira la página sólo para detectar si la postulación se envió. |
-| Contenido del sitio web | Sí | El texto visible y los campos del formulario que se completa, para decidir qué va en cada uno. |
+| Contenido del sitio web | Sí | El texto visible y los campos del formulario que se completa, para decidir qué va en cada uno. Con «Contactos de esta vacante», el texto de la vacante y el nombre, cargo y link de perfil de los resultados de búsqueda de LinkedIn. |
 
 Certificaciones:
 
