@@ -228,8 +228,8 @@ export function publicBusqueda(b: Busqueda) {
   return rest;
 }
 
-/** Sin el texto completo del perfil (pesa) y, para candidatos de Maru, sin contacto. */
+/** Sin el texto completo del perfil (pesa) y, para candidatos de Maru, sin contacto hasta que acepten. */
 export function publicCandidato(c: Candidato) {
   const { perfil, ...rest } = c;
-  return { ...rest, perfilResumen: perfil.slice(0, 1500), contacto: c.fuente === "maru" ? null : c.contacto };
+  return { ...rest, perfilResumen: perfil.slice(0, 1500), contacto: c.fuente === "maru" && !c.contactoCompartido ? null : c.contacto };
 }

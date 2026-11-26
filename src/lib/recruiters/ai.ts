@@ -1,4 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { askStructured, cvBlocks, jobBlock, unreadable } from "../claude";
 import { PROFILE_SYSTEM } from "../prompts";
 import { ProfileSchema, type CvSource, type Profile } from "../schemas";
@@ -144,4 +145,55 @@ export async function proponer(b: Busqueda, icp: Icp, cs: Candidato[]): Promise<
     editorialPaths: ["propuestas.*.por_que"],
   });
   return propuestasFromDraft(icp, draft);
+}
+
+/* ---------- Outreach ---------- */
+
+export const SECUENCIA_SYSTEM = `Sos Maru, recruiter senior en Argentina. Escribís la secuencia de contacto de una búsqueda: los mensajes que un reclutador manda a candidatos que todavía no se postularon.
+
+- 3 pasos: email (día 0), whatsapp (3 días después) y email (4 días después, respondiendo en el mismo hilo). asunto sólo en el primer email; en los demás, ''.
+- Variables disponibles, entre llaves dobles: {{nombre}} (nombre de pila), {{puesto}}, {{empresa}}, {{remitente}} y {{gancho}} (una línea personalizada que Maru escribe para cada persona sobre su experiencia). El primer email empieza con "Hola {{nombre}}," y usa {{gancho}} en el primer párrafo.
+- Primer email: 60 a 110 palabras. Qué es el puesto, por qué podría interesarle, y un pedido concreto (una charla de 20 minutos). Nada de "oportunidad única" ni elogios genéricos.
+- WhatsApp: 25 a 45 palabras, cercano, sin links.
+- Último email: 30 a 60 palabras, corto, deja la puerta abierta.
+- No prometas sueldo, beneficios ni condiciones que no estén en el brief o el perfil ideal. No inventes datos de la empresa.
+- Firmá con {{remitente}}. No agregues datos de baja ni de privacidad: Maru los suma solo.
+
+Español rioplatense, tono profesional y directo.`;
+
+export const SecuenciaDraftSchema = z.object({
+  pasos: z.array(z.object({ canal: z.enum(["email", "whatsapp", "linkedin"]), dias: z.number().describe("Días después del paso anterior"), asunto: z.string(), cuerpo: z.string() })).describe("Exactamente 3 pasos"),
+});
+
+export async function draftSecuencia(b: Busqueda, icp: Icp, tono: string) {
+  return askStructured({
+    system: SECUENCIA_SYSTEM,
+    content: [
+      { type: "text", text: `<brief>\n${esc(b.brief)}\n</brief>` },
+      { type: "text", text: `<perfil_ideal>\n${icpForPrompt(icp)}\n</perfil_ideal>` },
+      ...(tono ? [{ type: "text" as const, text: `<pedido_del_reclutador>\n${esc(tono)}\n</pedido_del_reclutador>` }] : []),
+      { type: "text", text: "Escribí la secuencia." },
+    ],
+    schema: SecuenciaDraftSchema,
+    effort: "low",
+    maxTokens: 2500,
+    editorialPaths: ["pasos.*.asunto", "pasos.*.cuerpo"],
+  });
+}
+
+export const GANCHO_SYSTEM = `Sos Maru, recruiter senior. Escribís una sola línea (menos de 30 palabras) para el primer mensaje a un candidato: qué de su experiencia hace que este puesto le pueda interesar. Concreta, sobre un hecho del perfil (un cargo, un logro, una industria). Sin elogios genéricos ni signos de exclamación. No menciones características personales. Español rioplatense, tratando de vos.`;
+
+export async function draftGancho(icp: Icp, c: Pick<Candidato, "perfil">): Promise<string> {
+  const out = await askStructured({
+    system: GANCHO_SYSTEM,
+    content: [
+      { type: "text", text: `<perfil_ideal>\n${icpForPrompt(icp)}\n</perfil_ideal>` },
+      { type: "text", text: `<perfil_candidato>\n${esc(c.perfil.slice(0, 6000))}\n</perfil_candidato>` },
+    ],
+    schema: z.object({ gancho: z.string() }),
+    effort: "low",
+    maxTokens: 400,
+    editorialPaths: ["gancho"],
+  });
+  return out.gancho.replace(/\s+/g, " ").trim().slice(0, 300);
 }

@@ -1,13 +1,28 @@
 "use client";
 
 import { requestLogin } from "../loginRequest";
-import type { Busqueda, Candidato, Categoria, Decision, Estado, Icp, IcpEdit } from "./types";
+import type { Busqueda, Candidato, Canal, Categoria, Decision, Envio, Estado, EstadoInscripcion, Icp, IcpEdit, Paso } from "./types";
 
 /** Lo que devuelve la API (sin datos internos). */
 export type BusquedaView = Omit<Busqueda, "owner">;
 export type CandidatoView = Omit<Candidato, "perfil" | "contacto"> & { perfilResumen: string; contacto: Candidato["contacto"] | null };
+export type InscripcionView = {
+  candidatoId: string;
+  estado: EstadoInscripcion;
+  paso: number;
+  proximoEn: number;
+  gancho: string;
+  historial: Envio[];
+  tarea: { canal: Canal; texto: string; whatsapp: string | null; linkedin: string | null } | null;
+};
+export type OutreachView = {
+  secuencia: { pasos: Paso[]; remitente: string; empresa: string; autoSi: boolean; activa: boolean; actualizadaEn: number } | null;
+  inscripciones: InscripcionView[];
+  configuracion: { email: boolean; whatsapp: boolean };
+};
 export type Snapshot = {
   busqueda: BusquedaView;
+  outreach: OutreachView;
   candidatos: CandidatoView[];
   versiones: { version: number; creadoEn: number; calificados: number; si: number }[];
   pendientes: number;

@@ -37,3 +37,12 @@ Sección para empresas y reclutadores: arman el perfil ideal de una búsqueda, c
 - Modelo: Haiku 5.5 (nivel `rapido`), esfuerzo bajo. Una evaluación lee unos 3.000 tokens y escribe unos 500: alrededor de US$0,0006, más la revisión editorial del «por qué».
 - Cupo: 200 lecturas con IA por cuenta y por día (`RECRUITERS_DAILY_AI`). Cuentan el perfil ideal, cada CV leído, cada evaluación y cada pedido de ajustes. Si la IA falla, la lectura se devuelve.
 - Topes: 50 búsquedas por cuenta, 300 candidatos por búsqueda, brief de 4.000 caracteres.
+
+## Outreach (PR 4)
+
+- Una secuencia por búsqueda (`maru:rec:s:<búsqueda>`) y una inscripción por candidato (`maru:rec:i:<búsqueda>:<candidato>`). Las activas están en `maru:rec:enviar` para el envío diario.
+- El primer paso sale al inscribir o al activar; los siguientes, con el cron de lunes a viernes 10:00 ART, en días hábiles.
+- Email: Resend, «<remitente> vía Maru» desde `RECRUITERS_FROM` (por defecto `recruiters@marucoach.com`), Reply-To del reclutador. Los siguientes mails responden en el mismo hilo («Re: …»). Al pie, siempre: «Me interesa», «No, gracias», privacidad y baja global (`maru:rec:baja:<hash>`).
+- WhatsApp: con la API de WhatsApp Business (plantilla aprobada) sale solo; sin ella, tarea con `wa.me` y el texto. LinkedIn: siempre tarea manual.
+- Candidatos de Maru: el mail va al email de su cuenta sin mostrarlo. Al tocar «Me interesa», la empresa ve su nombre y email. La baja también apaga «Abierto a propuestas».
+- Las respuestas por mail le llegan al reclutador; Maru no lee su casilla, por eso existe «Respondió» para frenar a mano.

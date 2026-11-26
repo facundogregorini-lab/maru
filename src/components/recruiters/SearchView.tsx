@@ -7,6 +7,7 @@ import { RecError, icpActual, recApi, type Snapshot } from "@/lib/recruiters/cli
 import type { IcpEdit } from "@/lib/recruiters/types";
 import Afinar from "./Afinar";
 import IcpEditor from "./IcpEditor";
+import Outreach from "./Outreach";
 import Results from "./Results";
 
 export default function SearchView({ id }: { id: string }) {
@@ -17,6 +18,7 @@ export default function SearchView({ id }: { id: string }) {
   const [busy, setBusy] = useState(false);
   const [working, setWorking] = useState("");
   const [showAfinar, setShowAfinar] = useState(false);
+  const [vista, setVista] = useState<"candidatos" | "contacto">("candidatos");
 
   const act = useCallback(
     async (body: Record<string, unknown>) => {
@@ -109,7 +111,15 @@ export default function SearchView({ id }: { id: string }) {
         />
       ) : (
         <>
-          {showAfinar && (
+          <div role="tablist" aria-label="Secciones de la búsqueda" className="flex gap-1.5">
+            {([["candidatos", `Candidatos (${snap.candidatos.length})`], ["contacto", `Contacto${snap.outreach.inscripciones.some((i) => i.tarea) ? " · tareas" : ""}`]] as const).map(([k, label]) => (
+              <button key={k} type="button" role="tab" aria-selected={vista === k} onClick={() => setVista(k)} className={`min-h-10 rounded-full px-4 text-sm font-semibold ${vista === k ? "bg-ink text-white" : "border border-line bg-white"}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {vista === "contacto" && <Outreach snap={snap} act={act} />}
+          {vista === "candidatos" && showAfinar && (
             <Afinar
               propuestas={b.propuestas}
               version={icp.version}
@@ -124,7 +134,7 @@ export default function SearchView({ id }: { id: string }) {
               }
             />
           )}
-          <Results
+          {vista === "candidatos" && <Results
             snap={snap}
             act={act}
             working={working || (busy ? "Pensando ajustes al perfil…" : "")}
@@ -136,7 +146,7 @@ export default function SearchView({ id }: { id: string }) {
                 setShowAfinar(true);
               })
             }
-          />
+          />}
         </>
       )}
     </div>
