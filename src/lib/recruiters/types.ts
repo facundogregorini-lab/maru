@@ -102,6 +102,8 @@ export type Candidato = {
   contacto: { email: string; telefono: string; linkedin: string };
   /** Id de la cuenta en el índice de talento (fuente "maru"). */
   talentoId?: string;
+  /** Candidato de Maru que tocó «Me interesa»: la empresa ya ve su nombre y su email. */
+  contactoCompartido?: boolean;
   evaluacion: Evaluacion | null;
   decision: Decision | null;
   motivo: string;
@@ -114,6 +116,51 @@ export type Candidato = {
 export const PROPUESTA_TIPOS = ["agregar_obligatorio", "quitar_obligatorio", "cambiar_peso", "editar_obligatorio", "agregar_deseable", "agregar_evitar"] as const;
 export type PropuestaTipo = (typeof PROPUESTA_TIPOS)[number];
 export type Propuesta = { id: string; tipo: PropuestaTipo; criterioId: string; antes: string; despues: string; peso: Peso | null; porQue: string };
+
+/* ---------- Outreach (src/lib/recruiters/outreach.ts) ---------- */
+
+export const CANALES = ["email", "whatsapp", "linkedin"] as const;
+export type Canal = (typeof CANALES)[number];
+
+export const PasoSchema = z.object({
+  id: z.string().min(1).max(40),
+  canal: z.enum(CANALES),
+  /** Días después del paso anterior (el primero: 0 = al inscribir). */
+  dias: z.number().int().min(0).max(30),
+  /** Sólo email: asunto del primer mensaje; los siguientes responden en el mismo hilo ("Re: …"). */
+  asunto: z.string().trim().max(160),
+  cuerpo: z.string().trim().min(1).max(3000),
+});
+export type Paso = z.infer<typeof PasoSchema>;
+
+export const SecuenciaEditSchema = z.object({
+  pasos: z.array(PasoSchema).min(1).max(5),
+  remitente: z.string().trim().min(1).max(80),
+  empresa: z.string().trim().min(1).max(120),
+  autoSi: z.boolean(),
+});
+export type SecuenciaEdit = z.infer<typeof SecuenciaEditSchema>;
+
+export type Secuencia = SecuenciaEdit & { activa: boolean; actualizadaEn: number; /** Email del reclutador: Reply-To de los mails y avisos. */ replyTo: string };
+
+export const ESTADOS_INSCRIPCION = ["activa", "pausada", "tarea", "interesado", "no_interesado", "respondio", "completada", "cancelada", "baja"] as const;
+export type EstadoInscripcion = (typeof ESTADOS_INSCRIPCION)[number];
+
+export type Envio = { paso: number; canal: Canal; en: number; ok: boolean; manual?: boolean; error?: string };
+export type Inscripcion = {
+  busquedaId: string;
+  candidatoId: string;
+  estado: EstadoInscripcion;
+  /** Índice del próximo paso. */
+  paso: number;
+  /** Cuándo toca el próximo paso. */
+  proximoEn: number;
+  /** Primera línea escrita por la IA para esta persona ({{gancho}}). */
+  gancho: string;
+  historial: Envio[];
+  creadaEn: number;
+  actualizadaEn: number;
+};
 
 /* ---------- Pedidos a la API ---------- */
 
@@ -143,6 +190,12 @@ export const AccionSchema = z.discriminatedUnion("accion", [
   z.object({ accion: z.literal("aplicar"), aceptadas: z.array(z.string().max(40)).max(8) }),
   z.object({ accion: z.literal("borrar_candidato"), candidatoId: z.string().max(40) }),
   z.object({ accion: z.literal("buscar_maru") }),
+  z.object({ accion: z.literal("secuencia_generar"), tono: z.string().trim().max(500).optional() }),
+  z.object({ accion: z.literal("secuencia_guardar"), secuencia: SecuenciaEditSchema }),
+  z.object({ accion: z.literal("secuencia_activar"), activa: z.boolean() }),
+  z.object({ accion: z.literal("inscribir"), candidatoIds: z.array(z.string().max(40)).min(1).max(20) }),
+  z.object({ accion: z.literal("inscripcion"), candidatoId: z.string().max(40), estado: z.enum(["activa", "pausada", "cancelada", "respondio"]) }),
+  z.object({ accion: z.literal("tarea_hecha"), candidatoId: z.string().max(40) }),
 ]);
 export type Accion = z.infer<typeof AccionSchema>;
 

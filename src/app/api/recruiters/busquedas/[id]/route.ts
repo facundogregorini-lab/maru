@@ -1,8 +1,10 @@
 import { UserFacingError, errorResponse } from "@/lib/claude";
-import { buildIcp, evaluar, extractProfile, proponer } from "@/lib/recruiters/ai";
+import { buildIcp, draftSecuencia, evaluar, extractProfile, proponer } from "@/lib/recruiters/ai";
+import { deleteOutreach, readSecuencia, saveSecuencia } from "@/lib/recruiters/outreach";
+import { activate, enroll, outreachView, pauseAll, setEstado, taskDone } from "@/lib/recruiters/outreachFlow";
 import { recJson, recruiterEmail, reserveAi } from "@/lib/recruiters/http";
 import { MIN_CALIFICADOS, applyEdit, applyPropuestas, calificados, candidatoFromProfile, currentIcp, pendientes, publicBusqueda, publicCandidato, versiones } from "@/lib/recruiters/logic";
-import { MAX_CANDIDATOS, countCandidatos, deleteBusqueda, listCandidatos, readCandidato, readOwnBusqueda, refundAi, removeCandidato, saveBusqueda, saveCandidato } from "@/lib/recruiters/store";
+import { MAX_CANDIDATOS, countCandidatos, newId, deleteBusqueda, listCandidatos, readCandidato, readOwnBusqueda, refundAi, removeCandidato, saveBusqueda, saveCandidato } from "@/lib/recruiters/store";
 import { allTalentos, quickMatches, readTalentos } from "@/lib/recruiters/talento";
 import { AccionSchema, type Busqueda, type Candidato } from "@/lib/recruiters/types";
 
@@ -29,6 +31,7 @@ async function snapshot(b: Busqueda, extra: Record<string, unknown> = {}) {
   const icp = currentIcp(b);
   return {
     busqueda: publicBusqueda(b),
+    outreach: await outreachView(b, cs),
     candidatos: cs.map(publicCandidato),
     versiones: versiones(b, cs),
     pendientes: b.borrador ? 0 : pendientes(icp, cs).length,
@@ -54,6 +57,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
     const email = recruiterEmail(req);
     const b = await readOwnBusqueda((await params).id, email);
     if (!b) throw notFound();
+    await deleteOutreach(b.id);
     await deleteBusqueda(b);
     return recJson({ ok: true });
   } catch (err) {
@@ -135,13 +139,19 @@ export async function POST(req: Request, { params }: Ctx) {
         const c = await readCandidato(b.id, a.candidatoId);
         if (!c) throw new UserFacingError("No encontramos ese candidato.", "NOT_FOUND", 404);
         const decision = a.decision;
-        await saveCandidato({
+        const next: Candidato = {
           ...c,
           decision,
           motivo: decision === "no" || decision === "tal" ? (a.motivo ?? c.motivo) : "",
           decididoEn: decision ? Date.now() : null,
           decididoConVersion: decision ? (c.evaluacion?.icpVersion ?? currentIcp(b).version) : null,
-        });
+        };
+        await saveCandidato(next);
+        // Con «inscribir a los Sí» prendido, cada Sí entra a la secuencia (en pausa si la secuencia no está activa).
+        if (decision === "si" && c.decision !== "si") {
+          const sec = await readSecuencia(b.id);
+          if (sec?.autoSi) await enroll({ email, b, sec, candidatos: [next] });
+        }
         break;
       }
       case "proponer": {
@@ -164,6 +174,52 @@ export async function POST(req: Request, { params }: Ctx) {
       }
       case "borrar_candidato": {
         await removeCandidato(b.id, a.candidatoId);
+        break;
+      }
+      case "secuencia_generar": {
+        await reserveAi(email);
+        try {
+          const d = await draftSecuencia(b, currentIcp(b), a.tono ?? "");
+          const prev = await readSecuencia(b.id);
+          const pasos = d.pasos.slice(0, 5).map((p, i) => ({ id: newId(), canal: p.canal, dias: i === 0 ? 0 : Math.max(1, Math.min(30, Math.round(p.dias))), asunto: p.asunto.slice(0, 160), cuerpo: p.cuerpo.slice(0, 3000) || "Hola {{nombre}}," }));
+          await saveSecuencia(b.id, { pasos, remitente: prev?.remitente ?? email.split("@")[0], empresa: prev?.empresa ?? "", autoSi: prev?.autoSi ?? false, activa: false, actualizadaEn: Date.now(), replyTo: email });
+          if (prev?.activa) await pauseAll(b);
+        } catch (err) {
+          await refundAi(email).catch(() => {});
+          throw err;
+        }
+        break;
+      }
+      case "secuencia_guardar": {
+        const prev = await readSecuencia(b.id);
+        await saveSecuencia(b.id, { ...a.secuencia, pasos: a.secuencia.pasos.map((p, i) => ({ ...p, dias: i === 0 ? 0 : p.dias })), activa: prev?.activa ?? false, actualizadaEn: Date.now(), replyTo: email });
+        break;
+      }
+      case "secuencia_activar": {
+        const sec = await readSecuencia(b.id);
+        if (!sec) throw new UserFacingError("Primero armá la secuencia.", "NO_SEQUENCE", 409);
+        if (a.activa && (!sec.empresa.trim() || sec.empresa === "Tu empresa" || sec.remitente === "Tu nombre")) throw new UserFacingError("Completá quién firma y el nombre de la empresa antes de activar.", "SEQUENCE_INCOMPLETE", 422);
+        const next = { ...sec, activa: a.activa, actualizadaEn: Date.now(), replyTo: email };
+        await saveSecuencia(b.id, next);
+        if (a.activa) await activate({ b, sec: next });
+        else await pauseAll(b);
+        break;
+      }
+      case "inscribir": {
+        const sec = await readSecuencia(b.id);
+        if (!sec) throw new UserFacingError("Primero armá la secuencia.", "NO_SEQUENCE", 409);
+        const cs = (await visibles(b.id)).filter((c) => a.candidatoIds.includes(c.id));
+        await enroll({ email, b, sec, candidatos: cs });
+        break;
+      }
+      case "inscripcion": {
+        await setEstado(b, a.candidatoId, a.estado);
+        break;
+      }
+      case "tarea_hecha": {
+        const sec = await readSecuencia(b.id);
+        if (!sec) throw new UserFacingError("Primero armá la secuencia.", "NO_SEQUENCE", 409);
+        await taskDone(b, sec, a.candidatoId);
         break;
       }
       case "buscar_maru": {
