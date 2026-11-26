@@ -32,6 +32,22 @@ export default function Results({
   onEditIcp: () => void;
   onPropose: () => Promise<void>;
 }) {
+  const [aviso, setAviso] = useState("");
+  async function buscarMaru() {
+    setError("");
+    setAviso("");
+    setUploading("Buscando entre los candidatos de Maru");
+    try {
+      const s = await act({ accion: "buscar_maru" });
+      setAviso(s.encontrados ? `Sumamos ${s.encontrados} ${s.encontrados === 1 ? "candidato" : "candidatos"} de Maru. La IA los está leyendo.` : "Por ahora no hay candidatos de Maru que coincidan con este perfil. Probá ampliar los requisitos o volvé en unos días.");
+      setUploading("");
+      if (s.pendientes > 0) await runEvaluations(s);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No pudimos buscar en Maru.");
+    } finally {
+      setUploading("");
+    }
+  }
   const icp = icpActual(snap.busqueda);
   const [tab, setTab] = useState<Tab>("todos");
   const [selId, setSelId] = useState<string | null>(null);
@@ -155,6 +171,11 @@ export default function Results({
             Subir CVs
             <input ref={fileRef} type="file" multiple accept=".pdf,.docx,application/pdf" className="sr-only" onChange={(e) => void upload(e.target.files)} disabled={!!uploading || !!working} />
           </label>
+          {snap.busqueda.fuentes.maru && (
+            <button type="button" onClick={() => void buscarMaru()} disabled={!!uploading || !!working} className="inline-flex min-h-11 items-center rounded-full border border-neon-deep bg-white px-4 text-sm font-semibold disabled:opacity-60">
+              Buscar en Maru
+            </button>
+          )}
           <button type="button" onClick={() => setShowPaste((v) => !v)} aria-expanded={showPaste} className="inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 text-sm font-medium">
             Pegar un CV
           </button>
@@ -181,6 +202,7 @@ export default function Results({
         </div>
       )}
       {error && <p role="alert" className="rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger-dark">{error}</p>}
+      {aviso && <p role="status" className="rounded-xl bg-panel px-4 py-3 text-sm text-[#0b4a2a]">{aviso}</p>}
 
       {snap.candidatos.length > 0 && (
         <div className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl px-4 py-3 ${listos ? "border border-brand-light bg-panel" : "border border-dashed border-black/20 bg-white"}`}>
@@ -198,7 +220,7 @@ export default function Results({
       {snap.candidatos.length === 0 ? (
         <div className="rounded-[20px] border border-dashed border-black/20 bg-white p-8 text-center">
           <p className="text-base font-semibold">Todavía no hay candidatos en esta búsqueda</p>
-          <p className="mt-1 text-sm text-muted">Subí CVs en PDF o Word (hasta 50 por vez). Maru los lee y los evalúa contra el perfil v{icp.version}.</p>
+          <p className="mt-1 text-sm text-muted">Subí CVs en PDF o Word (hasta 50 por vez){snap.busqueda.fuentes.maru ? " o buscá entre los candidatos de Maru" : ""}. Maru los lee y los evalúa contra el perfil v{icp.version}.</p>
         </div>
       ) : (
         <div className="flex flex-wrap items-start gap-5">

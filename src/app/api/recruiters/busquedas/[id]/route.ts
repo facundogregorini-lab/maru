@@ -3,6 +3,7 @@ import { buildIcp, evaluar, extractProfile, proponer } from "@/lib/recruiters/ai
 import { recJson, recruiterEmail, reserveAi } from "@/lib/recruiters/http";
 import { MIN_CALIFICADOS, applyEdit, applyPropuestas, calificados, candidatoFromProfile, currentIcp, pendientes, publicBusqueda, publicCandidato, versiones } from "@/lib/recruiters/logic";
 import { MAX_CANDIDATOS, countCandidatos, deleteBusqueda, listCandidatos, readCandidato, readOwnBusqueda, refundAi, removeCandidato, saveBusqueda, saveCandidato } from "@/lib/recruiters/store";
+import { allTalentos, quickMatches, readTalentos } from "@/lib/recruiters/talento";
 import { AccionSchema, type Busqueda, type Candidato } from "@/lib/recruiters/types";
 
 export const maxDuration = 120;
@@ -11,8 +12,20 @@ type Ctx = { params: Promise<{ id: string }> };
 
 const notFound = () => new UserFacingError("No encontramos esa búsqueda.", "NOT_FOUND", 404);
 
-async function snapshot(b: Busqueda) {
-  const cs = await listCandidatos(b.id);
+/** Candidatos de Maru que apagaron «Abierto a propuestas»: dejan de verse en las búsquedas. */
+async function visibles(busquedaId: string): Promise<Candidato[]> {
+  const cs = await listCandidatos(busquedaId);
+  const ids = cs.flatMap((c) => (c.fuente === "maru" && c.talentoId ? [c.talentoId] : []));
+  if (!ids.length) return cs;
+  const activos = new Set((await readTalentos(ids)).map((t) => t.id));
+  const fuera = cs.filter((c) => c.fuente === "maru" && !(c.talentoId && activos.has(c.talentoId)));
+  // Se borran de la búsqueda: la persona retiró su consentimiento.
+  for (const c of fuera) await removeCandidato(busquedaId, c.id);
+  return cs.filter((c) => !fuera.includes(c));
+}
+
+async function snapshot(b: Busqueda, extra: Record<string, unknown> = {}) {
+  const cs = await visibles(b.id);
   const icp = currentIcp(b);
   return {
     busqueda: publicBusqueda(b),
@@ -21,6 +34,7 @@ async function snapshot(b: Busqueda) {
     pendientes: b.borrador ? 0 : pendientes(icp, cs).length,
     calificados: calificados(cs).length,
     minCalificados: MIN_CALIFICADOS,
+    ...extra,
   };
 }
 
@@ -113,7 +127,7 @@ export async function POST(req: Request, { params }: Ctx) {
       }
       case "evaluar": {
         if (b.borrador) throw new UserFacingError("Aprobá el perfil ideal antes de evaluar.", "ICP_DRAFT", 409);
-        const todos = pendientes(currentIcp(b), await listCandidatos(b.id));
+        const todos = pendientes(currentIcp(b), await visibles(b.id));
         for (const c of todos.slice(0, a.max ?? 3)) await evaluarUno(email, b, c);
         break;
       }
@@ -151,6 +165,17 @@ export async function POST(req: Request, { params }: Ctx) {
       case "borrar_candidato": {
         await removeCandidato(b.id, a.candidatoId);
         break;
+      }
+      case "buscar_maru": {
+        if (b.borrador) throw new UserFacingError("Aprobá el perfil ideal antes de buscar.", "ICP_DRAFT", 409);
+        const cs = await listCandidatos(b.id);
+        const ya = new Set(cs.flatMap((c) => (c.talentoId ? [c.talentoId] : [])));
+        const lugar = Math.max(0, MAX_CANDIDATOS - cs.length);
+        const matches = quickMatches(currentIcp(b), await allTalentos(), ya, Math.min(20, lugar));
+        for (const m of matches) await saveCandidato(candidatoFromProfile(b.id, m.talento.profile, "maru", Date.now(), m.talento.id));
+        const fresh = await readOwnBusqueda(b.id, email);
+        if (!fresh) throw notFound();
+        return recJson(await snapshot(fresh, { encontrados: matches.length }));
       }
     }
     const fresh = await readOwnBusqueda(b.id, email);
