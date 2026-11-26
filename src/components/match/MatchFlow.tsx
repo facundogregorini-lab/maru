@@ -20,6 +20,7 @@ import PrefsForm, { EMPTY_PREFS } from "./PrefsForm";
 import ProfileConfirm from "./ProfileConfirm";
 import QuickStart, { trackQuickStart } from "./QuickStart";
 import Results from "./Results";
+import TalentPanel from "./TalentPanel";
 
 /** `rapido`: perfil y preferencias en un paso, con lo opcional plegado. `confirmar` y `preferencias` quedan para editar desde los resultados. */
 type Stage = "cv" | "leyendo" | "rapido" | "confirmar" | "preferencias" | "resultados";
@@ -177,6 +178,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
       )}
       {/* Al editar lo que busca (ya con resultados), también puede ajustar sus alertas. */}
       {stage === "preferencias" && state.profile && state.prefs && <AlertsPanel profile={state.profile} prefs={state.prefs} interactions={state.interactions} />}
+      {stage === "preferencias" && state.profile && state.prefs && <TalentPanel prefs={state.prefs} />}
 
       {stage === "resultados" && state.profile && state.prefs && (
         <Results
@@ -190,6 +192,7 @@ export default function MatchFlow({ stats }: { stats?: Stat[] }) {
           onEditPrefs={() => setStage("preferencias")}
         />
       )}
+      {stage === "resultados" && state.profile && state.prefs && <TalentPanel prefs={state.prefs} />}
 
       {stage !== "leyendo" && (state.profile || state.prefs) && (
         <p className="mt-12 text-center text-xs text-muted">

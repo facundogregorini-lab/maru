@@ -140,7 +140,7 @@ export default function RecruitersHome() {
           <legend className="mb-3 text-lg font-semibold">¿Dónde buscamos?</legend>
           <div className="grid gap-3 sm:grid-cols-3">
             {fuente(propios, setPropios, "Tus postulantes", "Subí CVs en PDF o Word. Maru los lee y los evalúa contra el perfil ideal.")}
-            {fuente(maru, setMaru, "Candidatos de Maru", "Personas que activaron «Abierto a propuestas». Ves su experiencia; el contacto llega cuando aceptan.", true)}
+            {fuente(maru, setMaru, "Candidatos de Maru", "Personas que activaron «Abierto a propuestas». Ves su experiencia; el contacto llega cuando aceptan.")}
             {fuente(false, () => {}, "Base externa", "Perfiles licenciados a proveedores de datos. Lo sumamos cuando haya volumen.", true)}
           </div>
         </fieldset>

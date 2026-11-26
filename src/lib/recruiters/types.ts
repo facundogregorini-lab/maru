@@ -142,6 +142,7 @@ export const AccionSchema = z.discriminatedUnion("accion", [
   z.object({ accion: z.literal("proponer") }),
   z.object({ accion: z.literal("aplicar"), aceptadas: z.array(z.string().max(40)).max(8) }),
   z.object({ accion: z.literal("borrar_candidato"), candidatoId: z.string().max(40) }),
+  z.object({ accion: z.literal("buscar_maru") }),
 ]);
 export type Accion = z.infer<typeof AccionSchema>;
 

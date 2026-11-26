@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacidadPage() {
   return (
-    <LegalPage title="Privacidad" updated="22 de octubre de 2026">
+    <LegalPage title="Privacidad" updated="26 de noviembre de 2026">
       <p>
         Maru está pensada para guardar lo mínimo. Tu perfil, tus búsquedas y tu seguimiento viven en tu navegador y, si ingresás con tu email, también en tu cuenta. Esta página explica qué datos usamos, para qué y dónde quedan.
       </p>
@@ -72,6 +72,14 @@ export default function PrivacidadPage() {
           seguimiento de tu cuenta (empresa, puesto, dirección del aviso y fecha); sin sesión, se abre tu seguimiento en Maru.
         </li>
       </ul>
+
+      <h2>Abierto a propuestas y Maru Recruiters</h2>
+      <p>
+        Si activás «Abierto a propuestas», guardamos en tu cuenta tu experiencia, estudios, aptitudes y lo que buscás para que empresas que usan Maru Recruiters puedan encontrarte. Ven tu nombre de pila con la inicial del apellido, sin tu email, tu teléfono ni tu LinkedIn. Una IA lee tu perfil contra los requisitos de cada búsqueda y no usa edad, género, nacionalidad ni foto. Si una empresa te escribe, el mensaje te llega por mail desde Maru y vos decidís si responder: al responder, la empresa ve tu email. Si apagás la opción, borramos tu registro y tu perfil deja de aparecer en las búsquedas de las empresas.
+      </p>
+      <p>
+        Las empresas que usan Maru Recruiters cargan CVs de sus propios postulantes. Esos datos los trata cada empresa como responsable; Maru los guarda en su cuenta para leerlos y evaluarlos, y los borra cuando la empresa quita al candidato o la búsqueda.
+      </p>
 
       <h2>Dictado por voz</h2>
       <p>

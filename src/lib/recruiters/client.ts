@@ -13,6 +13,8 @@ export type Snapshot = {
   pendientes: number;
   calificados: number;
   minCalificados: number;
+  /** Sólo en la respuesta de «buscar_maru». */
+  encontrados?: number;
 };
 export type BusquedaItem = { id: string; titulo: string; version: number; borrador: boolean; actualizadaEn: number };
 
