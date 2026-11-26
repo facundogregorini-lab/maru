@@ -35,5 +35,6 @@ export const config = {
     "/api/export/:path*",
     "/api/tracking/:path*",
     "/api/match/ranking",
+    "/api/recruiters/:path*",
   ],
 };

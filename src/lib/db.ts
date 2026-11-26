@@ -104,6 +104,22 @@ function runMemory([op, key, ...args]: Cmd): unknown {
     }
     case "SMEMBERS":
       return [...(sets.get(k) ?? [])];
+    case "INCRBY": {
+      const next = Number(memory.get(k) ?? 0) + Number(args[0]);
+      memory.set(k, String(next));
+      return next;
+    }
+    case "EXPIRE":
+      return memory.has(k) ? 1 : 0;
+    case "DEL": {
+      let n = 0;
+      for (const x of [k, ...args.map(String)]) {
+        if (memory.delete(x)) n++;
+        if (lists.delete(x)) n++;
+        if (sets.delete(x)) n++;
+      }
+      return n;
+    }
     default:
       throw new DbError(`Comando no soportado en memoria: ${op}`);
   }
@@ -170,6 +186,16 @@ export async function setRemove(key: string, member: string): Promise<void> {
 export async function setMembers(key: string): Promise<string[]> {
   const [raw] = await pipeline([["SMEMBERS", key]]);
   return (raw as string[]) ?? [];
+}
+
+/** Suma `by` a un contador y le pone vencimiento (cupos diarios). Devuelve el valor nuevo. */
+export async function incrementWithTtl(key: string, by: number, ttlSeconds: number): Promise<number> {
+  const [value] = await pipeline([["INCRBY", key, by], ["EXPIRE", key, ttlSeconds]]);
+  return Number(value);
+}
+
+export async function deleteKeys(keys: string[]): Promise<void> {
+  if (keys.length) await pipeline([["DEL", ...keys]]);
 }
 
 /** Para tests. */
