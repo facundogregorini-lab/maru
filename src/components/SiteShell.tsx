@@ -65,6 +65,7 @@ export default function SiteShell({ tagline, children }: { tagline?: string; chi
                 { href: "/#como-funciona", label: "Cómo funciona" },
                 { href: "/#faq", label: "Preguntas frecuentes" },
                 { href: "/precios", label: "Planes y precios" },
+                { href: "/recruiters", label: "Maru Recruiters (empresas)" },
                 { href: "/terminos", label: "Términos y condiciones" },
                 { href: "/privacidad", label: "Privacidad" },
                 { href: "/baja", label: "Botón de baja" },

@@ -5,7 +5,7 @@
 Pedido del dueño: sumar una sección para reclutadores al estilo Metaview (sourcing, perfil ideal, calificación y outreach por email y WhatsApp), en producción. Diseño y reglas en `docs/RECRUITERS.md`.
 
 1. **Hecho (PR 1): backend de búsquedas.** `src/lib/recruiters/*` y `/api/recruiters/busquedas[/id]`: perfil ideal con IA desde el brief (versionado), carga de CVs, evaluación por criterio, Sí/Tal vez/No con motivo, ajustes propuestos con 5 calificaciones. Cupo de 200 lecturas con IA por día y cuenta. Tests: `tests/recruiters.test.ts`.
-2. **Pendiente (PR 2): pantallas** `/recruiters` (brief y búsquedas) y `/recruiters/[id]` (perfil ideal, resultados, afinar), según el canvas.
+2. **Hecho (PR 2): pantallas.** `/recruiters`: brief (texto o dictado), aviso y CV de referencia opcionales, fuentes y lista de búsquedas. `/recruiters/[id]`: editor del perfil ideal con pesos y preguntas de Maru; resultados con subida de CVs (hasta 50 por vez) o CV pegado, evaluación de a 3 con avance, tarjetas con criterios ✓/✗/?, Sí/Tal vez/No (atajos S, T, N) con motivos, detalle con evidencia y contacto, exportar CSV, versiones; panel «Afinar» con antes y después. Link en el footer («Maru Recruiters (empresas)»); `/recruiters/` fuera de buscadores (robots y `noindex`).
 3. **Pendiente (PR 3): candidatos de Maru** que activen «Abierto a propuestas», con búsqueda rápida gratis y lectura con IA.
 4. **Pendiente (PR 4): outreach** con secuencias por email y WhatsApp.
 
