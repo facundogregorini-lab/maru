@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Maru Recruiters (plan en curso, desde 26/11/2026)
+
+Pedido del dueño: sumar una sección para reclutadores al estilo Metaview (sourcing, perfil ideal, calificación y outreach por email y WhatsApp), en producción. Diseño y reglas en `docs/RECRUITERS.md`.
+
+1. **Hecho (PR 1): backend de búsquedas.** `src/lib/recruiters/*` y `/api/recruiters/busquedas[/id]`: perfil ideal con IA desde el brief (versionado), carga de CVs, evaluación por criterio, Sí/Tal vez/No con motivo, ajustes propuestos con 5 calificaciones. Cupo de 200 lecturas con IA por día y cuenta. Tests: `tests/recruiters.test.ts`.
+2. **Pendiente (PR 2): pantallas** `/recruiters` (brief y búsquedas) y `/recruiters/[id]` (perfil ideal, resultados, afinar), según el canvas.
+3. **Pendiente (PR 3): candidatos de Maru** que activen «Abierto a propuestas», con búsqueda rápida gratis y lectura con IA.
+4. **Pendiente (PR 4): outreach** con secuencias por email y WhatsApp.
+
 ## Extensión: contactos de la vacante en LinkedIn (plan en curso, desde 25/11/2026)
 
 Pedido del dueño: cuando la persona encuentra una búsqueda, que la extensión le encuentre en LinkedIn a quien lidera el equipo (hiring manager), a quien recluta y a People/HR, y le deje lista la invitación con una nota. Nivel elegido: **semiautomático**. La extensión abre el perfil, toca «Conectar», agrega la nota y resalta «Enviar»; el envío lo hace la persona. Nunca se envía nada solo (las condiciones de LinkedIn prohíben automatizar y la cuenta de quien busca trabajo es lo que está en juego).
