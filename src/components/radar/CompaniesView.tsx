@@ -7,6 +7,7 @@ import { requestLogin } from "@/lib/loginRequest";
 import { DEFAULT_FILTERS, MONITOR_LABELS, applyFilters, filterOptions, type CompanyFilters, type MonitorState } from "@/lib/radar/filters";
 import type { ImportRun, TargetView } from "@/lib/radar/types";
 import { PrioritySelect, SourceTag, ago, lastSuccess, openJobsLabel } from "./bits";
+import { trackRadar } from "@/lib/radar/analytics";
 import { radarApi } from "./api";
 import AddCompanyDrawer from "./AddCompanyDrawer";
 import CompanyDrawer from "./CompanyDrawer";
@@ -56,6 +57,7 @@ export default function CompaniesView() {
     setBusy(companyId);
     try {
       await radarApi("/api/radar/empresas", { method: "PATCH", body: { companyId, ...body } });
+      if ("priority" in body) trackRadar("radar_priority_changed", { company_id: companyId, priority: (body.priority as string | null) ?? "sin" });
       await load();
       if (ok) toast.show(ok);
     } catch (e) {

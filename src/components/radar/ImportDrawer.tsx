@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { COMPANY_FIELD_LABELS, JOB_FIELD_LABELS, type CompanyField, type JobField } from "@/lib/radar/fields";
+import { trackRadar } from "@/lib/radar/analytics";
 import { radarApi } from "./api";
 import { Drawer, Notice, Tag, btnDark, btnGhost, field } from "./ui";
 
@@ -66,6 +67,7 @@ export default function ImportDrawer({ open, onClose, onImported }: { open: bool
       setDirty(false);
       if (step === "confirm") {
         const t = r.totals;
+        trackRadar("radar_import_completed", { count: t.unique, status: `${t.targetsCreated}_nuevas` });
         await onImported(`Importación lista: ${t.targetsCreated} empresas nuevas en tu lista, ${t.targetsKept} ya estaban.`);
         onClose();
       }
@@ -144,7 +146,7 @@ export default function ImportDrawer({ open, onClose, onImported }: { open: bool
                           setIndustries((x) => ({ ...x, [tab.name]: e.target.value }));
                           setDirty(true);
                         }}
-                        className={`${field} w-40 py-1.5`}
+                        className={`${field.replace("w-full ", "")} w-40 shrink-0 py-1.5`}
                         maxLength={40}
                       />
                     </label>

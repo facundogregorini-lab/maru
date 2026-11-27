@@ -1,5 +1,5 @@
-import { compareAndSetJson, deleteKeys, getManyJson, pipeline, pushRecent, readRecent, setIfAbsent, setJson, setMembers } from "../../db";
-import type { Company, CompanySource, ImportRun, MatchesDoc, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
+import { compareAndSetJson, deleteKeys, getManyJson, pipeline, pushRecent, readRecent, setAdd, setIfAbsent, setJson, setMembers, setRemove } from "../../db";
+import type { Company, CompanySource, DiscoveryDoc, ImportRun, MatchesDoc, MonitoringRun, NotificationsDoc, OutboxDoc, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 import type { RadarRepos } from "./types";
 
 /** Implementación sobre Upstash. Esquema en docs/radar/ADR-001-persistencia.md. */
@@ -20,6 +20,12 @@ export const keys = {
   lease: (key: string) => `${NS}:lease:${key}`,
   followed: () => `${NS}:followed`,
   matches: (uid: string, companyId: string) => `${NS}:u:${uid}:matches:${companyId}`,
+  followers: (companyId: string) => `${NS}:followers:${companyId}`,
+  users: () => `${NS}:users`,
+  notifications: (uid: string) => `${NS}:u:${uid}:notifications`,
+  outbox: (uid: string) => `${NS}:u:${uid}:outbox`,
+  discovery: (uid: string) => `${NS}:u:${uid}:discovery`,
+  contact: (uid: string) => `${NS}:u:${uid}:contact`,
 };
 
 const CHUNK = 200;
@@ -31,7 +37,30 @@ async function mget<T>(ks: string[]): Promise<(T | null)[]> {
 
 const emptyTargets = (): TargetsDoc => ({ items: {}, updatedAt: 0 });
 
+const one = async <T>(key: string): Promise<T | null> => (await getManyJson<T>([key]))[0];
+
 export const redisRepos: RadarRepos = {
+  followers: {
+    async add(companyId, uid) {
+      await pipeline([["SADD", keys.followers(companyId), uid], ["SADD", keys.users(), uid]]);
+    },
+    remove: (companyId, uid) => setRemove(keys.followers(companyId), uid),
+    of: (companyId) => setMembers(keys.followers(companyId)),
+    users: () => setMembers(keys.users()),
+  },
+  user: {
+    notifications: async (uid) => (await one<NotificationsDoc>(keys.notifications(uid))) ?? { items: [], updatedAt: 0 },
+    saveNotifications: (uid, doc) => setJson(keys.notifications(uid), doc),
+    outbox: async (uid) => (await one<OutboxDoc>(keys.outbox(uid))) ?? { items: {}, updatedAt: 0 },
+    saveOutbox: (uid, doc) => setJson(keys.outbox(uid), doc),
+    discovery: async (uid) => (await one<DiscoveryDoc>(keys.discovery(uid))) ?? { rejected: {}, accepted: {}, week: null, suggestions: [] },
+    saveDiscovery: (uid, doc) => setJson(keys.discovery(uid), doc),
+    contact: (uid) => one<string>(keys.contact(uid)),
+    async setContact(uid, email) {
+      if (email) await setJson(keys.contact(uid), email);
+      else await deleteKeys([keys.contact(uid)]);
+    },
+  },
   matches: {
     readMany: (uid, companyIds) => mget<MatchesDoc>(companyIds.map((c) => keys.matches(uid, c))),
     write: (uid, doc) => setJson(keys.matches(uid, doc.companyId), doc),

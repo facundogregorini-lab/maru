@@ -274,3 +274,39 @@ export type RadarMatch = {
 };
 
 export type MatchesDoc = { companyId: string; items: Record<string, RadarMatch>; updatedAt: number };
+
+/* ---------- Notificaciones (sesión 4) ---------- */
+
+export type NotificationKind = "alert" | "digest";
+export type RadarNotification = {
+  id: string;
+  kind: NotificationKind;
+  at: string;
+  title: string;
+  body: string;
+  jobIds: string[];
+  read: boolean;
+};
+export type NotificationsDoc = { items: RadarNotification[]; updatedAt: number };
+
+export type OutboxItem = {
+  /** Clave idempotente: `${uid}|${jobId}|alert` o `${uid}|digest|${semana}`. */
+  key: string;
+  kind: NotificationKind;
+  channel: "in_app" | "email";
+  status: "pending" | "sent" | "cancelled" | "failed";
+  attempts: number;
+  jobIds: string[];
+  createdAt: string;
+  sentAt: string | null;
+};
+export type OutboxDoc = { items: Record<string, OutboxItem>; updatedAt: number };
+
+export type DiscoveryDoc = {
+  /** Empresas rechazadas («No me interesa»): no se vuelven a sugerir. */
+  rejected: Record<string, string>;
+  accepted: Record<string, { priority: Priority; at: string }>;
+  /** Sugerencias de la semana (estables durante la semana ISO). */
+  week: string | null;
+  suggestions: string[];
+};

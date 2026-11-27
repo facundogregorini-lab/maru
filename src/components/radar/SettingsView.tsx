@@ -5,8 +5,87 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { requestLogin } from "@/lib/loginRequest";
 import { COUNTRY_OPTIONS } from "@/lib/radar/settings";
 import type { Frequency, MatchWeights, RadarEligibilityPrefs, RadarSettings } from "@/lib/radar/types";
+import { trackRadar } from "@/lib/radar/analytics";
+import type { MonitoringRun } from "@/lib/radar/types";
 import { radarApi } from "./api";
-import { EmptyState, Label, Notice, Skeleton, Tag, btnDark, btnGhost, card, field, useToast } from "./ui";
+import { SOURCE_STATUS_LABEL, ago, fmtDate } from "./bits";
+import { Drawer, EmptyState, Label, Notice, Skeleton, Tag, btnDark, btnGhost, card, field, useToast } from "./ui";
+
+type Status = { enabled: boolean; lastRun: MonitoringRun | null; sources: { expected: number; verified: number; manual: number; errors: number }; nextDueAt: string | null; history: MonitoringRun[] };
+const RUN_LABEL: Record<string, string> = { ...SOURCE_STATUS_LABEL, skipped: "Salteada (sin tiempo)", locked: "Otra revisión en curso" };
+const TRIGGER: Record<string, string> = { manual: "Revisión a pedido", worker: "Revisión programada", script: "Script" };
+
+/** Estado real del monitoreo, «Revisar ahora» (todas las empresas) e historial de corridas. */
+function MonitoringPanel({ enabled }: { enabled: boolean }) {
+  const [st, setSt] = useState<Status | null>(null);
+  const [error, setError] = useState("");
+  const [working, setWorking] = useState(false);
+  const [msg, setMsg] = useState<{ text: string; tone: "info" | "error" } | null>(null);
+  const [history, setHistory] = useState(false);
+  const load = () =>
+    radarApi<Status>("/api/radar/monitoreo")
+      .then((d) => { setSt(d); setError(""); })
+      .catch((e) => setError(e instanceof Error ? e.message : "No pudimos cargar el estado."));
+  useEffect(() => { void load(); }, []);
+
+  async function reviewAll() {
+    setWorking(true);
+    setMsg(null);
+    try {
+      const { run } = await radarApi<{ run: MonitoringRun }>("/api/radar/monitoreo/revisar", { method: "POST" });
+      const t = run.totals;
+      trackRadar("radar_scan_completed", { count: t.created, status: run.status, action: "todas" });
+      setMsg({ text: `Revisión lista: ${t.sources} fuentes, ${t.created} vacantes nuevas, ${t.closed} cerradas${t.errors ? `, ${t.errors} con error` : ""}.`, tone: t.errors ? "error" : "info" });
+      await load();
+    } catch (e) {
+      setMsg({ text: e instanceof Error ? e.message : "No se pudo revisar.", tone: "error" });
+    } finally {
+      setWorking(false);
+    }
+  }
+
+  return (
+    <section className={`${card} p-5`} aria-labelledby="ajustes-estado">
+      <h2 id="ajustes-estado" className="text-lg font-bold">Estado del monitoreo</h2>
+      {error && <div className="mt-2"><Notice tone="error">{error}</Notice></div>}
+      {!st && !error && <p className="mt-2 text-sm text-muted">Cargando…</p>}
+      {st && (
+        <>
+          <p className="mt-2">{enabled ? <Tag tone="ok">Radar activo</Tag> : <Tag tone="warn">Pausado: no se revisa solo ni se envían avisos</Tag>}</p>
+          <dl className="mt-3 space-y-2 text-sm">
+            <div className="flex justify-between gap-2"><dt className="text-muted">Última ejecución</dt><dd>{st.lastRun ? `${ago(st.lastRun.startedAt)} (${TRIGGER[st.lastRun.trigger] ?? st.lastRun.trigger})` : "Ninguna"}</dd></div>
+            <div className="flex justify-between gap-2"><dt className="text-muted">Fuentes al día</dt><dd>{st.sources.verified} de {st.sources.expected}{st.sources.manual ? ` · ${st.sources.manual} manual` : ""}</dd></div>
+            <div className="flex justify-between gap-2"><dt className="text-muted">Con error</dt><dd className={st.sources.errors ? "font-semibold text-danger-dark" : ""}>{st.sources.errors}</dd></div>
+            <div className="flex justify-between gap-2"><dt className="text-muted">Próximo ciclo</dt><dd>{!enabled ? "Pausado" : st.nextDueAt ? fmtDate(st.nextDueAt) : st.sources.expected ? "En la próxima corrida diaria" : "Sin fuentes para revisar"}</dd></div>
+          </dl>
+        </>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" className={btnDark} disabled={working || !st?.sources.expected} onClick={() => void reviewAll()}>{working ? "Revisando…" : "Revisar ahora"}</button>
+        <button type="button" className={btnGhost} disabled={!st?.history.length} onClick={() => setHistory(true)}>Ver historial</button>
+      </div>
+      <p className="mt-1 text-xs text-muted">«Revisar ahora» lee todas tus empresas; se puede una vez cada 30 minutos.</p>
+      {msg && <div className="mt-2" role="status"><Notice tone={msg.tone === "error" ? "error" : "info"}>{msg.text}</Notice></div>}
+      <Drawer title="Historial de revisiones" open={history} onClose={() => setHistory(false)}>
+        <ul className="space-y-3">
+          {st?.history.map((r) => (
+            <li key={r.id} className="rounded-xl p-3 text-sm ring-1 ring-black/[0.08]">
+              <p className="font-semibold">{fmtDate(r.startedAt)} {new Date(r.startedAt).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })} · {TRIGGER[r.trigger] ?? r.trigger}</p>
+              <ul className="mt-1 space-y-0.5 text-xs">
+                {r.items.map((i) => (
+                  <li key={i.sourceId}>
+                    {RUN_LABEL[i.status] ?? i.status} · {i.received} leídas · {i.created} nuevas · {i.closed} cerradas
+                    {i.error && <span className="text-danger-dark"> · {i.error}</span>}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </Drawer>
+    </section>
+  );
+}
 
 const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const FREQ_LABEL: Record<Frequency, string> = { diaria: "Diaria", semanal: "Semanal", mensual: "Mensual", pausada: "Pausada" };
@@ -99,6 +178,7 @@ export default function SettingsView() {
       setS(settings);
       setSaved(JSON.stringify(settings));
       toast.show("Preferencias guardadas");
+      trackRadar("radar_settings_saved", { status: settings.enabled ? "activo" : "pausado", action: settings.channels.email ? "email" : "in_app" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "No se pudieron guardar.");
     } finally {
@@ -108,7 +188,7 @@ export default function SettingsView() {
 
   return (
     <div className="space-y-4">
-      <Notice tone="warn">Maru lee las fuentes cuando tocás «Revisar ahora» en la ficha de cada empresa. La revisión automática con estas frecuencias, las alertas y el resumen todavía no están activos.</Notice>
+      <Notice>Con Radar activo, Maru revisa tus empresas una vez por día según estas frecuencias, evalúa lo nuevo y te avisa en Oportunidades. El email es opcional y nunca se postula por vos.</Notice>
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-4">
           <section className={`${card} p-5`} aria-labelledby="ajustes-frecuencia">
@@ -120,7 +200,7 @@ export default function SettingsView() {
                   <span className="font-semibold">Prioridad {p.slice(1)}</span>
                   <span className="block text-xs text-muted">{p === "P1" ? "Empresas soñadas · objetivo 20" : p === "P2" ? "Empresas objetivo · objetivo 100" : "Para explorar"}</span>
                 </label>
-                <select id={`freq-${p}`} value={s.frequencies[p]} onChange={(e) => up({ frequencies: { ...s.frequencies, [p]: e.target.value as Frequency } })} className={`${field} w-36`}>
+                <select id={`freq-${p}`} value={s.frequencies[p]} onChange={(e) => up({ frequencies: { ...s.frequencies, [p]: e.target.value as Frequency } })} className={`${field.replace("w-full ", "")} w-36 shrink-0`}>
                   {(Object.keys(FREQ_LABEL) as Frequency[]).map((f) => <option key={f} value={f}>{FREQ_LABEL[f]}</option>)}
                 </select>
               </div>
@@ -192,7 +272,7 @@ export default function SettingsView() {
             <Toggle id="radar-alertas" checked={s.instantAlerts.enabled} onChange={(enabled) => up({ instantAlerts: { ...s.instantAlerts, enabled } })} label="Alertas inmediatas de P1" hint="Sólo con match alto y sin requisitos que te dejen afuera." />
             <div className="flex items-center justify-between gap-4 border-t border-line py-3">
               <label htmlFor="radar-umbral" className="text-sm font-semibold">Match mínimo para alertar</label>
-              <select id="radar-umbral" value={s.instantAlerts.threshold} onChange={(e) => up({ instantAlerts: { ...s.instantAlerts, threshold: Number(e.target.value) } })} className={`${field} w-28`}>
+              <select id="radar-umbral" value={s.instantAlerts.threshold} onChange={(e) => up({ instantAlerts: { ...s.instantAlerts, threshold: Number(e.target.value) } })} className={`${field.replace("w-full ", "")} w-28 shrink-0`}>
                 {[80, 85, 90, 95].map((n) => <option key={n} value={n}>{n}</option>)}
               </select>
             </div>
@@ -227,27 +307,15 @@ export default function SettingsView() {
               <p className="mt-1 text-sm">En Maru <Tag tone="ok">Siempre</Tag></p>
               <label className="mt-2 flex items-center gap-2 text-sm">
                 <input type="checkbox" checked={s.channels.email} onChange={(e) => up({ channels: { ...s.channels, email: e.target.checked } })} className="h-4 w-4 accent-ink" />
-                También por email (cuando esté disponible)
+                Quiero recibir las alertas y el resumen también por email
               </label>
+              <p className="mt-1 text-xs text-muted">Se mandan a {email}. Cada email trae un link para darte de baja. Nada de WhatsApp.</p>
             </div>
           </section>
         </div>
 
         <div className="space-y-4">
-          <section className={`${card} p-5`} aria-labelledby="ajustes-estado">
-            <h2 id="ajustes-estado" className="text-lg font-bold">Estado del monitoreo</h2>
-            <p className="mt-2"><Tag tone="warn">Todavía no activo</Tag></p>
-            <dl className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between gap-2"><dt className="text-muted">Última ejecución</dt><dd>Ninguna</dd></div>
-              <div className="flex justify-between gap-2"><dt className="text-muted">Páginas verificadas</dt><dd>0 de 0</dd></div>
-              <div className="flex justify-between gap-2"><dt className="text-muted">Errores</dt><dd>—</dd></div>
-              <div className="flex justify-between gap-2"><dt className="text-muted">Próximo ciclo</dt><dd>Sin programar</dd></div>
-            </dl>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" className={btnGhost} disabled>Revisar ahora</button>
-              <button type="button" className={btnGhost} disabled>Ver historial</button>
-            </div>
-          </section>
+          <MonitoringPanel enabled={s.enabled} />
 
           <section className={`${card} p-5`} aria-labelledby="ajustes-pesos">
             <h2 id="ajustes-pesos" className="text-lg font-bold">Pesos del match</h2>
@@ -264,7 +332,7 @@ export default function SettingsView() {
                     step={5}
                     value={s.weights[k]}
                     onChange={(e) => up({ weights: { ...s.weights, [k]: Math.max(0, Math.min(100, Math.round(Number(e.target.value) || 0))) } })}
-                    className={`${field} w-20 text-right`}
+                    className={`${field.replace("w-full ", "")} w-20 shrink-0 text-right`}
                   />
                 </div>
               ))}

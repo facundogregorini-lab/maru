@@ -2,6 +2,40 @@
 
 Traspaso entre sesiones. Lo actualiza cada sesión al terminar.
 
+## Sesión 4 (27/11/2026): automatización, alertas, descubrimiento, analytics y QA
+
+Pasos de rollout, rollback, variables y costos en **`ROLLOUT.md`**. **El flag sigue apagado en Production.**
+
+### Qué funciona
+
+- **Scheduler:** cron de Vercel `/api/cron/radar` (diario, 10:23 UTC; `CRON_SECRET`). Tres fases separadas e idempotentes: **crawl** (sólo fuentes vencidas por `nextDueAt`, con la frecuencia mínima entre las personas activas que siguen la empresa), **match** (lo nuevo o cambiado de cada persona con Radar activo, perfil leído de su cuenta) y **entrega**. Con `RADAR_ENABLED` apagado responde `{ skipped: "flag" }` sin tocar nada. Lock de 15 min contra corridas simultáneas. `?phase=` corre una sola.
+- **Notificaciones** (`src/lib/radar/notify.ts`): outbox con claves idempotentes `(persona, vacante, alerta)` y `(persona, resumen, semana ISO)`; avisos in-app (panel en Oportunidades y badge en el subnav); alerta inmediata para P1 con match ≥ umbral, elegible, que encaja y al día; resumen semanal (día, hora y zona IANA; si el cron llega tarde, hasta 48 h después) con top 5, nuevas, cerradas, fuentes con error y cobertura. Lo que ya llegó como alerta aparece «(ya te avisamos)» y no cuenta como nuevo. Email por Resend sólo con consentimiento (el email se guarda aparte sólo si lo acepta y se borra al desactivarlo), con baja en un clic (`/api/radar/baja`, token firmado; el GET no cambia nada). Reintentos de email sin duplicar el aviso in-app (hasta 3). Pausar cancela lo pendiente. Nada de WhatsApp.
+- **Automatización:** estado real (última ejecución, fuentes al día sobre esperadas, con error, próximo ciclo), «Revisar ahora» para todas las empresas (cada 30 min) e historial de corridas. Consentimiento explícito para email.
+- **Descubrimiento:** hasta 10 empresas por semana (fijas durante la semana ISO) del catálogo que la persona no sigue ni rechazó, por afinidad de sector (pesada por prioridad, menos lo rechazado) y vacantes de su área en fuentes ya leídas. Motivo concreto; señales sólo con fuente y fecha, si no «pendiente de verificación». `+P1`, `+P2` y «No me interesa», idempotentes y guardados.
+- **Analytics:** había capa de tracking (PostHog en el navegador). `src/lib/radar/analytics.ts` manda los eventos de §6 con propiedades en lista blanca (ids internos, sector, prioridad, proveedor, cantidades, banda de score, `source=radar`). `radar_digest_delivered` y el detalle de las corridas del cron quedan sólo en el log del servidor (no hay PostHog del lado del servidor).
+- **Arreglo de identidad:** agregar a mano una empresa con un link de ATS (sin dominio) ahora usa la del catálogo si hay una sola con el mismo nombre exacto (antes duplicaba Linear).
+
+### QA
+
+- Navegador (local, flag prendido): las cuatro pantallas en 1360 px y 380 px sin scroll horizontal, sin errores de consola; foco visible con teclado en el subnav; estados vacío, cargando, error y desactualizado. Cron disparado a mano dos veces: la segunda no leyó fuentes ni evaluó de nuevo ni duplicó avisos.
+- Capturas finales: `docs/radar/capturas/s4-*.png`.
+
+### Configuración nueva
+
+Ver `ROLLOUT.md`. Nuevas: entrada en `vercel.json` (`/api/cron/radar`), `RADAR_FROM` opcional.
+
+### Riesgos y bloqueos abiertos
+
+- **Secret `ANTHROPIC_API_KEY` de GitHub inválido** (401): la evaluación real con IA y su costo quedan pendientes (`radar-eval`).
+- **Falta el export del Sheet** (`research-laboral.xlsx`) y las capturas del prototipo.
+- **Preview sin `AUTH_SECRET`**: no se puede ingresar en Preview.
+- **Plan de Vercel desconocido:** el cron quedó diario; con Pro conviene pasarlo a horario (`ROLLOUT.md`).
+- Los de las sesiones anteriores (volumen en Upstash, board deducido, detección de país por texto).
+
+### Para quien siga
+
+El kit de 4 sesiones está completo. Lo que queda es del dueño (ver «Rollout» en `ROLLOUT.md`) y mejoras posibles: lectores de Teamtailor y BambooHR (Match ya tiene conectores), cron horario si el plan lo permite, PostHog del lado del servidor para los eventos del cron.
+
 ## Sesión 3 (27/11/2026): match de rol, Oportunidades y Seguimiento
 
 Cierra el flujo **seguir empresa → vacante real → evaluación → guardar en Seguimiento**. Decisión de diseño en `ADR-002-match.md`: scorer propio `radar-match@1` que reutiliza las reglas de Match (`extract`, `fit.ts`, `salaryFromText`) y `askStructured`; `/match` no cambia.
