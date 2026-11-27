@@ -3,7 +3,8 @@ import { analyze, planImport, type ImportPlan, type MappingOverrides } from "./i
 import { radarRepos } from "./repo";
 import { defaultSettings } from "./settings";
 import type { Sheet } from "./tabular";
-import { PRIORITIES, type Company, type CompanySource, type ImportRun, type Priority, type RadarSettings, type TargetCompany, type TargetView } from "./types";
+import { PRIORITIES, type Company, type CompanySource, type ImportRun, type JobOpening, type MonitoringRun, type PilotJob, type Priority, type RadarSettings, type SourceProvider, type TargetCompany, type TargetView } from "./types";
+import { runMonitoring } from "./sources/worker";
 
 /** Operaciones de Radar. Reciben siempre el `userId` derivado de la sesión verificada. */
 
@@ -46,7 +47,7 @@ export async function listTargets(uid: string): Promise<{ items: TargetView[]; s
     archived: items.length - active.length,
     total: active.length,
     sourcesWithError: active.filter((v) => v.sources.some((s) => s.status === "error")).length,
-    sourcesPending: active.filter((v) => !v.sources.length || v.sources.every((s) => s.status === "pendiente")).length,
+    sourcesPending: active.filter((v) => !v.sources.length || v.sources.every((s) => s.status === "pending")).length,
     pilotJobs: pilot.length,
   };
   return { items: sortTargets(items), summary, lastImport: imports[0] ?? null };
@@ -121,13 +122,14 @@ export async function follow(uid: string, input: { companyId?: string; create?: 
       const key = careers.replace(/\/+$/, "").toLowerCase();
       if (!current.some((s) => s.careersUrl.replace(/\/+$/, "").toLowerCase() === key)) {
         const { provider, boardId } = detectProvider(careers);
-        source = { id: `src_${slugify(company.id)}_${current.length + 1}`, companyId: company.id, provider, careersUrl: careers, externalBoardId: boardId, status: "pendiente", declaredStatus: "", lastAttemptAt: null, lastSuccessAt: null, nextDueAt: null, failureCount: 0, createdAt: at };
+        source = { id: `src_${slugify(company.id)}_${current.length + 1}`, companyId: company.id, provider, careersUrl: careers, externalBoardId: boardId, status: "pending", declaredStatus: "", lastAttemptAt: null, lastSuccessAt: null, nextDueAt: null, failureCount: 0, createdAt: at };
         await repos.sources.saveMany({ [company.id]: [...current, source] });
       }
     }
   } else throw new RadarError("Falta la empresa.", "BAD_REQUEST");
 
   const c = company;
+  await repos.followed.add([c.id]);
   const target = await repos.targets.update(uid, (doc) => {
     const prev = doc.items[c.id];
     // Ya la seguía: se reactiva si estaba archivada; la prioridad sólo cambia si se pidió una.
@@ -231,6 +233,7 @@ export async function applyImport(uid: string, fileName: string, plan: ImportPla
   const changed = plan.companies.filter((p) => p.changed).map((p) => p.company);
   if (changed.length) await repos.companies.saveMany(changed);
   if (Object.keys(plan.sources).length) await repos.sources.saveMany(plan.sources);
+  await repos.followed.add(plan.companies.map((p) => p.company.id));
   // El seguimiento se vuelve a mezclar sobre lo último guardado: si la persona editó algo mientras tanto, se respeta.
   await repos.targets.update(uid, (doc) => {
     for (const [id, t] of Object.entries(plan.targets.items)) if (!doc.items[id]) doc.items[id] = t;
@@ -262,4 +265,100 @@ export async function applyImport(uid: string, fileName: string, plan: ImportPla
 
 export async function readSettings(uid: string): Promise<RadarSettings> {
   return (await radarRepos().settings.read(uid)) ?? defaultSettings();
+}
+
+/* ---------- Vacantes detectadas ---------- */
+
+const PROVIDER_RANK: Record<SourceProvider, number> = { greenhouse: 0, lever: 0, ashby: 0, jsonld: 1, careers: 2 };
+
+/**
+ * Duplicados entre fuentes de una misma empresa: misma URL canónica = misma vacante (gana la del ATS).
+ * Nunca se unen dos roles distintos sólo porque se llamen igual.
+ */
+export function dedupeAcrossSources(jobs: JobOpening[], providers: Record<string, SourceProvider>): JobOpening[] {
+  const best = new Map<string, JobOpening>();
+  for (const j of jobs) {
+    const k = `${j.companyId}|${j.canonicalUrl}`;
+    const cur = best.get(k);
+    if (!cur || PROVIDER_RANK[providers[j.sourceId] ?? "careers"] < PROVIDER_RANK[providers[cur.sourceId] ?? "careers"]) best.set(k, j);
+  }
+  return [...best.values()];
+}
+
+async function jobsForCompanies(companyIds: string[]) {
+  const repos = radarRepos();
+  const byCompany = await repos.sources.forCompanies(companyIds);
+  const sources = Object.values(byCompany).flat();
+  const docs = await repos.jobs.readIndexes(sources.map((s) => s.id));
+  const providers = Object.fromEntries(sources.map((s) => [s.id, s.provider]));
+  const all = docs.flatMap((d) => (d ? Object.values(d.jobs) : []));
+  return { jobs: dedupeAcrossSources(all, providers), sources, byCompany };
+}
+
+async function assertFollows(uid: string, companyId: string) {
+  const doc = await radarRepos().targets.read(uid);
+  if (!doc.items[companyId]) throw new RadarError("No seguís esa empresa.", "NOT_FOUND", 404);
+  return doc.items[companyId];
+}
+
+const byRecent = (a: JobOpening, b: JobOpening) => (b.publishedAt ?? b.firstSeenAt).localeCompare(a.publishedAt ?? a.firstSeenAt);
+
+/** Ficha: vacantes activas y cerradas de una empresa seguida, con el historial de corridas de sus fuentes. */
+export async function companyDetail(uid: string, companyId: string): Promise<{ open: JobOpening[]; closed: JobOpening[]; runs: MonitoringRun[] }> {
+  await assertFollows(uid, companyId);
+  const { jobs, sources } = await jobsForCompanies([companyId]);
+  const runs = (await Promise.all(sources.map((s) => radarRepos().runs.forSource(s.id)))).flat().sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, 10);
+  return { open: jobs.filter((j) => j.status === "open").sort(byRecent), closed: jobs.filter((j) => j.status === "closed").sort((a, b) => (b.closedAt ?? "").localeCompare(a.closedAt ?? "")).slice(0, 30), runs };
+}
+
+export type DetectedJob = JobOpening & { companyName: string; priority: Priority | null; industries: string[] };
+
+/** Oportunidades: vacantes abiertas detectadas en las empresas que sigue la persona (sin score todavía). */
+export async function detectedOpportunities(uid: string): Promise<{ jobs: DetectedJob[]; pilot: PilotJob[]; companies: { total: number; checked: number; lastSuccessAt: string | null } }> {
+  const repos = radarRepos();
+  const doc = await repos.targets.read(uid);
+  const active = Object.values(doc.items).filter((t) => t.status === "activa");
+  const ids = active.map((t) => t.companyId);
+  const [{ jobs, byCompany }, companies, pilot] = await Promise.all([jobsForCompanies(ids), repos.companies.getMany(ids), repos.pilot.list(uid)]);
+  const names = new Map(companies.filter(Boolean).map((c) => [c!.id, c!]));
+  const prio = new Map(active.map((t) => [t.companyId, t.priority]));
+  const checked = ids.filter((id) => (byCompany[id] ?? []).some((s) => s.lastSuccessAt)).length;
+  const last = Object.values(byCompany).flat().map((s) => s.lastSuccessAt).filter(Boolean).sort().pop() ?? null;
+  return {
+    jobs: jobs
+      .filter((j) => j.status === "open")
+      .map((j) => ({ ...j, companyName: names.get(j.companyId)?.name ?? "", priority: prio.get(j.companyId) ?? null, industries: names.get(j.companyId)?.industries ?? [] }))
+      .sort((a, b) => priorityRank(a.priority) - priorityRank(b.priority) || byRecent(a, b)),
+    pilot,
+    companies: { total: ids.length, checked, lastSuccessAt: last },
+  };
+}
+
+export const REVIEW_COOLDOWN_MS = 10 * 60_000;
+
+/** "Revisar ahora": lee ya las fuentes de una empresa seguida. Cooldown global por empresa. */
+export async function reviewNow(uid: string, companyId: string, opts: { reresolve?: boolean } = {}): Promise<MonitoringRun> {
+  await assertFollows(uid, companyId);
+  const sources = (await radarRepos().sources.forCompanies([companyId]))[companyId] ?? [];
+  if (!sources.length) throw new RadarError("Esta empresa no tiene página de Careers. Agregala desde la ficha.", "NO_SOURCE", 409);
+  if (!(await radarRepos().leases.acquire(`cooldown:${companyId}`, uid, REVIEW_COOLDOWN_MS))) {
+    throw new RadarError("Se revisó hace menos de 10 minutos. Probá un poco más tarde.", "COOLDOWN", 429);
+  }
+  return runMonitoring({ companyIds: [companyId], trigger: "manual", budgetMs: 25_000, reresolve: opts.reresolve });
+}
+
+/** Agrega una página de Careers a una empresa seguida (la fuente queda pendiente). */
+export async function addSource(uid: string, companyId: string, careersUrl: string): Promise<CompanySource> {
+  await assertFollows(uid, companyId);
+  const careers = cleanUrl(careersUrl);
+  if (!careers || !careers.startsWith("https://")) throw new RadarError("El link tiene que empezar con https://", "BAD_REQUEST");
+  const repos = radarRepos();
+  const current = (await repos.sources.forCompanies([companyId]))[companyId] ?? [];
+  const key = careers.replace(/\/+$/, "").toLowerCase();
+  const dup = current.find((s) => s.careersUrl.replace(/\/+$/, "").toLowerCase() === key);
+  if (dup) return dup;
+  const { provider, boardId } = detectProvider(careers);
+  const source: CompanySource = { id: `src_${slugify(companyId)}_${current.length + 1}_${Date.now().toString(36)}`, companyId, provider, careersUrl: careers, externalBoardId: boardId, status: "pending", declaredStatus: "", lastAttemptAt: null, lastSuccessAt: null, nextDueAt: null, failureCount: 0, createdAt: nowIso() };
+  await repos.sources.saveMany({ [companyId]: [...current, source] });
+  return source;
 }

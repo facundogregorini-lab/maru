@@ -1,5 +1,5 @@
 import { companyIdFrom, json, radarRoute, readJson } from "@/lib/radar/http";
-import { RadarError, follow, listTargets, unfollow, updateTarget, type CreateCompanyInput, type TargetPatch } from "@/lib/radar/service";
+import { RadarError, follow, listTargets, reviewNow, unfollow, updateTarget, type CreateCompanyInput, type TargetPatch } from "@/lib/radar/service";
 import type { Priority } from "@/lib/radar/types";
 
 /**
@@ -8,6 +8,7 @@ import type { Priority } from "@/lib/radar/types";
  */
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 export const GET = radarRoute(async ({ uid }) => json(await listTargets(uid)));
@@ -26,7 +27,17 @@ export const POST = radarRoute(async ({ req, uid }) => {
     careersUrl: typeof c.careersUrl === "string" ? c.careersUrl : undefined,
     industry: typeof c.industry === "string" ? c.industry : undefined,
   };
-  return json(await follow(uid, { create, priority }), 201);
+  const view = await follow(uid, { create, priority });
+  // verify: resolver y leer la fuente apenas se agrega (lo pide la pantalla). Si falla, la empresa queda igual.
+  if (body.verify === true && view.sources.length) {
+    try {
+      await reviewNow(uid, view.company.id);
+      return json((await listTargets(uid)).items.find((v) => v.company.id === view.company.id) ?? view, 201);
+    } catch {
+      // cooldown o fuente caída: queda pendiente y se puede reintentar desde la ficha
+    }
+  }
+  return json(view, 201);
 });
 
 export const PATCH = radarRoute(async ({ req, uid }) => {

@@ -114,7 +114,7 @@ describe("importación", () => {
     expect(plan.pilotJobs).toHaveLength(6);
     expect(plan.pilotJobs.find((j) => j.company === "Humand")).toMatchObject({ companyId: "d:humand.co", editorialScore: 94, date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) });
     expect(plan.pilotJobs.find((j) => j.company === "Stripe")?.companyId).toBeNull();
-    expect(plan.sources["s:supabase"][0]).toMatchObject({ provider: "ashby", externalBoardId: "supabase", status: "pendiente" });
+    expect(plan.sources["s:supabase"][0]).toMatchObject({ provider: "ashby", externalBoardId: "supabase", status: "pending" });
   });
 
   it("vista previa no escribe; confirmar guarda; la segunda importación no duplica ni pisa preferencias", async () => {
@@ -168,7 +168,7 @@ describe("Mis empresas", () => {
     expect(created.status).toBe(201);
     const a = await created.json();
     expect(a.company).toMatchObject({ id: "d:mercadolibre.com", identity: "dominio" });
-    expect(a.sources[0]).toMatchObject({ status: "pendiente", provider: "careers" });
+    expect(a.sources[0]).toMatchObject({ status: "pending", provider: "careers" });
 
     await POST(req("POST", ANA, { create: { name: "Ualá", industry: "Fintech" }, priority: "P2" }));
     await POST(req("POST", ANA, { create: { name: "Satellogic", industry: "Space" }, priority: "P1" }));

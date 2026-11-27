@@ -98,7 +98,7 @@ export default function AddCompanyDrawer({ open, onClose, onAdded, industries }:
         className="mt-6 space-y-3 border-t border-line pt-5"
         onSubmit={(e) => {
           e.preventDefault();
-          void follow({ create: form }, form.name.trim());
+          void follow({ create: form, verify: true }, form.name.trim());
         }}
       >
         <h3 className="text-sm font-bold uppercase tracking-wide text-muted">Crear una empresa nueva</h3>
@@ -113,7 +113,7 @@ export default function AddCompanyDrawer({ open, onClose, onAdded, industries }:
         <div>
           <Label htmlFor="radar-careers" hint="(opcional)">Página de Careers</Label>
           <input id="radar-careers" type="url" value={form.careersUrl} onChange={(e) => setForm({ ...form, careersUrl: e.target.value })} className={field} placeholder="https://…" />
-          <p className="mt-1 text-xs text-muted">Queda pendiente de verificación hasta que Maru pueda revisarla.</p>
+          <p className="mt-1 text-xs text-muted">Maru la revisa al agregarla: detecta si usa Greenhouse, Lever o Ashby y trae sus vacantes.</p>
         </div>
         <div>
           <Label htmlFor="radar-sector" hint="(opcional)">Sector</Label>
@@ -124,7 +124,7 @@ export default function AddCompanyDrawer({ open, onClose, onAdded, industries }:
         </div>
         {error && <Notice tone="error">{error}</Notice>}
         <div className="flex gap-2">
-          <button type="submit" className={btnDark} disabled={saving}>{saving ? "Guardando…" : "Agregar a mis empresas"}</button>
+          <button type="submit" className={btnDark} disabled={saving}>{saving ? "Agregando y revisando…" : "Agregar a mis empresas"}</button>
           <button type="button" className={btnGhost} onClick={onClose}>Cancelar</button>
         </div>
       </form>

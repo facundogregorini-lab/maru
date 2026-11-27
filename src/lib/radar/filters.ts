@@ -3,7 +3,7 @@ import type { CompanySource, Priority, SourceStatus, TargetView } from "./types"
 
 /** Filtros combinables de "Mis empresas". Corre en el navegador sobre la lista ya ordenada por el servidor. */
 
-export type MonitorState = "todas" | "pendiente" | "error" | "verificada" | "sin_fuente";
+export type MonitorState = "todas" | "pendiente" | "error" | "verificada" | "manual" | "sin_fuente";
 
 export type CompanyFilters = {
   industry: string; // "Todas" o una etiqueta
@@ -19,8 +19,9 @@ export const DEFAULT_FILTERS: CompanyFilters = { industry: "Todas", priority: "T
 export function monitorState(sources: CompanySource[]): Exclude<MonitorState, "todas"> {
   if (!sources.length) return "sin_fuente";
   const st = new Set<SourceStatus>(sources.map((s) => s.status));
+  if (st.has("success") || st.has("verified_empty") || st.has("partial")) return "verificada";
   if (st.has("error")) return "error";
-  if (st.has("verificada") || st.has("verificada_vacia") || st.has("parcial")) return "verificada";
+  if (st.has("manual")) return "manual";
   return "pendiente";
 }
 
@@ -28,6 +29,7 @@ export const MONITOR_LABELS: Record<Exclude<MonitorState, "todas">, string> = {
   sin_fuente: "Sin fuente",
   pendiente: "Fuente pendiente",
   error: "Fuente con error",
+  manual: "Revisión manual",
   verificada: "Fuente verificada",
 };
 
