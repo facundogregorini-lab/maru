@@ -20,3 +20,9 @@ export async function writeDoc(email: string, doc: SyncDoc, data: unknown, expec
   const stored: StoredDoc = { data, updatedAt: Math.max(now, expectedVersion + 1) };
   return compareAndSetJson(keyFor(email, doc), expectedVersion, stored);
 }
+
+/** Lo mismo, a partir del id de cuenta (para procesos sin el email, como el cron de Radar). */
+export async function readDocsByUid(uid: string): Promise<Record<SyncDoc, StoredDoc | null>> {
+  const values = await getManyJson<StoredDoc>(SYNC_DOC_IDS.map((d) => `maru:u:${uid}:${d}`));
+  return Object.fromEntries(SYNC_DOC_IDS.map((d, i) => [d, values[i]])) as Record<SyncDoc, StoredDoc | null>;
+}

@@ -1,4 +1,4 @@
-import type { Company, CompanySource, ImportRun, MatchesDoc, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
+import type { Company, CompanySource, DiscoveryDoc, ImportRun, MatchesDoc, MonitoringRun, NotificationsDoc, OutboxDoc, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 
 /**
  * Interfaces de acceso a datos de Radar. Las pantallas y las rutas sólo conocen esto; hoy lo implementa
@@ -70,7 +70,30 @@ export interface FollowedRepo {
   all(): Promise<string[]>;
 }
 
+/** Quién sigue cada empresa (para la frecuencia global y la entrega) y quiénes usan Radar. */
+export interface FollowersRepo {
+  add(companyId: string, userId: string): Promise<void>;
+  remove(companyId: string, userId: string): Promise<void>;
+  of(companyId: string): Promise<string[]>;
+  users(): Promise<string[]>;
+}
+
+/** Documentos por persona de la sesión 4. */
+export interface UserDocsRepo {
+  notifications(userId: string): Promise<NotificationsDoc>;
+  saveNotifications(userId: string, doc: NotificationsDoc): Promise<void>;
+  outbox(userId: string): Promise<OutboxDoc>;
+  saveOutbox(userId: string, doc: OutboxDoc): Promise<void>;
+  discovery(userId: string): Promise<DiscoveryDoc>;
+  saveDiscovery(userId: string, doc: DiscoveryDoc): Promise<void>;
+  /** Email para el resumen: sólo existe si la persona aceptó recibirlo por email. */
+  contact(userId: string): Promise<string | null>;
+  setContact(userId: string, email: string | null): Promise<void>;
+}
+
 export type RadarRepos = {
+  followers: FollowersRepo;
+  user: UserDocsRepo;
   jobs: JobRepo;
   matches: MatchRepo;
   runs: MonitoringRunRepo;

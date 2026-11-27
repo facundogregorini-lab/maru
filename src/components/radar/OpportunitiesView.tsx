@@ -9,8 +9,10 @@ import { ELIGIBILITY_LABEL } from "@/lib/radar/match/score";
 import { trackInputFor, trackedFor } from "@/lib/radar/tracking";
 import type { PilotJob } from "@/lib/radar/types";
 import { STATUSES, TRACKER_EVENT, listTracked, upsertTracked, type TrackItem } from "@/lib/tracker";
+import { scoreBand, trackRadar } from "@/lib/radar/analytics";
 import { radarApi } from "./api";
 import { REMOTE_LABEL, ago, fmtDate } from "./bits";
+import AlertsPanel from "./AlertsPanel";
 import OpportunityDrawer, { ELIG_TONE, type DetectedJob } from "./OpportunityDrawer";
 import { EmptyState, Monogram, Notice, PriorityPill, Skeleton, Stat, Tag, btnDark, btnGhost, btnNeon, card, field, useToast } from "./ui";
 
@@ -131,13 +133,18 @@ export default function OpportunitiesView() {
   }
 
   function save(j: DetectedJob) {
+    const existed = !!trackedOf(j);
     const item = upsertTracked(trackInputFor({ url: j.url, title: j.title, companyName: j.companyName }));
+    const props = { company_id: j.companyId, job_id: j.id, priority: j.priority ?? "sin", score_band: scoreBand(j.match?.score), sector: j.industries[0] };
+    trackRadar("radar_opportunity_saved", props);
+    if (item && !existed) trackRadar("radar_application_created", { ...props, status: item.status });
     if (item) toast.show(item.status === "guardada" ? "Guardada en Seguimiento" : `Ya está en Seguimiento (${STATUSES.find((s) => s.id === item.status)?.one})`);
   }
 
   async function dismiss(j: DetectedJob, undo: boolean) {
     try {
       await radarApi("/api/radar/oportunidades/descartar", { method: "POST", body: { companyId: j.companyId, jobId: j.id, undo } });
+      if (!undo) trackRadar("radar_opportunity_dismissed", { company_id: j.companyId, job_id: j.id, score_band: scoreBand(j.match?.score) });
       toast.show(undo ? "Vuelve a aparecer en la lista" : "Descartada: no se borra la vacante, sólo deja de mostrarse");
       setOpenId(null);
       await load();
@@ -158,6 +165,10 @@ export default function OpportunitiesView() {
   const unevaluated = visible.filter((j) => !j.match || j.match.score === null).length;
   const closedTracked = data.recentlyClosed.filter((c) => trackedFor(tracker, { url: c.url, title: c.title, companyName: c.companyName }));
   const openJob = openId ? data.jobs.find((j) => j.id === openId) ?? null : null;
+  const openDetail = (j: DetectedJob) => {
+    setOpenId(j.id);
+    trackRadar("radar_opportunity_viewed", { company_id: j.companyId, job_id: j.id, score_band: scoreBand(j.match?.score), priority: j.priority ?? "sin" });
+  };
 
   return (
     <div className="space-y-4">
@@ -167,6 +178,8 @@ export default function OpportunitiesView() {
         <Stat label="Empresas revisadas" value={`${data.companies.checked}/${data.companies.total}`} hint="Con al menos una lectura buena" />
         <Stat label="Última actualización" value={data.companies.lastSuccessAt ? ago(data.companies.lastSuccessAt) : "—"} hint={data.companies.lastSuccessAt ? fmtDate(data.companies.lastSuccessAt) : "Sin revisiones"} />
       </div>
+
+      <AlertsPanel />
 
       {closedTracked.length > 0 && (
         <Notice tone="warn">
@@ -238,7 +251,7 @@ export default function OpportunitiesView() {
                     <Monogram name={j.companyName} size={36} />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm text-muted">{j.companyName}</p>
-                      <button type="button" onClick={() => setOpenId(j.id)} className="text-left font-semibold leading-snug outline-none hover:underline focus-visible:underline">{j.title}</button>
+                      <button type="button" onClick={() => openDetail(j)} className="text-left font-semibold leading-snug outline-none hover:underline focus-visible:underline">{j.title}</button>
                     </div>
                     <div className="text-right">
                       {m && m.score !== null ? (
@@ -263,7 +276,7 @@ export default function OpportunitiesView() {
                     <Tag>Detectada {ago(j.firstSeenAt)}</Tag>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <button type="button" className={btnDark} onClick={() => setOpenId(j.id)}>Analizar oportunidad</button>
+                    <button type="button" className={btnDark} onClick={() => openDetail(j)}>Analizar oportunidad</button>
                     <button type="button" className={btnGhost} onClick={() => save(j)} aria-label={`Guardar ${j.title} en Seguimiento`}>{tracked ? "Guardada" : "Guardar"}</button>
                     <button type="button" className={btnGhost} onClick={() => void dismiss(j, m?.disposition === "dismissed")}>{m?.disposition === "dismissed" ? "Volver a mostrar" : "Descartar"}</button>
                     <a href={j.url?.startsWith("https://") ? j.url : undefined} target="_blank" rel="noopener noreferrer" className={`${btnGhost} px-3`} aria-label={`Ver aviso original de ${j.title}`}>↗</a>

@@ -89,9 +89,11 @@ export async function follow(uid: string, input: { companyId?: string; create?: 
     const industry = cleanText(input.create.industry, 40);
 
     const all = await repos.companies.all();
+    // Misma regla que la importación: por dominio; sin dominio, la única con el mismo nombre exacto.
+    const sameName = all.filter((c) => [c.name, ...c.aliases].some((n) => fold(n) === fold(name)));
     const existing =
       (domain && all.find((c) => c.canonicalDomain === domain)) ||
-      (!domain && all.find((c) => c.id === companyIdFor(null, name))) ||
+      (!domain && (all.find((c) => c.id === companyIdFor(null, name)) ?? (sameName.length === 1 ? sameName[0] : null))) ||
       null;
     const at = nowIso();
     company = existing ?? {
@@ -131,6 +133,7 @@ export async function follow(uid: string, input: { companyId?: string; create?: 
 
   const c = company;
   await repos.followed.add([c.id]);
+  await repos.followers.add(c.id, uid);
   const target = await repos.targets.update(uid, (doc) => {
     const prev = doc.items[c.id];
     // Ya la seguía: se reactiva si estaba archivada; la prioridad sólo cambia si se pidió una.
@@ -199,6 +202,7 @@ export async function unfollow(uid: string, companyId: string): Promise<boolean>
     delete doc.items[companyId];
     return { doc, result: true };
   });
+  if (out) await radarRepos().followers.remove(companyId, uid);
   return !!out;
 }
 
@@ -235,6 +239,7 @@ export async function applyImport(uid: string, fileName: string, plan: ImportPla
   if (changed.length) await repos.companies.saveMany(changed);
   if (Object.keys(plan.sources).length) await repos.sources.saveMany(plan.sources);
   await repos.followed.add(plan.companies.map((p) => p.company.id));
+  for (const p of plan.companies) await repos.followers.add(p.company.id, uid);
   // El seguimiento se vuelve a mezclar sobre lo último guardado: si la persona editó algo mientras tanto, se respeta.
   await repos.targets.update(uid, (doc) => {
     for (const [id, t] of Object.entries(plan.targets.items)) if (!doc.items[id]) doc.items[id] = t;

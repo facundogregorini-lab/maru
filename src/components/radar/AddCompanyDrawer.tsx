@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import type { Company, Priority } from "@/lib/radar/types";
+import { trackRadar } from "@/lib/radar/analytics";
 import { radarApi } from "./api";
 import { Drawer, Label, Monogram, Notice, Tag, btnDark, btnGhost, field } from "./ui";
 
@@ -43,7 +44,8 @@ export default function AddCompanyDrawer({ open, onClose, onAdded, industries }:
     setSaving(true);
     setError("");
     try {
-      await radarApi("/api/radar/empresas", { method: "POST", body: { ...body, priority: priority || null } });
+      const v = await radarApi<{ company: { id: string; industries: string[] }; sources: { provider: string }[] }>("/api/radar/empresas", { method: "POST", body: { ...body, priority: priority || null } });
+      trackRadar("radar_company_followed", { company_id: v.company.id, sector: v.company.industries[0], priority: priority || "sin", provider: v.sources[0]?.provider, action: body.companyId ? "catalogo" : "manual" });
       await onAdded(name);
       onClose();
     } catch (e) {

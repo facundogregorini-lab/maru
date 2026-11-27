@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { JobOpening, MonitoringRun, TargetView } from "@/lib/radar/types";
+import { trackRadar } from "@/lib/radar/analytics";
 import { radarApi } from "./api";
 import { PROVIDER_LABEL, PrioritySelect, REMOTE_LABEL, SOURCE_STATUS_LABEL, SourceTag, ago, fmtDate } from "./bits";
 import { Drawer, Monogram, Notice, Tag, btnDark, btnGhost, field } from "./ui";
@@ -79,6 +80,7 @@ export default function CompanyDrawer({
     try {
       const { run } = await radarApi<{ run: MonitoringRun }>("/api/radar/empresas/revisar", { method: "POST", body: { companyId: c.id, reresolve } });
       const tt = run.totals;
+      trackRadar("radar_scan_completed", { company_id: c.id, provider: run.items[0]?.provider, count: tt.created, status: run.status });
       const err = run.items.find((i) => i.error)?.error;
       setMsg(err ? { text: `La revisión terminó con un problema: ${err}`, tone: "error" } : { text: `Revisión lista: ${tt.created} nuevas, ${tt.modified} modificadas, ${tt.closed} cerradas.`, tone: "info" });
       await Promise.all([loadDetail(), onChanged()]);
