@@ -1,5 +1,13 @@
 # Estado y próximos pasos de Maru
 
+## Radar laboral (plan en curso, desde 27/11/2026)
+
+Pedido del dueño: módulo nuevo para seguir empresas objetivo (P1/P2/P3), descubrir vacantes y recibir recomendaciones. Kit y prompts por sesión en `docs/radar/`; el traspaso detallado está en `docs/radar/ESTADO.md`.
+
+1. **Hecho (sesión 1): auditoría, ADR de persistencia (sólo Upstash) y MVP visual** detrás de `RADAR_ENABLED` (apagado en Production). Mis empresas completa, importación XLSX/CSV con dedup e idempotencia, ficha, agregar empresa, ajustes de automatización (sólo guardan). Tests: `tests/radar.test.ts`.
+2. **Pendiente (dueño):** subir `docs/radar/research-laboral.xlsx` (export del Sheet) y las capturas del prototipo. Para probar en Preview con sesión, cargar `AUTH_SECRET` también en Preview.
+3. **Siguiente:** sesión 2 (`docs/radar/SESION-2.md`).
+
 ## Maru Recruiters (plan en curso, desde 26/11/2026)
 
 Pedido del dueño: sumar una sección para reclutadores al estilo Metaview (sourcing, perfil ideal, calificación y outreach por email y WhatsApp), en producción. Diseño y reglas en `docs/RECRUITERS.md`.

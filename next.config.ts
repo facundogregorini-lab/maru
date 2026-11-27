@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Radar laboral: el mismo flag del servidor, copiado al build para que la navegación ni lo consulte si está apagado.
+  env: { NEXT_PUBLIC_RADAR_ENABLED: process.env.RADAR_ENABLED?.trim().toLowerCase() === "true" ? "true" : "" },
   // Se cargan desde node_modules en runtime (no se empaquetan con webpack).
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core", "mammoth"],
   outputFileTracingIncludes: {
