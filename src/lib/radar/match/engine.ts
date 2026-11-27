@@ -139,6 +139,8 @@ export type EvaluateOptions = {
   onUsage?: (u: UsageReport) => void;
   /** Sólo estas empresas (por defecto, todas las activas). */
   companyIds?: string[];
+  /** Diagnóstico (scripts): recibe el error de una tanda que falló. En la app no se usa ni se loguea el contenido. */
+  onError?: (err: unknown) => void;
 };
 
 export type EvaluateResult = { total: number; unchanged: number; rules: number; ia: number; failed: number; pendingIa: number; staleKept: number; quotaLeft: number | null };
@@ -207,8 +209,9 @@ export async function evaluateForUser(uid: string, source: ProfileSource, settin
         let evals: JobEval[] = [];
         try {
           evals = await evaluator!(pb, g.map(({ job, desc }) => ({ id: job.id, title: job.title, company: names.get(job.companyId) ?? "", location: job.location, remoteType: job.remoteType, description: desc })), opts.onUsage);
-        } catch {
+        } catch (err) {
           console.warn("MARU_RADAR_MATCH_UNAVAILABLE");
+          opts.onError?.(err);
         }
         for (const it of g) {
           const doc = docs.get(it.job.companyId)!;

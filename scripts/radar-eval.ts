@@ -58,11 +58,20 @@ async function main() {
 
   const settings = { ...defaultSettings(), eligibility: { authorizedCountries: ["AR"], relocation: "a_conversar" as const, remote: "cualquiera" as const, minMonthlyUsd: 6000 } };
   const usage: UsageReport[] = [];
+  const errors = new Set<string>();
   let usd = 0;
   const t0 = Date.now();
   const res = await evaluateForUser(uid, { profile: PROFILE, prefs: PREFS }, settings, {
     maxLlm: maxIa,
     dailyLimit: 10_000,
+    onError: (err) => {
+      const e = err as { name?: string; status?: number; code?: string; message?: string };
+      const line = `${e.name ?? "Error"} ${e.status ?? ""} ${e.code ?? ""} ${(e.message ?? "").slice(0, 400)}`;
+      if (!errors.has(line)) {
+        errors.add(line);
+        console.error("Falla de la IA:", line);
+      }
+    },
     onUsage: (u) => {
       usage.push(u);
       usd += u.usd;
@@ -93,6 +102,8 @@ async function main() {
     `- Con score: ${evaluated.length}. **Bloqueadas: ${blocked}. Por verificar: ${verify}.**`,
     `- Tokens: ${tokIn} de entrada y ${tokOut} de salida en ${usage.length} llamadas (${secs} s). Costo: **US$${usd.toFixed(4)}**, **US$${perEval.toFixed(5)} por vacante evaluada con IA**.`,
     `- Estimación por usuario activo y semana (7 empresas P1, ~15 % de vacantes nuevas o modificadas, ${Math.round(iaShare * 100)} % pasa a la IA): ~${weeklyNew} vacantes, **US$${weeklyCost.toFixed(4)}**.`,
+    "",
+    ...(errors.size ? ["", "Errores de la IA:", ...[...errors].map((e) => `- ${e}`)] : []),
     "",
     "## Top 5 por prioridad de acción",
     "",
