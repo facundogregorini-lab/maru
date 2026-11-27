@@ -1,4 +1,4 @@
-import type { Company, CompanySource, ImportRun, PilotJob, RadarSettings, TargetsDoc } from "../types";
+import type { Company, CompanySource, ImportRun, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 
 /**
  * Interfaces de acceso a datos de Radar. Las pantallas y las rutas sólo conocen esto; hoy lo implementa
@@ -37,7 +37,37 @@ export interface ImportRunRepo {
   add(userId: string, run: ImportRun): Promise<void>;
 }
 
+/** Vacantes detectadas: un índice por fuente (global) y la descripción de cada una aparte. */
+export interface JobRepo {
+  readIndexes(sourceIds: string[]): Promise<(SourceJobsDoc | null)[]>;
+  writeIndex(doc: SourceJobsDoc): Promise<void>;
+  writeDescriptions(byJobId: Record<string, string>): Promise<void>;
+  readDescription(jobId: string): Promise<string | null>;
+}
+
+export interface MonitoringRunRepo {
+  add(run: MonitoringRun): Promise<void>;
+  recent(limit?: number): Promise<MonitoringRun[]>;
+  forSource(sourceId: string): Promise<MonitoringRun[]>;
+}
+
+/** Locks con vencimiento (lease por fuente, cooldown de "Revisar ahora"). */
+export interface LeaseRepo {
+  acquire(key: string, owner: string, ttlMs: number): Promise<boolean>;
+  release(key: string): Promise<void>;
+}
+
+/** Empresas que alguien siguió alguna vez: el universo que recorre el worker (sin datos de quién). */
+export interface FollowedRepo {
+  add(companyIds: string[]): Promise<void>;
+  all(): Promise<string[]>;
+}
+
 export type RadarRepos = {
+  jobs: JobRepo;
+  runs: MonitoringRunRepo;
+  leases: LeaseRepo;
+  followed: FollowedRepo;
   companies: CompanyRepo;
   sources: CompanySourceRepo;
   targets: TargetCompanyRepo;

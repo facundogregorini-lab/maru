@@ -1,5 +1,5 @@
-import { compareAndSetJson, getManyJson, pipeline, pushRecent, readRecent, setJson, setMembers } from "../../db";
-import type { Company, CompanySource, ImportRun, PilotJob, RadarSettings, TargetsDoc } from "../types";
+import { compareAndSetJson, deleteKeys, getManyJson, pipeline, pushRecent, readRecent, setIfAbsent, setJson, setMembers } from "../../db";
+import type { Company, CompanySource, ImportRun, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 import type { RadarRepos } from "./types";
 
 /** Implementación sobre Upstash. Esquema en docs/radar/ADR-001-persistencia.md. */
@@ -13,6 +13,12 @@ export const keys = {
   settings: (uid: string) => `${NS}:u:${uid}:settings`,
   pilot: (uid: string) => `${NS}:u:${uid}:pilot`,
   imports: (uid: string) => `${NS}:u:${uid}:imports`,
+  jobs: (sourceId: string) => `${NS}:jobs:${sourceId}`,
+  jobDesc: (jobId: string) => `${NS}:jobdesc:${jobId}`,
+  runs: () => `${NS}:runs`,
+  sourceRuns: (sourceId: string) => `${NS}:source-runs:${sourceId}`,
+  lease: (key: string) => `${NS}:lease:${key}`,
+  followed: () => `${NS}:followed`,
 };
 
 const CHUNK = 200;
@@ -25,6 +31,38 @@ async function mget<T>(ks: string[]): Promise<(T | null)[]> {
 const emptyTargets = (): TargetsDoc => ({ items: {}, updatedAt: 0 });
 
 export const redisRepos: RadarRepos = {
+  jobs: {
+    readIndexes: (ids) => mget<SourceJobsDoc>(ids.map(keys.jobs)),
+    writeIndex: (doc) => setJson(keys.jobs(doc.sourceId), doc),
+    async writeDescriptions(byJobId) {
+      const entries = Object.entries(byJobId);
+      // De a 50 (≤ 200 KB por pedido a Upstash).
+      for (let i = 0; i < entries.length; i += 50) await pipeline(entries.slice(i, i + 50).map(([id, text]) => ["SET", keys.jobDesc(id), JSON.stringify(text)]));
+    },
+    async readDescription(jobId) {
+      const [d] = await getManyJson<string>([keys.jobDesc(jobId)]);
+      return d;
+    },
+  },
+  runs: {
+    async add(run) {
+      const slim = { ...run };
+      await pushRecent(keys.runs(), slim, 200);
+      for (const item of run.items) await pushRecent(keys.sourceRuns(item.sourceId), { ...run, items: [item] }, 20);
+    },
+    recent: (limit = 20) => readRecent<MonitoringRun>(keys.runs(), limit),
+    forSource: (sourceId) => readRecent<MonitoringRun>(keys.sourceRuns(sourceId), 20),
+  },
+  leases: {
+    acquire: (key, owner, ttlMs) => setIfAbsent(keys.lease(key), owner, ttlMs),
+    release: (key) => deleteKeys([keys.lease(key)]),
+  },
+  followed: {
+    async add(ids) {
+      if (ids.length) await pipeline([["SADD", keys.followed(), ...ids]]);
+    },
+    all: () => setMembers(keys.followed()),
+  },
   companies: {
     async all() {
       const ids = await setMembers(keys.companies());

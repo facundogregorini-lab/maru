@@ -14,7 +14,8 @@
     "match:verticals": "npx --yes tsx@4 scripts/match-verticals.ts",
     "match:apify": "npx --yes tsx@4 scripts/apify-jobs.ts",
     "ext:pack": "npx --yes tsx@4 scripts/ext-pack.ts",
-    "ext:screenshots": "node scripts/ext-screenshots.mjs"
+    "ext:screenshots": "node scripts/ext-screenshots.mjs",
+    "radar:monitor": "npx --yes tsx@4 scripts/radar-monitor.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

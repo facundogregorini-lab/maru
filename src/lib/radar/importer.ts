@@ -410,7 +410,7 @@ export function planImport(
           provider,
           careersUrl: careers,
           externalBoardId: boardId,
-          status: "pendiente",
+          status: "pending",
           declaredStatus: r.values.linkStatus?.trim() ?? "",
           lastAttemptAt: null,
           lastSuccessAt: null,

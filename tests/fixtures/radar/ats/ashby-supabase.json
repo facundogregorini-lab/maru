@@ -1,0 +1,49 @@
+{
+ "jobs": [
+  {
+   "id": "a0b46de3-5617-41cc-8623-2be9b6fd6b49",
+   "title": "Head of Ecosystem",
+   "location": "Remote, AMER",
+   "department": "Engineering",
+   "team": "Product Engineering",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "publishedAt": "2026-11-10T16:33:17.148+00:00",
+   "employmentType": "FullTime",
+   "jobUrl": "https://jobs.ashbyhq.com/supabase/a0b46de3-5617-41cc-8623-2be9b6fd6b49",
+   "applyUrl": "https://jobs.ashbyhq.com/supabase/a0b46de3-5617-41cc-8623-2be9b6fd6b49/application",
+   "descriptionPlain": "Supabase is the Postgres development platform, built by developers for developers. We aim to empower developers by providing a complete backend solution including Database, Auth, Storage, Edge Functions, Realtime, and Vector Search. All services are deeply integrated and designed for growth.\n\nWe're looking for a Head of Ecosystem to lead the teams that make Supabase the backend for the platforms and tools developers already use. That covers AI app builders and coding agents, integrations with the developer tools teams rely on, and the Supabase Marketplace. You'll build this org from the ground up and shape how Supabase extends beyond its own platform.\n\nYou'll also drive hiring, onboarding, and career development while maintaining high engineering standards.\n\n\n\n\nWHAT YOU'LL OWN:\n\n - Build and lead a new engineering org across platform partners, integrations, and Marketplace, hiring EMs and engineers as it grows\n\n - Own the technical relationship with the platforms building on Supabase, from integration health to escalations\n\n - Set and maintain clear roadmaps that balance partner needs with platform priorities\n\n - Partner with Product, Partnerships, and Sales to define and execute our ecosystem strategy\n\n - Ship a unified, self-serve surface for integrations and Marketplace\n\n - Maintain high engineering standards: roadmap hygiene, issue tracking, on-call, incident response, and responsiveness to partners\n\n\nWHAT YOU BRING:\n\n - Proven experience leading multiple engineering team"
+  },
+  {
+   "id": "a6fc3980-3f96-4df9-a1b4-d7ed0e1ff7c4",
+   "title": "Senior Accountant ",
+   "location": "Remote, AMER",
+   "department": "Operations",
+   "team": "Finance",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "publishedAt": "2026-11-12T02:00:51.509+00:00",
+   "employmentType": "FullTime",
+   "jobUrl": "https://jobs.ashbyhq.com/supabase/a6fc3980-3f96-4df9-a1b4-d7ed0e1ff7c4",
+   "applyUrl": "https://jobs.ashbyhq.com/supabase/a6fc3980-3f96-4df9-a1b4-d7ed0e1ff7c4/application",
+   "descriptionPlain": "ABOUT SUPABASE\n\nSupabase is the Postgres development platform, built by developers for developers. We provide a complete backend solution including Database, Auth, Storage, Edge Functions, Realtime, and Vector Search. All services are deeply integrated and designed for growth.\n\n\n\n\n\nABOUT THE ROLE\n\nWe're looking for a detail-oriented, driven Senior Accountant to join our Accounting team at an exciting time of growth for Supabase. As we continue to scale, we're expanding the team to add experience, spread responsibilities, and strengthen the processes that keep our financials accurate and timely. This is a hands-on role with real ownership and a lot of autonomy.\n\n\n\nIn this role, you'll support the month-end close, perform analytics on financial results, assist with external audit and tax requests, and take on ad-hoc projects. You'll collaborate across Finance and the wider company, including FP&A, People/Payroll, and Legal, and work with our external audit, tax, and technical accounting partners, while contributing to the continuous improvement of our processes and controls. This role is open to candidates based in North America.\n\n\n\nThis role is ideal for someone who thrives in async, fast-paced environments and is excited about building developer tools that scale to millions.\n\n\n\nWHAT YOU'LL BE RESPONSIBLE FOR\n\n - Own key areas of the monthly, quarterly, and annual close within your assigned areas, preparing workpapers, journal entries, account reconciliations, flux analysis, a"
+  },
+  {
+   "id": "3b5d54ca-741b-45ac-bd3f-31605a0d3541",
+   "title": "AI Platform Engineer",
+   "location": "Remote, Global",
+   "department": "Business Operations",
+   "team": "Business Operations",
+   "isListed": true,
+   "isRemote": null,
+   "workplaceType": null,
+   "publishedAt": "2026-07-31T18:56:39.246+00:00",
+   "employmentType": "FullTime",
+   "jobUrl": "https://jobs.ashbyhq.com/supabase/3b5d54ca-741b-45ac-bd3f-31605a0d3541",
+   "applyUrl": "https://jobs.ashbyhq.com/supabase/3b5d54ca-741b-45ac-bd3f-31605a0d3541/application",
+   "descriptionPlain": "ABOUT SUPABASE\n\nSupabase is the Postgres development platform, built by developers for developers. We provide a complete backend solution including Database, Auth, Storage, Edge Functions, Realtime, and Vector Search. All services are deeply integrated and designed for growth.\n\n\n\nABOUT THE ROLE\n\nWe are hiring a AI Platform Engineer to build the execution layer for Supabase's internal AI systems.\n\nSupabase is building an AI-native internal operating system: a common way of working across the company where AI carries a meaningful share of the operational load rather than sitting alongside it as an assistant. We are standing up a new central team to build those systems, enable the teams, and embed AI operations throughout the organization. You are the engineer on that team.\n\nThe execution layer is yours. You will build the platform that actually runs agents: an event-triggered queue, a headless model-agnostic runtime, durable state so work survives a restart, a human review gate, atomic rollback, and full logging of every prompt, tool call and decision so any run can be reconstructed. You will build the evaluation layer that makes any of it trustworthy, because an agent that cannot be measured cannot be trusted with anything beyond reading. And you will build the agents themselves, across everything from executive reporting down to a layer of agents that watch the platform and improve it.\n\nThis is a governance-heavy environment by design, and that is the interesting part of the "
+  }
+ ]
+}

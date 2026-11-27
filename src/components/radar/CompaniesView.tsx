@@ -6,7 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { requestLogin } from "@/lib/loginRequest";
 import { DEFAULT_FILTERS, MONITOR_LABELS, applyFilters, filterOptions, type CompanyFilters, type MonitorState } from "@/lib/radar/filters";
 import type { ImportRun, TargetView } from "@/lib/radar/types";
-import { PrioritySelect, SourceTag } from "./bits";
+import { PrioritySelect, SourceTag, ago, lastSuccess, openJobsLabel } from "./bits";
 import { radarApi } from "./api";
 import AddCompanyDrawer from "./AddCompanyDrawer";
 import CompanyDrawer from "./CompanyDrawer";
@@ -230,8 +230,8 @@ export default function CompaniesView() {
                             <td className="px-3 py-3">
                               <PrioritySelect label={`Prioridad de ${v.company.name}`} value={v.target.priority} disabled={busy === v.company.id} onChange={(p) => void patch(v.company.id, { priority: p }, `${v.company.name}: ${p ?? "por clasificar"}`)} />
                             </td>
-                            <td className="px-3 py-3 text-muted">Sin revisar</td>
-                            <td className="px-3 py-3 text-muted">Nunca</td>
+                            <td className="px-3 py-3 text-muted">{openJobsLabel(v)}</td>
+                            <td className="px-3 py-3 text-muted">{ago(lastSuccess(v))}</td>
                             <td className="px-3 py-3"><SourceTag view={v} /></td>
                             <td className="py-3 pl-3">
                               <div className="flex items-center justify-end gap-1">
@@ -269,7 +269,7 @@ export default function CompaniesView() {
                       </div>
                       <div className="mt-3 flex items-center gap-2">
                         <PrioritySelect label={`Prioridad de ${v.company.name}`} value={v.target.priority} disabled={busy === v.company.id} onChange={(p) => void patch(v.company.id, { priority: p }, `${v.company.name}: ${p ?? "por clasificar"}`)} />
-                        <span className="flex-1 text-xs text-muted">Sin revisar</span>
+                        <span className="flex-1 text-xs text-muted">{openJobsLabel(v)}</span>
                         <button type="button" className={`${btnGhost} h-10`} onClick={() => setOpenId(v.company.id)}>Ficha</button>
                       </div>
                     </li>
@@ -287,6 +287,10 @@ export default function CompaniesView() {
           onClose={() => setOpenId(null)}
           busy={busy === openView.company.id}
           onPatch={(body, ok) => patch(openView.company.id, body, ok)}
+          onChanged={async (m) => {
+            await load();
+            if (m) toast.show(m);
+          }}
           onUnfollow={async () => {
             try {
               await radarApi("/api/radar/empresas", { method: "DELETE", body: { companyId: openView.company.id } });

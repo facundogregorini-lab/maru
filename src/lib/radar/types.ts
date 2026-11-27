@@ -39,9 +39,14 @@ export type Company = {
   updatedAt: string;
 };
 
-export type SourceProvider = "greenhouse" | "lever" | "ashby" | "careers";
-/** pendiente: registrada, sin revisar; las demás llegan con el monitoreo (sesión 3). */
-export type SourceStatus = "pendiente" | "verificada" | "verificada_vacia" | "parcial" | "error";
+/** careers = página propia sin ATS reconocido (todavía sin resolver); jsonld = la página publica JobPosting. */
+export type SourceProvider = "greenhouse" | "lever" | "ashby" | "jsonld" | "careers";
+/**
+ * pending: registrada, sin revisar. success: snapshot completo con vacantes. verified_empty: completo y sin vacantes.
+ * partial: se leyó, pero incompleto o sospechoso (nunca cierra vacantes). error: falló la última vez. manual: no se puede leer sola.
+ */
+export type SourceStatus = "pending" | "success" | "verified_empty" | "partial" | "error" | "manual";
+export const SOURCE_STATUSES: readonly SourceStatus[] = ["pending", "success", "verified_empty", "partial", "error", "manual"];
 
 export type CompanySource = {
   id: string;
@@ -49,13 +54,23 @@ export type CompanySource = {
   provider: SourceProvider;
   careersUrl: string;
   externalBoardId: string | null;
+  /** Región del ATS (Greenhouse y Lever tienen instancia EU). */
+  region?: "us" | "eu";
+  /** URL que se lee para JSON-LD (después de redirecciones). */
+  resolvedUrl?: string | null;
   status: SourceStatus;
+  /** Motivo corto del estado (sanitizado, sin datos de personas). */
+  statusNote?: string;
   /** "Estado del enlace" del Sheet, tal cual. */
   declaredStatus: string;
   lastAttemptAt: string | null;
   lastSuccessAt: string | null;
+  /** Última resolución de ATS/board. */
+  resolvedAt?: string | null;
   nextDueAt: string | null;
   failureCount: number;
+  /** Vacantes abiertas según la última lectura (para la tabla, sin leer el índice). */
+  openJobs?: number;
   createdAt: string;
 };
 
@@ -136,3 +151,76 @@ export type ImportRun = {
 
 /** Una fila de "Mis empresas": el seguimiento con su empresa y fuentes. */
 export type TargetView = { target: TargetCompany; company: Company; sources: CompanySource[] };
+
+/* ---------- Vacantes detectadas (globales por fuente) ---------- */
+
+export type RemoteType = "remoto" | "hibrido" | "presencial" | "desconocido";
+export type JobStatus = "open" | "closed";
+export type JobEvent = { at: string; event: "opened" | "modified" | "closed" | "reopened"; reason?: string };
+
+export type JobOpening = {
+  /** `${sourceId}:${externalJobId}` (hash corto). */
+  id: string;
+  companyId: string;
+  sourceId: string;
+  externalJobId: string;
+  /** Link oficial del aviso, tal cual (https). */
+  url: string;
+  /** Para detectar el mismo aviso en otra fuente (minúsculas, sin utm). */
+  canonicalUrl: string;
+  title: string;
+  location: string;
+  remoteType: RemoteType;
+  department: string;
+  contentHash: string;
+  /** Fecha que publica la fuente; null si no la da. No es la primera detección. */
+  publishedAt: string | null;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  status: JobStatus;
+  closedAt: string | null;
+  closedReason: string | null;
+  /** Snapshots completos y exitosos seguidos sin esta vacante. */
+  missedCompleteSnapshots: number;
+  history: JobEvent[];
+};
+
+/** Índice de vacantes de una fuente (sin descripciones; esas van aparte). */
+export type SourceJobsDoc = {
+  sourceId: string;
+  jobs: Record<string, JobOpening>;
+  updatedAt: number;
+  /** Caída brusca vista una vez: si la próxima lectura completa la repite, se da por confirmada. */
+  pendingDrop?: { count: number; at: string } | null;
+};
+
+export type RunTrigger = "manual" | "script" | "worker";
+export type RunItemStatus = SourceStatus | "skipped" | "locked";
+
+export type MonitoringRunItem = {
+  sourceId: string;
+  companyId: string;
+  provider: SourceProvider;
+  attempts: number;
+  status: RunItemStatus;
+  /** true si el snapshot vino entero (todas las páginas). */
+  complete: boolean;
+  received: number;
+  created: number;
+  modified: number;
+  closed: number;
+  reopened: number;
+  error: string | null;
+  durationMs: number;
+};
+
+export type MonitoringRun = {
+  id: string;
+  trigger: RunTrigger;
+  startedAt: string;
+  finishedAt: string | null;
+  status: "completa" | "parcial" | "con_errores";
+  budgetMs: number;
+  items: MonitoringRunItem[];
+  totals: { sources: number; ok: number; errors: number; skipped: number; created: number; modified: number; closed: number; reopened: number };
+};
