@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { requestLogin } from "@/lib/loginRequest";
-import type { Frequency, MatchWeights, RadarSettings } from "@/lib/radar/types";
+import { COUNTRY_OPTIONS } from "@/lib/radar/settings";
+import type { Frequency, MatchWeights, RadarEligibilityPrefs, RadarSettings } from "@/lib/radar/types";
 import { radarApi } from "./api";
 import { EmptyState, Label, Notice, Skeleton, Tag, btnDark, btnGhost, card, field, useToast } from "./ui";
 
@@ -82,6 +83,7 @@ export default function SettingsView() {
 
   const total = Object.values(s.weights).reduce((a, b) => a + b, 0);
   const up = (patch: Partial<RadarSettings>) => setS({ ...s, ...patch });
+  const upE = (patch: Partial<RadarEligibilityPrefs>) => setS({ ...s, eligibility: { ...s.eligibility, ...patch } });
   const dirty = JSON.stringify({ ...s, updatedAt: null }) !== JSON.stringify({ ...JSON.parse(saved || "{}"), updatedAt: null });
 
   async function save() {
@@ -106,7 +108,7 @@ export default function SettingsView() {
 
   return (
     <div className="space-y-4">
-      <Notice tone="warn">Por ahora Maru guarda tus preferencias, pero todavía no revisa fuentes ni envía avisos. Lo vas a ver acá cuando empiece.</Notice>
+      <Notice tone="warn">Maru lee las fuentes cuando tocás «Revisar ahora» en la ficha de cada empresa. La revisión automática con estas frecuencias, las alertas y el resumen todavía no están activos.</Notice>
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-4">
           <section className={`${card} p-5`} aria-labelledby="ajustes-frecuencia">
@@ -124,6 +126,65 @@ export default function SettingsView() {
               </div>
             ))}
             <button type="button" className={`${btnGhost} mt-2`} onClick={() => up({ frequencies: { P1: "semanal", P2: "semanal", P3: "semanal" } })}>Semanal para todas</button>
+          </section>
+
+          <section className={`${card} p-5`} aria-labelledby="ajustes-elegibilidad">
+            <h2 id="ajustes-elegibilidad" className="text-lg font-bold">Dónde podés trabajar</h2>
+            <p className="mt-1 text-xs text-muted">Lo usa el match para saber si una vacante te deja afuera. Maru no lo deduce de tu CV ni de tu nombre: si no lo declarás, esas vacantes quedan «por verificar».</p>
+            <fieldset className="mt-3">
+              <legend className="text-sm font-semibold">Países donde podés trabajar legalmente</legend>
+              <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 sm:grid-cols-3">
+                {COUNTRY_OPTIONS.map(([code, name]) => (
+                  <label key={code} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-ink"
+                      checked={s.eligibility.authorizedCountries.includes(code)}
+                      onChange={(e) => {
+                        const set = new Set(s.eligibility.authorizedCountries);
+                        if (e.target.checked) set.add(code);
+                        else set.delete(code);
+                        upE({ authorizedCountries: COUNTRY_OPTIONS.map(([c]) => c).filter((c) => set.has(c)) });
+                      }}
+                    />
+                    {name}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div>
+                <Label htmlFor="radar-reloc">Relocalización</Label>
+                <select id="radar-reloc" value={s.eligibility.relocation} onChange={(e) => upE({ relocation: e.target.value as RadarEligibilityPrefs["relocation"] })} className={field}>
+                  <option value="si">Me mudaría</option>
+                  <option value="a_conversar">A conversar</option>
+                  <option value="no">No me mudaría</option>
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="radar-modalidad">Modalidad</Label>
+                <select id="radar-modalidad" value={s.eligibility.remote} onChange={(e) => upE({ remote: e.target.value as RadarEligibilityPrefs["remote"] })} className={field}>
+                  <option value="cualquiera">Cualquiera</option>
+                  <option value="remoto_o_hibrido">Remoto o híbrido</option>
+                  <option value="solo_remoto">Sólo remoto</option>
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="radar-min" hint="(opcional)">Mínimo mensual USD</Label>
+                <input
+                  id="radar-min"
+                  type="number"
+                  min={0}
+                  step={100}
+                  inputMode="numeric"
+                  value={s.eligibility.minMonthlyUsd ?? ""}
+                  onChange={(e) => upE({ minMonthlyUsd: e.target.value === "" ? null : Math.max(0, Math.round(Number(e.target.value) || 0)) })}
+                  className={field}
+                  placeholder="Ej. 5000"
+                />
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-muted">Los roles, el nivel y tu experiencia salen de tu CV y tus preferencias en Match.</p>
           </section>
 
           <section className={`${card} p-5`} aria-labelledby="ajustes-alertas">

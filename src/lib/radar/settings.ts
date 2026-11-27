@@ -14,8 +14,25 @@ export function defaultSettings(timezone = "America/Argentina/Buenos_Aires"): Ra
     instantAlerts: { enabled: false, threshold: 85 },
     channels: { inApp: true, email: false },
     weights: { ...DEFAULT_WEIGHTS },
+    eligibility: { ...DEFAULT_ELIGIBILITY },
     updatedAt: null,
   };
+}
+
+export const DEFAULT_ELIGIBILITY = { authorizedCountries: [] as string[], relocation: "a_conversar" as const, remote: "cualquiera" as const, minMonthlyUsd: null };
+
+/** Países que se pueden declarar (y "EU" = cualquier país de la Unión Europea). */
+export const COUNTRY_OPTIONS: [string, string][] = [
+  ["AR", "Argentina"], ["UY", "Uruguay"], ["CL", "Chile"], ["BR", "Brasil"], ["CO", "Colombia"], ["MX", "México"], ["PE", "Perú"],
+  ["US", "Estados Unidos"], ["CA", "Canadá"], ["ES", "España"], ["PT", "Portugal"], ["IT", "Italia"], ["DE", "Alemania"], ["FR", "Francia"],
+  ["NL", "Países Bajos"], ["IE", "Irlanda"], ["GB", "Reino Unido"], ["EU", "Unión Europea (cualquier país)"],
+];
+
+/** Ajustes guardados antes de que existiera un campo: se completan con los valores de fábrica. */
+export function withDefaults(s: Partial<RadarSettings> | null): RadarSettings {
+  const d = defaultSettings();
+  if (!s) return d;
+  return { ...d, ...s, eligibility: { ...d.eligibility, ...(s.eligibility ?? {}) }, weights: { ...d.weights, ...(s.weights ?? {}) } };
 }
 
 export function validTimezone(tz: string): boolean {
@@ -44,6 +61,14 @@ export const settingsInput = z
     instantAlerts: z.object({ enabled: z.boolean(), threshold: z.number().int().min(50).max(100) }),
     channels: z.object({ inApp: z.literal(true), email: z.boolean() }),
     weights: z.object({ experiencia: pct, seniority: pct, ubicacion: pct, compensacion: pct, interes: pct }),
+    eligibility: z
+      .object({
+        authorizedCountries: z.array(z.string().regex(/^([A-Z]{2})$/)).max(30).refine((xs) => xs.every((x) => COUNTRY_OPTIONS.some(([c]) => c === x)), "País no admitido."),
+        relocation: z.enum(["si", "no", "a_conversar"]),
+        remote: z.enum(["solo_remoto", "remoto_o_hibrido", "cualquiera"]),
+        minMonthlyUsd: z.number().int().min(0).max(1_000_000).nullable(),
+      })
+      .default({ ...DEFAULT_ELIGIBILITY }),
   })
   .refine((s) => Object.values(s.weights).reduce((a, b) => a + b, 0) === 100, { message: "Los pesos del match tienen que sumar 100.", path: ["weights"] });
 

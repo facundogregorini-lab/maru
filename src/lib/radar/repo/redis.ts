@@ -1,5 +1,5 @@
 import { compareAndSetJson, deleteKeys, getManyJson, pipeline, pushRecent, readRecent, setIfAbsent, setJson, setMembers } from "../../db";
-import type { Company, CompanySource, ImportRun, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
+import type { Company, CompanySource, ImportRun, MatchesDoc, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 import type { RadarRepos } from "./types";
 
 /** Implementación sobre Upstash. Esquema en docs/radar/ADR-001-persistencia.md. */
@@ -19,6 +19,7 @@ export const keys = {
   sourceRuns: (sourceId: string) => `${NS}:source-runs:${sourceId}`,
   lease: (key: string) => `${NS}:lease:${key}`,
   followed: () => `${NS}:followed`,
+  matches: (uid: string, companyId: string) => `${NS}:u:${uid}:matches:${companyId}`,
 };
 
 const CHUNK = 200;
@@ -31,6 +32,10 @@ async function mget<T>(ks: string[]): Promise<(T | null)[]> {
 const emptyTargets = (): TargetsDoc => ({ items: {}, updatedAt: 0 });
 
 export const redisRepos: RadarRepos = {
+  matches: {
+    readMany: (uid, companyIds) => mget<MatchesDoc>(companyIds.map((c) => keys.matches(uid, c))),
+    write: (uid, doc) => setJson(keys.matches(uid, doc.companyId), doc),
+  },
   jobs: {
     readIndexes: (ids) => mget<SourceJobsDoc>(ids.map(keys.jobs)),
     writeIndex: (doc) => setJson(keys.jobs(doc.sourceId), doc),
@@ -39,6 +44,7 @@ export const redisRepos: RadarRepos = {
       // De a 50 (≤ 200 KB por pedido a Upstash).
       for (let i = 0; i < entries.length; i += 50) await pipeline(entries.slice(i, i + 50).map(([id, text]) => ["SET", keys.jobDesc(id), JSON.stringify(text)]));
     },
+    readDescriptions: (ids) => mget<string>(ids.map(keys.jobDesc)),
     async readDescription(jobId) {
       const [d] = await getManyJson<string>([keys.jobDesc(jobId)]);
       return d;

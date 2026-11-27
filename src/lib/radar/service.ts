@@ -1,10 +1,11 @@
 import { cleanUrl, companyDomain, companyIdFor, detectProvider, fold, slugify } from "./identity";
 import { analyze, planImport, type ImportPlan, type MappingOverrides } from "./importer";
 import { radarRepos } from "./repo";
-import { defaultSettings } from "./settings";
+import { withDefaults } from "./settings";
 import type { Sheet } from "./tabular";
-import { PRIORITIES, type Company, type CompanySource, type ImportRun, type JobOpening, type MonitoringRun, type PilotJob, type Priority, type RadarSettings, type SourceProvider, type TargetCompany, type TargetView } from "./types";
+import { PRIORITIES, type Company, type CompanySource, type ImportRun, type JobOpening, type MonitoringRun, type PilotJob, type Priority, type RadarMatch, type RadarSettings, type SourceProvider, type TargetCompany, type TargetView } from "./types";
 import { runMonitoring } from "./sources/worker";
+import { actionPriority } from "./match/score";
 
 /** Operaciones de Radar. Reciben siempre el `userId` derivado de la sesión verificada. */
 
@@ -264,7 +265,7 @@ export async function applyImport(uid: string, fileName: string, plan: ImportPla
 /* ---------- Ajustes ---------- */
 
 export async function readSettings(uid: string): Promise<RadarSettings> {
-  return (await radarRepos().settings.read(uid)) ?? defaultSettings();
+  return withDefaults(await radarRepos().settings.read(uid));
 }
 
 /* ---------- Vacantes detectadas ---------- */
@@ -311,15 +312,29 @@ export async function companyDetail(uid: string, companyId: string): Promise<{ o
   return { open: jobs.filter((j) => j.status === "open").sort(byRecent), closed: jobs.filter((j) => j.status === "closed").sort((a, b) => (b.closedAt ?? "").localeCompare(a.closedAt ?? "")).slice(0, 30), runs };
 }
 
-export type DetectedJob = JobOpening & { companyName: string; priority: Priority | null; industries: string[] };
+export type DetectedJob = JobOpening & {
+  companyName: string;
+  priority: Priority | null;
+  industries: string[];
+  match: RadarMatch | null;
+  action: { value: number; band: "alta" | "media" | "baja"; why: string[] } | null;
+};
 
 /** Oportunidades: vacantes abiertas detectadas en las empresas que sigue la persona (sin score todavía). */
-export async function detectedOpportunities(uid: string): Promise<{ jobs: DetectedJob[]; pilot: PilotJob[]; companies: { total: number; checked: number; lastSuccessAt: string | null } }> {
+export async function detectedOpportunities(uid: string): Promise<{
+  jobs: DetectedJob[];
+  pilot: PilotJob[];
+  companies: { total: number; checked: number; lastSuccessAt: string | null };
+  /** Cerradas en los últimos 30 días (para avisar si estaban en Seguimiento). */
+  recentlyClosed: { id: string; title: string; companyName: string; url: string; closedAt: string | null }[];
+}> {
   const repos = radarRepos();
   const doc = await repos.targets.read(uid);
   const active = Object.values(doc.items).filter((t) => t.status === "activa");
   const ids = active.map((t) => t.companyId);
-  const [{ jobs, byCompany }, companies, pilot] = await Promise.all([jobsForCompanies(ids), repos.companies.getMany(ids), repos.pilot.list(uid)]);
+  const [{ jobs, byCompany }, companies, pilot, matchDocs, settings] = await Promise.all([jobsForCompanies(ids), repos.companies.getMany(ids), repos.pilot.list(uid), repos.matches.readMany(uid, ids), readSettings(uid)]);
+  const matches = new Map<string, RadarMatch>();
+  for (const d of matchDocs) if (d) for (const [k, v] of Object.entries(d.items)) matches.set(k, v);
   const names = new Map(companies.filter(Boolean).map((c) => [c!.id, c!]));
   const prio = new Map(active.map((t) => [t.companyId, t.priority]));
   const checked = ids.filter((id) => (byCompany[id] ?? []).some((s) => s.lastSuccessAt)).length;
@@ -327,10 +342,20 @@ export async function detectedOpportunities(uid: string): Promise<{ jobs: Detect
   return {
     jobs: jobs
       .filter((j) => j.status === "open")
-      .map((j) => ({ ...j, companyName: names.get(j.companyId)?.name ?? "", priority: prio.get(j.companyId) ?? null, industries: names.get(j.companyId)?.industries ?? [] }))
-      .sort((a, b) => priorityRank(a.priority) - priorityRank(b.priority) || byRecent(a, b)),
+      .map((j) => {
+        const priority = prio.get(j.companyId) ?? null;
+        const m = matches.get(j.id) ?? null;
+        // Un resultado sin score (sólo una marca de descarte) no se muestra como evaluado.
+        const match = m && m.scoringVersion ? { ...m, rejected: m.rejected ?? null } : m ? { ...m, score: null } : null;
+        const action = match && match.score !== null ? actionPriority(match, { priority, publishedAt: j.publishedAt, firstSeenAt: j.firstSeenAt, open: true, interestWeight: settings.weights.interes }) : null;
+        return { ...j, companyName: names.get(j.companyId)?.name ?? "", priority, industries: names.get(j.companyId)?.industries ?? [], match, action };
+      })
+      .sort((a, b) => (b.action?.value ?? -1) - (a.action?.value ?? -1) || priorityRank(a.priority) - priorityRank(b.priority) || byRecent(a, b)),
     pilot,
     companies: { total: ids.length, checked, lastSuccessAt: last },
+    recentlyClosed: jobs
+      .filter((j) => j.status === "closed" && j.closedAt && Date.now() - Date.parse(j.closedAt) < 30 * 86_400_000)
+      .map((j) => ({ id: j.id, title: j.title, companyName: names.get(j.companyId)?.name ?? "", url: j.url, closedAt: j.closedAt })),
   };
 }
 
@@ -362,3 +387,15 @@ export async function addSource(uid: string, companyId: string, careersUrl: stri
   await repos.sources.saveMany({ [companyId]: [...current, source] });
   return source;
 }
+
+/** Vacante de una empresa seguida con su descripción (para pasarla a CV, Carta o Entrevista). */
+export async function jobForHandoff(uid: string, companyId: string, jobId: string): Promise<{ job: JobOpening; description: string; company: string }> {
+  await assertFollows(uid, companyId);
+  const { jobs } = await jobsForCompanies([companyId]);
+  const job = jobs.find((j) => j.id === jobId);
+  if (!job) throw new RadarError("No encontramos esa vacante.", "NOT_FOUND", 404);
+  const [company] = await radarRepos().companies.getMany([companyId]);
+  return { job, description: (await radarRepos().jobs.readDescription(jobId)) ?? "", company: company?.name ?? "" };
+}
+
+export { assertFollows };

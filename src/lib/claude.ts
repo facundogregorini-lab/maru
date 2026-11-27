@@ -140,12 +140,16 @@ type Usage = { input_tokens: number; output_tokens: number; cache_read_input_tok
  * Una línea por llamada en los logs de Vercel (que ya muestran la ruta del pedido): modelo, etapa,
  * tokens y costo estimado. Nunca contenido ni datos de la persona.
  */
-export function logUsage(model: string, etapa: "borrador" | "editorial", usage: Usage | undefined): void {
+export type UsageReport = { model: string; etapa: "borrador" | "editorial"; entrada: number; salida: number; usd: number };
+
+export function logUsage(model: string, etapa: "borrador" | "editorial", usage: Usage | undefined, onUsage?: (u: UsageReport) => void): void {
   if (!usage) return;
   const [inPrice, outPrice] = PRICES[model] ?? [0, 0];
   const input = usage.input_tokens + (usage.cache_read_input_tokens ?? 0) + (usage.cache_creation_input_tokens ?? 0);
   const usd = (input * inPrice + usage.output_tokens * outPrice) / 1e6;
-  console.info(`MARU_IA_USO ${JSON.stringify({ model, etapa, entrada: input, salida: usage.output_tokens, usd: Number(usd.toFixed(5)) })}`);
+  const report: UsageReport = { model, etapa, entrada: input, salida: usage.output_tokens, usd: Number(usd.toFixed(5)) };
+  console.info(`MARU_IA_USO ${JSON.stringify(report)}`);
+  onUsage?.(report);
 }
 
 /** Haiku no tiene fallback del lado del servidor: ante un rechazo, la respuesta se maneja acá. */
@@ -169,6 +173,8 @@ export async function askStructured<T extends z.ZodType>(opts: {
   model?: string;
   /** Tope por llamada, sin reintentos. Sin esto rigen los valores del SDK. */
   timeoutMs?: number;
+  /** Recibe tokens y costo de cada llamada (borrador y editorial). */
+  onUsage?: (u: UsageReport) => void;
 }): Promise<z.infer<T>> {
   const model = opts.model ?? MODELS[opts.nivel ?? "rapido"]();
   const request = opts.timeoutMs ? { timeout: opts.timeoutMs, maxRetries: 0 } : undefined;
@@ -180,7 +186,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
     output_config: { effort: opts.effort, format: betaZodOutputFormat(opts.schema) },
     messages: [{ role: "user", content: opts.content }],
   }, request);
-  logUsage(response.model ?? model, "borrador", response.usage);
+  logUsage(response.model ?? model, "borrador", response.usage, opts.onUsage);
 
   if (response.stop_reason === "refusal") {
     throw new UserFacingError("No pudimos procesar este pedido. Revisá el contenido e intentá de nuevo.", "REFUSAL", 422);
@@ -206,7 +212,7 @@ export async function askStructured<T extends z.ZodType>(opts: {
       output_config: { effort: "low", format: betaZodOutputFormat(PatchSchema) },
       messages: [{ role: "user", content: JSON.stringify({ borradores: fields }) }],
     }, { timeout: 12000, maxRetries: 0 });
-    logUsage(edited.model ?? editor, "editorial", edited.usage);
+    logUsage(edited.model ?? editor, "editorial", edited.usage, opts.onUsage);
     if (edited.stop_reason === "max_tokens" || !edited.parsed_output) return draft;
     const candidate = applyEditorialPatches(draft, fields, edited.parsed_output.patches);
     const checked = opts.schema.safeParse(candidate);

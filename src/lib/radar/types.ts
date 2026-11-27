@@ -112,7 +112,18 @@ export type RadarSettings = {
   instantAlerts: { enabled: boolean; threshold: number };
   channels: { inApp: boolean; email: boolean };
   weights: MatchWeights;
+  /** Lo que la persona declara para la elegibilidad. Nunca se infiere nacionalidad ni permiso de trabajo. */
+  eligibility: RadarEligibilityPrefs;
   updatedAt: string | null;
+};
+
+export type RadarEligibilityPrefs = {
+  /** Países (ISO-2) o "EU" donde puede trabajar legalmente. Vacío = no lo declaró. */
+  authorizedCountries: string[];
+  relocation: "si" | "no" | "a_conversar";
+  remote: "solo_remoto" | "remoto_o_hibrido" | "cualquiera";
+  /** Mínimo bruto mensual en USD; null = no lo declaró. */
+  minMonthlyUsd: number | null;
 };
 
 /** Vacante histórica del piloto (sección JOB OPENINGS · PILOTO). Sin vigencia verificada. */
@@ -224,3 +235,42 @@ export type MonitoringRun = {
   items: MonitoringRunItem[];
   totals: { sources: number; ok: number; errors: number; skipped: number; created: number; modified: number; closed: number; reopened: number };
 };
+
+/* ---------- Match de rol (radar-match, ver docs/radar/ADR-002-match.md) ---------- */
+
+export type CriterionId = "experiencia" | "seniority" | "ubicacion" | "compensacion" | "interes";
+export type Criterion = { id: CriterionId; known: boolean; score: number | null; weight: number; evidence: string[] };
+export type EligibilityStatus = "eligible" | "needs_verification" | "blocked";
+export type MustHave = { text: string; status: "cumple" | "no_cumple" | "desconocido" };
+
+export type RadarMatch = {
+  jobId: string;
+  /** null = sin evaluar todavía. */
+  score: number | null;
+  coverage: number;
+  confidence: "alta" | "media" | "baja";
+  eligibility: EligibilityStatus;
+  eligibilityEvidence: string[];
+  /** Las reglas la dejaron afuera (función distinta, nivel fuera de rango): no se recomienda. */
+  rejected: string | null;
+  breakdown: Criterion[];
+  method: "ia" | "reglas";
+  mainReason: string;
+  mainBarrier: string;
+  strengths: string[];
+  gaps: string[];
+  mustHaves: MustHave[];
+  unknowns: string[];
+  nextStep: string;
+  scoringVersion: string;
+  profileHash: string;
+  jobHash: string;
+  evaluatedAt: string;
+  /** El resultado es de un perfil o un aviso anterior: falta re-evaluar. */
+  stale: boolean;
+  /** Preferencia personal: descartar no borra la vacante global. */
+  disposition: "dismissed" | null;
+  dispositionAt: string | null;
+};
+
+export type MatchesDoc = { companyId: string; items: Record<string, RadarMatch>; updatedAt: number };
