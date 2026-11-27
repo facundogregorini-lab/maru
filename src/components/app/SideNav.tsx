@@ -3,9 +3,25 @@
 import Link from "next/link";
 import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 import { usePathname } from "next/navigation";
+import { useRadarVisible } from "@/components/radar/useRadarVisible";
+
+type Item = { href: string; label: string; icon: React.ReactNode };
+
+/** Radar laboral (detrás de RADAR_ENABLED): va debajo de Match. */
+export const RADAR_ITEM: Item = {
+  href: "/radar",
+  label: "Radar laboral",
+  icon: (
+    <>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 12 17.5 6.5M12 4v2M20 12h-2" />
+      <circle cx="12" cy="12" r="1.2" />
+    </>
+  ),
+};
 
 /** Íconos de la barra lateral (los de jobright: Jobs, Resume, Profile, Agent, Coaching, Interview). */
-const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
+const ITEMS: Item[] = [
   { href: "/busquedas", label: "Búsquedas", icon: <path d="M4 8h16v11H4zM9 8V5h6v3M4 13h16" /> },
   {
     href: "/match",
@@ -27,18 +43,26 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
   { href: EXTENSION_STORE_URL, label: "Extensión", icon: <path d="M9 4h4v3a2 2 0 1 0 0 4v0h4v4h-3a2 2 0 1 0 0 4H9v-4a2 2 0 1 1 0-4V7H5V4h4" /> },
 ];
 
+/** Los ítems de la barra; con el flag apagado, exactamente los de siempre. */
+export function navItems(radar: boolean): Item[] {
+  if (!radar) return ITEMS;
+  const i = ITEMS.findIndex((it) => it.href === "/match");
+  return [...ITEMS.slice(0, i + 1), RADAR_ITEM, ...ITEMS.slice(i + 1)];
+}
+
 export default function SideNav() {
   const path = usePathname();
+  const radar = useRadarVisible();
   return (
     <nav className="flex flex-col gap-1">
-      {ITEMS.map((it) => {
+      {navItems(radar).map((it) => {
         const on = path.startsWith(it.href);
         return (
           <Link
             key={it.href}
             href={it.href}
             aria-current={on ? "page" : undefined}
-            className={`flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] font-medium transition-colors ${on ? "bg-white shadow-sm" : "hover:bg-white/70"}`}
+            className={`flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] font-medium transition-colors ${it === RADAR_ITEM ? "text-center leading-[11px]" : ""} ${on ? "bg-white shadow-sm" : "hover:bg-white/70"}`}
           >
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               {it.icon}

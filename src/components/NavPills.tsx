@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { NAV, TOOLS } from "./nav";
+import { useRadarVisible } from "./radar/useRadarVisible";
 
 /** La extensión es una herramienta más; no cambia el modo de uso del sitio. */
 export function NavPills() {
@@ -63,6 +64,7 @@ export function NavPills() {
 /** Menú de celular y tablet: hamburguesa a la izquierda, como en jobright. */
 export function NavMenu() {
   const path = usePathname();
+  const radar = useRadarVisible();
   const menu = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     if (menu.current) menu.current.open = false;
@@ -84,9 +86,16 @@ export function NavMenu() {
             Inicio
           </Link>
           {NAV.map((n) => (
-            <Link key={n.href} href={n.href} aria-current={path === n.href ? "page" : undefined} className="flex h-10 items-center text-base aria-[current=page]:font-semibold">
-              {n.label}
-            </Link>
+            <Fragment key={n.href}>
+              <Link href={n.href} aria-current={path === n.href ? "page" : undefined} className="flex h-10 items-center text-base aria-[current=page]:font-semibold">
+                {n.label}
+              </Link>
+              {radar && n.href === "/match" && (
+                <Link href="/radar/empresas" aria-current={path.startsWith("/radar") ? "page" : undefined} className="flex h-10 items-center text-base aria-[current=page]:font-semibold">
+                  Radar laboral
+                </Link>
+              )}
+            </Fragment>
           ))}
         </nav>
         <hr className="my-4 border-surface" />
