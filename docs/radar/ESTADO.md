@@ -23,10 +23,11 @@ Cierra el flujo **seguir empresa → vacante real → evaluación → guardar en
 
 ### Ejecución real
 
-- **Sin IA en este contenedor:** no hay `ANTHROPIC_API_KEY` acá (por regla, sólo como secret de GitHub o variable de Vercel). Para la corrida real quedó el workflow manual **`radar-eval`** (`scripts/radar-eval.ts`, secret `ANTHROPIC_API_KEY`, corta en US$1, no escribe en Upstash ni commitea). El top 5 con desglose, las bloqueadas, las por verificar y el costo se anotan abajo cuando se corra.
-- **Parte determinística con datos reales** (simulación del evaluador, 7 empresas P1 de ejemplo, perfil de prueba Growth/GTM, Argentina declarada): 452 vacantes abiertas; **285 descartadas por reglas sin IA** (63 %); el resto pasa a la IA. En la UI con Supabase + Linear: 112 vacantes, 100 «no encajan», 12 para evaluar con IA.
+- **Bloqueo: el secret `ANTHROPIC_API_KEY` de GitHub es inválido.** El workflow `radar-eval` corrió dos veces el 27/11 (en `main` y en la rama) y todas las llamadas a la IA respondieron **401 `invalid x-api-key`** (0 tokens, US$0). Afecta también a `match-eval`. Hay que cargar una clave válida en GitHub → Settings → Secrets and variables → Actions → `ANTHROPIC_API_KEY` (la de Vercel se actualizó el 19/11) y volver a correr `radar-eval` desde Actions. En este contenedor no hay clave (por regla, sólo como secret o variable de Vercel).
+- **Parte determinística con datos reales** (corrida en GitHub Actions, 7 empresas P1 de ejemplo, perfil de prueba Growth/GTM, Argentina declarada, mínimo USD 6.000): 7 fuentes leídas sin errores, **452 vacantes abiertas**; **285 no encajan por reglas** (función o nivel; 63 %, sin gastar IA); **5 bloqueadas** (por ejemplo, presencial en un país no declarado sin relocalización, o ciudadanía exigida); **220 por verificar** entre las evaluadas (sobre todo remotos restringidos a EMEA, EE. UU. o AMER y ubicaciones sin país); 167 quedan para la IA. El top 5 con desglose queda pendiente de la clave.
+- En la UI local con Supabase + Linear: 112 vacantes, 100 «no encajan», 12 para evaluar con IA.
 
-### Costo (estimado hasta la corrida real)
+### Costo (estimado; se confirma con la corrida real)
 
 Haiku 5.5 (US$0,10 por millón de entrada y US$0,50 de salida, según `PRICES` de `claude.ts`). Cada vacante va con ~3.000 caracteres de aviso más el perfil (≈ 1.200 tokens de entrada por vacante en tandas de 5) y devuelve ≈ 350 tokens: **≈ US$0,0003 por vacante**. Con 7 empresas P1, ~15 % de vacantes nuevas o modificadas por semana y ~37 % que pasa las reglas: ~25 evaluaciones, **≈ US$0,01 por usuario activo por semana**. La revisión editorial puede sumar una llamada corta por tanda.
 
