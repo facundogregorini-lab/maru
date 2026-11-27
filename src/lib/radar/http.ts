@@ -16,7 +16,7 @@ export const notFound = () => new Response("Not found", { status: 404, headers: 
 
 export const COMPANY_ID = /^[ds]:[a-z0-9][a-z0-9.-]{0,119}$/;
 
-type Ctx = { req: Request; uid: string };
+type Ctx = { req: Request; uid: string; email: string };
 
 export function radarRoute(handler: (ctx: Ctx) => Promise<Response>) {
   return async (req: Request): Promise<Response> => {
@@ -31,7 +31,7 @@ export function radarRoute(handler: (ctx: Ctx) => Promise<Response>) {
     if (!email) return json({ error: "Ingresá con Google para usar Radar laboral.", code: "AUTH_REQUIRED" }, 401);
     if (!dbConfigured()) return json({ error: "La base de datos todavía no está conectada.", code: "DB_NOT_CONFIGURED" }, 503);
     try {
-      return await handler({ req, uid: userId(email) });
+      return await handler({ req, uid: userId(email), email });
     } catch (err) {
       if (err instanceof RadarError) return json({ error: err.message, code: err.code }, err.status);
       if (err instanceof TabularError) return json({ error: err.message, code: err.code }, 422);

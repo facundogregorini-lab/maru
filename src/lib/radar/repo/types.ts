@@ -1,4 +1,4 @@
-import type { Company, CompanySource, ImportRun, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
+import type { Company, CompanySource, ImportRun, MatchesDoc, MonitoringRun, PilotJob, RadarSettings, SourceJobsDoc, TargetsDoc } from "../types";
 
 /**
  * Interfaces de acceso a datos de Radar. Las pantallas y las rutas sólo conocen esto; hoy lo implementa
@@ -43,6 +43,13 @@ export interface JobRepo {
   writeIndex(doc: SourceJobsDoc): Promise<void>;
   writeDescriptions(byJobId: Record<string, string>): Promise<void>;
   readDescription(jobId: string): Promise<string | null>;
+  readDescriptions(jobIds: string[]): Promise<(string | null)[]>;
+}
+
+/** Resultados de radar-match de cada persona, un documento por empresa seguida. */
+export interface MatchRepo {
+  readMany(userId: string, companyIds: string[]): Promise<(MatchesDoc | null)[]>;
+  write(userId: string, doc: MatchesDoc): Promise<void>;
 }
 
 export interface MonitoringRunRepo {
@@ -65,6 +72,7 @@ export interface FollowedRepo {
 
 export type RadarRepos = {
   jobs: JobRepo;
+  matches: MatchRepo;
   runs: MonitoringRunRepo;
   leases: LeaseRepo;
   followed: FollowedRepo;

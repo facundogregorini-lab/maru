@@ -2,6 +2,59 @@
 
 Traspaso entre sesiones. Lo actualiza cada sesión al terminar.
 
+## Sesión 3 (27/11/2026): match de rol, Oportunidades y Seguimiento
+
+Cierra el flujo **seguir empresa → vacante real → evaluación → guardar en Seguimiento**. Decisión de diseño en `ADR-002-match.md`: scorer propio `radar-match@1` que reutiliza las reglas de Match (`extract`, `fit.ts`, `salaryFromText`) y `askStructured`; `/match` no cambia.
+
+### Qué funciona
+
+- **Perfil:** el CV y las preferencias que la persona ya cargó en Match (documento `match` sincronizado con su cuenta). Sin perfil, «Evaluar» pide cargarlo en Match. Ningún perfil hardcodeado (el de prueba está sólo en `scripts/radar-eval.ts` y en los tests).
+- **Elegibilidad declarada** en Automatización: países donde puede trabajar (o «Unión Europea»), relocalización, modalidad y mínimo mensual en USD. Nada se infiere: si no lo declaró, la vacante queda «por verificar».
+- **Gates por reglas** (`src/lib/radar/match/eligibility.ts`): `blocked` (presencial en un país no declarado y sin relocalización, ciudadanía o clearance, pedido explícito de permiso de un país no declarado, presencial cuando pidió sólo remoto) y `needs_verification` (país o región sin declarar, ubicación desconocida, remoto restringido). Un bloqueo nunca se compensa.
+- **Preclasificación sin IA:** función distinta, nivel fuera de rango o bloqueo → evaluada por reglas, marcada «No encaja» (tope 30/100), sin prioridad de acción y fuera de «Para considerar». No gasta IA.
+- **Score** con cinco criterios, evidencia y `known/unknown`, renormalizado sobre lo conocido, con cobertura y confianza; pesos de Automatización.
+- **IA** (Haiku, de a 5 vacantes, 3 en paralelo, tope de 30 por pedido y cupo de 150 por día y persona con `RADAR_DAILY_EVALS`): competencias, nivel si era dudoso, salario publicado, excluyentes, fortalezas, brechas, desconocidos, razón, barrera y siguiente paso. Aviso como contenido no confiable; perfil sin nombre, contacto, ciudad ni permisos.
+- **No recalcula** si no cambian `scoring_version`, `profile_hash` ni `job_hash`. Si la IA falla queda el resultado anterior «desactualizado»; si no había, «sin evaluar».
+- **Prioridad de acción** al leer, con tope 69 si falta verificar y 59 con confianza baja; muestra el porqué. Se aclara que no es una probabilidad.
+- **Oportunidades:** resumen (nuevas, prioridad alta, empresas revisadas, última actualización), filtros (estado: para considerar, por verificar, bloqueadas, no encajan, sin evaluar, guardadas, descartadas; sector; prioridad de empresa; match mínimo; nuevas; remoto; texto), orden por prioridad de acción, match o novedad, cards con score, razón, barrera, elegibilidad y frescura. **Detalle** con desglose y evidencia, fortalezas, brechas, excluyentes, desconocidos y siguiente paso.
+- **Seguimiento:** «Guardar» usa `upsertTracked` del modelo existente: una sola tarjeta por URL, en «Guardada», nunca retrocede ni postula. El estado se lee de Seguimiento (si la persona la mueve a «Postulada», Radar lo muestra). Si una vacante guardada cierra, Oportunidades avisa y la tarjeta no cambia.
+- **Descartar** es personal (no toca la vacante global) y se conserva al re-evaluar.
+- **Adaptar CV, Carta y Entrevista** abren las herramientas existentes con la vacante y su descripción precargadas (`handoffJob`).
+
+### Ejecución real
+
+- **Sin IA en este contenedor:** no hay `ANTHROPIC_API_KEY` acá (por regla, sólo como secret de GitHub o variable de Vercel). Para la corrida real quedó el workflow manual **`radar-eval`** (`scripts/radar-eval.ts`, secret `ANTHROPIC_API_KEY`, corta en US$1, no escribe en Upstash ni commitea). El top 5 con desglose, las bloqueadas, las por verificar y el costo se anotan abajo cuando se corra.
+- **Parte determinística con datos reales** (simulación del evaluador, 7 empresas P1 de ejemplo, perfil de prueba Growth/GTM, Argentina declarada): 452 vacantes abiertas; **285 descartadas por reglas sin IA** (63 %); el resto pasa a la IA. En la UI con Supabase + Linear: 112 vacantes, 100 «no encajan», 12 para evaluar con IA.
+
+### Costo (estimado hasta la corrida real)
+
+Haiku 5.5 (US$0,10 por millón de entrada y US$0,50 de salida, según `PRICES` de `claude.ts`). Cada vacante va con ~3.000 caracteres de aviso más el perfil (≈ 1.200 tokens de entrada por vacante en tandas de 5) y devuelve ≈ 350 tokens: **≈ US$0,0003 por vacante**. Con 7 empresas P1, ~15 % de vacantes nuevas o modificadas por semana y ~37 % que pasa las reglas: ~25 evaluaciones, **≈ US$0,01 por usuario activo por semana**. La revisión editorial puede sumar una llamada corta por tanda.
+
+### Decisiones
+
+- `radar-match` propio (ADR-002). `scoring_version` = `radar-match@1/p1`.
+- La prioridad de acción no se guarda: depende de la prioridad de la empresa y de la novedad, que cambian sin re-evaluar.
+- La fuente de verdad de «guardada» es Seguimiento; Radar sólo guarda «descartada».
+- Matches por persona y empresa: `maru:radar:v1:u:<uid>:matches:<companyId>`.
+
+### Configuración nueva
+
+| Variable | Dónde | Para qué |
+|---|---|---|
+| `RADAR_DAILY_EVALS` | Opcional (por defecto 150) | Evaluaciones con IA por persona y día. |
+| `RADAR_IA=off` | Opcional | Apaga la IA de Radar (sólo reglas). |
+
+### Riesgos
+
+- Las reglas de función usan `familyFromTitle` sobre los cargos del CV: un perfil con cargos de varias áreas deja pasar más vacantes a la IA (más costo, no peores resultados).
+- La detección de país es por texto («Remote, EMEA», ciudades conocidas): lo que no reconoce queda «por verificar», nunca bloqueado.
+- Seguimiento vive en el navegador (y en la cuenta si hay sesión): la marca «En Seguimiento» se ve en el navegador donde se guardó hasta que sincroniza.
+
+### Para la sesión 4
+
+- Scheduler: `runMonitoring` (sesión 2) + `evaluateForUser` (sesión 3); los dos son idempotentes. Las alertas pueden partir de `actionPriority(...).band === "alta"` y `eligibility === "eligible"`.
+- Analytics: no hay eventos de Radar todavía.
+
 ## Sesión 2 (27/11/2026): fuentes reales e ingestión de vacantes
 
 Misma rama (`claude/youthful-tesla-lw34fr`, reiniciada desde `main` tras el merge de la sesión 1). Primer tramo del flujo con datos reales: **seguir empresa → resolver su fuente → traer sus vacantes reales → verlas como detectadas**. Sin score.

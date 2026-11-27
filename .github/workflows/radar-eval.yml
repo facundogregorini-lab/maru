@@ -1,0 +1,38 @@
+# Evaluación real de radar-match (Radar laboral): lee vacantes reales de 7 empresas de ejemplo y las evalúa
+# con un perfil de prueba ficticio. Sólo a mano. Usa el secret ANTHROPIC_API_KEY (Haiku; corta en US$1).
+# No escribe en Upstash ni commitea nada: el resultado queda en el resumen del job y como artefacto.
+name: radar-eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_ia:
+        description: "Tope de vacantes evaluadas con IA"
+        required: false
+        default: "120"
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "1"
+      - name: Evaluar
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MAX_IA: ${{ github.event.inputs.max_ia }}
+        run: npx --yes tsx@4 scripts/radar-eval.ts radar-eval.md "--max-ia=${MAX_IA}" && cat radar-eval.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: radar-eval
+          path: radar-eval.md
