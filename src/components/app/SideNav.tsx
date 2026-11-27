@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { EXTENSION_STORE_URL } from "@/lib/extensionVersion";
 import { usePathname } from "next/navigation";
+import { useRadarAccess } from "@/components/radar/useRadarAccess";
 
 /** Íconos de la barra lateral (los de jobright: Jobs, Resume, Profile, Agent, Coaching, Interview). */
-const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
+const ITEMS: { href: string; label: string; icon: React.ReactNode; radar?: boolean }[] = [
   { href: "/busquedas", label: "Búsquedas", icon: <path d="M4 8h16v11H4zM9 8V5h6v3M4 13h16" /> },
   {
     href: "/match",
@@ -15,6 +16,18 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
         <circle cx="12" cy="12" r="8" />
         <circle cx="12" cy="12" r="4" />
         <circle cx="12" cy="12" r="0.8" />
+      </>
+    ),
+  },
+  {
+    href: "/radar",
+    label: "Radar laboral",
+    radar: true,
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="8" />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 12l5.5-5.5" />
       </>
     ),
   },
@@ -29,16 +42,18 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
 
 export default function SideNav() {
   const path = usePathname();
+  // Radar laboral va detrás de un feature flag del servidor.
+  const radar = useRadarAccess();
   return (
     <nav className="flex flex-col gap-1">
-      {ITEMS.map((it) => {
+      {ITEMS.filter((it) => !it.radar || radar).map((it) => {
         const on = path.startsWith(it.href);
         return (
           <Link
             key={it.href}
             href={it.href}
             aria-current={on ? "page" : undefined}
-            className={`flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[10px] font-medium transition-colors ${on ? "bg-white shadow-sm" : "hover:bg-white/70"}`}
+            className={`flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-center text-[10px] font-medium leading-tight transition-colors ${on ? "bg-white shadow-sm" : "hover:bg-white/70"}`}
           >
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               {it.icon}

@@ -1,10 +1,11 @@
 import type { SavedProfile } from "../profileStore";
 import type { MatchState } from "../match/clientStore";
 import type { TrackItem } from "../tracker";
+import { mergeRadar } from "../radar/state";
 
 /**
  * Lo que se sincroniza con la cuenta: el perfil, el match (preferencias y búsquedas guardadas o descartadas)
- * y el seguimiento. Cada documento es la misma clave de localStorage que ya usaba Maru, tal cual.
+ * el seguimiento y el Radar laboral. Cada documento es la misma clave de localStorage que ya usaba Maru, tal cual.
  * Lo armado en cada herramienta (CV, carta, entrevista, video) sigue siendo sólo del navegador.
  */
 
@@ -12,6 +13,7 @@ export const SYNC_DOCS = {
   perfil: "maru:perfil:v1",
   match: "maru:match:v1",
   tracker: "maru:tracker:v1",
+  radar: "maru:radar:v1",
 } as const;
 
 export type SyncDoc = keyof typeof SYNC_DOCS;
@@ -64,6 +66,8 @@ export function mergeDoc(doc: SyncDoc, local: unknown, remote: unknown, base?: u
     }
     return [...byId.values()];
   }
+
+  if (doc === "radar") return mergeRadar(local, remote);
 
   if (doc === "perfil") {
     const l = local as SavedProfile;

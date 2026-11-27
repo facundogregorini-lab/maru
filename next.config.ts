@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
     // El copiloto y las alertas semanales rankean con el mismo inventario.
     "/api/copiloto": ["./data/match/*.json"],
     "/api/cron/alertas": ["./data/match/*.json"],
+    // Radar laboral: estado de las empresas seguidas contra el directorio y el inventario.
+    "/api/radar/**": ["./data/match/*.json"],
     "/busquedas": ["./data/match/inventory*.json"],
     "/busquedas/[id]": ["./data/match/inventory*.json"],
     // La home lee los números del inventario al regenerarse (ISR).

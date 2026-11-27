@@ -130,6 +130,8 @@ export const RankingRequestSchema = z.object({
   limit: z.number().int().min(10).max(400).optional(),
   /** false: sólo el orden por reglas (rápido). La web lo pide primero y después pide el afinado con IA. */
   ia: z.boolean().optional(),
+  /** Radar laboral: limitar el ranking a estas empresas (nombres) y bolsas ("greenhouse:anthropic"). */
+  scope: z.object({ companies: list(1500, 120), boards: list(1500, 200) }).optional(),
 });
 
 export type ExternalJob = z.infer<typeof ExternalJobSchema>;

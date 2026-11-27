@@ -32,9 +32,9 @@ export function saveMatch(s: MatchState): void {
 }
 
 /** Lo último armado en cada herramienta y el seguimiento: también son datos de la persona. */
-const TOOL_KEYS = ["maru:sesion:v2", "maru:cv:v1", "maru:carta:v1", "maru:entrevista:v1", "maru:video:v1", "maru:tracker:v1", POSTULACIONES_KEY];
+const TOOL_KEYS = ["maru:sesion:v2", "maru:cv:v1", "maru:carta:v1", "maru:entrevista:v1", "maru:video:v1", "maru:tracker:v1", "maru:radar:v1", POSTULACIONES_KEY];
 
-/** Borra todo lo de Maru en este navegador: perfil, match, búsquedas propias, lo armado en cada herramienta y el seguimiento. */
+/** Borra todo lo de Maru en este navegador: perfil, match, búsquedas propias, lo armado en cada herramienta, el seguimiento y el Radar. */
 export function forgetEverything(): void {
   remove(KEY);
   remove(HANDOFF_KEY);

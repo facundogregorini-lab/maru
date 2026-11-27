@@ -1,5 +1,14 @@
 # Estado y próximos pasos de Maru
 
+## Radar laboral (plan en curso, desde 27/11/2026)
+
+Pedido del dueño: una sección para seguir empresas objetivo (P1, P2, P3), ver sus búsquedas con el match y llevarlas a Seguimiento. Spec en `docs/radar/PROMPT_MAESTRO.md`, decisiones en `docs/radar/ADR-001-persistencia.md`, traspaso detallado en `docs/radar/ESTADO.md`. Va detrás del flag `RADAR_ENABLED` (apagado en Production).
+
+1. **Hecho (PR 1): base.** Flag, documento `radar` en el sync, navegación, Mis empresas, agregar, importar XLSX/CSV, ficha, Automatización (guarda preferencias), estado de cada empresa contra el directorio y el inventario, `scope` en el ranking. Tests: `tests/radar-import.test.ts`, `tests/radar-api.test.ts`.
+2. **Pendiente (PR 2):** Oportunidades en vivo con el match y Guardar en Seguimiento.
+3. **Pendiente (PR 3):** pedir que una empresa nueva entre al directorio y a la sincronización diaria.
+4. **Pendiente (PR 4):** alertas y resumen semanal, descubrimiento, eventos y rollout.
+
 ## Maru Recruiters (plan en curso, desde 26/11/2026)
 
 Pedido del dueño: sumar una sección para reclutadores al estilo Metaview (sourcing, perfil ideal, calificación y outreach por email y WhatsApp), en producción. Diseño y reglas en `docs/RECRUITERS.md`.

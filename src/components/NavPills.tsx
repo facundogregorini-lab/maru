@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { NAV, TOOLS } from "./nav";
+import { useRadarAccess } from "./radar/useRadarAccess";
 
 /** La extensión es una herramienta más; no cambia el modo de uso del sitio. */
 export function NavPills() {
@@ -64,6 +65,9 @@ export function NavPills() {
 export function NavMenu() {
   const path = usePathname();
   const menu = useRef<HTMLDetailsElement>(null);
+  // Radar laboral (detrás de un feature flag) va después de Match.
+  const radar = useRadarAccess();
+  const items: readonly { href: string; label: string }[] = radar ? [...NAV.slice(0, 2), { href: "/radar", label: "Radar laboral" }, ...NAV.slice(2)] : NAV;
   useEffect(() => {
     if (menu.current) menu.current.open = false;
   }, [path]);
@@ -83,7 +87,7 @@ export function NavMenu() {
           <Link href="/" className={`flex h-10 items-center text-base ${path === "/" ? "font-semibold" : ""}`}>
             Inicio
           </Link>
-          {NAV.map((n) => (
+          {items.map((n) => (
             <Link key={n.href} href={n.href} aria-current={path === n.href ? "page" : undefined} className="flex h-10 items-center text-base aria-[current=page]:font-semibold">
               {n.label}
             </Link>

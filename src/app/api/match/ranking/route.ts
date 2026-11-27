@@ -6,7 +6,8 @@ import { analyzeStandalone, buildOpportunities } from "@/lib/match/inventory";
 import { loadInventory, resolveId } from "@/lib/match/load";
 import { rankOpportunities, weightsFromEnv, type RankOutput } from "@/lib/match/ranking";
 import { RERANK_ELIGIBLE, RERANK_PENDING, rerank, rerankEnabled } from "@/lib/match/rerank";
-import type { NormalizedPosting, StoredPosting } from "@/lib/match/types";
+import { companyKey } from "@/lib/match/group";
+import type { NormalizedPosting, Opportunity, StoredPosting } from "@/lib/match/types";
 
 export const runtime = "nodejs";
 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     const fields = invalidFields(parsed.error);
     return Response.json({ error: `Revisá tus datos: hay campos inválidos (${fields.join(", ")}).`, code: "BAD_REQUEST", fields }, { status: 400 });
   }
-  const { profile, prefs, interactions, filters, external = [], limit, ia } = parsed.data;
+  const { profile, prefs, interactions, filters, external = [], limit, ia, scope } = parsed.data;
 
   try {
     const { inv, postings, alias } = await loadInventory();
@@ -43,7 +44,8 @@ export async function POST(req: Request) {
     const allPostings = new Map<string, StoredPosting>(postings);
     for (const p of own) allPostings.set(p.key, p);
 
-    const opportunities = [...inv.opportunities, ...ownOpps];
+    // Radar laboral: sólo las empresas que sigue la persona (por nombre o por su bolsa de empleo).
+    const opportunities = scope ? inScope([...inv.opportunities, ...ownOpps], allPostings, scope) : [...inv.opportunities, ...ownOpps];
     // La web pide primero sin IA (resultados en segundos) y después el afinado, que puede tardar más.
     const available = rerankEnabled();
     const ai = available && ia !== false;
@@ -84,6 +86,12 @@ export async function POST(req: Request) {
     console.error("[match/ranking]", err instanceof Error ? err.message : "error");
     return Response.json({ error: "No pudimos armar tu ranking. Probá de nuevo.", code: "UNKNOWN" }, { status: 500 });
   }
+}
+
+function inScope(opps: Opportunity[], postings: Map<string, StoredPosting>, scope: { companies: string[]; boards: string[] }): Opportunity[] {
+  const names = new Set(scope.companies.map(companyKey));
+  const boards = new Set(scope.boards.map((b) => b.toLowerCase()));
+  return opps.filter((o) => names.has(companyKey(o.company)) || o.postingKeys.some((k) => boards.has(postings.get(k)?.boardId ?? "")));
 }
 
 /** La página pedida ("Ver más" suma de a 40), después de re-evaluar. */
