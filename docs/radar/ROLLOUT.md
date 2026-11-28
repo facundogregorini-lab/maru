@@ -1,6 +1,6 @@
 # Radar laboral — rollout y rollback
 
-Estado al 27/11/2026, después de las sesiones 1 a 4. **Radar está en producción, pero apagado** (`RADAR_ENABLED` no existe en Production): `/radar/*` y `/api/radar/*` dan 404, la navegación es la de siempre y el cron diario no hace nada.
+**Estado al 28/11/2026: prendido en Production sólo para la cuenta del dueño** (`RADAR_ENABLED=true` y `RADAR_ALLOWLIST` con su email; pasos 1 y 2 del rollout hechos, salvo la clave de GitHub). Para cualquier otra visita, `/radar/*` y `/api/radar/*` siguen dando 404 y la navegación no cambia. El cron diario ya corre para las empresas que siga esa cuenta.
 
 ## Qué funciona con fuente real y qué sigue en fixture
 
