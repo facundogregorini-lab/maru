@@ -1,5 +1,5 @@
 import { companyIdFrom, json, radarRoute, readJson } from "@/lib/radar/http";
-import { RadarError, follow, listTargets, reviewNow, unfollow, updateTarget, type CreateCompanyInput, type TargetPatch } from "@/lib/radar/service";
+import { RadarError, completeCompany, follow, listTargets, reviewNow, unfollow, updateTarget, type CreateCompanyInput, type TargetPatch } from "@/lib/radar/service";
 import type { Priority } from "@/lib/radar/types";
 
 /**
@@ -28,6 +28,15 @@ export const POST = radarRoute(async ({ req, uid }) => {
     industry: typeof c.industry === "string" ? c.industry : undefined,
   };
   const view = await follow(uid, { create, priority });
+  // Sin link de Careers: completar la ficha (IA + verificación) y leer lo que encuentre.
+  if (body.verify === true && !view.sources.length) {
+    try {
+      await completeCompany(uid, view.company.id);
+      return json((await listTargets(uid)).items.find((v) => v.company.id === view.company.id) ?? view, 201);
+    } catch {
+      // sin IA, cooldown o nada encontrado: queda como estaba
+    }
+  }
   // verify: resolver y leer la fuente apenas se agrega (lo pide la pantalla). Si falla, la empresa queda igual.
   if (body.verify === true && view.sources.length) {
     try {

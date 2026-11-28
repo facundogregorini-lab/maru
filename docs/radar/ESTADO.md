@@ -2,6 +2,11 @@
 
 Traspaso entre sesiones. Lo actualiza cada sesión al terminar.
 
+## 28/11/2026: rollout para el dueño y alta por nombre
+
+- **Production:** `RADAR_ENABLED=true` y `RADAR_ALLOWLIST` (sólo la cuenta del dueño). Cualquier otra visita recibe 404.
+- **Agregar empresa por nombre:** desplegable con catálogo + sugerencias de Haiku (`GET /api/radar/empresas/sugerir`, caché por texto, 120 por día y persona). Elegir una sugerencia crea la empresa con su dominio y la completa (`enrichCompany`): dominio verificado en el sitio (el título u `og:site_name` tienen que nombrar a la empresa), descripción tomada del sitio, ATS por link propuesto o por nombre (confirmado por la API), sede/etapa/tamaño de la IA marcados «estimado por IA, sin verificar», nunca pisa datos. Botón «Completar ficha» en la ficha (una vez por hora por empresa). Sin clave de IA sigue funcionando la búsqueda del ATS por nombre.
+
 ## Sesión 4 (27/11/2026): automatización, alertas, descubrimiento, analytics y QA
 
 Pasos de rollout, rollback, variables y costos en **`ROLLOUT.md`**. **El flag sigue apagado en Production.**

@@ -7,11 +7,14 @@ import { radarApi } from "./api";
 import { PROVIDER_LABEL, PrioritySelect, REMOTE_LABEL, SOURCE_STATUS_LABEL, SourceTag, ago, fmtDate } from "./bits";
 import { Drawer, Monogram, Notice, Tag, btnDark, btnGhost, field } from "./ui";
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({ label, children, estimated }: { label: string; children: React.ReactNode; estimated?: boolean }) {
   return (
     <div className="grid grid-cols-[8.5rem_1fr] gap-2 py-1.5 text-sm">
       <dt className="text-muted">{label}</dt>
-      <dd className="min-w-0 break-words">{children || <span className="text-muted">Sin dato</span>}</dd>
+      <dd className="min-w-0 break-words">
+        {children || <span className="text-muted">Sin dato</span>}
+        {estimated && children ? <span className="ml-1.5 whitespace-nowrap rounded-full bg-warning-soft px-2 py-0.5 text-xs">estimado por IA, sin verificar</span> : null}
+      </dd>
     </div>
   );
 }
@@ -55,12 +58,14 @@ export default function CompanyDrawer({
   const [notes, setNotes] = useState(t.notes);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [detailError, setDetailError] = useState("");
-  const [working, setWorking] = useState<"review" | "reresolve" | "source" | null>(null);
+  const [working, setWorking] = useState<"review" | "reresolve" | "source" | "complete" | null>(null);
   const [msg, setMsg] = useState<{ text: string; tone: "info" | "error" } | null>(null);
   const [newUrl, setNewUrl] = useState("");
   const [showClosed, setShowClosed] = useState(false);
   useEffect(() => setNotes(t.notes), [t.notes]);
   const archived = t.status === "archivada";
+  const est = (f: string) => (c.estimated ?? []).includes(f);
+  const incomplete = !sources.length || !c.canonicalDomain || !c.description || !c.headquarters;
 
   const loadDetail = useCallback(async () => {
     try {
@@ -86,6 +91,24 @@ export default function CompanyDrawer({
       await Promise.all([loadDetail(), onChanged()]);
     } catch (e) {
       setMsg({ text: e instanceof Error ? e.message : "No se pudo revisar.", tone: "error" });
+    } finally {
+      setWorking(null);
+    }
+  }
+
+  async function complete() {
+    setWorking("complete");
+    setMsg(null);
+    try {
+      const r = await radarApi<{ filled: string[]; verifiedDomain: boolean; usedAi: boolean }>("/api/radar/empresas/completar", { method: "POST", body: { companyId: c.id } });
+      setMsg(
+        r.filled.length
+          ? { text: `Completé: ${r.filled.join(", ")}.${r.verifiedDomain ? " El dominio se verificó en el sitio oficial." : ""} Lo que no se pudo comprobar queda como «estimado por IA».`, tone: "info" }
+          : { text: r.usedAi ? "No encontré datos que se puedan comprobar. Podés agregar el link de Careers a mano." : "No encontré su página de empleos. Agregá el link de Careers a mano.", tone: "error" },
+      );
+      await Promise.all([loadDetail(), onChanged()]);
+    } catch (e) {
+      setMsg({ text: e instanceof Error ? e.message : "No se pudo completar.", tone: "error" });
     } finally {
       setWorking(null);
     }
@@ -132,7 +155,7 @@ export default function CompanyDrawer({
       {!detail && !detailError && <p className="mt-2 text-sm text-muted">Cargando…</p>}
       {detail && (
         <>
-          <p className="mt-1 text-xs text-muted">Sin evaluar: el match con tu perfil llega en la próxima etapa.</p>
+          <p className="mt-1 text-xs text-muted">El match con tu perfil se ve en Oportunidades («Evaluar con mi perfil»).</p>
           {detail.open.length ? (
             <ul className="mt-2 space-y-2">{detail.open.slice(0, 50).map((j) => <JobRow key={j.id} j={j} />)}</ul>
           ) : (
@@ -216,12 +239,19 @@ export default function CompanyDrawer({
         </>
       )}
 
-      <h3 className="mt-6 text-sm font-bold uppercase tracking-wide text-muted">Empresa</h3>
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        <h3 className="mr-auto text-sm font-bold uppercase tracking-wide text-muted">Empresa</h3>
+        {incomplete && (
+          <button type="button" className={btnGhost} disabled={working !== null} onClick={() => void complete()}>
+            {working === "complete" ? "Buscando…" : "Completar ficha"}
+          </button>
+        )}
+      </div>
       <dl className="mt-1">
-        <Row label="Actividad">{c.description}</Row>
-        <Row label="Sede">{c.headquarters}</Row>
-        <Row label="Etapa">{c.stage}</Row>
-        <Row label="Tamaño estimado">
+        <Row label="Actividad" estimated={est("description")}>{c.description}</Row>
+        <Row label="Sede" estimated={est("headquarters")}>{c.headquarters}</Row>
+        <Row label="Etapa" estimated={est("stage")}>{c.stage}</Row>
+        <Row label="Tamaño estimado" estimated={est("employeeBand")}>
           {c.employeeBand && (
             <>
               {c.employeeBand}

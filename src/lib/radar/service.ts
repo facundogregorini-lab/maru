@@ -4,7 +4,7 @@ import { radarRepos } from "./repo";
 import { withDefaults } from "./settings";
 import type { Sheet } from "./tabular";
 import { PRIORITIES, type Company, type CompanySource, type ImportRun, type JobOpening, type MonitoringRun, type PilotJob, type Priority, type RadarMatch, type RadarSettings, type SourceProvider, type TargetCompany, type TargetView } from "./types";
-import { runMonitoring } from "./sources/worker";
+import { radarNet, runMonitoring } from "./sources/worker";
 import { actionPriority } from "./match/score";
 
 /** Operaciones de Radar. Reciben siempre el `userId` derivado de la sesión verificada. */
@@ -404,3 +404,15 @@ export async function jobForHandoff(uid: string, companyId: string, jobId: strin
 }
 
 export { assertFollows };
+
+/** «Completar ficha»: IA + verificación, y lee las vacantes si encontró una fuente. Una vez por hora por empresa. */
+export async function completeCompany(uid: string, companyId: string): Promise<{ filled: string[]; verifiedDomain: boolean; usedAi: boolean }> {
+  await assertFollows(uid, companyId);
+  if (!(await radarRepos().leases.acquire(`enrich:${companyId}`, uid, 60 * 60_000))) {
+    throw new RadarError("Ya se completó hace poco. Probá en una hora.", "COOLDOWN", 429);
+  }
+  const { enrichCompany } = await import("./enrich");
+  const r = await enrichCompany(companyId, { net: radarNet() });
+  if (r.sources.length) await runMonitoring({ companyIds: [companyId], trigger: "manual", budgetMs: 25_000 });
+  return { filled: r.filled, verifiedDomain: r.verifiedDomain, usedAi: r.usedAi };
+}

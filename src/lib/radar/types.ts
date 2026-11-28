@@ -35,6 +35,8 @@ export type Company = {
   references: string[];
   /** De dónde salieron los metadatos y cuándo. */
   metadataSource: { label: string; at: string } | null;
+  /** Campos completados por IA que no se pudieron comprobar en una fuente (se muestran «estimado por IA»). */
+  estimated?: string[];
   createdAt: string;
   updatedAt: string;
 };
